@@ -47,7 +47,7 @@ class LocalProfileFragment : Fragment() {
     }
 
     private fun sumLabel(): String {
-        val profile = LocalProfilePlugin.createProfileStore().defaultProfile
+        val profile = LocalProfilePlugin.createProfileStore().getDefaultProfile()
         val sum = profile?.baseBasalSum() ?: 0.0
         return " ∑" + DecimalFormatter.to2Decimal(sum) + MainApp.gs(R.string.insulin_unit_shortname)
     }
@@ -80,7 +80,7 @@ class LocalProfileFragment : Fragment() {
 
         // Spinner
         spinner = SpinnerHelper(view?.findViewById(R.id.localprofile_spinner))
-        val profileList: ArrayList<CharSequence> = LocalProfilePlugin.profile?.profileList
+        val profileList: ArrayList<CharSequence> = LocalProfilePlugin.profile?.getProfileList()
                 ?: ArrayList()
         context?.let { context ->
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)

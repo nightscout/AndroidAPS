@@ -63,7 +63,7 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
 
     @Synchronized
     fun isValidEditState(): Boolean {
-        return createProfileStore().defaultProfile?.isValid(MainApp.gs(R.string.localprofile), false)
+        return createProfileStore().getDefaultProfile()?.isValid(MainApp.gs(R.string.localprofile), false)
                 ?: false
     }
 
@@ -107,6 +107,7 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
             val LOCAL_PROFILE_NUMBERED = LOCAL_PROFILE + "_" + i + "_"
 
             p.name = SP.getString(LOCAL_PROFILE_NUMBERED + "name", LOCAL_PROFILE + i)
+            if (isExistingName(p.name)) continue
             p.mgdl = SP.getBoolean(LOCAL_PROFILE_NUMBERED + "mgdl", false)
             p.dia = SP.getDouble(LOCAL_PROFILE_NUMBERED + "dia", Constants.defaultDIA)
             try {
@@ -162,7 +163,15 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
             profiles.add(p)
         }
         isEdited = false
+        numOfProfiles = profiles.size
         createAndStoreConvertedProfile()
+    }
+
+    private fun isExistingName(name: String?) : Boolean {
+        for (p in profiles) {
+            if (p.name == name) return true
+        }
+        return false
     }
 
     @Synchronized
@@ -347,7 +356,7 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
     }
 
     override fun getProfileName(): String {
-        return DecimalFormatter.to2Decimal(rawProfile?.defaultProfile?.percentageBasalSum()
+        return DecimalFormatter.to2Decimal(rawProfile?.getDefaultProfile()?.percentageBasalSum()
                 ?: 0.0) + "U "
     }
 

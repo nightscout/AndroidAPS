@@ -58,7 +58,7 @@ class ProfileViewerDialog : DialogFragment() {
                 profileview_datelayout.visibility = View.VISIBLE
             }
             Mode.PUMP_PROFILE -> {
-                profile = (ConfigBuilderPlugin.getPlugin().activePump as ProfileInterface?)?.profile?.defaultProfile
+                profile = (ConfigBuilderPlugin.getPlugin().activePump as ProfileInterface?)?.profile?.getDefaultProfile()
                 profileName = (ConfigBuilderPlugin.getPlugin().activePump as ProfileInterface?)?.profileName
                 date = ""
                 profileview_reload.visibility = View.VISIBLE

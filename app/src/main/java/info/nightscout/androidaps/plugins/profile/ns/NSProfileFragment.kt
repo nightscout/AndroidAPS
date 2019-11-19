@@ -119,7 +119,7 @@ class NSProfileFragment : Fragment() {
         profileview_noprofile.visibility = View.VISIBLE
 
         NSProfilePlugin.getPlugin().profile?.let { profileStore ->
-            val profileList = profileStore.profileList
+            val profileList = profileStore.getProfileList()
             val adapter = ArrayAdapter(context!!, R.layout.spinner_centered, profileList)
             nsprofile_spinner.adapter = adapter
             // set selected to actual profile

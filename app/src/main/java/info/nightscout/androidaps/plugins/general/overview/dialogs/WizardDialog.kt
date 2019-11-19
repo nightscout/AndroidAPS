@@ -214,7 +214,7 @@ class WizardDialog : DialogFragment() {
         }
 
         val profileList: ArrayList<CharSequence>
-        profileList = profileStore.profileList
+        profileList = profileStore.getProfileList()
         profileList.add(0, MainApp.gs(R.string.active))
         context?.let { context ->
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
