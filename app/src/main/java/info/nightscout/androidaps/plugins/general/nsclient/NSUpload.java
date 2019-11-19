@@ -587,7 +587,7 @@ public class NSUpload {
 
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
     }

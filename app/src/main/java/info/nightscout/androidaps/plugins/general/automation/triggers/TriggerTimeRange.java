@@ -93,7 +93,7 @@ public class TriggerTimeRange extends Trigger {
             object.put("type", TriggerTimeRange.class.getName());
             object.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         log.debug(object.toString());
         return object.toString();
@@ -108,7 +108,7 @@ public class TriggerTimeRange extends Trigger {
             start = JsonHelper.safeGetInt(o, "start");
             end = JsonHelper.safeGetInt(o, "end");
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }
