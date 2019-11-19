@@ -75,9 +75,9 @@ public class ProfileStore {
             if (store.has(profileName)) {
                 profile = cachedObjects.get(profileName);
                 if (profile == null) {
-                    if (store.has("units")) {
-                        String units = store.getString("units");
-                        profile = new Profile(store.getJSONObject(profileName), units);
+                    JSONObject profileObject = store.getJSONObject(profileName);
+                    if (profileObject!= null && profileObject.has("units")) {
+                        profile = new Profile(profileObject, profileObject.getString("units"));
                         cachedObjects.put(profileName, profile);
                     }
                 }

@@ -29,6 +29,11 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
         .shortName(R.string.localprofile_shortname)
         .description(R.string.description_profile_local)), ProfileInterface {
 
+    override fun onStart() {
+        super.onStart()
+        loadSettings()
+    }
+
     private val log = LoggerFactory.getLogger(L.PROFILE)
 
     private var rawProfile: ProfileStore? = null
@@ -53,10 +58,6 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
 
     internal var numOfProfiles = 0
     internal var currentProfileIndex = 0
-
-    init {
-        loadSettings()
-    }
 
     fun currentProfile() = profiles[currentProfileIndex]
 
