@@ -661,6 +661,35 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("BOLUS 1", smsCommunicatorPlugin.messages.get(0).text);
         Assert.assertEquals("Pump suspended", smsCommunicatorPlugin.messages.get(1).text);
         when(pump.isSuspended()).thenReturn(false);
+
+        //BOLUS 1 a
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BOLUS 1 a");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BOLUS 1 a", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages.get(1).text);
+
+        //BOLUS 1 MEAL
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BOLUS 1 MEAL");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BOLUS 1 MEAL", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.messages.get(1).text.contains("To deliver meal bolus 1.00U reply with code"));
+        passCode = smsCommunicatorPlugin.messageToConfirm.confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages.get(2).text);
+        Assert.assertEquals("Meal Bolus 1.00U delivered successfully\nVirtual Pump", smsCommunicatorPlugin.messages.get(3).text);
+
+        //BOLUS 1 MEAL (Suspended pump)
+        smsCommunicatorPlugin.lastRemoteBolusTime = 0;
+        when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
+        when(pump.isSuspended()).thenReturn(true);
+        smsCommunicatorPlugin.messages = new ArrayList<>();
+        sms = new Sms("1234", "BOLUS 1 MEAL");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("BOLUS 1 MEAL", smsCommunicatorPlugin.messages.get(0).text);
+        Assert.assertEquals("Pump suspended", smsCommunicatorPlugin.messages.get(1).text);
+        when(pump.isSuspended()).thenReturn(false);
     }
 
     @Test
