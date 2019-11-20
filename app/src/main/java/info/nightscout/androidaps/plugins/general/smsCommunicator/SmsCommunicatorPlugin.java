@@ -302,6 +302,9 @@ public class SmsCommunicatorPlugin extends PluginBase {
                     else
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.wrongformat));
                     break;
+            }
+            // splitted switch to fix bug in mockito
+            switch (splitted[0].toUpperCase()) {
                 case "CAL":
                     if (!remoteCommandsAllowed)
                         sendSMS(new Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotecommandnotallowed));
