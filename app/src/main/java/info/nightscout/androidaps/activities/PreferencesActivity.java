@@ -9,28 +9,28 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
-import android.text.TextUtils;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
-import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
-import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin;
-import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader;
-import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
+import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
+import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin;
+import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
+import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
+import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
@@ -43,16 +43,9 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
-import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
-import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
-import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
-import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
-
-import com.andreabaccega.widget.ValidatingEditTextPreference;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     MyPreferenceFragment myPreferenceFragment;
@@ -83,7 +76,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         if (key.equals(MainApp.gs(R.string.key_openapsama_useautosens)) && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
             OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity), MainApp.gs(R.string.sensitivity_warning), null);
         }
-        updatePrefSummary(myPreferenceFragment.getPreference(key));
+        updatePrefSummary(myPreferenceFragment.findPreference(key));
     }
 
     private static void updatePrefSummary(Preference pref) {
@@ -95,13 +88,13 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             EditTextPreference editTextPref = (EditTextPreference) pref;
             if (pref.getKey().contains("password") || pref.getKey().contains("secret")) {
                 pref.setSummary("******");
-            } else if (pref.getKey().equals(MainApp.gs(R.string.key_danars_name))) {
-                pref.setSummary(SP.getString(R.string.key_danars_name, ""));
             } else if (editTextPref.getText() != null) {
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
-            } else if (pref.getKey().contains("smscommunicator_allowednumbers") && (editTextPref.getText() == null || TextUtils.isEmpty(editTextPref.getText().trim()))) {
-                pref.setSummary(MainApp.gs(R.string.smscommunicator_allowednumbers_summary));
+            } else {
+                for (PluginBase plugin : MainApp.getPluginsList()) {
+                    plugin.updatePreferenceSummary(pref);
+                }
             }
         }
     }
@@ -201,68 +194,17 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResourceIfEnabled(StatuslinePlugin.getPlugin(), PluginType.GENERAL);
             }
 
-            if (Config.NSCLIENT) {
-                PreferenceScreen scrnAdvancedSettings = (PreferenceScreen) findPreference(getString(R.string.key_advancedsettings));
-                if (scrnAdvancedSettings != null) {
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_warning)));
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_critical)));
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_bat_warning)));
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_bat_critical)));
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_show_statuslights)));
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_show_statuslights_extended)));
-                }
-            }
-
             initSummary(getPreferenceScreen());
 
-            final Preference tidepoolTestLogin = findPreference(MainApp.gs(R.string.key_tidepool_test_login));
-            if (tidepoolTestLogin != null)
-                tidepoolTestLogin.setOnPreferenceClickListener(preference -> {
-                    TidepoolUploader.INSTANCE.testLogin(getActivity());
-                    return false;
-                });
-
-            final ValidatingEditTextPreference distance = (ValidatingEditTextPreference)findPreference(getString(R.string.key_smscommunicator_remotebolusmindistance));
-            final EditTextPreference allowedNumbers = (EditTextPreference)findPreference(getString(R.string.key_smscommunicator_allowednumbers));
-            if (distance != null && allowedNumbers != null) {
-                if (!SmsCommunicatorPlugin.areMoreNumbers(allowedNumbers.getText())) {
-                    distance.setTitle(getString(R.string.smscommunicator_remotebolusmindistance)
-                            + ".\n"
-                            + getString(R.string.smscommunicator_remotebolusmindistance_caveat));
-                    distance.setEnabled(false);
-                } else {
-                    distance.setTitle(getString(R.string.smscommunicator_remotebolusmindistance));
-                    distance.setEnabled(true);
-                }
-
-                allowedNumbers.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                    @Override
-                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        if (!SmsCommunicatorPlugin.areMoreNumbers(((String)newValue))) {
-                            distance.setText(String.valueOf(Constants.remoteBolusMinDistance/(60 * 1000L)));
-                            distance.setTitle(getString(R.string.smscommunicator_remotebolusmindistance)
-                                    + ".\n"
-                                    + getString(R.string.smscommunicator_remotebolusmindistance_caveat));
-                            distance.setEnabled(false);
-                        } else {
-                            distance.setTitle(getString(R.string.smscommunicator_remotebolusmindistance));
-                            distance.setEnabled(true);
-                        }
-                        return true;
-                    }
-                });
+            for (PluginBase plugin : MainApp.getPluginsList()) {
+                plugin.preprocessPreferences(this);
             }
-
         }
 
         @Override
         public void onSaveInstanceState(Bundle outState) {
             super.onSaveInstanceState(outState);
             outState.putInt("id", id);
-        }
-
-        public Preference getPreference(String key) {
-            return findPreference(key);
         }
     }
 }
