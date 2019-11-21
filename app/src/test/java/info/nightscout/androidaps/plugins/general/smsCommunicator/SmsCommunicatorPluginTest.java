@@ -758,7 +758,7 @@ public class SmsCommunicatorPluginTest {
         when(SmsManager.getDefault()).thenReturn(smsManager);
 
         when(SP.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678");
-        smsCommunicatorPlugin = SmsCommunicatorPlugin.getPlugin();
+        smsCommunicatorPlugin = SmsCommunicatorPlugin.INSTANCE;
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true);
 
         mockStatic(LoopPlugin.class);

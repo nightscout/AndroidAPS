@@ -49,7 +49,7 @@ import java.util.*
 /**
  * Created by mike on 05.08.2016.
  */
-class SmsCommunicatorPlugin internal constructor() : PluginBase(PluginDescription()
+object SmsCommunicatorPlugin : PluginBase(PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(SmsCommunicatorFragment::class.java.name)
         .pluginName(R.string.smscommunicator)
@@ -57,11 +57,16 @@ class SmsCommunicatorPlugin internal constructor() : PluginBase(PluginDescriptio
         .preferencesId(R.xml.pref_smscommunicator)
         .description(R.string.description_sms_communicator)
 ) {
+    private val log = LoggerFactory.getLogger(L.SMS)
     private val disposable = CompositeDisposable()
     var allowedNumbers: MutableList<String> = ArrayList()
     var messageToConfirm: AuthRequest? = null
     var lastRemoteBolusTime: Long = 0
     var messages = ArrayList<Sms>()
+
+    init {
+        processSettings(null)
+    }
 
     override fun onStart() {
         super.onStart()
@@ -772,41 +777,24 @@ class SmsCommunicatorPlugin internal constructor() : PluginBase(PluginDescriptio
         return passCode
     }
 
-    companion object {
-        private val log = LoggerFactory.getLogger(L.SMS)
-        private var smsCommunicatorPlugin: SmsCommunicatorPlugin? = null
-        @JvmStatic
-        val plugin: SmsCommunicatorPlugin?
-            get() {
-                if (smsCommunicatorPlugin == null) {
-                    smsCommunicatorPlugin = SmsCommunicatorPlugin()
-                }
-                return smsCommunicatorPlugin
-            }
-
-        private fun stripAccents(str: String): String {
-            var s = str
-            s = Normalizer.normalize(s, Normalizer.Form.NFD)
-            s = s.replace("[\\p{InCombiningDiacriticalMarks}]".toRegex(), "")
-            return s
-        }
-
-        fun areMoreNumbers(allowednumbers: String): Boolean {
-            var countNumbers = 0
-            val substrings = allowednumbers.split(";").toTypedArray()
-            for (number in substrings) {
-                var cleaned = number.replace(Regex("\\s+"), "")
-                if (cleaned.length < 4) continue
-                if (cleaned.substring(0, 1).compareTo("+") != 0) continue
-                cleaned = cleaned.replace("+", "")
-                if (!cleaned.matches(Regex("[0-9]+"))) continue
-                countNumbers++
-            }
-            return countNumbers > 1
-        }
+    private fun stripAccents(str: String): String {
+        var s = str
+        s = Normalizer.normalize(s, Normalizer.Form.NFD)
+        s = s.replace("[\\p{InCombiningDiacriticalMarks}]".toRegex(), "")
+        return s
     }
 
-    init {
-        processSettings(null)
+    fun areMoreNumbers(allowednumbers: String): Boolean {
+        var countNumbers = 0
+        val substrings = allowednumbers.split(";").toTypedArray()
+        for (number in substrings) {
+            var cleaned = number.replace(Regex("\\s+"), "")
+            if (cleaned.length < 4) continue
+            if (cleaned.substring(0, 1).compareTo("+") != 0) continue
+            cleaned = cleaned.replace("+", "")
+            if (!cleaned.matches(Regex("[0-9]+"))) continue
+            countNumbers++
+        }
+        return countNumbers > 1
     }
-}
+ }
