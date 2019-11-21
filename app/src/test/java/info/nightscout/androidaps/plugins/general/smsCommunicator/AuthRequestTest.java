@@ -8,8 +8,6 @@ import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.Date;
-
 import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -28,9 +26,9 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({SmsCommunicatorPlugin.class, L.class, SP.class, MainApp.class, DateUtil.class})
 
 public class AuthRequestTest {
-    SmsCommunicatorPlugin smsCommunicatorPlugin;
-    Sms sentSms;
-    boolean actionCalled = false;
+    private SmsCommunicatorPlugin smsCommunicatorPlugin;
+    private Sms sentSms;
+    private boolean actionCalled = false;
 
     @Test
     public void doTests() {

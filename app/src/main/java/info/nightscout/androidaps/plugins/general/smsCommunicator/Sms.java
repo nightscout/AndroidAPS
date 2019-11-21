@@ -5,7 +5,7 @@ import android.telephony.SmsMessage;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.utils.DateUtil;
 
-class Sms {
+public class Sms {
     String phoneNumber;
     String text;
     long date;

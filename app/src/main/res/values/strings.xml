@@ -307,7 +307,7 @@
     <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU delivered successfully</string>
     <string name="smscommunicator_mealbolusdelivered">Meal Bolus %1$.2fU delivered successfully</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Target %1$s for %2$d minutes</string>
-    <string name="smscommunicator_tt_set">Target %1$s for %2$d minutes set succesfully</string>
+    <string name="smscommunicator_tt_set">Target %1$s for %2$d minutes set successfully</string>
     <string name="bolusdelivering">Delivering %1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Allow remote commands via SMS</string>
     <string name="glucosetype_finger">Finger</string>

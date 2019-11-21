@@ -155,6 +155,9 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.pumpNotInitialized)).thenReturn("Pump not initialized!");
         when(MainApp.gs(R.string.increasingmaxbasal)).thenReturn("Increasing max basal value because setting is lower than your max basal in profile");
         when(MainApp.gs(R.string.overview_bolusprogress_delivered)).thenReturn("Delivered");
+        when(MainApp.gs(R.string.smscommunicator_mealbolusreplywithcode)).thenReturn("To deliver meal bolus %1$.2fU reply with code %2$s");
+        when(MainApp.gs(R.string.smscommunicator_mealbolusdelivered)).thenReturn("Meal Bolus %1$.2fU delivered successfully");
+        when(MainApp.gs(R.string.smscommunicator_mealbolusdelivered_tt)).thenReturn("Target %1$s for %2$d minutes");
     }
 
     public static MainApp mockMainApp() {

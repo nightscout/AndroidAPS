@@ -62,14 +62,14 @@ public class SmsCommunicatorFragment extends Fragment {
                 return (int) (object1.date - object2.date);
             }
         }
-        Collections.sort(SmsCommunicatorPlugin.getPlugin().messages, new CustomComparator());
+        Collections.sort(SmsCommunicatorPlugin.getPlugin().getMessages(), new CustomComparator());
         int messagesToShow = 40;
 
-        int start = Math.max(0, SmsCommunicatorPlugin.getPlugin().messages.size() - messagesToShow);
+        int start = Math.max(0, SmsCommunicatorPlugin.getPlugin().getMessages().size() - messagesToShow);
 
         String logText = "";
-        for (int x = start; x < SmsCommunicatorPlugin.getPlugin().messages.size(); x++) {
-            Sms sms = SmsCommunicatorPlugin.getPlugin().messages.get(x);
+        for (int x = start; x < SmsCommunicatorPlugin.getPlugin().getMessages().size(); x++) {
+            Sms sms = SmsCommunicatorPlugin.getPlugin().getMessages().get(x);
             if (sms.ignored) {
                 logText += DateUtil.timeString(sms.date) + " &lt;&lt;&lt; " + "░ " + sms.phoneNumber + " <b>" + sms.text + "</b><br>";
             } else if (sms.received) {
