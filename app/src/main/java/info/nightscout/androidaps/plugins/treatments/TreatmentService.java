@@ -736,6 +736,14 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
         boolean newRecord;
         boolean success;
+
+        @Override
+        public String toString() {
+            return "UpdateReturn [" +
+                    "newRecord=" + newRecord +
+                    ", success=" + success +
+                    ']';
+        }
     }
 
 }

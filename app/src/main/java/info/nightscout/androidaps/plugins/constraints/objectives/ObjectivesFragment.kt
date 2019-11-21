@@ -204,7 +204,7 @@ class ObjectivesFragment : Fragment() {
             holder.accomplished.setTextColor(-0x3e3e3f)
             holder.verify.setOnClickListener {
                 holder.verify.visibility = View.INVISIBLE
-                NetworkChangeReceiver.fetch()
+                NetworkChangeReceiver.grabNetworkStatus(context)
                 if (objectives_fake.isChecked) {
                     objective.accomplishedOn = DateUtil.now()
                     scrollToCurrentObjective()
@@ -236,7 +236,7 @@ class ObjectivesFragment : Fragment() {
             }
             holder.start.setOnClickListener {
                 holder.start.visibility = View.INVISIBLE
-                NetworkChangeReceiver.fetch()
+                NetworkChangeReceiver.grabNetworkStatus(context)
                 if (objectives_fake.isChecked) {
                     objective.startedOn = DateUtil.now()
                     scrollToCurrentObjective()

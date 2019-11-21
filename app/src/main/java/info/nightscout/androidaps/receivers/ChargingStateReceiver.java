@@ -21,7 +21,7 @@ public class ChargingStateReceiver extends BroadcastReceiver {
         lastEvent = event;
     }
 
-    public EventChargingState grabChargingState(Context context) {
+    public static EventChargingState grabChargingState(Context context) {
         BatteryManager bm = (BatteryManager) context.getSystemService(Context.BATTERY_SERVICE);
 
         if (bm == null)
