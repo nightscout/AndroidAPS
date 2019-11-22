@@ -19,8 +19,12 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuil
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerProfilePercent;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.JsonHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ActionProfileSwitchPercent extends Action {
+    private static final Logger log = LoggerFactory.getLogger(ActionProfileSwitchPercent.class);
+
     InputPercent pct = new InputPercent();
     InputDuration duration = new InputDuration(0, InputDuration.TimeUnit.MINUTES);
 
@@ -71,7 +75,7 @@ public class ActionProfileSwitchPercent extends Action {
             data.put("durationInMinutes", duration.getMinutes());
             o.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -83,7 +87,7 @@ public class ActionProfileSwitchPercent extends Action {
             pct.setValue(JsonHelper.safeGetInt(d, "percentage"));
             duration.setMinutes(JsonHelper.safeGetInt(d, "durationInMinutes"));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }

@@ -153,7 +153,7 @@ public class GlucoseStatusTest {
             list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":226,\"mills\":1514765100000,\"direction\":\"Flat\"}"))));
             list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":228,\"mills\":1514764800000,\"direction\":\"Flat\"}"))));
         } catch (JSONException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return list;
     }
@@ -165,7 +165,7 @@ public class GlucoseStatusTest {
             list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":216,\"mills\":1514766800000,\"direction\":\"Flat\"}")))); // +2
             list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":216,\"mills\":1514766600000,\"direction\":\"Flat\"}"))));
         } catch (JSONException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return list;
     }
@@ -180,7 +180,7 @@ public class GlucoseStatusTest {
         try {
             list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":228,\"mills\":1514764800000,\"direction\":\"Flat\"}"))));
         } catch (JSONException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return list;
     }
@@ -190,7 +190,7 @@ public class GlucoseStatusTest {
         try {
             list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":214,\"mills\":1514766900000,\"direction\":\"Flat\"}"))));
         } catch (JSONException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return list;
     }
@@ -211,7 +211,7 @@ public class GlucoseStatusTest {
                 list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":" + (latest_reading + (i*2)) + ",\"mills\":" + (end_time - (1000 * 60 * i)) + ",\"direction\":\"Flat\"}"))));
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return list;
     }

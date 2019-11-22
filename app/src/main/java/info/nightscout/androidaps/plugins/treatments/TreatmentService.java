@@ -133,7 +133,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             try {
                 getDao().executeRaw("ALTER TABLE `" + Treatment.TABLE_TREATMENTS + "` ADD COLUMN boluscalc STRING;");
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         } else {
             if (L.isEnabled(L.DATATREATMENTS))
@@ -147,7 +147,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             try {
                 getDao().executeRaw("ALTER TABLE `" + Treatment.TABLE_TREATMENTS + "` DROP COLUMN boluscalc STRING;");
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
     }
@@ -736,6 +736,14 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
         boolean newRecord;
         boolean success;
+
+        @Override
+        public String toString() {
+            return "UpdateReturn [" +
+                    "newRecord=" + newRecord +
+                    ", success=" + success +
+                    ']';
+        }
     }
 
 }

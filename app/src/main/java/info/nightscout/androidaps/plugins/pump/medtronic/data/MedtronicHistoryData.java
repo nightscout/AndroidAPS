@@ -49,6 +49,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
@@ -67,7 +68,6 @@ import info.nightscout.androidaps.utils.SP;
 // All things marked with "TODO: Fix db code" needs to be updated in new 2.5 database code
 
 public class MedtronicHistoryData {
-
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     private List<PumpHistoryEntry> allHistory = null;
@@ -77,6 +77,7 @@ public class MedtronicHistoryData {
     private boolean isInit = false;
 
     private Gson gson;
+    private Gson gsonCore;
 
     private DatabaseHelper databaseHelper = MainApp.getDbHelper();
     private ClockDTO pumpTime;
@@ -94,9 +95,14 @@ public class MedtronicHistoryData {
     public MedtronicHistoryData() {
         this.allHistory = new ArrayList<>();
         this.gson = MedtronicUtil.gsonInstance;
+        this.gsonCore = MedtronicUtil.getGsonInstanceCore();
 
         if (this.gson == null) {
             this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        }
+
+        if (this.gsonCore == null) {
+            this.gsonCore = new GsonBuilder().create();
         }
     }
 
@@ -523,7 +529,7 @@ public class MedtronicHistoryData {
             data.put("eventType", event);
             NSUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            LOG.error("Unhandled exception", e);
         }
     }
 
@@ -597,7 +603,7 @@ public class MedtronicHistoryData {
 
         if (doubleBolusDebug)
             LOG.debug("DoubleBolusDebug: List (before filter): {}, FromDb={}", gson.toJson(entryList),
-                    gson.toJson(entriesFromHistory));
+                    gsonCore.toJson(entriesFromHistory));
 
         filterOutAlreadyAddedEntries(entryList, entriesFromHistory);
 
@@ -609,7 +615,7 @@ public class MedtronicHistoryData {
 
         if (doubleBolusDebug)
             LOG.debug("DoubleBolusDebug: List (after filter): {}, FromDb={}", gson.toJson(entryList),
-                    gson.toJson(entriesFromHistory));
+                    gsonCore.toJson(entriesFromHistory));
 
         if (isCollectionEmpty(entriesFromHistory)) {
             for (PumpHistoryEntry treatment : entryList) {
@@ -862,6 +868,7 @@ public class MedtronicHistoryData {
             return;
 
         List<DbObjectBase> removeTreatmentsFromHistory = new ArrayList<>();
+        List<PumpHistoryEntry> removeTreatmentsFromPH = new ArrayList<>();
 
         for (DbObjectBase treatment : treatmentsFromHistory) {
 
@@ -879,10 +886,16 @@ public class MedtronicHistoryData {
                 if (selectedBolus != null) {
                     entryList.remove(selectedBolus);
 
+                    removeTreatmentsFromPH.add(selectedBolus);
                     removeTreatmentsFromHistory.add(treatment);
                 }
             }
         }
+
+        if (doubleBolusDebug)
+            LOG.debug("DoubleBolusDebug: filterOutAlreadyAddedEntries: PumpHistory={}, Treatments={}",
+                    gson.toJson(removeTreatmentsFromPH),
+                    gsonCore.toJson(removeTreatmentsFromHistory));
 
         treatmentsFromHistory.removeAll(removeTreatmentsFromHistory);
     }
@@ -947,36 +960,23 @@ public class MedtronicHistoryData {
 
         } else {
 
-            DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.INSTANCE.findDetailedBolusInfo(treatment.date, bolusDTO.getDeliveredAmount());
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: addBolus(OldTreatment={}): Bolus={}", treatment, bolusDTO);
+
+            treatment.source = Source.PUMP;
+            treatment.pumpId = bolus.getPumpId();
+            treatment.insulin = bolusDTO.getDeliveredAmount();
+
+            TreatmentService.UpdateReturn updateReturn = TreatmentsPlugin.getPlugin().getService().createOrUpdateMedtronic(treatment, false);
 
             if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: addBolus(tretament={}): Bolus={}, DetailedBolusInfo={}", treatment, bolusDTO, detailedBolusInfo);
-
-            if (detailedBolusInfo == null) {
-                detailedBolusInfo = new DetailedBolusInfo();
-
-                if (doubleBolusDebug)
-                    LOG.debug("DoubleBolusDebug: detailedBolusInfoCouldNotBeRetrived !");
-            }
-
-            detailedBolusInfo.date = treatment.date;
-            detailedBolusInfo.source = Source.PUMP;
-            detailedBolusInfo.pumpId = bolus.getPumpId();
-            detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();
-            detailedBolusInfo.carbs = treatment.carbs;
-
-            addCarbsFromEstimate(detailedBolusInfo, bolus);
-
-            if (doubleBolusDebug)
-                LOG.debug("DoubleBolusDebug: addBolus(tretament!=null): DetailedBolusInfo(New)={}", detailedBolusInfo);
-
-            boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
-
-            bolus.setLinkedObject(detailedBolusInfo);
+                LOG.debug("DoubleBolusDebug: addBolus(tretament!=null): NewTreatment={}, UpdateReturn={}", treatment, updateReturn);
 
             if (isLogEnabled())
-                LOG.debug("editBolus - [date={},pumpId={}, insulin={}, newRecord={}]", detailedBolusInfo.date,
-                        detailedBolusInfo.pumpId, detailedBolusInfo.insulin, newRecord);
+                LOG.debug("editBolus - [date={},pumpId={}, insulin={}, newRecord={}]", treatment.date,
+                        treatment.pumpId, treatment.insulin, updateReturn.toString());
+
+            bolus.setLinkedObject(treatment);
 
         }
     }

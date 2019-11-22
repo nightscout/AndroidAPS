@@ -65,7 +65,7 @@ public class TriggerTime extends Trigger {
             object.put("type", TriggerTime.class.getName());
             object.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return object.toString();
     }
@@ -78,7 +78,7 @@ public class TriggerTime extends Trigger {
             lastRun = JsonHelper.safeGetLong(o, "lastRun");
             runAt = JsonHelper.safeGetLong(o, "runAt");
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }
