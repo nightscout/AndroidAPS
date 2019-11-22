@@ -883,7 +883,6 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
         for (number in substrings) {
             var cleaned = number.replace(Regex("\\s+"), "")
             if (cleaned.length < 4) continue
-            if (cleaned.substring(0, 1).compareTo("+") != 0) continue
             cleaned = cleaned.replace("+", "")
             if (!cleaned.matches(Regex("[0-9]+"))) continue
             countNumbers++
