@@ -887,6 +887,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
     private fun generatePasscode(): String {
         val startChar1 = 'A'.toInt() // on iphone 1st char is uppercase :)
         var passCode = Character.toString((startChar1 + Math.random() * ('z' - 'a' + 1)).toChar())
+        //For Milos: may we have only 'a'.toInt() for the 2nd and 3rd chars? Upper letters are uncomfortable here
         val startChar2: Int = if (Math.random() > 0.5) 'a'.toInt() else 'A'.toInt()
         passCode += Character.toString((startChar2 + Math.random() * ('z' - 'a' + 1)).toChar())
         val startChar3: Int = if (Math.random() > 0.5) 'a'.toInt() else 'A'.toInt()

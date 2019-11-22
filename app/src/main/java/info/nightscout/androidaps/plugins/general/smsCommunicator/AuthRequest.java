@@ -37,8 +37,9 @@ public class AuthRequest {
                 log.debug("Already processed");
             return;
         }
+        //if (false) {  //F. Casellato - I test SMS with master phone that sends commands to itself. I found only this way to di this...
         if (!confirmCode.equals(codeReceived)) {
-            processed = true;
+                processed = true;
             if (L.isEnabled(L.SMS))
                 log.debug("Wrong code");
             plugin.sendSMS(new Sms(requester.phoneNumber, R.string.sms_wrongcode));
