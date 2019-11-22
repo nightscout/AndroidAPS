@@ -36,7 +36,7 @@ public class ActionSendSMS extends Action {
 
     @Override
     public void doAction(Callback callback) {
-        boolean result = SmsCommunicatorPlugin.getPlugin().sendNotificationToAllNumbers(text.getValue());
+        boolean result = SmsCommunicatorPlugin.INSTANCE.sendNotificationToAllNumbers(text.getValue());
         if (callback != null)
             callback.result(new PumpEnactResult().success(result).comment(result ? R.string.ok : R.string.danar_error)).run();
 

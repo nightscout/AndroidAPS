@@ -307,7 +307,7 @@
     <string name="smscommunicator_bolusdelivered">Bolus %1$.2fU delivered successfully</string>
     <string name="smscommunicator_mealbolusdelivered">Meal Bolus %1$.2fU delivered successfully</string>
     <string name="smscommunicator_mealbolusdelivered_tt">Target %1$s for %2$d minutes</string>
-    <string name="smscommunicator_tt_set">Target %1$s for %2$d minutes set succesfully</string>
+    <string name="smscommunicator_tt_set">Target %1$s for %2$d minutes set successfully</string>
     <string name="bolusdelivering">Delivering %1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Allow remote commands via SMS</string>
     <string name="glucosetype_finger">Finger</string>
@@ -367,10 +367,13 @@
     <string name="smscommunicator_basalreplywithcode">To start basal %1$.2fU/h for %2$d min reply with code %3$s</string>
     <string name="smscommunicator_profilereplywithcode">To switch profile to %1$s %2$d%% reply with code %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">To start extended bolus %1$.2fU for %2$d min reply with code %3$s</string>
+    <string name="smscommunicator_carbsreplywithcode">To enter %1$dg at %2$s reply with code %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">To start basal %1$d%% for %2$d min reply with code %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">To suspend loop for %1$d minutes reply with code %2$s</string>
     <string name="smscommunicator_tempbasalset">Temp basal %1$.2fU/h for %2$d min started successfully</string>
     <string name="smscommunicator_extendedset">Extended bolus %1$.2fU for %2$d min started successfully</string>
+    <string name="smscommunicator_carbsset">Carbs %1$dg entered successfully</string>
+    <string name="smscommunicator_carbsfailed">Entering %1$dg of carbs failed</string>
     <string name="smscommunicator_tempbasalset_percent">Temp basal %1$d%% for %2$d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
     <string name="smscommunicator_extendedfailed">Extended bolus start failed</string>

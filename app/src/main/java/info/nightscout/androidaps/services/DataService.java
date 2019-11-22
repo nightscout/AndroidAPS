@@ -103,7 +103,7 @@ public class DataService extends IntentService {
         ) {
             handleNewDataFromNSClient(intent);
         } else if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)) {
-            SmsCommunicatorPlugin.getPlugin().handleNewData(intent);
+            SmsCommunicatorPlugin.INSTANCE.handleNewData(intent);
         }
 
         if (L.isEnabled(L.DATASERVICE))

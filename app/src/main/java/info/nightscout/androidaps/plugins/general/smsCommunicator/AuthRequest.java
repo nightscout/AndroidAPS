@@ -8,7 +8,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.utils.DateUtil;
 
-class AuthRequest {
+public class AuthRequest {
     private static Logger log = LoggerFactory.getLogger(L.SMS);
 
     Sms requester;
