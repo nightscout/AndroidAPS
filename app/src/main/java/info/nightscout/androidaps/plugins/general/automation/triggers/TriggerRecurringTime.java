@@ -163,7 +163,7 @@ public class TriggerRecurringTime extends Trigger {
             object.put("type", TriggerRecurringTime.class.getName());
             object.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return object.toString();
     }
@@ -181,7 +181,7 @@ public class TriggerRecurringTime extends Trigger {
             minute = JsonHelper.safeGetInt(o, "minute");
             validTo = JsonHelper.safeGetLong(o, "validTo");
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }
