@@ -394,11 +394,22 @@ public class SmsCommunicatorPluginTest {
         sms = new Sms("1234", "TARGET MEAL");
         smsCommunicatorPlugin.processSms(sms);
         Assert.assertEquals("TARGET MEAL", smsCommunicatorPlugin.getMessages().get(0).text);
-        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(1).text.contains("To set the Temp Target MEAL reply with code"));
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(1).text.contains("To set the Temp Target"));
         passCode = smsCommunicatorPlugin.getMessageToConfirm().confirmCode;
         smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
         Assert.assertEquals(passCode, smsCommunicatorPlugin.getMessages().get(2).text);
-        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(3).text.contains("Target MEAL for 45 minutes set successfully"));
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(3).text.contains("set successfully"));
+
+        //TARGET STOP/CANCEL
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "TARGET STOP");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("TARGET STOP", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(1).text.contains("To cancel Temp Target reply with code"));
+        passCode = smsCommunicatorPlugin.getMessageToConfirm().confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.getMessages().get(2).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(3).text.contains("Temp Target canceled successfully"));
     }
 
     @Test

@@ -39,6 +39,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DateUtil.now
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.apache.commons.lang3.StringUtils
@@ -725,6 +726,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
         val isMeal = splitted[1].equals("MEAL", ignoreCase = true)
         val isActivity = splitted[1].equals("ACTIVITY", ignoreCase = true)
         val isHypo = splitted[1].equals("HYPO", ignoreCase = true)
+        val isStop = splitted[1].equals("STOP", ignoreCase = true) || splitted[1].equals("CANCEL", ignoreCase = true)
         if (isMeal || isActivity || isHypo) {
             val passCode = generatePasscode()
             val reply = String.format(MainApp.gs(R.string.smscommunicator_temptargetwithcode), splitted[1].toUpperCase(Locale.getDefault()), passCode)
@@ -777,7 +779,30 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                     }
                 }
             })
-        } else sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
+        } else if (isStop) {
+            val passCode = generatePasscode()
+            val reply = String.format(MainApp.gs(R.string.smscommunicator_temptargetcancel), passCode)
+            receivedSms.processed = true
+            messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction() {
+                override fun run() {
+                    val currentProfile = ProfileFunctions.getInstance().profile
+                    if (currentProfile != null) {
+                         val tempTarget = TempTarget()
+                                .source(Source.USER)
+                                .date(now())
+                                .duration(0)
+                                .low(0.0)
+                                .high(0.0)
+                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
+                        val replyText = String.format(MainApp.gs(R.string.smscommunicator_tt_canceled))
+                        sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                    } else {
+                        sendSMS(Sms(receivedSms.phoneNumber, R.string.smscommunicator_unknowncommand))
+                    }
+                }
+            })
+        } else
+            sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
     }
 
     private fun processSMS(splitted: Array<String>, receivedSms: Sms) {

@@ -115,6 +115,13 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.sms_lastbg)).thenReturn("Last BG:");
         when(MainApp.gs(R.string.sms_minago)).thenReturn("%1$dmin ago");
         when(MainApp.gs(R.string.smscommunicator_remotecommandnotallowed)).thenReturn("Remote command is not allowed");
+        when(MainApp.gs(R.string.smscommunicator_stopsmswithcode)).thenReturn("To disable the SMS Remote Service reply with code %1$s.\\n\\nKeep in mind that you\\'ll able to reactivate it directly from the AAPS master smartphone only.");
+        when(MainApp.gs(R.string.smscommunicator_mealbolusreplywithcode)).thenReturn("To deliver meal bolus %1$.2fU reply with code %2$s.");
+        when(MainApp.gs(R.string.smscommunicator_temptargetwithcode)).thenReturn("To set the Temp Target %1$s reply with code %2$s");
+        when(MainApp.gs(R.string.smscommunicator_temptargetcancel)).thenReturn("To cancel Temp Target reply with code %1$s");
+        when(MainApp.gs(R.string.smscommunicator_stoppedsms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.");
+        when(MainApp.gs(R.string.smscommunicator_tt_set)).thenReturn("Target %1$s for %2$d minutes set successfully");
+        when(MainApp.gs(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully");
         when(MainApp.gs(R.string.loopsuspendedfor)).thenReturn("Suspended (%1$d m)");
         when(MainApp.gs(R.string.smscommunicator_loopisdisabled)).thenReturn("Loop is disabled");
         when(MainApp.gs(R.string.smscommunicator_loopisenabled)).thenReturn("Loop is enabled");
