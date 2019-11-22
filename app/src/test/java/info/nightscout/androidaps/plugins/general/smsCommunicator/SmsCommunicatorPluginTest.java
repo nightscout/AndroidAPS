@@ -49,6 +49,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.powermock.api.mockito.PowerMockito.doAnswer;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.spy;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
@@ -721,6 +722,87 @@ public class SmsCommunicatorPluginTest {
     }
 
     @Test
+    public void processCarbsTest() {
+        Sms sms;
+
+        when(DateUtil.now()).thenReturn(1000000L);
+        when(SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(false);
+        //CAL
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "CARBS");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("CARBS", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertEquals("Remote command is not allowed", smsCommunicatorPlugin.getMessages().get(1).text);
+
+        when(SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)).thenReturn(true);
+
+        //CARBS
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "CARBS");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("CARBS", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.getMessages().get(1).text);
+
+        when(MainApp.getConstraintChecker().applyCarbsConstraints(any())).thenReturn(new Constraint<>(0));
+
+        //CARBS 0
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "CARBS 0");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("CARBS 0", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.getMessages().get(1).text);
+
+        when(MainApp.getConstraintChecker().applyCarbsConstraints(any())).thenReturn(new Constraint<>(1));
+
+        //CARBS 1
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "CARBS 1");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("CARBS 1", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(1).text.contains("To enter 1g at 01:16AM reply with code"));
+        String passCode = smsCommunicatorPlugin.getMessageToConfirm().confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.getMessages().get(2).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(3).text.startsWith("Carbs 1g entered successfully"));
+
+        //CARBS 1 a
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "CARBS 1 a");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("CARBS 1 a", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(1).text.contains("Wrong format"));
+
+        //CARBS 1 00
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "CARBS 1 00");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("CARBS 1 00", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(1).text.contains("Wrong format"));
+
+        //CARBS 1 12:01
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "CARBS 1 12:01");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("CARBS 1 12:01", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(1).text.contains("To enter 1g at 12:01PM reply with code"));
+        passCode = smsCommunicatorPlugin.getMessageToConfirm().confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.getMessages().get(2).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(3).text.startsWith("Carbs 1g entered successfully"));
+
+        //CARBS 1 3:01AM
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "CARBS 1 3:01AM");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("CARBS 1 3:01AM", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(1).text.contains("To enter 1g at 03:01AM reply with code"));
+        passCode = smsCommunicatorPlugin.getMessageToConfirm().confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.getMessages().get(2).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(3).text.startsWith("Carbs 1g entered successfully"));
+    }
+
+    @Test
     public void sendNotificationToAllNumbers() {
         smsCommunicatorPlugin.setMessages(new ArrayList<>());
         smsCommunicatorPlugin.sendNotificationToAllNumbers("abc");
@@ -752,7 +834,7 @@ public class SmsCommunicatorPluginTest {
         PowerMockito.when(IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "SMS COB")).thenReturn(new CobInfo(10d, 2d));
 
         mockStatic(XdripCalibrations.class);
-        mockStatic(DateUtil.class);
+        spy(DateUtil.class);
         mockStatic(SmsManager.class);
         SmsManager smsManager = mock(SmsManager.class);
         when(SmsManager.getDefault()).thenReturn(smsManager);

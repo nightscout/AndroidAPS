@@ -37,6 +37,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -158,6 +159,8 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.smscommunicator_mealbolusreplywithcode)).thenReturn("To deliver meal bolus %1$.2fU reply with code %2$s");
         when(MainApp.gs(R.string.smscommunicator_mealbolusdelivered)).thenReturn("Meal Bolus %1$.2fU delivered successfully");
         when(MainApp.gs(R.string.smscommunicator_mealbolusdelivered_tt)).thenReturn("Target %1$s for %2$d minutes");
+        when(MainApp.gs(R.string.smscommunicator_carbsreplywithcode)).thenReturn("To enter %1$dg at %2$s reply with code %3$s");
+        when(MainApp.gs(R.string.smscommunicator_carbsset)).thenReturn("Carbs %1$dg entered successfully");
     }
 
     public static MainApp mockMainApp() {
@@ -186,6 +189,7 @@ public class AAPSMocker {
         when(SP.getLong(anyInt(), anyLong())).thenReturn(0L);
         when(SP.getBoolean(anyInt(), anyBoolean())).thenReturn(false);
         when(SP.getInt(anyInt(), anyInt())).thenReturn(0);
+        when(SP.getString(anyInt(), anyString())).thenReturn("");
     }
 
     public static void mockL() {

@@ -75,12 +75,6 @@ public class AuthRequestTest {
 
     @Before
     public void prepareTests() {
-        smsCommunicatorPlugin = mock(SmsCommunicatorPlugin.class);
-        doAnswer((Answer) invocation -> {
-            sentSms = invocation.getArgument(0);
-            return null;
-        }).when(smsCommunicatorPlugin).sendSMS(any(Sms.class));
-
         AAPSMocker.mockMainApp();
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
@@ -88,5 +82,12 @@ public class AuthRequestTest {
         AAPSMocker.mockStrings();
 
         mockStatic(DateUtil.class);
+
+        smsCommunicatorPlugin = mock(SmsCommunicatorPlugin.class);
+        doAnswer((Answer) invocation -> {
+            sentSms = invocation.getArgument(0);
+            return null;
+        }).when(smsCommunicatorPlugin).sendSMS(any(Sms.class));
+
     }
 }
