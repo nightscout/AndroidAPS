@@ -348,6 +348,19 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("PUMP", smsCommunicatorPlugin.getMessages().get(0).text);
         Assert.assertEquals("Virtual Pump", smsCommunicatorPlugin.getMessages().get(1).text);
 
+       //HELP
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "HELP");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("HELP", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(1).text.contains("PUMP"));
+
+       //HELP PUMP
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "HELP PUMP");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("HELP PUMP", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(1).text.contains("PUMP"));
     }
 
     @Test
