@@ -185,7 +185,7 @@ public class DateUtil {
         long remainingTimeMinutes = timeInMillis / (1000 * 60);
         long remainingTimeHours = remainingTimeMinutes / 60;
         remainingTimeMinutes = remainingTimeMinutes % 60;
-        return "(" + ((remainingTimeHours > 0) ? (remainingTimeHours + "h ") : "") + remainingTimeMinutes + "')";
+        return "(" + ((remainingTimeHours > 0) ? (remainingTimeHours + MainApp.gs(R.string.shorthour) + " ") : "") + remainingTimeMinutes + "')";
     }
 
     public static String sinceString(long timestamp) {
