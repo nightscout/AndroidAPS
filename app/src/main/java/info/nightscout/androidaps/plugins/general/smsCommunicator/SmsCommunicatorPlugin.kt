@@ -46,9 +46,6 @@ import org.slf4j.LoggerFactory
 import java.text.Normalizer
 import java.util.*
 
-/**
- * Created by mike on 05.08.2016.
- */
 object SmsCommunicatorPlugin : PluginBase(PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(SmsCommunicatorFragment::class.java.name)
@@ -63,6 +60,23 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
     var messageToConfirm: AuthRequest? = null
     var lastRemoteBolusTime: Long = 0
     var messages = ArrayList<Sms>()
+
+    val commands = mapOf(
+            "BG" to "BG",
+            "LOOP" to "LOOP STOP/DISABLE/START/ENABLE/RESUME/STATUS\nLOOP SUSPEND 20",
+            "TREATMENTS" to "TREATMENTS REFRESH",
+            "NSCLIENT" to "NSCLIENT RESTART",
+            "PUMP" to "PUMP",
+            "BASAL" to "BASAL STOP/CANCEL\nBASAL 0.3\nBASAL 0.3 20\nBASAL 30%\nBASAL 30% 20\n",
+            "BOLUS" to "BOLUS 1.2\nBOLUS 1.2 MEAL",
+            "EXTENDED" to "EXTENDED STOP/CANCEL\nEXTENDED 2 120",
+            "CAL" to "CAL 5.6",
+            "PROFILE" to "PROFILE STATUS/LIST\nPROFILE 1\nPROFILE 2 30",
+            "TARGET" to "TARGET MEAL/ACTIVITY/HYPO/STOP",
+            "SMS" to "SMS DISABLE/STOP",
+            "CARBS" to "CARBS 12\nCARBS 12 23:05\nCARBS 12 11:05PM",
+            "HELP" to "HELP\nHELP command"
+    )
 
     init {
         processSettings(null)
@@ -135,10 +149,11 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
     }
 
     fun isCommand(command: String, number: String): Boolean {
-        when (command.toUpperCase(Locale.getDefault())) {
-            "BG", "LOOP", "TREATMENTS", "NSCLIENT", "PUMP", "BASAL", "BOLUS", "EXTENDED", "CAL", "PROFILE", "TARGET", "SMS", "CARBS" -> return true
+        var found = false
+        commands.forEach { (k, _) ->
+            if (k == command) found = true
         }
-        return messageToConfirm?.requester?.phoneNumber == number
+        return found || messageToConfirm?.requester?.phoneNumber == number
     }
 
     fun isAllowedNumber(number: String): Boolean {
@@ -225,6 +240,9 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                 "SMS" ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotecommandnotallowed))
                     else if (splitted.size == 2) processSMS(splitted, receivedSms)
+                    else sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
+                "HELP" ->
+                    if (splitted.size == 1 || splitted.size == 2) processHELP(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
                 else ->
                     if (messageToConfirm?.requester?.phoneNumber == receivedSms.phoneNumber) {
@@ -360,6 +378,17 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
         if (splitted[1].toUpperCase(Locale.getDefault()) == "RESTART") {
             send(EventNSClientRestart())
             sendSMS(Sms(receivedSms.phoneNumber, "NSCLIENT RESTART SENT"))
+            receivedSms.processed = true
+        } else
+            sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
+    }
+
+    private fun processHELP(splitted: Array<String>, receivedSms: Sms) {
+        if (splitted.size == 1) {
+            sendSMS(Sms(receivedSms.phoneNumber, commands.keys.toString().replace("[", "").replace("]", "")))
+            receivedSms.processed = true
+        } else if (isCommand(splitted[1].toUpperCase(Locale.getDefault()), receivedSms.phoneNumber)) {
+            sendSMS(Sms(receivedSms.phoneNumber, commands[splitted[1].toUpperCase(Locale.getDefault())]))
             receivedSms.processed = true
         } else
             sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
