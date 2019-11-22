@@ -348,6 +348,43 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("PUMP", smsCommunicatorPlugin.getMessages().get(0).text);
         Assert.assertEquals("Virtual Pump", smsCommunicatorPlugin.getMessages().get(1).text);
 
+        //SMS : wrong format
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "SMS");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertFalse(sms.ignored);
+        Assert.assertEquals("SMS", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.getMessages().get(1).text);
+
+        //SMS STOP
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "SMS DISABLE");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("SMS DISABLE", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(1).text.contains("To disable the SMS Remote Service reply with code"));
+        passCode = smsCommunicatorPlugin.getMessageToConfirm().confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.getMessages().get(2).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(3).text.contains("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone."));
+
+        //TARGET : wrong format
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "TARGET");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertFalse(sms.ignored);
+        Assert.assertEquals("TARGET", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertEquals("Wrong format", smsCommunicatorPlugin.getMessages().get(1).text);
+
+        //TARGET MEAL
+        smsCommunicatorPlugin.setMessages(new ArrayList<>());
+        sms = new Sms("1234", "TARGET MEAL");
+        smsCommunicatorPlugin.processSms(sms);
+        Assert.assertEquals("TARGET MEAL", smsCommunicatorPlugin.getMessages().get(0).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(1).text.contains("To set the Temp Target MEAL reply with code"));
+        passCode = smsCommunicatorPlugin.getMessageToConfirm().confirmCode;
+        smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.getMessages().get(2).text);
+        Assert.assertTrue(smsCommunicatorPlugin.getMessages().get(3).text.contains("Target MEAL for 45 minutes set successfully"));
     }
 
     @Test
