@@ -66,6 +66,8 @@ public class OmnipodManager {
                     BasalScheduleMapper.mapProfileToBasalSchedule(profile)));
 
             executeDelayed(() -> {
+                // TODO improve: repeat get status when it fails and handle unexpected statuses
+                // TODO give user feedback when priming finished (or somehow failed)
                 StatusResponse delayedStatusResponse = communicationService.executeAction(new GetStatusAction(podState));
                 InsertCannulaAction.updateCannulaInsertionStatus(podState, delayedStatusResponse);
             }, OmnipodConst.POD_CANNULA_INSERTION_DURATION);
@@ -87,6 +89,8 @@ public class OmnipodManager {
                 communicationService.executeAction(new PrimeAction(new PrimeService(), podState));
 
                 executeDelayed(() -> {
+                    // TODO improve: repeat get status when it fails and handle unexpected statuses
+                    // TODO give user feedback when priming finished (or somehow failed)
                     StatusResponse delayedStatusResponse = communicationService.executeAction(new GetStatusAction(podState));
                     PrimeAction.updatePrimingStatus(podState, delayedStatusResponse);
                 }, OmnipodConst.POD_PRIME_DURATION);
@@ -193,6 +197,7 @@ public class OmnipodManager {
             return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
+        // TODO calculate bolus duration
         return new PumpEnactResult().success(true).enacted(true);
     }
 
