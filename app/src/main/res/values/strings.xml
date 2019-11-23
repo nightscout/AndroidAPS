@@ -778,6 +778,7 @@
     <string name="shortgramm">g</string>
     <string name="shortminute">m</string>
     <string name="shorthour">h</string>
+    <string name="shortday">d</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
