@@ -10,9 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.events.EventExtendedBolusChange
-import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
@@ -23,15 +20,15 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState
-import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.SetWarnColor
@@ -208,8 +205,8 @@ class OmnipodFragment : Fragment() {
             omnipod_pod_address.text = pumpStatus.podSessionState.address.toString()
             omnipod_pod_expiry.text = pumpStatus.podSessionState.expiryDateAsString
 
-            pumpStatus.podDeviceState = checkStatusSet(pumpStatus.podDeviceState,
-                    OmnipodUtil.getPodDeviceState()) as PodDeviceState?
+            //pumpStatus.podSessionState = checkStatusSet(pumpStatus.podSessionState,
+            //        OmnipodUtil.getPodSessionState()) as PodSessionState?
 
             var podDeviceState = pumpStatus.podDeviceState
 

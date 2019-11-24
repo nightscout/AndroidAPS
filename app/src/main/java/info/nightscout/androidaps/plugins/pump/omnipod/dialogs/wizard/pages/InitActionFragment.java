@@ -25,24 +25,29 @@ import java.util.List;
 import java.util.Map;
 
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 
 /**
  * Created by TechFreak on 04/09/2014.
  */
-public class InitActionFragment extends Fragment {
+public class InitActionFragment extends Fragment implements PodInitReceiver {
     private static final String ARG_KEY = "key";
 
     private PageFragmentCallbacks mCallbacks;
     private String mKey;
     private InitActionPage mPage;
 
-    ProgressBar progressBar;
-    TextView errorView;
+    private ProgressBar progressBar;
+    private TextView errorView;
 
-    PodInitActionType podInitActionType;
-    List<PodInitActionType> children;
-    Map<PodInitActionType, CheckBox> mapCheckBoxes;
+    private PodInitActionType podInitActionType;
+    //private List<PodInitActionType> children;
+    private Map<PodInitActionType, CheckBox> mapCheckBoxes;
+    private InitActionFragment instance;
 
     public static InitActionFragment create(String key, PodInitActionType podInitActionType) {
         Bundle args = new Bundle();
@@ -55,7 +60,7 @@ public class InitActionFragment extends Fragment {
     }
 
     public InitActionFragment() {
-
+        this.instance = this;
     }
 
     @Override
@@ -80,7 +85,7 @@ public class InitActionFragment extends Fragment {
 
         LinearLayout linearLayout = rootView.findViewById(R.id.initAction_ItemsHolder);
 
-        children = podInitActionType.getChildren();
+        List<PodInitActionType> children = podInitActionType.getChildren();
         mapCheckBoxes = new HashMap<>();
 
         for (PodInitActionType child : children) {
@@ -118,20 +123,20 @@ public class InitActionFragment extends Fragment {
         mCallbacks = null;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+//    @Override
+//    public void onViewCreated(View view, Bundle savedInstanceState) {
+//        super.onViewCreated(view, savedInstanceState);
+//
+//    }
 
-    }
-
-    @Override
-    public void setMenuVisibility(boolean menuVisible) {
-        super.setMenuVisibility(menuVisible);
-
-        // In a future update to the support library, this should override setUserVisibleHint
-        // instead of setMenuVisibility.
-
-    }
+//    @Override
+//    public void setMenuVisibility(boolean menuVisible) {
+//        super.setMenuVisibility(menuVisible);
+//
+//        // In a future update to the support library, this should override setUserVisibleHint
+//        // instead of setMenuVisibility.
+//
+//    }
 
     public PodInitActionType getPodInitActionType() {
         return podInitActionType;
@@ -152,22 +157,31 @@ public class InitActionFragment extends Fragment {
 
             new AsyncTask<Void, Void, String>() {
 
-                protected void onPreExecute() {
-                    //progressBar.setVisibility(View.VISIBLE);
-                }
+                PumpEnactResult callResult;
 
-                ;
+                protected void onPreExecute() {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
 
                 @Override
                 protected String doInBackground(Void... params) {
-                    System.out.println("ACTION: doInBackground Started: ");
-                    SystemClock.sleep(5000);
-                    mPage.setActionCompleted(true);
+                    if (podInitActionType == PodInitActionType.PairAndPrimeWizardStep) {
+                        this.callResult = AapsOmnipodManager.getInstance().initPod(
+                                podInitActionType,
+                                instance,
+                                null
+                        );
+                    } else if (podInitActionType == PodInitActionType.FillCannulaSetBasalProfileWizardStep) {
+                        this.callResult = AapsOmnipodManager.getInstance().initPod(
+                                podInitActionType,
+                                instance,
+                                ProfileFunctions.getInstance().getProfile()
+                        );
+                    } else if (podInitActionType == PodInitActionType.DeactivatePodWizardStep) {
+                        this.callResult = AapsOmnipodManager.getInstance().deactivatePod(instance);
+                    }
 
-                    System.out.println("ACTION: doInBackground Finished: ");
-
-
-                    return "Test";
+                    return "OK";
                 }
 
                 @Override
@@ -176,19 +190,16 @@ public class InitActionFragment extends Fragment {
 
                     System.out.println("ACTION: onPostExecute: " + result);
 
-                    boolean isOk = false;
-
-                    for (PodInitActionType actionType : mapCheckBoxes.keySet()) {
-                        mapCheckBoxes.get(actionType).setChecked(true);
-                        mapCheckBoxes.get(actionType).setTextColor(isOk ? Color.rgb(34, 135, 91) : Color.rgb(168, 36, 15));
-                    }
+                    boolean isOk = callResult.success;
 
                     progressBar.setVisibility(View.GONE);
 
                     if (!isOk) {
                         errorView.setVisibility(View.VISIBLE);
-                        errorView.setText("Error containg pod.");
+                        errorView.setText(callResult.comment);
                     }
+
+                    mPage.setActionCompleted(isOk);
 
                     mPage.getData().putString(Page.SIMPLE_DATA_KEY, "ddd");
                     mPage.notifyDataChanged();
@@ -199,4 +210,28 @@ public class InitActionFragment extends Fragment {
             System.out.println("ACTION: Not visible");
         }
     }
+
+    @Override
+    public void returnInitTaskStatus(PodInitActionType podInitActionType, boolean isSuccess, String errorMessage) {
+        if (podInitActionType.isParent()) {
+            for (PodInitActionType actionType : mapCheckBoxes.keySet()) {
+                setCheckBox(actionType, isSuccess);
+            }
+        } else {
+            setCheckBox(podInitActionType, isSuccess);
+        }
+    }
+
+
+    public void setCheckBox(PodInitActionType podInitActionType, boolean isSuccess) {
+        getActivity().runOnUiThread(() -> {
+            mapCheckBoxes.get(podInitActionType).setChecked(true);
+            mapCheckBoxes.get(podInitActionType).setTextColor(isSuccess ? Color.rgb(34, 135, 91) :
+                    Color.rgb(168, 36, 15));
+        });
+    }
+
+
+
+
 }

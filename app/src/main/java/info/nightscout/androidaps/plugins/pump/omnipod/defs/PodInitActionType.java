@@ -12,20 +12,21 @@ public enum PodInitActionType {
     PairPod(R.string.omnipod_init_pod_pair_pod, PairAndPrimeWizardStep), //
     PrimePod(R.string.omnipod_init_pod_prime_pod, PairAndPrimeWizardStep), //
 
-    FillCannulaSetBasalProfileWizardStep(),
-    FillCannula(R.string.omnipod_init_pod_fill_cannula, FillCannulaSetBasalProfileWizardStep),
-    SetBasalProfile(R.string.omnipod_init_pod_set_basal_profile, FillCannulaSetBasalProfileWizardStep);
+    FillCannulaSetBasalProfileWizardStep(), //
+    FillCannula(R.string.omnipod_init_pod_fill_cannula, FillCannulaSetBasalProfileWizardStep), //
+    SetBasalProfile(R.string.omnipod_init_pod_set_basal_profile, FillCannulaSetBasalProfileWizardStep), //
+
+    DeactivatePodWizardStep(), //
+    CancelDelivery(R.string.omnipod_deactivate_pod_cancel_delivery, DeactivatePodWizardStep), //
+    DeactivatePod(R.string.omnipod_deactivate_pod_deactivate_pod, DeactivatePodWizardStep) //
+    ;
+
+
 
     private int resourceId;
     private PodInitActionType parent;
 
     private static Map<PodInitActionType, List<PodInitActionType>> stepsForWizardStep;
-
-
-    static {
-        // TODO
-
-    }
 
 
     PodInitActionType(int resourceId, PodInitActionType parent) {
@@ -35,6 +36,11 @@ public enum PodInitActionType {
 
 
     PodInitActionType() {
+    }
+
+
+    public boolean isParent() {
+        return this.parent == null;
     }
 
 

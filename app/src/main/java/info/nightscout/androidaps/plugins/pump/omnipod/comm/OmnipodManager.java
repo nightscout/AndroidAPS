@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.comm;
 
+import android.os.SystemClock;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
@@ -37,12 +39,15 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalScheduleMapper;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodDbEntry;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodDbEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.SP;
 
 public class OmnipodManager {
-    private final OmnipodCommunicationService communicationService;
-    private PodSessionState podState;
+    protected final OmnipodCommunicationService communicationService;
+    protected PodSessionState podState;
 
     public OmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState) {
         if (communicationService == null) {
@@ -180,6 +185,10 @@ public class OmnipodManager {
     public PumpEnactResult resetPodState() {
         podState = null;
         SP.remove(OmnipodConst.Prefs.PodState);
+
+        addToHistory(System.currentTimeMillis(), PodDbEntryType.ResetPodState, null, null, null, null);
+
+        OmnipodUtil.setPodSessionState(null);
 
         return new PumpEnactResult().success(true).enacted(true);
     }
@@ -352,8 +361,27 @@ public class OmnipodManager {
         return new PumpEnactResult().success(false).enacted(false).comment("Pod should be initialized first");
     }
 
-    private void addToHistory(long requestTime, OmnipodAction omnipodAction, long responseTime) {
+    private void addToHistory(long requestTime, PodDbEntryType entryType, String shortDescription, OmnipodAction omnipodAction, Long responseTime, Object response) {
         // TODO andy
+
+        PodDbEntry entry = new PodDbEntry(requestTime, entryType);
+
+        if (shortDescription!=null) {
+            entry.setShortDescription(shortDescription);
+        }
+
+        if (omnipodAction!=null) {
+
+        }
+
+        if (responseTime!=null) {
+
+        }
+
+        if (response!=null) {
+
+        }
+
     }
 
 }

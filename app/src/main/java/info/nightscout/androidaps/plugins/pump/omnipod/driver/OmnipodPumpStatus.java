@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.service;
+package info.nightscout.androidaps.plugins.pump.omnipod.driver;
 
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.LocalDateTime;

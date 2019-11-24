@@ -10,21 +10,22 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.OmnipodManagerAAPS;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
-    private final OmnipodManager delegate;
+    private final OmnipodManagerAAPS delegate;
 
     private static AapsOmnipodManager instance;
     private OmnipodPumpStatus pumpStatus;
 
-    // FIXME this is dirty
     public static AapsOmnipodManager getInstance() {
         return instance;
     }
 
     public AapsOmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState) {
-        delegate = new OmnipodManager(communicationService, podState);
+        delegate = new OmnipodManagerAAPS(communicationService, podState);
         instance = this;
     }
 
@@ -39,6 +40,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             // FIXME we need a basal profile here
             PumpEnactResult result = delegate.insertCannula(profile);
             podInitReceiver.returnInitTaskStatus(podInitActionType, result.success, (result.success ? null : result.comment));
+            OmnipodUtil.setPodSessionState(delegate.podState);
             return result;
         }
         return new PumpEnactResult().success(false).enacted(false).comment("Illegal PodInitActionType: " + podInitActionType.name());
@@ -50,8 +52,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     @Override
-    public PumpEnactResult deactivatePod() {
-        return delegate.deactivatePod();
+    public PumpEnactResult deactivatePod(PodInitReceiver podInitReceiver) {
+        return delegate.deactivatePod(podInitReceiver);
     }
 
     @Override
@@ -61,7 +63,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     @Override
     public PumpEnactResult resetPodStatus() {
-        pumpStatus.podDeviceState = null;
         return delegate.resetPodState();
     }
 
@@ -100,12 +101,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return delegate.getPodInfo(podInfoType);
     }
 
-    // TODO should we add this to the OmnipodCommunicationManager interface?
     public PumpEnactResult suspendDelivery() {
         return delegate.suspendDelivery();
     }
 
-    // TODO should we add this to the OmnipodCommunicationManager interface?
     public PumpEnactResult resumeDelivery() {
         return delegate.resumeDelivery();
     }

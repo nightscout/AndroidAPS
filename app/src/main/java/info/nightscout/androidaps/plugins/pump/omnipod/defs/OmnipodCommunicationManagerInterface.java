@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.defs;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 
 public interface OmnipodCommunicationManagerInterface {
 
@@ -23,7 +23,7 @@ public interface OmnipodCommunicationManagerInterface {
     /**
      * Deactivate Pod
      */
-    PumpEnactResult deactivatePod();
+    PumpEnactResult deactivatePod(PodInitReceiver podInitReceiver);
 
     /**
      * Set Basal Profile

@@ -15,7 +15,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunication
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.SP;
 
@@ -73,7 +73,7 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
     }
 
 
-    public PumpEnactResult deactivatePod() {
+    public PumpEnactResult deactivatePod(PodInitReceiver podInitReceiver) {
         return null;
     }
 

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
-import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 
 /**
  * Created by andy on 4.8.2019

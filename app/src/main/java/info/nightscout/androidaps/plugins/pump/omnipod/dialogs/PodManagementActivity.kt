@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dialogs
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
 import com.atech.android.library.wizardpager.WizardPagerActivity
 import com.atech.android.library.wizardpager.WizardPagerContext
 import com.atech.android.library.wizardpager.data.WizardPagerSettings
@@ -9,8 +10,14 @@ import com.atech.android.library.wizardpager.defs.WizardStepsWayType
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashActivity
+import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodCancelAction
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodWizardModel
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.OmnipodManagerAAPS
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState
 import info.nightscout.androidaps.utils.OKDialog
 import kotlinx.android.synthetic.main.omnipod_pod_mgmt.*
 
@@ -77,8 +84,9 @@ class PodManagementActivity : NoSplashActivity() {
 
     fun resetPodAction() {
         OKDialog.showConfirmation(this,
-                MainApp.gs(R.string.omnipod_cmd_reset_pod_na), null)
-
+                MainApp.gs(R.string.omnipod_cmd_reset_pod_desc), Thread {
+            AapsOmnipodManager.getInstance().resetPodStatus()
+        })
     }
 
     fun showPodHistory() {

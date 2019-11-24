@@ -31,7 +31,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInt
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
-import info.nightscout.androidaps.plugins.pump.omnipod.service.OmnipodPumpStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.utils.OKDialog;
 
@@ -48,8 +48,8 @@ public class OmnipodUtil extends RileyLinkUtil {
     private static OmnipodPumpStatus omnipodPumpStatus;
     private static OmnipodCommandType currentCommand;
     private static Gson gsonInstance = createGson();
-    private static PodSessionState podSessionState;
-    private static PodDeviceState podDeviceState;
+    //private static PodSessionState podSessionState;
+    //private static PodDeviceState podDeviceState;
     private static OmnipodPumpPluginInterface omnipodPumpPlugin;
     private static OmnipodPodType omnipodPodType;
 
@@ -170,14 +170,9 @@ public class OmnipodUtil extends RileyLinkUtil {
         RxBus.INSTANCE.send(new EventOmnipodDeviceStatusChange(podSessionState));
     }
 
-    @Nullable
-    public static PodDeviceState getPodDeviceState() {
-        return null;
-    }
 
-
-    public static void setPodDeviceState(PodDeviceState podDeviceState) {
-        OmnipodUtil.podDeviceState = podDeviceState;
+    public static void setPodDeviceState(PodDeviceState podSessionState) {
+        omnipodPumpStatus.podDeviceState = podSessionState;
     }
 
 
@@ -199,5 +194,14 @@ public class OmnipodUtil extends RileyLinkUtil {
 
     public static OmnipodPodType getOmnipodPodType() {
         return omnipodPodType;
+    }
+
+    public static PodDeviceState getPodDeviceState() {
+        return omnipodPumpStatus.podDeviceState;
+    }
+
+
+    public static PodSessionState getPodSessionState() {
+        return omnipodPumpStatus.podSessionState;
     }
 }

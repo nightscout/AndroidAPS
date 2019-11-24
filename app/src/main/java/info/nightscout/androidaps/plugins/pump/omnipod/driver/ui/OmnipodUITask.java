@@ -66,7 +66,7 @@ public class OmnipodUITask {
                 break;
 
             case DeactivatePod:
-                returnData = communicationManager.deactivatePod();
+                returnData = communicationManager.deactivatePod((PodInitReceiver) parameters[0]);
                 break;
 
             case ResetPodStatus:

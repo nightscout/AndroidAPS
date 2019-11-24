@@ -1654,6 +1654,7 @@
     <string name="omnipod_cmd_init_pod_na">Init Pod not available at the moment.</string>
     <string name="omnipod_cmd_deactivate_pod_na">Deactivate Pod not available at the moment.</string>
     <string name="omnipod_cmd_reset_pod_na">Reset Pod not available at the moment.</string>
+    <string name="omnipod_cmd_reset_pod_desc">If you press "OK" Pod will be forcefully removed. Do this only if Deactivate Pod fails.</string>
     <string name="omnipod_cmd_pod_history_na">Pod History not available at the moment.</string>
 
     <string name="omnipod_namex" translatable="false">Omnipod</string>
@@ -1676,6 +1677,8 @@
     <string name="omnipod_init_pod_prime_pod">Prime Pod</string>
     <string name="omnipod_init_pod_fill_cannula">Fill Cannula</string>
     <string name="omnipod_init_pod_set_basal_profile">Set Basal Profile</string>
+    <string name="omnipod_deactivate_pod_cancel_delivery">Cancel Delivery</string>
+    <string name="omnipod_deactivate_pod_deactivate_pod">Deactivate Pod</string>
 
 
     <!-- Omnipod Dash -->

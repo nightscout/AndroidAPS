@@ -32,6 +32,7 @@ import java.util.List;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 
 public class PodInfoFragment extends Fragment {
@@ -77,31 +78,35 @@ public class PodInfoFragment extends Fragment {
 
 
         if (isInitPod) {
-            createDataOfPod();
+            if (createDataOfPod()) {
 
-            ListView listView = (ListView) rootView.findViewById(R.id.podInfoList);
-            listView.setAdapter(new PodInfoAdapter(mCurrentReviewItems, getContext()));
-            listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
+                ListView listView = (ListView) rootView.findViewById(R.id.podInfoList);
+                listView.setAdapter(new PodInfoAdapter(mCurrentReviewItems, getContext()));
+                listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
+            }
         }
 
 
         return rootView;
     }
 
-    private void createDataOfPod() {
+    private boolean createDataOfPod() {
 
-        // TODO
+        PodSessionState podSessionState = OmnipodUtil.getPodSessionState();
 
-        PodSessionState podSessionState = new PodSessionState(DateTimeZone.UTC,
-                483748738,
-                new DateTime(),
-                new FirmwareVersion(1,0,0),
-                new FirmwareVersion(1,0,0),
-                574875,
-                5487584,
-                1,
-                1
-        );
+//        PodSessionState podSessionState = new PodSessionState(DateTimeZone.UTC,
+//                483748738,
+//                new DateTime(),
+//                new FirmwareVersion(1,0,0),
+//                new FirmwareVersion(1,0,0),
+//                574875,
+//                5487584,
+//                1,
+//                1
+//        );
+
+        if (podSessionState==null)
+            return false;
 
         mCurrentReviewItems = new ArrayList<>();
         mCurrentReviewItems.add(new ReviewItem("Pod Address", "" + podSessionState.getAddress(), "33"));
@@ -109,6 +114,7 @@ public class PodInfoFragment extends Fragment {
         mCurrentReviewItems.add(new ReviewItem("Firmware Version", podSessionState.getPiVersion().toString(), "35"));
         mCurrentReviewItems.add(new ReviewItem("LOT", "" + podSessionState.getLot(), "36"));
 
+        return true;
     }
 
     @Override
