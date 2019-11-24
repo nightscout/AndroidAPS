@@ -55,6 +55,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             LOG.debug("RileyLinkOmnipodService newly constructed");
         OmnipodUtil.setOmnipodService(this);
         pumpStatus = (OmnipodPumpStatus) OmnipodPumpPlugin.getPlugin().getPumpStatusData();
+        //LOG.debug("RRRRRRRRRR: " + pumpStatus);
     }
 
 
@@ -124,7 +125,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
                     LOG.error("Could not deserialize Pod state: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
                 }
             }
-            omnipodCommunicationManager = new AapsOmnipodManager(new OmnipodCommunicationService(rfspy), podState);
+            omnipodCommunicationManager = new AapsOmnipodManager(new OmnipodCommunicationService(rfspy), podState, pumpStatus);
         } else {
             omnipodCommunicationManager = AapsOmnipodManager.getInstance();
         }

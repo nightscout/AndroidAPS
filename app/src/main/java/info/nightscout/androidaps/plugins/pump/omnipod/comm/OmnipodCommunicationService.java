@@ -59,6 +59,11 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
     }
 
     @Override
+    public boolean hasTunning() {
+        return false;
+    }
+
+    @Override
     public <E extends RLMessage> E createResponseMessage(byte[] payload, Class<E> clazz) {
         return (E) new OmnipodPacket(payload);
     }

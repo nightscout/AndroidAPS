@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -99,14 +100,16 @@ public abstract class RileyLinkCommunicationManager {
                     rfSpyResponse.wasTimeout(), rfSpyResponse.isUnknownCommand(), rfSpyResponse.isInvalidParam());
 
             if (rfSpyResponse.wasTimeout()) {
-                timeoutCount++;
+                if (hasTunning()) {
+                    timeoutCount++;
 
-                long diff = System.currentTimeMillis() - pumpStatus.lastConnection;
+                    long diff = System.currentTimeMillis() - pumpStatus.lastConnection;
 
-                if (diff > ALLOWED_PUMP_UNREACHABLE) {
-                    LOG.warn("We reached max time that Pump can be unreachable. Starting Tuning.");
-                    ServiceTaskExecutor.startTask(new WakeAndTuneTask());
-                    timeoutCount = 0;
+                    if (diff > ALLOWED_PUMP_UNREACHABLE) {
+                        LOG.warn("We reached max time that Pump can be unreachable. Starting Tuning.");
+                        ServiceTaskExecutor.startTask(new WakeAndTuneTask());
+                        timeoutCount = 0;
+                    }
                 }
 
                 throw new RileyLinkCommunicationException(RileyLinkBLEError.Timeout);
@@ -134,6 +137,10 @@ public abstract class RileyLinkCommunicationManager {
 
     public int getNotConnectedCount() {
         return rfspy != null ? rfspy.notConnectedCount : 0;
+    }
+
+    public boolean hasTunning() {
+        return true;
     }
 
 
@@ -449,4 +456,7 @@ public abstract class RileyLinkCommunicationManager {
         return L.isEnabled(L.PUMPCOMM);
     }
 
+    public void setPumpStatus(PumpStatus pumpStatus) {
+        this.pumpStatus = pumpStatus;
+    }
 }
