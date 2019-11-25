@@ -43,14 +43,14 @@ public class AuthRequestTest {
         // Check if SMS requesting code is sent
         AuthRequest authRequest = new AuthRequest(smsCommunicatorPlugin, requester, "Request text", "ABC", action);
 
-        Assert.assertEquals(sentSms.phoneNumber, "aNumber");
-        Assert.assertEquals(sentSms.text, "Request text");
+        Assert.assertEquals(sentSms.getPhoneNumber(), "aNumber");
+        Assert.assertEquals(sentSms.getText(), "Request text");
 
         // wrong reply
         actionCalled = false;
         authRequest.action("EFG");
-        Assert.assertEquals(sentSms.phoneNumber, "aNumber");
-        Assert.assertEquals(sentSms.text, "Wrong code. Command cancelled.");
+        Assert.assertEquals(sentSms.getPhoneNumber(), "aNumber");
+        Assert.assertEquals(sentSms.getText(), "Wrong code. Command cancelled.");
         Assert.assertFalse(actionCalled);
 
         // correct reply

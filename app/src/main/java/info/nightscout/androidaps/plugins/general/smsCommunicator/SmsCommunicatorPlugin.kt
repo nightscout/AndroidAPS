@@ -110,7 +110,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             distance.title = MainApp.gs(R.string.smscommunicator_remotebolusmindistance)
             distance.isEnabled = true
         }
-        allowedNumbers.onPreferenceChangeListener = OnPreferenceChangeListener { preference: Preference?, newValue: Any ->
+        allowedNumbers.onPreferenceChangeListener = OnPreferenceChangeListener { _: Preference?, newValue: Any ->
             if (!areMoreNumbers(newValue as String)) {
                 distance.text = (Constants.remoteBolusMinDistance / (60 * 1000L)).toString()
                 distance.title = (MainApp.gs(R.string.smscommunicator_remotebolusmindistance)
@@ -344,8 +344,8 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                             ConfigBuilderPlugin.getPlugin().commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
                                     if (result.success) {
-                                        LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + anInteger * 60L * 1000)
-                                        NSUpload.uploadOpenAPSOffline(anInteger * 60.toDouble())
+                                        LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + anInteger() * 60L * 1000)
+                                        NSUpload.uploadOpenAPSOffline(anInteger() * 60.toDouble())
                                         send(EventRefreshOverview("SMS_LOOP_SUSPENDED"))
                                         val replyText = MainApp.gs(R.string.smscommunicator_loopsuspended) + " " +
                                                 MainApp.gs(if (result.success) R.string.smscommunicator_tempbasalcanceled else R.string.smscommunicator_tempbasalcancelfailed)
@@ -389,8 +389,10 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             sendSMS(Sms(receivedSms.phoneNumber, commands.keys.toString().replace("[", "").replace("]", "")))
             receivedSms.processed = true
         } else if (isCommand(splitted[1].toUpperCase(Locale.getDefault()), receivedSms.phoneNumber)) {
-            sendSMS(Sms(receivedSms.phoneNumber, commands[splitted[1].toUpperCase(Locale.getDefault())]))
-            receivedSms.processed = true
+            commands[splitted[1].toUpperCase(Locale.getDefault())]?.let {
+                sendSMS(Sms(receivedSms.phoneNumber, it))
+                receivedSms.processed = true
+            }
         } else
             sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
     }
@@ -504,7 +506,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction(tempBasalPct, duration) {
                     override fun run() {
-                        ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalPercent(anInteger, secondInteger, true, profile, object : Callback() {
+                        ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalPercent(anInteger(), secondInteger(), true, profile, object : Callback() {
                             override fun run() {
                                 if (result.success) {
                                     var replyText: String
@@ -536,7 +538,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction(tempBasal, duration) {
                     override fun run() {
-                        ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalAbsolute(aDouble, secondInteger, true, profile, object : Callback() {
+                        ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalAbsolute(aDouble(), secondInteger(), true, profile, object : Callback() {
                             override fun run() {
                                 if (result.success) {
                                     var replyText = if (result.isPercent) String.format(MainApp.gs(R.string.smscommunicator_tempbasalset_percent), result.percent, result.duration)
@@ -591,7 +593,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction(extended, duration) {
                     override fun run() {
-                        ConfigBuilderPlugin.getPlugin().commandQueue.extendedBolus(aDouble, secondInteger, object : Callback() {
+                        ConfigBuilderPlugin.getPlugin().commandQueue.extendedBolus(aDouble(), secondInteger(), object : Callback() {
                             override fun run() {
                                 if (result.success) {
                                     var replyText = String.format(MainApp.gs(R.string.smscommunicator_extendedset), aDouble, duration)
@@ -626,7 +628,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction(bolus) {
                 override fun run() {
                     val detailedBolusInfo = DetailedBolusInfo()
-                    detailedBolusInfo.insulin = aDouble
+                    detailedBolusInfo.insulin = aDouble()
                     detailedBolusInfo.source = Source.USER
                     ConfigBuilderPlugin.getPlugin().commandQueue.bolus(detailedBolusInfo, object : Callback() {
                         override fun run() {
@@ -702,8 +704,8 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction(grams, time) {
                 override fun run() {
                     val detailedBolusInfo = DetailedBolusInfo()
-                    detailedBolusInfo.carbs = anInteger.toDouble()
-                    detailedBolusInfo.date = secondLong
+                    detailedBolusInfo.carbs = anInteger().toDouble()
+                    detailedBolusInfo.date = secondLong()
                     ConfigBuilderPlugin.getPlugin().commandQueue.bolus(detailedBolusInfo, object : Callback() {
                         override fun run() {
                             if (result.success) {
@@ -837,7 +839,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
         } else sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
     }
 
-    fun sendNotificationToAllNumbers(text: String?): Boolean {
+    fun sendNotificationToAllNumbers(text: String): Boolean {
         var result = true
         for (i in allowedNumbers.indices) {
             val sms = Sms(allowedNumbers[i], text)
@@ -902,16 +904,19 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
         return s
     }
 
-    fun areMoreNumbers(allowednumbers: String): Boolean {
-        var countNumbers = 0
-        val substrings = allowednumbers.split(";").toTypedArray()
-        for (number in substrings) {
-            var cleaned = number.replace(Regex("\\s+"), "")
-            if (cleaned.length < 4) continue
-            cleaned = cleaned.replace("+", "")
-            if (!cleaned.matches(Regex("[0-9]+"))) continue
-            countNumbers++
-        }
-        return countNumbers > 1
+    fun areMoreNumbers(allowednumbers: String?): Boolean {
+        return allowednumbers?.let {
+            var countNumbers = 0
+            val substrings = it.split(";").toTypedArray()
+            for (number in substrings) {
+                var cleaned = number.replace(Regex("\\s+"), "")
+                if (cleaned.length < 4) continue
+                cleaned = cleaned.replace("+", "")
+                cleaned = cleaned.replace("-", "")
+                if (!cleaned.matches(Regex("[0-9]+"))) continue
+                countNumbers++
+            }
+            countNumbers > 1
+        } ?: false
     }
 }
