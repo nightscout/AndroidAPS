@@ -32,43 +32,33 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.Init
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.PodInfoFragment;
 
 public class RemovePodWizardModel extends AbstractWizardModel {
+
     public RemovePodWizardModel(Context context) {
         super(context);
     }
 
     @Override
     protected PageList onNewRootPageList() {
-        // TODO
+
         return new PageList(
 
                 new DisplayTextPage(this,
-                        R.string.omnipod_init_pod_wizard_step1_title,
-                        R.string.omnipod_init_pod_wizard_step1_desc,
+                        R.string.omnipod_remove_pod_wizard_step1_title,
+                        R.string.omnipod_remove_pod_wizard_step1_desc,
                         R.style.WizardPagePodContent).setRequired(true).setCancelReason("None"),
 
                 new InitActionPage(this,
-                        R.string.omnipod_init_pod_wizard_step2_title,
-                        PodInitActionType.PairAndPrimeWizardStep
-                ).setRequired(true).setCancelReason("Cancel"),
+                        R.string.omnipod_remove_pod_wizard_step2_title,
+                        PodInitActionType.DeactivatePodWizardStep
+                ).setRequired(true).setCancelReason("Cancel")
 
-                new DisplayTextPage(this,
-                        R.string.omnipod_init_pod_wizard_step3_title,
-                        R.string.omnipod_init_pod_wizard_step3_desc,
-                        R.style.WizardPagePodContent).setRequired(true).setCancelReason("Cancel"),
-
-                new InitActionPage(this,
-                        R.string.omnipod_init_pod_wizard_step4_title,
-                        PodInitActionType.FillCannulaSetBasalProfileWizardStep).setRequired(true).setCancelReason("Cancel")
-
-                //new PodInfoPage(this, "Pod Info").setRequired(true)
         );
     }
 
 
     public Fragment getReviewFragment() {
-        // TODO
         PodInfoFragment.isInitPod = false;
-        return DisplayTextFragment.create(null, 0, 0);
+        return new PodInfoFragment();
     }
 
 

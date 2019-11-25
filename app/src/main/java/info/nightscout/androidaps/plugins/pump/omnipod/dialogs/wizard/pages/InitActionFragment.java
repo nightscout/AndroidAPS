@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +26,7 @@ import java.util.Map;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.AapsOmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 
@@ -101,6 +100,10 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
             linearLayout.addView(checkBox1);
 
             mapCheckBoxes.put(child, checkBox1);
+        }
+
+        if (podInitActionType==PodInitActionType.DeactivatePodWizardStep) {
+            headerView.setText(R.string.omnipod_remove_pod_wizard_step2_action_header);
         }
 
         return rootView;

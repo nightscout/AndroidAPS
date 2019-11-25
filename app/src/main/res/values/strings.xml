@@ -1651,10 +1651,7 @@
     <string name="omnipod_cmd_reset_pod">Reset Pod</string>
     <string name="omnipod_cmd_pod_history">Pod History</string>
 
-    <string name="omnipod_cmd_init_pod_na">Init Pod not available at the moment.</string>
-    <string name="omnipod_cmd_deactivate_pod_na">Deactivate Pod not available at the moment.</string>
-    <string name="omnipod_cmd_reset_pod_na">Reset Pod not available at the moment.</string>
-    <string name="omnipod_cmd_reset_pod_desc">If you press "OK" Pod will be forcefully removed. Do this only if Deactivate Pod fails.</string>
+    <string name="omnipod_cmd_reset_pod_desc">If you press "OK" Pod will be forcefully removed. Do this only if you can not communicate with Pod anymore.</string>
     <string name="omnipod_cmd_pod_history_na">Pod History not available at the moment.</string>
 
     <string name="omnipod_namex" translatable="false">Omnipod</string>
@@ -1671,7 +1668,13 @@
     <string name="omnipod_init_pod_wizard_step4_title">Fill Cannula and Start Basal delivery</string>
     <string name="omnipod_init_pod_wizard_pod_info_title">Pod Info</string>
     <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">Pod is now active.\n\nBasal has been programmed.\n\nCheck infusion site and cannula. If cannula seems incorrectly inserted, please replace the Pod.</string>
-    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod Info</string>
+
+    <string name="omnipod_remove_pod_wizard_step1_title">Prepare for Pod Removal</string>
+    <string name="omnipod_remove_pod_wizard_step1_desc">\nPress <b>Next</b> to begin Pod removal process.\n\n\nThis will stop delivery of insulin and deactivate Pod.</string>
+    <string name="omnipod_remove_pod_wizard_step2_title">Remove the Pod</string>
+    <string name="omnipod_remove_pod_wizard_step2_action_header">We are trying to communicate with Pod.\n\nWhen all items are checked, you can press Next. If Pod removal fails and you click on Cancel, Pod will be forcefully removed from AAPS.</string>
+
+    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod deactivated.\n\nRemove and discard the Pod.\n\nWhen you are ready, prepare the next Pod and start <b>Init Pod</b> action.</string>
 
     <string name="omnipod_init_pod_pair_pod">Pair Pod</string>
     <string name="omnipod_init_pod_prime_pod">Prime Pod</string>

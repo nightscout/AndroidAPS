@@ -23,7 +23,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.AapsOmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
@@ -121,11 +121,15 @@ public class RileyLinkOmnipodService extends RileyLinkService {
                     Gson gson = OmnipodUtil.getGsonInstance();
                     String storedPodState = SP.getString(OmnipodConst.Prefs.PodState, null);
                     podState = gson.fromJson(storedPodState, PodSessionState.class);
+                    OmnipodUtil.setPodSessionState(podState);
                 } catch (Exception ex) {
                     LOG.error("Could not deserialize Pod state: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
                 }
             }
-            omnipodCommunicationManager = new AapsOmnipodManager(new OmnipodCommunicationService(rfspy), podState, pumpStatus);
+            OmnipodCommunicationService omnipodCommunicationService = new OmnipodCommunicationService(rfspy);
+            omnipodCommunicationService.setPumpStatus(pumpStatus);
+
+            omnipodCommunicationManager = new AapsOmnipodManager(omnipodCommunicationService, podState, pumpStatus);
         } else {
             omnipodCommunicationManager = AapsOmnipodManager.getInstance();
         }

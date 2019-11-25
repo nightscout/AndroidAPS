@@ -39,10 +39,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalScheduleMapper;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodDbEntry;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodDbEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.SP;
 
 public class OmnipodManager {
@@ -185,10 +182,6 @@ public class OmnipodManager {
     public PumpEnactResult resetPodState() {
         podState = null;
         SP.remove(OmnipodConst.Prefs.PodState);
-
-        addToHistory(System.currentTimeMillis(), PodDbEntryType.ResetPodState, null, null, null, null);
-
-        OmnipodUtil.setPodSessionState(null);
 
         return new PumpEnactResult().success(true).enacted(true);
     }
@@ -361,27 +354,7 @@ public class OmnipodManager {
         return new PumpEnactResult().success(false).enacted(false).comment("Pod should be initialized first");
     }
 
-    private void addToHistory(long requestTime, PodDbEntryType entryType, String shortDescription, OmnipodAction omnipodAction, Long responseTime, Object response) {
-        // TODO andy
-
-        PodDbEntry entry = new PodDbEntry(requestTime, entryType);
-
-        if (shortDescription!=null) {
-            entry.setShortDescription(shortDescription);
-        }
-
-        if (omnipodAction!=null) {
-
-        }
-
-        if (responseTime!=null) {
-
-        }
-
-        if (response!=null) {
-
-        }
-
+    public PodSessionState getPodState() {
+        return this.podState;
     }
-
 }

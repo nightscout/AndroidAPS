@@ -62,7 +62,7 @@ public class OmnipodManagerAAPS extends OmnipodManager //implements OmnipodCommu
     public PumpEnactResult resetPodState() {
         resetPodStateInternal();
 
-        addToHistory(System.currentTimeMillis(), PodDbEntryType.ResetPodState, null, null, null, true);
+        //addToHistory(System.currentTimeMillis(), PodDbEntryType.ResetPodState, null, null, null, true);
 
         return new PumpEnactResult().success(true).enacted(true);
     }
@@ -76,22 +76,5 @@ public class OmnipodManagerAAPS extends OmnipodManager //implements OmnipodCommu
     }
 
 
-    private void addToHistory(long requestTime, PodDbEntryType entryType, OmnipodAction omnipodAction, Long responseTime, Object response, boolean success) {
-        // TODO andy
 
-        PodDbEntry entry = new PodDbEntry(requestTime, entryType);
-
-        if (omnipodAction!=null) {
-
-        }
-
-        if (responseTime!=null) {
-            entry.setDateTimeResponse(responseTime);
-        }
-
-        if (response!=null) {
-
-        }
-
-    }
 }
