@@ -39,7 +39,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
-import info.nightscout.androidaps.utils.DateUtil.now
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.apache.commons.lang3.StringUtils
@@ -98,10 +97,22 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragment) {
         super.preprocessPreferences(preferenceFragment)
-        val distance = preferenceFragment.findPreference(MainApp.gs(R.string.key_smscommunicator_remotebolusmindistance)) as ValidatingEditTextPreference
-        val allowedNumbers = preferenceFragment.findPreference(MainApp.gs(R.string.key_smscommunicator_allowednumbers)) as EditTextPreference
-        if (distance != null && allowedNumbers != null) {
-            if (!areMoreNumbers(allowedNumbers.text)) {
+        val distance = preferenceFragment.findPreference(MainApp.gs(R.string.key_smscommunicator_remotebolusmindistance)) as ValidatingEditTextPreference?
+                ?: return
+        val allowedNumbers = preferenceFragment.findPreference(MainApp.gs(R.string.key_smscommunicator_allowednumbers)) as EditTextPreference?
+                ?: return
+        if (!areMoreNumbers(allowedNumbers.text)) {
+            distance.title = (MainApp.gs(R.string.smscommunicator_remotebolusmindistance)
+                    + ".\n"
+                    + MainApp.gs(R.string.smscommunicator_remotebolusmindistance_caveat))
+            distance.isEnabled = false
+        } else {
+            distance.title = MainApp.gs(R.string.smscommunicator_remotebolusmindistance)
+            distance.isEnabled = true
+        }
+        allowedNumbers.onPreferenceChangeListener = OnPreferenceChangeListener { preference: Preference?, newValue: Any ->
+            if (!areMoreNumbers(newValue as String)) {
+                distance.text = (Constants.remoteBolusMinDistance / (60 * 1000L)).toString()
                 distance.title = (MainApp.gs(R.string.smscommunicator_remotebolusmindistance)
                         + ".\n"
                         + MainApp.gs(R.string.smscommunicator_remotebolusmindistance_caveat))
@@ -110,19 +121,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                 distance.title = MainApp.gs(R.string.smscommunicator_remotebolusmindistance)
                 distance.isEnabled = true
             }
-            allowedNumbers.onPreferenceChangeListener = OnPreferenceChangeListener { preference: Preference?, newValue: Any ->
-                if (!areMoreNumbers(newValue as String)) {
-                    distance.text = (Constants.remoteBolusMinDistance / (60 * 1000L)).toString()
-                    distance.title = (MainApp.gs(R.string.smscommunicator_remotebolusmindistance)
-                            + ".\n"
-                            + MainApp.gs(R.string.smscommunicator_remotebolusmindistance_caveat))
-                    distance.isEnabled = false
-                } else {
-                    distance.title = MainApp.gs(R.string.smscommunicator_remotebolusmindistance)
-                    distance.isEnabled = true
-                }
-                true
-            }
+            true
         }
     }
 
@@ -166,9 +165,10 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
 
     fun handleNewData(intent: Intent) {
         val bundle = intent.extras ?: return
+        val format = bundle.getString("format") ?: return
         val pdus = bundle["pdus"] as Array<*>
         for (pdu in pdus) {
-            val message = SmsMessage.createFromPdu(pdu as ByteArray)
+            val message = SmsMessage.createFromPdu(pdu as ByteArray, format)
             processSms(Sms(message))
         }
     }
@@ -787,9 +787,9 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                 override fun run() {
                     val currentProfile = ProfileFunctions.getInstance().profile
                     if (currentProfile != null) {
-                         val tempTarget = TempTarget()
+                        val tempTarget = TempTarget()
                                 .source(Source.USER)
-                                .date(now())
+                                .date(DateUtil.now())
                                 .duration(0)
                                 .low(0.0)
                                 .high(0.0)
@@ -887,7 +887,6 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
     private fun generatePasscode(): String {
         val startChar1 = 'A'.toInt() // on iphone 1st char is uppercase :)
         var passCode = Character.toString((startChar1 + Math.random() * ('z' - 'a' + 1)).toChar())
-        //For Milos: may we have only 'a'.toInt() for the 2nd and 3rd chars? Upper letters are uncomfortable here
         val startChar2: Int = if (Math.random() > 0.5) 'a'.toInt() else 'A'.toInt()
         passCode += Character.toString((startChar2 + Math.random() * ('z' - 'a' + 1)).toChar())
         val startChar3: Int = if (Math.random() > 0.5) 'a'.toInt() else 'A'.toInt()
