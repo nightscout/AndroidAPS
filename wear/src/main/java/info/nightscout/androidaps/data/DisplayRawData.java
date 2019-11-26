@@ -7,6 +7,7 @@ import android.os.PowerManager;
 import com.google.android.gms.wearable.DataMap;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import info.nightscout.androidaps.interaction.utils.Constants;
 import info.nightscout.androidaps.interaction.utils.Persistence;
@@ -120,7 +121,7 @@ public class DisplayRawData {
     public DataMap updateDataFromMessage(Intent intent, PowerManager.WakeLock wakeLock) {
         Bundle bundle = intent.getBundleExtra("data");
         if (bundle != null) {
-            DataMap dataMap = DataMap.fromBundle(bundle);
+            DataMap dataMap = WearUtil.bundleToDataMap(bundle);
             updateData(dataMap);
             return dataMap;
         }
@@ -141,7 +142,7 @@ public class DisplayRawData {
     public DataMap updateStatusFromMessage(Intent intent, PowerManager.WakeLock wakeLock) {
         Bundle bundle = intent.getBundleExtra("status");
         if (bundle != null) {
-            DataMap dataMap = DataMap.fromBundle(bundle);
+            DataMap dataMap = WearUtil.bundleToDataMap(bundle);
             updateStatus(dataMap);
             return dataMap;
         }
@@ -168,7 +169,7 @@ public class DisplayRawData {
     public DataMap updateBasalsFromMessage(Intent intent, PowerManager.WakeLock wakeLock) {
         Bundle bundle = intent.getBundleExtra("basals");
         if (bundle != null) {
-            DataMap dataMap = DataMap.fromBundle(bundle);
+            DataMap dataMap = WearUtil.bundleToDataMap(bundle);
             updateBasals(dataMap);
             return dataMap;
         }
@@ -259,10 +260,12 @@ public class DisplayRawData {
             bgDataList.add(new BgWatchData(sgv, high, low, timestamp, color));
         }
 
-        for (int i = 0; i < bgDataList.size(); i++) {
-            if (bgDataList.get(i).timestamp < (System.currentTimeMillis() - (Constants.HOUR_IN_MS * 5))) {
-                bgDataList.remove(i); //Get rid of anything more than 5 hours old
-                break;
+        // We use iterator instead for-loop because we iterate and remove on the go
+        Iterator itr = bgDataList.iterator();
+        while (itr.hasNext()) {
+            BgWatchData entry = (BgWatchData)itr.next();
+            if (entry.timestamp < (WearUtil.timestamp() - (Constants.HOUR_IN_MS * 5))) {
+                itr.remove(); //Get rid of anything more than 5 hours old
             }
         }
     }

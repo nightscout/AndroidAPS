@@ -4,10 +4,10 @@ import android.app.PendingIntent;
 import android.support.wearable.complications.ComplicationData;
 import android.support.wearable.complications.ComplicationText;
 import android.util.Log;
-import android.util.Pair;
 
 import info.nightscout.androidaps.data.DisplayRawData;
 import info.nightscout.androidaps.interaction.utils.DisplayFormat;
+import info.nightscout.androidaps.interaction.utils.Pair;
 
 /*
  * Created by dlvoy on 2019-11-12

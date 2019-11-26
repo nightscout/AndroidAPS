@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.interaction.utils;
 
-import android.util.Pair;
-
 import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.data.DisplayRawData;
 
@@ -45,20 +43,30 @@ public class DisplayFormat {
                 return days + "d";
             } else {
                 int weeks = days / 7;
-                return weeks + "d";
+                return weeks + "w";
             }
         }
     }
 
     public static String shortTrend(final DisplayRawData raw) {
-        String minutes = shortTimeSince(raw.datetime);
-        String delta = (new SmallestDoubleString(raw.sDelta)).minimise(MAX_SHORT_FIELD-1);
-
-        if (minutes.length() + delta.length() + 1 < MAX_SHORT_FIELD) {
-            delta = deltaSymbol() + delta;
+        String minutes = "--";
+        if (raw.datetime > 0) {
+            minutes = shortTimeSince(raw.datetime);
         }
 
-        return minutes + " " + delta;
+        if (minutes.length() + raw.sDelta.length() + deltaSymbol().length() + 1 <= MAX_SHORT_FIELD) {
+            return minutes + " " + deltaSymbol() + raw.sDelta;
+        }
+
+        // that only optimizes obvious things like 0 before . or at end, + at beginning
+        String delta = (new SmallestDoubleString(raw.sDelta)).minimise(MAX_SHORT_FIELD-1);
+        if (minutes.length() + delta.length() + deltaSymbol().length() + 1 <= MAX_SHORT_FIELD) {
+            return minutes + " " + deltaSymbol() + delta;
+        }
+
+        String shortDelta = (new SmallestDoubleString(raw.sDelta)).minimise(MAX_SHORT_FIELD-(1+minutes.length()));
+
+        return minutes + " " + shortDelta;
     }
 
     public static String longGlucoseLine(final DisplayRawData raw) {
@@ -105,13 +113,17 @@ public class DisplayFormat {
         final String iob1 = new SmallestDoubleString(raw.sIOB1, SmallestDoubleString.Units.USE).minimise(MAX_SHORT_FIELD);
         String iob2 = "";
         if (raw.sIOB2.contains("|")) {
-
             String[] iobs = raw.sIOB2.replace("(", "").replace(")", "").split("\\|");
-            if (iobs.length == 2) {
-                final String iobBolus = new SmallestDoubleString(iobs[0]).minimise(MIN_IOB_FIELD);
-                final String iobBasal = new SmallestDoubleString(iobs[1]).minimise((MAX_SHORT_FIELD-1) - Math.max(MIN_IOB_FIELD, iobBolus.length()));
-                iob2 = iobBolus+" "+iobBasal;
+
+            String iobBolus = new SmallestDoubleString(iobs[0]).minimise(MIN_IOB_FIELD);
+            if (iobBolus.trim().length() == 0) {
+                iobBolus = "--";
             }
+            String iobBasal = new SmallestDoubleString(iobs[1]).minimise((MAX_SHORT_FIELD-1) - Math.max(MIN_IOB_FIELD, iobBolus.length()));
+            if (iobBasal.trim().length() == 0) {
+                iobBasal = "--";
+            }
+            iob2 = iobBolus+" "+iobBasal;
         }
         return Pair.create(iob1, iob2);
     }

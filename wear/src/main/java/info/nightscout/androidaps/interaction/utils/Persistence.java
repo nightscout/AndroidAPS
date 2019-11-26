@@ -23,7 +23,7 @@ public class Persistence {
     }
 
     public DataMap getDataMap(String key) {
-        if (preferences.contains("raw_data")) {
+        if (preferences.contains(key)) {
             final String rawB64Data = preferences.getString(key, null);
             byte[] rawData = Base64.decode(rawB64Data, Base64.DEFAULT);
             try {

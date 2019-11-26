@@ -71,6 +71,8 @@ public class SmallestDoubleString {
     }
 
     public String minimise(int maxSize) {
+        final String originalSeparator = separator;
+
         if (Integer.parseInt("0"+fractional) == 0) {
             separator = "";
             fractional = "";
@@ -95,7 +97,7 @@ public class SmallestDoubleString {
             return toString();
         }
 
-        if ((fractional.length() > 0)&&(decimal.length() > 0)) {
+        if (fractional.length() > 0) {
             int remainingForFraction = maxSize-currentLen()+fractional.length();
             String formatCandidate = "#";
             if (remainingForFraction>=1) {
@@ -104,8 +106,10 @@ public class SmallestDoubleString {
             DecimalFormat df = new DecimalFormat(formatCandidate);
             df.setRoundingMode(RoundingMode.HALF_UP);
 
-            return sign + df.format(Double.parseDouble(decimal+"."+fractional)).replace(".", separator) +
+            final String decimalSup = (decimal.length() > 0) ? decimal : "0";
+            String result = sign + df.format(Double.parseDouble(decimalSup+"."+fractional)).replace(",", originalSeparator).replace(".", originalSeparator) +
                     ((withUnits == Units.USE) ? units : "");
+            return (decimal.length() > 0) ? result : result.substring(1);
         }
         return toString();
     }
@@ -115,6 +119,7 @@ public class SmallestDoubleString {
                 ((withUnits == Units.USE) ? units.length() : 0);
     }
 
+    @Override
     public String toString() {
         return sign+decimal+separator+fractional +
                 ((withUnits == Units.USE) ? units : "");

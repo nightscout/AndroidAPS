@@ -2,8 +2,11 @@ package info.nightscout.androidaps.interaction.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.PowerManager;
 import android.util.Log;
+
+import com.google.android.gms.wearable.DataMap;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -12,7 +15,6 @@ import java.util.Map;
 import java.util.Set;
 
 import info.nightscout.androidaps.aaps;
-import info.nightscout.androidaps.data.DisplayRawData;
 
 /**
  * Created by andy on 3/5/19.
@@ -123,5 +125,12 @@ public class WearUtil {
             }
         }
         return set;
+    }
+
+    /**
+     * Taken out to helper method to allow testing
+     */
+    public static DataMap bundleToDataMap(Bundle bundle) {
+        return DataMap.fromBundle(bundle);
     }
 }
