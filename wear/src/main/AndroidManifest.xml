@@ -246,7 +246,7 @@
             android:value="LONG_TEXT" />
         <meta-data
             android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-            android:value="60" />
+            android:value="300" />
         </service>
 
         <service
@@ -263,7 +263,7 @@
                 android:value="LONG_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="60" />
+                android:value="300" />
         </service>
 
         <service
@@ -280,7 +280,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="60" />
+                android:value="300" />
         </service>
 
         <service
@@ -297,7 +297,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="60" />
+                android:value="300" />
         </service>
 
         <service
@@ -314,7 +314,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="60" />
+                android:value="300" />
         </service>
 
         <service
@@ -331,7 +331,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="60" />
+                android:value="300" />
         </service>
 
         <service
@@ -348,7 +348,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="60" />
+                android:value="300" />
         </service>
 
         <service
@@ -365,7 +365,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="60" />
+                android:value="300" />
         </service>
 
         <service
@@ -382,7 +382,7 @@
                 android:value="SHORT_TEXT" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="60" />
+                android:value="300" />
         </service>
 
         <service
@@ -399,7 +399,7 @@
                 android:value="RANGED_VALUE,SHORT_TEXT,ICON" />
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="60" />
+                android:value="300" />
         </service>
 
         <service
