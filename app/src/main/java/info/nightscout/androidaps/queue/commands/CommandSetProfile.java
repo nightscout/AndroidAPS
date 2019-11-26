@@ -50,7 +50,7 @@ public class CommandSetProfile extends Command {
         // Send SMS notification if ProfileSwitch is comming from NS
         ProfileSwitch profileSwitch = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(System.currentTimeMillis());
         if (profileSwitch != null && r.enacted && profileSwitch.source == Source.NIGHTSCOUT) {
-            SmsCommunicatorPlugin smsCommunicatorPlugin = SmsCommunicatorPlugin.getPlugin();
+            SmsCommunicatorPlugin smsCommunicatorPlugin = SmsCommunicatorPlugin.INSTANCE;
             if (smsCommunicatorPlugin.isEnabled(PluginType.GENERAL)) {
                 smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.gs(R.string.profile_set_ok));
             }
