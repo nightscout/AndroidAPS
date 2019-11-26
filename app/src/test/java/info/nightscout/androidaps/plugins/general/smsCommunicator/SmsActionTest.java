@@ -41,7 +41,7 @@ public class SmsActionTest {
         };
         smsAction.run();
         Assert.assertEquals(result, "B");
-        Assert.assertEquals(smsAction.aDouble, 1d, 0.000001d);
+        Assert.assertEquals(smsAction.aDouble(), 1d, 0.000001d);
 
         smsAction = new SmsAction(1d, 2) {
             @Override
@@ -51,8 +51,8 @@ public class SmsActionTest {
         };
         smsAction.run();
         Assert.assertEquals(result, "C");
-        Assert.assertEquals(smsAction.aDouble, 1d, 0.000001d);
-        Assert.assertEquals(smsAction.secondInteger.intValue(), 2);
+        Assert.assertEquals(smsAction.aDouble(), 1d, 0.000001d);
+        Assert.assertEquals(smsAction.secondInteger(), 2);
 
         smsAction = new SmsAction("aString", 3) {
             @Override
@@ -62,8 +62,8 @@ public class SmsActionTest {
         };
         smsAction.run();
         Assert.assertEquals(result, "D");
-        Assert.assertEquals(smsAction.aString, "aString");
-        Assert.assertEquals(smsAction.secondInteger.intValue(), 3);
+        Assert.assertEquals(smsAction.aString(), "aString");
+        Assert.assertEquals(smsAction.secondInteger(), 3);
 
         smsAction = new SmsAction(4) {
             @Override
@@ -73,7 +73,7 @@ public class SmsActionTest {
         };
         smsAction.run();
         Assert.assertEquals(result, "E");
-        Assert.assertEquals(smsAction.anInteger.intValue(), 4);
+        Assert.assertEquals(smsAction.anInteger(), 4);
 
         smsAction = new SmsAction(5, 6) {
             @Override
@@ -83,8 +83,8 @@ public class SmsActionTest {
         };
         smsAction.run();
         Assert.assertEquals(result, "F");
-        Assert.assertEquals(smsAction.anInteger.intValue(), 5);
-        Assert.assertEquals(smsAction.secondInteger.intValue(), 6);
+        Assert.assertEquals(smsAction.anInteger(), 5);
+        Assert.assertEquals(smsAction.secondInteger(), 6);
     }
 
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
         android:key="smscommunicator"
         android:title="@string/smscommunicator">
@@ -8,6 +9,16 @@
             android:key="@string/key_smscommunicator_allowednumbers"
             android:summary="@string/smscommunicator_allowednumbers_summary"
             android:title="@string/smscommunicator_allowednumbers" />
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+            android:key="@string/key_smscommunicator_remotebolusmindistance"
+            android:defaultValue="15"
+            android:summary="@string/smscommunicator_remotebolusmindistance_summary"
+            android:title="@string/smscommunicator_remotebolusmindistance"
+            validate:minNumber="3"
+            validate:maxNumber="60"
+            validate:testType="numericRange"
+            android:singleLineTitle="false"
+            />
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_smscommunicator_remotecommandsallowed"

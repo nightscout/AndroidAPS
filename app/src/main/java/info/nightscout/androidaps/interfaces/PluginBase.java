@@ -1,10 +1,13 @@
 package info.nightscout.androidaps.interfaces;
 
 import android.os.SystemClock;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -214,5 +217,11 @@ public abstract class PluginBase {
     }
 
     protected void onStateChange(PluginType type, State oldState, State newState) {
+    }
+
+    public void preprocessPreferences(@NotNull final PreferenceFragment preferenceFragment) {
+    }
+
+    public void updatePreferenceSummary(@NotNull final Preference pref) {
     }
 }
