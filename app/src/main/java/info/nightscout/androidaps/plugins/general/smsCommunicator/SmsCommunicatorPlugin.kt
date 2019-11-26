@@ -259,7 +259,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
         val actualBG = DatabaseHelper.actualBg()
         val lastBG = DatabaseHelper.lastBg()
         var reply = ""
-        val units = ProfileFunctions.getInstance().profileUnits
+        val units = ProfileFunctions.getSystemUnits()
         if (actualBG != null) {
             reply = MainApp.gs(R.string.sms_actualbg) + " " + actualBG.valueToUnitsToString(units) + ", "
         } else if (lastBG != null) {
@@ -428,7 +428,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             receivedSms.processed = true
             return
         }
-        val list = store.profileList
+        val list = store.getProfileList()
         if (splitted[1].toUpperCase(Locale.getDefault()) == "STATUS") {
             sendSMS(Sms(receivedSms.phoneNumber, ProfileFunctions.getInstance().profileName))
         } else if (splitted[1].toUpperCase(Locale.getDefault()) == "LIST") {
