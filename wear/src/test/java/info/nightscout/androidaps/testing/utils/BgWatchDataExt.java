@@ -2,16 +2,11 @@ package info.nightscout.androidaps.testing.utils;
 
 import androidx.annotation.Nullable;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import info.nightscout.androidaps.data.BgWatchData;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static info.nightscout.androidaps.testing.utils.ExtUtil.assertClassHaveSameFields;
 
 public class BgWatchDataExt extends BgWatchData {
 
@@ -26,16 +21,9 @@ public class BgWatchDataExt extends BgWatchData {
     public BgWatchDataExt(BgWatchData ref) {
         super();
 
-        Set<String> parentFields = new HashSet<>();
-        for (Field f : BgWatchData.class.getDeclaredFields()) {
-            parentFields.add(f.getName());
-        }
-
-        Set<String> knownFields = new HashSet<>(Arrays.asList("sgv,high,low,timestamp,color".split(",")));
-
         // since we do not want modify BgWatchDataExt - we use this wrapper class
         // but we make sure it has same fields
-        assertThat(parentFields, is(knownFields));
+        assertClassHaveSameFields(BgWatchData.class, "sgv,high,low,timestamp,color");
 
         this.sgv = ref.sgv;
         this.high = ref.high;

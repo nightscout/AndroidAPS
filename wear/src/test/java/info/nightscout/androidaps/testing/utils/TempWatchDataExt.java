@@ -2,16 +2,11 @@ package info.nightscout.androidaps.testing.utils;
 
 import androidx.annotation.Nullable;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import info.nightscout.androidaps.data.TempWatchData;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static info.nightscout.androidaps.testing.utils.ExtUtil.assertClassHaveSameFields;
 
 
 public class TempWatchDataExt extends TempWatchData {
@@ -23,16 +18,9 @@ public class TempWatchDataExt extends TempWatchData {
     public TempWatchDataExt(TempWatchData ref) {
         super();
 
-        Set<String> parentFields = new HashSet<>();
-        for (Field f : TempWatchData.class.getDeclaredFields()) {
-            parentFields.add(f.getName());
-        }
-
-        Set<String> knownFields = new HashSet<>(Arrays.asList("startTime,startBasal,endTime,endBasal,amount".split(",")));
-
-        // since we do not want modify TempWatchData - we use this wrapper class
+        // since we do not want modify BolusWatchData - we use this wrapper class
         // but we make sure it has same fields
-        assertThat(parentFields, is(knownFields));
+        assertClassHaveSameFields(TempWatchData.class, "startTime,startBasal,endTime,endBasal,amount");
 
         this.startTime = ref.startTime;
         this.startBasal = ref.startBasal;

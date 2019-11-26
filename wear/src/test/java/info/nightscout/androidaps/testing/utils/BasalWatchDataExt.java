@@ -2,16 +2,11 @@ package info.nightscout.androidaps.testing.utils;
 
 import androidx.annotation.Nullable;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import info.nightscout.androidaps.data.BasalWatchData;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static info.nightscout.androidaps.testing.utils.ExtUtil.assertClassHaveSameFields;
 
 public class BasalWatchDataExt extends BasalWatchData {
 
@@ -22,16 +17,9 @@ public class BasalWatchDataExt extends BasalWatchData {
     public BasalWatchDataExt(BasalWatchData ref) {
         super();
 
-        Set<String> parentFields = new HashSet<>();
-        for (Field f : BasalWatchData.class.getDeclaredFields()) {
-            parentFields.add(f.getName());
-        }
-
-        Set<String> knownFields = new HashSet<>(Arrays.asList("startTime,endTime,amount".split(",")));
-
         // since we do not want modify BasalWatchData - we use this wrapper class
         // but we make sure it has same fields
-        assertThat(parentFields, is(knownFields));
+        assertClassHaveSameFields(BasalWatchData.class, "startTime,endTime,amount");
 
         this.startTime = ref.startTime;
         this.endTime = ref.endTime;
