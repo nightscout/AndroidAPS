@@ -255,6 +255,11 @@ public class MainActivity extends NoSplashAppCompatActivity {
         SP.remove(R.string.key_pump_unreachable_threshold);
         if (unreachable_threshold < 30) unreachable_threshold = 30;
         SP.putString(R.string.key_pump_unreachable_threshold, Integer.toString(unreachable_threshold));
+
+        if (!SP.contains(R.string.key_units)) {
+            Intent intent = new Intent(this, SetupWizardActivity.class);
+            startActivity(intent);
+        }
     }
 
 
