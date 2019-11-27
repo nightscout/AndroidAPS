@@ -46,11 +46,39 @@
         <item>4</item>
     </string-array>
 
+    <string-array name="complication_tap_action">
+        <item>Default</item>
+        <item>Menu</item>
+        <item>Wizard</item>
+        <item>Bolus</item>
+        <item>eCarb</item>
+        <item>Status</item>
+        <item>None</item>
+    </string-array>
+
+    <string-array name="complication_tap_action_values">
+        <item>default</item>
+        <item>menu</item>
+        <item>wizard</item>
+        <item>bolus</item>
+        <item>ecarb</item>
+        <item>status</item>
+        <item>none</item>
+    </string-array>
 
     <string name="label_xdrip">AAPS</string>
     <string name="label_xdrip_large">AAPS(Large)</string>
     <string name="label_xdrip_big_chart">AAPS(BigChart)</string>
     <string name="label_xdrip_no_chart">AAPS(NoChart)</string>
     <string name="label_xdrip_circle">AAPS(Circle)</string>
+
+
+    <string name="label_warning_sync">No data!</string>
+    <string name="label_warning_old">Old data!</string>
+    <string name="label_warning_since">Since %1$s</string>
+    <string name="label_warning_sync_aaps">Sync with AAPS!</string>
+
+    <string name="msg_warning_sync">No data received since %1$s! Check if AAPS on the phone sends data to watch</string>
+    <string name="msg_warning_old">AAPS data is %1$s old! Check your sensor, xDrip+, NS, AAPS config or other!</string>
 
 </resources>
