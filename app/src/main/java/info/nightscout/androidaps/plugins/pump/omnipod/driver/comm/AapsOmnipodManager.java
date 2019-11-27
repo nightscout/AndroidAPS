@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.comm;
 
-import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
@@ -47,7 +46,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         if (PodInitActionType.PairAndPrimeWizardStep.equals(podInitActionType)) {
             PumpEnactResult result = delegate.pairAndPrime(res -> //
                     podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), createCommentForSetupActionResult(res)));
-            if(!result.success) {
+            if (!result.success) {
                 podInitReceiver.returnInitTaskStatus(podInitActionType, false, result.comment);
             }
             return result;
@@ -175,20 +174,18 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         //PodDbEntry entry = new PodDbEntry(requestTime, entryType);
 
 
-
     }
 
-    @Nullable
     private String createCommentForSetupActionResult(SetupActionResult res) {
         String comment = null;
-        switch(res.getResultType()) {
+        switch (res.getResultType()) {
             case FAILURE:
                 // TODO use string resource
-                comment = "Unexpected setup progress: "+ res.getSetupProgress();
+                comment = "Unexpected setup progress: " + res.getSetupProgress();
                 break;
             case VERIFICATION_FAILURE:
                 // TODO use string resource
-                comment = "Verification failed: "+ res.getException().getClass().getSimpleName() +": "+ res.getException().getMessage();
+                comment = "Verification failed: " + res.getException().getClass().getSimpleName() + ": " + res.getException().getMessage();
                 break;
         }
         return comment;
@@ -198,7 +195,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     static BasalSchedule mapProfileToBasalSchedule(Profile profile) {
         Profile.ProfileValue[] basalValues = profile.getBasalValues();
         List<BasalScheduleEntry> entries = new ArrayList<>();
-        for(Profile.ProfileValue basalValue : basalValues) {
+        for (Profile.ProfileValue basalValue : basalValues) {
             entries.add(new BasalScheduleEntry(basalValue.value, Duration.standardSeconds(basalValue.timeAsSeconds)));
         }
 

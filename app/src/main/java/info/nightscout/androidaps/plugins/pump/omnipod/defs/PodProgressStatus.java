@@ -15,7 +15,7 @@ public enum PodProgressStatus {
     TWO_NOT_USED_BUT_IN_33((byte) 0x0b),
     THREE_NOT_USED_BUT_IN_33((byte) 0x0c),
     ERROR_EVENT_LOGGED_SHUTTING_DOWN((byte) 0x0d),
-    a((byte) 0x0e),
+    DELAYED_PRIME((byte) 0x0e),
     INACTIVE((byte) 0x0f);
 
     private byte value;
