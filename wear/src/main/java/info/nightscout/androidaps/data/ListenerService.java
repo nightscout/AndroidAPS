@@ -40,6 +40,7 @@ import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.actions.AcceptActivity;
 import info.nightscout.androidaps.interaction.actions.CPPActivity;
+import info.nightscout.androidaps.interaction.utils.Persistence;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
 import info.nightscout.androidaps.interaction.utils.WearUtil;
 
@@ -512,12 +513,14 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("status", dataMap.toBundle());
+                    Persistence.storeDataMap(RawDisplayData.STATUS_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 } else if (path.equals(BASAL_DATA_PATH)){
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("basals", dataMap.toBundle());
+                    Persistence.storeDataMap(RawDisplayData.BASALS_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 } else if (path.equals(NEW_PREFERENCES_PATH)){
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
@@ -541,6 +544,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("data", dataMap.toBundle());
+                    Persistence.storeDataMap(RawDisplayData.DATA_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 }
             }
