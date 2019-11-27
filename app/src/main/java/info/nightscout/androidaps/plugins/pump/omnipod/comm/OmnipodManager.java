@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AcknowledgeAlertsAction;
@@ -33,7 +32,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.pod
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalScheduleMapper;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.SP;
@@ -82,7 +81,7 @@ public class OmnipodManager {
     // Returns a PumpEnactResult which describes whether or not all commands have been sent successfully
     // After inserting the cannula should have finished (10 seconds), the pod state is verified.
     // The result of that verification is passed to the SetupActionResultHandler
-    public PumpEnactResult insertCannula(Profile profile, SetupActionResultHandler resultHandler) {
+    public PumpEnactResult insertCannula(BasalSchedule basalSchedule, SetupActionResultHandler resultHandler) {
         if (podState == null || podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
             // TODO use string resource
             return new PumpEnactResult().success(false).enacted(false).comment("Pod should be paired and primed first");
@@ -92,8 +91,7 @@ public class OmnipodManager {
         }
 
         try {
-            communicationService.executeAction(new InsertCannulaAction(new InsertCannulaService(), podState,
-                    BasalScheduleMapper.mapProfileToBasalSchedule(profile)));
+            communicationService.executeAction(new InsertCannulaAction(new InsertCannulaService(), podState, basalSchedule));
 
             executeDelayed(() -> verifySetupAction(statusResponse -> InsertCannulaAction.updateCannulaInsertionStatus(podState, statusResponse), //
                     SetupProgress.COMPLETED, resultHandler),
@@ -159,14 +157,13 @@ public class OmnipodManager {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    public PumpEnactResult setBasalProfile(Profile basalProfile) {
+    public PumpEnactResult setBasalSchedule(BasalSchedule schedule) {
         if (!isInitialized()) {
             return createNotInitializedResult();
         }
 
         try {
-            communicationService.executeAction(new SetBasalScheduleAction(podState,
-                    BasalScheduleMapper.mapProfileToBasalSchedule(basalProfile),
+            communicationService.executeAction(new SetBasalScheduleAction(podState, schedule,
                     false, podState.getScheduleOffset(), true));
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures

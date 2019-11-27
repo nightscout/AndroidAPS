@@ -2,6 +2,10 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.comm;
 
 import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -10,14 +14,14 @@ import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.SetupActionResult;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.OmnipodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodDbEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodDbEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
@@ -48,7 +52,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             }
             return result;
         } else if (PodInitActionType.FillCannulaSetBasalProfileWizardStep.equals(podInitActionType)) {
-            PumpEnactResult result = delegate.insertCannula(profile, res -> {
+            PumpEnactResult result = delegate.insertCannula(mapProfileToBasalSchedule(profile), res -> {
                 podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), createCommentForSetupActionResult(res));
                 OmnipodUtil.setPodSessionState(delegate.getPodState());
                 RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
@@ -82,7 +86,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     @Override
     public PumpEnactResult setBasalProfile(Profile basalProfile) {
-        return delegate.setBasalProfile(basalProfile);
+        return delegate.setBasalSchedule(mapProfileToBasalSchedule(basalProfile));
     }
 
     @Override
@@ -179,12 +183,25 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         String comment = null;
         switch(res.getResultType()) {
             case FAILURE:
+                // TODO use string resource
                 comment = "Unexpected setup progress: "+ res.getSetupProgress();
                 break;
             case VERIFICATION_FAILURE:
+                // TODO use string resource
                 comment = "Verification failed: "+ res.getException().getClass().getSimpleName() +": "+ res.getException().getMessage();
                 break;
         }
         return comment;
+    }
+
+    // TODO add tests
+    static BasalSchedule mapProfileToBasalSchedule(Profile profile) {
+        Profile.ProfileValue[] basalValues = profile.getBasalValues();
+        List<BasalScheduleEntry> entries = new ArrayList<>();
+        for(Profile.ProfileValue basalValue : basalValues) {
+            entries.add(new BasalScheduleEntry(basalValue.value, Duration.standardSeconds(basalValue.timeAsSeconds)));
+        }
+
+        return new BasalSchedule(entries);
     }
 }
