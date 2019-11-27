@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.comm;
 
-import android.os.SystemClock;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
@@ -15,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AcknowledgeAlertsAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.BolusAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.CancelDeliveryAction;
@@ -23,7 +20,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.DeactivatePod
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.GetPodInfoAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.GetStatusAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.InsertCannulaAction;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.OmnipodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.PairAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.PrimeAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.SetBasalScheduleAction;
@@ -43,6 +39,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.SP;
 
 public class OmnipodManager {
+    private static final int SETUP_ACTION_VERIFICATION_TRIES = 3;
+
     protected final OmnipodCommunicationService communicationService;
     protected PodSessionState podState;
 
@@ -54,7 +52,37 @@ public class OmnipodManager {
         this.podState = podState;
     }
 
-    public PumpEnactResult insertCannula(Profile profile) {
+    // Returns a PumpEnactResult which describes whether or not all commands have been sent successfully
+    // After priming should have finished (55 seconds), the pod state is verified.
+    // The result of that verification is passed to the SetupActionResultHandler
+    public PumpEnactResult pairAndPrime(SetupActionResultHandler resultHandler) {
+        try {
+            if (podState == null) {
+                podState = communicationService.executeAction(new PairAction(new PairService()));
+            }
+            if (podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
+                communicationService.executeAction(new PrimeAction(new PrimeService(), podState));
+
+                executeDelayed(() -> verifySetupAction(statusResponse -> PrimeAction.updatePrimingStatus(podState, statusResponse), //
+                        SetupProgress.PRIMING_FINISHED, resultHandler), //
+                        OmnipodConst.POD_PRIME_DURATION);
+            } else {
+                // TODO use string resource
+                return new PumpEnactResult().success(false).enacted(false).comment("Illegal setup state: " + podState.getSetupProgress().name());
+            }
+        } catch (Exception ex) {
+            // TODO distinguish between certain and uncertain failures
+            // TODO user friendly error messages (string resources)
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+        }
+
+        return new PumpEnactResult().success(true).enacted(true);
+    }
+
+    // Returns a PumpEnactResult which describes whether or not all commands have been sent successfully
+    // After inserting the cannula should have finished (10 seconds), the pod state is verified.
+    // The result of that verification is passed to the SetupActionResultHandler
+    public PumpEnactResult insertCannula(Profile profile, SetupActionResultHandler resultHandler) {
         if (podState == null || podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
             // TODO use string resource
             return new PumpEnactResult().success(false).enacted(false).comment("Pod should be paired and primed first");
@@ -67,39 +95,9 @@ public class OmnipodManager {
             communicationService.executeAction(new InsertCannulaAction(new InsertCannulaService(), podState,
                     BasalScheduleMapper.mapProfileToBasalSchedule(profile)));
 
-            executeDelayed(() -> {
-                // TODO improve: repeat get status when it fails and handle unexpected statuses
-                // TODO give user feedback when priming finished (or somehow failed)
-                StatusResponse delayedStatusResponse = communicationService.executeAction(new GetStatusAction(podState));
-                InsertCannulaAction.updateCannulaInsertionStatus(podState, delayedStatusResponse);
-            }, OmnipodConst.POD_CANNULA_INSERTION_DURATION);
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-
-        return new PumpEnactResult().success(true).enacted(true);
-    }
-
-    public PumpEnactResult pairAndPrime() {
-        try {
-            if (podState == null) {
-                podState = communicationService.executeAction(new PairAction(new PairService()));
-            }
-            if (podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
-                communicationService.executeAction(new PrimeAction(new PrimeService(), podState));
-
-                executeDelayed(() -> {
-                    // TODO improve: repeat get status when it fails and handle unexpected statuses
-                    // TODO give user feedback when priming finished (or somehow failed)
-                    StatusResponse delayedStatusResponse = communicationService.executeAction(new GetStatusAction(podState));
-                    PrimeAction.updatePrimingStatus(podState, delayedStatusResponse);
-                }, OmnipodConst.POD_PRIME_DURATION);
-            } else {
-                // TODO use string resource
-                return new PumpEnactResult().success(false).enacted(false).comment("Illegal setup state: " + podState.getSetupProgress().name());
-            }
+            executeDelayed(() -> verifySetupAction(statusResponse -> InsertCannulaAction.updateCannulaInsertionStatus(podState, statusResponse), //
+                    SetupProgress.COMPLETED, resultHandler),
+                    OmnipodConst.POD_CANNULA_INSERTION_DURATION);
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
@@ -356,5 +354,36 @@ public class OmnipodManager {
 
     public PodSessionState getPodState() {
         return this.podState;
+    }
+
+    private void verifySetupAction(StatusResponseHandler statusResponseHandler, SetupProgress expectedSetupProgress, SetupActionResultHandler resultHandler) {
+        SetupActionResult result = null;
+        for (int i = 0; SETUP_ACTION_VERIFICATION_TRIES > i; i++) {
+            try {
+                StatusResponse delayedStatusResponse = communicationService.executeAction(new GetStatusAction(podState));
+                statusResponseHandler.handle(delayedStatusResponse);
+
+                if (podState.getSetupProgress().equals(expectedSetupProgress)) {
+                    result = new SetupActionResult(SetupActionResult.ResultType.SUCCESS);
+                    break;
+                } else {
+                    result = new SetupActionResult(SetupActionResult.ResultType.FAILURE) //
+                            .setupProgress(podState.getSetupProgress());
+                    break;
+                }
+            } catch (Exception ex) {
+                result = new SetupActionResult(SetupActionResult.ResultType.VERIFICATION_FAILURE) //
+                        .exception(ex);
+            }
+        }
+        if (resultHandler != null) {
+            resultHandler.handle(result);
+        }
+
+    }
+
+    @FunctionalInterface
+    private interface StatusResponseHandler {
+        void handle(StatusResponse podState);
     }
 }

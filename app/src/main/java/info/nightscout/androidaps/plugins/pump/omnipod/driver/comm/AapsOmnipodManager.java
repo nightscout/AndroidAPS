@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.comm;
 
+import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 
 import info.nightscout.androidaps.data.Profile;
@@ -8,6 +9,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.SetupActionResult;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.OmnipodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
@@ -36,20 +38,23 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         instance = this;
     }
 
-
     @Override
     public PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, Profile profile) {
         if (PodInitActionType.PairAndPrimeWizardStep.equals(podInitActionType)) {
-            PumpEnactResult result = delegate.pairAndPrime();
-            podInitReceiver.returnInitTaskStatus(podInitActionType, result.success, (result.success ? null : result.comment));
+            PumpEnactResult result = delegate.pairAndPrime(res -> //
+                    podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), createCommentForSetupActionResult(res)));
+            if(!result.success) {
+                podInitReceiver.returnInitTaskStatus(podInitActionType, false, result.comment);
+            }
             return result;
         } else if (PodInitActionType.FillCannulaSetBasalProfileWizardStep.equals(podInitActionType)) {
-            // FIXME we need a basal profile here
-            PumpEnactResult result = delegate.insertCannula(profile);
-            podInitReceiver.returnInitTaskStatus(podInitActionType, result.success, (result.success ? null : result.comment));
-            if (result.success) {
+            PumpEnactResult result = delegate.insertCannula(profile, res -> {
+                podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), createCommentForSetupActionResult(res));
                 OmnipodUtil.setPodSessionState(delegate.getPodState());
                 RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
+            });
+            if (!result.success) {
+                podInitReceiver.returnInitTaskStatus(podInitActionType, false, result.comment);
             }
             return result;
         }
@@ -74,8 +79,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
         return result;
     }
-
-
 
     @Override
     public PumpEnactResult setBasalProfile(Profile basalProfile) {
@@ -169,5 +172,19 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
 
 
+    }
+
+    @Nullable
+    private String createCommentForSetupActionResult(SetupActionResult res) {
+        String comment = null;
+        switch(res.getResultType()) {
+            case FAILURE:
+                comment = "Unexpected setup progress: "+ res.getSetupProgress();
+                break;
+            case VERIFICATION_FAILURE:
+                comment = "Verification failed: "+ res.getException().getClass().getSimpleName() +": "+ res.getException().getMessage();
+                break;
+        }
+        return comment;
     }
 }
