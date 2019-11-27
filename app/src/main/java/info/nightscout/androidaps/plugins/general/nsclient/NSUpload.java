@@ -510,6 +510,21 @@ public class NSUpload {
         }
     }
 
+    public static void uploadProfileStore(JSONObject profileStore) {
+        if (SP.getBoolean(R.string.key_ns_uploadlocalprofile, false)) {
+            Context context = MainApp.instance().getApplicationContext();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "profile");
+            bundle.putString("data", String.valueOf(profileStore));
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            DbLogger.dbAdd(intent, String.valueOf(profileStore));
+        }
+    }
+
     public static void uploadEvent(String careportalEvent, long time, @Nullable String notes) {
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();

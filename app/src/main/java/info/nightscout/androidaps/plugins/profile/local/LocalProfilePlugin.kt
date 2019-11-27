@@ -12,6 +12,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.SP
@@ -89,6 +90,7 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
         if (L.isEnabled(L.PROFILE))
             log.debug("Storing settings: " + rawProfile?.data.toString())
         RxBus.send(EventProfileStoreChanged())
+        rawProfile?.let { NSUpload.uploadProfileStore(it.data) }
     }
 
     @Synchronized
@@ -167,7 +169,7 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
         createAndStoreConvertedProfile()
     }
 
-    private fun isExistingName(name: String?) : Boolean {
+    private fun isExistingName(name: String?): Boolean {
         for (p in profiles) {
             if (p.name == name) return true
         }
