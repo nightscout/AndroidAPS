@@ -216,13 +216,13 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 DefaultValueHelper helper = new DefaultValueHelper();
                 if (MainApp.gs(R.string.eatingsoon).equals(reasonList.get(position))) {
                     defaultDuration = helper.determineEatingSoonTTDuration();
-                    defaultTarget = helper.determineEatingSoonTT(units);
+                    defaultTarget = helper.determineEatingSoonTT();
                 } else if (MainApp.gs(R.string.activity).equals(reasonList.get(position))) {
                     defaultDuration = helper.determineActivityTTDuration();
-                    defaultTarget = helper.determineActivityTT(units);
+                    defaultTarget = helper.determineActivityTT();
                 } else if (MainApp.gs(R.string.hypo).equals(reasonList.get(position))) {
                     defaultDuration = helper.determineHypoTTDuration();
-                    defaultTarget = helper.determineHypoTT(units);
+                    defaultTarget = helper.determineHypoTT();
                 } else if (editDuration.getValue() != 0) {
                     defaultDuration = editDuration.getValue();
                 } else {

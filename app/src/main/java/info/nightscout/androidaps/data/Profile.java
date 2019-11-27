@@ -19,6 +19,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -617,20 +618,37 @@ public class Profile {
         else return value * Constants.MGDL_TO_MMOLL;
     }
 
-    public static double toUnits(Double valueInMgdl, Double valueInMmol, String units) {
+    public static double fromMmolToUnits(double value, String units) {
+        if (units.equals(Constants.MMOL)) return value;
+        else return value * Constants.MMOLL_TO_MGDL;
+    }
+
+    public static double toUnits(double valueInMgdl, double valueInMmol, String units) {
         if (units.equals(Constants.MGDL)) return valueInMgdl;
         else return valueInMmol;
     }
 
-    public static String toUnitsString(Double valueInMgdl, Double valueInMmol, String units) {
+    public static String toUnitsString(double valueInMgdl, double valueInMmol, String units) {
         if (units.equals(Constants.MGDL)) return DecimalFormatter.to0Decimal(valueInMgdl);
         else return DecimalFormatter.to1Decimal(valueInMmol);
     }
 
-    public static String toSignedUnitsString(Double valueInMgdl, Double valueInMmol, String units) {
+    public static String toSignedUnitsString(double valueInMgdl, double valueInMmol, String units) {
         if (units.equals(Constants.MGDL))
             return (valueInMgdl > 0 ? "+" : "") + DecimalFormatter.to0Decimal(valueInMgdl);
         else return (valueInMmol > 0 ? "+" : "") + DecimalFormatter.to1Decimal(valueInMmol);
+    }
+
+    public static double toCurrentUnits(double anyBg) {
+        if (anyBg < 32) return fromMmolToUnits(anyBg, ProfileFunctions.getSystemUnits());
+        else return fromMgdlToUnits(anyBg, ProfileFunctions.getSystemUnits());
+    }
+
+    public static String toCurrentUnitsString(double anyBg) {
+        if (anyBg < 32)
+            return toUnitsString(anyBg * Constants.MMOLL_TO_MGDL, anyBg, ProfileFunctions.getSystemUnits());
+        else
+            return toUnitsString(anyBg, anyBg * Constants.MGDL_TO_MMOLL, ProfileFunctions.getSystemUnits());
     }
 
     // targets are stored in mg/dl but profile vary

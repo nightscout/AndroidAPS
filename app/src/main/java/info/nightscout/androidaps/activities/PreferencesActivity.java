@@ -10,9 +10,12 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 
+import java.util.Arrays;
+
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -46,6 +49,7 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAverage
 import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.SafeParse;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     MyPreferenceFragment myPreferenceFragment;
@@ -65,13 +69,17 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         RxBus.INSTANCE.send(new EventPreferenceChange(key));
-        if (key.equals("language")) {
+        if (key.equals(MainApp.gs(R.string.key_language))) {
             RxBus.INSTANCE.send(new EventRebuildTabs(true));
             //recreate() does not update language so better close settings
             finish();
         }
-        if (key.equals("short_tabtitles")) {
+        if (key.equals(MainApp.gs(R.string.key_short_tabtitles))) {
             RxBus.INSTANCE.send(new EventRebuildTabs());
+        }
+        if (key.equals(MainApp.gs(R.string.key_units))) {
+            recreate();
+            return;
         }
         if (key.equals(MainApp.gs(R.string.key_openapsama_useautosens)) && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
             OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity), MainApp.gs(R.string.sensitivity_warning), null);
@@ -95,6 +103,14 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 for (PluginBase plugin : MainApp.getPluginsList()) {
                     plugin.updatePreferenceSummary(pref);
                 }
+            }
+            // convert preferences values to current units
+            String[] unitDependent = new String[]{MainApp.gs(R.string.key_hypo_target), MainApp.gs(R.string.key_activity_target), MainApp.gs(R.string.key_eatingsoon_target)};
+            if (Arrays.asList(unitDependent).contains(pref.getKey())) {
+                editTextPref = (EditTextPreference) pref;
+                String converted = Profile.toCurrentUnitsString(SafeParse.stringToDouble(editTextPref.getText()));
+                editTextPref.setSummary(converted);
+                editTextPref.setText(converted);
             }
         }
     }

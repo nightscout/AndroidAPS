@@ -319,13 +319,13 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
             DefaultValueHelper helper = new DefaultValueHelper();
 
             int activityTTDuration = helper.determineActivityTTDuration();
-            double activityTT = helper.determineActivityTT(units);
+            double activityTT = helper.determineActivityTT();
 
             int eatingSoonTTDuration = helper.determineEatingSoonTTDuration();
-            double eatingSoonTT = helper.determineEatingSoonTT(units);
+            double eatingSoonTT = helper.determineEatingSoonTT();
 
             int hypoTTDuration = helper.determineHypoTTDuration();
-            double hypoTT = helper.determineHypoTT(units);
+            double hypoTT = helper.determineHypoTT();
 
             List<String> actions = new LinkedList<>();
 
