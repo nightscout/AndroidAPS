@@ -35,7 +35,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.complications.BaseComplicationProviderService;
-import info.nightscout.androidaps.data.DisplayRawData;
+import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.R;
 import lecho.lib.hellocharts.view.LineChartView;
@@ -70,7 +70,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public LineChartView chart;
 
 
-    public DisplayRawData rawData = new DisplayRawData();
+    public RawDisplayData rawData = new RawDisplayData();
 
     public PowerManager.WakeLock wakeLock;
     // related endTime manual layout

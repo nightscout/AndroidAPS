@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 public class BgWatchDataTest {
 
     @Before
-    public void mock() {
+    public void mock() throws Exception {
         WearUtilMocker.prepareMockNoReal();
     }
 

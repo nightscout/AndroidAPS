@@ -3,6 +3,8 @@ package info.nightscout.androidaps.interaction.utils;
 import android.content.SharedPreferences;
 import android.util.Base64;
 
+import androidx.annotation.Nullable;
+
 import com.google.android.gms.wearable.DataMap;
 
 import java.util.Set;
@@ -22,15 +24,15 @@ public class Persistence {
         preferences = aaps.getAppContext().getSharedPreferences(COMPLICATION_PROVIDER_PREFERENCES_FILE_KEY, 0);
     }
 
+    @Nullable
     public DataMap getDataMap(String key) {
         if (preferences.contains(key)) {
             final String rawB64Data = preferences.getString(key, null);
             byte[] rawData = Base64.decode(rawB64Data, Base64.DEFAULT);
             try {
-                DataMap dataMap = DataMap.fromByteArray(rawData);
-                return dataMap;
+                return DataMap.fromByteArray(rawData);
             } catch (IllegalArgumentException ex) {
-
+                // Should never happen, and if it happen - we ignore and fallback to null
             }
         }
         return null;

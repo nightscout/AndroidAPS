@@ -22,28 +22,23 @@ public class AAPSMocker {
     private static final Map<String, SharedPreferences> mockedSharedPrefs = new HashMap<>();
     private static boolean unicodeComplicationsOn = true;
 
-    public static void prepareMock() {
+    public static void prepareMock() throws Exception {
         Context mockedContext = mock(Context.class);
         mockStatic(aaps.class, InvocationOnMock::callRealMethod);
-        try {
-            PowerMockito.when(aaps.class, "getAppContext").thenReturn(mockedContext);
-            PowerMockito.when(mockedContext, "getSharedPreferences",  ArgumentMatchers.anyString(), ArgumentMatchers.anyInt()).thenAnswer(invocation -> {
 
-                final String key = invocation.getArgument(0);
-                if (mockedSharedPrefs.containsKey(key)) {
-                    return mockedSharedPrefs.get(key);
-                } else {
-                    SharedPreferencesMock newPrefs = new SharedPreferencesMock();
-                    mockedSharedPrefs.put(key, newPrefs);
-                    return newPrefs;
-                }
-            });
-            PowerMockito.when(aaps.class, "areComplicationsUnicode").thenAnswer(invocation -> unicodeComplicationsOn);
+        PowerMockito.when(aaps.class, "getAppContext").thenReturn(mockedContext);
+        PowerMockito.when(mockedContext, "getSharedPreferences",  ArgumentMatchers.anyString(), ArgumentMatchers.anyInt()).thenAnswer(invocation -> {
 
-
-        } catch (Exception e) {
-            Assert.fail("Unable to mock objects: " + e.getMessage());
-        }
+            final String key = invocation.getArgument(0);
+            if (mockedSharedPrefs.containsKey(key)) {
+                return mockedSharedPrefs.get(key);
+            } else {
+                SharedPreferencesMock newPrefs = new SharedPreferencesMock();
+                mockedSharedPrefs.put(key, newPrefs);
+                return newPrefs;
+            }
+        });
+        PowerMockito.when(aaps.class, "areComplicationsUnicode").thenAnswer(invocation -> unicodeComplicationsOn);
 
         setMockedUnicodeComplicationsOn(true);
         resetMockedSharedPrefs();

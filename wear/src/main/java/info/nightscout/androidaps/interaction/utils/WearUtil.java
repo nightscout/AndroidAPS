@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.google.android.gms.wearable.DataMap;
@@ -53,14 +54,14 @@ public class WearUtil {
     //==============================================================================================
 
     // return true if below rate limit
-    public static synchronized boolean rateLimit(String name, int seconds) {
+    public static synchronized boolean isBelowRateLimit(String named, int onceForSeconds) {
         // check if over limit
-        if ((rateLimits.containsKey(name)) && (timestamp() - rateLimits.get(name) < (seconds * 1000))) {
-            Log.d(TAG, name + " rate limited: " + seconds + " seconds");
+        if ((rateLimits.containsKey(named)) && (timestamp() - rateLimits.get(named) < (onceForSeconds * 1000))) {
+            Log.d(TAG, named + " rate limited to one for " + onceForSeconds + " seconds");
             return false;
         }
         // not over limit
-        rateLimits.put(name, timestamp());
+        rateLimits.put(named, timestamp());
         return true;
     }
 
@@ -82,18 +83,15 @@ public class WearUtil {
         aaps.getAppContext().startActivity(getStartActivityIntent(c));
     }
 
-
     public static Intent getStartActivityIntent(Class c) {
         return new Intent(aaps.getAppContext(), c).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
-
-
 
     public static void threadSleep(long millis) {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
-            //
+            // we simply ignore if sleep was interrupted
         }
     }
 

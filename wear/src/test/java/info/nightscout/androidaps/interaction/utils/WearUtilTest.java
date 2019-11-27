@@ -36,7 +36,7 @@ import static org.junit.Assert.assertTrue;
 public class WearUtilTest {
 
     @Before
-    public void mock() {
+    public void mock() throws Exception {
         WearUtilMocker.prepareMock();
         LogMocker.prepareMock();
     }
@@ -146,12 +146,12 @@ public class WearUtilTest {
     @Test
     public void rateLimitTest() {
         // WHEN
-        final boolean firstCall = WearUtil.rateLimit("test-limit", 3);
-        final boolean callAfterward = WearUtil.rateLimit("test-limit", 3);
+        final boolean firstCall = WearUtil.isBelowRateLimit("test-limit", 3);
+        final boolean callAfterward = WearUtil.isBelowRateLimit("test-limit", 3);
         WearUtilMocker.progressClock(500L);
-        final boolean callTooSoon = WearUtil.rateLimit("test-limit", 3);
+        final boolean callTooSoon = WearUtil.isBelowRateLimit("test-limit", 3);
         WearUtilMocker.progressClock(3100L);
-        final boolean callAfterRateLimit = WearUtil.rateLimit("test-limit", 3);
+        final boolean callAfterRateLimit = WearUtil.isBelowRateLimit("test-limit", 3);
 
         // THEN
         assertTrue(firstCall);
@@ -166,7 +166,7 @@ public class WearUtilTest {
      * uses DataMap.fromBundle which need Android SDK runtime
      */
     @Test
-    public void bundleToDataMapTest() {
+    public void bundleToDataMapTest() throws Exception {
         // GIVEN
         DataMap refMap = new DataMap();
         refMap.putString("ala", "ma kota");

@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import info.nightscout.androidaps.aaps;
-import info.nightscout.androidaps.data.DisplayRawData;
+import info.nightscout.androidaps.data.RawDisplayData;
 
 /*
  * Created by dlvoy on 2019-11-12
@@ -26,7 +26,7 @@ public abstract class WallpaperComplication extends BaseComplicationProviderServ
 
     private static final String TAG = WallpaperComplication.class.getSimpleName();
 
-    public ComplicationData buildComplicationData(int dataType, DisplayRawData raw, PendingIntent complicationPendingIntent) {
+    public ComplicationData buildComplicationData(int dataType, RawDisplayData raw, PendingIntent complicationPendingIntent) {
 
         ComplicationData complicationData = null;
 
@@ -48,7 +48,6 @@ public abstract class WallpaperComplication extends BaseComplicationProviderServ
                     builder.setLargeImage(Icon.createWithBitmap(scaled));
             } catch (IOException e) {
                 Log.e(TAG, "Cannot read wallpaper asset: "+e.getMessage(), e);
-                e.printStackTrace();
             }
 
             complicationData = builder.build();

@@ -33,7 +33,7 @@ import static org.junit.Assert.assertTrue;
 public class PersistenceTest {
 
     @Before
-    public void mock() {
+    public void mock() throws Exception {
         WearUtilMocker.prepareMock();
         LogMocker.prepareMock();
         AAPSMocker.prepareMock();
@@ -88,9 +88,9 @@ public class PersistenceTest {
         final long whenUpdatedNext = persistence.whenDataUpdated();
 
         // THEN
-        assertThat(0L, is(whenNotUpdated));
-        assertThat(REF_NOW, is(whenUpdatedFirst));
-        assertThat(REF_NOW + 60000, is(whenUpdatedNext));
+        assertThat(whenNotUpdated, is(0L));
+        assertThat(whenUpdatedFirst, is(REF_NOW));
+        assertThat(whenUpdatedNext, is(REF_NOW + 60000));
     }
 
     @Test

@@ -5,6 +5,8 @@ import android.util.Log;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import info.nightscout.androidaps.BuildConfig;
+
 /**
  * Created for xDrip by jamorham on 07/03/2018
  * Adapted for AAPS by dlvoy on 2019-11-11
@@ -18,7 +20,7 @@ public class Inevitable {
 
     private static final String TAG = Inevitable.class.getSimpleName();
     private static final int MAX_QUEUE_TIME = (int) Constants.MINUTE_IN_MS * 6;
-    private static final boolean d = true;
+    private static final boolean debug = BuildConfig.DEBUG;
 
     private static final ConcurrentHashMap<String, Task> tasks = new ConcurrentHashMap<>();
 
@@ -31,14 +33,14 @@ public class Inevitable {
             // if it already exists then extend the time
             task.extendTime(idle_for);
 
-            if (d)
+            if (debug)
                 Log.d(TAG, "Extending time for: " + id + " to " + WearUtil.dateTimeText(task.when));
         } else {
             // otherwise create new task
             if (runnable == null) return; // extension only if already exists
             tasks.put(id, new Task(id, idle_for, runnable));
 
-            if (d) {
+            if (debug) {
                 Log.d(TAG, "Creating task: " + id + " due: " + WearUtil.dateTimeText(tasks.get(id).when));
             }
 
@@ -58,7 +60,6 @@ public class Inevitable {
                 }
             });
             t.setPriority(Thread.MIN_PRIORITY);
-            //t.setDaemon(true);
             t.start();
         }
     }
@@ -100,7 +101,7 @@ public class Inevitable {
         public boolean poll() {
             final long till = WearUtil.msTill(when);
             if (till < 1) {
-                if (d) Log.d(TAG, "Executing task! " + this.id);
+                if (debug) Log.d(TAG, "Executing task! " + this.id);
                 tasks.remove(this.id); // early remove to allow overlapping scheduling
                 what.run();
                 return true;

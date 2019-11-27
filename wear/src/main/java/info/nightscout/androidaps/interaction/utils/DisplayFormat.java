@@ -1,17 +1,19 @@
 package info.nightscout.androidaps.interaction.utils;
 
 import info.nightscout.androidaps.aaps;
-import info.nightscout.androidaps.data.DisplayRawData;
+import info.nightscout.androidaps.data.RawDisplayData;
 
 public class DisplayFormat {
 
     /**
-     * Maximal lengths of fields/labels shown in complications
+     * Maximal and minimal lengths of fields/labels shown in complications, in characters
+     * For MAX values - above that WearOS and watch faces may start ellipsize (...) contents
+     * For MIN values - this is minimal length that can hold legible data
      */
-    public static final int MAX_LONG_FIELD = 22; // this is empirical, above that many watch faces start to ellipsize
-    public static final int MAX_SHORT_FIELD = 7; // according to Wear OS docs for TYPE_SHORT_TEXT
-    public static final int MIN_COB_FIELD = 3;   // since carbs are 0..99g
-    public static final int MIN_IOB_FIELD = 3;   // IoB can range from like .1U to 99U
+    public static final int MAX_FIELD_LEN_LONG = 22; // this is found out empirical, for TYPE_LONG_TEXT
+    public static final int MAX_FIELD_LEN_SHORT = 7; // according to Wear OS docs for TYPE_SHORT_TEXT
+    public static final int MIN_FIELD_LEN_COB = 3;   // since carbs are usually 0..99g
+    public static final int MIN_FIELD_LEN_IOB = 3;   // IoB can range from like .1U to 99U
 
     public static String deltaSymbol() {
         return aaps.areComplicationsUnicode() ? "\u0394" : "";
@@ -48,32 +50,32 @@ public class DisplayFormat {
         }
     }
 
-    public static String shortTrend(final DisplayRawData raw) {
+    public static String shortTrend(final RawDisplayData raw) {
         String minutes = "--";
         if (raw.datetime > 0) {
             minutes = shortTimeSince(raw.datetime);
         }
 
-        if (minutes.length() + raw.sDelta.length() + deltaSymbol().length() + 1 <= MAX_SHORT_FIELD) {
+        if (minutes.length() + raw.sDelta.length() + deltaSymbol().length() + 1 <= MAX_FIELD_LEN_SHORT) {
             return minutes + " " + deltaSymbol() + raw.sDelta;
         }
 
         // that only optimizes obvious things like 0 before . or at end, + at beginning
-        String delta = (new SmallestDoubleString(raw.sDelta)).minimise(MAX_SHORT_FIELD-1);
-        if (minutes.length() + delta.length() + deltaSymbol().length() + 1 <= MAX_SHORT_FIELD) {
+        String delta = (new SmallestDoubleString(raw.sDelta)).minimise(MAX_FIELD_LEN_SHORT -1);
+        if (minutes.length() + delta.length() + deltaSymbol().length() + 1 <= MAX_FIELD_LEN_SHORT) {
             return minutes + " " + deltaSymbol() + delta;
         }
 
-        String shortDelta = (new SmallestDoubleString(raw.sDelta)).minimise(MAX_SHORT_FIELD-(1+minutes.length()));
+        String shortDelta = (new SmallestDoubleString(raw.sDelta)).minimise(MAX_FIELD_LEN_SHORT -(1+minutes.length()));
 
         return minutes + " " + shortDelta;
     }
 
-    public static String longGlucoseLine(final DisplayRawData raw) {
+    public static String longGlucoseLine(final RawDisplayData raw) {
         return raw.sSgv + raw.sDirection + " " + deltaSymbol() + (new SmallestDoubleString(raw.sDelta)).minimise(8) + " (" + shortTimeSince(raw.datetime) + ")";
     }
 
-    public static String longDetailsLine(final DisplayRawData raw) {
+    public static String longDetailsLine(final RawDisplayData raw) {
 
         final String SEP_LONG = "  " + verticalSeparatorSymbol() + "  ";
         final String SEP_SHORT = " " + verticalSeparatorSymbol() + " ";
@@ -81,26 +83,26 @@ public class DisplayFormat {
         final String SEP_MIN = " ";
 
         String line = raw.sCOB2 + SEP_LONG + raw.sIOB1 + SEP_LONG + basalRateSymbol()+raw.sBasalRate;
-        if (line.length() <= MAX_LONG_FIELD) {
+        if (line.length() <= MAX_FIELD_LEN_LONG) {
             return line;
         }
         line = raw.sCOB2 + SEP_SHORT + raw.sIOB1 + SEP_SHORT + raw.sBasalRate;
-        if (line.length() <= MAX_LONG_FIELD) {
+        if (line.length() <= MAX_FIELD_LEN_LONG) {
             return line;
         }
 
-        int remainingMax = MAX_LONG_FIELD - (raw.sCOB2.length() + raw.sBasalRate.length() + SEP_SHORT_LEN*2);
-        final String smallestIoB = new SmallestDoubleString(raw.sIOB1, SmallestDoubleString.Units.USE).minimise(Math.max(MIN_IOB_FIELD, remainingMax));
+        int remainingMax = MAX_FIELD_LEN_LONG - (raw.sCOB2.length() + raw.sBasalRate.length() + SEP_SHORT_LEN*2);
+        final String smallestIoB = new SmallestDoubleString(raw.sIOB1, SmallestDoubleString.Units.USE).minimise(Math.max(MIN_FIELD_LEN_IOB, remainingMax));
         line = raw.sCOB2 + SEP_SHORT + smallestIoB + SEP_SHORT + raw.sBasalRate;
-        if (line.length() <= MAX_LONG_FIELD) {
+        if (line.length() <= MAX_FIELD_LEN_LONG) {
             return line;
         }
 
-        remainingMax = MAX_LONG_FIELD - (smallestIoB.length() + raw.sBasalRate.length() + SEP_SHORT_LEN*2);
-        final String simplifiedCob = new SmallestDoubleString(raw.sCOB2, SmallestDoubleString.Units.USE).minimise(Math.max(MIN_COB_FIELD, remainingMax));
+        remainingMax = MAX_FIELD_LEN_LONG - (smallestIoB.length() + raw.sBasalRate.length() + SEP_SHORT_LEN*2);
+        final String simplifiedCob = new SmallestDoubleString(raw.sCOB2, SmallestDoubleString.Units.USE).minimise(Math.max(MIN_FIELD_LEN_COB, remainingMax));
 
         line = simplifiedCob + SEP_SHORT + smallestIoB + SEP_SHORT + raw.sBasalRate;
-        if (line.length() <= MAX_LONG_FIELD) {
+        if (line.length() <= MAX_FIELD_LEN_LONG) {
             return line;
         }
 
@@ -109,17 +111,17 @@ public class DisplayFormat {
         return line;
     }
 
-    public static Pair<String, String> detailedIob(DisplayRawData raw) {
-        final String iob1 = new SmallestDoubleString(raw.sIOB1, SmallestDoubleString.Units.USE).minimise(MAX_SHORT_FIELD);
+    public static Pair<String, String> detailedIob(RawDisplayData raw) {
+        final String iob1 = new SmallestDoubleString(raw.sIOB1, SmallestDoubleString.Units.USE).minimise(MAX_FIELD_LEN_SHORT);
         String iob2 = "";
         if (raw.sIOB2.contains("|")) {
             String[] iobs = raw.sIOB2.replace("(", "").replace(")", "").split("\\|");
 
-            String iobBolus = new SmallestDoubleString(iobs[0]).minimise(MIN_IOB_FIELD);
+            String iobBolus = new SmallestDoubleString(iobs[0]).minimise(MIN_FIELD_LEN_IOB);
             if (iobBolus.trim().length() == 0) {
                 iobBolus = "--";
             }
-            String iobBasal = new SmallestDoubleString(iobs[1]).minimise((MAX_SHORT_FIELD-1) - Math.max(MIN_IOB_FIELD, iobBolus.length()));
+            String iobBasal = new SmallestDoubleString(iobs[1]).minimise((MAX_FIELD_LEN_SHORT -1) - Math.max(MIN_FIELD_LEN_IOB, iobBolus.length()));
             if (iobBasal.trim().length() == 0) {
                 iobBasal = "--";
             }
@@ -128,14 +130,14 @@ public class DisplayFormat {
         return Pair.create(iob1, iob2);
     }
 
-    public static Pair<String, String> detailedCob(final DisplayRawData raw) {
+    public static Pair<String, String> detailedCob(final RawDisplayData raw) {
         SmallestDoubleString cobMini = new SmallestDoubleString(raw.sCOB2, SmallestDoubleString.Units.USE);
 
         String cob2 = "";
         if (cobMini.getExtra().length() > 0) {
             cob2 = cobMini.getExtra() + cobMini.getUnits();
         }
-        final String cob1 = cobMini.minimise(MAX_SHORT_FIELD);
+        final String cob1 = cobMini.minimise(MAX_FIELD_LEN_SHORT);
         return Pair.create(cob1, cob2);
     }
 }

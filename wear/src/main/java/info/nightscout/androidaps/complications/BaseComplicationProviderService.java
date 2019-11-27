@@ -20,7 +20,7 @@ import java.util.Set;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.aaps;
-import info.nightscout.androidaps.data.DisplayRawData;
+import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.Constants;
 import info.nightscout.androidaps.interaction.utils.DisplayFormat;
@@ -38,7 +38,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     private static final String TAG = BaseComplicationProviderService.class.getSimpleName();
 
     private static final String KEY_COMPLICATIONS = "complications";
-    private static final String KEY_LAST_SINCE = "lastSince";
+    private static final String KEY_LAST_SHOWN_SINCE_VALUE = "lastSince";
     private static final String KEY_STALE_REPORTED = "staleReported";
     private static final String TASK_ID_REFRESH_COMPLICATION = "refresh-complication";
 
@@ -56,7 +56,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     // ABSTRACT COMPLICATION INTERFACE
     //==============================================================================================
 
-    public abstract ComplicationData buildComplicationData(int dataType, DisplayRawData raw, PendingIntent complicationPendingIntent);
+    public abstract ComplicationData buildComplicationData(int dataType, RawDisplayData raw, PendingIntent complicationPendingIntent);
     public abstract String getProviderCanonicalName();
 
     public ComplicationAction getComplicationAction() { return ComplicationAction.MENU; };
@@ -66,11 +66,11 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     //----------------------------------------------------------------------------------------------
 
     public ComplicationData buildNoSyncComplicationData(int dataType,
-                                                        DisplayRawData raw,
+                                                        RawDisplayData raw,
                                                         PendingIntent complicationPendingIntent,
                                                         PendingIntent exceptionalPendingIntent,
                                                         long since) {
-        ComplicationData complicationData = null;
+
 
         final ComplicationData.Builder builder = new ComplicationData.Builder(dataType);
         if (dataType != ComplicationData.TYPE_LARGE_IMAGE) {
@@ -111,16 +111,14 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
         }
 
         builder.setTapAction(exceptionalPendingIntent);
-        complicationData = builder.build();
-        return complicationData;
+        return builder.build();
     }
 
     public ComplicationData buildOutdatedComplicationData(int dataType,
-                                                          DisplayRawData raw,
+                                                          RawDisplayData raw,
                                                           PendingIntent complicationPendingIntent,
                                                           PendingIntent exceptionalPendingIntent,
                                                           long since) {
-        ComplicationData complicationData = null;
 
         final ComplicationData.Builder builder = new ComplicationData.Builder(dataType);
         if (dataType != ComplicationData.TYPE_LARGE_IMAGE) {
@@ -162,8 +160,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
         }
 
         builder.setTapAction(exceptionalPendingIntent);
-        complicationData = builder.build();
-        return complicationData;
+        return builder.build();
     }
 
     /**
@@ -230,12 +227,12 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
 
         final Persistence persistence = new Persistence();
 
-        final DisplayRawData raw = new DisplayRawData();
-        raw.partialUpdateFromPersistence(persistence);
+        final RawDisplayData raw = new RawDisplayData();
+        raw.updateForComplicationsFromPersistence(persistence);
         Log.d(TAG, "Complication data: " + raw.toDebugString());
 
-        // store what is currently rendered since field, to detect it need update
-        persistence.putString(KEY_LAST_SINCE, DisplayFormat.shortTimeSince(raw.datetime));
+        // store what is currently rendered in 'SGV since' field, to detect if it was changed and need update
+        persistence.putString(KEY_LAST_SHOWN_SINCE_VALUE, DisplayFormat.shortTimeSince(raw.datetime));
 
         // by each render we clear stale flag to ensure it is re-rendered at next refresh detection round
         persistence.putBoolean(KEY_STALE_REPORTED, false);
@@ -259,7 +256,6 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
 
         if (complicationData != null) {
             complicationManager.updateComplicationData(complicationId, complicationData);
-
         } else {
             // If no data is sent, we still need to inform the ComplicationManager, so the update
             // job can finish and the wake lock isn't held any longer than necessary.
@@ -297,7 +293,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
         Log.d(TAG, "Pending check if update needed - "+p.getString(KEY_COMPLICATIONS, ""));
 
         Inevitable.task(TASK_ID_REFRESH_COMPLICATION, 15 * Constants.SECOND_IN_MS, () -> {
-            if (WearUtil.rateLimit("complication-checkIfUpdateNeeded", 5)) {
+            if (WearUtil.isBelowRateLimit("complication-checkIfUpdateNeeded", 5)) {
                 Log.d(TAG, "Checking if update needed");
                 requestUpdateIfSinceChanged();
                 // We reschedule need for check - to make sure next check will Inevitable go in next 15s
@@ -314,10 +310,10 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
     private static void requestUpdateIfSinceChanged() {
         final Persistence persistence = new Persistence();
 
-        final DisplayRawData raw = new DisplayRawData();
-        raw.partialUpdateFromPersistence(persistence);
+        final RawDisplayData raw = new RawDisplayData();
+        raw.updateForComplicationsFromPersistence(persistence);
 
-        final String lastSince = persistence.getString(KEY_LAST_SINCE, "-");
+        final String lastSince = persistence.getString(KEY_LAST_SHOWN_SINCE_VALUE, "-");
         final String calcSince = DisplayFormat.shortTimeSince(raw.datetime);
         final boolean isStale = (WearUtil.msSince(persistence.whenDataUpdated()) > Constants.STALE_MS)
                 ||(WearUtil.msSince(raw.datetime) > Constants.STALE_MS);
@@ -326,7 +322,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
         final boolean sinceWasChanged = !lastSince.equals(calcSince);
 
         if (sinceWasChanged|| (isStale && !staleWasRefreshed)) {
-            persistence.putString(KEY_LAST_SINCE, calcSince);
+            persistence.putString(KEY_LAST_SHOWN_SINCE_VALUE, calcSince);
             persistence.putBoolean(KEY_STALE_REPORTED, isStale);
 
             Log.d(TAG, "Detected refresh of time needed! Reason: "
@@ -351,7 +347,7 @@ public abstract class BaseComplicationProviderService extends ComplicationProvid
             Log.d(TAG, "Pending update of "+provider);
             // We wait with updating allowing all request, from various sources, to arrive
             Inevitable.task("update-req-"+provider, 700, () -> {
-                if (WearUtil.rateLimit("update-req-"+provider, 2)) {
+                if (WearUtil.isBelowRateLimit("update-req-"+provider, 2)) {
                     Log.d(TAG, "Requesting update of "+provider);
                     final ComponentName componentName = new ComponentName(aaps.getAppContext(), provider);
                     final ProviderUpdateRequester providerUpdateRequester = new ProviderUpdateRequester(aaps.getAppContext(), componentName);

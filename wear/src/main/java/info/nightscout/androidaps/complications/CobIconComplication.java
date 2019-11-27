@@ -7,7 +7,7 @@ import android.support.wearable.complications.ComplicationText;
 import android.util.Log;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.DisplayRawData;
+import info.nightscout.androidaps.data.RawDisplayData;
 
 /*
  * Created by dlvoy on 2019-11-12
@@ -16,7 +16,7 @@ public class CobIconComplication extends BaseComplicationProviderService {
 
     private static final String TAG = CobIconComplication.class.getSimpleName();
 
-    public ComplicationData buildComplicationData(int dataType, DisplayRawData raw, PendingIntent complicationPendingIntent) {
+    public ComplicationData buildComplicationData(int dataType, RawDisplayData raw, PendingIntent complicationPendingIntent) {
 
         ComplicationData complicationData = null;
 

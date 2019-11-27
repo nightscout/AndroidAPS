@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.watchfaces;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
@@ -18,7 +17,7 @@ import java.util.TimeZone;
 import info.nightscout.androidaps.data.BasalWatchData;
 import info.nightscout.androidaps.data.BgWatchData;
 import info.nightscout.androidaps.data.BolusWatchData;
-import info.nightscout.androidaps.data.DisplayRawData;
+import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.data.TempWatchData;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -116,7 +115,7 @@ public class BgGraphBuilder {
         this.end_time = (predictionEndTime>end_time)?predictionEndTime:end_time;
     }
 
-    public BgGraphBuilder(Context context, DisplayRawData raw, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
+    public BgGraphBuilder(Context context, RawDisplayData raw, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
         this(context,
                 raw.bgDataList,
                 raw.predictionList,
@@ -135,7 +134,7 @@ public class BgGraphBuilder {
                 timespan);
     }
 
-    public BgGraphBuilder(Context context, DisplayRawData raw, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
+    public BgGraphBuilder(Context context, RawDisplayData raw, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int bolusInvalidColor, int carbsColor, int timespan) {
         this(context,
                 raw.bgDataList,
                 raw.predictionList,

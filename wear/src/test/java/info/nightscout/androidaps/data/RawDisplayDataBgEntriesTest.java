@@ -20,10 +20,10 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { WearUtil.class } )
-public class DisplayRawDataBgEntriesTest {
+public class RawDisplayDataBgEntriesTest {
 
     @Before
-    public void mock() {
+    public void mock() throws Exception {
         WearUtilMocker.prepareMockNoReal();
     }
 
@@ -62,7 +62,7 @@ public class DisplayRawDataBgEntriesTest {
     @Test
     public void addToWatchSetTest() {
         // GIVEN
-        DisplayRawData newRaw = new DisplayRawData();
+        RawDisplayData newRaw = new RawDisplayData();
         DataMap multipleEntries = dataMapForEntries();
         DataMap singleEntry1 = dataMapForEntries(WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS*4*2,92);
         DataMap singleEntry2 = dataMapForEntries(WearUtilMocker.REF_NOW - Constants.MINUTE_IN_MS*4*1,88);
@@ -107,7 +107,7 @@ public class DisplayRawDataBgEntriesTest {
 
     @Test
     public void addToWatchSetCleanupOldTest() {
-        DisplayRawData newRaw = new DisplayRawData();
+        RawDisplayData newRaw = new RawDisplayData();
 
         newRaw.addToWatchSet(dataMapForEntries(WearUtil.timestamp(),125));
         assertThat(newRaw.bgDataList.size(), is(1));

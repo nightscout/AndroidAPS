@@ -25,28 +25,22 @@ public class WearUtilMocker {
     public static final long REF_NOW = 1572610530000L;
     private static long clockMsDiff = 0L;
 
-    public static void prepareMock() {
+    public static void prepareMock() throws Exception {
         resetClock();
         mockStatic(WearUtil.class, InvocationOnMock::callRealMethod);
-        try {
-            // because we cleverly used timestamp() by implementation, we can mock it
-            // and control the time in tests
-            PowerMockito.when(WearUtil.class, "timestamp").then(invocation -> (REF_NOW + clockMsDiff));
-        } catch (Exception e) {
-            Assert.fail("Unable to mock the construction of the WearUtil object: " + e.getMessage());
-        }
+
+        // because we cleverly used timestamp() by implementation, we can mock it
+        // and control the time in tests
+        PowerMockito.when(WearUtil.class, "timestamp").then(invocation -> (REF_NOW + clockMsDiff));
     }
 
-    public static void prepareMockNoReal() {
+    public static void prepareMockNoReal() throws Exception {
         resetClock();
         mockStatic(WearUtil.class);
-        try {
-            PowerMockito.when(WearUtil.class, "timestamp").then(invocation -> REF_NOW + clockMsDiff);
-            PowerMockito.when(WearUtil.class, "getWakeLock", anyString(), anyInt()).then(invocation -> null);
-            PowerMockito.when(WearUtil.class, "bundleToDataMap", any(Bundle.class)).then(bundleToDataMapMock);
-        } catch (Exception e) {
-            Assert.fail("Unable to mock the construction of the WearUtil object: " + e.getMessage());
-        }
+
+        PowerMockito.when(WearUtil.class, "timestamp").then(invocation -> REF_NOW + clockMsDiff);
+        PowerMockito.when(WearUtil.class, "getWakeLock", anyString(), anyInt()).then(invocation -> null);
+        PowerMockito.when(WearUtil.class, "bundleToDataMap", any(Bundle.class)).then(bundleToDataMapMock);
     }
 
     public static void resetClock() {

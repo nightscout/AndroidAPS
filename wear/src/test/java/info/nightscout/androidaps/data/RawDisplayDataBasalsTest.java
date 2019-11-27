@@ -35,10 +35,10 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest( { WearUtil.class, Log.class, SharedPreferences.class, Context.class, aaps.class, android.util.Base64.class, Intent.class } )
-public class DisplayRawDataBasalsTest {
+public class RawDisplayDataBasalsTest {
 
     @Before
-    public void mock() {
+    public void mock() throws Exception {
         AAPSMocker.prepareMock();
         AAPSMocker.resetMockedSharedPrefs();
         AndroidMocker.mockBase64();
@@ -119,14 +119,14 @@ public class DisplayRawDataBasalsTest {
         return dataMap;
     }
 
-    private void assertBasalsEmpty(DisplayRawData newRaw) {
+    private void assertBasalsEmpty(RawDisplayData newRaw) {
         assertThat(newRaw.tempWatchDataList.size(), is(0));
         assertThat(newRaw.basalWatchDataList.size(), is(0));
         assertThat(newRaw.bolusWatchDataList.size(), is(0));
         assertThat(newRaw.predictionList.size(), is(0));
     }
 
-    private void assertBasalsOk(DisplayRawData newRaw) {
+    private void assertBasalsOk(RawDisplayData newRaw) {
         assertThat(newRaw.tempWatchDataList.size(), is(2));
         assertThat(newRaw.basalWatchDataList.size(), is(1));
         assertThat(newRaw.bolusWatchDataList.size(), is(3));
@@ -196,7 +196,7 @@ public class DisplayRawDataBasalsTest {
     public void updateBasalsFromEmptyPersistenceTest() {
         // GIVEN
         Persistence persistence = new Persistence();
-        DisplayRawData newRaw = new DisplayRawData();
+        RawDisplayData newRaw = new RawDisplayData();
 
         // WHEN
         newRaw.updateFromPersistence(persistence);
@@ -209,10 +209,10 @@ public class DisplayRawDataBasalsTest {
     public void updateBasalsFromPersistenceTest() {
         // GIVEN
         Persistence persistence = new Persistence();
-        DisplayRawData newRaw = new DisplayRawData();
+        RawDisplayData newRaw = new RawDisplayData();
 
         // WHEN
-        Persistence.storeDataMap(DisplayRawData.BASALS_PERSISTENCE_KEY, dataMapForBasals());
+        Persistence.storeDataMap(RawDisplayData.BASALS_PERSISTENCE_KEY, dataMapForBasals());
         newRaw.updateFromPersistence(persistence);
 
         // THEN
@@ -223,11 +223,11 @@ public class DisplayRawDataBasalsTest {
     public void partialUpdateBasalsFromPersistenceTest() {
         // GIVEN
         Persistence persistence = new Persistence();
-        DisplayRawData newRaw = new DisplayRawData();
+        RawDisplayData newRaw = new RawDisplayData();
 
         // WHEN
-        Persistence.storeDataMap(DisplayRawData.BASALS_PERSISTENCE_KEY, dataMapForBasals());
-        newRaw.partialUpdateFromPersistence(persistence);
+        Persistence.storeDataMap(RawDisplayData.BASALS_PERSISTENCE_KEY, dataMapForBasals());
+        newRaw.updateForComplicationsFromPersistence(persistence);
 
         // THEN
         assertBasalsEmpty(newRaw);
@@ -240,7 +240,7 @@ public class DisplayRawDataBasalsTest {
         Bundle bundle = BundleMock.mock(dataMapForBasals());
 
         intent.putExtra("basals", bundle);
-        DisplayRawData newRaw = new DisplayRawData();
+        RawDisplayData newRaw = new RawDisplayData();
 
         // WHEN
         newRaw.updateBasalsFromMessage(intent, null);
@@ -253,7 +253,7 @@ public class DisplayRawDataBasalsTest {
     public void updateBasalsFromEmptyMessageTest() {
         // GIVEN
         Intent intent = IntentMock.mock();
-        DisplayRawData newRaw = new DisplayRawData();
+        RawDisplayData newRaw = new RawDisplayData();
 
         // WHEN
         newRaw.updateBasalsFromMessage(intent, null);

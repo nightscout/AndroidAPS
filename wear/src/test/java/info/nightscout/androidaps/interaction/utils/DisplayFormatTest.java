@@ -11,7 +11,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import info.nightscout.androidaps.aaps;
-import info.nightscout.androidaps.data.DisplayRawData;
+import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.testing.mockers.AAPSMocker;
 import info.nightscout.androidaps.testing.mockers.WearUtilMocker;
 
@@ -34,7 +34,7 @@ import static org.junit.Assert.assertThat;
 public class DisplayFormatTest {
 
     @Before
-    public void mock() {
+    public void mock() throws Exception {
         WearUtilMocker.prepareMock();
         AAPSMocker.prepareMock();
         AAPSMocker.resetMockedSharedPrefs();
@@ -104,7 +104,7 @@ public class DisplayFormatTest {
 
     @Test
     public void shortTrendTest() {
-        DisplayRawData raw = new DisplayRawData();
+        RawDisplayData raw = new RawDisplayData();
         assertThat(DisplayFormat.shortTrend(raw), is("-- Δ--"));
 
         raw.datetime = backInTime(0, 0, 2, 0);
