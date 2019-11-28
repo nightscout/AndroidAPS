@@ -60,6 +60,30 @@ class LocalProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         build()
+        // activate DIA tab
+        processVisibilityOnClick(dia_tab)
+        localprofile_dia_placeholder.visibility = View.VISIBLE
+        // setup listeners
+        dia_tab.setOnClickListener {
+            processVisibilityOnClick(it)
+            localprofile_dia_placeholder.visibility = View.VISIBLE
+        }
+        ic_tab.setOnClickListener {
+            processVisibilityOnClick(it)
+            localprofile_ic.visibility = View.VISIBLE
+        }
+        isf_tab.setOnClickListener {
+            processVisibilityOnClick(it)
+            localprofile_isf.visibility = View.VISIBLE
+        }
+        basal_tab.setOnClickListener {
+            processVisibilityOnClick(it)
+            localprofile_basal.visibility = View.VISIBLE
+        }
+        target_tab.setOnClickListener {
+            processVisibilityOnClick(it)
+            localprofile_target.visibility = View.VISIBLE
+        }
     }
 
     fun build() {
@@ -68,14 +92,14 @@ class LocalProfileFragment : Fragment() {
 
         localprofile_name.setText(LocalProfilePlugin.currentProfile().name)
         localprofile_dia.setParams(LocalProfilePlugin.currentProfile().dia, HardLimits.MINDIA, HardLimits.MAXDIA, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
-        TimeListEdit(context, view, R.id.localprofile_ic, MainApp.gs(R.string.nsprofileview_ic_label) + ":", LocalProfilePlugin.currentProfile().ic, null, HardLimits.MINIC, HardLimits.MAXIC, 0.1, DecimalFormat("0.0"), save)
+        TimeListEdit(context, view, R.id.localprofile_ic, MainApp.gs(R.string.nsprofileview_ic_label), LocalProfilePlugin.currentProfile().ic, null, HardLimits.MINIC, HardLimits.MAXIC, 0.1, DecimalFormat("0.0"), save)
         basalView = TimeListEdit(context, view, R.id.localprofile_basal, MainApp.gs(R.string.nsprofileview_basal_label) + ": " + sumLabel(), LocalProfilePlugin.currentProfile().basal, null, pumpDescription.basalMinimumRate, 10.0, 0.01, DecimalFormat("0.00"), save)
         if (units == Constants.MGDL) {
-            TimeListEdit(context, view, R.id.localprofile_isf, MainApp.gs(R.string.nsprofileview_isf_label) + ":", LocalProfilePlugin.currentProfile().isf, null, HardLimits.MINISF, HardLimits.MAXISF, 1.0, DecimalFormat("0"), save)
-            TimeListEdit(context, view, R.id.localprofile_target, MainApp.gs(R.string.nsprofileview_target_label) + ":", LocalProfilePlugin.currentProfile().targetLow, LocalProfilePlugin.currentProfile().targetHigh, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), 1.0, DecimalFormat("0"), save)
+            TimeListEdit(context, view, R.id.localprofile_isf, MainApp.gs(R.string.nsprofileview_isf_label), LocalProfilePlugin.currentProfile().isf, null, HardLimits.MINISF, HardLimits.MAXISF, 1.0, DecimalFormat("0"), save)
+            TimeListEdit(context, view, R.id.localprofile_target, MainApp.gs(R.string.nsprofileview_target_label), LocalProfilePlugin.currentProfile().targetLow, LocalProfilePlugin.currentProfile().targetHigh, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), 1.0, DecimalFormat("0"), save)
         } else {
-            TimeListEdit(context, view, R.id.localprofile_isf, MainApp.gs(R.string.nsprofileview_isf_label) + ":", LocalProfilePlugin.currentProfile().isf, null, Profile.fromMgdlToUnits(HardLimits.MINISF, Constants.MMOL), Profile.fromMgdlToUnits(HardLimits.MAXISF, Constants.MMOL), 0.1, DecimalFormat("0.0"), save)
-            TimeListEdit(context, view, R.id.localprofile_target, MainApp.gs(R.string.nsprofileview_target_label) + ":", LocalProfilePlugin.currentProfile().targetLow, LocalProfilePlugin.currentProfile().targetHigh, Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), Constants.MMOL), Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), Constants.MMOL), 0.1, DecimalFormat("0.0"), save)
+            TimeListEdit(context, view, R.id.localprofile_isf, MainApp.gs(R.string.nsprofileview_isf_label), LocalProfilePlugin.currentProfile().isf, null, Profile.fromMgdlToUnits(HardLimits.MINISF, Constants.MMOL), Profile.fromMgdlToUnits(HardLimits.MAXISF, Constants.MMOL), 0.1, DecimalFormat("0.0"), save)
+            TimeListEdit(context, view, R.id.localprofile_target, MainApp.gs(R.string.nsprofileview_target_label), LocalProfilePlugin.currentProfile().targetLow, LocalProfilePlugin.currentProfile().targetHigh, Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[0].toDouble(), Constants.MMOL), Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_TARGET_BG[1].toDouble(), Constants.MMOL), 0.1, DecimalFormat("0.0"), save)
         }
 
         // Spinner
@@ -183,11 +207,11 @@ class LocalProfileFragment : Fragment() {
     }
 
     fun updateGUI() {
-        if (invalidprofile == null) return
+        if (localprofile_profileswitch == null) return
         val isValid = LocalProfilePlugin.isValidEditState()
         val isEdited = LocalProfilePlugin.isEdited
         if (isValid) {
-            invalidprofile.visibility = View.GONE //show invalid profile
+            this.view?.setBackgroundColor(MainApp.gc(R.color.ok_background))
 
             if (isEdited) {
                 //edited profile -> save first
@@ -198,7 +222,7 @@ class LocalProfileFragment : Fragment() {
                 localprofile_save.visibility = View.GONE
             }
         } else {
-            invalidprofile.visibility = View.VISIBLE
+            this.view?.setBackgroundColor(MainApp.gc(R.color.error_background))
             localprofile_profileswitch.visibility = View.GONE
             localprofile_save.visibility = View.GONE //don't save an invalid profile
         }
@@ -210,4 +234,19 @@ class LocalProfileFragment : Fragment() {
             localprofile_reset.visibility = View.GONE
         }
     }
+
+    private fun processVisibilityOnClick(selected: View) {
+        dia_tab.setBackgroundColor(MainApp.gc(R.color.defaultbackground))
+        ic_tab.setBackgroundColor(MainApp.gc(R.color.defaultbackground))
+        isf_tab.setBackgroundColor(MainApp.gc(R.color.defaultbackground))
+        basal_tab.setBackgroundColor(MainApp.gc(R.color.defaultbackground))
+        target_tab.setBackgroundColor(MainApp.gc(R.color.defaultbackground))
+        selected.setBackgroundColor(MainApp.gc(R.color.tabBgColorSelected))
+        localprofile_dia_placeholder.visibility = View.GONE
+        localprofile_ic.visibility = View.GONE
+        localprofile_isf.visibility = View.GONE
+        localprofile_basal.visibility = View.GONE
+        localprofile_target.visibility = View.GONE
+    }
+
 }
