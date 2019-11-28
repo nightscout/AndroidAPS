@@ -42,6 +42,7 @@ class LocalProfileFragment : Fragment() {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             LocalProfilePlugin.currentProfile().dia = SafeParse.stringToDouble(localprofile_dia.text.toString())
+            LocalProfilePlugin.currentProfile().name = localprofile_name.text.toString()
             doEdit()
         }
     }
@@ -91,6 +92,7 @@ class LocalProfileFragment : Fragment() {
         val units = if (LocalProfilePlugin.currentProfile().mgdl) Constants.MGDL else Constants.MMOL
 
         localprofile_name.setText(LocalProfilePlugin.currentProfile().name)
+        localprofile_name.addTextChangedListener(textWatch)
         localprofile_dia.setParams(LocalProfilePlugin.currentProfile().dia, HardLimits.MINDIA, HardLimits.MAXDIA, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
         TimeListEdit(context, view, R.id.localprofile_ic, MainApp.gs(R.string.nsprofileview_ic_label), LocalProfilePlugin.currentProfile().ic, null, HardLimits.MINIC, HardLimits.MAXIC, 0.1, DecimalFormat("0.0"), save)
         basalView = TimeListEdit(context, view, R.id.localprofile_basal, MainApp.gs(R.string.nsprofileview_basal_label) + ": " + sumLabel(), LocalProfilePlugin.currentProfile().basal, null, pumpDescription.basalMinimumRate, 10.0, 0.01, DecimalFormat("0.00"), save)
@@ -191,7 +193,7 @@ class LocalProfileFragment : Fragment() {
                 return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
             }
             LocalProfilePlugin.storeSettings()
-            updateGUI()
+            build()
         }
         updateGUI()
     }
