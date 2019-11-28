@@ -14,6 +14,11 @@ General rules
 Development guidelines
 ======================
 
+Coding convetions
+-----------------
+1. Use Android Studio with default indents (4 chars, use spaces)
+2. Use autoformat feature CTRL-ALR-L in every changed file before commit
+
 Commiting Changes / Pull Requests
 ---------------------------------
 
