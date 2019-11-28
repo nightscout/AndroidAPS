@@ -1,8 +1,23 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.dicedmelon.gradle:jacoco-android:0.1.4'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'jacoco-android'
+
+jacoco {
+    toolVersion = "0.8.3"
+}
 
 ext {
     wearableVersion = "2.4.0"
     playServicesWearable = "17.0.0"
+    powermockVersion = "1.7.3"
 }
 
 def generateGitBuild = { ->
@@ -92,6 +107,10 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     //implementation files("libs/hellocharts-library-1.5.5.jar")
     //compile "com.ustwo.android:clockwise-wearable:1.0.2"
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.legacy:legacy-support-v13:1.0.0'
+
     compileOnly "com.google.android.wearable:wearable:${wearableVersion}"
     implementation "com.google.android.support:wearable:${wearableVersion}"
     implementation "com.google.android.gms:play-services-wearable:${playServicesWearable}"
@@ -101,4 +120,27 @@ dependencies {
     implementation 'androidx.wear:wear:1.0.0'
     implementation('me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0')
     implementation('com.github.lecho:hellocharts-library:1.5.8@aar')
+    
+    testImplementation "junit:junit:4.12"
+    testImplementation "org.json:json:20140107"
+    testImplementation ("org.mockito:mockito-core:2.8.47") {
+        exclude group: 'net.bytebuddy', module: 'byte-buddy'
+        exclude group: 'net.bytebuddy', module: 'byte-buddy-android'
+        exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
+    }
+    // to fix org.mockito:mockito-core dependency issues, fixed in mockito 3+
+    testImplementation 'net.bytebuddy:byte-buddy:1.8.22'
+    testImplementation 'net.bytebuddy:byte-buddy-android:1.8.22'
+    testImplementation 'net.bytebuddy:byte-buddy-agent:1.8.22'
+
+    testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
+    testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
+    testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
+    testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
+    testImplementation "joda-time:joda-time:2.9.9"
+    testImplementation("com.google.truth:truth:0.39") {
+        exclude group: "com.google.guava", module: "guava"
+    }
+    testImplementation "org.skyscreamer:jsonassert:1.5.0"
+    testImplementation "org.hamcrest:hamcrest-all:1.3"
 }

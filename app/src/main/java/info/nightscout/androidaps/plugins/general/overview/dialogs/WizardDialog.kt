@@ -114,6 +114,7 @@ class WizardDialog : DialogFragment() {
                 log.debug("guarding: ok already clicked")
             } else {
                 okClicked = true
+                calculateInsulin()
                 parentContext?.let { context ->
                     wizard?.confirmAndExecute(context)
                 }

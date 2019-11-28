@@ -20,8 +20,12 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.JsonHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ActionNotification extends Action {
+    private static final Logger log = LoggerFactory.getLogger(ActionNotification.class);
+
     public InputString text = new InputString();
 
     @Override
@@ -59,7 +63,7 @@ public class ActionNotification extends Action {
             o.put("type", this.getClass().getName());
             o.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -70,7 +74,7 @@ public class ActionNotification extends Action {
             JSONObject o = new JSONObject(data);
             text.setValue(JsonHelper.safeGetString(o, "text"));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }

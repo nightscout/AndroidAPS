@@ -28,19 +28,19 @@ public class SmsTest {
         when(smsMessage.getMessageBody()).thenReturn("aBody");
 
         Sms sms = new Sms(smsMessage);
-        Assert.assertEquals(sms.phoneNumber, "aNumber");
-        Assert.assertEquals(sms.text, "aBody");
-        Assert.assertTrue(sms.received);
+        Assert.assertEquals(sms.getPhoneNumber(), "aNumber");
+        Assert.assertEquals(sms.getText(), "aBody");
+        Assert.assertTrue(sms.getReceived());
 
         sms = new Sms("aNumber", "aBody");
-        Assert.assertEquals(sms.phoneNumber, "aNumber");
-        Assert.assertEquals(sms.text, "aBody");
-        Assert.assertTrue(sms.sent);
+        Assert.assertEquals(sms.getPhoneNumber(), "aNumber");
+        Assert.assertEquals(sms.getText(), "aBody");
+        Assert.assertTrue(sms.getSent());
 
         sms = new Sms("aNumber", R.string.insulin_unit_shortname);
-        Assert.assertEquals(sms.phoneNumber, "aNumber");
-        Assert.assertEquals(sms.text, MainApp.gs(R.string.insulin_unit_shortname));
-        Assert.assertTrue(sms.sent);
+        Assert.assertEquals(sms.getPhoneNumber(), "aNumber");
+        Assert.assertEquals(sms.getText(), MainApp.gs(R.string.insulin_unit_shortname));
+        Assert.assertTrue(sms.getSent());
 
         Assert.assertEquals(sms.toString(), "SMS from aNumber: U");
     }

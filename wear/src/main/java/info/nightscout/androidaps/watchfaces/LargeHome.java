@@ -53,15 +53,15 @@ public class LargeHome extends BaseWatchFace {
                 R.color.dark_background : R.color.dark_mLinearLayout));
         mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
         mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
-        if (sgvLevel == 1) {
+        if (rawData.sgvLevel == 1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
             mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
-        } else if (sgvLevel == 0) {
+        } else if (rawData.sgvLevel == 0) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
             mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        } else if (sgvLevel == -1) {
+        } else if (rawData.sgvLevel == -1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
             mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
@@ -74,7 +74,7 @@ public class LargeHome extends BaseWatchFace {
             mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_TimestampOld));
         }
 
-        if (batteryLevel == 1) {
+        if (rawData.batteryLevel == 1) {
             mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), dividerMatchesBg ?
                     R.color.dark_midColor : R.color.dark_uploaderBattery));
         } else {
@@ -90,15 +90,15 @@ public class LargeHome extends BaseWatchFace {
             mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), dividerMatchesBg ?
                     R.color.light_background : R.color.light_stripe_background));
             mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_background));
-            if (sgvLevel == 1) {
+            if (rawData.sgvLevel == 1) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
                 mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
-            } else if (sgvLevel == 0) {
+            } else if (rawData.sgvLevel == 0) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
                 mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
-            } else if (sgvLevel == -1) {
+            } else if (rawData.sgvLevel == -1) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
                 mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
@@ -110,7 +110,7 @@ public class LargeHome extends BaseWatchFace {
                 mTimestamp.setTextColor(Color.RED);
             }
 
-            if (batteryLevel == 1) {
+            if (rawData.batteryLevel == 1) {
                 mUploaderBattery.setTextColor(dividerMatchesBg ? Color.BLACK : Color.WHITE);
             } else {
                 mUploaderBattery.setTextColor(Color.RED);
@@ -120,15 +120,15 @@ public class LargeHome extends BaseWatchFace {
         } else {
             mRelativeLayout.setBackgroundColor(Color.BLACK);
             mLinearLayout.setBackgroundColor(dividerMatchesBg ? Color.BLACK : Color.LTGRAY);
-            if (sgvLevel == 1) {
+            if (rawData.sgvLevel == 1) {
                 mSgv.setTextColor(Color.YELLOW);
                 mDirection.setTextColor(Color.YELLOW);
                 mDelta.setTextColor(Color.YELLOW);
-            } else if (sgvLevel == 0) {
+            } else if (rawData.sgvLevel == 0) {
                 mSgv.setTextColor(Color.WHITE);
                 mDirection.setTextColor(Color.WHITE);
                 mDelta.setTextColor(Color.WHITE);
-            } else if (sgvLevel == -1) {
+            } else if (rawData.sgvLevel == -1) {
                 mSgv.setTextColor(Color.RED);
                 mDirection.setTextColor(Color.RED);
                 mDelta.setTextColor(Color.RED);

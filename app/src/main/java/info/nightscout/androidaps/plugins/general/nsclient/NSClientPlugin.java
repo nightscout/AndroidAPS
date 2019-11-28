@@ -7,9 +7,12 @@ import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.text.Html;
 import android.text.Spanned;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,7 +92,7 @@ public class NSClientPlugin extends PluginBase {
         }
 
         nsClientReceiverDelegate =
-                new NsClientReceiverDelegate(MainApp.instance().getApplicationContext());
+                new NsClientReceiverDelegate();
     }
 
     public boolean isAllowed() {
@@ -104,7 +107,7 @@ public class NSClientPlugin extends PluginBase {
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         super.onStart();
 
-        nsClientReceiverDelegate.registerReceivers();
+        nsClientReceiverDelegate.grabReceiversState();
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventNSClientStatus.class)
                 .observeOn(Schedulers.io())
@@ -129,7 +132,6 @@ public class NSClientPlugin extends PluginBase {
                 .subscribe(event -> {
                     if (nsClientService != null) {
                         MainApp.instance().getApplicationContext().unbindService(mConnection);
-                        nsClientReceiverDelegate.unregisterReceivers();
                     }
                 }, FabricPrivacy::logException)
         );
@@ -152,9 +154,25 @@ public class NSClientPlugin extends PluginBase {
     @Override
     protected void onStop() {
         MainApp.instance().getApplicationContext().unbindService(mConnection);
-        nsClientReceiverDelegate.unregisterReceivers();
         disposable.clear();
         super.onStop();
+    }
+
+    @Override
+    public void preprocessPreferences(@NotNull PreferenceFragment preferenceFragment) {
+        super.preprocessPreferences(preferenceFragment);
+
+        if (Config.NSCLIENT) {
+            PreferenceScreen scrnAdvancedSettings = (PreferenceScreen) preferenceFragment.findPreference(MainApp.gs(R.string.key_advancedsettings));
+            if (scrnAdvancedSettings != null) {
+                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(MainApp.gs(R.string.key_statuslights_res_warning)));
+                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(MainApp.gs(R.string.key_statuslights_res_critical)));
+                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(MainApp.gs(R.string.key_statuslights_bat_warning)));
+                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(MainApp.gs(R.string.key_statuslights_bat_critical)));
+                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(MainApp.gs(R.string.key_show_statuslights)));
+                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(MainApp.gs(R.string.key_show_statuslights_extended)));
+            }
+        }
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
