@@ -143,7 +143,7 @@
     <string name="profileswitch_basalhigher">Basalen zullen 10% hoger zijn.</string>
     <string name="profileswitch_basallower">Basalen zullen 10% lager zijn.</string>
     <string name="profileswitch_ichigher">De KH ratio wordt 10% hoger.</string>
-    <string name="profileswitch_iclower">De KH ratio wordt 10% hoger.</string>
+    <string name="profileswitch_iclower">De KH ratio wordt 10% lager.</string>
     <string name="profileswitch_isfhigher">ISF-waarde wordt 10% hoger.</string>
     <string name="profileswitch_isflower">ISF-waarde wordt 10% lager.</string>
     <string name="profileswitch_overall">In totaal zul je ongeveer 10% minder insuline krijgen.</string>

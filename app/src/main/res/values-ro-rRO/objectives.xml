@@ -36,7 +36,6 @@
     <string name="objectives_useloop">Afișați conținutul facilității Buclă</string>
     <string name="objectives_usescale">Folosiți funcția scală prin apăsarea prelungă a graficului glicemiei</string>
     <string name="objectives_button_enter">Introduceţi</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Introduceți codul obținut de la dezvoltatori pentru a sări peste restul obiectivelor</string>
     <string name="codeaccepted">Cod acceptat</string>
     <string name="codeinvalid">Cod invalid</string>
     <string name="objectives_exam_objective">Dovediți-vă cunoștințele</string>

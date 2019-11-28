@@ -36,7 +36,6 @@
     <string name="objectives_useloop">Wyświetl zawartość wtyczki Pętla (Loop)</string>
     <string name="objectives_usescale">Użyj funkcji skalowania przez dłuższe przytrzymanie wykresu glikemii</string>
     <string name="objectives_button_enter">Wprowadź</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Wprowadź kod otrzymany od programistów by pominąć resztę zadań</string>
     <string name="codeaccepted">Kod został zaakceptowany</string>
     <string name="codeinvalid">Niepoprawny kod</string>
     <string name="objectives_exam_objective">Potwierdź swoje umiejętności</string>

@@ -36,7 +36,7 @@
     <string name="objectives_useloop">Mostrar conteúdo do plugin Loop</string>
     <string name="objectives_usescale">Utilizar a função de escala premindo longamente gráfico Glic</string>
     <string name="objectives_button_enter">Inserir</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Insira o código obtido dos programadores para ignorar o resto dos objectivos</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se era utilizador do OpenAPS antes e o seu NS tem pelo menos 3 meses de dados do loop, pode enviar um e-mail para oobjectives@androidaps.org com seu endereço de NS e pedir código para ignorar o resto dos objectivos. Digite o código obtido dos programadores</string>
     <string name="codeaccepted">Código aceite</string>
     <string name="codeinvalid">Código inválido</string>
     <string name="objectives_exam_objective">Prove seu conhecimento</string>

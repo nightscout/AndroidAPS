@@ -202,7 +202,7 @@
     <string name="careportal_newnstreatment_sensor">Sensorius</string>
     <string name="careportal_newnstreatment_carbs_label">Angliavandeniai</string>
     <string name="careportal_newnstreatment_insulin_label">Insulinas</string>
-    <string name="careportal_newnstreatment_carbtime_label">Angliavandenių laikas</string>
+    <string name="careportal_newnstreatment_carbtime_label">AV laikas</string>
     <string name="careportal_newnstreatment_split_label">Išskaidyti</string>
     <string name="careportal_newnstreatment_duration_label">Trukmė</string>
     <string name="careportal_newnstreatment_percent_label">Procentai</string>
@@ -988,7 +988,7 @@
     <string name="send_all_logs">Siųsti įrašus el. paštu</string>
     <string name="delete_logs">Ištrinti įrašus</string>
     <string name="error_adding_treatment_message">Įrašas (insulinas: %1$.2f, angl.: %2$d, ties: %3$s) negali būti pridėtas. Prašome patikrinti ir rankiniu būdu atitinkamai įtraukti įrašą.</string>
-    <string name="generated_ecarbs_note">eAngl.: %1$d g (%2$d h), atidėjimas: %3$d m</string>
+    <string name="generated_ecarbs_note">iAV.: %1$d g (%2$d h), atidėjimas: %3$d m</string>
     <string name="openaps_noasdata">Nėra autosens duomenų</string>
     <string name="nav_logsettings">Įrašų nustatymai</string>
     <string name="resettodefaults">Atkurti numatytuosius</string>
@@ -1147,8 +1147,6 @@
     <string name="tidepool_upload_tbr">Perkelti laikiną bazę</string>
     <string name="tidepool_upload_profile">Perduoti profilio pokyčius, laikinas bazes</string>
     <string name="tidepool_upload_bg">Perduoti KG testus</string>
-    <string name="dst_in_24h_warning">Laiko persukimas įvyks po 24 val ar mažiau</string>
-    <string name="dst_loop_disabled_warning">Laikas persuktas prieš mažiau nei 3 val - Uždaras ciklas deaktyvuotas</string>
     <string name="storage">vidinės saugyklos apribojimas</string>
     <string name="diskfull">Atlaisvinkite ne mažiau kaip %1$d MB iš vidinės atminties! Ciklas išjungtas!</string>
     <string name="wrongformat">Neteisingas formatas</string>

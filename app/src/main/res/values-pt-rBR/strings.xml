@@ -680,6 +680,7 @@
     <string name="shortgramm">g</string>
     <string name="shortminute">m</string>
     <string name="shorthour">h</string>
+    <string name="shortday">d</string>
     <string name="none"><![CDATA[<nenhum>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
@@ -708,6 +709,7 @@
     <string name="bgsource_upload">Configurações de upload de BG</string>
     <string name="wear_detailed_delta_title">Mostrar Delta detalho</string>
     <string name="wear_detailed_delta_summary">Mostrar delta com mais um ponto decimal</string>
+    <string name="smbmaxminutes">SMB máx. minutos</string>
     <string name="smbmaxminutes_summary">Limite de minutos de basal para SMB</string>
     <string name="unsupportedfirmware">Firmware bomba não suportado</string>
     <string name="dexcomg5_xdripupload_title">Enviar dados Glic. para xDrip+</string>
@@ -1236,6 +1238,8 @@
     <string name="medtronic_pump_battery_no">Não seleccionado (Visão simples)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (Visão estendida)</string>
     <string name="medtronic_pump_battery_lithium">Lithium (visão estendida)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Vista Estendida)</string>
+    <string name="medtronic_bolus_debugging">Depuração de Bólus/Tratamentos</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">PROCURAR</string>
     <string name="rileylink_scanner_scan_stop">PARAR</string>
@@ -1373,4 +1377,6 @@
     <string name="boluswizard">Assistente de Bólus</string>
     <string name="unit_minute_short">min</string>
     <string name="format_carbs">%1$dg</string>
+    <string name="common_on">Ligado</string>
+    <string name="common_off">Desligado</string>
 </resources>
