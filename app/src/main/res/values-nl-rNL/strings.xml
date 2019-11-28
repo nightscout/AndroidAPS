@@ -1147,8 +1147,6 @@
     <string name="tidepool_upload_tbr">Tijdelijke basalen uploaden</string>
     <string name="tidepool_upload_profile">Upload profiel wisselingen, tijdelijke doelen</string>
     <string name="tidepool_upload_bg">Upload BG-tests</string>
-    <string name="dst_in_24h_warning">Zomer/wintertijd omschakeling binnen 24 uur</string>
-    <string name="dst_loop_disabled_warning">Omschakeling zomer/wintertijd minder dan 3 uur geleden - Closed Loop modus gedeactiveerd</string>
     <string name="storage">interne opslag bijna vol</string>
     <string name="diskfull">Maak minstens %1$d MB vrij in interne opslag! Loop is uitgeschakeld!</string>
     <string name="wrongformat">Verkeerde invoer</string>
@@ -1236,6 +1234,8 @@
     <string name="medtronic_pump_battery_no">Niet geselecteerd (Eenvoudige weergave)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline (uitgebreide weergave)</string>
     <string name="medtronic_pump_battery_lithium">Lithium (uitgebreide weergave)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (uitgebreide weergave)</string>
+    <string name="medtronic_bolus_debugging">Bolus/Behandelingen Debuggen</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SCAN</string>
     <string name="rileylink_scanner_scan_stop">STOP</string>
@@ -1373,4 +1373,6 @@
     <string name="boluswizard">Bolus wizard</string>
     <string name="unit_minute_short">min</string>
     <string name="format_carbs">%1$dg</string>
+    <string name="common_on">Aan</string>
+    <string name="common_off">Uit</string>
 </resources>

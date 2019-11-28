@@ -1144,8 +1144,6 @@
     <string name="tidepool_upload_tbr">Înregistrează bazalele temporare</string>
     <string name="tidepool_upload_profile">Înregistrează schimbările de profil, țintele temporare</string>
     <string name="tidepool_upload_bg">Înregistrează testările de glicemie</string>
-    <string name="dst_in_24h_warning">Schimbare oră vară/iarnă în mai puțin de 24h</string>
-    <string name="dst_loop_disabled_warning">Schimbare oră vară/iarnă în mai puțin de 3 ore - buclă dezactivată</string>
     <string name="storage">restricție de stocare internă</string>
     <string name="diskfull">Eliberați cel puțin %1$d MB din spațiunl de stocare al telefonlui! Buclă dezactivată!</string>
     <string name="wrongformat">Format greșit</string>

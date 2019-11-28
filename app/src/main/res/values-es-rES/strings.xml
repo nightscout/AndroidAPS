@@ -1147,8 +1147,8 @@
     <string name="tidepool_upload_tbr">Subir basales temporales</string>
     <string name="tidepool_upload_profile">Subir conmutaciones de perfil, objetivos temps</string>
     <string name="tidepool_upload_bg">Subir pruebas BG</string>
-    <string name="dst_in_24h_warning">Cambio al horario de verano/invierno en menos de 24 horas</string>
-    <string name="dst_loop_disabled_warning">Cambio al horario de verano/invierno hace menos de 3 horas - Lazo cerrado deshabilitado</string>
+    <string name="dst_in_24h_warning">Cambio al horario de verano en menos de 24 horas</string>
+    <string name="dst_loop_disabled_warning">Cambio al horario de verano hace menos de 3 horas - Lazo cerrado deshabilitado</string>
     <string name="storage">restricción de almacenamiento interno</string>
     <string name="diskfull">Libera al menos %1$d MB de almacenamiento interno. ¡Loop desactivado!</string>
     <string name="wrongformat">Formato incorrecto</string>
@@ -1236,6 +1236,8 @@
     <string name="medtronic_pump_battery_no">No seleccionado (Vista simple)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (vista extendida)</string>
     <string name="medtronic_pump_battery_lithium">Litio (vista extendida)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (vista ampliada)</string>
+    <string name="medtronic_bolus_debugging">Bolos/Depuración de Tratamientos</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">ESCANEAR</string>
     <string name="rileylink_scanner_scan_stop">DETENER</string>
@@ -1373,4 +1375,6 @@
     <string name="boluswizard">Asistente Bolus</string>
     <string name="unit_minute_short">min</string>
     <string name="format_carbs">%1$dg</string>
+    <string name="common_on">Activado</string>
+    <string name="common_off">Desactivado</string>
 </resources>

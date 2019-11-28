@@ -202,7 +202,7 @@
     <string name="careportal_newnstreatment_sensor">сенсор</string>
     <string name="careportal_newnstreatment_carbs_label">углеводы</string>
     <string name="careportal_newnstreatment_insulin_label">инсулин</string>
-    <string name="careportal_newnstreatment_carbtime_label">Время действия углеводов</string>
+    <string name="careportal_newnstreatment_carbtime_label">Подождать до еды</string>
     <string name="careportal_newnstreatment_split_label">разбивка</string>
     <string name="careportal_newnstreatment_duration_label">Длительность действия</string>
     <string name="careportal_newnstreatment_percent_label">процент</string>
@@ -260,11 +260,23 @@
     <string name="smscommunicator_allowednumbers">разрешенные телефонные номера</string>
     <string name="smscommunicator_allowednumbers_summary">+ XXXXXXXXXX; + YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode">Чтобы подать болюс %1$.2fU ответьте кодом %2$s</string>
+    <string name="smscommunicator_mealbolusreplywithcode">Чтобы подать болюс %1$.2fU ответьте кодом %2$s</string>
+    <string name="smscommunicator_temptargetwithcode">Чтобы установить временную цель %1$s ответьте кодом %2$s</string>
+    <string name="smscommunicator_temptargetcancel">Чтобы отменить временную цель ответьте кодом %1$s</string>
+    <string name="smscommunicator_stopsmswithcode">Чтобы отключить службу удаленных SMS-сообщений ответьте кодом %1$s.\n\n Имейте в виду, что вы сможете вновь активировать ее только с основного телефона AAPS.</string>
+    <string name="smscommunicator_stoppedsms">Удаленная служба SMS остановлена. Для ее реактивации используйте AAPS на главном смартфоне.</string>
     <string name="smscommunicator_calibrationreplywithcode">чтобы отправить калибровку %1$.2f ответьте кодом %2$s</string>
     <string name="smscommunicator_bolusfailed">Подача болюса не состоялась</string>
+    <string name="smscommunicator_remotebolusmindistance_summary">Минимальное количество минут между одним удаленным болюсом и следующим</string>
+    <string name="smscommunicator_remotebolusmindistance">Минимум минут, должных пройти между одним болюсом и следующим</string>
+    <string name="smscommunicator_remotebolusmindistance_caveat">В целях безопасности, для изменения этого параметра необходимо добавить не менее 2 телефонных номеров.</string>
     <string name="bolusdelivered">Болюс %1$.2fед. подан успешно</string>
     <string name="bolusrequested">Начинается подача болюса %1$.2fед.</string>
     <string name="smscommunicator_bolusdelivered">Болюс %1$.2fед. подан успешно</string>
+    <string name="smscommunicator_mealbolusdelivered">Болюс на еду %1$.2f ед. подан успешно</string>
+    <string name="smscommunicator_mealbolusdelivered_tt">Цель %1$s на %2$d минут</string>
+    <string name="smscommunicator_tt_set">Цель %1$s на %2$d минут установлена успешно</string>
+    <string name="smscommunicator_tt_canceled">Временная цель успешно отменена</string>
     <string name="bolusdelivering">Подается болюс %1$.2fед.</string>
     <string name="smscommunicator_remotecommandsallowed">разрешить команды через смс</string>
     <string name="glucosetype_finger">палец</string>
@@ -298,7 +310,7 @@
     <string name="danar_history_glucose">гликемия</string>
     <string name="danar_history_refill">Перезаправка</string>
     <string name="danar_history_syspend">Останов</string>
-    <string name="danar_history_connectingfor">Связь установлена за %1$d сек</string>
+    <string name="danar_history_connectingfor">Попытка установить связь: %1$d сек</string>
     <string name="danar_password_title">пароль помпы</string>
     <string name="wrongpumppassword">неверный пароль помпы</string>
     <string name="pumpbusy">помпа занята</string>
@@ -324,10 +336,13 @@
     <string name="smscommunicator_basalreplywithcode">Чтобы подать базал %1$.2fед./ч в течение %2$d мин. ответьте кодом %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Для переключения профиля на %1$s %2$d%% ответьте кодом %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">Для начала подачи пролонгированного болюса %1$.2fед. за %2$d мин. ответьте кодом %3$s</string>
+    <string name="smscommunicator_carbsreplywithcode">Чтобы ввести %1$d г в %2$s ответьте кодом %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Для начала подачи базала %1$d%% на %2$d мин. ответьте кодом %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">для приостановки цикла на %1$d мин ответьте кодом %2$s</string>
     <string name="smscommunicator_tempbasalset">врем базал %1$.2fU/h на %2$d мин начат успешно</string>
     <string name="smscommunicator_extendedset">Пролонгированный болюс %1$.2fед. на %2$d мин. начат успешно</string>
+    <string name="smscommunicator_carbsset">Углеводы %1$d г введены успешно</string>
+    <string name="smscommunicator_carbsfailed">Не удалось ввести %1$d г углеводов</string>
     <string name="smscommunicator_tempbasalset_percent">Врем. базал %1$d%% на %2$d мин. начат успешно</string>
     <string name="smscommunicator_tempbasalfailed">неуспех старта врем базала</string>
     <string name="smscommunicator_extendedfailed">Не удалось начать подачу пролонгированного болюса</string>
@@ -680,6 +695,7 @@
     <string name="shortgramm">грамм</string>
     <string name="shortminute">минут</string>
     <string name="shorthour">ч</string>
+    <string name="shortday">дн</string>
     <string name="none"><![CDATA[<отсутствует>]]></string>
     <string name="shortkilojoul">кДж</string>
     <string name="shortenergy">Энергия</string>
@@ -708,6 +724,7 @@
     <string name="bgsource_upload">Параметры загрузки СК</string>
     <string name="wear_detailed_delta_title">Показать подробно дельту</string>
     <string name="wear_detailed_delta_summary">Показать дельту еще с одним десятичным знаком</string>
+    <string name="smbmaxminutes">Максимум минут микроболюса SMB</string>
     <string name="smbmaxminutes_summary">Верхний лимит минут базала на SMB</string>
     <string name="unsupportedfirmware">Неподдерживаемая версия прошивки помпы</string>
     <string name="dexcomg5_xdripupload_title">Отправить данные СК на xDrip+</string>
@@ -1150,7 +1167,7 @@ Context | Edit Context</string>
     <string name="tidepool_upload_profile">Загрузить переключения профиля, временные цели</string>
     <string name="tidepool_upload_bg">Загрузить тесты ГК</string>
     <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
-    <string name="dst_loop_disabled_warning">Переход на летнее время меньше 3 часов назад - Замкнутый цикл отключен</string>
+    <string name="dst_loop_disabled_warning">Изменение сезонного времени произошло меньше 3 часов назад-Закрытый цикл выключен</string>
     <string name="storage">ограничение по объему карты памяти</string>
     <string name="diskfull">Освободите по крайней мере %1$d MB из внутренней памяти! Цикл остановлен!</string>
     <string name="wrongformat">Неверный формат</string>
@@ -1238,6 +1255,8 @@ Context | Edit Context</string>
     <string name="medtronic_pump_battery_no">Не выбрано (Простой вид)</string>
     <string name="medtronic_pump_battery_alkaline">Щелочная (Подробный вид)</string>
     <string name="medtronic_pump_battery_lithium">Литиевая (Подробный вид)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Подробный вид)</string>
+    <string name="medtronic_bolus_debugging">Отладка Болюс/Назначения</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">СКАН</string>
     <string name="rileylink_scanner_scan_stop">СТОП</string>
@@ -1375,4 +1394,6 @@ Context | Edit Context</string>
     <string name="boluswizard">Мастер Болюса</string>
     <string name="unit_minute_short">мин</string>
     <string name="format_carbs">%1$d гр</string>
+    <string name="common_on">Вкл.</string>
+    <string name="common_off">Выкл.</string>
 </resources>

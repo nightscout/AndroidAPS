@@ -1138,8 +1138,6 @@
     <string name="tidepool_upload_tbr">Laai tydelike basale op</string>
     <string name="tidepool_upload_profile">Laai profiel veranderings, tydelike teikens op</string>
     <string name="tidepool_upload_bg">Laai BG toetse op</string>
-    <string name="dst_in_24h_warning">Daglig spaar tyd verandering in 24 h of minder</string>
-    <string name="dst_loop_disabled_warning">Daglig spaar tyd het verander minder as 3 ure terug - Geslote lus afgeskakel</string>
     <string name="storage">interne berging beperking</string>
     <string name="diskfull">Bevry ten minste %1$d MB van intene stoorspasie! Lus gedeaktiveer!</string>
     <string name="wrongformat">Verkeerde formaat</string>
