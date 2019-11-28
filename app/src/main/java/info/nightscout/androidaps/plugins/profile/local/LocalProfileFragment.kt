@@ -133,13 +133,26 @@ class LocalProfileFragment : Fragment() {
         })
 
         localprofile_profile_add.setOnClickListener {
-            LocalProfilePlugin.addNewProfile()
-            build()
+            if (LocalProfilePlugin.isEdited) {
+                activity?.let { OKDialog.show(it, "", MainApp.gs(R.string.saveorresetchangesfirst), null) }
+            } else {
+                LocalProfilePlugin.addNewProfile()
+                build()
+            }
+        }
+
+        localprofile_profile_clone.setOnClickListener {
+            if (LocalProfilePlugin.isEdited) {
+                activity?.let { OKDialog.show(it, "", MainApp.gs(R.string.saveorresetchangesfirst), null) }
+            } else {
+                LocalProfilePlugin.cloneProfile()
+                build()
+            }
         }
 
         localprofile_profile_remove.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, MainApp.gs(R.string.doyouwantswitchprofile), {
+                OKDialog.showConfirmation(activity, MainApp.gs(R.string.deletecurrentprofile), {
                     LocalProfilePlugin.removeCurrentProfile()
                     build()
                 }, null)
@@ -149,10 +162,8 @@ class LocalProfileFragment : Fragment() {
         // this is probably not possible because it leads to invalid profile
         // if (!pumpDescription.isTempBasalCapable) localprofile_basal.visibility = View.GONE
 
-        localprofile_mgdl.isChecked = LocalProfilePlugin.currentProfile().mgdl
-        localprofile_mmol.isChecked = !LocalProfilePlugin.currentProfile().mgdl
-        localprofile_mgdl.isEnabled = false
-        localprofile_mmol.isEnabled = false
+        @Suppress("SETTEXTL18N")
+        localprofile_units.text = MainApp.gs(R.string.units_colon) + " " + (if (LocalProfilePlugin.currentProfile().mgdl) MainApp.gs(R.string.mgdl) else MainApp.gs(R.string.mmol))
 
         localprofile_profileswitch.setOnClickListener {
             // TODO: select in dialog LocalProfilePlugin.currentProfileIndex
@@ -165,8 +176,8 @@ class LocalProfileFragment : Fragment() {
 
         localprofile_reset.setOnClickListener {
             LocalProfilePlugin.loadSettings()
-            localprofile_mgdl.isChecked = LocalProfilePlugin.currentProfile().mgdl
-            localprofile_mmol.isChecked = !LocalProfilePlugin.currentProfile().mgdl
+            @Suppress("SETTEXTL18N")
+            localprofile_units.text = MainApp.gs(R.string.units) + ": " + (if (LocalProfilePlugin.currentProfile().mgdl) MainApp.gs(R.string.mgdl) else MainApp.gs(R.string.mmol))
             localprofile_dia.setParams(LocalProfilePlugin.currentProfile().dia, MIN_DIA, 12.0, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
             TimeListEdit(context, view, R.id.localprofile_ic, MainApp.gs(R.string.nsprofileview_ic_label) + ":", LocalProfilePlugin.currentProfile().ic, null, 0.5, 50.0, 0.1, DecimalFormat("0.0"), save)
             TimeListEdit(context, view, R.id.localprofile_isf, MainApp.gs(R.string.nsprofileview_isf_label) + ":", LocalProfilePlugin.currentProfile().isf, null, 0.5, 500.0, 0.1, DecimalFormat("0.0"), save)

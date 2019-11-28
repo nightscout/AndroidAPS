@@ -1649,5 +1649,8 @@
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">TARG</string>
+    <string name="clone_label">CLONE</string>
+    <string name="saveorresetchangesfirst">Save or reset current changes first</string>
+    <string name="deletecurrentprofile">Delete current profile?</string>
 
 </resources>

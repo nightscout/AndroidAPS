@@ -52,6 +52,19 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
         internal var basal: JSONArray? = null
         internal var targetLow: JSONArray? = null
         internal var targetHigh: JSONArray? = null
+
+        fun deepClone() : SingleProfile {
+            val sp = SingleProfile()
+            sp.name = name
+            sp.mgdl = mgdl
+            sp.dia = dia
+            sp.ic = JSONArray(ic.toString())
+            sp.isf = JSONArray(isf.toString())
+            sp.basal = JSONArray(basal.toString())
+            sp.targetLow = JSONArray(targetLow.toString())
+            sp.targetHigh = JSONArray(targetHigh.toString())
+            return sp
+        }
     }
 
     var isEdited: Boolean = false
@@ -308,6 +321,16 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
         p.basal = JSONArray(DEFAULTARRAY)
         p.targetLow = JSONArray(DEFAULTARRAY)
         p.targetHigh = JSONArray(DEFAULTARRAY)
+        profiles.add(p)
+        currentProfileIndex = profiles.size - 1
+        numOfProfiles++
+        createAndStoreConvertedProfile()
+        storeSettings()
+    }
+
+    fun cloneProfile() {
+        val p = profiles[currentProfileIndex].deepClone()
+        p.name = p.name + " copy"
         profiles.add(p)
         currentProfileIndex = profiles.size - 1
         numOfProfiles++
