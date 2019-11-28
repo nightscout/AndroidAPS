@@ -89,6 +89,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
+            android:weightSum="5"
             android:paddingBottom="10dp">
 
             <TextView
@@ -104,7 +105,7 @@
 
             <TextView
                 android:id="@+id/ic_tab"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
@@ -115,7 +116,7 @@
 
             <TextView
                 android:id="@+id/isf_tab"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
@@ -126,7 +127,7 @@
 
             <TextView
                 android:id="@+id/basal_tab"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
@@ -137,7 +138,7 @@
 
             <TextView
                 android:id="@+id/target_tab"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
