@@ -105,7 +105,13 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 }
             }
             // convert preferences values to current units
-            String[] unitDependent = new String[]{MainApp.gs(R.string.key_hypo_target), MainApp.gs(R.string.key_activity_target), MainApp.gs(R.string.key_eatingsoon_target)};
+            String[] unitDependent = new String[]{
+                    MainApp.gs(R.string.key_hypo_target),
+                    MainApp.gs(R.string.key_activity_target),
+                    MainApp.gs(R.string.key_eatingsoon_target),
+                    MainApp.gs(R.string.key_high_mark),
+                    MainApp.gs(R.string.key_low_mark)
+                    };
             if (Arrays.asList(unitDependent).contains(pref.getKey())) {
                 editTextPref = (EditTextPreference) pref;
                 String converted = Profile.toCurrentUnitsString(SafeParse.stringToDouble(editTextPref.getText()));

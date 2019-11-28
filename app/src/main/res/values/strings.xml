@@ -1639,7 +1639,11 @@
     <string name="common_off">Off</string>
     <string name="nopumpselected">No pump selected</string>
     <string name="setupwizard_units_prompt">Select units you want to display values in</string>
-    <string name="key_ns_uploadlocalprofile">ns_uploadlocalprofile</string>
+    <string name="key_ns_uploadlocalprofile" translatable="false">ns_uploadlocalprofile</string>
     <string name="ns_ploadlocalprofile">Upload local profile changes to NS</string>
+    <string name="key_low_mark" translatable="false">low_mark</string>
+    <string name="key_high_mark" translatable="false">high_mark</string>
+    <string name="key_wear_detailediob" translatable="false">wear_detailediob</string>
+    <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
 
 </resources>

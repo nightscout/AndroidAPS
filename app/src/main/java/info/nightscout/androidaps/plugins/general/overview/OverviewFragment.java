@@ -1041,8 +1041,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final String profileName = ProfileFunctions.getInstance().getProfileName();
 
         final String units = ProfileFunctions.getSystemUnits();
-        final double lowLine = OverviewPlugin.INSTANCE.determineLowLine(units);
-        final double highLine = OverviewPlugin.INSTANCE.determineHighLine(units);
+        final double lowLine = OverviewPlugin.INSTANCE.determineLowLine();
+        final double highLine = OverviewPlugin.INSTANCE.determineHighLine();
 
         //Start with updating the BG as it is unaffected by loop.
         // **** BG value ****
