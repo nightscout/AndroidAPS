@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.BatteryManager;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventChargingState;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 
 public class ChargingStateReceiver extends BroadcastReceiver {
 
@@ -17,11 +17,11 @@ public class ChargingStateReceiver extends BroadcastReceiver {
         EventChargingState event = grabChargingState(context);
 
         if (event != null)
-            MainApp.bus().post(event);
+            RxBus.INSTANCE.send(event);
         lastEvent = event;
     }
 
-    public EventChargingState grabChargingState(Context context) {
+    public static EventChargingState grabChargingState(Context context) {
         BatteryManager bm = (BatteryManager) context.getSystemService(Context.BATTERY_SERVICE);
 
         if (bm == null)

@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 
-import com.squareup.otto.Bus;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -39,6 +37,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -51,8 +51,6 @@ public class AAPSMocker {
     private static Profile profile;
     private static ProfileStore profileStore;
     public static final String TESTPROFILENAME = "someProfile";
-
-    public static Intent intentSent = null;
 
     public static CommandQueue queue;
     public static ConfigBuilderPlugin configBuilderPlugin;
@@ -110,6 +108,8 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.configbuilder_insulin)).thenReturn("Insulin");
         when(MainApp.gs(R.string.bolusdelivering)).thenReturn("Delivering 0.0U");
         when(MainApp.gs(R.string.profile_per_unit)).thenReturn("/U");
+        when(MainApp.gs(R.string.shortday)).thenReturn("d");
+        when(MainApp.gs(R.string.shorthour)).thenReturn("h");
         when(MainApp.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U");
         when(MainApp.gs(R.string.profile_ins_units_per_hour)).thenReturn("U/h");
         when(MainApp.gs(R.string.sms_wrongcode)).thenReturn("Wrong code. Command cancelled.");
@@ -117,6 +117,13 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.sms_lastbg)).thenReturn("Last BG:");
         when(MainApp.gs(R.string.sms_minago)).thenReturn("%1$dmin ago");
         when(MainApp.gs(R.string.smscommunicator_remotecommandnotallowed)).thenReturn("Remote command is not allowed");
+        when(MainApp.gs(R.string.smscommunicator_stopsmswithcode)).thenReturn("To disable the SMS Remote Service reply with code %1$s.\\n\\nKeep in mind that you\\'ll able to reactivate it directly from the AAPS master smartphone only.");
+        when(MainApp.gs(R.string.smscommunicator_mealbolusreplywithcode)).thenReturn("To deliver meal bolus %1$.2fU reply with code %2$s.");
+        when(MainApp.gs(R.string.smscommunicator_temptargetwithcode)).thenReturn("To set the Temp Target %1$s reply with code %2$s");
+        when(MainApp.gs(R.string.smscommunicator_temptargetcancel)).thenReturn("To cancel Temp Target reply with code %1$s");
+        when(MainApp.gs(R.string.smscommunicator_stoppedsms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.");
+        when(MainApp.gs(R.string.smscommunicator_tt_set)).thenReturn("Target %1$s for %2$d minutes set successfully");
+        when(MainApp.gs(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully");
         when(MainApp.gs(R.string.loopsuspendedfor)).thenReturn("Suspended (%1$d m)");
         when(MainApp.gs(R.string.smscommunicator_loopisdisabled)).thenReturn("Loop is disabled");
         when(MainApp.gs(R.string.smscommunicator_loopisenabled)).thenReturn("Loop is enabled");
@@ -157,6 +164,12 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.suspendloop)).thenReturn("Suspend loop");
         when(MainApp.gs(R.string.pumpNotInitialized)).thenReturn("Pump not initialized!");
         when(MainApp.gs(R.string.increasingmaxbasal)).thenReturn("Increasing max basal value because setting is lower than your max basal in profile");
+        when(MainApp.gs(R.string.overview_bolusprogress_delivered)).thenReturn("Delivered");
+        when(MainApp.gs(R.string.smscommunicator_mealbolusreplywithcode)).thenReturn("To deliver meal bolus %1$.2fU reply with code %2$s");
+        when(MainApp.gs(R.string.smscommunicator_mealbolusdelivered)).thenReturn("Meal Bolus %1$.2fU delivered successfully");
+        when(MainApp.gs(R.string.smscommunicator_mealbolusdelivered_tt)).thenReturn("Target %1$s for %2$d minutes");
+        when(MainApp.gs(R.string.smscommunicator_carbsreplywithcode)).thenReturn("To enter %1$dg at %2$s reply with code %3$s");
+        when(MainApp.gs(R.string.smscommunicator_carbsset)).thenReturn("Carbs %1$dg entered successfully");
     }
 
     public static MainApp mockMainApp() {
@@ -180,16 +193,12 @@ public class AAPSMocker {
         return constraintChecker;
     }
 
-    public static void mockBus() {
-        Bus bus = PowerMockito.mock(Bus.class);
-        when(MainApp.bus()).thenReturn(bus);
-    }
-
     public static void mockSP() {
         PowerMockito.mockStatic(SP.class);
         when(SP.getLong(anyInt(), anyLong())).thenReturn(0L);
         when(SP.getBoolean(anyInt(), anyBoolean())).thenReturn(false);
         when(SP.getInt(anyInt(), anyInt())).thenReturn(0);
+        when(SP.getString(anyInt(), anyString())).thenReturn("");
     }
 
     public static void mockL() {
@@ -242,17 +251,6 @@ public class AAPSMocker {
 
     }
 
-    public static DanaRPlugin mockDanaRPlugin() {
-        PowerMockito.mockStatic(DanaRPlugin.class);
-        DanaRPlugin danaRPlugin = mock(DanaRPlugin.class);
-        DanaRv2Plugin danaRv2Plugin = mock(DanaRv2Plugin.class);
-        DanaRKoreanPlugin danaRKoreanPlugin = mock(DanaRKoreanPlugin.class);
-        when(MainApp.getSpecificPlugin(DanaRPlugin.class)).thenReturn(danaRPlugin);
-        when(MainApp.getSpecificPlugin(DanaRv2Plugin.class)).thenReturn(danaRv2Plugin);
-        when(MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).thenReturn(danaRKoreanPlugin);
-        return danaRPlugin;
-    }
-
     public static Profile getValidProfile() {
         try {
             if (profile == null)
@@ -297,32 +295,6 @@ public class AAPSMocker {
         Object dataLock = new Object();
         PowerMockito.when(iobCobCalculatorPlugin.getDataLock()).thenReturn(dataLock);
         return iobCobCalculatorPlugin;
-    }
-
-    private static MockedBus bus = new MockedBus();
-
-    public static void prepareMockedBus() {
-        when(MainApp.bus()).thenReturn(bus);
-    }
-
-    public static class MockedBus extends Bus {
-        public boolean registered = false;
-        public boolean notificationSent = false;
-
-        @Override
-        public void register(Object event) {
-            registered = true;
-        }
-
-        @Override
-        public void unregister(Object event) {
-            registered = false;
-        }
-
-        @Override
-        public void post(Object event) {
-            notificationSent = true;
-        }
     }
 
 }

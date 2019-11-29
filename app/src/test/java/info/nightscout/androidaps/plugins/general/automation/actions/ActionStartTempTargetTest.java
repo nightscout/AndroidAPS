@@ -90,7 +90,6 @@ public class ActionStartTempTargetTest {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockSP();
         AAPSMocker.mockStrings();
-        AAPSMocker.mockBus();
         AAPSMocker.mockProfileFunctions();
         treatmentsPlugin = AAPSMocker.mockTreatmentPlugin();
 

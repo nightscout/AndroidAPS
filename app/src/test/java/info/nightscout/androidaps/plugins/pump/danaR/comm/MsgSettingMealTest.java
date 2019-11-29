@@ -26,7 +26,6 @@ public class MsgSettingMealTest {
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
-        AAPSMocker.mockBus();
         MsgSettingMeal packet = new MsgSettingMeal();
 
         // test message decoding

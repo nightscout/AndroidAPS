@@ -93,7 +93,7 @@ public class TriggerLocation extends Trigger {
             data.put("lastRun", lastRun);
             o.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -108,7 +108,7 @@ public class TriggerLocation extends Trigger {
             name.setValue(JsonHelper.safeGetString(d, "name"));
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }

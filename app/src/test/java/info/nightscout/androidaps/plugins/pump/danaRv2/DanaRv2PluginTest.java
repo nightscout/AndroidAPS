@@ -66,7 +66,6 @@ public class DanaRv2PluginTest {
     public void prepareMocks() throws Exception {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockConfigBuilder();
-        AAPSMocker.mockBus();
         AAPSMocker.mockStrings();
         AAPSMocker.mockApplicationContext();
         AAPSMocker.mockSP();

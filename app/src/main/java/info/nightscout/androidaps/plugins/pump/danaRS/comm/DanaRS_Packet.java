@@ -4,11 +4,15 @@ import android.annotation.TargetApi;
 import android.os.Build;
 
 import com.cozmo.danar.util.BleCommandUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 public class DanaRS_Packet {
+    private static final Logger log = LoggerFactory.getLogger(DanaRS_Packet.class);
+
     protected static final int TYPE_START = 0;
     protected static final int OPCODE_START = 1;
     protected static final int DATA_START = 2;
@@ -73,7 +77,7 @@ public class DanaRS_Packet {
 
             return ret;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return null;
     }

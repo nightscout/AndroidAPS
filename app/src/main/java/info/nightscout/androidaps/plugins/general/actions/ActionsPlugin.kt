@@ -7,7 +7,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 
 object ActionsPlugin : PluginBase(PluginDescription()
         .mainType(PluginType.GENERAL)
-        .fragmentClass(ActionsFragment::class.java.name)
+        .fragmentClass(ActionsFragment::class.qualifiedName)
         .pluginName(R.string.actions)
         .shortName(R.string.actions_shortname)
         .description(R.string.description_actions))

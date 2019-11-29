@@ -25,8 +25,8 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_StopTest extends DanaRS_Packet_B
     public void runTest() {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockApplicationContext();
+        AAPSMocker.mockStrings();
         AAPSMocker.mockSP();
-        AAPSMocker.mockBus();
         AAPSMocker.mockL();
 
         DanaRS_Packet_Bolus_Set_Step_Bolus_Stop testPacket = new DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(1d , new Treatment());

@@ -2,11 +2,8 @@ package info.nightscout.androidaps.interfaces;
 
 import android.content.Context;
 
-import com.squareup.otto.Bus;
-
 import junit.framework.Assert;
 
-import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,12 +17,12 @@ import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ConstraintChecker;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
-import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
@@ -73,7 +70,7 @@ public class ConstraintsCheckerTest {
     }
 
     @Test
-    public void isClosedLoopAllowedTest()  {
+    public void isClosedLoopAllowedTest() {
         when(SP.getString(R.string.key_aps_mode, "open")).thenReturn("closed");
         objectivesPlugin.getObjectives().get(ObjectivesPlugin.INSTANCE.getMAXIOB_ZERO_CL_OBJECTIVE()).setStartedOn(0);
 
@@ -247,7 +244,7 @@ public class ConstraintsCheckerTest {
         // Apply all limits
         Constraint<Double> d = constraintChecker.getMaxIOBAllowed();
         Assert.assertEquals(1.5d, d.value());
-        Assert.assertEquals(d.getReasonList().toString(),2, d.getReasonList().size());
+        Assert.assertEquals(d.getReasonList().toString(), 2, d.getReasonList().size());
         Assert.assertEquals("Safety: Limiting IOB to 1.5 U because of max value in preferences", d.getMostLimitedReasons());
 
     }
@@ -278,7 +275,6 @@ public class ConstraintsCheckerTest {
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockConstraintsChecker();
         AAPSMocker.mockApplicationContext();
-        AAPSMocker.mockBus();
         AAPSMocker.mockStrings();
         AAPSMocker.mockSP();
         AAPSMocker.mockCommandQueue();
@@ -311,12 +307,4 @@ public class ConstraintsCheckerTest {
         when(mainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class)).thenReturn(constraintsPluginsList);
 
     }
-
-    class MockedBus extends Bus {
-        @Override
-        public void post(Object event) {
-            notificationSent = true;
-        }
-    }
-
 }

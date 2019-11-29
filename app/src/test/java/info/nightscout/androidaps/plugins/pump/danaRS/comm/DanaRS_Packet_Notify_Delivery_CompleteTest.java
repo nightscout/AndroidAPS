@@ -30,7 +30,6 @@ public class DanaRS_Packet_Notify_Delivery_CompleteTest {
         AAPSMocker.mockSP();
         AAPSMocker.mockL();
         AAPSMocker.mockStrings();
-        AAPSMocker.mockBus();
         DanaRS_Packet_Notify_Delivery_Complete packet = new DanaRS_Packet_Notify_Delivery_Complete(0.5d,new Treatment());
 
         // test params

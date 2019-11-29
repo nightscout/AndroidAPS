@@ -14,7 +14,9 @@ public enum BatteryType {
 
     None(R.string.key_medtronic_pump_battery_no, 0, 0),
     Alkaline(R.string.key_medtronic_pump_battery_alkaline, 1.20d, 1.47d), //
-    Lithium(R.string.key_medtronic_pump_battery_lithium, 1.22d, 1.64d);
+    Lithium(R.string.key_medtronic_pump_battery_lithium, 1.22d, 1.64d), //
+    NiZn(R.string.key_medtronic_pump_battery_nizn, 1.40d, 1.70d) //
+    ;
 
     private final String description;
     public double lowVoltage;

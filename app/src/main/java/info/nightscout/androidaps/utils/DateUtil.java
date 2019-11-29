@@ -93,15 +93,15 @@ public class DateUtil {
     }
 
     public static int toSeconds(String hh_colon_mm) {
-        Pattern p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.| AM | PM|)");
+        Pattern p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.| AM| PM|AM|PM|)");
         Matcher m = p.matcher(hh_colon_mm);
         int retval = 0;
 
         if (m.find()) {
             retval = SafeParse.stringToInt(m.group(1)) * 60 * 60 + SafeParse.stringToInt(m.group(2)) * 60;
-            if ((m.group(3).equals(" a.m.") || m.group(3).equals(" AM")) && m.group(1).equals("12"))
+            if ((m.group(3).equals(" a.m.") || m.group(3).equals(" AM") || m.group(3).equals("AM")) && m.group(1).equals("12"))
                 retval -= 12 * 60 * 60;
-            if ((m.group(3).equals(" p.m.") || m.group(3).equals(" PM")) && !(m.group(1).equals("12")))
+            if ((m.group(3).equals(" p.m.") || m.group(3).equals(" PM") || m.group(3).equals("PM")) && !(m.group(1).equals("12")))
                 retval += 12 * 60 * 60;
         }
         return retval;
@@ -185,7 +185,7 @@ public class DateUtil {
         long remainingTimeMinutes = timeInMillis / (1000 * 60);
         long remainingTimeHours = remainingTimeMinutes / 60;
         remainingTimeMinutes = remainingTimeMinutes % 60;
-        return "(" + ((remainingTimeHours > 0) ? (remainingTimeHours + "h ") : "") + remainingTimeMinutes + "')";
+        return "(" + ((remainingTimeHours > 0) ? (remainingTimeHours + MainApp.gs(R.string.shorthour) + " ") : "") + remainingTimeMinutes + "')";
     }
 
     public static String sinceString(long timestamp) {

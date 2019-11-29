@@ -5,10 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import androidx.fragment.app.FragmentActivity;
-import androidx.appcompat.app.AlertDialog;
-
-import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -22,7 +18,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.danaR.AbstractDanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
@@ -30,13 +26,17 @@ import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStart;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.services.DanaRKoreanExecutionService;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static DanaRKoreanPlugin plugin = null;
 
@@ -58,7 +58,27 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, DanaRKoreanExecutionService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (isEnabled(PluginType.PUMP)) {
+                        boolean previousValue = useExtendedBoluses;
+                        useExtendedBoluses = SP.getBoolean(R.string.key_danar_useextended, false);
+
+                        if (useExtendedBoluses != previousValue && TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
+                            sExecutionService.extendedBolusStop();
+                        }
+                    }
+                }, FabricPrivacy::logException)
+        );
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    MainApp.instance().getApplicationContext().unbindService(mConnection);
+                }, FabricPrivacy::logException)
+        );
         super.onStart();
     }
 
@@ -67,7 +87,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         Context context = MainApp.instance().getApplicationContext();
         context.unbindService(mConnection);
 
-        MainApp.bus().unregister(this);
+        disposable.clear();
         super.onStop();
     }
 
@@ -86,24 +106,6 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             sExecutionService = mLocalBinder.getServiceInstance();
         }
     };
-
-    @SuppressWarnings("UnusedParameters")
-    @Subscribe
-    public void onStatusEvent(final EventAppExit e) {
-        MainApp.instance().getApplicationContext().unbindService(mConnection);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPreferenceChange s) {
-        if (isEnabled(PluginType.PUMP)) {
-            boolean previousValue = useExtendedBoluses;
-            useExtendedBoluses = SP.getBoolean(R.string.key_danar_useextended, false);
-
-            if (useExtendedBoluses != previousValue && TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
-                sExecutionService.extendedBolusStop();
-            }
-        }
-    }
 
     // Plugin base interface
     @Override

@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
-import com.squareup.otto.Subscribe;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -17,6 +15,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.danaR.AbstractDanaRPlugin;
@@ -26,14 +25,18 @@ import info.nightscout.androidaps.plugins.pump.danaRv2.services.DanaRv2Execution
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class DanaRv2Plugin extends AbstractDanaRPlugin {
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static DanaRv2Plugin plugin = null;
 
@@ -56,7 +59,13 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         Intent intent = new Intent(context, DanaRv2ExecutionService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
-        MainApp.bus().register(this);
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    MainApp.instance().getApplicationContext().unbindService(mConnection);
+                }, FabricPrivacy::logException)
+        );
         super.onStart();
     }
 
@@ -65,7 +74,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         Context context = MainApp.instance().getApplicationContext();
         context.unbindService(mConnection);
 
-        MainApp.bus().unregister(this);
+        disposable.clear();
         super.onStop();
     }
 
@@ -84,12 +93,6 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             sExecutionService = mLocalBinder.getServiceInstance();
         }
     };
-
-    @SuppressWarnings("UnusedParameters")
-    @Subscribe
-    public void onStatusEvent(final EventAppExit e) {
-        MainApp.instance().getApplicationContext().unbindService(mConnection);
-    }
 
     // Plugin base interface
     @Override
