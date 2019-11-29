@@ -61,10 +61,6 @@ public abstract class Objective {
         return true;
     }
 
-    public boolean isRevertable() {
-        return false;
-    }
-
     public boolean isAccomplished() {
         return accomplishedOn != 0 && accomplishedOn < DateUtil.now();
     }

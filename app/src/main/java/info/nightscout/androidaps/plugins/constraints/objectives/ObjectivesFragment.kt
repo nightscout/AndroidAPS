@@ -126,7 +126,6 @@ class ObjectivesFragment : Fragment() {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val objective = ObjectivesPlugin.objectives[position]
             holder.title.text = MainApp.gs(R.string.nth_objective, position + 1)
-            holder.revert.visibility = View.GONE
             if (objective.objective != 0) {
                 holder.objective.visibility = View.VISIBLE
                 holder.objective.text = MainApp.gs(objective.objective)
@@ -142,6 +141,8 @@ class ObjectivesFragment : Fragment() {
                 holder.verify.visibility = View.GONE
                 holder.progress.visibility = View.GONE
                 holder.accomplished.visibility = View.GONE
+                holder.unFinish.visibility = View.GONE
+                holder.unStart.visibility = View.GONE
                 if (position == 0 || ObjectivesPlugin.objectives[position - 1].isAccomplished)
                     holder.start.visibility = View.VISIBLE
                 else
@@ -152,15 +153,16 @@ class ObjectivesFragment : Fragment() {
                 holder.progress.visibility = View.GONE
                 holder.start.visibility = View.GONE
                 holder.accomplished.visibility = View.VISIBLE
+                holder.unFinish.visibility = View.VISIBLE
+                holder.unStart.visibility = View.GONE
             } else if (objective.isStarted) {
                 holder.gate.setTextColor(-0x1)
                 holder.verify.visibility = View.VISIBLE
                 holder.verify.isEnabled = objective.isCompleted || objectives_fake.isChecked
                 holder.start.visibility = View.GONE
                 holder.accomplished.visibility = View.GONE
-                if (objective.isRevertable) {
-                    holder.revert.visibility = View.VISIBLE
-                }
+                holder.unFinish.visibility = View.GONE
+                holder.unStart.visibility = View.VISIBLE
                 holder.progress.visibility = View.VISIBLE
                 holder.progress.removeAllViews()
                 for (task in objective.tasks) {
@@ -264,13 +266,13 @@ class ObjectivesFragment : Fragment() {
                         }
                     }, NetworkChangeReceiver.isConnected())
             }
-            holder.revert.setOnClickListener {
-                objective.accomplishedOn = 0
+            holder.unStart.setOnClickListener {
                 objective.startedOn = 0
-                if (position > 0) {
-                    val prevObj = ObjectivesPlugin.objectives[position - 1]
-                    prevObj.accomplishedOn = 0
-                }
+                scrollToCurrentObjective()
+                RxBus.send(EventObjectivesUpdateGui())
+            }
+            holder.unFinish.setOnClickListener {
+                objective.accomplishedOn = 0
                 scrollToCurrentObjective()
                 RxBus.send(EventObjectivesUpdateGui())
             }
@@ -309,7 +311,8 @@ class ObjectivesFragment : Fragment() {
             val progress: LinearLayout = itemView.findViewById(R.id.objective_progress)
             val verify: Button = itemView.findViewById(R.id.objective_verify)
             val start: Button = itemView.findViewById(R.id.objective_start)
-            val revert: Button = itemView.findViewById(R.id.objective_back)
+            val unFinish: Button = itemView.findViewById(R.id.objective_unfinish)
+            val unStart: Button = itemView.findViewById(R.id.objective_unstart)
             val inputHint: TextView = itemView.findViewById(R.id.objective_inputhint)
             val input: EditText = itemView.findViewById(R.id.objective_input)
             val enterButton: Button = itemView.findViewById(R.id.objective_enterbutton)
