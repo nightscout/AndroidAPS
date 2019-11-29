@@ -107,6 +107,8 @@ public abstract class Objective {
         return tasks;
     }
 
+    public boolean specialActionEnabled() { return true; }
+
     public void specialAction(Activity activity, String input) {}
 
     public abstract class Task {

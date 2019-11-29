@@ -210,6 +210,7 @@ class ObjectivesFragment : Fragment() {
                     scrollToCurrentObjective()
                     startUpdateTimer()
                     RxBus.send(EventObjectivesUpdateGui())
+                    holder.verify.visibility = View.INVISIBLE
                 } else
                     SntpClient.ntpTime(object : SntpClient.Callback() {
                         override fun run() {
@@ -242,6 +243,7 @@ class ObjectivesFragment : Fragment() {
                     scrollToCurrentObjective()
                     startUpdateTimer()
                     RxBus.send(EventObjectivesUpdateGui())
+                    holder.start.visibility = View.VISIBLE
                 } else
                     SntpClient.ntpTime(object : SntpClient.Callback() {
                         override fun run() {
@@ -272,7 +274,7 @@ class ObjectivesFragment : Fragment() {
                 scrollToCurrentObjective()
                 RxBus.send(EventObjectivesUpdateGui())
             }
-            if (objective.hasSpecialInput && !objective.isAccomplished && objective.isStarted) {
+            if (objective.hasSpecialInput && !objective.isAccomplished && objective.isStarted && objective.specialActionEnabled()) {
                 // generate random request code if none exists
                 val request = SP.getString(R.string.key_objectives_request_code, String.format("%1$05d", (Math.random() * 99999).toInt()))
                 SP.putString(R.string.key_objectives_request_code, request)
