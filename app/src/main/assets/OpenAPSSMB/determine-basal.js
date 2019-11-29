@@ -115,7 +115,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
     var deliverAt = new Date();
     if (currentTime) {
-        deliverAt = currentTime;
+        deliverAt = new Date(currentTime);
     }
 
     if (typeof profile === 'undefined' || typeof profile.current_basal === 'undefined') {
