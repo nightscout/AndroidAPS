@@ -93,30 +93,30 @@
             validate:testType="numericRange" />
 
         <com.andreabaccega.widget.ValidatingEditTextPreference
-                android:defaultValue="30"
-                android:dialogMessage="@string/uamsmbmaxminutes"
-                android:digits="0123456789"
-                android:inputType="number"
-                android:key="key_uamsmbmaxminutes"
-                android:maxLines="20"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/uamsmbmaxminutes_summary"
-                validate:maxNumber="120"
-                validate:minNumber="15"
-                validate:testType="numericRange" />
+            android:defaultValue="30"
+            android:dialogMessage="@string/uamsmbmaxminutes"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:key="@string/key_uamsmbmaxminutes"
+            android:maxLines="20"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/uamsmbmaxminutes_summary"
+            validate:maxNumber="120"
+            validate:minNumber="15"
+            validate:testType="numericRange" />
 
         <com.andreabaccega.widget.ValidatingEditTextPreference
-                android:defaultValue="0.1"
-                android:inputType="numberDecimal"
-                android:key="key_bolus_increment"
-                android:maxLines="20"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/bolus_increment_summary"
-                validate:floatmaxNumber="1.0"
-                validate:floatminNumber="0.05"
-                validate:testType="floatNumericRange" />
+            android:defaultValue="0.1"
+            android:inputType="numberDecimal"
+            android:key="key_bolus_increment"
+            android:maxLines="20"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/bolus_increment_summary"
+            validate:floatmaxNumber="1.0"
+            validate:floatminNumber="0.05"
+            validate:testType="floatNumericRange" />
 
 
         <SwitchPreference
@@ -126,6 +126,18 @@
             android:title="@string/enableuam" />
 
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_sensitivity_raises_target"
+            android:summary="@string/sensitivity_raises_target_summary"
+            android:title="@string/sensitivity_raises_target_title"
+            />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_resistance_lowers_target"
+            android:summary="@string/resistance_lowers_target_summary"
+            android:title="@string/resistance_lowers_target_title"
+            />
         <!-- TODO AS-FIX -->
         <SwitchPreference
             android:defaultValue="false"
@@ -143,6 +155,20 @@
             android:title="@string/low_temptarget_lowers_sensitivity_title"
             android:enabled="false"
             />
+
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+            android:key="@string/key_carbsReqThreshold"
+            android:title="@string/carbsReqThreshold"
+            android:defaultValue="1"
+            android:dialogMessage="@string/carbsReqThreshold_summary"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:maxLines="20"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            validate:maxNumber="10"
+            validate:minNumber="1"
+            validate:testType="numericRange"/>
 
         <PreferenceScreen android:title="@string/advancedsettings_title">
 
