@@ -41,7 +41,7 @@ class StatuslightHandler {
                     R.string.key_statuslights_bat_warning, 22.0,
                     batteryView, "BAT", batteryLevel);
         } else {
-            applyStatuslight("page", CareportalEvent.PUMPBATTERYCHANGE, batteryView, "BAT", 504, 240);
+            applyStatuslight("bage", CareportalEvent.PUMPBATTERYCHANGE, batteryView, "BAT", 504, 240);
         }
 
     }
