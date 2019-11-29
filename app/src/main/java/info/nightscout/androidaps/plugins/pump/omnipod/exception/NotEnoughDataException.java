@@ -1,11 +1,16 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.exception;
 
+import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+
 public class NotEnoughDataException extends OmnipodException {
-    public NotEnoughDataException(String message) {
-        super(message);
+    private final byte[] data;
+
+    public NotEnoughDataException(byte[] data) {
+        super("Not enough data: " + ByteUtil.shortHexString(data));
+        this.data = data;
     }
 
-    public NotEnoughDataException(String message, Throwable cause) {
-        super(message, cause);
+    public byte[] getData() {
+        return data;
     }
 }

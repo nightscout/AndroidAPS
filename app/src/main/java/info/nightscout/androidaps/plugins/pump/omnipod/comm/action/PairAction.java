@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Ver
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSetupState;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
 
 public class PairAction implements OmnipodAction<PodSessionState> {
     private final PairService service;
@@ -18,7 +19,7 @@ public class PairAction implements OmnipodAction<PodSessionState> {
 
     public PairAction(PairService pairService, int address) {
         if (pairService == null) {
-            throw new IllegalArgumentException("Pair service cannot be null");
+            throw new ActionInitializationException("Pair service cannot be null");
         }
         this.service = pairService;
         this.address = address;

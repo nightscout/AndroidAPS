@@ -26,10 +26,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodState;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommunicationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceResyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.NotEnoughDataException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodReturnedErrorResponseException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalPacketTypeException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalResponseException;
 
 /**
  * Created by andy on 6/29/18.
@@ -112,12 +116,12 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
                     podState.setFaultEvent(faultEvent);
                     throw new PodFaultException(faultEvent);
                 } else {
-                    throw new OmnipodException("Unexpected response type: " + responseMessageBlock.toString());
+                    throw new IllegalResponseException(responseClass.getSimpleName(), responseMessageBlock.getType());
                 }
             }
         }
 
-        throw new OmnipodException("Nonce resync failed");
+        throw new NonceResyncException();
     }
 
     private MessageBlock transportMessages(PodState podState, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride) {
@@ -139,15 +143,17 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             firstPacket = false;
             try {
                 response = exchangePackets(podState, packet);
+            } catch (OmnipodException ex) {
+                throw ex;
             } catch (Exception ex) {
-                throw new OmnipodException("Failed to exchange packets", ex);
+                throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
             }
             //We actually ignore (ack) responses if it is not last packet to send
         }
 
         if (response.getPacketType() == PacketType.ACK) {
             podState.increasePacketNumber(1);
-            throw new OmnipodException("Received ack instead of real response");
+            throw new IllegalPacketTypeException(null, PacketType.ACK);
         }
 
         OmnipodMessage receivedMessage = null;
@@ -158,15 +164,19 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             } catch (NotEnoughDataException ex) {
                 // Message is (probably) not complete yet
                 OmnipodPacket ackForCon = createAckPacket(podState, packetAddress, ackAddressOverride);
+
                 try {
                     OmnipodPacket conPacket = exchangePackets(podState, ackForCon, 3, 40);
                     if (conPacket.getPacketType() != PacketType.CON) {
-                        throw new OmnipodException("Received a non-con packet type: " + conPacket.getPacketType());
+                        throw new IllegalPacketTypeException(PacketType.CON, conPacket.getPacketType());
                     }
                     receivedMessageData = ByteUtil.concat(receivedMessageData, conPacket.getEncodedMessage());
-                } catch (RileyLinkCommunicationException ex2) {
-                    throw new OmnipodException("RileyLink communication failed", ex2);
+                } catch (OmnipodException ex2) {
+                    throw ex2;
+                } catch (Exception ex2) {
+                    throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex2);
                 }
+
             }
         }
 
@@ -177,7 +187,7 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
         List<MessageBlock> messageBlocks = receivedMessage.getMessageBlocks();
 
         if (messageBlocks.size() == 0) {
-            throw new OmnipodException("Not enough data");
+            throw new NotEnoughDataException(receivedMessageData);
         } else if (messageBlocks.size() > 1) {
             LOG.error("received more than one message block: " + messageBlocks.toString());
         }
@@ -206,32 +216,34 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             if (RileyLinkBLEError.Timeout.equals(ex.getErrorCode())) {
                 quiet = true;
             } else {
-                LOG.debug("Ignoring exception in ackUntilQuiet: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+                LOG.debug("Ignoring exception in ackUntilQuiet: " + ex.getClass().getSimpleName() + ": " + ex.getErrorCode() + ": " + ex.getMessage());
             }
         } catch (Exception ex) {
-            LOG.debug("Ignoring exception in ackUntilQuiet: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
         }
 
         podState.increasePacketNumber(1);
     }
 
-    private OmnipodPacket exchangePackets(PodState podState, OmnipodPacket packet) throws RileyLinkCommunicationException {
+    private OmnipodPacket exchangePackets(PodState podState, OmnipodPacket packet) {
         return exchangePackets(podState, packet, 0, 333, 9000, 127);
     }
 
-    private OmnipodPacket exchangePackets(PodState podState, OmnipodPacket packet, int repeatCount, int preambleExtensionMilliseconds) throws RileyLinkCommunicationException {
+    private OmnipodPacket exchangePackets(PodState podState, OmnipodPacket packet, int repeatCount, int preambleExtensionMilliseconds) {
         return exchangePackets(podState, packet, repeatCount, 333, 9000, preambleExtensionMilliseconds);
     }
 
-    private OmnipodPacket exchangePackets(PodState podState, OmnipodPacket packet, int repeatCount, int responseTimeoutMilliseconds, int exchangeTimeoutMilliseconds, int preambleExtensionMilliseconds) throws RileyLinkCommunicationException {
+    private OmnipodPacket exchangePackets(PodState podState, OmnipodPacket packet, int repeatCount, int responseTimeoutMilliseconds, int exchangeTimeoutMilliseconds, int preambleExtensionMilliseconds) {
         long timeoutTime = System.currentTimeMillis() + exchangeTimeoutMilliseconds;
 
         while (System.currentTimeMillis() < timeoutTime) {
             OmnipodPacket response = null;
             try {
                 response = sendAndListen(packet, responseTimeoutMilliseconds, repeatCount, 9, preambleExtensionMilliseconds, OmnipodPacket.class);
-            } catch (Exception ex) {
+            } catch (RileyLinkCommunicationException ex) {
                 LOG.debug("Ignoring exception in exchangePackets: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+            } catch (Exception ex) {
+                throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
             }
             if (response == null || !response.isValid()) {
                 continue;
@@ -246,6 +258,6 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             podState.increasePacketNumber(2);
             return response;
         }
-        throw new OmnipodException("Timeout when trying to exchange packets");
+        throw new CommunicationException(CommunicationException.Type.TIMEOUT);
     }
 }

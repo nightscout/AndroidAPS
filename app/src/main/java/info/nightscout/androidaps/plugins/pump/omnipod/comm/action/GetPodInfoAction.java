@@ -5,6 +5,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.GetS
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
 
 public class GetPodInfoAction implements OmnipodAction<PodInfoResponse> {
     private final PodSessionState podState;
@@ -12,10 +13,10 @@ public class GetPodInfoAction implements OmnipodAction<PodInfoResponse> {
 
     public GetPodInfoAction(PodSessionState podState, PodInfoType podInfoType) {
         if (podState == null) {
-            throw new IllegalArgumentException("Pod state cannot be null");
+            throw new ActionInitializationException("Pod state cannot be null");
         }
         if (podInfoType == null) {
-            throw new IllegalArgumentException("Pod info type cannot be null");
+            throw new ActionInitializationException("Pod info type cannot be null");
         }
         this.podState = podState;
         this.podInfoType = podInfoType;

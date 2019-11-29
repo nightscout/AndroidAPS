@@ -10,8 +10,8 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.CrcMismatchException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.MessageDecodingException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.NotEnoughDataException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmniCRC;
 
 public class OmnipodMessage {
@@ -29,7 +29,7 @@ public class OmnipodMessage {
 
     public static OmnipodMessage decodeMessage(byte[] data) {
         if (data.length < 10) {
-            throw new NotEnoughDataException("Not enough data");
+            throw new NotEnoughDataException(data);
         }
 
         int address = ByteUtil.toInt((int) data[0], (int) data[1], (int) data[2],
@@ -37,21 +37,20 @@ public class OmnipodMessage {
         byte b9 = data[4];
         int bodyLength = ByteUtil.convertUnsignedByteToInt(data[5]);
         if (data.length - 8 < bodyLength) {
-            throw new NotEnoughDataException("not enough data: " + ByteUtil.shortHexString(data));
+            throw new NotEnoughDataException(data);
         }
         int sequenceNumber = (((int) b9 >> 2) & 0b11111);
         int crc = ByteUtil.toInt(data[data.length - 2], data[data.length - 1]);
         int calculatedCrc = OmniCRC.crc16(ByteUtil.substring(data, 0, data.length - 2));
         if (crc != calculatedCrc) {
-            throw new CrcMismatchException("CRC mismatch");
+            throw new CrcMismatchException(calculatedCrc, crc);
         }
         List<MessageBlock> blocks = decodeBlocks(ByteUtil.substring(data, 6, data.length - 6 - 2));
         if (blocks == null || blocks.size() == 0) {
-            throw new OmnipodException("No blocks decoded");
+            throw new MessageDecodingException("No blocks decoded");
         }
 
-        OmnipodMessage result = new OmnipodMessage(address, blocks, sequenceNumber);
-        return result;
+        return new OmnipodMessage(address, blocks, sequenceNumber);
     }
 
     private static List<MessageBlock> decodeBlocks(byte[] data) {
@@ -65,7 +64,7 @@ public class OmnipodMessage {
                 int blockLength = block.getRawData().length;
                 index += blockLength;
             } catch (Exception ex) {
-                throw new OmnipodException("Failed to decode blocks", ex);
+                throw new MessageDecodingException("Failed to decode blocks", ex);
             }
         }
 
@@ -84,7 +83,6 @@ public class OmnipodMessage {
         header = ByteUtil.concat(header, (byte) (((sequenceNumber & 0x1F) << 2) + ((encodedData.length >> 8) & 0x03)));
         header = ByteUtil.concat(header, (byte) (encodedData.length & 0xFF));
         encodedData = ByteUtil.concat(header, encodedData);
-        String myString = ByteUtil.shortHexString(encodedData);
         int crc = OmniCRC.crc16(encodedData);
         encodedData = ByteUtil.concat(encodedData, ByteUtil.substring(ByteUtil.getBytesFromInt(crc), 2, 2));
         return encodedData;

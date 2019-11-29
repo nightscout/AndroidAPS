@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.SetI
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
 
 public class SetBasalScheduleAction implements OmnipodAction<StatusResponse> {
     private final PodSessionState podState;
@@ -22,13 +23,13 @@ public class SetBasalScheduleAction implements OmnipodAction<StatusResponse> {
     public SetBasalScheduleAction(PodSessionState podState, BasalSchedule basalSchedule,
                                   boolean confidenceReminder, Duration scheduleOffset, boolean acknowledgementBeep) {
         if (podState == null) {
-            throw new IllegalArgumentException("Pod state cannot be null");
+            throw new ActionInitializationException("Pod state cannot be null");
         }
         if (basalSchedule == null) {
-            throw new IllegalArgumentException("Basal schedule cannot be null");
+            throw new ActionInitializationException("Basal schedule cannot be null");
         }
         if (scheduleOffset == null) {
-            throw new IllegalArgumentException("Schedule offset cannot be null");
+            throw new ActionInitializationException("Schedule offset cannot be null");
         }
         this.podState = podState;
         this.basalSchedule = basalSchedule;

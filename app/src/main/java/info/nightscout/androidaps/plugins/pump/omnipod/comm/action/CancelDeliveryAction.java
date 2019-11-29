@@ -8,6 +8,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Sta
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
 
 public class CancelDeliveryAction implements OmnipodAction<StatusResponse> {
     private final PodSessionState podState;
@@ -17,10 +18,10 @@ public class CancelDeliveryAction implements OmnipodAction<StatusResponse> {
     public CancelDeliveryAction(PodSessionState podState, EnumSet<DeliveryType> deliveryTypes,
                                 boolean acknowledgementBeep) {
         if (podState == null) {
-            throw new IllegalArgumentException("Pod state cannot be null");
+            throw new ActionInitializationException("Pod state cannot be null");
         }
         if (deliveryTypes == null) {
-            throw new IllegalArgumentException("Delivery types cannot be null");
+            throw new ActionInitializationException("Delivery types cannot be null");
         }
         this.podState = podState;
         this.deliveryTypes = deliveryTypes;

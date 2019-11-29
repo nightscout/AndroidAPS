@@ -9,6 +9,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Sta
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalSetupProgressException;
 
 public class InsertCannulaAction implements OmnipodAction<StatusResponse> {
     private static final Logger LOG = LoggerFactory.getLogger(InsertCannulaAction.class);
@@ -19,13 +21,13 @@ public class InsertCannulaAction implements OmnipodAction<StatusResponse> {
 
     public InsertCannulaAction(InsertCannulaService insertCannulaService, PodSessionState podState, BasalSchedule initialBasalSchedule) {
         if (insertCannulaService == null) {
-            throw new IllegalArgumentException("Insert cannula service cannot be null");
+            throw new ActionInitializationException("Insert cannula service cannot be null");
         }
         if (podState == null) {
-            throw new IllegalArgumentException("Pod state cannot be null");
+            throw new ActionInitializationException("Pod state cannot be null");
         }
         if (initialBasalSchedule == null) {
-            throw new IllegalArgumentException("Initial basal schedule cannot be null");
+            throw new ActionInitializationException("Initial basal schedule cannot be null");
         }
         this.service = insertCannulaService;
         this.podState = podState;
@@ -45,7 +47,7 @@ public class InsertCannulaAction implements OmnipodAction<StatusResponse> {
     @Override
     public StatusResponse execute(OmnipodCommunicationService communicationService) {
         if (podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
-            throw new IllegalStateException("Pod should be primed first");
+            throw new IllegalSetupProgressException(SetupProgress.PRIMING_FINISHED, podState.getSetupProgress());
         }
 
         if (podState.getSetupProgress().isBefore(SetupProgress.INITIAL_BASAL_SCHEDULE_SET)) {
@@ -67,7 +69,7 @@ public class InsertCannulaAction implements OmnipodAction<StatusResponse> {
             updateCannulaInsertionStatus(podState, statusResponse);
             return statusResponse;
         } else {
-            throw new IllegalStateException("Illegal setup progress: " + podState.getSetupProgress().name());
+            throw new IllegalSetupProgressException(null, podState.getSetupProgress());
         }
     }
 }
