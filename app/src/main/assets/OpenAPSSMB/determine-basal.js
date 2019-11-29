@@ -47,6 +47,69 @@ function convert_bg(value, profile)
     }
 }
 
+function enable_smb(
+    profile,
+    microBolusAllowed,
+    meal_data,
+    target_bg
+) {
+    // disable SMB when a high temptarget is set
+    if (! microBolusAllowed) {
+        console.error("SMB disabled (!microBolusAllowed)");
+        return false;
+    } else if (! profile.allowSMB_with_high_temptarget && profile.temptargetSet && target_bg > 100) {
+        console.error("SMB disabled due to high temptarget of",target_bg);
+        return false;
+    } else if (meal_data.bwFound === true && profile.A52_risk_enable === false) {
+        console.error("SMB disabled due to Bolus Wizard activity in the last 6 hours.");
+        return false;
+    }
+
+    // enable SMB/UAM if always-on (unless previously disabled for high temptarget)
+    if (profile.enableSMB_always === true) {
+        if (meal_data.bwFound) {
+            console.error("Warning: SMB enabled within 6h of using Bolus Wizard: be sure to easy bolus 30s before using Bolus Wizard");
+        } else {
+            console.error("SMB enabled due to enableSMB_always");
+        }
+        return true;
+    }
+
+    // enable SMB/UAM (if enabled in preferences) while we have COB
+    if (profile.enableSMB_with_COB === true && meal_data.mealCOB) {
+        if (meal_data.bwCarbs) {
+            console.error("Warning: SMB enabled with Bolus Wizard carbs: be sure to easy bolus 30s before using Bolus Wizard");
+        } else {
+            console.error("SMB enabled for COB of",meal_data.mealCOB);
+        }
+        return true;
+    }
+
+    // enable SMB/UAM (if enabled in preferences) for a full 6 hours after any carb entry
+    // (6 hours is defined in carbWindow in lib/meal/total.js)
+    if (profile.enableSMB_after_carbs === true && meal_data.carbs ) {
+        if (meal_data.bwCarbs) {
+            console.error("Warning: SMB enabled with Bolus Wizard carbs: be sure to easy bolus 30s before using Bolus Wizard");
+        } else {
+            console.error("SMB enabled for 6h after carb entry");
+        }
+        return true;
+    }
+
+    // enable SMB/UAM (if enabled in preferences) if a low temptarget is set
+    if (profile.enableSMB_with_temptarget === true && (profile.temptargetSet && target_bg < 100)) {
+        if (meal_data.bwFound) {
+            console.error("Warning: SMB enabled within 6h of using Bolus Wizard: be sure to easy bolus 30s before using Bolus Wizard");
+        } else {
+            console.error("SMB enabled for temptarget of",convert_bg(target_bg, profile));
+        }
+        return true;
+    }
+
+    console.error("SMB disabled (no enableSMB preferences active or no condition satisfied)");
+    return false;
+}
+
 var determine_basal = function determine_basal(glucose_status, currenttemp, iob_data, profile, autosens_data, meal_data, tempBasalFunctions, microBolusAllowed, reservoir_data, currentTime) {
     var rT = {}; //short for requestedTemp
 
@@ -86,7 +149,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             rT.reason = "Error: CGM data is unchanged for the past ~45m";
         }
     }
-    if (bg <= 10 || bg === 38 || noise >= 3 || minAgo > 12 || minAgo < -5 || ( bg > 60 && glucose_status == 0 && glucose_status.short_avgdelta > -1 && glucose_status.short_avgdelta < 1 && glucose_status.long_avgdelta > -1 && glucose_status.long_avgdelta < 1 ) ) {
+    if (bg <= 10 || bg === 38 || noise >= 3 || minAgo > 12 || minAgo < -5 || ( bg > 60 && glucose_status == 0 && glucose_status.short_avgdelta > -1 && glucose_status.short_avgdelta < 1 && glucose_status.long_avgdelta > -1 && glucose_status.long_avgdelta < 1 ) ) {
         if (currenttemp.rate > basal) { // high temp is running
             rT.reason += ". Replacing high temp basal of "+currenttemp.rate+" with neutral temp of "+basal;
             rT.deliverAt = deliverAt;
@@ -130,7 +193,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
     var sensitivityRatio;
     var high_temptarget_raises_sensitivity = profile.exercise_mode || profile.high_temptarget_raises_sensitivity;
-    var normalTarget = 100; // evaluate high/low temptarget against 100, not scheduled basal (which might change)
+    var normalTarget = 100; // evaluate high/low temptarget against 100, not scheduled target (which might change)
     if ( profile.half_basal_exercise_target ) {
         var halfBasalTarget = profile.half_basal_exercise_target;
     } else {
@@ -147,24 +210,24 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         // limit sensitivityRatio to profile.autosens_max (1.2x by default)
         sensitivityRatio = Math.min(sensitivityRatio, profile.autosens_max);
         sensitivityRatio = round(sensitivityRatio,2);
-        process.stderr.write("Sensitivity ratio set to "+sensitivityRatio+" based on temp target of "+target_bg+"; ");
+        console.log("Sensitivity ratio set to "+sensitivityRatio+" based on temp target of "+target_bg+"; ");
     } else if (typeof autosens_data !== 'undefined' && autosens_data) {
         sensitivityRatio = autosens_data.ratio;
-        process.stderr.write("Autosens ratio: "+sensitivityRatio+"; ");
+        console.log("Autosens ratio: "+sensitivityRatio+"; ");
     }
     if (sensitivityRatio) {
         basal = profile.current_basal * sensitivityRatio;
         basal = round_basal(basal, profile);
         if (basal !== profile_current_basal) {
-            process.stderr.write("Adjusting basal from "+profile_current_basal+" to "+basal+"; ");
+            console.log("Adjusting basal from "+profile_current_basal+" to "+basal+"; ");
         } else {
-            process.stderr.write("Basal unchanged: "+basal+"; ");
+            console.log("Basal unchanged: "+basal+"; ");
         }
     }
 
     // adjust min, max, and target BG for sensitivity, such that 50% increase in ISF raises target from 100 to 120
     if (profile.temptargetSet) {
-        //process.stderr.write("Temp Target set, not adjusting with autosens; ");
+        //console.log("Temp Target set, not adjusting with autosens; ");
     } else if (typeof autosens_data !== 'undefined' && autosens_data) {
         if ( profile.sensitivity_raises_target && autosens_data.ratio < 1 || profile.resistance_lowers_target && autosens_data.ratio > 1 ) {
             // with a target of 100, default 0.7-1.2 autosens min/max range would allow a 93-117 target range
@@ -174,9 +237,9 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             // don't allow target_bg below 80
             new_target_bg = Math.max(80, new_target_bg);
             if (target_bg === new_target_bg) {
-                process.stderr.write("target_bg unchanged: "+new_target_bg+"; ");
+                console.log("target_bg unchanged: "+new_target_bg+"; ");
             } else {
-                process.stderr.write("target_bg from "+target_bg+" to "+new_target_bg+"; ");
+                console.log("target_bg from "+target_bg+" to "+new_target_bg+"; ");
             }
             target_bg = new_target_bg;
         }
@@ -216,11 +279,11 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         sens = profile.sens / sensitivityRatio;
         sens = round(sens, 1);
         if (sens !== profile_sens) {
-            process.stderr.write("ISF from "+profile_sens+" to "+sens);
+            console.log("ISF from "+profile_sens+" to "+sens);
         } else {
-            process.stderr.write("ISF unchanged: "+sens);
+            console.log("ISF unchanged: "+sens);
         }
-        //process.stderr.write(" (autosens ratio "+sensitivityRatio+")");
+        //console.log(" (autosens ratio "+sensitivityRatio+")");
     }
     console.error("; CR:",profile.carb_ratio);
 
@@ -292,7 +355,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         var adjustedMinBG = round(Math.min(200, min_bg * noisyCGMTargetMultiplier ));
         var adjustedTargetBG = round(Math.min(200, target_bg * noisyCGMTargetMultiplier ));
         var adjustedMaxBG = round(Math.min(200, max_bg * noisyCGMTargetMultiplier ));
-        process.stderr.write("Raising target_bg for noisy / raw CGM data, from "+target_bg+" to "+adjustedTargetBG+"; ");
+        console.log("Raising target_bg for noisy / raw CGM data, from "+target_bg+" to "+adjustedTargetBG+"; ");
         min_bg = adjustedMinBG;
         target_bg = adjustedTargetBG;
         max_bg = adjustedMaxBG;
@@ -305,17 +368,17 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         // if eventualBG, naive_eventualBG, and target_bg aren't all above adjustedMinBG, don’t use it
         //console.error("naive_eventualBG:",naive_eventualBG+", eventualBG:",eventualBG);
         if (eventualBG > adjustedMinBG && naive_eventualBG > adjustedMinBG && min_bg > adjustedMinBG) {
-            process.stderr.write("Adjusting targets for high BG: min_bg from "+min_bg+" to "+adjustedMinBG+"; ");
+            console.log("Adjusting targets for high BG: min_bg from "+min_bg+" to "+adjustedMinBG+"; ");
             min_bg = adjustedMinBG;
         } else {
-            process.stderr.write("min_bg unchanged: "+min_bg+"; ");
+            console.log("min_bg unchanged: "+min_bg+"; ");
         }
         // if eventualBG, naive_eventualBG, and target_bg aren't all above adjustedTargetBG, don’t use it
         if (eventualBG > adjustedTargetBG && naive_eventualBG > adjustedTargetBG && target_bg > adjustedTargetBG) {
-            process.stderr.write("target_bg from "+target_bg+" to "+adjustedTargetBG+"; ");
+            console.log("target_bg from "+target_bg+" to "+adjustedTargetBG+"; ");
             target_bg = adjustedTargetBG;
         } else {
-            process.stderr.write("target_bg unchanged: "+target_bg+"; ");
+            console.log("target_bg unchanged: "+target_bg+"; ");
         }
         // if eventualBG, naive_eventualBG, and max_bg aren't all above adjustedMaxBG, don’t use it
         if (eventualBG > adjustedMaxBG && naive_eventualBG > adjustedMaxBG && max_bg > adjustedMaxBG) {
@@ -361,71 +424,13 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     ZTpredBGs.push(bg);
     UAMpredBGs.push(bg);
 
-    // enable SMB whenever we have COB or UAM is enabled
-    // SMB is disabled by default, unless explicitly enabled in preferences.json
-    var enableSMB=false;
-    // disable SMB when a high temptarget is set
-    if (! microBolusAllowed) {
-        console.error("SMB disabled (!microBolusAllowed)")
-    } else if (! profile.allowSMB_with_high_temptarget && profile.temptargetSet && target_bg > 100) {
-        console.error("SMB disabled due to high temptarget of",target_bg);
-        enableSMB=false;
-    // enable SMB/UAM (if enabled in preferences) while we have COB
-    } else if (profile.enableSMB_with_COB === true && meal_data.mealCOB) {
-        if (meal_data.bwCarbs) {
-            if (profile.A52_risk_enable === true) {
-                console.error("Warning: SMB enabled with Bolus Wizard carbs: be sure to easy bolus 30s before using Bolus Wizard")
-                enableSMB=true;
-            } else {
-                console.error("SMB not enabled for Bolus Wizard COB");
-            }
-        } else {
-            console.error("SMB enabled for COB of",meal_data.mealCOB);
-            enableSMB=true;
-        }
-    // enable SMB/UAM (if enabled in preferences) for a full 6 hours after any carb entry
-    // (6 hours is defined in carbWindow in lib/meal/total.js)
-    } else if ((profile.enableSMB_after_carbs === true || profile.enableSMB_with_carbs === true) && meal_data.carbs ) {
-        if (meal_data.bwCarbs) {
-            if (profile.A52_risk_enable === true) {
-            console.error("Warning: SMB enabled with Bolus Wizard carbs: be sure to easy bolus 30s before using Bolus Wizard")
-            enableSMB=true;
-            } else {
-                console.error("SMB not enabled for Bolus Wizard carbs");
-            }
-        } else {
-            console.error("SMB enabled for 6h after carb entry");
-            enableSMB=true;
-        }
-    // enable SMB/UAM (if enabled in preferences) if a low temptarget is set
-    } else if (profile.enableSMB_with_temptarget === true && (profile.temptargetSet && target_bg < 100)) {
-        if (meal_data.bwFound) {
-            if (profile.A52_risk_enable === true) {
-                console.error("Warning: SMB enabled within 6h of using Bolus Wizard: be sure to easy bolus 30s before using Bolus Wizard")
-                enableSMB=true;
-            } else {
-                console.error("enableSMB_with_temptarget not supported within 6h of using Bolus Wizard");
-            }
-        } else {
-            console.error("SMB enabled for temptarget of",convert_bg(target_bg, profile));
-            enableSMB=true;
-        }
-    // enable SMB/UAM if always-on (unless previously disabled for high temptarget)
-    } else if (profile.enableSMB_always === true) {
-        if (meal_data.bwFound) {
-            if (profile.A52_risk_enable === true) {
-                console.error("Warning: SMB enabled within 6h of using Bolus Wizard: be sure to easy bolus 30s before using Bolus Wizard")
-                enableSMB=true;
-            } else {
-                console.error("enableSMB_always not supported within 6h of using Bolus Wizard");
-            }
-        } else {
-            console.error("SMB enabled due to enableSMB_always");
-            enableSMB=true;
-        }
-    } else {
-        console.error("SMB disabled for this run (no selected enableSMB criteria met)");
-    }
+    var enableSMB = enable_smb(
+        profile,
+        microBolusAllowed,
+        meal_data,
+        target_bg
+    );
+
     // enable UAM (if enabled in preferences)
     var enableUAM=(profile.enableUAM);
 
@@ -573,7 +578,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             remainingCItotal += predCI+remainingCI;
             remainingCIs.push(round(remainingCI,0));
             predCIs.push(round(predCI,0));
-            //process.stderr.write(round(predCI,1)+"+"+round(remainingCI,1)+" ");
+            //console.log(round(predCI,1)+"+"+round(remainingCI,1)+" ");
             COBpredBG = COBpredBGs[COBpredBGs.length-1] + predBGI + Math.min(0,predDev) + predCI + remainingCI;
             var aCOBpredBG = aCOBpredBGs[aCOBpredBGs.length-1] + predBGI + Math.min(0,predDev) + predACI;
             // for UAMpredBGs, predicted carb impact drops at slopeFromDeviations
@@ -606,7 +611,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             // set minPredBGs starting when currently-dosed insulin activity will peak
             // look ahead 60m (regardless of insulin type) so as to be less aggressive on slower insulins
             var insulinPeakTime = 60;
-            // add 30m to allow for insluin delivery (SMBs or temps)
+            // add 30m to allow for insulin delivery (SMBs or temps)
             insulinPeakTime = 90;
             var insulinPeak5m = (insulinPeakTime/60)*12;
             //console.error(insulinPeakTime, insulinPeak5m, profile.insulinPeakTime, profile.curve);
@@ -764,8 +769,10 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
             // if blendedMinPredBG > minCOBPredBG, use that instead
             minPredBG = round(Math.max(minIOBPredBG, minCOBPredBG, blendedMinPredBG));
         // if carbs have been entered, but have expired, use minUAMPredBG
-        } else {
+        } else if ( enableUAM ) {
             minPredBG = minZTUAMPredBG;
+        } else {
+            minPredBG = minGuardBG;
         }
     // in pure UAM mode, use the higher of minIOBPredBG,minUAMPredBG
     } else if ( enableUAM ) {
@@ -775,12 +782,12 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     // make sure minPredBG isn't higher than avgPredBG
     minPredBG = Math.min( minPredBG, avgPredBG );
 
-    process.stderr.write("minPredBG: "+minPredBG+" minIOBPredBG: "+minIOBPredBG+" minZTGuardBG: "+minZTGuardBG);
+    console.log("minPredBG: "+minPredBG+" minIOBPredBG: "+minIOBPredBG+" minZTGuardBG: "+minZTGuardBG);
     if (minCOBPredBG < 999) {
-        process.stderr.write(" minCOBPredBG: "+minCOBPredBG);
+        console.log(" minCOBPredBG: "+minCOBPredBG);
     }
     if (minUAMPredBG < 999) {
-        process.stderr.write(" minUAMPredBG: "+minUAMPredBG);
+        console.log(" minUAMPredBG: "+minUAMPredBG);
     }
     console.error(" avgPredBG:",avgPredBG,"COB:",meal_data.mealCOB,"/",meal_data.carbs);
     // But if the COB line falls off a cliff, don't trust UAM too much:
