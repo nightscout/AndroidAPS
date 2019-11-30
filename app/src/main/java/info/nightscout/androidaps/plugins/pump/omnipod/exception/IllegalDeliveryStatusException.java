@@ -10,7 +10,7 @@ public class IllegalDeliveryStatusException extends OmnipodException {
     private final DeliveryStatus actual;
 
     public IllegalDeliveryStatusException(DeliveryStatus expected, DeliveryStatus actual) {
-        super(String.format(Locale.getDefault(), "Illegal delivery status: %s, expected: %s", actual, expected));
+        super(String.format(Locale.getDefault(), "Illegal delivery status: %s, expected: %s", actual, expected), true);
         this.expected = expected;
         this.actual = actual;
     }
@@ -21,10 +21,5 @@ public class IllegalDeliveryStatusException extends OmnipodException {
 
     public DeliveryStatus getActual() {
         return actual;
-    }
-
-    @Override
-    public boolean isCertainFailure() {
-        return true;
     }
 }

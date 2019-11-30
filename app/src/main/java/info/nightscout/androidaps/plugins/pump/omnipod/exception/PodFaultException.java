@@ -9,16 +9,11 @@ public class PodFaultException extends OmnipodException {
 
     public PodFaultException(PodInfoFaultEvent faultEvent) {
         super(String.format(Locale.getDefault(), "Pod fault (%d): %s", faultEvent.getFaultEventCode().getValue(),
-                faultEvent.getFaultEventCode().toString()));
+                faultEvent.getFaultEventCode().toString()), true);
         this.faultEvent = faultEvent;
     }
 
     public PodInfoFaultEvent getFaultEvent() {
         return faultEvent;
-    }
-
-    @Override
-    public boolean isCertainFailure() {
-        return true;
     }
 }

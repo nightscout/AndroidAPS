@@ -123,7 +123,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
                     podState = gson.fromJson(storedPodState, PodSessionState.class);
                     OmnipodUtil.setPodSessionState(podState);
                 } catch (Exception ex) {
-                    LOG.error("Could not deserialize Pod state: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+                    LOG.error("Could not deserialize Pod state", ex);
                 }
             }
             OmnipodCommunicationService omnipodCommunicationService = new OmnipodCommunicationService(rfspy);

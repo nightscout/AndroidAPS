@@ -6,16 +6,11 @@ public class PodReturnedErrorResponseException extends OmnipodException {
     private final ErrorResponse errorResponse;
 
     public PodReturnedErrorResponseException(ErrorResponse errorResponse) {
-        super("Pod returned error response: " + errorResponse.getErrorResponseType());
+        super("Pod returned error response: " + errorResponse.getErrorResponseType(), true);
         this.errorResponse = errorResponse;
     }
 
     public ErrorResponse getErrorResponse() {
         return errorResponse;
-    }
-
-    @Override
-    public boolean isCertainFailure() {
-        return true;
     }
 }

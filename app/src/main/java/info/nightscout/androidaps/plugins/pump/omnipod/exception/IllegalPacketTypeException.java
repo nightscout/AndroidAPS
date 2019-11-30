@@ -10,7 +10,7 @@ public class IllegalPacketTypeException extends OmnipodException {
 
     public IllegalPacketTypeException(PacketType expected, PacketType actual) {
         super(String.format(Locale.getDefault(), "Illegal packet type: %s, expected %s",
-                actual, expected));
+                actual, expected), false);
         this.expected = expected;
         this.actual = actual;
     }
@@ -23,8 +23,4 @@ public class IllegalPacketTypeException extends OmnipodException {
         return actual;
     }
 
-    @Override
-    public boolean isCertainFailure() {
-        return false;
-    }
 }

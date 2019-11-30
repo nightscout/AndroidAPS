@@ -9,7 +9,7 @@ public class IllegalSetupProgressException extends OmnipodException {
     private final SetupProgress actual;
 
     public IllegalSetupProgressException(SetupProgress expected, SetupProgress actual) {
-        super(String.format(Locale.getDefault(), "Illegal setup progress: %s, expected: %s", actual, expected));
+        super(String.format(Locale.getDefault(), "Illegal setup progress: %s, expected: %s", actual, expected), true);
         this.expected = expected;
         this.actual = actual;
     }
@@ -22,8 +22,4 @@ public class IllegalSetupProgressException extends OmnipodException {
         return actual;
     }
 
-    @Override
-    public boolean isCertainFailure() {
-        return true;
-    }
 }

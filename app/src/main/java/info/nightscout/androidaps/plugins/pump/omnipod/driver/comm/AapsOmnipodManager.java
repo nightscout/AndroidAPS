@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalPodProgr
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalSetupProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.MessageDecodingException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceOutOfSyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceResyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.NotEnoughDataException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
@@ -159,7 +160,13 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             });
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
-            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+            if(OmnipodManager.isCertainFailure(ex)) {
+                return new PumpEnactResult().success(false).enacted(false).comment(comment);
+            } else {
+                // TODO notify user about uncertain failure
+                //  we don't know if the bolus failed, so for safety reasons, we choose to register the bolus as succesful.
+                return new PumpEnactResult().success(true).enacted(true);
+            }
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -328,6 +335,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_response);
             } else if (ex instanceof MessageDecodingException) {
                 comment = getStringResource(R.string.omnipod_driver_error_message_decoding_failed);
+            } else if (ex instanceof NonceOutOfSyncException) {
+                comment = getStringResource(R.string.omnipod_driver_error_nonce_out_of_sync);
             } else if (ex instanceof NonceResyncException) {
                 comment = getStringResource(R.string.omnipod_driver_error_nonce_resync_failed);
             } else if (ex instanceof NotEnoughDataException) {
@@ -347,7 +356,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         } else {
             comment = getStringResource(R.string.omnipod_driver_error_unexpected_exception_type, ex.getClass().getName());
             if (loggingEnabled()) {
-                LOG.error(String.format("Caught unexpected exception type from OmnipodManager (user-friendly error message: %s)", comment), ex);
+                LOG.error(String.format("Caught unexpected exception type[certainFailure=false] from OmnipodManager (user-friendly error message: %s)", comment), ex);
             }
         }
 

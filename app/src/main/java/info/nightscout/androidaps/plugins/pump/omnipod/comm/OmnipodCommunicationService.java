@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
@@ -27,13 +28,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodState;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommunicationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalPacketTypeException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalResponseException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceOutOfSyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceResyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.NotEnoughDataException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodReturnedErrorResponseException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalPacketTypeException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalResponseException;
 
 /**
  * Created by andy on 6/29/18.
@@ -41,7 +43,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalResponse
 
 public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OmnipodCommunicationService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public OmnipodCommunicationService(RFSpy rfspy) {
         super(rfspy);
@@ -73,8 +75,12 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
     }
 
     public <T extends MessageBlock> T sendCommand(Class<T> responseClass, PodState podState, MessageBlock command) {
+        return sendCommand(responseClass, podState, command, true);
+    }
+
+    public <T extends MessageBlock> T sendCommand(Class<T> responseClass, PodState podState, MessageBlock command, boolean automaticallyResyncNone) {
         OmnipodMessage message = new OmnipodMessage(podState.getAddress(), Collections.singletonList(command), podState.getMessageNumber());
-        return exchangeMessages(responseClass, podState, message);
+        return exchangeMessages(responseClass, podState, message, automaticallyResyncNone);
     }
 
     // Convenience method
@@ -83,10 +89,18 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
     }
 
     public <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodState podState, OmnipodMessage message) {
-        return exchangeMessages(responseClass, podState, message, null, null);
+        return exchangeMessages(responseClass, podState, message, true);
+    }
+
+    public <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodState podState, OmnipodMessage message, boolean automaticallyResyncNonce) {
+        return exchangeMessages(responseClass, podState, message, null, null, automaticallyResyncNonce);
     }
 
     public synchronized <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodState podState, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride) {
+        return exchangeMessages(responseClass, podState, message, addressOverride, ackAddressOverride, true);
+    }
+
+    public synchronized <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodState podState, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride, boolean automaticallyResyncNonce) {
         for (int i = 0; 2 > i; i++) {
 
             if (podState.hasNonceState() && message.isNonceResyncable()) {
@@ -106,13 +120,16 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
                     ErrorResponse error = (ErrorResponse) responseMessageBlock;
                     if (error.getErrorResponseType() == ErrorResponseType.BAD_NONCE) {
                         podState.resyncNonce(error.getNonceSearchKey(), message.getSentNonce(), message.getSequenceNumber());
-                        message.resyncNonce(podState.getCurrentNonce());
+                        if (automaticallyResyncNonce) {
+                            message.resyncNonce(podState.getCurrentNonce());
+                        } else {
+                            throw new NonceOutOfSyncException();
+                        }
                     } else {
                         throw new PodReturnedErrorResponseException((ErrorResponse) responseMessageBlock);
                     }
                 } else if (responseMessageBlock.getType() == MessageBlockType.POD_INFO_RESPONSE && ((PodInfoResponse) responseMessageBlock).getSubType() == PodInfoType.FAULT_EVENT) {
                     PodInfoFaultEvent faultEvent = ((PodInfoResponse) responseMessageBlock).getPodInfo();
-                    LOG.error("Pod fault: " + faultEvent.getFaultEventCode().name());
                     podState.setFaultEvent(faultEvent);
                     throw new PodFaultException(faultEvent);
                 } else {
@@ -189,7 +206,10 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
         if (messageBlocks.size() == 0) {
             throw new NotEnoughDataException(receivedMessageData);
         } else if (messageBlocks.size() > 1) {
-            LOG.error("received more than one message block: " + messageBlocks.toString());
+            // BS: don't expect this to happen
+            if (isLoggingEnabled()) {
+                LOG.error("Received more than one message block: {}", messageBlocks.toString());
+            }
         }
 
         return messageBlocks.get(0);
@@ -216,7 +236,13 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             if (RileyLinkBLEError.Timeout.equals(ex.getErrorCode())) {
                 quiet = true;
             } else {
-                LOG.debug("Ignoring exception in ackUntilQuiet: " + ex.getClass().getSimpleName() + ": " + ex.getErrorCode() + ": " + ex.getMessage());
+                if (isLoggingEnabled()) {
+                    LOG.debug("Ignoring exception in ackUntilQuiet", ex);
+                }
+            }
+        } catch (OmnipodException ex) {
+            if (isLoggingEnabled()) {
+                LOG.debug("Ignoring exception in ackUntilQuiet", ex);
             }
         } catch (Exception ex) {
             throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
@@ -241,7 +267,9 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             try {
                 response = sendAndListen(packet, responseTimeoutMilliseconds, repeatCount, 9, preambleExtensionMilliseconds, OmnipodPacket.class);
             } catch (RileyLinkCommunicationException ex) {
-                LOG.debug("Ignoring exception in exchangePackets: " + ex.getClass().getSimpleName() + ": " + ex.getMessage());
+                if (isLoggingEnabled()) {
+                    LOG.debug("Ignoring exception in exchangePackets", ex);
+                }
             } catch (Exception ex) {
                 throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
             }
@@ -259,5 +287,9 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             return response;
         }
         throw new CommunicationException(CommunicationException.Type.TIMEOUT);
+    }
+
+    private boolean isLoggingEnabled() {
+        return L.isEnabled(L.PUMPCOMM);
     }
 }

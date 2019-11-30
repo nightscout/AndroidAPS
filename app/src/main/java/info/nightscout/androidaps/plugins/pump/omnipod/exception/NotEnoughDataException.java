@@ -6,16 +6,11 @@ public class NotEnoughDataException extends OmnipodException {
     private final byte[] data;
 
     public NotEnoughDataException(byte[] data) {
-        super("Not enough data: " + ByteUtil.shortHexString(data));
+        super("Not enough data: " + ByteUtil.shortHexString(data), false);
         this.data = data;
     }
 
     public byte[] getData() {
         return data;
-    }
-
-    @Override
-    public boolean isCertainFailure() {
-        return false;
     }
 }

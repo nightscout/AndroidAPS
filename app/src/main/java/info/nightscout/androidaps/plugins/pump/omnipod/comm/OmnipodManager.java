@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
 import java.util.TimeZone;
@@ -10,6 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AcknowledgeAlertsAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.BolusAction;
@@ -26,19 +29,26 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.Inser
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.PairService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.PrimeService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.SetTempBasalService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.CancelDeliveryCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommunicationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalSetupProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceOutOfSyncException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.SP;
 
 public class OmnipodManager {
     private static final int ACTION_VERIFICATION_TRIES = 3;
+
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     protected final OmnipodCommunicationService communicationService;
     protected PodSessionState podState;
@@ -128,7 +138,31 @@ public class OmnipodManager {
     public void bolus(Double units, StatusResponseHandler bolusCompletionHandler) {
         assertReadyForDelivery();
 
-        communicationService.executeAction(new BolusAction(podState, units, true, true));
+        try {
+            communicationService.executeAction(new BolusAction(podState, units, true, true));
+        } catch (Exception ex) {
+            if (isCertainFailure(ex)) {
+                throw ex;
+            } else {
+                CommandVerificationResult verificationResult = verifyCommand();
+                switch (verificationResult) {
+                    case CERTAIN_FAILURE:
+                        if (ex instanceof OmnipodException) {
+                            ((OmnipodException) ex).setCertainFailure(true);
+                            throw ex;
+                        } else {
+                            OmnipodException newException = new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
+                            newException.setCertainFailure(true);
+                            throw newException;
+                        }
+                    case UNCERTAIN_FAILURE:
+                        throw ex;
+                    case SUCCESS:
+                        // Ignore original exception
+                        break;
+                }
+            }
+        }
 
         if (bolusCompletionHandler != null) {
             executeDelayed(() -> {
@@ -254,5 +288,47 @@ public class OmnipodManager {
         if (resultHandler != null) {
             resultHandler.handle(result);
         }
+    }
+
+    // Only works for commands which contain nonce resyncable message blocks
+    private CommandVerificationResult verifyCommand() {
+        if (isLoggingEnabled()) {
+            LOG.warn("Verifying command by using cancel none command to verify nonce");
+        }
+        try {
+            communicationService.sendCommand(StatusResponse.class, podState,
+                    new CancelDeliveryCommand(podState.getCurrentNonce(), BeepType.NO_BEEP, DeliveryType.NONE), false);
+        } catch (NonceOutOfSyncException ex) {
+            if (isLoggingEnabled()) {
+                LOG.info("Command resolved to FAILURE (CERTAIN_FAILURE)");
+            }
+            return CommandVerificationResult.CERTAIN_FAILURE;
+        } catch (Exception ex) {
+            if (isLoggingEnabled()) {
+                LOG.error("Command unresolved (UNCERTAIN_FAILURE)");
+            }
+            return CommandVerificationResult.UNCERTAIN_FAILURE;
+        }
+
+        if (isLoggingEnabled()) {
+            if (isLoggingEnabled()) {
+                LOG.info("Command status resolved to SUCCESS");
+            }
+        }
+        return CommandVerificationResult.SUCCESS;
+    }
+
+    public static boolean isCertainFailure(Exception ex) {
+        return ex instanceof OmnipodException && ((OmnipodException) ex).isCertainFailure();
+    }
+
+    private enum CommandVerificationResult {
+        SUCCESS,
+        CERTAIN_FAILURE,
+        UNCERTAIN_FAILURE
+    }
+
+    private boolean isLoggingEnabled() {
+        return L.isEnabled(L.PUMP);
     }
 }

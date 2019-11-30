@@ -4,22 +4,17 @@ public class CommunicationException extends OmnipodException {
     private final Type type;
 
     public CommunicationException(Type type) {
-        super(type.getDescription());
+        super(type.getDescription(), false);
         this.type = type;
     }
 
     public CommunicationException(Type type, Throwable cause) {
-        super(type.getDescription(), cause);
+        super(type.getDescription() + ": "+ cause, cause, false);
         this.type = type;
     }
 
     public Type getType() {
         return type;
-    }
-
-    @Override
-    public boolean isCertainFailure() {
-        return false;
     }
 
     public enum Type {

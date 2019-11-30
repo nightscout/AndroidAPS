@@ -7,7 +7,7 @@ public class CrcMismatchException extends OmnipodException {
     private final int actual;
 
     public CrcMismatchException(int expected, int actual) {
-        super(String.format(Locale.getDefault(), "CRC mismatch: expected %d, got %d", expected, actual));
+        super(String.format(Locale.getDefault(), "CRC mismatch: expected %d, got %d", expected, actual), false);
         this.expected = expected;
         this.actual = actual;
     }
@@ -18,10 +18,5 @@ public class CrcMismatchException extends OmnipodException {
 
     public int getActual() {
         return actual;
-    }
-
-    @Override
-    public boolean isCertainFailure() {
-        return false;
     }
 }

@@ -1651,10 +1651,11 @@
     <string name="omnipod_driver_error_communication_failed">Communication failed.</string>
     <string name="omnipod_driver_error_crc_mismatch">Communication failed: Message integrity verification failed.</string>
     <string name="omnipod_driver_error_invalid_packet_type">Communication failed: received an invalid packet from the pod.</string>
-    <string name="omnipod_driver_error_invalid_progress_state">Communication failed: rhe pod is in a wrong state. Please retry your command.</string>
+    <string name="omnipod_driver_error_invalid_progress_state">Communication failed: the pod is in a wrong state.</string>
     <string name="omnipod_driver_error_invalid_response">Communication failed: received an invalid response from the pod.</string>
     <string name="omnipod_driver_error_message_decoding_failed">Communication failed: failed to decode message from the pod.</string>
-    <string name="omnipod_driver_error_nonce_resync_failed">Communication failed: nonce resync failed. Please try your command again.</string>
+    <string name="omnipod_driver_error_nonce_resync_failed">Communication failed: nonce resync failed.</string>
+    <string name="omnipod_driver_error_nonce_out_of_sync">Communication failed: nonce out of sync.</string>
     <string name="omnipod_driver_error_not_enough_data">Communication failed: not enough data received from the pod.</string>
     <string name="omnipod_driver_error_pod_fault">A pod fault (%1$s) has been detected. Please deactivate your pod and start a new one.</string>
     <string name="omnipod_driver_error_pod_returned_error_response">Communication failed: the pod returned an error response.</string>

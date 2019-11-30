@@ -10,7 +10,7 @@ public class IllegalResponseException extends OmnipodException {
 
     public IllegalResponseException(String actualClass, MessageBlockType expectedType) {
         super(String.format(Locale.getDefault(), "Illegal response type: got class of type %s " +
-                "for message block type %s", actualClass, expectedType));
+                "for message block type %s", actualClass, expectedType), false);
         this.actualClass = actualClass;
         this.expectedType = expectedType;
     }
@@ -21,10 +21,5 @@ public class IllegalResponseException extends OmnipodException {
 
     public MessageBlockType getExpectedType() {
         return expectedType;
-    }
-
-    @Override
-    public boolean isCertainFailure() {
-        return false;
     }
 }
