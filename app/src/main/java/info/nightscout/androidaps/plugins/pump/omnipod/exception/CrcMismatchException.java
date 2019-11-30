@@ -1,11 +1,22 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.exception;
 
+import java.util.Locale;
+
 public class CrcMismatchException extends OmnipodException {
-    public CrcMismatchException(String message) {
-        super(message);
+    private final int expected;
+    private final int actual;
+
+    public CrcMismatchException(int expected, int actual) {
+        super(String.format(Locale.getDefault(), "CRC mismatch: expected %d, got %d", expected, actual));
+        this.expected = expected;
+        this.actual = actual;
     }
 
-    public CrcMismatchException(String message, Throwable cause) {
-        super(message, cause);
+    public int getExpected() {
+        return expected;
+    }
+
+    public int getActual() {
+        return actual;
     }
 }

@@ -9,6 +9,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.RateEntry;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommandInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 public class TempBasalExtraCommand extends MessageBlock {
@@ -23,12 +24,12 @@ public class TempBasalExtraCommand extends MessageBlock {
     public TempBasalExtraCommand(double rate, Duration duration, boolean acknowledgementBeep, boolean completionBeep,
                                  Duration programReminderInterval) {
         if (rate < 0D) {
-            throw new IllegalArgumentException("Rate should be >= 0");
+            throw new CommandInitializationException("Rate should be >= 0");
         } else if (rate > OmnipodConst.MAX_BASAL_RATE) {
-            throw new IllegalArgumentException("Rate exceeds max basal rate");
+            throw new CommandInitializationException("Rate exceeds max basal rate");
         }
         if (duration.isLongerThan(OmnipodConst.MAX_TEMP_BASAL_DURATION)) {
-            throw new IllegalArgumentException("Duration exceeds max temp basal duration");
+            throw new CommandInitializationException("Duration exceeds max temp basal duration");
         }
 
         this.acknowledgementBeep = acknowledgementBeep;

@@ -5,13 +5,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.GetS
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
 
 public class GetStatusAction implements OmnipodAction<StatusResponse> {
     private final PodSessionState podState;
 
     public GetStatusAction(PodSessionState podState) {
         if (podState == null) {
-            throw new IllegalArgumentException("Pod state cannot be null");
+            throw new ActionInitializationException("Pod state cannot be null");
         }
         this.podState = podState;
     }

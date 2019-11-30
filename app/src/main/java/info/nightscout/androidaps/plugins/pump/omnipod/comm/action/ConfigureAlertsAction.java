@@ -7,6 +7,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.Conf
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
 
 public class ConfigureAlertsAction implements OmnipodAction<StatusResponse> {
     private final PodSessionState podState;
@@ -14,10 +15,10 @@ public class ConfigureAlertsAction implements OmnipodAction<StatusResponse> {
 
     public ConfigureAlertsAction(PodSessionState podState, List<AlertConfiguration> alertConfigurations) {
         if (podState == null) {
-            throw new IllegalArgumentException("Pod state cannot be null");
+            throw new ActionInitializationException("Pod state cannot be null");
         }
         if (alertConfigurations == null) {
-            throw new IllegalArgumentException("Alert configurations cannot be null");
+            throw new ActionInitializationException("Alert configurations cannot be null");
         }
         this.podState = podState;
         this.alertConfigurations = alertConfigurations;

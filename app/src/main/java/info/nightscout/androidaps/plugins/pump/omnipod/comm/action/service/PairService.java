@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.Conf
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.VersionResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSetupState;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalPodProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 public class PairService {
@@ -37,7 +37,7 @@ public class PairService {
                 message, OmnipodConst.DEFAULT_ADDRESS, setupState.getAddress());
 
         if (configurePodResponse.getPodProgressStatus() != PodProgressStatus.PAIRING_SUCCESS) {
-            throw new OmnipodException("Pairing failed, state: " + configurePodResponse.getPodProgressStatus().name());
+            throw new IllegalPodProgressException(PodProgressStatus.PAIRING_SUCCESS, configurePodResponse.getPodProgressStatus());
         }
 
         return configurePodResponse;

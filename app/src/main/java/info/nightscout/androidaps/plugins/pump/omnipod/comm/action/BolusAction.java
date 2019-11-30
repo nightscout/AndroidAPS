@@ -11,6 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.SetI
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BolusDeliverySchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
 
 public class BolusAction implements OmnipodAction<StatusResponse> {
     private final PodSessionState podState;
@@ -22,10 +23,10 @@ public class BolusAction implements OmnipodAction<StatusResponse> {
     public BolusAction(PodSessionState podState, double units, Duration timeBetweenPulses,
                        boolean acknowledgementBeep, boolean completionBeep) {
         if (podState == null) {
-            throw new IllegalArgumentException("Pod state cannot be null");
+            throw new ActionInitializationException("Pod state cannot be null");
         }
         if (timeBetweenPulses == null) {
-            throw new IllegalArgumentException("Time between pulses cannot be null");
+            throw new ActionInitializationException("Time between pulses cannot be null");
         }
         this.podState = podState;
         this.units = units;

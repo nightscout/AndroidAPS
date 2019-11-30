@@ -7,6 +7,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.Deac
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
 
 public class DeactivatePodAction implements OmnipodAction<StatusResponse> {
     private final PodSessionState podState;
@@ -14,7 +15,7 @@ public class DeactivatePodAction implements OmnipodAction<StatusResponse> {
 
     public DeactivatePodAction(PodSessionState podState, boolean acknowledgementBeep) {
         if (podState == null) {
-            throw new IllegalArgumentException("Pod state cannot be null");
+            throw new ActionInitializationException("Pod state cannot be null");
         }
         this.podState = podState;
         this.acknowledgementBeep = acknowledgementBeep;
