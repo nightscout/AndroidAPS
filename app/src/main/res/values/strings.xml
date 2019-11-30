@@ -1634,5 +1634,6 @@
     <string name="objectives_button_unfinish">Clear finished</string>
     <string name="objectives_button_unstart">Clear started</string>
     <string name="timedetection">Time detection</string>
+    <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
 
 </resources>

@@ -225,8 +225,9 @@ class ObjectivesFragment : Fragment() {
                         SntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
                                 log.debug("NTP time: $time System time: ${DateUtil.now()}")
+                                SystemClock.sleep(300)
                                 if (!networkConnected) {
-                                    RxBus.send(EventNtpStatus(MainApp.gs(R.string.notconnected), 100))
+                                    RxBus.send(EventNtpStatus(MainApp.gs(R.string.notconnected), 99))
                                 } else if (success) {
                                     if (objective.isCompleted(time)) {
                                         objective.accomplishedOn = time
@@ -236,10 +237,10 @@ class ObjectivesFragment : Fragment() {
                                         SystemClock.sleep(100)
                                         scrollToCurrentObjective()
                                     } else {
-                                        RxBus.send(EventNtpStatus(MainApp.gs(R.string.requirementnotmet), 100))
+                                        RxBus.send(EventNtpStatus(MainApp.gs(R.string.requirementnotmet), 99))
                                     }
                                 } else {
-                                    RxBus.send(EventNtpStatus(MainApp.gs(R.string.failedretrievetime), 100))
+                                    RxBus.send(EventNtpStatus(MainApp.gs(R.string.failedretrievetime), 99))
                                 }
                             }
                         }, NetworkChangeReceiver.isConnected())
@@ -261,26 +262,29 @@ class ObjectivesFragment : Fragment() {
                         SntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
                                 log.debug("NTP time: $time System time: ${DateUtil.now()}")
+                                SystemClock.sleep(300)
                                 if (!networkConnected) {
-                                    RxBus.send(EventNtpStatus(MainApp.gs(R.string.notconnected), 100))
+                                    RxBus.send(EventNtpStatus(MainApp.gs(R.string.notconnected), 99))
                                 } else if (success) {
-                                        objective.startedOn = time
-                                        RxBus.send(EventNtpStatus(MainApp.gs(R.string.success), 100))
-                                        SystemClock.sleep(1000)
-                                        RxBus.send(EventObjectivesUpdateGui())
-                                        SystemClock.sleep(100)
-                                        scrollToCurrentObjective()
+                                    objective.startedOn = time
+                                    RxBus.send(EventNtpStatus(MainApp.gs(R.string.success), 100))
+                                    SystemClock.sleep(1000)
+                                    RxBus.send(EventObjectivesUpdateGui())
+                                    SystemClock.sleep(100)
+                                    scrollToCurrentObjective()
                                 } else {
-                                    RxBus.send(EventNtpStatus(MainApp.gs(R.string.failedretrievetime), 100))
+                                    RxBus.send(EventNtpStatus(MainApp.gs(R.string.failedretrievetime), 99))
                                 }
                             }
                         }, NetworkChangeReceiver.isConnected())
                     }.start()
             }
             holder.unStart.setOnClickListener {
-                objective.startedOn = 0
-                scrollToCurrentObjective()
-                RxBus.send(EventObjectivesUpdateGui())
+                OKDialog.showConfirmation(activity, MainApp.gs(R.string.doyouwantresetstart)) {
+                    objective.startedOn = 0
+                    scrollToCurrentObjective()
+                    RxBus.send(EventObjectivesUpdateGui())
+                }
             }
             holder.unFinish.setOnClickListener {
                 objective.accomplishedOn = 0

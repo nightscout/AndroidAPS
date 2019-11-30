@@ -42,6 +42,7 @@ class NtpProgressDialog : DialogFragment() {
         overview_bolusprogress_status.setText(state)
         overview_bolusprogress_progressbar.setMax(100)
         overview_bolusprogress_progressbar.setProgress(percent)
+        overview_bolusprogress_stop.text = MainApp.gs(R.string.close)
     }
 
     override fun onResume() {
