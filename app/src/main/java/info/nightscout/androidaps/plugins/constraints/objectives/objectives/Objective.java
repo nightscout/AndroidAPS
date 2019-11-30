@@ -61,10 +61,6 @@ public abstract class Objective {
         return true;
     }
 
-    public boolean isRevertable() {
-        return false;
-    }
-
     public boolean isAccomplished() {
         return accomplishedOn != 0 && accomplishedOn < DateUtil.now();
     }
@@ -106,6 +102,8 @@ public abstract class Objective {
     public List<Task> getTasks() {
         return tasks;
     }
+
+    public boolean specialActionEnabled() { return true; }
 
     public void specialAction(Activity activity, String input) {}
 
