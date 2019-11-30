@@ -13,4 +13,9 @@ public class PodReturnedErrorResponseException extends OmnipodException {
     public ErrorResponse getErrorResponse() {
         return errorResponse;
     }
+
+    @Override
+    public boolean isCertainFailure() {
+        return true;
+    }
 }

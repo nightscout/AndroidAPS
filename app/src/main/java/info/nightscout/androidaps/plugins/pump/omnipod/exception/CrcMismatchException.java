@@ -19,4 +19,9 @@ public class CrcMismatchException extends OmnipodException {
     public int getActual() {
         return actual;
     }
+
+    @Override
+    public boolean isCertainFailure() {
+        return false;
+    }
 }

@@ -21,4 +21,9 @@ public class IllegalSetupProgressException extends OmnipodException {
     public SetupProgress getActual() {
         return actual;
     }
+
+    @Override
+    public boolean isCertainFailure() {
+        return true;
+    }
 }

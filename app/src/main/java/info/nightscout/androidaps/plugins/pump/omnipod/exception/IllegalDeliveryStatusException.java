@@ -22,4 +22,9 @@ public class IllegalDeliveryStatusException extends OmnipodException {
     public DeliveryStatus getActual() {
         return actual;
     }
+
+    @Override
+    public boolean isCertainFailure() {
+        return true;
+    }
 }

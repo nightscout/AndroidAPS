@@ -4,4 +4,9 @@ public class ActionInitializationException extends OmnipodException {
     public ActionInitializationException(String message) {
         super(message);
     }
+
+    @Override
+    public boolean isCertainFailure() {
+        return true;
+    }
 }

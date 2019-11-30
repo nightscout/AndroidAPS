@@ -13,4 +13,9 @@ public class NotEnoughDataException extends OmnipodException {
     public byte[] getData() {
         return data;
     }
+
+    @Override
+    public boolean isCertainFailure() {
+        return false;
+    }
 }

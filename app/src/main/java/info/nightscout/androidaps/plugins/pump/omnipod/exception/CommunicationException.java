@@ -17,6 +17,11 @@ public class CommunicationException extends OmnipodException {
         return type;
     }
 
+    @Override
+    public boolean isCertainFailure() {
+        return false;
+    }
+
     public enum Type {
         TIMEOUT("Communication timeout"),
         UNEXPECTED_EXCEPTION("Caught an unexpected Exception");

@@ -16,4 +16,9 @@ public class PodFaultException extends OmnipodException {
     public PodInfoFaultEvent getFaultEvent() {
         return faultEvent;
     }
+
+    @Override
+    public boolean isCertainFailure() {
+        return true;
+    }
 }

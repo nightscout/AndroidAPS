@@ -8,4 +8,9 @@ public class MessageDecodingException extends OmnipodException {
     public MessageDecodingException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    @Override
+    public boolean isCertainFailure() {
+        return false;
+    }
 }

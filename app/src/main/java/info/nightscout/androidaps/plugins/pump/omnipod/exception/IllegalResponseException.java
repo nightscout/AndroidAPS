@@ -22,4 +22,9 @@ public class IllegalResponseException extends OmnipodException {
     public MessageBlockType getExpectedType() {
         return expectedType;
     }
+
+    @Override
+    public boolean isCertainFailure() {
+        return false;
+    }
 }

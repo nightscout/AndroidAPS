@@ -8,4 +8,6 @@ public abstract class OmnipodException extends RuntimeException {
     public OmnipodException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public abstract boolean isCertainFailure();
 }

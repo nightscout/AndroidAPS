@@ -22,4 +22,9 @@ public class IllegalPacketTypeException extends OmnipodException {
     public PacketType getActual() {
         return actual;
     }
+
+    @Override
+    public boolean isCertainFailure() {
+        return false;
+    }
 }

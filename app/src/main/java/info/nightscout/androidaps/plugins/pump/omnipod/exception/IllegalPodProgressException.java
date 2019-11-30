@@ -21,4 +21,9 @@ public class IllegalPodProgressException extends OmnipodException {
     public PodProgressStatus getActual() {
         return actual;
     }
+
+    @Override
+    public boolean isCertainFailure() {
+        return true;
+    }
 }

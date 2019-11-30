@@ -341,12 +341,14 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 // Shouldn't be reachable
                 comment = getStringResource(R.string.omnipod_driver_error_unexpected_exception_type, ex.getClass().getName());
             }
+            if (loggingEnabled()) {
+                LOG.error(String.format("Caught OmnipodException[certainFailure=%s] from OmnipodManager (user-friendly error message: %s)", ((OmnipodException) ex).isCertainFailure(), comment), ex);
+            }
         } else {
             comment = getStringResource(R.string.omnipod_driver_error_unexpected_exception_type, ex.getClass().getName());
-        }
-
-        if (loggingEnabled()) {
-            LOG.error(String.format("Caught OmnipodManager exception (user-friendly error message: %s)", comment), ex);
+            if (loggingEnabled()) {
+                LOG.error(String.format("Caught unexpected exception type from OmnipodManager (user-friendly error message: %s)", comment), ex);
+            }
         }
 
         return comment;

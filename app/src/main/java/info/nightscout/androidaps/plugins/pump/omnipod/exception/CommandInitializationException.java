@@ -4,4 +4,9 @@ public class CommandInitializationException extends OmnipodException {
     public CommandInitializationException(String message) {
         super(message);
     }
+
+    @Override
+    public boolean isCertainFailure() {
+        return true;
+    }
 }
