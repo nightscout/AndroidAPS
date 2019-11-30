@@ -10,7 +10,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AcknowledgeAlertsAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.BolusAction;
@@ -52,74 +51,37 @@ public class OmnipodManager {
         this.podState = podState;
     }
 
-    // Returns a PumpEnactResult which describes whether or not all commands have been sent successfully
-    // After priming should have finished (55 seconds), the pod state is verified.
+    // After priming should have been finished, the pod state is verified.
     // The result of that verification is passed to the SetupActionResultHandler
-    public PumpEnactResult pairAndPrime(SetupActionResultHandler resultHandler) {
-        try {
-            if (podState == null) {
-                podState = communicationService.executeAction(new PairAction(new PairService()));
-            }
-            if (podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
-                communicationService.executeAction(new PrimeAction(new PrimeService(), podState));
-
-                executeDelayed(() -> verifySetupAction(statusResponse -> PrimeAction.updatePrimingStatus(podState, statusResponse), //
-                        SetupProgress.PRIMING_FINISHED, resultHandler), //
-                        calculateBolusDuration(OmnipodConst.POD_PRIME_BOLUS_UNITS, OmnipodConst.POD_PRIMING_DELIVERY_RATE));
-            } else {
-                // TODO use string resource
-                return new PumpEnactResult().success(false).enacted(false).comment("Illegal setup state: " + podState.getSetupProgress().name());
-            }
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+    public void pairAndPrime(SetupActionResultHandler resultHandler) {
+        if (podState == null) {
+            podState = communicationService.executeAction(new PairAction(new PairService()));
         }
+        if (podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
+            communicationService.executeAction(new PrimeAction(new PrimeService(), podState));
 
-        return new PumpEnactResult().success(true).enacted(true);
+            executeDelayed(() -> verifySetupAction(statusResponse -> PrimeAction.updatePrimingStatus(podState, statusResponse), //
+                    SetupProgress.PRIMING_FINISHED, resultHandler), //
+                    calculateBolusDuration(OmnipodConst.POD_PRIME_BOLUS_UNITS, OmnipodConst.POD_PRIMING_DELIVERY_RATE));
+        } else {
+            throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, podState.getSetupProgress());
+        }
     }
 
-    // Returns a PumpEnactResult which describes whether or not all commands have been sent successfully
-    // After inserting the cannula should have finished (10 seconds), the pod state is verified.
+    // After inserting the cannula should have been finished, the pod state is verified.
     // The result of that verification is passed to the SetupActionResultHandler
-    public PumpEnactResult insertCannula(BasalSchedule basalSchedule, SetupActionResultHandler resultHandler) {
+    public void insertCannula(BasalSchedule basalSchedule, SetupActionResultHandler resultHandler) {
         if (podState == null || podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
-            // TODO use string resource
-            return new PumpEnactResult().success(false).enacted(false).comment("Pod should be paired and primed first");
+            throw new IllegalSetupProgressException(SetupProgress.PRIMING_FINISHED, podState == null ? null : podState.getSetupProgress());
         } else if (podState.getSetupProgress().isAfter(SetupProgress.CANNULA_INSERTING)) {
-            // TODO use string resource
-            return new PumpEnactResult().success(false).enacted(false).comment("Illegal setup state: " + podState.getSetupProgress().name());
+            throw new IllegalSetupProgressException(SetupProgress.CANNULA_INSERTING, podState.getSetupProgress());
         }
 
-        try {
-            communicationService.executeAction(new InsertCannulaAction(new InsertCannulaService(), podState, basalSchedule));
+        communicationService.executeAction(new InsertCannulaAction(new InsertCannulaService(), podState, basalSchedule));
 
-            executeDelayed(() -> verifySetupAction(statusResponse -> InsertCannulaAction.updateCannulaInsertionStatus(podState, statusResponse), //
-                    SetupProgress.COMPLETED, resultHandler),
-                    calculateBolusDuration(OmnipodConst.POD_CANNULA_INSERTION_BOLUS_UNITS, OmnipodConst.POD_CANNULA_INSERTION_DELIVERY_RATE));
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-
-        return new PumpEnactResult().success(true).enacted(true);
-    }
-
-    public PumpEnactResult cancelBolus() {
-        if (!isInitialized()) {
-            return createNotInitializedResult();
-        }
-
-        try {
-            communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.BOLUS, true));
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-
-        return new PumpEnactResult().success(true).enacted(true);
+        executeDelayed(() -> verifySetupAction(statusResponse -> InsertCannulaAction.updateCannulaInsertionStatus(podState, statusResponse), //
+                SetupProgress.COMPLETED, resultHandler),
+                calculateBolusDuration(OmnipodConst.POD_CANNULA_INSERTION_BOLUS_UNITS, OmnipodConst.POD_CANNULA_INSERTION_DELIVERY_RATE));
     }
 
     public StatusResponse getPodStatus() {
@@ -130,204 +92,108 @@ public class OmnipodManager {
         return communicationService.executeAction(new GetStatusAction(podState));
     }
 
-    public PumpEnactResult deactivatePod() {
+    public PodInfoResponse getPodInfo(PodInfoType podInfoType) {
+        assertReadyForDelivery();
+
+        return communicationService.executeAction(new GetPodInfoAction(podState, podInfoType));
+    }
+
+    public void acknowledgeAlerts() {
+        assertReadyForDelivery();
+
+        communicationService.executeAction(new AcknowledgeAlertsAction(podState, podState.getActiveAlerts()));
+    }
+
+    public void setBasalSchedule(BasalSchedule schedule) {
+        assertReadyForDelivery();
+
+        communicationService.executeAction(new SetBasalScheduleAction(podState, schedule,
+                false, podState.getScheduleOffset(), true));
+    }
+
+    public void setTemporaryBasal(TempBasalPair tempBasalPair) {
+        assertReadyForDelivery();
+
+        communicationService.executeAction(new SetTempBasalAction(new SetTempBasalService(),
+                podState, tempBasalPair.getInsulinRate(), Duration.standardMinutes(tempBasalPair.getDurationMinutes()),
+                true, true));
+    }
+
+    public void cancelTemporaryBasal() {
+        assertReadyForDelivery();
+
+        communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.TEMP_BASAL, true));
+    }
+
+    public void bolus(Double units, StatusResponseHandler bolusCompletionHandler) {
+        assertReadyForDelivery();
+
+        communicationService.executeAction(new BolusAction(podState, units, true, true));
+
+        if (bolusCompletionHandler != null) {
+            executeDelayed(() -> {
+                for (int i = 0; ACTION_VERIFICATION_TRIES > i; i++) {
+                    StatusResponse statusResponse = null;
+                    try {
+                        statusResponse = getPodStatus();
+                        if (statusResponse.getDeliveryStatus().isBolusing()) {
+                            break;
+                        }
+                    } catch (Exception ex) {
+                        // Ignore
+                    }
+                    bolusCompletionHandler.handle(statusResponse);
+                }
+            }, calculateBolusDuration(units, OmnipodConst.POD_BOLUS_DELIVERY_RATE));
+        }
+    }
+
+    public void cancelBolus() {
+        assertReadyForDelivery();
+        communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.BOLUS, true));
+    }
+
+    public void suspendDelivery() {
+        assertReadyForDelivery();
+
+        communicationService.executeAction(new CancelDeliveryAction(podState, EnumSet.allOf(DeliveryType.class), true));
+    }
+
+    public void resumeDelivery() {
+        assertReadyForDelivery();
+
+        communicationService.executeAction(new SetBasalScheduleAction(podState, podState.getBasalSchedule(),
+                true, podState.getScheduleOffset(), true));
+    }
+
+    // If this command fails, it it possible that delivery has been suspended
+    public void setTime() {
+        assertReadyForDelivery();
+
+        // Suspend delivery
+        communicationService.executeAction(new CancelDeliveryAction(podState, EnumSet.allOf(DeliveryType.class), false));
+
+        // Joda seems to cache the default time zone, so we use the JVM's
+        DateTimeZone.setDefault(DateTimeZone.forTimeZone(TimeZone.getDefault()));
+        podState.setTimeZone(DateTimeZone.getDefault());
+
+        // Resume delivery
+        StatusResponse statusResponse = communicationService.executeAction(new SetBasalScheduleAction(podState, podState.getBasalSchedule(),
+                true, podState.getScheduleOffset(), true));
+    }
+
+    public void deactivatePod() {
         if (podState == null) {
-            // TODO use string resource
-            return new PumpEnactResult().success(false).enacted(false).comment("Pod should be paired and primed first");
+            throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, null);
         }
 
-        try {
-            communicationService.executeAction(new DeactivatePodAction(podState, true));
-            resetPodState();
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-
-        return new PumpEnactResult().success(true).enacted(true);
+        communicationService.executeAction(new DeactivatePodAction(podState, true));
+        resetPodState();
     }
 
-    public PumpEnactResult setBasalSchedule(BasalSchedule schedule) {
-        if (!isInitialized()) {
-            return createNotInitializedResult();
-        }
-
-        try {
-            communicationService.executeAction(new SetBasalScheduleAction(podState, schedule,
-                    false, podState.getScheduleOffset(), true));
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-
-        return new PumpEnactResult().success(true).enacted(true);
-    }
-
-    public PumpEnactResult resetPodState() {
+    public void resetPodState() {
         podState = null;
         SP.remove(OmnipodConst.Prefs.PodState);
-
-        return new PumpEnactResult().success(true).enacted(true);
-    }
-
-    public PumpEnactResult bolus(Double units, StatusResponseHandler bolusCompletionHandler) {
-        if (!isInitialized()) {
-            return createNotInitializedResult();
-        }
-
-        try {
-            communicationService.executeAction(new BolusAction(podState, units, true, true));
-
-            if(bolusCompletionHandler != null) {
-                executeDelayed(() -> {
-                    for (int i = 0; ACTION_VERIFICATION_TRIES > i; i++) {
-                        StatusResponse statusResponse = null;
-                        try {
-                            statusResponse = getPodStatus();
-                            if (statusResponse.getDeliveryStatus().isBolusing()) {
-                                break;
-                            }
-                        } catch (Exception ex) {
-                            // Ignore
-                        }
-                        bolusCompletionHandler.handle(statusResponse);
-                    }
-                }, calculateBolusDuration(units, OmnipodConst.POD_BOLUS_DELIVERY_RATE));
-            }
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-
-        return new PumpEnactResult().success(true).enacted(true);
-    }
-
-    public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
-        if (!isInitialized()) {
-            return createNotInitializedResult();
-        }
-
-        try {
-            communicationService.executeAction(new SetTempBasalAction(new SetTempBasalService(),
-                    podState, tempBasalPair.getInsulinRate(), Duration.standardMinutes(tempBasalPair.getDurationMinutes()),
-                    true, true));
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-
-        return new PumpEnactResult().success(true).enacted(true);
-    }
-
-    public PumpEnactResult cancelTemporaryBasal() {
-        if (!isInitialized()) {
-            return createNotInitializedResult();
-        }
-
-        try {
-            communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.TEMP_BASAL, true));
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-
-        return new PumpEnactResult().success(true).enacted(true);
-    }
-
-    public PumpEnactResult acknowledgeAlerts() {
-        if (!isInitialized()) {
-            return createNotInitializedResult();
-        }
-
-        try {
-            communicationService.executeAction(new AcknowledgeAlertsAction(podState, podState.getActiveAlerts()));
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-        return new PumpEnactResult().success(true).enacted(true);
-    }
-
-    // TODO should we add this to the OmnipodCommunicationManager interface?
-    public PumpEnactResult getPodInfo(PodInfoType podInfoType) {
-        if (!isInitialized()) {
-            return createNotInitializedResult();
-        }
-
-        try {
-            // TODO how can we return the PodInfo response?
-            PodInfoResponse podInfoResponse = communicationService.executeAction(new GetPodInfoAction(podState, podInfoType));
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-
-        return new PumpEnactResult().success(true).enacted(true);
-    }
-
-    public PumpEnactResult suspendDelivery() {
-        if (!isInitialized()) {
-            return createNotInitializedResult();
-        }
-
-        try {
-            communicationService.executeAction(new CancelDeliveryAction(podState, EnumSet.allOf(DeliveryType.class), true));
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-
-        return new PumpEnactResult().success(true).enacted(true);
-    }
-
-    public PumpEnactResult resumeDelivery() {
-        if (!isInitialized()) {
-            return createNotInitializedResult();
-        }
-
-        try {
-            communicationService.executeAction(new SetBasalScheduleAction(podState, podState.getBasalSchedule(),
-                    true, podState.getScheduleOffset(), true));
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-
-        return new PumpEnactResult().success(true).enacted(true);
-    }
-
-    public PumpEnactResult setTime() {
-        if (!isInitialized()) {
-            return createNotInitializedResult();
-        }
-
-        try {
-            // Suspend delivery
-            communicationService.executeAction(new CancelDeliveryAction(podState, EnumSet.allOf(DeliveryType.class), false));
-
-            // Joda seems to cache the default time zone, so we use the JVM's
-            DateTimeZone.setDefault(DateTimeZone.forTimeZone(TimeZone.getDefault()));
-            podState.setTimeZone(DateTimeZone.getDefault());
-
-            // Resume delivery
-            communicationService.executeAction(new SetBasalScheduleAction(podState, podState.getBasalSchedule(),
-                    true, podState.getScheduleOffset(), true));
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-
-        return new PumpEnactResult().success(true).enacted(true);
     }
 
     public OmnipodCommunicationService getCommunicationService() {
@@ -338,8 +204,12 @@ public class OmnipodManager {
         return podState.getTime();
     }
 
-    public boolean isInitialized() {
+    public boolean isReadyForDelivery() {
         return podState != null && podState.getSetupProgress() == SetupProgress.COMPLETED;
+    }
+
+    public PodSessionState getPodState() {
+        return this.podState;
     }
 
     public String getPodStateAsString() {
@@ -347,7 +217,7 @@ public class OmnipodManager {
     }
 
     private Duration calculateBolusDuration(double units, double deliveryRate) {
-        return Duration.standardSeconds((long)Math.ceil(units / deliveryRate));
+        return Duration.standardSeconds((long) Math.ceil(units / deliveryRate));
     }
 
     private void executeDelayed(Runnable r, Duration timeout) {
@@ -355,13 +225,10 @@ public class OmnipodManager {
         scheduledExecutorService.schedule(r, timeout.getMillis(), TimeUnit.MILLISECONDS);
     }
 
-    private PumpEnactResult createNotInitializedResult() {
-        // TODO use string resource
-        return new PumpEnactResult().success(false).enacted(false).comment("Pod should be initialized first");
-    }
-
-    public PodSessionState getPodState() {
-        return this.podState;
+    private void assertReadyForDelivery() {
+        if (!isReadyForDelivery()) {
+            throw new IllegalSetupProgressException(SetupProgress.COMPLETED, podState == null ? null : podState.getSetupProgress());
+        }
     }
 
     private void verifySetupAction(StatusResponseHandler statusResponseHandler, SetupProgress expectedSetupProgress, SetupActionResultHandler resultHandler) {

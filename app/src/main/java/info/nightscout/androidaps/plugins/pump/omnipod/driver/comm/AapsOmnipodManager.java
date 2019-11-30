@@ -14,6 +14,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunication
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.SetupActionResult;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
@@ -45,23 +46,30 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, Profile profile) {
         if (PodInitActionType.PairAndPrimeWizardStep.equals(podInitActionType)) {
-            PumpEnactResult result = delegate.pairAndPrime(res -> //
-                    podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), createCommentForSetupActionResult(res)));
-            if (!result.success) {
-                podInitReceiver.returnInitTaskStatus(podInitActionType, false, result.comment);
+            try {
+                delegate.pairAndPrime(res -> //
+                        podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), createCommentForSetupActionResult(res)));
+                return new PumpEnactResult().success(true).enacted(true);
+            } catch (Exception ex) {
+                // TODO use string resource instead of exception message
+                podInitReceiver.returnInitTaskStatus(podInitActionType, false, ex.getMessage());
+                return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
             }
-            return result;
         } else if (PodInitActionType.FillCannulaSetBasalProfileWizardStep.equals(podInitActionType)) {
-            PumpEnactResult result = delegate.insertCannula(mapProfileToBasalSchedule(profile), res -> {
-                podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), createCommentForSetupActionResult(res));
-                OmnipodUtil.setPodSessionState(delegate.getPodState());
-                RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
-            });
-            if (!result.success) {
-                podInitReceiver.returnInitTaskStatus(podInitActionType, false, result.comment);
+            try {
+                delegate.insertCannula(mapProfileToBasalSchedule(profile), res -> {
+                    podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), createCommentForSetupActionResult(res));
+                    OmnipodUtil.setPodSessionState(delegate.getPodState());
+                    RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
+                });
+                return new PumpEnactResult().success(true).enacted(true);
+            } catch (Exception ex) {
+                // TODO use string resource instead of exception message
+                podInitReceiver.returnInitTaskStatus(podInitActionType, false, ex.getMessage());
+                return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
             }
-            return result;
         }
+        // Todo use string resource
         return new PumpEnactResult().success(false).enacted(false).comment("Illegal PodInitActionType: " + podInitActionType.name());
     }
 
@@ -70,77 +78,120 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             StatusResponse statusResponse = delegate.getPodStatus();
             return new PumpEnactResult().success(true).enacted(false);
-        } catch(Exception ex) {
-            // TODO return string resource
+        } catch (Exception ex) {
+            // TODO use string resource instead of exception message
             return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
     }
 
     @Override
     public PumpEnactResult deactivatePod(PodInitReceiver podInitReceiver) {
-
-        PumpEnactResult result = delegate.deactivatePod();
-        podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, result.success, (result.success ? null : result.comment));
-
-        if (result.success) {
-            OmnipodUtil.setPodSessionState(null);
-            RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
+        try {
+            delegate.deactivatePod();
+        } catch (Exception ex) {
+            // TODO use string resource instead of exception message
+            podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, false, ex.getMessage());
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
-        return result;
+        podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, true, null);
+
+        OmnipodUtil.setPodSessionState(null);
+        RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
+
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
     public PumpEnactResult setBasalProfile(Profile basalProfile) {
-        return delegate.setBasalSchedule(mapProfileToBasalSchedule(basalProfile));
+        try {
+            delegate.setBasalSchedule(mapProfileToBasalSchedule(basalProfile));
+        } catch (Exception ex) {
+            // TODO use string resource instead of exception message
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+        }
+
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
     public PumpEnactResult resetPodStatus() {
-
-        PumpEnactResult result = delegate.resetPodState();
+        delegate.resetPodState();
 
         //addToHistory(System.currentTimeMillis(), PodDbEntryType.ResetPodState, null, null, null, null);
 
         OmnipodUtil.setPodSessionState(null);
-
         RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
 
-        return result;
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
     public PumpEnactResult setBolus(Double amount) {
-        return delegate.bolus(amount, statusResponse -> {
-            if(statusResponse == null) {
-                // Failed to retrieve status response after bolus
-                // Bolus probably finished anyway
-            } else if(statusResponse.getDeliveryStatus().isBolusing()) {
-                // This shouldn't happen
-            } else {
-                // Bolus successfully completed
-            }
-        });
+        try {
+            delegate.bolus(amount, statusResponse -> {
+                if (statusResponse == null) {
+                    // Failed to retrieve status response after bolus
+                    // Bolus probably finished anyway
+                } else if (statusResponse.getDeliveryStatus().isBolusing()) {
+                    // This shouldn't happen
+                } else {
+                    // Bolus successfully completed
+                }
+            });
+        } catch (Exception ex) {
+            // TODO use string resource instead of exception message
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+        }
+
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
     public PumpEnactResult cancelBolus() {
-        return delegate.cancelBolus();
+        try {
+            delegate.cancelBolus();
+        } catch (Exception ex) {
+            // TODO use string resource instead of exception message
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+        }
+
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
     public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
-        return delegate.setTemporaryBasal(tempBasalPair);
+        try {
+            delegate.setTemporaryBasal(tempBasalPair);
+        } catch (Exception ex) {
+            // TODO use string resource instead of exception message
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+        }
+
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
     public PumpEnactResult cancelTemporaryBasal() {
-        return delegate.cancelTemporaryBasal();
+        try {
+            delegate.cancelTemporaryBasal();
+        } catch (Exception ex) {
+            // TODO use string resource instead of exception message
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+        }
+
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
     public PumpEnactResult acknowledgeAlerts() {
-        return delegate.acknowledgeAlerts();
+        try {
+            delegate.acknowledgeAlerts();
+        } catch (Exception ex) {
+            // TODO use string resource instead of exception message
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+        }
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
@@ -151,20 +202,51 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
     public PumpEnactResult getPodInfo(PodInfoType podInfoType) {
-        return delegate.getPodInfo(podInfoType);
+        try {
+            // TODO how can we return the PodInfo response?
+            // This method is useless unless we return the PodInfoResponse,
+            // because the pod state we keep, doesn't get updated from a PodInfoResponse.
+            // We use StatusResponses for that, which can be obtained from the getPodStatus method
+            PodInfoResponse podInfo = delegate.getPodInfo(podInfoType);
+            return new PumpEnactResult().success(true).enacted(true);
+        } catch (Exception ex) {
+            // TODO use string resource instead of exception message
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+        }
     }
 
     public PumpEnactResult suspendDelivery() {
-        return delegate.suspendDelivery();
+        try {
+            delegate.suspendDelivery();
+        } catch (Exception ex) {
+            // TODO use string resource instead of exception message
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+        }
+
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     public PumpEnactResult resumeDelivery() {
-        return delegate.resumeDelivery();
+        try {
+            delegate.resumeDelivery();
+        } catch (Exception ex) {
+            // TODO use string resource instead of exception message
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+        }
+
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
     public PumpEnactResult setTime() {
-        return delegate.setTime();
+        try {
+            delegate.setTime();
+        } catch (Exception ex) {
+            // TODO distinguish between certain and uncertain failures
+            // TODO user friendly error messages (string resources)
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+        }
+        return new PumpEnactResult().success(true).enacted(true);
     }
 
     public OmnipodCommunicationService getCommunicationService() {
@@ -176,7 +258,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     public boolean isInitialized() {
-        return delegate.isInitialized();
+        return delegate.isReadyForDelivery();
     }
 
     public String getPodStateAsString() {
