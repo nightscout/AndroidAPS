@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.defs.state;
 import com.google.gson.Gson;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 
@@ -22,11 +23,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDevice
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmniCRC;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 
 public class PodSessionState extends PodState {
     private final Map<AlertSlot, AlertType> configuredAlerts;
-    private final DateTime activatedAt;
+    private DateTime activatedAt;
+    private DateTime expiresAt;
     private final FirmwareVersion piVersion;
     private final FirmwareVersion pmVersion;
     private final int lot;
@@ -79,6 +82,15 @@ public class PodSessionState extends PodState {
     public DateTime getActivatedAt() {
         return activatedAt;
     }
+
+    public DateTime getExpiresAt() {
+        return expiresAt;
+    }
+
+    public String getExpiryDateAsString() {
+        return expiresAt == null ? "???" : DateUtil.dateAndTimeString(expiresAt.toDate());
+    }
+
 
     public FirmwareVersion getPiVersion() {
         return piVersion;
@@ -133,7 +145,7 @@ public class PodSessionState extends PodState {
     }
 
     public boolean hasActiveAlerts() {
-        return activeAlerts != null;
+        return activeAlerts != null && activeAlerts.size() > 0;
     }
 
     public AlertSet getActiveAlerts() {
@@ -194,6 +206,15 @@ public class PodSessionState extends PodState {
 
     @Override
     public void updateFromStatusResponse(StatusResponse statusResponse) {
+        DateTime activatedAtCalculated = getTime().minus(statusResponse.getTimeActive());
+        if(activatedAt == null) {
+            activatedAt = activatedAtCalculated;
+        }
+        DateTime expiresAtCalculated = activatedAtCalculated.plus(OmnipodConst.NOMINAL_POD_LIFE);
+        if(expiresAt == null || expiresAtCalculated.isBefore(expiresAt) || expiresAtCalculated.isAfter(expiresAt.plusMinutes(1))) {
+            expiresAt = expiresAtCalculated;
+        }
+
         suspended = (statusResponse.getDeliveryStatus() == DeliveryStatus.SUSPENDED);
         activeAlerts = statusResponse.getAlerts();
         lastDeliveryStatus = statusResponse.getDeliveryStatus();
@@ -205,13 +226,6 @@ public class PodSessionState extends PodState {
         SP.putString(OmnipodConst.Prefs.PodState, gson.toJson(this));
         OmnipodUtil.setPodSessionState(this);
     }
-
-    public String getExpiryDateAsString() {
-        // TODO
-        return "???";
-    }
-
-
 
     @Override
     public String toString() {

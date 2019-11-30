@@ -250,10 +250,6 @@ public class OmnipodManager {
         return podState == null ? "null" : podState.toString();
     }
 
-    private Duration calculateBolusDuration(double units, double deliveryRate) {
-        return Duration.standardSeconds((long) Math.ceil(units / deliveryRate));
-    }
-
     private void executeDelayed(Runnable r, Duration timeout) {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         scheduledExecutorService.schedule(r, timeout.getMillis(), TimeUnit.MILLISECONDS);
@@ -318,6 +314,18 @@ public class OmnipodManager {
         return CommandVerificationResult.SUCCESS;
     }
 
+    private boolean isLoggingEnabled() {
+        return L.isEnabled(L.PUMP);
+    }
+
+    public static Duration calculateBolusDuration(double units) {
+        return calculateBolusDuration(units, OmnipodConst.POD_BOLUS_DELIVERY_RATE);
+    }
+
+    private static Duration calculateBolusDuration(double units, double deliveryRate) {
+        return Duration.standardSeconds((long) Math.ceil(units / deliveryRate));
+    }
+
     public static boolean isCertainFailure(Exception ex) {
         return ex instanceof OmnipodException && ((OmnipodException) ex).isCertainFailure();
     }
@@ -326,9 +334,5 @@ public class OmnipodManager {
         SUCCESS,
         CERTAIN_FAILURE,
         UNCERTAIN_FAILURE
-    }
-
-    private boolean isLoggingEnabled() {
-        return L.isEnabled(L.PUMP);
     }
 }
