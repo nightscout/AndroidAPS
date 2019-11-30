@@ -13,7 +13,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 
 
 /**
- * A page asking for a name and an email.
+ * Created by andy on 12/11/2019
+ *
+ * This page is for InitPod and RemovePod, but Fragments called for this 2 actions are different
  */
 public class InitActionPage extends Page {
 

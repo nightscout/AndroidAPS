@@ -31,22 +31,25 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 
 /**
- * Created by TechFreak on 04/09/2014.
+ * Created by andy on 12/11/2019
  */
 public class InitActionFragment extends Fragment implements PodInitReceiver {
     private static final String ARG_KEY = "key";
 
-    private PageFragmentCallbacks mCallbacks;
-    private String mKey;
-    private InitActionPage mPage;
+    protected PageFragmentCallbacks mCallbacks;
+    protected String mKey;
+    protected InitActionPage mPage;
 
-    private ProgressBar progressBar;
-    private TextView errorView;
+    protected ProgressBar progressBar;
+    protected TextView errorView;
 
-    private PodInitActionType podInitActionType;
-    //private List<PodInitActionType> children;
-    private Map<PodInitActionType, CheckBox> mapCheckBoxes;
-    private InitActionFragment instance;
+    protected PodInitActionType podInitActionType;
+    protected List<PodInitActionType> children;
+    protected Map<PodInitActionType, CheckBox> mapCheckBoxes;
+    protected InitActionFragment instance;
+
+    protected PumpEnactResult callResult;
+
 
     public static InitActionFragment create(String key, PodInitActionType podInitActionType) {
         Bundle args = new Bundle();
@@ -84,7 +87,7 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
 
         LinearLayout linearLayout = rootView.findViewById(R.id.initAction_ItemsHolder);
 
-        List<PodInitActionType> children = podInitActionType.getChildren();
+        children = podInitActionType.getChildren();
         mapCheckBoxes = new HashMap<>();
 
         for (PodInitActionType child : children) {
@@ -126,20 +129,6 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
         mCallbacks = null;
     }
 
-//    @Override
-//    public void onViewCreated(View view, Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//
-//    }
-
-//    @Override
-//    public void setMenuVisibility(boolean menuVisible) {
-//        super.setMenuVisibility(menuVisible);
-//
-//        // In a future update to the support library, this should override setUserVisibleHint
-//        // instead of setMenuVisibility.
-//
-//    }
 
     public PodInitActionType getPodInitActionType() {
         return podInitActionType;
@@ -154,13 +143,11 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        System.out.println("ACTION: setUserVisibleHint="+ isVisibleToUser);
+        //System.out.println("ACTION: setUserVisibleHint="+ isVisibleToUser);
         if (isVisibleToUser) {
-            System.out.println("ACTION: Visible");
+            //System.out.println("ACTION: Visible");
 
             new AsyncTask<Void, Void, String>() {
-
-                PumpEnactResult callResult;
 
                 protected void onPreExecute() {
                     progressBar.setVisibility(View.VISIBLE);
@@ -169,19 +156,19 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
                 @Override
                 protected String doInBackground(Void... params) {
                     if (podInitActionType == PodInitActionType.PairAndPrimeWizardStep) {
-                        this.callResult = AapsOmnipodManager.getInstance().initPod(
+                        callResult = AapsOmnipodManager.getInstance().initPod(
                                 podInitActionType,
                                 instance,
                                 null
                         );
                     } else if (podInitActionType == PodInitActionType.FillCannulaSetBasalProfileWizardStep) {
-                        this.callResult = AapsOmnipodManager.getInstance().initPod(
+                        callResult = AapsOmnipodManager.getInstance().initPod(
                                 podInitActionType,
                                 instance,
                                 ProfileFunctions.getInstance().getProfile()
                         );
                     } else if (podInitActionType == PodInitActionType.DeactivatePodWizardStep) {
-                        this.callResult = AapsOmnipodManager.getInstance().deactivatePod(instance);
+                        callResult = AapsOmnipodManager.getInstance().deactivatePod(instance);
                     }
 
                     return "OK";
@@ -191,21 +178,7 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
                 protected void onPostExecute(String result) {
                     super.onPostExecute(result);
 
-                    System.out.println("ACTION: onPostExecute: " + result);
-
-                    boolean isOk = callResult.success;
-
-                    progressBar.setVisibility(View.GONE);
-
-                    if (!isOk) {
-                        errorView.setVisibility(View.VISIBLE);
-                        errorView.setText(callResult.comment);
-                    }
-
-                    mPage.setActionCompleted(isOk);
-
-                    mPage.getData().putString(Page.SIMPLE_DATA_KEY, "ddd");
-                    mPage.notifyDataChanged();
+                    actionOnReceiveResponse(result);
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -214,15 +187,58 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
         }
     }
 
+    public void actionOnReceiveResponse(String result) {
+//        System.out.println("ACTION: actionOnReceiveResponse: " + result);
+//
+//        boolean isOk = callResult.success;
+//
+//        progressBar.setVisibility(View.GONE);
+//
+//        if (!isOk) {
+//            errorView.setVisibility(View.VISIBLE);
+//            errorView.setText(callResult.comment);
+//        }
+//
+//        mPage.setActionCompleted(isOk);
+//
+//        mPage.getData().putString(Page.SIMPLE_DATA_KEY, "ddd");
+//        mPage.notifyDataChanged();
+    }
+
     @Override
     public void returnInitTaskStatus(PodInitActionType podInitActionType, boolean isSuccess, String errorMessage) {
         if (podInitActionType.isParent()) {
             for (PodInitActionType actionType : mapCheckBoxes.keySet()) {
                 setCheckBox(actionType, isSuccess);
             }
+
+            // special handling for init
+            processOnFinishedActions(isSuccess, errorMessage);
+
         } else {
             setCheckBox(podInitActionType, isSuccess);
         }
+    }
+
+
+    private void processOnFinishedActions(boolean isOk, String errorMessage) {
+
+        getActivity().runOnUiThread(() -> {
+
+            progressBar.setVisibility(View.GONE);
+
+            if (!isOk) {
+                errorView.setVisibility(View.VISIBLE);
+                errorView.setText(errorMessage);
+            }
+
+            mPage.setActionCompleted(isOk);
+
+            mPage.getData().putString(Page.SIMPLE_DATA_KEY, "ddd");
+            mPage.notifyDataChanged();
+
+        });
+
     }
 
 
@@ -233,8 +249,6 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
                     Color.rgb(168, 36, 15));
         });
     }
-
-
 
 
 }
