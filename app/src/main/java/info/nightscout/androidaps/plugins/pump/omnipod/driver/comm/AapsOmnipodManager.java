@@ -13,6 +13,7 @@ import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.SetupActionResult;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
@@ -66,7 +67,13 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     @Override
     public PumpEnactResult getPodStatus() {
-        return delegate.getPodStatus();
+        try {
+            StatusResponse statusResponse = delegate.getPodStatus();
+            return new PumpEnactResult().success(true).enacted(false);
+        } catch(Exception ex) {
+            // TODO return string resource
+            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+        }
     }
 
     @Override
@@ -104,7 +111,16 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     @Override
     public PumpEnactResult setBolus(Double amount) {
-        return delegate.bolus(amount);
+        return delegate.bolus(amount, statusResponse -> {
+            if(statusResponse == null) {
+                // Failed to retrieve status response after bolus
+                // Bolus probably finished anyway
+            } else if(statusResponse.getDeliveryStatus().isBolusing()) {
+                // This shouldn't happen
+            } else {
+                // Bolus successfully completed
+            }
+        });
     }
 
     @Override

@@ -34,11 +34,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalSetupProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.SP;
 
 public class OmnipodManager {
-    private static final int SETUP_ACTION_VERIFICATION_TRIES = 3;
+    private static final int ACTION_VERIFICATION_TRIES = 3;
 
     protected final OmnipodCommunicationService communicationService;
     protected PodSessionState podState;
@@ -64,7 +65,7 @@ public class OmnipodManager {
 
                 executeDelayed(() -> verifySetupAction(statusResponse -> PrimeAction.updatePrimingStatus(podState, statusResponse), //
                         SetupProgress.PRIMING_FINISHED, resultHandler), //
-                        OmnipodConst.POD_PRIME_DURATION);
+                        calculateBolusDuration(OmnipodConst.POD_PRIME_BOLUS_UNITS, OmnipodConst.POD_PRIMING_DELIVERY_RATE));
             } else {
                 // TODO use string resource
                 return new PumpEnactResult().success(false).enacted(false).comment("Illegal setup state: " + podState.getSetupProgress().name());
@@ -95,7 +96,7 @@ public class OmnipodManager {
 
             executeDelayed(() -> verifySetupAction(statusResponse -> InsertCannulaAction.updateCannulaInsertionStatus(podState, statusResponse), //
                     SetupProgress.COMPLETED, resultHandler),
-                    OmnipodConst.POD_CANNULA_INSERTION_DURATION);
+                    calculateBolusDuration(OmnipodConst.POD_CANNULA_INSERTION_BOLUS_UNITS, OmnipodConst.POD_CANNULA_INSERTION_DELIVERY_RATE));
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
@@ -121,22 +122,12 @@ public class OmnipodManager {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    public PumpEnactResult getPodStatus() {
+    public StatusResponse getPodStatus() {
         if (podState == null) {
-            // TODO use string resource
-            return new PumpEnactResult().success(false).enacted(false).comment("Pod should be paired and primed first");
+            throw new IllegalSetupProgressException(SetupProgress.PRIMING_FINISHED, null);
         }
 
-        try {
-            // TODO how can we return the status response? Also refer to TODO in interface
-            StatusResponse statusResponse = communicationService.executeAction(new GetStatusAction(podState));
-        } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
-        }
-
-        return new PumpEnactResult().success(true).enacted(true);
+        return communicationService.executeAction(new GetStatusAction(podState));
     }
 
     public PumpEnactResult deactivatePod() {
@@ -181,20 +172,36 @@ public class OmnipodManager {
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    public PumpEnactResult bolus(Double units) {
+    public PumpEnactResult bolus(Double units, StatusResponseHandler bolusCompletionHandler) {
         if (!isInitialized()) {
             return createNotInitializedResult();
         }
 
         try {
             communicationService.executeAction(new BolusAction(podState, units, true, true));
+
+            if(bolusCompletionHandler != null) {
+                executeDelayed(() -> {
+                    for (int i = 0; ACTION_VERIFICATION_TRIES > i; i++) {
+                        StatusResponse statusResponse = null;
+                        try {
+                            statusResponse = getPodStatus();
+                            if (statusResponse.getDeliveryStatus().isBolusing()) {
+                                break;
+                            }
+                        } catch (Exception ex) {
+                            // Ignore
+                        }
+                        bolusCompletionHandler.handle(statusResponse);
+                    }
+                }, calculateBolusDuration(units, OmnipodConst.POD_BOLUS_DELIVERY_RATE));
+            }
         } catch (Exception ex) {
             // TODO distinguish between certain and uncertain failures
             // TODO user friendly error messages (string resources)
             return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
         }
 
-        // TODO calculate bolus duration
         return new PumpEnactResult().success(true).enacted(true);
     }
 
@@ -339,6 +346,10 @@ public class OmnipodManager {
         return podState == null ? "null" : podState.toString();
     }
 
+    private Duration calculateBolusDuration(double units, double deliveryRate) {
+        return Duration.standardSeconds((long)Math.ceil(units / deliveryRate));
+    }
+
     private void executeDelayed(Runnable r, Duration timeout) {
         ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
         scheduledExecutorService.schedule(r, timeout.getMillis(), TimeUnit.MILLISECONDS);
@@ -355,7 +366,7 @@ public class OmnipodManager {
 
     private void verifySetupAction(StatusResponseHandler statusResponseHandler, SetupProgress expectedSetupProgress, SetupActionResultHandler resultHandler) {
         SetupActionResult result = null;
-        for (int i = 0; SETUP_ACTION_VERIFICATION_TRIES > i; i++) {
+        for (int i = 0; ACTION_VERIFICATION_TRIES > i; i++) {
             try {
                 StatusResponse delayedStatusResponse = communicationService.executeAction(new GetStatusAction(podState));
                 statusResponseHandler.handle(delayedStatusResponse);
@@ -376,11 +387,5 @@ public class OmnipodManager {
         if (resultHandler != null) {
             resultHandler.handle(result);
         }
-
-    }
-
-    @FunctionalInterface
-    private interface StatusResponseHandler {
-        void handle(StatusResponse podState);
     }
 }

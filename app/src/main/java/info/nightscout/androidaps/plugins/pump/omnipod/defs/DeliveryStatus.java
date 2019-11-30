@@ -26,4 +26,8 @@ public enum DeliveryStatus {
     public byte getValue() {
         return value;
     }
+
+    public boolean isBolusing() {
+        return this.equals(BOLUS_IN_PROGRESS) || this.equals(BOLUS_AND_TEMP_BASAL);
+    }
 }

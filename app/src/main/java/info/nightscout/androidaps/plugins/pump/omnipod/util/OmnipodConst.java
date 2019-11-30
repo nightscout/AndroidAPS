@@ -26,6 +26,9 @@ public class OmnipodConst {
     }
 
     public static final double POD_PULSE_SIZE = 0.05;
+    public static final double POD_BOLUS_DELIVERY_RATE = 0.025; // units per second
+    public static final double POD_PRIMING_DELIVERY_RATE = 0.05; // units per second
+    public static final double POD_CANNULA_INSERTION_DELIVERY_RATE = 0.05; // units per second
     public static final double MAX_RESERVOIR_READING = 50.0;
     public static final double MAX_BOLUS = 30.0;
     public static final double MAX_BASAL_RATE = 30.0;
@@ -39,6 +42,4 @@ public class OmnipodConst {
 
     public static final double POD_PRIME_BOLUS_UNITS = 2.6;
     public static final double POD_CANNULA_INSERTION_BOLUS_UNITS = 0.5;
-    public static final Duration POD_PRIME_DURATION = Duration.standardSeconds(55);
-    public static final Duration POD_CANNULA_INSERTION_DURATION = Duration.standardSeconds(10);
 }
