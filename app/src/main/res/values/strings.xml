@@ -1643,6 +1643,21 @@
     <!-- Omnipod - Error -->
     <string name="omnipod_error_operation_not_possible_no_configuration">Operation is not possible.\n\n You need to configure Omnipod first, before you can use this operation.</string>
     <string name="omnipod_error_operation_not_possible_no_profile">Operation is not possible.\n\n You need to wait few minutes, until AAPS tries to set profile for first time.</string>
+    <string name="omnipod_error_illegal_init_action_type">Illegal PodInitActionType: %1$s</string>
+
+    <string name="omnipod_driver_error_setup_action_verification_failed">Command verification failed.</string>
+    <string name="omnipod_driver_error_unexpected_exception_type">An unexpected error occured. Please report! (type: %1$d).</string>
+    <string name="omnipod_driver_error_invalid_parameters">Communication failed: received invalid input parameters.</string>
+    <string name="omnipod_driver_error_communication_failed">Communication failed.</string>
+    <string name="omnipod_driver_error_crc_mismatch">Communication failed: Message integrity verification failed.</string>
+    <string name="omnipod_driver_error_invalid_packet_type">Communication failed: received an invalid packet from the pod.</string>
+    <string name="omnipod_driver_error_invalid_progress_state">Communication failed: rhe pod is in a wrong state. Please retry your command.</string>
+    <string name="omnipod_driver_error_invalid_response">Communication failed: received an invalid response from the pod.</string>
+    <string name="omnipod_driver_error_message_decoding_failed">Communication failed: failed to decode message from the pod.</string>
+    <string name="omnipod_driver_error_nonce_resync_failed">Communication failed: nonce resync failed. Please try your command again.</string>
+    <string name="omnipod_driver_error_not_enough_data">Communication failed: not enough data received from the pod.</string>
+    <string name="omnipod_driver_error_pod_fault">A pod fault (%1$s) has been detected. Please deactivate your pod and start a new one.</string>
+    <string name="omnipod_driver_error_pod_returned_error_response">Communication failed: the pod returned an error response.</string>
 
     <!-- Omnipod - Pod Mgmt -->
     <string name="omnipod_pod_mgmt_title">Pod Management</string>

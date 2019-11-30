@@ -2,12 +2,17 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.comm;
 
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
@@ -25,9 +30,25 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionStat
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodDbEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommandInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommunicationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.CrcMismatchException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalDeliveryStatusException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalPacketTypeException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalPodProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalResponseException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalSetupProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.MessageDecodingException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceResyncException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.NotEnoughDataException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodFaultException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodReturnedErrorResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
     private final OmnipodManager delegate;
 
     private static AapsOmnipodManager instance;
@@ -48,29 +69,26 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         if (PodInitActionType.PairAndPrimeWizardStep.equals(podInitActionType)) {
             try {
                 delegate.pairAndPrime(res -> //
-                        podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), createCommentForSetupActionResult(res)));
+                        handleSetupActionResult(podInitActionType, podInitReceiver, res));
                 return new PumpEnactResult().success(true).enacted(true);
             } catch (Exception ex) {
-                // TODO use string resource instead of exception message
-                podInitReceiver.returnInitTaskStatus(podInitActionType, false, ex.getMessage());
-                return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+                String comment = handleAndTranslateException(ex);
+                podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
+                return new PumpEnactResult().success(false).enacted(false).comment(comment);
             }
         } else if (PodInitActionType.FillCannulaSetBasalProfileWizardStep.equals(podInitActionType)) {
             try {
-                delegate.insertCannula(mapProfileToBasalSchedule(profile), res -> {
-                    podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), createCommentForSetupActionResult(res));
-                    OmnipodUtil.setPodSessionState(delegate.getPodState());
-                    RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
-                });
+                delegate.insertCannula(mapProfileToBasalSchedule(profile), res -> //
+                        handleSetupActionResult(podInitActionType, podInitReceiver, res));
                 return new PumpEnactResult().success(true).enacted(true);
             } catch (Exception ex) {
-                // TODO use string resource instead of exception message
-                podInitReceiver.returnInitTaskStatus(podInitActionType, false, ex.getMessage());
-                return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+                String comment = handleAndTranslateException(ex);
+                podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
+                return new PumpEnactResult().success(false).enacted(false).comment(comment);
             }
         }
-        // Todo use string resource
-        return new PumpEnactResult().success(false).enacted(false).comment("Illegal PodInitActionType: " + podInitActionType.name());
+
+        return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_illegal_init_action_type, podInitActionType.name()));
     }
 
     @Override
@@ -79,8 +97,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             StatusResponse statusResponse = delegate.getPodStatus();
             return new PumpEnactResult().success(true).enacted(false);
         } catch (Exception ex) {
-            // TODO use string resource instead of exception message
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+            String comment = handleAndTranslateException(ex);
+            return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
     }
 
@@ -89,9 +107,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             delegate.deactivatePod();
         } catch (Exception ex) {
-            // TODO use string resource instead of exception message
-            podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, false, ex.getMessage());
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+            String comment = handleAndTranslateException(ex);
+            podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, false, comment);
+            return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
         podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, true, null);
@@ -107,8 +125,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             delegate.setBasalSchedule(mapProfileToBasalSchedule(basalProfile));
         } catch (Exception ex) {
-            // TODO use string resource instead of exception message
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+            String comment = handleAndTranslateException(ex);
+            return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -140,8 +158,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 }
             });
         } catch (Exception ex) {
-            // TODO use string resource instead of exception message
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+            String comment = handleAndTranslateException(ex);
+            return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -152,8 +170,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             delegate.cancelBolus();
         } catch (Exception ex) {
-            // TODO use string resource instead of exception message
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+            String comment = handleAndTranslateException(ex);
+            return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -164,8 +182,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             delegate.setTemporaryBasal(tempBasalPair);
         } catch (Exception ex) {
-            // TODO use string resource instead of exception message
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+            String comment = handleAndTranslateException(ex);
+            return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -176,8 +194,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             delegate.cancelTemporaryBasal();
         } catch (Exception ex) {
-            // TODO use string resource instead of exception message
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+            String comment = handleAndTranslateException(ex);
+            return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -188,8 +206,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             delegate.acknowledgeAlerts();
         } catch (Exception ex) {
-            // TODO use string resource instead of exception message
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+            String comment = handleAndTranslateException(ex);
+            return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
         return new PumpEnactResult().success(true).enacted(true);
     }
@@ -210,8 +228,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             PodInfoResponse podInfo = delegate.getPodInfo(podInfoType);
             return new PumpEnactResult().success(true).enacted(true);
         } catch (Exception ex) {
-            // TODO use string resource instead of exception message
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+            String comment = handleAndTranslateException(ex);
+            return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
     }
 
@@ -219,8 +237,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             delegate.suspendDelivery();
         } catch (Exception ex) {
-            // TODO use string resource instead of exception message
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+            String comment = handleAndTranslateException(ex);
+            return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -230,8 +248,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             delegate.resumeDelivery();
         } catch (Exception ex) {
-            // TODO use string resource instead of exception message
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+            String comment = handleAndTranslateException(ex);
+            return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
         return new PumpEnactResult().success(true).enacted(true);
@@ -242,9 +260,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             delegate.setTime();
         } catch (Exception ex) {
-            // TODO distinguish between certain and uncertain failures
-            // TODO user friendly error messages (string resources)
-            return new PumpEnactResult().success(false).enacted(false).comment(ex.getMessage());
+            String comment = handleAndTranslateException(ex);
+            return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
         return new PumpEnactResult().success(true).enacted(true);
     }
@@ -274,19 +291,73 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     }
 
-    private String createCommentForSetupActionResult(SetupActionResult res) {
+    private void handleSetupActionResult(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, SetupActionResult res) {
         String comment = null;
         switch (res.getResultType()) {
             case FAILURE:
-                // TODO use string resource
-                comment = "Unexpected setup progress: " + res.getSetupProgress();
+                LOG.error("Setup action failed: illegal setup progress: {}", res.getSetupProgress());
+                comment = getStringResource(R.string.omnipod_driver_error_invalid_progress_state, res.getSetupProgress());
                 break;
             case VERIFICATION_FAILURE:
-                // TODO use string resource
-                comment = "Verification failed: " + res.getException().getClass().getSimpleName() + ": " + res.getException().getMessage();
+                if (loggingEnabled()) {
+                    LOG.error("Setup action verification failed: caught exception", res.getException());
+                }
+                comment = getStringResource(R.string.omnipod_driver_error_setup_action_verification_failed);
                 break;
         }
+
+        podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), comment);
+    }
+
+    private String handleAndTranslateException(Exception ex) {
+        String comment;
+
+        if (ex instanceof OmnipodException) {
+            if (ex instanceof ActionInitializationException || ex instanceof CommandInitializationException) {
+                comment = getStringResource(R.string.omnipod_driver_error_invalid_parameters);
+            } else if (ex instanceof CommunicationException) {
+                comment = getStringResource(R.string.omnipod_driver_error_communication_failed);
+            } else if (ex instanceof CrcMismatchException) {
+                comment = getStringResource(R.string.omnipod_driver_error_crc_mismatch);
+            } else if (ex instanceof IllegalPacketTypeException) {
+                comment = getStringResource(R.string.omnipod_driver_error_invalid_packet_type);
+            } else if (ex instanceof IllegalPodProgressException || ex instanceof IllegalSetupProgressException
+                    || ex instanceof IllegalDeliveryStatusException) {
+                comment = getStringResource(R.string.omnipod_driver_error_invalid_progress_state);
+            } else if (ex instanceof IllegalResponseException) {
+                comment = getStringResource(R.string.omnipod_driver_error_invalid_response);
+            } else if (ex instanceof MessageDecodingException) {
+                comment = getStringResource(R.string.omnipod_driver_error_message_decoding_failed);
+            } else if (ex instanceof NonceResyncException) {
+                comment = getStringResource(R.string.omnipod_driver_error_nonce_resync_failed);
+            } else if (ex instanceof NotEnoughDataException) {
+                comment = getStringResource(R.string.omnipod_driver_error_not_enough_data);
+            } else if (ex instanceof PodFaultException) {
+                // TODO handle pod fault with some kind of dialog that has a button to start pod deactivation
+                comment = getStringResource(R.string.omnipod_driver_error_pod_fault, ((PodFaultException) ex).getFaultEvent().getFaultEventCode().name());
+            } else if (ex instanceof PodReturnedErrorResponseException) {
+                comment = getStringResource(R.string.omnipod_driver_error_pod_returned_error_response);
+            } else {
+                // Shouldn't be reachable
+                comment = getStringResource(R.string.omnipod_driver_error_unexpected_exception_type, ex.getClass().getName());
+            }
+        } else {
+            comment = getStringResource(R.string.omnipod_driver_error_unexpected_exception_type, ex.getClass().getName());
+        }
+
+        if (loggingEnabled()) {
+            LOG.error(String.format("Caught OmnipodManager exception (user-friendly error message: %s)", comment), ex);
+        }
+
         return comment;
+    }
+
+    private String getStringResource(int id, Object... args) {
+        return MainApp.gs(id, args);
+    }
+
+    private boolean loggingEnabled() {
+        return L.isEnabled(L.PUMP);
     }
 
     // TODO add tests
