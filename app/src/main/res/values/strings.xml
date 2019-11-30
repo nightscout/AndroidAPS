@@ -1672,7 +1672,7 @@
     <string name="omnipod_remove_pod_wizard_step1_title">Prepare for Pod Removal</string>
     <string name="omnipod_remove_pod_wizard_step1_desc">\nPress <b>Next</b> to begin Pod removal process.\n\n\nThis will stop delivery of insulin and deactivate Pod.</string>
     <string name="omnipod_remove_pod_wizard_step2_title">Remove the Pod</string>
-    <string name="omnipod_remove_pod_wizard_step2_action_header">We are trying to communicate with Pod.\n\nWhen all items are checked, you can press Next. If Pod removal fails and you click on Cancel, Pod will be forcefully removed from AAPS.</string>
+    <string name="omnipod_remove_pod_wizard_step2_action_header">We are trying to communicate with Pod.\n\nWhen all items are checked, you can press Next. If Pod removal fails you need to click on Cancel.</string>
 
     <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod deactivated.\n\nRemove and discard the Pod.\n\nWhen you are ready, prepare the next Pod and start <b>Init Pod</b> action.</string>
 

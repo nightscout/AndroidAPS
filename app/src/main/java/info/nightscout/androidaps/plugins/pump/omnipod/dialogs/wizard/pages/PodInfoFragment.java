@@ -35,6 +35,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionStat
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 
+/**
+ * Created by andy on 12/11/2019
+ */
 public class PodInfoFragment extends Fragment {
     private static final String ARG_KEY = "key";
 

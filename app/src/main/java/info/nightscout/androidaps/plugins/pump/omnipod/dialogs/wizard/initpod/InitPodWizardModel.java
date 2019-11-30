@@ -27,9 +27,11 @@ import com.tech.freak.wizardpager.model.PageList;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitActionPage;
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.PodInfoFragment;
 
+/**
+ * Created by andy on 12/11/2019
+ */
 public class InitPodWizardModel extends AbstractWizardModel {
     public InitPodWizardModel(Context context) {
         super(context);

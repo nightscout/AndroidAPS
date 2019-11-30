@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages;
+package info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod;
 
 import android.app.Activity;
 import android.graphics.Color;

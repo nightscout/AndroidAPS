@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 
 /**
- * A page asking for a name and an email.
+ * Created by andy on 12/11/2019
  */
 public class PodInfoPage extends Page {
     public static final String NAME_DATA_KEY = "name";

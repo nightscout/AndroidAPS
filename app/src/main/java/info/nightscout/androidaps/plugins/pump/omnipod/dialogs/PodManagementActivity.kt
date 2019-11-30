@@ -16,6 +16,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.
 import info.nightscout.androidaps.utils.OKDialog
 import kotlinx.android.synthetic.main.omnipod_pod_mgmt.*
 
+/**
+ * Created by andy on 30/08/2019
+ */
 class PodManagementActivity : NoSplashActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,7 +78,7 @@ class PodManagementActivity : NoSplashActivity() {
         pagerSettings.setFinishButtonBackground(R.drawable.finish_background)
         pagerSettings.setNextButtonBackground(R.drawable.selectable_item_background)
         pagerSettings.setBackStringResourceId(R.string.cancel)
-        pagerSettings.setCancelAction(InitPodCancelAction())
+        //pagerSettings.setCancelAction(InitPodCancelAction())
 
         val wizardPagerContext = WizardPagerContext.getInstance();
 

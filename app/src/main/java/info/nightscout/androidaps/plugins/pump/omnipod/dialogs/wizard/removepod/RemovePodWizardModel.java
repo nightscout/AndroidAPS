@@ -21,16 +21,17 @@ import android.content.Context;
 import androidx.fragment.app.Fragment;
 
 import com.atech.android.library.wizardpager.model.DisplayTextPage;
-import com.atech.android.library.wizardpager.ui.DisplayTextFragment;
 
 import com.tech.freak.wizardpager.model.AbstractWizardModel;
 import com.tech.freak.wizardpager.model.PageList;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitActionPage;
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.PodInfoFragment;
 
+/**
+ * Created by andy on 12/11/2019
+ */
 public class RemovePodWizardModel extends AbstractWizardModel {
 
     public RemovePodWizardModel(Context context) {
@@ -47,7 +48,7 @@ public class RemovePodWizardModel extends AbstractWizardModel {
                         R.string.omnipod_remove_pod_wizard_step1_desc,
                         R.style.WizardPagePodContent).setRequired(true).setCancelReason("None"),
 
-                new InitActionPage(this,
+                new RemovePodActionPage(this,
                         R.string.omnipod_remove_pod_wizard_step2_title,
                         PodInitActionType.DeactivatePodWizardStep
                 ).setRequired(true).setCancelReason("Cancel")
