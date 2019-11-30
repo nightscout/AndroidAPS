@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.SystemClock
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
@@ -21,6 +23,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
+import info.nightscout.androidaps.plugins.constraints.objectives.dialogs.NtpProgressDialog
+import info.nightscout.androidaps.plugins.constraints.objectives.events.EventNtpStatus
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
@@ -101,18 +105,20 @@ class ObjectivesFragment : Fragment() {
     }
 
     private fun scrollToCurrentObjective() {
-        for (i in 0 until ObjectivesPlugin.objectives.size) {
-            val objective = ObjectivesPlugin.objectives[i]
-            if (!objective.isStarted || !objective.isAccomplished) {
-                context?.let {
-                    val smoothScroller = object : LinearSmoothScroller(it) {
-                        override fun getVerticalSnapPreference(): Int = SNAP_TO_START
-                        override fun calculateTimeForScrolling(dx: Int): Int = super.calculateTimeForScrolling(dx) * 4
+        activity?.runOnUiThread {
+            for (i in 0 until ObjectivesPlugin.objectives.size) {
+                val objective = ObjectivesPlugin.objectives[i]
+                if (!objective.isStarted || !objective.isAccomplished) {
+                    context?.let {
+                        val smoothScroller = object : LinearSmoothScroller(it) {
+                            override fun getVerticalSnapPreference(): Int = SNAP_TO_START
+                            override fun calculateTimeForScrolling(dx: Int): Int = super.calculateTimeForScrolling(dx) * 4
+                        }
+                        smoothScroller.targetPosition = i
+                        objectives_recyclerview.layoutManager?.startSmoothScroll(smoothScroller)
                     }
-                    smoothScroller.targetPosition = i
-                    objectives_recyclerview.layoutManager?.startSmoothScroll(smoothScroller)
+                    break
                 }
-                break
             }
         }
     }
@@ -205,66 +211,71 @@ class ObjectivesFragment : Fragment() {
             holder.accomplished.text = MainApp.gs(R.string.accomplished, DateUtil.dateAndTimeString(objective.accomplishedOn))
             holder.accomplished.setTextColor(-0x3e3e3f)
             holder.verify.setOnClickListener {
-                holder.verify.visibility = View.INVISIBLE
                 NetworkChangeReceiver.grabNetworkStatus(context)
                 if (objectives_fake.isChecked) {
                     objective.accomplishedOn = DateUtil.now()
                     scrollToCurrentObjective()
                     startUpdateTimer()
                     RxBus.send(EventObjectivesUpdateGui())
-                    holder.verify.visibility = View.INVISIBLE
-                } else
-                    SntpClient.ntpTime(object : SntpClient.Callback() {
-                        override fun run() {
-                            activity?.runOnUiThread {
-                                holder.verify.visibility = View.VISIBLE
+                } else {
+                    // move out of UI thread
+                    Thread {
+                        NtpProgressDialog().show((context as AppCompatActivity).supportFragmentManager, "NtpCheck")
+                        RxBus.send(EventNtpStatus(MainApp.gs(R.string.timedetection), 0))
+                        SntpClient.ntpTime(object : SntpClient.Callback() {
+                            override fun run() {
                                 log.debug("NTP time: $time System time: ${DateUtil.now()}")
                                 if (!networkConnected) {
-                                    ToastUtils.showToastInUiThread(context, R.string.notconnected)
+                                    RxBus.send(EventNtpStatus(MainApp.gs(R.string.notconnected), 100))
                                 } else if (success) {
                                     if (objective.isCompleted(time)) {
                                         objective.accomplishedOn = time
-                                        scrollToCurrentObjective()
-                                        startUpdateTimer()
+                                        RxBus.send(EventNtpStatus(MainApp.gs(R.string.success), 100))
+                                        SystemClock.sleep(1000)
                                         RxBus.send(EventObjectivesUpdateGui())
+                                        SystemClock.sleep(100)
+                                        scrollToCurrentObjective()
                                     } else {
-                                        ToastUtils.showToastInUiThread(context, R.string.requirementnotmet)
+                                        RxBus.send(EventNtpStatus(MainApp.gs(R.string.requirementnotmet), 100))
                                     }
                                 } else {
-                                    ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
+                                    RxBus.send(EventNtpStatus(MainApp.gs(R.string.failedretrievetime), 100))
                                 }
                             }
-                        }
-                    }, NetworkChangeReceiver.isConnected())
+                        }, NetworkChangeReceiver.isConnected())
+                    }.start()
+                }
             }
             holder.start.setOnClickListener {
-                holder.start.visibility = View.INVISIBLE
                 NetworkChangeReceiver.grabNetworkStatus(context)
                 if (objectives_fake.isChecked) {
                     objective.startedOn = DateUtil.now()
                     scrollToCurrentObjective()
                     startUpdateTimer()
                     RxBus.send(EventObjectivesUpdateGui())
-                    holder.start.visibility = View.VISIBLE
                 } else
-                    SntpClient.ntpTime(object : SntpClient.Callback() {
-                        override fun run() {
-                            activity?.runOnUiThread {
-                                holder.start.visibility = View.VISIBLE
+                // move out of UI thread
+                    Thread {
+                        NtpProgressDialog().show((context as AppCompatActivity).supportFragmentManager, "NtpCheck")
+                        RxBus.send(EventNtpStatus(MainApp.gs(R.string.timedetection), 0))
+                        SntpClient.ntpTime(object : SntpClient.Callback() {
+                            override fun run() {
                                 log.debug("NTP time: $time System time: ${DateUtil.now()}")
                                 if (!networkConnected) {
-                                    ToastUtils.showToastInUiThread(context, R.string.notconnected)
+                                    RxBus.send(EventNtpStatus(MainApp.gs(R.string.notconnected), 100))
                                 } else if (success) {
-                                    objective.startedOn = time
-                                    scrollToCurrentObjective()
-                                    startUpdateTimer()
-                                    RxBus.send(EventObjectivesUpdateGui())
+                                        objective.startedOn = time
+                                        RxBus.send(EventNtpStatus(MainApp.gs(R.string.success), 100))
+                                        SystemClock.sleep(1000)
+                                        RxBus.send(EventObjectivesUpdateGui())
+                                        SystemClock.sleep(100)
+                                        scrollToCurrentObjective()
                                 } else {
-                                    ToastUtils.showToastInUiThread(context, R.string.failedretrievetime)
+                                    RxBus.send(EventNtpStatus(MainApp.gs(R.string.failedretrievetime), 100))
                                 }
                             }
-                        }
-                    }, NetworkChangeReceiver.isConnected())
+                        }, NetworkChangeReceiver.isConnected())
+                    }.start()
             }
             holder.unStart.setOnClickListener {
                 objective.startedOn = 0
