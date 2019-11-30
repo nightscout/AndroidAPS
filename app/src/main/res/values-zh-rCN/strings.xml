@@ -1091,8 +1091,6 @@
     <string name="tidepool_upload_tbr">上传临时基础率</string>
     <string name="tidepool_upload_profile">上传配置文件切换，临时目标</string>
     <string name="tidepool_upload_bg">上传血糖值</string>
-    <string name="dst_in_24h_warning">在24小时内或更少时间内更夏令时时间</string>
-    <string name="dst_loop_disabled_warning">不到3小时前夏令时时间变化了-已禁用闭环</string>
     <string name="storage">内部储存空间不足</string>
     <string name="diskfull">至少 剩余%1$d MB 内部存储！闭环已禁用！</string>
     <string name="wrongformat">格式错误</string>

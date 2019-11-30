@@ -78,13 +78,13 @@ public class Home2 extends BaseWatchFace {
 
         setTextSizes();
 
-        if (sgvLevel == 1) {
+        if (rawData.sgvLevel == 1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
-        } else if (sgvLevel == 0) {
+        } else if (rawData.sgvLevel == 0) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        } else if (sgvLevel == -1) {
+        } else if (rawData.sgvLevel == -1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
         }
@@ -95,7 +95,7 @@ public class Home2 extends BaseWatchFace {
             mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_TimestampOld));
         }
 
-        if (batteryLevel == 1) {
+        if (rawData.batteryLevel == 1) {
             mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBattery));
         } else {
             mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBatteryEmpty));
@@ -176,13 +176,13 @@ public class Home2 extends BaseWatchFace {
 
             setTextSizes();
 
-            if (sgvLevel == 1) {
+            if (rawData.sgvLevel == 1) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
-            } else if (sgvLevel == 0) {
+            } else if (rawData.sgvLevel == 0) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
-            } else if (sgvLevel == -1) {
+            } else if (rawData.sgvLevel == -1) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
             }
@@ -193,7 +193,7 @@ public class Home2 extends BaseWatchFace {
                 mTimestamp.setTextColor(Color.RED);
             }
 
-            if (batteryLevel == 1) {
+            if (rawData.batteryLevel == 1) {
                 mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
             } else {
                 mUploaderBattery.setTextColor(Color.RED);
@@ -229,7 +229,7 @@ public class Home2 extends BaseWatchFace {
 
         if (mIOB1 != null && mIOB2 != null) {
 
-            if (detailedIOB) {
+            if (rawData.detailedIOB) {
                 mIOB1.setTextSize(14);
                 mIOB2.setTextSize(10);
             } else {

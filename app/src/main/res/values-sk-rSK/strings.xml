@@ -260,11 +260,23 @@
     <string name="smscommunicator_allowednumbers">Povolené telefónne čísla</string>
     <string name="smscommunicator_allowednumbers_summary">+421XXXXXXXXX;+421YYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode">Pre podanie bolusu %1$.2fJI odpovedz SMS kódom %2$s</string>
+    <string name="smscommunicator_mealbolusreplywithcode">Pre podanie bolusu k jedlu %1$.2fJI odpovedz SMS kódom %2$s</string>
+    <string name="smscommunicator_temptargetwithcode">Pre nastavenie dočasného cieľa %1$s odpovedz SMS kódom %2$s</string>
+    <string name="smscommunicator_temptargetcancel">Pre zrušenie dočasného bazálu odpovedzte SMS s kódom %1$s</string>
+    <string name="smscommunicator_stopsmswithcode">Pre vypnutie služby SMS komunikátora odpovedz SMS kódom %1$s.\n\n\Majte na pamäti, že opätovná reaktivácia je možná len priamo na AAPS master telefóne.</string>
+    <string name="smscommunicator_stoppedsms">SMS komunikátor zastavený. Na jeho reaktiváciu, použite AAPS na master telefóne.</string>
     <string name="smscommunicator_calibrationreplywithcode">Pre odoslanie kalibrácie %1$.2f odpovedz SMS kódom %2$s</string>
     <string name="smscommunicator_bolusfailed">Chyba pri aplikovaní bolusu</string>
+    <string name="smscommunicator_remotebolusmindistance_summary">Minimálny počet minút, ktorý musí uplynúť medzi jedným vzdialeným bolusom a tým nasledujúcim</string>
+    <string name="smscommunicator_remotebolusmindistance">Aspoň koľko minút musí uplynúť, medzi jedným vzdialeným bolusom a tým nasledujúcim</string>
+    <string name="smscommunicator_remotebolusmindistance_caveat">Pre vašu bezpečnosť,  musíte pridať aspoň 2 telefónne čísla, aby ste zmenili toto prednastavenie.</string>
     <string name="bolusdelivered">Bolus %1$.2fJI podaný úspešne</string>
     <string name="bolusrequested">Podávanie %1$.2fJ inzulínu</string>
     <string name="smscommunicator_bolusdelivered">Bolus %1$.2fJI podaný úspešne</string>
+    <string name="smscommunicator_mealbolusdelivered">Bolus %1$.2fJI podaný úspešne</string>
+    <string name="smscommunicator_mealbolusdelivered_tt">Cieľ %1$s na %2$d minút</string>
+    <string name="smscommunicator_tt_set">Cieľ %1$s na %2$d minút bol úspešne nastavený</string>
+    <string name="smscommunicator_tt_canceled">Dočasný cieľ úspešne zrušený</string>
     <string name="bolusdelivering">Podávanie %1$.2fJI</string>
     <string name="smscommunicator_remotecommandsallowed">Povoliť príkazy na diaľku cez SMS</string>
     <string name="glucosetype_finger">Prst</string>
@@ -324,10 +336,13 @@
     <string name="smscommunicator_basalreplywithcode">Pre spustenie bazálu %1$.2fJI/h na %2$d min odpovedzte SMS s kódom %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Pre prepnutie profilu na %1$s %2$d%% odpovedzte SMS s kódom %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">Pre spustenie predĺženého bolusu %1$.2fJI na %2$d min odpovedzte SMS s kódom %3$s</string>
+    <string name="smscommunicator_carbsreplywithcode">Pre zadanie %1$dg na %2$s odpovedz SMS kódom %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Pre spustenie bazálu %1$d%% na %2$d min odpovedzte SMS s kódom %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Pre pozastavenie uzavretého okruhu na %1$d minút odpovedaj SMS s kódom %2$s</string>
     <string name="smscommunicator_tempbasalset">Dočasný bazál %1$.2fJI/h spustený na %2$d minút</string>
     <string name="smscommunicator_extendedset">Predĺžený bolus %1$.2fJI na %2$d min úspešne spustený</string>
+    <string name="smscommunicator_carbsset">Sacharidy %1$dg zadané úspešne</string>
+    <string name="smscommunicator_carbsfailed">Zadanie %1$dg sacharidov sa nepodarilo</string>
     <string name="smscommunicator_tempbasalset_percent">Dočasný bazál %1$d%% na %2$d minút úspešne spustený</string>
     <string name="smscommunicator_tempbasalfailed">Spustenie dočasného bazálu zlyhalo</string>
     <string name="smscommunicator_extendedfailed">Spustenie predĺženého bolusu zlyhalo</string>
@@ -680,6 +695,7 @@
     <string name="shortgramm">g</string>
     <string name="shortminute">m</string>
     <string name="shorthour">h</string>
+    <string name="shortday">d</string>
     <string name="none"><![CDATA[<prázdne>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
@@ -708,6 +724,7 @@
     <string name="bgsource_upload">Nastavenie nahrávania glykémie</string>
     <string name="wear_detailed_delta_title">Zobrazovať detailné zmeny</string>
     <string name="wear_detailed_delta_summary">Zobrazovať rozdiel s jedným desatinným miestom naviac</string>
+    <string name="smbmaxminutes">SMB max. minút</string>
     <string name="smbmaxminutes_summary">Maximálny počet minút bazálu, ku ktorým se limituje SMB</string>
     <string name="unsupportedfirmware">Nepodporovaný firmware v pumpe</string>
     <string name="dexcomg5_xdripupload_title">Odosielať glykémie do xDrip+</string>
@@ -1237,6 +1254,7 @@
     <string name="medtronic_pump_battery_alkaline">Alkalické (rozšírené zobrazenie)</string>
     <string name="medtronic_pump_battery_lithium">Líthiové (rozšírené zobrazenie)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Rozšírené)</string>
+    <string name="medtronic_bolus_debugging">Bolus/Ošetrenia ladenie</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">VYHĽADAŤ</string>
     <string name="rileylink_scanner_scan_stop">ZASTAVIŤ</string>
@@ -1374,4 +1392,6 @@
     <string name="boluswizard">Bolusová kalkulačka</string>
     <string name="unit_minute_short">min</string>
     <string name="format_carbs">%1$dg</string>
+    <string name="common_on">ZAP</string>
+    <string name="common_off">VYP</string>
 </resources>

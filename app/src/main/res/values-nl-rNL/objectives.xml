@@ -36,7 +36,7 @@
     <string name="objectives_useloop">Inhoud van loop plugin weergeven</string>
     <string name="objectives_usescale">Gebruik de schaalfunctie: houd de BG grafiek lang ingedrukt</string>
     <string name="objectives_button_enter">Enter</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Voer de code in die u van de ontwikkelaars hebt gekregen om de rest van de doelen te omzeilen</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Als u eerder OpenAPS gebruikte en u NS ten minste 3 maanden aan Loop gegevens heeft kunt u een code aanvragen waarmee u de rest van de doelstellingen kunt omzeilen. U kunt de aanvraag indienen via objectives@androidaps.org, samen met de url van uw NS. Voer de code die u van de ontwikkelaars hebt ontvangen in</string>
     <string name="codeaccepted">Code geaccepteerd</string>
     <string name="codeinvalid">Code ongeldig</string>
     <string name="objectives_exam_objective">Bewijs je kennis</string>

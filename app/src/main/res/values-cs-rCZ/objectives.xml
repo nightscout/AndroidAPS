@@ -36,7 +36,7 @@
     <string name="objectives_useloop">Zobrazte obsah modulu Smyčka</string>
     <string name="objectives_usescale">Přepněte režim zobrazení dlouhým stisknutím grafu glykémie</string>
     <string name="objectives_button_enter">Zadat</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Zadejte kód, který jste získali od vývojářů, abyste obešli zbývající cíle</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Pokud jste byli dříve uživateli OpenAPS a váš NS má alespoň 3 měsíce dat z používání smyčky, můžete poslat e-mail na adresu objectives@androidaps.org s adresou svého NS a požádat o kód, pomocí něhož budete moci obejít zbývající cíle. Zadejte kód získaný od vývojářů.</string>
     <string name="codeaccepted">Kód přijat</string>
     <string name="codeinvalid">Neplatný kód</string>
     <string name="objectives_exam_objective">Prokažte své znalosti</string>

@@ -1147,8 +1147,6 @@
     <string name="tidepool_upload_tbr">Αποστολή προσωρινών ρυθμών</string>
     <string name="tidepool_upload_profile">Αποστολή αλλαγών προφίλ, προσωρινών στόχων</string>
     <string name="tidepool_upload_bg">Αποστολή BG βαθμονομήσεων</string>
-    <string name="dst_in_24h_warning">Αλλαγή σε Θερινή ώρα σε 24h ή λιγότερο</string>
-    <string name="dst_loop_disabled_warning">Η Θερινή ώρα αλλάζει σε λιγότερο από 3 ώρες - Απενεργοποιήθηκε το κλειστό κύκλωμα</string>
     <string name="storage">περιορισμός εσωτερικής μνήμης</string>
     <string name="diskfull">Ελευθερώστε τουλάχιστον %1$d MB από εσωτερική μνήμη! Κύκλωμα απενεργοποιήθηκε!</string>
     <string name="wrongformat">Λάθος μορφή αρχείου</string>
