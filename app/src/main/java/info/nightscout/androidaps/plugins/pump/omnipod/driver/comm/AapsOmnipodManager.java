@@ -148,6 +148,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     public PumpEnactResult setBolus(Double amount) {
         try {
             delegate.bolus(amount, statusResponse -> {
+                // TODO set device driver to available here
+
+                // BS: We could optionally use the status response from the command completion verification,
+                // But I don't think we can use that information in any useful way
                 if (statusResponse == null) {
                     // Failed to retrieve status response after bolus
                     // Bolus probably finished anyway
@@ -157,6 +161,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                     // Bolus successfully completed
                 }
             });
+            // TODO set device driver busy here
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             if (OmnipodManager.isCertainFailure(ex)) {
