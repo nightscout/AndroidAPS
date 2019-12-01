@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.setupwizard.elements.SWBreak;
 import info.nightscout.androidaps.setupwizard.elements.SWButton;
+import info.nightscout.androidaps.setupwizard.elements.SWEditNumberWithUnits;
 import info.nightscout.androidaps.setupwizard.elements.SWEditString;
 import info.nightscout.androidaps.setupwizard.elements.SWEditUrl;
 import info.nightscout.androidaps.setupwizard.elements.SWFragment;
@@ -115,6 +116,21 @@ public class SWDefinition {
                     .preferenceId(R.string.key_units).label(R.string.units)
                     .comment(R.string.setupwizard_units_prompt))
             .validator(() -> SP.contains(R.string.key_units));
+
+    private SWScreen displaySettings = new SWScreen(R.string.wear_display_settings)
+            .skippable(false)
+            .add(new SWEditNumberWithUnits(4d, 3d, 8d)
+                    .preferenceId(R.string.key_low_mark)
+                    .updateDelay(5)
+                    .label(R.string.low_mark)
+                    .comment(R.string.low_mark_comment))
+            .add(new SWBreak())
+            .add(new SWEditNumberWithUnits(10d, 5d, 20d)
+                    .preferenceId(R.string.key_high_mark)
+                    .updateDelay(5)
+                    .label(R.string.high_mark)
+                    .comment(R.string.high_mark_comment))
+            .validator(() -> SP.contains(R.string.key_low_mark) && SP.contains(R.string.key_high_mark));
 
     private SWScreen screenPermissionBattery = new SWScreen(R.string.permission)
             .skippable(false)
@@ -421,6 +437,7 @@ public class SWDefinition {
                 .add(screenPermissionStore)
                 .add(screenImport)
                 .add(screenUnits)
+                .add(displaySettings)
                 .add(screenNsClient)
                 .add(screenAge)
                 .add(screenInsulin)
@@ -448,6 +465,7 @@ public class SWDefinition {
                 .add(screenPermissionStore)
                 .add(screenImport)
                 .add(screenUnits)
+                .add(displaySettings)
                 .add(screenNsClient)
                 .add(screenAge)
                 .add(screenInsulin)
@@ -470,6 +488,7 @@ public class SWDefinition {
                 .add(screenPermissionStore)
                 .add(screenImport)
                 .add(screenUnits)
+                .add(displaySettings)
                 .add(screenNsClient)
                 .add(screenBgSource)
                 .add(screenAge)

@@ -86,6 +86,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
 
     public NumberPicker(Context context) {
         super(context, null);
+        this.initialize(context);
     }
 
     public NumberPicker(Context context, AttributeSet attrs) {

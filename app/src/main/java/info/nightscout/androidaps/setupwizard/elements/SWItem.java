@@ -38,7 +38,8 @@ public class SWItem {
         RADIOBUTTON,
         PLUGIN,
         BUTTON,
-        FRAGMENT
+        FRAGMENT,
+        UNITNUMBER
     }
 
     Type type;
