@@ -11,22 +11,25 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Ver
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSetupState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateChangedHandler;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
 
 public class PairAction implements OmnipodAction<PodSessionState> {
     private final PairService service;
     private final int address;
+    private final PodStateChangedHandler podStateChangedHandler;
 
-    public PairAction(PairService pairService, int address) {
+    public PairAction(PairService pairService, int address, PodStateChangedHandler podStateChangedHandler) {
         if (pairService == null) {
             throw new ActionInitializationException("Pair service cannot be null");
         }
         this.service = pairService;
         this.address = address;
+        this.podStateChangedHandler = podStateChangedHandler;
     }
 
-    public PairAction(PairService service) {
-        this(service, generateRandomAddress());
+    public PairAction(PairService service, PodStateChangedHandler podStateChangedHandler) {
+        this(service, generateRandomAddress(), podStateChangedHandler);
     }
 
     private static int generateRandomAddress() {
@@ -47,7 +50,7 @@ public class PairAction implements OmnipodAction<PodSessionState> {
 
         PodSessionState podState = new PodSessionState(timeZone, address, activationDate, confirmPairingResponse.getPiVersion(),
                 confirmPairingResponse.getPmVersion(), confirmPairingResponse.getLot(), confirmPairingResponse.getTid(),
-                setupState.getPacketNumber(), setupState.getMessageNumber());
+                setupState.getPacketNumber(), setupState.getMessageNumber(), podStateChangedHandler);
         podState.setSetupProgress(SetupProgress.POD_CONFIGURED);
 
         return podState;

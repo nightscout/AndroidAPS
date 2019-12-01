@@ -60,7 +60,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     public AapsOmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState, OmnipodPumpStatus pumpStatus) {
-        delegate = new OmnipodManager(communicationService, podState);
+        delegate = new OmnipodManager(communicationService, podState, OmnipodUtil::setPodSessionState);
         this.pumpStatus = pumpStatus;
         instance = this;
     }
@@ -160,7 +160,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             });
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
-            if(OmnipodManager.isCertainFailure(ex)) {
+            if (OmnipodManager.isCertainFailure(ex)) {
                 return new PumpEnactResult().success(false).enacted(false).comment(comment);
             } else {
                 // TODO notify user about uncertain failure

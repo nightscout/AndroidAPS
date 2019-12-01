@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.defs.state;
 import com.google.gson.Gson;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 
@@ -19,7 +18,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.NonceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmniCRC;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
@@ -28,6 +26,7 @@ import info.nightscout.androidaps.utils.SP;
 
 public class PodSessionState extends PodState {
     private final Map<AlertSlot, AlertType> configuredAlerts;
+    private final PodStateChangedHandler stateChangedHandler;
     private DateTime activatedAt;
     private DateTime expiresAt;
     private final FirmwareVersion piVersion;
@@ -44,7 +43,8 @@ public class PodSessionState extends PodState {
     private DeliveryStatus lastDeliveryStatus;
 
     public PodSessionState(DateTimeZone timeZone, int address, DateTime activatedAt, FirmwareVersion piVersion,
-                           FirmwareVersion pmVersion, int lot, int tid, int packetNumber, int messageNumber) {
+                           FirmwareVersion pmVersion, int lot, int tid, int packetNumber, int messageNumber,
+                           PodStateChangedHandler stateChangedHandler) {
         super(address, messageNumber, packetNumber);
         if (timeZone == null) {
             throw new IllegalArgumentException("Time zone can not be null");
@@ -61,6 +61,7 @@ public class PodSessionState extends PodState {
         this.pmVersion = pmVersion;
         this.lot = lot;
         this.tid = tid;
+        this.stateChangedHandler = stateChangedHandler;
         this.nonceState = new NonceState(lot, tid);
         store();
     }
@@ -207,11 +208,11 @@ public class PodSessionState extends PodState {
     @Override
     public void updateFromStatusResponse(StatusResponse statusResponse) {
         DateTime activatedAtCalculated = getTime().minus(statusResponse.getTimeActive());
-        if(activatedAt == null) {
+        if (activatedAt == null) {
             activatedAt = activatedAtCalculated;
         }
         DateTime expiresAtCalculated = activatedAtCalculated.plus(OmnipodConst.NOMINAL_POD_LIFE);
-        if(expiresAt == null || expiresAtCalculated.isBefore(expiresAt) || expiresAtCalculated.isAfter(expiresAt.plusMinutes(1))) {
+        if (expiresAt == null || expiresAtCalculated.isBefore(expiresAt) || expiresAtCalculated.isAfter(expiresAt.plusMinutes(1))) {
             expiresAt = expiresAtCalculated;
         }
 
@@ -224,13 +225,22 @@ public class PodSessionState extends PodState {
     private void store() {
         Gson gson = OmnipodUtil.getGsonInstance();
         SP.putString(OmnipodConst.Prefs.PodState, gson.toJson(this));
-        OmnipodUtil.setPodSessionState(this);
+        if (stateChangedHandler != null) {
+            stateChangedHandler.handle(this);
+        }
     }
 
     @Override
     public String toString() {
         return "PodSessionState{" +
-                "activatedAt=" + activatedAt +
+                "address=" + address +
+                ", packetNumber=" + packetNumber +
+                ", messageNumber=" + messageNumber +
+                ", faultEvent=" + faultEvent +
+                ", configuredAlerts=" + configuredAlerts +
+                ", stateChangedHandler=" + stateChangedHandler +
+                ", activatedAt=" + activatedAt +
+                ", expiresAt=" + expiresAt +
                 ", piVersion=" + piVersion +
                 ", pmVersion=" + pmVersion +
                 ", lot=" + lot +
@@ -239,14 +249,9 @@ public class PodSessionState extends PodState {
                 ", timeZone=" + timeZone +
                 ", nonceState=" + nonceState +
                 ", setupProgress=" + setupProgress +
-                ", configuredAlerts=" + configuredAlerts +
                 ", activeAlerts=" + activeAlerts +
                 ", basalSchedule=" + basalSchedule +
                 ", lastDeliveryStatus=" + lastDeliveryStatus +
-                ", address=" + address +
-                ", packetNumber=" + packetNumber +
-                ", messageNumber=" + messageNumber +
-                ", faultEvent=" + faultEvent +
                 '}';
     }
 }

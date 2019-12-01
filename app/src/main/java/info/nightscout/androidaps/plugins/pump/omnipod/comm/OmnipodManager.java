@@ -38,6 +38,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateChangedHandler;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommunicationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalSetupProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceOutOfSyncException;
@@ -51,21 +52,29 @@ public class OmnipodManager {
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     protected final OmnipodCommunicationService communicationService;
+    private final PodStateChangedHandler podStateChangedHandler;
     protected PodSessionState podState;
 
-    public OmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState) {
+    public OmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState,
+                          PodStateChangedHandler podStateChangedHandler) {
         if (communicationService == null) {
             throw new IllegalArgumentException("Communication service cannot be null");
         }
         this.communicationService = communicationService;
         this.podState = podState;
+        this.podStateChangedHandler = podStateChangedHandler;
+    }
+
+    public OmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState) {
+        this(communicationService, podState, null);
     }
 
     // After priming should have been finished, the pod state is verified.
     // The result of that verification is passed to the SetupActionResultHandler
     public void pairAndPrime(SetupActionResultHandler resultHandler) {
         if (podState == null) {
-            podState = communicationService.executeAction(new PairAction(new PairService()));
+            podState = communicationService.executeAction(
+                    new PairAction(new PairService(), podStateChangedHandler));
         }
         if (podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
             communicationService.executeAction(new PrimeAction(new PrimeService(), podState));
@@ -261,12 +270,12 @@ public class OmnipodManager {
         }
     }
 
-    private void verifySetupAction(StatusResponseHandler statusResponseHandler, SetupProgress expectedSetupProgress, SetupActionResultHandler resultHandler) {
+    private void verifySetupAction(StatusResponseHandler setupActionResponseHandler, SetupProgress expectedSetupProgress, SetupActionResultHandler resultHandler) {
         SetupActionResult result = null;
         for (int i = 0; ACTION_VERIFICATION_TRIES > i; i++) {
             try {
                 StatusResponse delayedStatusResponse = communicationService.executeAction(new GetStatusAction(podState));
-                statusResponseHandler.handle(delayedStatusResponse);
+                setupActionResponseHandler.handle(delayedStatusResponse);
 
                 if (podState.getSetupProgress().equals(expectedSetupProgress)) {
                     result = new SetupActionResult(SetupActionResult.ResultType.SUCCESS);
