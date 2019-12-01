@@ -76,6 +76,11 @@ public class Profile {
         }
     }
 
+    // Constructor from profileStore JSON
+    public Profile(JSONObject json) {
+        init(json, 100, 0);
+    }
+
     public Profile(JSONObject json, int percentage, int timeshift) {
         init(json, percentage, timeshift);
     }
@@ -99,8 +104,6 @@ public class Profile {
         try {
             if (json.has("units"))
                 units = json.getString("units").toLowerCase();
-            if (json.has("dia"))
-                dia = json.getDouble("dia");
             if (json.has("dia"))
                 dia = json.getDouble("dia");
             if (json.has("timezone"))
@@ -687,5 +690,113 @@ public class Profile {
 
     public int getTimeshift() {
         return timeshift;
+    }
+
+    public Profile convertToNonCustomizedProfile() {
+        JSONObject o = new JSONObject();
+        try {
+            o.put("units", units);
+            o.put("dia", dia);
+            o.put("timezone", timeZone.getID());
+            // SENS
+            JSONArray sens = new JSONArray();
+            double lastValue = -1d;
+            for (int i = 0; i < 24; i++) {
+                int timeAsSeconds = i * 60 * 60;
+                double value = getIsfTimeFromMidnight(timeAsSeconds);
+                if (value != lastValue) {
+                    JSONObject item = new JSONObject();
+                    String time;
+                    DecimalFormat df = new DecimalFormat("00");
+                    time = df.format(i) + ":00";
+                    item.put("time", time);
+                    item.put("timeAsSeconds", timeAsSeconds);
+                    item.put("value", value);
+                    lastValue = value;
+                    sens.put(item);
+                }
+            }
+            o.put("sens", sens);
+            // CARBRATIO
+            JSONArray carbratio = new JSONArray();
+            lastValue = -1d;
+            for (int i = 0; i < 24; i++) {
+                int timeAsSeconds = i * 60 * 60;
+                double value = getIcTimeFromMidnight(timeAsSeconds);
+                if (value != lastValue) {
+                    JSONObject item = new JSONObject();
+                    String time;
+                    DecimalFormat df = new DecimalFormat("00");
+                    time = df.format(i) + ":00";
+                    item.put("time", time);
+                    item.put("timeAsSeconds", timeAsSeconds);
+                    item.put("value", value);
+                    lastValue = value;
+                    carbratio.put(item);
+                }
+            }
+            o.put("carbratio", carbratio);
+            // BASAL
+            JSONArray basal = new JSONArray();
+            lastValue = -1d;
+            for (int i = 0; i < 24; i++) {
+                int timeAsSeconds = i * 60 * 60;
+                double value = getBasalTimeFromMidnight(timeAsSeconds);
+                if (value != lastValue) {
+                    JSONObject item = new JSONObject();
+                    String time;
+                    DecimalFormat df = new DecimalFormat("00");
+                    time = df.format(i) + ":00";
+                    item.put("time", time);
+                    item.put("timeAsSeconds", timeAsSeconds);
+                    item.put("value", value);
+                    lastValue = value;
+                    basal.put(item);
+                }
+            }
+            o.put("basal", basal);
+            // TARGET_LOW
+            JSONArray target_low = new JSONArray();
+            lastValue = -1d;
+            for (int i = 0; i < 24; i++) {
+                int timeAsSeconds = i * 60 * 60;
+                double value = getTargetLowTimeFromMidnight(timeAsSeconds);
+                if (value != lastValue) {
+                    JSONObject item = new JSONObject();
+                    String time;
+                    DecimalFormat df = new DecimalFormat("00");
+                    time = df.format(i) + ":00";
+                    item.put("time", time);
+                    item.put("timeAsSeconds", timeAsSeconds);
+                    item.put("value", value);
+                    lastValue = value;
+                    target_low.put(item);
+                }
+            }
+            o.put("target_low", target_low);
+            // TARGET_HIGH
+            JSONArray target_high = new JSONArray();
+            lastValue = -1d;
+            for (int i = 0; i < 24; i++) {
+                int timeAsSeconds = i * 60 * 60;
+                double value = getTargetHighTimeFromMidnight(timeAsSeconds);
+                if (value != lastValue) {
+                    JSONObject item = new JSONObject();
+                    String time;
+                    DecimalFormat df = new DecimalFormat("00");
+                    time = df.format(i) + ":00";
+                    item.put("time", time);
+                    item.put("timeAsSeconds", timeAsSeconds);
+                    item.put("value", value);
+                    lastValue = value;
+                    target_high.put(item);
+                }
+            }
+            o.put("target_high", target_high);
+
+        } catch (JSONException e) {
+            log.error("Unhandled exception" + e);
+        }
+        return new Profile(o);
     }
 }

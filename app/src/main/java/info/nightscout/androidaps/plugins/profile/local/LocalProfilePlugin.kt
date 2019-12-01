@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.profile.local
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.ProfileStore
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -53,7 +54,7 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
         internal var targetLow: JSONArray? = null
         internal var targetHigh: JSONArray? = null
 
-        fun deepClone() : SingleProfile {
+        fun deepClone(): SingleProfile {
             val sp = SingleProfile()
             sp.name = name
             sp.mgdl = mgdl
@@ -63,6 +64,23 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
             sp.basal = JSONArray(basal.toString())
             sp.targetLow = JSONArray(targetLow.toString())
             sp.targetHigh = JSONArray(targetHigh.toString())
+            return sp
+        }
+
+        fun copyFrom(profile: Profile, newName: String): SingleProfile {
+            var verifiedName = newName
+            if (rawProfile?.getSpecificProfile(newName) != null) {
+                verifiedName += " " + DateUtil.now().toString()
+            }
+            val sp = SingleProfile()
+            sp.name = verifiedName
+            sp.mgdl = profile.units == Constants.MGDL
+            sp.dia = profile.dia
+            sp.ic = JSONArray(profile.data.getJSONArray("carbratio").toString())
+            sp.isf = JSONArray(profile.data.getJSONArray("sens").toString())
+            sp.basal = JSONArray(profile.data.getJSONArray("basal").toString())
+            sp.targetLow = JSONArray(profile.data.getJSONArray("target_low").toString())
+            sp.targetHigh = JSONArray(profile.data.getJSONArray("target_high").toString())
             return sp
         }
     }
@@ -336,6 +354,16 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
         numOfProfiles++
         createAndStoreConvertedProfile()
         storeSettings()
+        isEdited = false
+    }
+
+    fun addProfile(p: SingleProfile) {
+        profiles.add(p)
+        currentProfileIndex = profiles.size - 1
+        numOfProfiles++
+        createAndStoreConvertedProfile()
+        storeSettings()
+        isEdited = false
     }
 
     fun removeCurrentProfile() {
@@ -345,6 +373,7 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
         currentProfileIndex = 0
         createAndStoreConvertedProfile()
         storeSettings()
+        isEdited = false
     }
 
     fun createProfileStore(): ProfileStore {

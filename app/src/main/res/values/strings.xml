@@ -1653,8 +1653,9 @@
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">TARG</string>
-    <string name="clone_label">CLONE</string>
+    <string name="clone_label">Clone</string>
     <string name="saveorresetchangesfirst">Save or reset current changes first</string>
     <string name="deletecurrentprofile">Delete current profile?</string>
+    <string name="copytolocalprofile">Create new local profile from this profile switch?</string>
 
 </resources>

@@ -14,12 +14,12 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
 import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.MIN_DIA
+import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -60,7 +60,6 @@ class LocalProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        build()
         // activate DIA tab
         processVisibilityOnClick(dia_tab)
         localprofile_dia_placeholder.visibility = View.VISIBLE
@@ -91,6 +90,7 @@ class LocalProfileFragment : Fragment() {
         val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription ?: return
         val units = if (LocalProfilePlugin.currentProfile().mgdl) Constants.MGDL else Constants.MMOL
 
+        localprofile_name.removeTextChangedListener(textWatch)
         localprofile_name.setText(LocalProfilePlugin.currentProfile().name)
         localprofile_name.addTextChangedListener(textWatch)
         localprofile_dia.setParams(LocalProfilePlugin.currentProfile().dia, HardLimits.MINDIA, HardLimits.MAXDIA, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
@@ -179,7 +179,7 @@ class LocalProfileFragment : Fragment() {
         localprofile_reset.setOnClickListener {
             LocalProfilePlugin.loadSettings()
             @Suppress("SETTEXTL18N")
-            localprofile_units.text = MainApp.gs(R.string.units) + ": " + (if (LocalProfilePlugin.currentProfile().mgdl) MainApp.gs(R.string.mgdl) else MainApp.gs(R.string.mmol))
+            localprofile_units.text = MainApp.gs(R.string.units_colon) + " " + (if (LocalProfilePlugin.currentProfile().mgdl) MainApp.gs(R.string.mgdl) else MainApp.gs(R.string.mmol))
             localprofile_dia.setParams(LocalProfilePlugin.currentProfile().dia, MIN_DIA, 12.0, 0.1, DecimalFormat("0.0"), false, localprofile_save, textWatch)
             TimeListEdit(context, view, R.id.localprofile_ic, MainApp.gs(R.string.nsprofileview_ic_label) + ":", LocalProfilePlugin.currentProfile().ic, null, 0.5, 50.0, 0.1, DecimalFormat("0.0"), save)
             TimeListEdit(context, view, R.id.localprofile_isf, MainApp.gs(R.string.nsprofileview_isf_label) + ":", LocalProfilePlugin.currentProfile().isf, null, 0.5, 500.0, 0.1, DecimalFormat("0.0"), save)
@@ -202,10 +202,11 @@ class LocalProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         disposable.add(RxBus
-                .toObservable(EventInitializationChanged::class.java)
+                .toObservable(EventLocalProfileChanged::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+                .subscribe({ build() }, { FabricPrivacy.logException(it) })
         )
+        build()
     }
 
     @Synchronized
@@ -261,5 +262,4 @@ class LocalProfileFragment : Fragment() {
         localprofile_basal.visibility = View.GONE
         localprofile_target.visibility = View.GONE
     }
-
 }
