@@ -1148,7 +1148,7 @@
     <string name="tidepool_upload_tbr">Prześlij bazy tymczasowe</string>
     <string name="tidepool_upload_profile">Prześlij zmiany profilu, cele tymczasowe</string>
     <string name="tidepool_upload_bg">Prześlij testowe BG</string>
-    <string name="dst_in_24h_warning">Zmiana na czas letni w ciągu 24 godzin lub krócej</string>
+    <string name="dst_in_24h_warning">Zmiana czasu w 24h lub mniej</string>
     <string name="dst_loop_disabled_warning">Zmiana czasu nastąpiła mniej niż 3 godziny temu - Zamknięta pętla wyłączona</string>
     <string name="storage">limit wielkości pamięci wewnętrznej</string>
     <string name="diskfull">Zwolnij co najmniej %1$d MB z pamięci wewnętrznej! Pętla zatrzymana!</string>
@@ -1237,6 +1237,8 @@
     <string name="medtronic_pump_battery_no">Nie wybrany (widok prosty)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaliczne (widok rozszerzony)</string>
     <string name="medtronic_pump_battery_lithium">Litowe (widok rozszerzony)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (widok rozszerzony)</string>
+    <string name="medtronic_bolus_debugging">Bolus/Leczenie - debugowanie</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SKANUJ</string>
     <string name="rileylink_scanner_scan_stop">ZATRZYMAJ</string>
@@ -1374,4 +1376,6 @@
     <string name="boluswizard">Kalkulator bolusa</string>
     <string name="unit_minute_short">min</string>
     <string name="format_carbs">%1$dg</string>
+    <string name="common_on">Włącz</string>
+    <string name="common_off">Wyłącz</string>
 </resources>

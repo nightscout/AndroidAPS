@@ -1140,8 +1140,6 @@
     <string name="tidepool_upload_tbr">임시 Basal 업로드</string>
     <string name="tidepool_upload_profile">프로파일변경, 임시목표 업로드</string>
     <string name="tidepool_upload_bg">혈당 테스트 업로드</string>
-    <string name="dst_in_24h_warning">24시간 이내 썸머타임 변경</string>
-    <string name="dst_loop_disabled_warning">썸머타임 변경이 3시간 미만입니다 - Closed Loop 비활성됨</string>
     <string name="storage">내부 저장 용량 제한</string>
     <string name="diskfull">내부 저장 공간을 최소 %1$d MB 이상 비우세요! Loop가 비활성화되었습니다!</string>
     <string name="wrongformat">잘못된 형식</string>

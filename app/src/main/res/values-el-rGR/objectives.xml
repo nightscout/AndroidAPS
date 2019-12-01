@@ -36,7 +36,6 @@
     <string name="objectives_useloop">Εμφάνιση περιεχομένου της προσθήκης Κύκλωμα</string>
     <string name="objectives_usescale">Χρησιμοποιήστε τη λειτουργία κλίμακας πατώντας παρατεταμένα το διάγραμμα BG</string>
     <string name="objectives_button_enter">Εισαγωγή</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Εισαγάγετε τον κωδικό που λαμβάνετε από τους προγραμματιστές για να παρακάμψετε τους υπόλοιπους στόχους</string>
     <string name="codeaccepted">Κωδικός αποδεκτός</string>
     <string name="codeinvalid">Μη έγκυρος κωδικός</string>
     <string name="objectives_exam_objective">Αποδείξτε τις γνώσεις σας</string>

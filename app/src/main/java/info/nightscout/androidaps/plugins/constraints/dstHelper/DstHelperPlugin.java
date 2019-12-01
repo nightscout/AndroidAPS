@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 
 public class DstHelperPlugin extends PluginBase implements ConstraintsInterface {
     public static final int DISABLE_TIMEFRAME_HOURS = -3;
-    public static final int WARN_PRIOR_TIMEFRAME_HOURS = 24;
+    public static final int WARN_PRIOR_TIMEFRAME_HOURS = 12;
     private static Logger log = LoggerFactory.getLogger(L.CONSTRAINTS);
 
     static DstHelperPlugin plugin = null;

@@ -1223,7 +1223,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 extendedBolusView.setVisibility(View.VISIBLE);
         }
 
-        activeProfileView.setText(ProfileFunctions.getInstance().getProfileName());
+        activeProfileView.setText(ProfileFunctions.getInstance().getProfileNameWithDuration());
         if (profile.getPercentage() != 100 || profile.getTimeshift() != 0) {
             activeProfileView.setBackgroundColor(MainApp.gc(R.color.ribbonWarning));
             activeProfileView.setTextColor(MainApp.gc(R.color.ribbonTextWarning));

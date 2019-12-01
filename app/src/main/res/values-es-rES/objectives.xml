@@ -36,7 +36,6 @@
     <string name="objectives_useloop">Mostrar contenido del plugin Loop</string>
     <string name="objectives_usescale">Usar función de escala mediante un gráfico BG pulsado largo</string>
     <string name="objectives_button_enter">Intro</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Introduzca el código obtenido de los desarrolladores para eludir el resto de objetivos</string>
     <string name="codeaccepted">Código aceptado</string>
     <string name="codeinvalid">Código no válido</string>
     <string name="objectives_exam_objective">Compruebe su conocimiento</string>

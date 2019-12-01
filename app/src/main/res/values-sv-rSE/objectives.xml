@@ -36,7 +36,6 @@
     <string name="objectives_useloop">Visa innehållet i insticksprogrammet \"Loop\"</string>
     <string name="objectives_usescale">Testa skala om BG-grafen genom att trycka och hålla in fingret på den</string>
     <string name="objectives_button_enter">Enter</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Ange kod som erhållits från utvecklare för att kringgå resten av målen</string>
     <string name="codeaccepted">Koden godkänd</string>
     <string name="codeinvalid">Koden är felaktig</string>
     <string name="objectives_exam_objective">Bevisa dina kunskaper</string>

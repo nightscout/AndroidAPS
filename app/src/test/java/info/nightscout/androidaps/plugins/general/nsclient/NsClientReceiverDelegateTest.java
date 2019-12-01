@@ -33,9 +33,7 @@ public class NsClientReceiverDelegateTest {
         AAPSMocker.mockMainApp();
         AAPSMocker.mockApplicationContext();
 
-        Context context = MainApp.instance().getApplicationContext();
-
-        sut = new NsClientReceiverDelegate(context);
+        sut = new NsClientReceiverDelegate();
     }
 
     @Test

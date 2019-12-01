@@ -680,6 +680,7 @@
     <string name="shortgramm">g</string>
     <string name="shortminute">m</string>
     <string name="shorthour">h</string>
+    <string name="shortday">d</string>
     <string name="none"><![CDATA[<nenhum>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
@@ -708,6 +709,7 @@
     <string name="bgsource_upload">Configurações de upload de BG</string>
     <string name="wear_detailed_delta_title">Mostrar Delta detalho</string>
     <string name="wear_detailed_delta_summary">Mostrar delta com mais um ponto decimal</string>
+    <string name="smbmaxminutes">SMB máx. minutos</string>
     <string name="smbmaxminutes_summary">Limite de minutos de basal para SMB</string>
     <string name="unsupportedfirmware">Firmware bomba não suportado</string>
     <string name="dexcomg5_xdripupload_title">Enviar dados Glic. para xDrip+</string>

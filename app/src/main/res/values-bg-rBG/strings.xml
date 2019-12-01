@@ -98,6 +98,7 @@
     <string name="openapsma_profile_label">Профил</string>
     <string name="openapsma_mealdata_label">Данни за хранене</string>
     <string name="result">Резултат</string>
+    <string name="result_insulin_carbs">Резултат: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Няма данни за КЗ</string>
     <string name="nochangerequested">Не се изисква промяна</string>
     <string name="openapsma_request_label">Искане</string>
@@ -215,6 +216,7 @@
     <string name="overview_tempbasal_button">Временен базал</string>
     <string name="overview_extendedbolus_button">Удължен болус</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout версия:</string>
+    <string name="missing_carbs">Нужни %1$dг</string>
     <string name="exported">Настройките са експортирани</string>
     <string name="export_to">Експортирай настройките в </string>
     <string name="import_from">Импорт на настройки от</string>
@@ -258,11 +260,23 @@
     <string name="smscommunicator_allowednumbers">Разрешени телефонни номера</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode">За да доставите болус от %1$.2fЕ отговорете с код %2$s</string>
+    <string name="smscommunicator_mealbolusreplywithcode">За да стартирате болус от %1$.2fЕ отговорете с код %2$s</string>
+    <string name="smscommunicator_temptargetwithcode">Зa zадаване на временна цел %1$s отговорете с код %2$s</string>
+    <string name="smscommunicator_temptargetcancel">За да спрете временната цел отговорете с код %1$s</string>
+    <string name="smscommunicator_stopsmswithcode">За да изключите услугата за отдалечен SMS контрол отговорете с код %1$s.\n\nИмайте предвид, че можете да го активирате само от AAPS смартфона.</string>
+    <string name="smscommunicator_stoppedsms">Отдалечен SMS контрол е изключен. Можете да го включите от AndroidAPS телефона.</string>
     <string name="smscommunicator_calibrationreplywithcode">За да изпратите калибрация %1$.2f отговорете с код %2$s</string>
     <string name="smscommunicator_bolusfailed">Болус отказан</string>
+    <string name="smscommunicator_remotebolusmindistance_summary">Минимален брой минути, в които трябва да мине между един отдалечен болус и следващия</string>
+    <string name="smscommunicator_remotebolusmindistance">Колко най-малко минути трябва да минат два болуса</string>
+    <string name="smscommunicator_remotebolusmindistance_caveat">За вашата сигурност, променете тази настройка, трябва да добавите най-малко 2 телефонни номера.</string>
     <string name="bolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
     <string name="bolusrequested">Ще стартира %1$.2fЕ болус</string>
     <string name="smscommunicator_bolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
+    <string name="smscommunicator_mealbolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
+    <string name="smscommunicator_mealbolusdelivered_tt">Временна цел от %1$s за %2$d минути</string>
+    <string name="smscommunicator_tt_set">Временна цел от %1$s за %2$d минути стартирана успешно</string>
+    <string name="smscommunicator_tt_canceled">Временна цел успешно спряна</string>
     <string name="bolusdelivering">Стартирам %1$.2fЕ</string>
     <string name="smscommunicator_remotecommandsallowed">Позволи отдалечени команди чрез SMS</string>
     <string name="glucosetype_finger">Пръст</string>
@@ -322,10 +336,13 @@
     <string name="smscommunicator_basalreplywithcode">За да стартирате базал от %1$.2fЕ/ч за %2$d мин отговорете с код %3$s</string>
     <string name="smscommunicator_profilereplywithcode">За да превключите профила към %1$s %2$d%% отговорете с код %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">За да започнете удължен болус %1$.2fЕ за %2$d мин отговорете с код %3$s</string>
+    <string name="smscommunicator_carbsreplywithcode">За да въведете %1$dг в %2$s отговорете с код %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">За да стартирате базал от %1$d%Е/ч за %2$d мин отговорете с код %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">За да спрете APS за %1$d минути отговорете с код %2$s</string>
     <string name="smscommunicator_tempbasalset">Временен базал от %1$.2fЕ/ч за %2$d мин стартиран успешно</string>
     <string name="smscommunicator_extendedset">Удължен болус %1$.2fU за %2$d мин стартиран успешно</string>
+    <string name="smscommunicator_carbsset">Въглехидрати %1$dг въведени</string>
+    <string name="smscommunicator_carbsfailed">Въвеждане на%1$dг въглехидрати - НЕУСПЕШНО</string>
     <string name="smscommunicator_tempbasalset_percent">Временен базал от %1$d%Е/ч за %2$d мин стартиран успешно</string>
     <string name="smscommunicator_tempbasalfailed">Неуспешно стартиране на временен базал</string>
     <string name="smscommunicator_extendedfailed">Неуспешно стартиране на удължен болус</string>
@@ -546,6 +563,8 @@
     <string name="show_statuslights_extended_summary">Показвай подробни статус светлини за канула, инсулин, сензор, резервоар и батерията на началния екран.</string>
     <string name="statuslights_res_warning">Ниво за аларма за останал инсулин в резервоара [Е]</string>
     <string name="statuslights_res_critical">Критично ниво на останал инсулин в резервоар [Е]</string>
+    <string name="statuslights_bat_warning">Аларма при заряд на батерия под [%]</string>
+    <string name="statuslights_bat_critical">Критично ниво на батерията под [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">СОВ</string>
     <string name="virtualpump_firmware_label">Фърмуер</string>
@@ -676,6 +695,7 @@
     <string name="shortgramm">гр.</string>
     <string name="shortminute">мин.</string>
     <string name="shorthour">ч.</string>
+    <string name="shortday">д</string>
     <string name="none"><![CDATA[<празно>]]></string>
     <string name="shortkilojoul">килодж.</string>
     <string name="shortenergy">Ен</string>
@@ -704,6 +724,7 @@
     <string name="bgsource_upload">Настройки при качване на КЗ към Nightscout</string>
     <string name="wear_detailed_delta_title">Показвай подробна делта</string>
     <string name="wear_detailed_delta_summary">Показвай делта с още един десетичен знак</string>
+    <string name="smbmaxminutes">Максимум минути СМБ</string>
     <string name="smbmaxminutes_summary">Максимални минути за ограничаване на базала от SMB</string>
     <string name="unsupportedfirmware">Неподдържан фърмуер на помпата</string>
     <string name="dexcomg5_xdripupload_title">Изпращай данни за КЗ към xDrip+</string>
@@ -1232,6 +1253,8 @@
     <string name="medtronic_pump_battery_no">Не е избрано (общ)</string>
     <string name="medtronic_pump_battery_alkaline">Алкални</string>
     <string name="medtronic_pump_battery_lithium">Литиева</string>
+    <string name="medtronic_pump_battery_nizn">NiZn батерия</string>
+    <string name="medtronic_bolus_debugging">Болус/Корекция подробно</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">СКАНИРАЙ</string>
     <string name="rileylink_scanner_scan_stop">СТОП</string>
@@ -1343,6 +1366,7 @@
     <string name="profilename">Смени профила на</string>
     <string name="changengetoprofilename">Смени профила на %1$s</string>
     <string name="automation_trigger_pump_last_connection_label">Последно свързване към помпа</string>
+    <string name="automation_trigger_pump_last_connection_description">Последнa връзкa с помпата [минути]</string>
     <string name="automation_trigger_pump_last_connection_compared">Последна връзка с помпата е %1$s %2$s минути преди</string>
     <string name="sendsmsactionlabel">Изпращане на SMS с текст %1$s</string>
     <string name="sendsmsactiondescription">Изпрати SMS до всички телефони от настройките</string>
@@ -1367,4 +1391,7 @@
     <string name="format_percent">%1$d %%</string>
     <string name="boluswizard">Болус калкулатор</string>
     <string name="unit_minute_short">мин</string>
+    <string name="format_carbs">%1$dг</string>
+    <string name="common_on">Вкл</string>
+    <string name="common_off">Изкл</string>
 </resources>

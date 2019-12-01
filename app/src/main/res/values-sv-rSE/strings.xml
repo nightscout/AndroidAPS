@@ -6,7 +6,7 @@
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
     <string name="treatmentssafety_title">Säkerhetsbegränsningar för behandlingar</string>
-    <string name="treatmentssafety_maxbolus_title">Max tillåten bolus [E]</string>
+    <string name="treatmentssafety_maxbolus_title">Max tillåten bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max tillåtna KH [g]</string>
     <string name="nav_preferences">Inställningar</string>
     <string name="nav_refreshtreatments">Uppdatera behandlingar från Nightscout</string>
@@ -23,8 +23,8 @@
     <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
     <string name="description_objectives">Inlärningsprogram</string>
     <string name="description_food">Visar förutbestämda inställningar för mat i Nightscout</string>
-    <string name="description_insulin_rapid">Insulininställning för Humalog, Apidra och Novorapid/Novolog</string>
-    <string name="description_insulin_ultra_rapid">Insulininställning för Fiasp</string>
+    <string name="description_insulin_rapid">Insulininställning för vanliga direktverkande insuliner som Humalog, Lispro, Apidra och Novorapid/Novolog</string>
+    <string name="description_insulin_ultra_rapid">Insulininställning för ultrasnabba insuliner, t ex Fiasp</string>
     <string name="description_insulin_free_peak">Låter dig ställa in tidpunkten för toppen på insulinets aktivitet. Bör bara användas av avancerade användare</string>
     <string name="description_loop">Aktivera eller avaktivera implementationen som kör loopen.</string>
     <string name="description_ns_client">Synkroniserar dina data med Nightscout</string>
@@ -54,7 +54,7 @@ Eversense-appen.</string>
     <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
     <string name="description_source_xdrip">Ta emot BG-data från xDrip</string>
     <string name="description_treatments">Spara alla behandlingar som gjorts</string>
-    <string name="description_wear">Följ och kontrollera din AndroidAPS med din WearOS-klocka</string>
+    <string name="description_wear">Följ och kontrollera AndroidAPS med din Wear OS-klocka</string>
     <string name="description_xdrip_status_line">Visa AAPS-information på din xDrip-urtavla</string>
     <string name="description_sms_communicator">Fjärrstyr AndroidAPS med SMS-kommandon.</string>
     <string name="nsprofileview_units_label">Enheter</string>
@@ -80,8 +80,8 @@ Eversense-appen.</string>
     <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">KH</string>
-    <string name="treatments_wizard_correction_label">Korr</string>
-    <string name="insulin_unit_shortname">E</string>
+    <string name="treatments_wizard_correction_label">Korrektion</string>
+    <string name="insulin_unit_shortname">U</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
     <string name="openapsma_run">Utför nu</string>
     <string name="vitualpump_label">Virtuell pump</string>
@@ -192,7 +192,7 @@ Eversense-appen.</string>
     <string name="careportal_snackbolus">Mellanmålsbolus</string>
     <string name="careportal_mealbolus">Måltidsbolus</string>
     <string name="careportal_correctionbolus">Korrektionsbolus</string>
-    <string name="careportal_combobolus">Kombinationsbolus</string>
+    <string name="careportal_combobolus">Kombi-bolus</string>
     <string name="careportal_tempbasalstart">Temp basal start</string>
     <string name="careportal_tempbasalend">Temp basal slut</string>
     <string name="careportal_carbscorrection">KH-korrektion</string>
@@ -544,8 +544,8 @@ Eversense-appen.</string>
     <string name="insulin_shortname">INS</string>
     <string name="enablesuperbolus">Aktivera superbolus i kalkylatorn</string>
     <string name="enablesuperbolus_summary">Aktiverar superbolusfunktionen i kalkylatorn. Aktivera inte innan du förstått hur den fungerar. DEN KAN ORSAKA ÖVERDOSERING AV INSULIN OM INSIKT SAKNAS OM FUNKTIONEN!</string>
-    <string name="show_statuslights">Visa statusindikationer på hemskärmen</string>
-    <string name="show_statuslights_extended">Visa statusindikatorer på hemskärmen</string>
+    <string name="show_statuslights">Visa \"statuslampor\" på hemskärmen</string>
+    <string name="show_statuslights_extended">Visa utökade statusindikatorer</string>
     <string name="show_statuslights_extended_summary">Aktivera statusindikatorerna för cage, iage, sage, reservoar och batterinivå på hemskärmen.</string>
     <string name="statuslights_res_warning">Varningsnivå för reservoar [U]</string>
     <string name="statuslights_res_critical">Akut varningsnivå för reservoar [U]</string>
@@ -709,6 +709,7 @@ Eversense-appen.</string>
     <string name="bgsource_upload">Uppladdningsinställningar för BG</string>
     <string name="wear_detailed_delta_title">Visa detaljerad delta</string>
     <string name="wear_detailed_delta_summary">Visa delta med en extra decimal</string>
+    <string name="smbmaxminutes">SMB max minuter</string>
     <string name="smbmaxminutes_summary">Max antal minuter som kan bli SMB</string>
     <string name="unsupportedfirmware">Pumpens firmware stöds inte</string>
     <string name="dexcomg5_xdripupload_title">Skicka BG-data till xDrip+</string>
@@ -1057,7 +1058,7 @@ Eversense-appen.</string>
     <string name="stopped">Stoppade</string>
     <string name="tbr_formatter">%1$d%% i %2$d / %3$d min</string>
     <string name="extended_bolus">Förlängd bolus</string>
-    <string name="multiwave_bolus">Kombinationsbolus</string>
+    <string name="multiwave_bolus">Kombi-bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U i %3$d min</string>
     <string name="enable_tbr_over_notification">Aktivera meddelanden om avslutade tempbasaler\n(pumpinställning)</string>
     <string name="disable_tbr_over_notification">Inaktivera meddelanden om avslutade tempbasaler\n(pumpinställning)</string>
@@ -1193,8 +1194,8 @@ Eversense-appen.</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
-    <string name="deltalabel">Skillnad</string>
-    <string name="deltalabel_u">BG-skillnad [%1$s]</string>
+    <string name="deltalabel">BG-förändring</string>
+    <string name="deltalabel_u">BG-förändring [%1$s]</string>
     <string name="currentlocation">Nuvarande plats</string>
     <string name="location">Plats</string>
     <string name="latitude_short">Lat:</string>
@@ -1237,6 +1238,8 @@ Eversense-appen.</string>
     <string name="medtronic_pump_battery_no">Ej vald</string>
     <string name="medtronic_pump_battery_alkaline">Alkaliskt</string>
     <string name="medtronic_pump_battery_lithium">Litium</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (utökad vy)</string>
+    <string name="medtronic_bolus_debugging">Avlusning av Bolus/Behandlingar</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SÖK</string>
     <string name="rileylink_scanner_scan_stop">AVBRYT</string>
@@ -1374,4 +1377,6 @@ Eversense-appen.</string>
     <string name="boluswizard">Kalkylator</string>
     <string name="unit_minute_short">min</string>
     <string name="format_carbs">%1$dg</string>
+    <string name="common_on">På</string>
+    <string name="common_off">Av</string>
 </resources>
