@@ -261,11 +261,23 @@ Eversense-appen.</string>
     <string name="smscommunicator_allowednumbers">Godkända telefonnummer</string>
     <string name="smscommunicator_allowednumbers_summary">+4670XXXXXXX; +4670YYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode">För att ge bolus %1$.2f enheter, svara med kod %2$s</string>
+    <string name="smscommunicator_mealbolusreplywithcode">För att ge bolus %1$.2f enheter, svara med kod: %2$s</string>
+    <string name="smscommunicator_temptargetwithcode">För att sätta ett temporärt mål på %1$s, svara med kod: %2$s</string>
+    <string name="smscommunicator_temptargetcancel">För att avbryta temporärt mål, svara med kod: %1$s</string>
+    <string name="smscommunicator_stopsmswithcode">För att avaktivera fjärrkommandon via SMS, svara med kod: %1$s \n\nTänk på att måste ha tillgång till huvudtelefonen för att kunna återaktivera.</string>
+    <string name="smscommunicator_stoppedsms">Fjärrkommandon via SMS stoppas. För att återaktivera detta, använd Konfigurationsverktyget på huvudtelefonen.</string>
     <string name="smscommunicator_calibrationreplywithcode">För att skicka kalibrering %1$.2f, svara med kod %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus misslyckades</string>
+    <string name="smscommunicator_remotebolusmindistance_summary">Minsta antal minuter som måste förflyta mellan en fjärrbolus och nästa</string>
+    <string name="smscommunicator_remotebolusmindistance">Minsta antal minuter mellan fjärrbolus</string>
+    <string name="smscommunicator_remotebolusmindistance_caveat">För att redigera den här inställningen måste du, för din säkerhet, lägga till minst 2 telefonnummer.</string>
     <string name="bolusdelivered">Bolus %1$.2f enheter levererat</string>
     <string name="bolusrequested">Kommer att leverera %1$.2f enheter</string>
     <string name="smscommunicator_bolusdelivered">Bolus %1$.2f enheter levererat</string>
+    <string name="smscommunicator_mealbolusdelivered">Bolus på %1$.2f enheter levererat</string>
+    <string name="smscommunicator_mealbolusdelivered_tt">Temporärt mål på %1$s är satt i %2$d minuter</string>
+    <string name="smscommunicator_tt_set">Temporärt mål på %1$s är satt i %2$d minuter</string>
+    <string name="smscommunicator_tt_canceled">Temporärt mål avbrutet</string>
     <string name="bolusdelivering">Levererar %1$.2f enheter</string>
     <string name="smscommunicator_remotecommandsallowed">Tillåt fjärrstyrning via SMS</string>
     <string name="glucosetype_finger">Finger</string>
@@ -325,10 +337,13 @@ Eversense-appen.</string>
     <string name="smscommunicator_basalreplywithcode">För att starta temp basal %1$.2f enheter/tim i %2$d min, svara med kod %3$s</string>
     <string name="smscommunicator_profilereplywithcode">För att byta till profil %1$s %2$d%% svara med kod %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">För att starta förlängd bolus med %1$.2f enheter över %2$d min, svara med kod %3$s</string>
+    <string name="smscommunicator_carbsreplywithcode">Om du vill ange %1$dg kl. %2$s, svara med kod %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">För att starta temp basal %1$d%% i %2$d min, svara med kod %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">För att pausa loop i %1$d minuter, svara med kod %2$s</string>
     <string name="smscommunicator_tempbasalset">Temp basal %1$.2f enheter/tim i %2$d min startad</string>
     <string name="smscommunicator_extendedset">Förlängd bolus %1$.2f enheter över %2$d min har startats</string>
+    <string name="smscommunicator_carbsset">%1$dg kolhydrater registrerat</string>
+    <string name="smscommunicator_carbsfailed">Misslyckades med att registrera %1$dg kolhydrater</string>
     <string name="smscommunicator_tempbasalset_percent">Temp basal %1$d%% enheter/tim i %2$d min startad</string>
     <string name="smscommunicator_tempbasalfailed">Fel vid start av temp basal</string>
     <string name="smscommunicator_extendedfailed">Lyckades inte starta förlängd bolus</string>
@@ -681,6 +696,7 @@ Eversense-appen.</string>
     <string name="shortgramm">g</string>
     <string name="shortminute">min</string>
     <string name="shorthour">h</string>
+    <string name="shortday">d</string>
     <string name="none"><![CDATA[<ingen>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
@@ -1379,4 +1395,8 @@ Eversense-appen.</string>
     <string name="format_carbs">%1$dg</string>
     <string name="common_on">På</string>
     <string name="common_off">Av</string>
+    <string name="objectives_button_unfinish">Rensa avslutade</string>
+    <string name="objectives_button_unstart">Rensa påbörjade</string>
+    <string name="timedetection">Tidsdetektering</string>
+    <string name="doyouwantresetstart">Vill du starta om målet? Du kan förlora de steg du gjort hittills.</string>
 </resources>

@@ -1394,4 +1394,8 @@
     <string name="format_carbs">%1$dg</string>
     <string name="common_on">ZAP</string>
     <string name="common_off">VYP</string>
+    <string name="objectives_button_unfinish">Vymazat dokončeno</string>
+    <string name="objectives_button_unstart">Vymazat start</string>
+    <string name="timedetection">Detekce času</string>
+    <string name="doyouwantresetstart">Chcete resetovat začátek cíle? Můžete přijít o svůj pokrok.</string>
 </resources>

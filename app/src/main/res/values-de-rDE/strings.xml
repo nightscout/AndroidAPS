@@ -1395,4 +1395,8 @@ Unerwartetes Verhalten.</string>
     <string name="format_carbs">%1$dg</string>
     <string name="common_on">Ein</string>
     <string name="common_off">Aus</string>
+    <string name="objectives_button_unfinish">Löschen abgeschlossen</string>
+    <string name="objectives_button_unstart">Löschen gestartet</string>
+    <string name="timedetection">Zeiterkennung</string>
+    <string name="doyouwantresetstart">Möchtest Du den Start der Ziele zurücksetzen? Du verlierst Deine Fortschritte.</string>
 </resources>
