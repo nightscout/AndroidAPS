@@ -65,7 +65,7 @@ class WizardInfoDialog : DialogFragment() {
         treatments_wizard_sbcheckbox.isChecked = JsonHelper.safeGetBoolean(json, "superbolusused")
         // Carbs
         //treatments_wizard_carbs.text = DecimalFormatter.to0Decimal(JsonHelper.safeGetDouble(json, "carbs")) + "g IC: " + DecimalFormatter.to1Decimal(JsonHelper.safeGetDouble(json, "ic"))
-        treatments_wizard_carbs.text = String.format(MainApp.gs(R.string.format_cob_ic), JsonHelper.safeGetDouble(json, "carbs"), JsonHelper.safeGetDouble(json, "ic"))
+        treatments_wizard_carbs.text = String.format(MainApp.gs(R.string.format_carbs_ic), JsonHelper.safeGetDouble(json, "carbs"), JsonHelper.safeGetDouble(json, "ic"))
         //treatments_wizard_carbsinsulin.text = DecimalFormatter.to2Decimal(JsonHelper.safeGetDouble(json, "insulincarbs")) + "U"
         treatments_wizard_carbsinsulin.text = StringUtils.formatInsulin(JsonHelper.safeGetDouble(json, "insulincarbs"))
         // Correction
