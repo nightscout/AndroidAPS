@@ -71,7 +71,7 @@ public class OmnipodManager {
 
     // After priming should have been finished, the pod state is verified.
     // The result of that verification is passed to the SetupActionResultHandler
-    public void pairAndPrime(SetupActionResultHandler resultHandler) {
+    public synchronized void pairAndPrime(SetupActionResultHandler resultHandler) {
         if (podState == null) {
             podState = communicationService.executeAction(
                     new PairAction(new PairService(), podStateChangedHandler));
@@ -89,7 +89,7 @@ public class OmnipodManager {
 
     // After inserting the cannula should have been finished, the pod state is verified.
     // The result of that verification is passed to the SetupActionResultHandler
-    public void insertCannula(BasalSchedule basalSchedule, SetupActionResultHandler resultHandler) {
+    public synchronized void insertCannula(BasalSchedule basalSchedule, SetupActionResultHandler resultHandler) {
         if (podState == null || podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
             throw new IllegalSetupProgressException(SetupProgress.PRIMING_FINISHED, podState == null ? null : podState.getSetupProgress());
         } else if (podState.getSetupProgress().isAfter(SetupProgress.CANNULA_INSERTING)) {
@@ -103,7 +103,7 @@ public class OmnipodManager {
                 calculateBolusDuration(OmnipodConst.POD_CANNULA_INSERTION_BOLUS_UNITS, OmnipodConst.POD_CANNULA_INSERTION_DELIVERY_RATE));
     }
 
-    public StatusResponse getPodStatus() {
+    public synchronized StatusResponse getPodStatus() {
         if (podState == null) {
             throw new IllegalSetupProgressException(SetupProgress.PRIMING_FINISHED, null);
         }
@@ -111,26 +111,26 @@ public class OmnipodManager {
         return communicationService.executeAction(new GetStatusAction(podState));
     }
 
-    public PodInfoResponse getPodInfo(PodInfoType podInfoType) {
+    public synchronized PodInfoResponse getPodInfo(PodInfoType podInfoType) {
         assertReadyForDelivery();
 
         return communicationService.executeAction(new GetPodInfoAction(podState, podInfoType));
     }
 
-    public void acknowledgeAlerts() {
+    public synchronized void acknowledgeAlerts() {
         assertReadyForDelivery();
 
         communicationService.executeAction(new AcknowledgeAlertsAction(podState, podState.getActiveAlerts()));
     }
 
-    public void setBasalSchedule(BasalSchedule schedule) {
+    public synchronized void setBasalSchedule(BasalSchedule schedule) {
         assertReadyForDelivery();
 
         communicationService.executeAction(new SetBasalScheduleAction(podState, schedule,
                 false, podState.getScheduleOffset(), true));
     }
 
-    public void setTemporaryBasal(TempBasalPair tempBasalPair) {
+    public synchronized void setTemporaryBasal(TempBasalPair tempBasalPair) {
         assertReadyForDelivery();
 
         communicationService.executeAction(new SetTempBasalAction(new SetTempBasalService(),
@@ -138,13 +138,13 @@ public class OmnipodManager {
                 true, true));
     }
 
-    public void cancelTemporaryBasal() {
+    public synchronized void cancelTemporaryBasal() {
         assertReadyForDelivery();
 
         communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.TEMP_BASAL, true));
     }
 
-    public void bolus(Double units, StatusResponseHandler bolusCompletionHandler) {
+    public synchronized void bolus(Double units, StatusResponseHandler bolusCompletionHandler) {
         assertReadyForDelivery();
 
         try {
@@ -191,18 +191,18 @@ public class OmnipodManager {
         }
     }
 
-    public void cancelBolus() {
+    public synchronized void cancelBolus() {
         assertReadyForDelivery();
         communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.BOLUS, true));
     }
 
-    public void suspendDelivery() {
+    public synchronized void suspendDelivery() {
         assertReadyForDelivery();
 
         communicationService.executeAction(new CancelDeliveryAction(podState, EnumSet.allOf(DeliveryType.class), true));
     }
 
-    public void resumeDelivery() {
+    public synchronized void resumeDelivery() {
         assertReadyForDelivery();
 
         communicationService.executeAction(new SetBasalScheduleAction(podState, podState.getBasalSchedule(),
@@ -210,7 +210,7 @@ public class OmnipodManager {
     }
 
     // If this command fails, it it possible that delivery has been suspended
-    public void setTime() {
+    public synchronized void setTime() {
         assertReadyForDelivery();
 
         // Suspend delivery
@@ -225,7 +225,7 @@ public class OmnipodManager {
                 true, podState.getScheduleOffset(), true));
     }
 
-    public void deactivatePod() {
+    public synchronized void deactivatePod() {
         if (podState == null) {
             throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, null);
         }
@@ -234,7 +234,7 @@ public class OmnipodManager {
         resetPodState();
     }
 
-    public void resetPodState() {
+    public synchronized void resetPodState() {
         podState = null;
         SP.remove(OmnipodConst.Prefs.PodState);
     }
