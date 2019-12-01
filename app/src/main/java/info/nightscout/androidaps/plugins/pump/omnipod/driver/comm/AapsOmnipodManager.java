@@ -13,7 +13,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
@@ -29,7 +28,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedu
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodDbEntryType;
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommandInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommunicationException;
@@ -119,7 +117,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, true, null);
 
         OmnipodUtil.setPodSessionState(null);
-        RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
 
         return new PumpEnactResult().success(true).enacted(true);
     }
@@ -143,7 +140,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         //addToHistory(System.currentTimeMillis(), PodDbEntryType.ResetPodState, null, null, null, null);
 
         OmnipodUtil.setPodSessionState(null);
-        RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
 
         return new PumpEnactResult().success(true).enacted(true);
     }

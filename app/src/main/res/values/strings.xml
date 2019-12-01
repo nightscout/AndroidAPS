@@ -1648,7 +1648,7 @@
     <!-- Omnipod - Fragment -->
     <string name="omnipod_pod_mgmt">Pod Mgmt</string>
     <string name="omnipod_pod_status">Pod Status</string>
-    <string name="omnipod_reservoir_left">%1$d U left</string>
+    <string name="omnipod_reservoir_left">%1$.2f U left</string>
     <string name="omnipod_reservoir_over50">Over 50 U</string>
     <string name="omnipod_pod_address">Pod Address</string>
     <string name="omnipod_pod_expiry">Pod Expires</string>
