@@ -5,6 +5,8 @@ import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -50,6 +52,7 @@ public class OmnipodPumpStatus extends PumpStatus {
     public PodDeviceState podDeviceState = PodDeviceState.NeverContacted;
     public boolean podAvailable = false;
     public boolean ackAlertsAvailable = false;
+    public String ackAlertsText = null;
 
 
     public OmnipodPumpStatus(PumpDescription pumpDescription) {
@@ -161,5 +164,54 @@ public class OmnipodPumpStatus extends PumpStatus {
         tbr.setEndTime(tempBasalEnd);
 
         return tbr;
+    }
+
+    @Override
+    public String toString() {
+        return "OmnipodPumpStatus{" +
+                "errorDescription='" + errorDescription + '\'' +
+                ", rileyLinkAddress='" + rileyLinkAddress + '\'' +
+                ", inPreInit=" + inPreInit +
+                ", rileyLinkServiceState=" + rileyLinkServiceState +
+                ", rileyLinkError=" + rileyLinkError +
+                ", currentBasal=" + currentBasal +
+                ", tempBasalStart=" + tempBasalStart +
+                ", tempBasalEnd=" + tempBasalEnd +
+                ", tempBasalAmount=" + tempBasalAmount +
+                ", tempBasalLength=" + tempBasalLength +
+                ", podSessionState=" + podSessionState +
+                ", rileyLinkAddressChanged=" + rileyLinkAddressChanged +
+                ", regexMac='" + regexMac + '\'' +
+                ", podNumber='" + podNumber + '\'' +
+                ", podDeviceState=" + podDeviceState +
+                ", podAvailable=" + podAvailable +
+                ", ackAlertsAvailable=" + ackAlertsAvailable +
+                ", ackAlertsText='" + ackAlertsText + '\'' +
+                ", lastDataTime=" + lastDataTime +
+                ", lastConnection=" + lastConnection +
+                ", previousConnection=" + previousConnection +
+                ", lastBolusTime=" + lastBolusTime +
+                ", lastBolusAmount=" + lastBolusAmount +
+                ", activeProfileName='" + activeProfileName + '\'' +
+                ", reservoirRemainingUnits=" + reservoirRemainingUnits +
+                ", reservoirFullUnits=" + reservoirFullUnits +
+                ", batteryRemaining=" + batteryRemaining +
+                ", batteryVoltage=" + batteryVoltage +
+                ", iob='" + iob + '\'' +
+                ", dailyTotalUnits=" + dailyTotalUnits +
+                ", maxDailyTotalUnits='" + maxDailyTotalUnits + '\'' +
+                ", validBasalRateProfileSelectedOnPump=" + validBasalRateProfileSelectedOnPump +
+                ", pumpType=" + pumpType +
+                ", profileStore=" + profileStore +
+                ", units='" + units + '\'' +
+                ", pumpStatusType=" + pumpStatusType +
+                ", basalsByHour=" + Arrays.toString(basalsByHour) +
+                ", currentBasal=" + currentBasal +
+                ", tempBasalInProgress=" + tempBasalInProgress +
+                ", tempBasalRatio=" + tempBasalRatio +
+                ", tempBasalRemainMin=" + tempBasalRemainMin +
+                ", tempBasalStart=" + tempBasalStart +
+                ", pumpDescription=" + pumpDescription +
+                "} " ;
     }
 }

@@ -20,12 +20,12 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodAcknowledgeAlertsChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory
 
 
 class OmnipodFragment : Fragment() {
-    private val log = LoggerFactory.getLogger(L.PUMP)
+    private val LOG = LoggerFactory.getLogger(L.PUMP)
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var podAvailable = false
 
@@ -128,14 +128,20 @@ class OmnipodFragment : Fragment() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     if (L.isEnabled(L.PUMP))
-                        log.info("onStatusEvent(EventOmnipodDeviceStatusChange): {}", it)
+                        LOG.info("onStatusEvent(EventOmnipodDeviceStatusChange): {}", it)
                     setDeviceStatus()
                 }, { FabricPrivacy.logException(it) })
         disposable += RxBus
                 .toObservable(EventOmnipodPumpValuesChanged::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+        disposable += RxBus
+                .toObservable(EventOmnipodAcknowledgeAlertsChanged::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ updateAcknowledgeAlerts(OmnipodUtil.getPumpStatus()) }, { FabricPrivacy.logException(it) })
     }
+
+
 
 
     override fun onPause() {
@@ -169,6 +175,8 @@ class OmnipodFragment : Fragment() {
         val pumpStatus: OmnipodPumpStatus = OmnipodUtil.getPumpStatus()
         pumpStatus.rileyLinkServiceState = checkStatusSet(pumpStatus.rileyLinkServiceState,
                 RileyLinkUtil.getServiceState()) as RileyLinkServiceState?
+
+        LOG.info("setDeviceStatus: [pumpStatus={}]", pumpStatus)
 
         val resourceId = pumpStatus.rileyLinkServiceState.getResourceId(RileyLinkTargetDevice.Omnipod)
         val rileyLinkError = RileyLinkUtil.getError()
@@ -239,7 +247,7 @@ class OmnipodFragment : Fragment() {
 //                    }
 //                }
                 }
-                else -> log.warn("Unknown pump state: " + pumpStatus.podDeviceState)
+                else -> LOG.warn("Unknown pump state: " + pumpStatus.podDeviceState)
             }
 
 
@@ -384,9 +392,19 @@ class OmnipodFragment : Fragment() {
 
         omnipod_errors.text = pumpStatus.errorInfo
 
-        omnipod_pod_active_alerts_ack.isEnabled = pumpStatus.ackAlertsAvailable
+        updateAcknowledgeAlerts(pumpStatus)
 
         omnipod_refresh.isEnabled = pumpStatus.podAvailable
 
     }
+
+
+    private fun updateAcknowledgeAlerts(pumpStatus: OmnipodPumpStatus) {
+        if (pumpStatus!=null) {
+            omnipod_pod_active_alerts_ack.isEnabled = pumpStatus.ackAlertsAvailable
+            omnipod_pod_active_alerts.text = pumpStatus.ackAlertsText
+        }
+    }
+
+
 }
