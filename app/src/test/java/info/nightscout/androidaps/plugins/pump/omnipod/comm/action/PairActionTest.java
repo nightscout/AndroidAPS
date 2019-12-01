@@ -65,7 +65,7 @@ public class PairActionTest {
                 .thenReturn(confirmPairingResponse);
 
         // SUT
-        PodSessionState podState = new PairAction(pairService, address).execute(communicationService);
+        PodSessionState podState = new PairAction(pairService, address, null).execute(communicationService);
 
         // Verify
         verify(pairService).executeAssignAddressCommand(any(), any());
