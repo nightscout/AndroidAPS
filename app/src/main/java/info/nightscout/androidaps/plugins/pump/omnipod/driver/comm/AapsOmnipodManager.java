@@ -60,7 +60,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     public AapsOmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState, OmnipodPumpStatus pumpStatus) {
-        delegate = new OmnipodManager(communicationService, podState, OmnipodUtil::setPodSessionState);
+        delegate = new OmnipodManager(communicationService, podState, podSessionState -> {
+            OmnipodUtil.setPodSessionState(podSessionState);
+            // TODO update active alerts (and other stuff(?)) in UI
+        });
         this.pumpStatus = pumpStatus;
         instance = this;
     }
