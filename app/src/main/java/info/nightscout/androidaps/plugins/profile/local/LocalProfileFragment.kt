@@ -192,7 +192,7 @@ class LocalProfileFragment : Fragment() {
             if (!LocalProfilePlugin.isValidEditState()) {
                 return@setOnClickListener  //Should not happen as saveButton should not be visible if not valid
             }
-            LocalProfilePlugin.storeSettings()
+            LocalProfilePlugin.storeSettings(activity)
             build()
         }
         updateGUI()

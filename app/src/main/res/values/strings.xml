@@ -1657,5 +1657,6 @@
     <string name="saveorresetchangesfirst">Save or reset current changes first</string>
     <string name="deletecurrentprofile">Delete current profile?</string>
     <string name="copytolocalprofile">Create new local profile from this profile switch?</string>
+    <string name="profilenamecontainsdot">Profile name contains dots.\nThis is not supported by NS.\nProfile is not uploaded to NS.</string>
 
 </resources>

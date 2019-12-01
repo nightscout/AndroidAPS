@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.profile.local
 
+import android.app.Activity
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -16,6 +17,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.OKDialog
 import info.nightscout.androidaps.utils.SP
 import org.json.JSONArray
 import org.json.JSONException
@@ -100,7 +102,7 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
     }
 
     @Synchronized
-    fun storeSettings() {
+    fun storeSettings(activity: Activity? = null) {
         for (i in 0 until numOfProfiles) {
             profiles[i].run {
                 val LOCAL_PROFILE_NUMBERED = LOCAL_PROFILE + "_" + i + "_"
@@ -121,7 +123,17 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
         if (L.isEnabled(L.PROFILE))
             log.debug("Storing settings: " + rawProfile?.data.toString())
         RxBus.send(EventProfileStoreChanged())
-        rawProfile?.let { NSUpload.uploadProfileStore(it.data) }
+        var namesOK = true
+        profiles.forEach {
+            val name = it.name ?: "."
+            if (name.contains(".")) namesOK = false
+        }
+        if (namesOK)
+            rawProfile?.let { NSUpload.uploadProfileStore(it.data) }
+        else
+            activity?.let {
+                OKDialog.show(it,"", MainApp.gs(R.string.profilenamecontainsdot), null)
+            }
     }
 
     @Synchronized
