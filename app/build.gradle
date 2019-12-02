@@ -251,7 +251,7 @@ dependencies {
     implementation "org.slf4j:slf4j-api:1.7.21"
     // Graphview cannot be upgraded
     implementation "com.jjoe64:graphview:4.0.1"
-    implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.1.1"
+    implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation(name: "android-edittext-validator-v1.3.4-mod", ext: "aar")
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
