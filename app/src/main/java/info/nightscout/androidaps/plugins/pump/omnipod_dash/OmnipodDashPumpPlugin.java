@@ -272,10 +272,11 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
         if (customActions == null) {
             this.customActions = Arrays.asList(
-                    customActionPairAndPrime, //
-                    customActionFillCanullaSetBasalProfile, //
-                    customActionDeactivatePod, //
-                    customActionResetPod);
+//                    customActionPairAndPrime, //
+//                    customActionFillCanullaSetBasalProfile, //
+//                    customActionDeactivatePod, //
+//                    customActionResetPod
+            );
         }
 
         return this.customActions;

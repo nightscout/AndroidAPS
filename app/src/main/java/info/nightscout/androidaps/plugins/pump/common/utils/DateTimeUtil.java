@@ -119,6 +119,14 @@ public class DateTimeUtil {
     }
 
 
+    public static long toATechDate(long timeInMillis) {
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTimeInMillis(timeInMillis);
+
+        return toATechDate(gc);
+    }
+
+
     public static boolean isSameDay(LocalDateTime ldt1, LocalDateTime ldt2) {
 
         return (ldt1.getYear() == ldt2.getYear() && //

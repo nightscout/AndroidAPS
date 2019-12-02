@@ -132,7 +132,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
                     for (int i = 0; i < 20; i++) {
 
-                        if (OmnipodUtil.getPumpStatus() != null) {
+                        if (pumpStatusLocal != null) {
                             if (isLoggingEnabled())
                                 LOG.debug("Starting OmniPod-RileyLink service");
                             if (OmnipodUtil.getPumpStatus().setNotInPreInit()) {
@@ -528,8 +528,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                         : OmnipodConst.Statistics.StandardBoluses);
 
                 // calculate time for bolus and set driver to busy for that time
+
                 // TODO fix this
-                int bolusTime = (int) (detailedBolusInfo.insulin * 42.0d);
+                int bolusTime = 1; //omnipodCommunicationManager.get;
                 long time = System.currentTimeMillis() + (bolusTime * 1000);
 
                 this.busyTimestamps.add(time);
@@ -780,17 +781,17 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private CustomAction customActionResetRLConfig = new CustomAction(
             R.string.medtronic_custom_action_reset_rileylink, OmnipodCustomActionType.ResetRileyLinkConfiguration, true);
 
-    protected CustomAction customActionPairAndPrime = new CustomAction(
-            R.string.omnipod_cmd_init_pod, OmnipodCustomActionType.PairAndPrime, true);
-
-    protected CustomAction customActionFillCanullaSetBasalProfile = new CustomAction(
-            R.string.omnipod_cmd_init_pod, OmnipodCustomActionType.FillCanulaSetBasalProfile, false);
-
-    protected CustomAction customActionDeactivatePod = new CustomAction(
-            R.string.omnipod_cmd_deactivate_pod, OmnipodCustomActionType.DeactivatePod, false);
-
-    protected CustomAction customActionResetPod = new CustomAction(
-            R.string.omnipod_cmd_reset_pod, OmnipodCustomActionType.ResetPodStatus, true);
+//    protected CustomAction customActionPairAndPrime = new CustomAction(
+//            R.string.omnipod_cmd_init_pod, OmnipodCustomActionType.PairAndPrime, true);
+//
+//    protected CustomAction customActionFillCanullaSetBasalProfile = new CustomAction(
+//            R.string.omnipod_cmd_init_pod, OmnipodCustomActionType.FillCanulaSetBasalProfile, false);
+//
+//    protected CustomAction customActionDeactivatePod = new CustomAction(
+//            R.string.omnipod_cmd_deactivate_pod, OmnipodCustomActionType.DeactivatePod, false);
+//
+//    protected CustomAction customActionResetPod = new CustomAction(
+//            R.string.omnipod_cmd_reset_pod, OmnipodCustomActionType.ResetPodStatus, true);
 
 
     @Override
@@ -811,9 +812,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     }
 
 
-    LogReceiver logReceiver = new LogReceiver();
-
-    // TODO we need to brainstorm how we want to do this -- Andy
     @Override
     public void executeCustomAction(CustomActionType customActionType) {
 
@@ -823,31 +821,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
             case ResetRileyLinkConfiguration: {
                 ServiceTaskExecutor.startTask(new ResetRileyLinkConfigurationTask());
-            }
-            break;
-
-            case PairAndPrime: {
-                omnipodUIComm.executeCommand(OmnipodCommandType.PairAndPrimePod, PodInitActionType.PairAndPrimeWizardStep, logReceiver);
-            }
-            break;
-
-            case FillCanulaSetBasalProfile: {
-                if (this.currentProfile != null) {
-                    omnipodUIComm.executeCommand(OmnipodCommandType.FillCanulaAndSetBasalProfile, PodInitActionType.FillCannulaSetBasalProfileWizardStep, logReceiver, this.currentProfile);
-                } else {
-                    OKDialog.show(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.combo_warning),
-                            MainApp.gs(R.string.omnipod_error_operation_not_possible_no_profile), null);
-                }
-            }
-            break;
-
-            case DeactivatePod: {
-                omnipodUIComm.executeCommand(OmnipodCommandType.DeactivatePod);
-            }
-            break;
-
-            case ResetPodStatus: {
-                omnipodUIComm.executeCommand(OmnipodCommandType.ResetPodStatus);
             }
             break;
 
@@ -864,34 +837,12 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 //            LOG.warn(getLogPrefix() + "Time, Date and/or TimeZone changed. ");
 //
 //        this.hasTimeDateOrTimeZoneChanged = true;
+
+        // TODO
     }
 
 
     public void setEnableCustomAction(OmnipodCustomActionType customAction, boolean isEnabled) {
-
-        switch (customAction) {
-
-            case PairAndPrime: {
-                this.customActionPairAndPrime.setEnabled(isEnabled);
-            }
-            break;
-
-            case FillCanulaSetBasalProfile: {
-                this.customActionFillCanullaSetBasalProfile.setEnabled(isEnabled);
-            }
-            break;
-
-
-            case DeactivatePod: {
-                this.customActionDeactivatePod.setEnabled(isEnabled);
-            }
-            break;
-
-            default:
-                break;
-        }
-
-        refreshCustomActionsList();
     }
 
 

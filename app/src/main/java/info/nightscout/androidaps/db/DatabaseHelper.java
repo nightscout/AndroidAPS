@@ -51,11 +51,13 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
+import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistory;
 import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightBolusID;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightHistoryOffset;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightPumpID;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistory;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.PercentageSplitter;
@@ -85,8 +87,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_INSIGHT_HISTORY_OFFSETS = "InsightHistoryOffsets";
     public static final String DATABASE_INSIGHT_BOLUS_IDS = "InsightBolusIDs";
     public static final String DATABASE_INSIGHT_PUMP_IDS = "InsightPumpIDs";
+    public static final String DATABASE_POD_HISTORY = "PodHistory";
 
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 12;
 
     public static Long earliestDataChange = null;
 
@@ -134,6 +137,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, InsightHistoryOffset.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightBolusID.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightPumpID.class);
+            TableUtils.createTableIfNotExists(connectionSource, PodHistory.class);
             database.execSQL("INSERT INTO sqlite_sequence (name, seq) SELECT \"" + DATABASE_INSIGHT_BOLUS_IDS + "\", " + System.currentTimeMillis() + " " +
                     "WHERE NOT EXISTS (SELECT 1 FROM sqlite_sequence WHERE name = \"" + DATABASE_INSIGHT_BOLUS_IDS + "\")");
             database.execSQL("INSERT INTO sqlite_sequence (name, seq) SELECT \"" + DATABASE_INSIGHT_PUMP_IDS + "\", " + System.currentTimeMillis() + " " +
@@ -219,6 +223,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
             TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
             TableUtils.dropTable(connectionSource, TDD.class, true);
+            TableUtils.dropTable(connectionSource, PodHistory.class, true);
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
@@ -228,6 +233,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
             TableUtils.createTableIfNotExists(connectionSource, TDD.class);
+            TableUtils.createTableIfNotExists(connectionSource, PodHistory.class);
             updateEarliestDataChange(0);
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
@@ -360,6 +366,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private Dao<InsightHistoryOffset, String> getDaoInsightHistoryOffset() throws SQLException {
         return getDao(InsightHistoryOffset.class);
+    }
+
+    private Dao<PodHistory, String> getDaoPodHistory() throws SQLException {
+        return getDao(PodHistory.class);
     }
 
     public static long roundDateToSec(long date) {
@@ -1890,4 +1900,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     // ---------------- Food handling ---------------
+
+    // ---------------- PodHistory handling ---------------
+
+    public void createOrUpdate(PodHistory podHistory) {
+        try {
+            getDaoPodHistory().createOrUpdate(podHistory);
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+    }
+
+
 }
