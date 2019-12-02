@@ -161,7 +161,7 @@ object AutomationPlugin : PluginBase(PluginDescription()
     private fun processActions() {
         if (!isEnabled(PluginType.GENERAL))
             return
-        if (LoopPlugin.getPlugin().isSuspended) {
+        if (LoopPlugin.getPlugin().isSuspended || !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Loop deactivated")
             return
