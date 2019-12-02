@@ -266,7 +266,7 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             OmnipodPacket response = null;
             try {
                 response = sendAndListen(packet, responseTimeoutMilliseconds, repeatCount, 9, preambleExtensionMilliseconds, OmnipodPacket.class);
-            } catch (RileyLinkCommunicationException ex) {
+            } catch (RileyLinkCommunicationException | OmnipodException ex) {
                 if (isLoggingEnabled()) {
                     LOG.debug("Ignoring exception in exchangePackets", ex);
                 }
