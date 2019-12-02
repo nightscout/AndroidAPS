@@ -48,7 +48,7 @@ class TreatmentsProfileSwitchFragment : Fragment() {
             val builder = AlertDialog.Builder(this.context!!)
             builder.setTitle(MainApp.gs(R.string.confirmation))
             builder.setMessage(MainApp.gs(R.string.refresheventsfromnightscout) + "?")
-            builder.setPositiveButton(MainApp.gs(R.string.ok)) { dialog: DialogInterface?, id: Int ->
+            builder.setPositiveButton(MainApp.gs(R.string.ok)) { _ , _->
                 MainApp.getDbHelper().resetProfileSwitch()
                 RxBus.send(EventNSClientRestart())
             }
