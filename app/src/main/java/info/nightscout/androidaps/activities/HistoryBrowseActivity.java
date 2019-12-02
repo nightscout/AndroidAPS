@@ -45,7 +45,7 @@ import info.nightscout.androidaps.utils.T;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class HistoryBrowseActivity extends NoSplashActivity {
+public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(HistoryBrowseActivity.class);
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -150,7 +150,7 @@ public class HistoryBrowseActivity extends NoSplashActivity {
             );
             dpd.setThemeDark(true);
             dpd.dismissOnPause(true);
-            dpd.show(getFragmentManager(), "Datepickerdialog");
+            dpd.show(getSupportFragmentManager(), "Datepickerdialog");
         });
 
         bgGraph.getGridLabelRenderer().setGridColor(MainApp.gc(R.color.graphgrid));
