@@ -269,6 +269,8 @@ public class TriggerRecurringTime extends Trigger {
         weekdaysPicker.setSelectedDays(getSelectedDays());
         weekdaysPicker.setOnWeekdaysChangeListener((view, i, list) -> set(DayOfWeek.fromCalendarInt(i), list.contains(i)));
         weekdaysPicker.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        weekdaysPicker.setSundayFirstDay(Calendar.getInstance().getFirstDayOfWeek() == Calendar.SUNDAY);
+        weekdaysPicker.redrawDays();
 
         root.addView(weekdaysPicker);
 
