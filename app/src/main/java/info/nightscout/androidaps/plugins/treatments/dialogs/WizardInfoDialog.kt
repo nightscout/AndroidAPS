@@ -34,7 +34,7 @@ class WizardInfoDialog : DialogFragment() {
         close.setOnClickListener { dismiss() }
 
         // BG
-        treatments_wizard_bg.text = String.format(MainApp.gs(R.string.format_bg_isf), JsonHelper.safeGetDouble(json, "bg"), JsonHelper.safeGetDouble(json, "isf"))
+        treatments_wizard_bg.text = DecimalFormatter.to0Decimal(JsonHelper.safeGetDouble(json, "bg")) + String.format(MainApp.gs(R.string.format_bg_isf), "" , JsonHelper.safeGetDouble(json, "isf"))
         treatments_wizard_bginsulin.text = StringUtils.formatInsulin(JsonHelper.safeGetDouble(json, "insulinbg"))
         treatments_wizard_bgcheckbox.isChecked = JsonHelper.safeGetBoolean(json, "insulinbgused")
         treatments_wizard_ttcheckbox.isChecked = JsonHelper.safeGetBoolean(json, "ttused")
