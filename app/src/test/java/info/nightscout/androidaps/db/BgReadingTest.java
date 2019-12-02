@@ -3,7 +3,6 @@ package info.nightscout.androidaps.db;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -12,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -31,8 +29,6 @@ import static org.mockito.Mockito.when;
 @PrepareForTest({MainApp.class, Logger.class, L.class, SP.class, GlucoseStatus.class})
 public class BgReadingTest {
     private BgReading bgReading = new BgReading();
-
-    GlucoseStatus glucoseStatus;
 
     @Test
     public void valueToUnits() {
