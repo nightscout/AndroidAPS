@@ -259,7 +259,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
         val actualBG = DatabaseHelper.actualBg()
         val lastBG = DatabaseHelper.lastBg()
         var reply = ""
-        val units = ProfileFunctions.getInstance().profileUnits
+        val units = ProfileFunctions.getSystemUnits()
         if (actualBG != null) {
             reply = MainApp.gs(R.string.sms_actualbg) + " " + actualBG.valueToUnitsToString(units) + ", "
         } else if (lastBG != null) {
@@ -428,7 +428,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             receivedSms.processed = true
             return
         }
-        val list = store.profileList
+        val list = store.getProfileList()
         if (splitted[1].toUpperCase(Locale.getDefault()) == "STATUS") {
             sendSMS(Sms(receivedSms.phoneNumber, ProfileFunctions.getInstance().profileName))
         } else if (splitted[1].toUpperCase(Locale.getDefault()) == "LIST") {
@@ -735,50 +735,47 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             receivedSms.processed = true
             messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    val currentProfile = ProfileFunctions.getInstance().profile
-                    if (currentProfile != null) {
-                        var keyDuration = 0
-                        var defaultTargetDuration = 0
-                        var keyTarget = 0
-                        var defaultTargetMMOL = 0.0
-                        var defaultTargetMGDL = 0.0
-                        if (isMeal) {
-                            keyDuration = R.string.key_eatingsoon_duration
-                            defaultTargetDuration = Constants.defaultEatingSoonTTDuration
-                            keyTarget = R.string.key_eatingsoon_target
-                            defaultTargetMMOL = Constants.defaultEatingSoonTTmmol
-                            defaultTargetMGDL = Constants.defaultEatingSoonTTmgdl
-                        } else if (isActivity) {
-                            keyDuration = R.string.key_activity_duration
-                            defaultTargetDuration = Constants.defaultActivityTTDuration
-                            keyTarget = R.string.key_activity_target
-                            defaultTargetMMOL = Constants.defaultActivityTTmmol
-                            defaultTargetMGDL = Constants.defaultActivityTTmgdl
-                        } else if (isHypo) {
-                            keyDuration = R.string.key_hypo_duration
-                            defaultTargetDuration = Constants.defaultHypoTTDuration
-                            keyTarget = R.string.key_hypo_target
-                            defaultTargetMMOL = Constants.defaultHypoTTmmol
-                            defaultTargetMGDL = Constants.defaultHypoTTmgdl
-                        }
-                        var ttDuration = SP.getInt(keyDuration, defaultTargetDuration)
-                        ttDuration = if (ttDuration > 0) ttDuration else defaultTargetDuration
-                        var tt = SP.getDouble(keyTarget, if (currentProfile.units == Constants.MMOL) defaultTargetMMOL else defaultTargetMGDL)
-                        tt = if (tt > 0) tt else if (currentProfile.units == Constants.MMOL) defaultTargetMMOL else defaultTargetMGDL
-                        val tempTarget = TempTarget()
-                                .date(System.currentTimeMillis())
-                                .duration(ttDuration)
-                                .reason(MainApp.gs(R.string.eatingsoon))
-                                .source(Source.USER)
-                                .low(Profile.toMgdl(tt, currentProfile.units))
-                                .high(Profile.toMgdl(tt, currentProfile.units))
-                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
-                        val ttString = if (currentProfile.units == Constants.MMOL) DecimalFormatter.to1Decimal(tt) else DecimalFormatter.to0Decimal(tt)
-                        val replyText = String.format(MainApp.gs(R.string.smscommunicator_tt_set), ttString, ttDuration)
-                        sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                    } else {
-                        sendSMS(Sms(receivedSms.phoneNumber, R.string.smscommunicator_unknowncommand))
+                    val units = ProfileFunctions.getSystemUnits()
+                    var keyDuration = 0
+                    var defaultTargetDuration = 0
+                    var keyTarget = 0
+                    var defaultTargetMMOL = 0.0
+                    var defaultTargetMGDL = 0.0
+                    if (isMeal) {
+                        keyDuration = R.string.key_eatingsoon_duration
+                        defaultTargetDuration = Constants.defaultEatingSoonTTDuration
+                        keyTarget = R.string.key_eatingsoon_target
+                        defaultTargetMMOL = Constants.defaultEatingSoonTTmmol
+                        defaultTargetMGDL = Constants.defaultEatingSoonTTmgdl
+                    } else if (isActivity) {
+                        keyDuration = R.string.key_activity_duration
+                        defaultTargetDuration = Constants.defaultActivityTTDuration
+                        keyTarget = R.string.key_activity_target
+                        defaultTargetMMOL = Constants.defaultActivityTTmmol
+                        defaultTargetMGDL = Constants.defaultActivityTTmgdl
+                    } else if (isHypo) {
+                        keyDuration = R.string.key_hypo_duration
+                        defaultTargetDuration = Constants.defaultHypoTTDuration
+                        keyTarget = R.string.key_hypo_target
+                        defaultTargetMMOL = Constants.defaultHypoTTmmol
+                        defaultTargetMGDL = Constants.defaultHypoTTmgdl
                     }
+                    var ttDuration = SP.getInt(keyDuration, defaultTargetDuration)
+                    ttDuration = if (ttDuration > 0) ttDuration else defaultTargetDuration
+                    var tt = SP.getDouble(keyTarget, if (units == Constants.MMOL) defaultTargetMMOL else defaultTargetMGDL)
+                    tt = Profile.toCurrentUnits(tt)
+                    tt = if (tt > 0) tt else if (units == Constants.MMOL) defaultTargetMMOL else defaultTargetMGDL
+                    val tempTarget = TempTarget()
+                            .date(System.currentTimeMillis())
+                            .duration(ttDuration)
+                            .reason(MainApp.gs(R.string.eatingsoon))
+                            .source(Source.USER)
+                            .low(Profile.toMgdl(tt, units))
+                            .high(Profile.toMgdl(tt, units))
+                    TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
+                    val ttString = if (units == Constants.MMOL) DecimalFormatter.to1Decimal(tt) else DecimalFormatter.to0Decimal(tt)
+                    val replyText = String.format(MainApp.gs(R.string.smscommunicator_tt_set), ttString, ttDuration)
+                    sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                 }
             })
         } else if (isStop) {
@@ -787,20 +784,15 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             receivedSms.processed = true
             messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    val currentProfile = ProfileFunctions.getInstance().profile
-                    if (currentProfile != null) {
-                        val tempTarget = TempTarget()
-                                .source(Source.USER)
-                                .date(DateUtil.now())
-                                .duration(0)
-                                .low(0.0)
-                                .high(0.0)
-                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
-                        val replyText = String.format(MainApp.gs(R.string.smscommunicator_tt_canceled))
-                        sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                    } else {
-                        sendSMS(Sms(receivedSms.phoneNumber, R.string.smscommunicator_unknowncommand))
-                    }
+                    val tempTarget = TempTarget()
+                            .source(Source.USER)
+                            .date(DateUtil.now())
+                            .duration(0)
+                            .low(0.0)
+                            .high(0.0)
+                    TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
+                    val replyText = String.format(MainApp.gs(R.string.smscommunicator_tt_canceled))
+                    sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                 }
             })
         } else

@@ -25,7 +25,7 @@ public class InputBg extends Element {
 
     public InputBg() {
         super();
-        setUnits(ProfileFunctions.getInstance().getProfileUnits());
+        setUnits(ProfileFunctions.getSystemUnits());
         if (getUnits().equals(Constants.MMOL))
             value = MMOL_MIN;
         else

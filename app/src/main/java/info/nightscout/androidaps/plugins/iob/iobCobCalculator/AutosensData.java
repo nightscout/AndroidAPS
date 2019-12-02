@@ -48,7 +48,7 @@ public class AutosensData implements DataPointWithLabelInterface {
             if (SensitivityAAPSPlugin.getPlugin().isEnabled(PluginType.SENSITIVITY) || SensitivityWeightedAveragePlugin.getPlugin().isEnabled(PluginType.SENSITIVITY)) {
                 double maxAbsorptionHours = SP.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME);
                 Profile profile = ProfileFunctions.getInstance().getProfile(t.date);
-                double sens = Profile.toMgdl(profile.getIsf(t.date), profile.getUnits());
+                double sens = profile.getIsfMgdl(t.date);
                 double ic = profile.getIc(t.date);
                 min5minCarbImpact = t.carbs / (maxAbsorptionHours * 60 / 5) * sens / ic;
                 if (L.isEnabled(L.AUTOSENS))

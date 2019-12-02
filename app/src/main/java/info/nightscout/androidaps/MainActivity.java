@@ -249,36 +249,19 @@ public class MainActivity extends NoSplashAppCompatActivity {
 
     private void doMigrations() {
 
-        checkUpgradeToProfileTarget();
-
         // guarantee that the unreachable threshold is at least 30 and of type String
         // Added in 1.57 at 21.01.2018
         int unreachable_threshold = SP.getInt(R.string.key_pump_unreachable_threshold, 30);
         SP.remove(R.string.key_pump_unreachable_threshold);
         if (unreachable_threshold < 30) unreachable_threshold = 30;
         SP.putString(R.string.key_pump_unreachable_threshold, Integer.toString(unreachable_threshold));
-    }
 
-
-    private void checkUpgradeToProfileTarget() { // TODO: can be removed in the future
-        boolean oldKeyExists = SP.contains("openapsma_min_bg");
-        if (oldKeyExists) {
-            Profile profile = ProfileFunctions.getInstance().getProfile();
-            String oldRange = SP.getDouble("openapsma_min_bg", 0d) + " - " + SP.getDouble("openapsma_max_bg", 0d);
-            String newRange = "";
-            if (profile != null) {
-                newRange = profile.getTargetLow() + " - " + profile.getTargetHigh();
-            }
-            String message = "Target range is changed in current version.\n\nIt's not taken from preferences but from profile.\n\n!!! REVIEW YOUR SETTINGS !!!";
-            message += "\n\nOld settings: " + oldRange;
-            message += "\nProfile settings: " + newRange;
-            OKDialog.show(this, "Target range change", message, () -> {
-                SP.remove("openapsma_min_bg");
-                SP.remove("openapsma_max_bg");
-                SP.remove("openapsma_target_bg");
-            });
+        if (!SP.contains(R.string.key_units)) {
+            Intent intent = new Intent(this, SetupWizardActivity.class);
+            startActivity(intent);
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

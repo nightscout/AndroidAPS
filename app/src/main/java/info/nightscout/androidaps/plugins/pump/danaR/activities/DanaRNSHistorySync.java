@@ -184,7 +184,7 @@ public class DanaRNSHistorySync {
                             log.debug("Syncing glucose record " + record.recordValue + " " + DateUtil.toISOString(record.recordDate));
                         nsrec.put(DANARSIGNATURE, record.bytes);
                         nsrec.put("eventType", "BG Check");
-                        nsrec.put("glucose", Profile.fromMgdlToUnits(record.recordValue, ProfileFunctions.getInstance().getProfileUnits()));
+                        nsrec.put("glucose", Profile.fromMgdlToUnits(record.recordValue, ProfileFunctions.getSystemUnits()));
                         nsrec.put("glucoseType", "Finger");
                         nsrec.put("created_at", DateUtil.toISOString(record.recordDate));
                         nsrec.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));

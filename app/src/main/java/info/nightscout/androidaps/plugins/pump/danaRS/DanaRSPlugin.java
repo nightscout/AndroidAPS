@@ -286,11 +286,6 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public String getUnits() {
-        return DanaRPump.getInstance().getUnits();
-    }
-
-    @Override
     public String getProfileName() {
         return DanaRPump.getInstance().createConvertedProfileName();
     }

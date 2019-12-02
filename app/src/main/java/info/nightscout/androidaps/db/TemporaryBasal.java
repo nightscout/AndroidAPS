@@ -299,11 +299,11 @@ public class TemporaryBasal implements Interval, DbObjectBase {
         double sensitivityRatio = lastAutosensResult.ratio;
         double normalTarget = 100;
 
-        if (exercise_mode && isTempTarget && profile.getTarget() >= normalTarget + 5) {
+        if (exercise_mode && isTempTarget && profile.getTargetMgdl() >= normalTarget + 5) {
             // w/ target 100, temp target 110 = .89, 120 = 0.8, 140 = 0.67, 160 = .57, and 200 = .44
             // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6
             double c = half_basal_exercise_target - normalTarget;
-            sensitivityRatio = c / (c + profile.getTarget() - normalTarget);
+            sensitivityRatio = c / (c + profile.getTargetMgdl() - normalTarget);
         }
 
         if (realDuration > 0) {
