@@ -247,8 +247,8 @@ dependencies {
     implementation("com.github.tony19:logback-android-classic:1.1.1-6") {
         exclude group: "com.google.android", module: "android"
     }
-    implementation "org.apache.commons:commons-lang3:3.7"
-    implementation "org.slf4j:slf4j-api:1.7.21"
+    implementation "org.apache.commons:commons-lang3:3.9"
+    implementation "org.slf4j:slf4j-api:1.7.29"
     // Graphview cannot be upgraded
     implementation "com.jjoe64:graphview:4.0.1"
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
@@ -268,7 +268,7 @@ dependencies {
 
     implementation "net.danlew:android.joda:2.10.3"
 
-    implementation 'org.mozilla:rhino:1.7.7.2'
+    implementation 'org.mozilla:rhino:1.7.11'
 
     implementation 'com.github.DavidProdinger:weekdays-selector:1.1.0'
 
