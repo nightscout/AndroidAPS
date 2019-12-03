@@ -376,10 +376,8 @@
     <string name="button1">Tlačidlo 1</string>
     <string name="button2">Tlačidlo 2</string>
     <string name="button3">Tlačidlo 3</string>
-    <string name="units">Jednotky:</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">Cieľový rozsah:</string>
     <string name="prefs_range_title">Rozsah pre zobrazenie</string>
     <string name="prefs_range_summary">Značka vysokej a nízkej hodnoty v prehľade a na hodinkách Wear</string>
@@ -521,7 +519,7 @@
     <string name="child">Dieťa</string>
     <string name="teenage">Dospievajúci</string>
     <string name="adult">Dospelý</string>
-    <string name="resistantadult">Dospelý z nízkou citlivosťou</string>
+    <string name="resistantadult">Dospelý s nízkou citlivosťou</string>
     <string name="patientage_summary">Vyberte vek pacienta pre nastavenie bezpečnostných limitov</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s potrebuje vypnúť optimalizáciu batérie pre optimálny výkon</string>
@@ -977,7 +975,7 @@
     <string name="option_off">VYP</string>
     <string name="open_navigation">Otvoriť Menu</string>
     <string name="close_navigation">Zavrieť Menu</string>
-    <string name="nav_plugin_preferences">Nastavenie modulov</string>
+    <string name="nav_plugin_preferences">Nastavenie modulu</string>
     <string name="completed_well_done">Hotovo, gratulujeme!</string>
     <string name="not_completed_yet">Nedokončené</string>
     <string name="time_elapsed">Uplynutý čas</string>

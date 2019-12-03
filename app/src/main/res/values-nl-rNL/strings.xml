@@ -376,10 +376,8 @@
     <string name="button1">Knop 1</string>
     <string name="button2">Knop 2</string>
     <string name="button3">Knop 3</string>
-    <string name="units">Eenheden:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">Streefdoel:</string>
     <string name="prefs_range_title">Bereik voor visualisatie</string>
     <string name="prefs_range_summary">Hoge en lage grens voor grafieken op het Overzicht en op Wear</string>
@@ -591,7 +589,7 @@
     <string name="hours">uren</string>
     <string name="overview_newtempbasal_basaltype_label">Basaal type</string>
     <string name="invalidprofile">Ongeldig profiel !!!</string>
-    <string name="profileswitch">Wisselen van profiel</string>
+    <string name="profileswitch">Profiel Wissel</string>
     <string name="careportal_pbage_label">Ouderdom batterij</string>
     <string name="careportal_pumpbatterychange">Pomp bat. wissel</string>
     <string name="ns_alarmoptions">Alarm opties</string>

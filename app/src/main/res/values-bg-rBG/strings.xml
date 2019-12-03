@@ -376,10 +376,8 @@
     <string name="button1">Бутон 1</string>
     <string name="button2">Бутон 2</string>
     <string name="button3">Бутон 3</string>
-    <string name="units">Единици:</string>
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммол/л</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">Целева КЗ:</string>
     <string name="prefs_range_title">Диапазон за визуализация</string>
     <string name="prefs_range_summary">Стойност на линиите за ниска и висока КЗ (mmol/l)  за телефона и часовника</string>

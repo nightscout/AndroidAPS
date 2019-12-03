@@ -359,10 +359,8 @@
     <string name="button1">버튼1</string>
     <string name="button2">버튼2</string>
     <string name="button3">버튼3</string>
-    <string name="units">유닛:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">목표 범위:</string>
     <string name="prefs_range_title">차트 표시 범위</string>
     <string name="prefs_range_summary">스마트워치 차트 고/저혈당 선</string>

@@ -376,10 +376,8 @@
     <string name="button1">кнопка 1</string>
     <string name="button2">кнопка 2</string>
     <string name="button3">кнопка 3</string>
-    <string name="units">единицы измерения:</string>
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммоль/л</string>
-    <string name="dia">Время действия инсулина DIA:</string>
     <string name="target_range">целевой диапазон</string>
     <string name="prefs_range_title">диапазон для визуализации</string>
     <string name="prefs_range_summary">Нижняя и верхняя граница диаграммы в отчетах и Smartwatch</string>
@@ -1396,4 +1394,8 @@ Context | Edit Context</string>
     <string name="format_carbs">%1$d гр</string>
     <string name="common_on">Вкл.</string>
     <string name="common_off">Выкл.</string>
+    <string name="objectives_button_unfinish">Очистить завершенные</string>
+    <string name="objectives_button_unstart">Очистить начатые</string>
+    <string name="timedetection">Определение времени</string>
+    <string name="doyouwantresetstart">Хотите сбросить начатую цель? Можете потерять уже достигнутое.</string>
 </resources>
