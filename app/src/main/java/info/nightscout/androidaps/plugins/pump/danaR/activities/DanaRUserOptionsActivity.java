@@ -12,9 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.activities.NoSplashActivity;
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
@@ -33,7 +32,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by Rumen Georgiev on 5/31/2018.
  */
 
-public class DanaRUserOptionsActivity extends NoSplashActivity {
+public class DanaRUserOptionsActivity extends NoSplashAppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(L.PUMP);
     private CompositeDisposable disposable = new CompositeDisposable();
 

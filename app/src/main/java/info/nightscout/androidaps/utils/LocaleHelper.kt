@@ -1,21 +1,19 @@
 package info.nightscout.androidaps.utils
 
 import android.content.Context
+import android.content.ContextWrapper
+import android.os.Build
+import android.os.LocaleList
 import info.nightscout.androidaps.R
 import java.util.*
 
-object LocaleHelper {
-    fun update(context: Context) =
-            updateResources(context, currentLanguage())
 
+object LocaleHelper {
     fun currentLanguage(): String =
             SP.getString(R.string.key_language, Locale.getDefault().language)
 
-    fun currentLocale(): Locale =
-            Locale(SP.getString(R.string.key_language, Locale.getDefault().language))
-
-    @Suppress("DEPRECATION")
-    private fun updateResources(context: Context, language: String) {
+    private fun currentLocale(): Locale {
+        val language = currentLanguage()
         var locale = Locale(language)
         if (language.contains("_")) {
             // language with country like pt_BR defined in arrays.xml
@@ -23,10 +21,35 @@ object LocaleHelper {
             val country = language.substring(3, 5)
             locale = Locale(lang, country)
         }
+        return locale
+    }
 
+    @Suppress("DEPRECATION")
+    fun update(context: Context) {
+        val locale = currentLocale()
         Locale.setDefault(locale)
         val resources = context.resources
-        resources.configuration.setLocale(locale)
-        resources.updateConfiguration(resources.configuration, resources.displayMetrics)
+        val configuration = resources.configuration
+        context.createConfigurationContext(configuration)
+        configuration.setLocale(locale)
+        configuration.locale = locale
+        resources.updateConfiguration(configuration, resources.displayMetrics)
+    }
+
+    fun wrap(ctx: Context): ContextWrapper {
+        val res = ctx.resources
+        val configuration = res.configuration
+        val newLocale = currentLocale()
+        val context = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            configuration.setLocale(newLocale)
+            val localeList = LocaleList(newLocale)
+            LocaleList.setDefault(localeList)
+            configuration.locales = localeList
+            ctx.createConfigurationContext(configuration)
+        } else {
+            configuration.setLocale(newLocale)
+            ctx.createConfigurationContext(configuration)
+        }
+        return ContextWrapper(context)
     }
 }

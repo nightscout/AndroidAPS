@@ -6,11 +6,11 @@ import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.NoSplashActivity
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.logging.L
 import kotlinx.android.synthetic.main.activity_logsetting.*
 
-class LogSettingActivity : NoSplashActivity() {
+class LogSettingActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

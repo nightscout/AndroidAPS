@@ -37,7 +37,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.activities.AgreementActivity;
 import info.nightscout.androidaps.activities.HistoryBrowseActivity;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.activities.PreferencesActivity;
@@ -141,8 +140,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
         if (!SP.getBoolean(R.string.key_setupwizard_processed, false) || !SP.contains(R.string.key_units)) {
             Intent intent = new Intent(this, SetupWizardActivity.class);
             startActivity(intent);
-        } else {
-            checkEula();
         }
 
         AndroidPermission.notifyForStoragePermission(this);
@@ -231,16 +228,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 toolbar.setLayoutParams(new LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT,
                         TypedValue.complexToDimensionPixelSize(typedValue.data, getResources().getDisplayMetrics())));
             }
-        }
-    }
-
-    private void checkEula() {
-        //SP.removeBoolean(R.string.key_i_understand);
-        boolean IUnderstand = SP.getBoolean(R.string.key_i_understand, false);
-        if (!IUnderstand) {
-            Intent intent = new Intent(getApplicationContext(), AgreementActivity.class);
-            startActivity(intent);
-            finish();
         }
     }
 
