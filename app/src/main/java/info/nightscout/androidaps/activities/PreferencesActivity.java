@@ -129,7 +129,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 }
             }
         }
-        adjustUnitDependentPrefs(pref);
+        if (pref != null)
+            adjustUnitDependentPrefs(pref);
     }
 
     public static void initSummary(Preference p) {
