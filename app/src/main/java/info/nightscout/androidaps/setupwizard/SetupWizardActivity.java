@@ -73,18 +73,6 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        if (currentWizardPage == 0)
-            OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
-        else showPreviousPage(null);
-    }
-
-    public void exitPressed(View view) {
-        SP.putBoolean(R.string.key_setupwizard_processed, true);
-        OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         disposable.clear();
@@ -155,6 +143,18 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
                 findViewById(R.id.previous_button).setVisibility(View.VISIBLE);
             currentScreen.processVisibility();
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (currentWizardPage == 0)
+            OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
+        else showPreviousPage(null);
+    }
+
+    public void exitPressed(View view) {
+        SP.putBoolean(R.string.key_setupwizard_processed, true);
+        OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
     }
 
     public void showNextPage(View view) {
