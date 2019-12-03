@@ -267,7 +267,6 @@ dependencies {
     implementation "com.google.guava:guava:24.1-jre"
 
     implementation "net.danlew:android.joda:2.10.3"
-    implementation "uk.com.robust-it:cloning:1.9.9"
 
     implementation 'org.mozilla:rhino:1.7.7.2'
 

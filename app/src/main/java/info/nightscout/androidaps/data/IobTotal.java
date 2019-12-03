@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.data;
 
-import com.rits.cloning.Cloner;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -37,8 +35,19 @@ public class IobTotal implements DataPointWithLabelInterface {
 
 
     public IobTotal copy() {
-        Cloner cloner = new Cloner();
-        return cloner.deepClone(this);
+        IobTotal i = new IobTotal(time);
+        i.iob = iob;
+        i.activity = activity;
+        i.bolussnooze = bolussnooze;
+        i.basaliob = basaliob;
+        i.netbasalinsulin = netbasalinsulin;
+        i.hightempinsulin = hightempinsulin;
+        i.lastBolusTime = lastBolusTime;
+        if (iobWithZeroTemp != null) i.iobWithZeroTemp = iobWithZeroTemp.copy();
+        i.netInsulin = netInsulin;
+        i.netRatio = netRatio;
+        i.extendedBolusInsulin = extendedBolusInsulin;
+        return i;
     }
 
     public IobTotal(long time) {
@@ -137,7 +146,7 @@ public class IobTotal implements DataPointWithLabelInterface {
 
     // DataPoint interface
 
-    int color;
+    private int color;
 
     @Override
     public double getX() {
