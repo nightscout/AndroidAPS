@@ -1406,7 +1406,7 @@
     <string name="nopumpselected">Nevybrána žádná pumpa</string>
     <string name="setupwizard_units_prompt">Vyberte jednotky, ve kterých chcete zobrazit hodnoty</string>
     <string name="ns_ploadlocalprofile">Odeslat změny lokálního profilu do NS</string>
-    <string name="dia_short">Doba působnosti inzulínu</string>
+    <string name="dia_short">DIA</string>
     <string name="ic_short">I:C</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">CÍL</string>
