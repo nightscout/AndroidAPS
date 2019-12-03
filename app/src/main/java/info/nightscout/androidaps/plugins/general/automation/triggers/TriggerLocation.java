@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers;
 import android.location.Location;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.common.base.Optional;
@@ -35,17 +36,17 @@ import info.nightscout.androidaps.utils.T;
 public class TriggerLocation extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
 
-    private static final String modeEntered = "entered";
-    private static final String modeLeft = "left";
     private static final ArrayList<InputOption> modes = new ArrayList<>(Arrays.asList(
-            new InputOption(R.string.location_entered, modeEntered),
-            new InputOption(R.string.location_left, modeLeft)
+            new InputOption(R.string.location_inside, MainApp.gs(R.string.location_inside)),
+            new InputOption(R.string.location_outside, MainApp.gs(R.string.location_outside))
     ));
 
     InputDouble latitude = new InputDouble(0d, -90d, +90d, 0.000001d, new DecimalFormat("0.000000"));
     InputDouble longitude = new InputDouble(0d, -180d, +180d, 0.000001d, new DecimalFormat("0.000000"));
     InputDouble distance = new InputDouble(200d, 0, 100000, 10d, new DecimalFormat("0"));
-    InputSelect mode = new InputSelect(modes);
+    // Default mode selected is 1 - inside area
+    InputSelect modeSelected = new InputSelect(modes);
+
     InputString name = new InputString();
 
     private Runnable buttonAction = () -> {
@@ -66,7 +67,7 @@ public class TriggerLocation extends Trigger {
         latitude = new InputDouble(triggerLocation.latitude);
         longitude = new InputDouble(triggerLocation.longitude);
         distance = new InputDouble(triggerLocation.distance);
-        mode = new InputSelect(triggerLocation.mode);
+        modeSelected = new InputSelect(modes);
         lastRun = triggerLocation.lastRun;
         name = triggerLocation.name;
     }
@@ -84,9 +85,8 @@ public class TriggerLocation extends Trigger {
         a.setLatitude(latitude.getValue());
         a.setLongitude(longitude.getValue());
         double calculatedDistance = location.distanceTo(a);
-
-        if ((mode.equals(modeEntered) && calculatedDistance < distance.getValue()) ||
-                (mode.equals(modeLeft) && calculatedDistance > distance.getValue())) {
+        if (((stringToMode(modeSelected.getValue()) == 1d) && (calculatedDistance < distance.getValue())) ||
+                ((stringToMode(modeSelected.getValue()) == 2d) && (calculatedDistance > distance.getValue()))) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Ready for execution: " + friendlyDescription());
             return true;
@@ -104,7 +104,7 @@ public class TriggerLocation extends Trigger {
             data.put("longitude", longitude.getValue());
             data.put("distance", distance.getValue());
             data.put("name", name.getValue());
-            data.put("mode", mode.getValue());
+            data.put("mode", stringToMode(modeSelected.getValue()));
             data.put("lastRun", lastRun);
             o.put("data", data);
         } catch (JSONException e) {
@@ -121,7 +121,7 @@ public class TriggerLocation extends Trigger {
             longitude.setValue(JsonHelper.safeGetDouble(d, "longitude"));
             distance.setValue(JsonHelper.safeGetDouble(d, "distance"));
             name.setValue(JsonHelper.safeGetString(d, "name"));
-            mode.setValue(JsonHelper.safeGetString(d, "mode", modeEntered));
+            modeSelected.setValue(modeToString(JsonHelper.safeGetDouble(d, "mode")));
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
         } catch (Exception e) {
             log.error("Unhandled exception", e);
@@ -136,7 +136,7 @@ public class TriggerLocation extends Trigger {
 
     @Override
     public String friendlyDescription() {
-        return MainApp.gs(R.string.locationis, name.getValue());
+        return MainApp.gs(R.string.locationis, modeSelected.getValue() + " " + name.getValue());
     }
 
     @Override
@@ -170,8 +170,8 @@ public class TriggerLocation extends Trigger {
         return this;
     }
 
-    TriggerLocation setMode(String value) {
-        mode.setValue(value);
+    TriggerLocation setMode(double value) {
+        modeSelected.setValue(modeToString(value));
         return this;
     }
 
@@ -183,8 +183,30 @@ public class TriggerLocation extends Trigger {
                 .add(new LabelWithElement(MainApp.gs(R.string.latitude_short), "", latitude))
                 .add(new LabelWithElement(MainApp.gs(R.string.longitude_short), "", longitude))
                 .add(new LabelWithElement(MainApp.gs(R.string.distance_short), "", distance))
-                .add(new LabelWithElement(MainApp.gs(R.string.location_mode), "", mode))
+                .add(new LabelWithElement(MainApp.gs(R.string.location_mode), "", modeSelected))
                 .add(new InputButton(MainApp.gs(R.string.currentlocation), buttonAction), LocationService.getLastLocation() != null)
                 .build(root);
     }
+
+    public double stringToMode(String selected) {
+        if (selected == null)
+            return 1d;
+        if (selected.equals(MainApp.gs(R.string.location_inside)))
+            return 1d;
+        else if (selected.equals(MainApp.gs(R.string.location_outside)))
+            return 2d;
+        else return 0d;
+    }
+
+    public String modeToString(double selectedMode) {
+        if (selectedMode == 1d)
+            return MainApp.gs(R.string.location_inside);
+        else if (selectedMode == 2d)
+            return MainApp.gs(R.string.location_outside);
+        else
+            return MainApp.gs(R.string.location_mode);
+
+    }
+
+
 }

@@ -1410,10 +1410,10 @@
     <string name="longitude_short">Lon:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="name_short">Name:</string>
-    <string name="locationis">Location is %1$s</string>
-    <string name="location_mode">On location</string>
-    <string name="location_entered">entered</string>
-    <string name="location_left">left</string>
+    <string name="locationis">Location is %1$s %2$s</string>
+    <string name="location_mode">In/Out of defined area</string>
+    <string name="location_inside">inside</string>
+    <string name="location_outside">outside</string>
     <string name="lastboluslabel">Last bolus ago</string>
     <string name="lastboluscompared">Last bolus time %1$s %2$s min ago</string>
     <string name="triggercoblabel">COB</string>
