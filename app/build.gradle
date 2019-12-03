@@ -274,7 +274,7 @@ dependencies {
 
     testImplementation "junit:junit:4.12"
     testImplementation "org.json:json:20190722"
-    testImplementation "org.mockito:mockito-core:3.1.0"
+    testImplementation "org.mockito:mockito-core:2.8.47"
     testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
@@ -291,7 +291,7 @@ dependencies {
     }
 */
 
-    androidTestImplementation "org.mockito:mockito-core:3.1.0"
+    androidTestImplementation "org.mockito:mockito-core:2.8.47"
     androidTestImplementation "com.google.dexmaker:dexmaker:${dexmakerVersion}"
     androidTestImplementation "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
