@@ -45,6 +45,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodExceptio
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodReturnedErrorResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
+import io.reactivex.Single;
 
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
@@ -147,33 +148,32 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public PumpEnactResult setBolus(Double amount) {
         try {
-            delegate.bolus(amount, statusResponse -> {
-                // TODO set device driver to available here
+            Single<StatusResponse> responseObserver = delegate.bolus(amount);
 
-                // BS: We could optionally use the status response from the command completion verification,
-                // But I don't think we can use that information in any useful way
-                if (statusResponse == null) {
-                    // Failed to retrieve status response after bolus
-                    // Bolus probably finished anyway
-                } else if (statusResponse.getDeliveryStatus().isBolusing()) {
-                    // This shouldn't happen
-                } else {
-                    // Bolus successfully completed
+            // At this point, we know that the bolus command has been succesfully sent
+
+            try {
+                // Wait for the bolus to finish
+                StatusResponse statusResponse = responseObserver.blockingGet();
+            } catch (Exception ex) {
+                if (loggingEnabled()) {
+                    LOG.debug("Ignoring failed status response for bolus completion verification", ex);
                 }
-            });
-            // TODO set device driver busy here
+            }
+
+            return new PumpEnactResult().success(true).enacted(true);
         } catch (Exception ex) {
+            // Sending the command failed
             String comment = handleAndTranslateException(ex);
             if (OmnipodManager.isCertainFailure(ex)) {
                 return new PumpEnactResult().success(false).enacted(false).comment(comment);
             } else {
                 // TODO notify user about uncertain failure
                 //  we don't know if the bolus failed, so for safety reasons, we choose to register the bolus as succesful.
-                return new PumpEnactResult().success(true).enacted(true);
+                // TODO also manually sleep until the bolus should have been finished here (after notifying the user)
+                return new PumpEnactResult().success(true).enacted(true).comment(comment);
             }
         }
-
-        return new PumpEnactResult().success(true).enacted(true);
     }
 
     @Override
@@ -306,7 +306,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         String comment = null;
         switch (res.getResultType()) {
             case FAILURE:
-                LOG.error("Setup action failed: illegal setup progress: {}", res.getSetupProgress());
+                if (loggingEnabled()) {
+                    LOG.error("Setup action failed: illegal setup progress: {}", res.getSetupProgress());
+                }
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_progress_state, res.getSetupProgress());
                 break;
             case VERIFICATION_FAILURE:

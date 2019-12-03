@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.Canc
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
@@ -40,11 +41,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedu
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateChangedHandler;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommunicationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalDeliveryStatusException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalSetupProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceOutOfSyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.Single;
 
 public class OmnipodManager {
     private static final int ACTION_VERIFICATION_TRIES = 3;
@@ -61,6 +64,9 @@ public class OmnipodManager {
             throw new IllegalArgumentException("Communication service cannot be null");
         }
         this.communicationService = communicationService;
+        if(podState != null) {
+            podState.setStateChangedHandler(podStateChangedHandler);
+        }
         this.podState = podState;
         this.podStateChangedHandler = podStateChangedHandler;
     }
@@ -144,7 +150,7 @@ public class OmnipodManager {
         communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.TEMP_BASAL, true));
     }
 
-    public synchronized void bolus(Double units, StatusResponseHandler bolusCompletionHandler) {
+    public Single<StatusResponse> bolus(Double units) {
         assertReadyForDelivery();
 
         try {
@@ -173,22 +179,18 @@ public class OmnipodManager {
             }
         }
 
-        if (bolusCompletionHandler != null) {
-            executeDelayed(() -> {
-                for (int i = 0; ACTION_VERIFICATION_TRIES > i; i++) {
-                    StatusResponse statusResponse = null;
-                    try {
-                        statusResponse = getPodStatus();
-                        if (statusResponse.getDeliveryStatus().isBolusing()) {
-                            break;
-                        }
-                    } catch (Exception ex) {
-                        // Ignore
-                    }
-                    bolusCompletionHandler.handle(statusResponse);
+        return Single.create(emitter -> executeDelayed(() -> {
+            try {
+                StatusResponse statusResponse = getPodStatus();
+                if (statusResponse.getDeliveryStatus().isBolusing()) {
+                    emitter.onError(new IllegalDeliveryStatusException(DeliveryStatus.NORMAL, statusResponse.getDeliveryStatus()));
+                } else {
+                    emitter.onSuccess(statusResponse);
                 }
-            }, calculateBolusDuration(units, OmnipodConst.POD_BOLUS_DELIVERY_RATE));
-        }
+            } catch (Exception ex) {
+                emitter.onError(ex);
+            }
+        }, calculateBolusDuration(units, OmnipodConst.POD_BOLUS_DELIVERY_RATE)));
     }
 
     public synchronized void cancelBolus() {
