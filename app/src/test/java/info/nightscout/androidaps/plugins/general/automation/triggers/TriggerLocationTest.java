@@ -15,10 +15,15 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.automation.elements.InputOption;
+import info.nightscout.androidaps.plugins.general.automation.elements.InputLocationMode;
 import info.nightscout.androidaps.services.LocationService;
 import info.nightscout.androidaps.utils.DateUtil;
 
@@ -30,6 +35,11 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class TriggerLocationTest {
 
     long now = 1514766900000L;
+
+    private static final ArrayList<InputOption> modes = new ArrayList<>(Arrays.asList(
+            new InputOption(1, "inside"),
+            new InputOption(2, "outside")
+    ));
 
     @Before
     public void mock() {
@@ -53,11 +63,14 @@ public class TriggerLocationTest {
         t.latitude.setValue(213);
         t.longitude.setValue(212);
         t.distance.setValue(2);
+        t.modeSelected.setValue(InputLocationMode.Mode.INSIDE);
+
 
         TriggerLocation t1 = (TriggerLocation) t.duplicate();
-        Assert.assertEquals(213d, t.latitude.getValue(), 0.01d);
-        Assert.assertEquals(212d, t.longitude.getValue(), 0.01d);
-        Assert.assertEquals(2d, t.distance.getValue(), 0.01d);
+        Assert.assertEquals(213d, t1.latitude.getValue(), 0.01d);
+        Assert.assertEquals(212d, t1.longitude.getValue(), 0.01d);
+        Assert.assertEquals(2d, t1.distance.getValue(), 0.01d);
+        Assert.assertEquals(InputLocationMode.Mode.INSIDE, t1.modeSelected.getValue());
     }
 
     @Test
@@ -66,6 +79,8 @@ public class TriggerLocationTest {
         t.latitude.setValue(213);
         t.longitude.setValue(212);
         t.distance.setValue(2);
+        t.modeSelected.setValue(InputLocationMode.Mode.OUTSIDE);
+
         PowerMockito.when(LocationService.getLastLocation()).thenReturn(null);
         Assert.assertFalse(t.shouldRun());
         PowerMockito.when(LocationService.getLastLocation()).thenReturn(mockedLocation());
@@ -78,7 +93,7 @@ public class TriggerLocationTest {
         Assert.assertFalse(t.shouldRun());
     }
 
-    String locationJson = "{\"data\":{\"distance\":2,\"lastRun\":0,\"latitude\":213,\"name\":\"\",\"longitude\":212},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerLocation\"}";
+    String locationJson = "{\"data\":{\"mode\":\"OUTSIDE\",\"distance\":2,\"lastRun\":0,\"latitude\":213,\"name\":\"\",\"longitude\":212},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerLocation\"}";
 
     @Test
     public void toJSONTest() {
@@ -86,6 +101,7 @@ public class TriggerLocationTest {
         t.latitude.setValue(213);
         t.longitude.setValue(212);
         t.distance.setValue(2);
+        t.modeSelected = t.modeSelected.setValue(InputLocationMode.Mode.OUTSIDE);
         Assert.assertEquals(locationJson, t.toJSON());
     }
 
@@ -95,11 +111,14 @@ public class TriggerLocationTest {
         t.latitude.setValue(213);
         t.longitude.setValue(212);
         t.distance.setValue(2);
+//        t.setMode(t.stringToMode(new InputSelect(modes).getValue()));
+        t.modeSelected.setValue(InputLocationMode.Mode.INSIDE);
 
         TriggerLocation t2 = (TriggerLocation) Trigger.instantiate(new JSONObject(t.toJSON()));
         Assert.assertEquals(t.latitude.getValue(), t2.latitude.getValue(), 0.01d);
         Assert.assertEquals(t.longitude.getValue(), t2.longitude.getValue(), 0.01d);
         Assert.assertEquals(t.distance.getValue(), t2.distance.getValue(), 0.01d);
+        Assert.assertEquals(t.modeSelected.getValue(), t2.modeSelected.getValue());
     }
 
     @Test
@@ -137,6 +156,13 @@ public class TriggerLocationTest {
         TriggerLocation t = new TriggerLocation();
         t.setdistance(2);
         Assert.assertEquals(t.distance.getValue(), 2, 0d);
+    }
+
+    @Test
+    public void setModeTest() {
+        TriggerLocation t = new TriggerLocation();
+        t.setMode(InputLocationMode.Mode.INSIDE);
+        Assert.assertEquals(t.modeSelected.getValue(), InputLocationMode.Mode.INSIDE);
     }
 
     @Test

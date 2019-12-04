@@ -6,6 +6,8 @@ public class InputOption {
 
     public InputOption(int stringRes, String value) {
         this.stringRes = stringRes;
+        if (value == null)
+            this.value = "";
         this.value = value;
     }
 
