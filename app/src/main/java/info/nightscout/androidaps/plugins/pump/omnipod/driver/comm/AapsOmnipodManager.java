@@ -13,6 +13,8 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
@@ -146,9 +148,15 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     @Override
-    public PumpEnactResult setBolus(Double amount) {
+    public PumpEnactResult setBolus(Double units) {
         try {
-            Single<StatusResponse> responseObserver = delegate.bolus(amount);
+            Single<StatusResponse> responseObserver = delegate.bolus(units,
+                    (estimatedUnitsDelivered, percentage) -> {
+                        EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
+                        progressUpdateEvent.setStatus(getStringResource(R.string.bolusdelivering, units));
+                        progressUpdateEvent.setPercent(percentage);
+                        RxBus.INSTANCE.send(progressUpdateEvent);
+                    });
 
             // At this point, we know that the bolus command has been succesfully sent
 

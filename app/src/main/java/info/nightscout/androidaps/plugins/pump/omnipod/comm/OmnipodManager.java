@@ -47,7 +47,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceOutOfSyncE
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.disposables.CompositeDisposable;
 
 public class OmnipodManager {
     private static final int ACTION_VERIFICATION_TRIES = 3;
@@ -64,7 +67,7 @@ public class OmnipodManager {
             throw new IllegalArgumentException("Communication service cannot be null");
         }
         this.communicationService = communicationService;
-        if(podState != null) {
+        if (podState != null) {
             podState.setStateChangedHandler(podStateChangedHandler);
         }
         this.podState = podState;
@@ -150,7 +153,7 @@ public class OmnipodManager {
         communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.TEMP_BASAL, true));
     }
 
-    public Single<StatusResponse> bolus(Double units) {
+    public Single<StatusResponse> bolus(Double units, BolusProgressIndicationConsumer progressIndicationConsumer) {
         assertReadyForDelivery();
 
         try {
@@ -179,18 +182,39 @@ public class OmnipodManager {
             }
         }
 
-        return Single.create(emitter -> executeDelayed(() -> {
-            try {
-                StatusResponse statusResponse = getPodStatus();
-                if (statusResponse.getDeliveryStatus().isBolusing()) {
-                    emitter.onError(new IllegalDeliveryStatusException(DeliveryStatus.NORMAL, statusResponse.getDeliveryStatus()));
-                } else {
-                    emitter.onSuccess(statusResponse);
+        CompositeDisposable disposables = new CompositeDisposable();
+        Duration bolusDuration = calculateBolusDuration(units, OmnipodConst.POD_BOLUS_DELIVERY_RATE);
+
+        if (progressIndicationConsumer != null) {
+            int numberOfProgressReports = 20;
+            long progressReportInterval = bolusDuration.getMillis() / numberOfProgressReports;
+
+            disposables.add(Flowable.intervalRange(0, numberOfProgressReports, 0, progressReportInterval, TimeUnit.MILLISECONDS) //
+                    .subscribe(count -> {
+                        // TODO needs improvement
+                        //  take (average) radio communication time into account
+                        double factor = (double)count / numberOfProgressReports;
+                        // Round estimated unites delivered to pod pulse size 0.05
+                        int roundingDivisor = (int) (1 / OmnipodConst.POD_PULSE_SIZE);
+                        double estimatedUnitsDelivered = Math.round(factor * units * roundingDivisor) / roundingDivisor;
+                        progressIndicationConsumer.accept(estimatedUnitsDelivered, (int) (factor * 100));
+                    }));
+        }
+
+        return Single.create(emitter -> {
+            executeDelayed(() -> {
+                try {
+                    StatusResponse statusResponse = getPodStatus();
+                    if (statusResponse.getDeliveryStatus().isBolusing()) {
+                        emitter.onError(new IllegalDeliveryStatusException(DeliveryStatus.NORMAL, statusResponse.getDeliveryStatus()));
+                    } else {
+                        emitter.onSuccess(statusResponse);
+                    }
+                } catch (Exception ex) {
+                    emitter.onError(ex);
                 }
-            } catch (Exception ex) {
-                emitter.onError(ex);
-            }
-        }, calculateBolusDuration(units, OmnipodConst.POD_BOLUS_DELIVERY_RATE)));
+            }, bolusDuration);
+        });
     }
 
     public void cancelBolus() {
