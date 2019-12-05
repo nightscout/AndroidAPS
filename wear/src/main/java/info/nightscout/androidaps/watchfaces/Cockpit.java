@@ -48,13 +48,13 @@ public class Cockpit extends BaseWatchFace {
         setTextSizes();
 
         if (mHighLight != null && mLowLight != null) {
-            if (sgvLevel == 1) {
+            if (rawData.sgvLevel == 1) {
                 mHighLight.setBackgroundResource(R.drawable.airplane_led_yellow_lit);
                 mLowLight.setBackgroundResource(R.drawable.airplane_led_grey_unlit);
-            } else if (sgvLevel == 0) {
+            } else if (rawData.sgvLevel == 0) {
                 mHighLight.setBackgroundResource(R.drawable.airplane_led_grey_unlit);
                 mLowLight.setBackgroundResource(R.drawable.airplane_led_grey_unlit);
-            } else if (sgvLevel == -1) {
+            } else if (rawData.sgvLevel == -1) {
                 mHighLight.setBackgroundResource(R.drawable.airplane_led_grey_unlit);
                 mLowLight.setBackgroundResource(R.drawable.airplane_led_red_lit);
             }
@@ -82,7 +82,7 @@ public class Cockpit extends BaseWatchFace {
     protected void setTextSizes() {
 
         if (mIOB2 != null) {
-            if (detailedIOB) {
+            if (rawData.detailedIOB) {
                 if (bIsRound) {
                     mIOB2.setTextSize(10);
                 } else {

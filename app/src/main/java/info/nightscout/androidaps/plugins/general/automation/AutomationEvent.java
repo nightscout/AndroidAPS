@@ -10,8 +10,11 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.general.automation.actions.Action;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AutomationEvent {
+    private static final Logger log = LoggerFactory.getLogger(AutomationEvent.class);
 
     private Trigger trigger = new TriggerConnector();
     private List<Action> actions = new ArrayList<>();
@@ -74,7 +77,7 @@ public class AutomationEvent {
             }
             o.put("actions", array);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -91,7 +94,7 @@ public class AutomationEvent {
                 actions.add(Action.instantiate(new JSONObject(array.getString(i))));
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }

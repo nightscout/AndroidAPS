@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.preference.Preference;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -108,6 +110,14 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             NSProfilePlugin.getPlugin().setPluginEnabled(PluginType.PROFILE, true);
             NSProfilePlugin.getPlugin().setFragmentVisible(PluginType.PROFILE, true);
         }
+    }
+
+    @Override
+    public void updatePreferenceSummary(@NotNull Preference pref) {
+        super.updatePreferenceSummary(pref);
+
+        if (pref.getKey().equals(MainApp.gs(R.string.key_danars_name)))
+            pref.setSummary(SP.getString(R.string.key_danars_name, ""));
     }
 
     @Override
@@ -273,11 +283,6 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         if (DanaRPump.getInstance().lastSettingsRead == 0)
             return null; // no info now
         return DanaRPump.getInstance().createConvertedProfile();
-    }
-
-    @Override
-    public String getUnits() {
-        return DanaRPump.getInstance().getUnits();
     }
 
     @Override

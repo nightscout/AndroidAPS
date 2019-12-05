@@ -8,6 +8,8 @@
     android:layout_marginTop="8dp"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true"
     android:background="@color/ribbonDefault"
     android:padding="8dp">
 
@@ -26,21 +28,21 @@
         android:layout_alignBottom="@+id/automation_enabled"
         android:layout_centerVertical="true"
         android:layout_marginTop="6dp"
-        android:layout_toStartOf="@+id/iconTrash"
+        android:layout_toStartOf="@+id/iconSort"
         android:layout_toEndOf="@id/automation_enabled"
         android:text="Title"
         android:textAlignment="viewStart"
         android:textStyle="bold" />
 
     <ImageView
-        android:id="@+id/iconTrash"
+        android:id="@+id/iconSort"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:contentDescription="@string/remove_label"
+        android:contentDescription="@string/reorder_label"
         android:orientation="horizontal"
-        android:src="@drawable/ic_trash_outline" />
+        android:src="@drawable/ic_reorder_gray_24dp" />
 
     <LinearLayout
         android:id="@+id/iconLayout"

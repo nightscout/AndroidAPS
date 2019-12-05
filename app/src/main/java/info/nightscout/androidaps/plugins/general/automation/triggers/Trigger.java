@@ -1,22 +1,25 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.common.base.Optional;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 
 public abstract class Trigger {
+    private static final Logger log = LoggerFactory.getLogger(Trigger.class);
 
     TriggerConnector connector = null;
     long lastRun;
@@ -56,7 +59,7 @@ public abstract class Trigger {
         try {
             return instantiate(new JSONObject(json));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return null;
     }
@@ -69,7 +72,7 @@ public abstract class Trigger {
             Class clazz = Class.forName(type);
             return ((Trigger) clazz.newInstance()).fromJSON(data.toString());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return null;
     }
@@ -81,11 +84,11 @@ public abstract class Trigger {
     }
 
     @Nullable
-    Activity scanForActivity(Context cont) {
+    AppCompatActivity scanForActivity(Context cont) {
         if (cont == null)
             return null;
-        else if (cont instanceof Activity)
-            return (Activity) cont;
+        else if (cont instanceof AppCompatActivity)
+            return (AppCompatActivity) cont;
         else if (cont instanceof ContextWrapper)
             return scanForActivity(((ContextWrapper) cont).getBaseContext());
 

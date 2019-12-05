@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
@@ -19,10 +20,11 @@ import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.T;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)
 public class BgReading implements DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
+    private static Logger log = LoggerFactory.getLogger(L.GLUCOSE);
 
     @DatabaseField(id = true)
     public long date;
@@ -73,9 +75,10 @@ public class BgReading implements DataPointWithLabelInterface {
 
     public String directionToSymbol() {
         String symbol = "";
-        if (direction == null) {
-            symbol = "??";
-        } else if (direction.compareTo("DoubleDown") == 0) {
+        if (direction == null)
+            direction = calculateDirection();
+
+        if (direction.compareTo("DoubleDown") == 0) {
             symbol = "\u21ca";
         } else if (direction.compareTo("SingleDown") == 0) {
             symbol = "\u2193";
@@ -95,18 +98,13 @@ public class BgReading implements DataPointWithLabelInterface {
         return symbol;
     }
 
-    public static boolean isSlopeNameInvalid(String direction) {
-        if (direction.compareTo("NOT_COMPUTABLE") == 0 ||
+    private static boolean isSlopeNameInvalid(String direction) {
+        return direction.compareTo("NOT_COMPUTABLE") == 0 ||
                 direction.compareTo("NOT COMPUTABLE") == 0 ||
                 direction.compareTo("OUT_OF_RANGE") == 0 ||
                 direction.compareTo("OUT OF RANGE") == 0 ||
                 direction.compareTo("NONE") == 0 ||
-                direction.compareTo("NotComputable") == 0
-                ) {
-            return true;
-        } else {
-            return false;
-        }
+                direction.compareTo("NotComputable") == 0;
     }
 
 
@@ -123,7 +121,8 @@ public class BgReading implements DataPointWithLabelInterface {
 
     public boolean isDataChanging(BgReading other) {
         if (date != other.date) {
-            log.error("Comparing different");
+            if (L.isEnabled(L.GLUCOSE))
+                log.error("Comparing different");
             return false;
         }
         if (value != other.value)
@@ -133,7 +132,8 @@ public class BgReading implements DataPointWithLabelInterface {
 
     public boolean isEqual(BgReading other) {
         if (date != other.date) {
-            log.error("Comparing different");
+            if (L.isEnabled(L.GLUCOSE))
+                log.error("Comparing different");
             return false;
         }
         if (value != other.value)
@@ -149,7 +149,8 @@ public class BgReading implements DataPointWithLabelInterface {
 
     public void copyFrom(BgReading other) {
         if (date != other.date) {
-            log.error("Copying different");
+            if (L.isEnabled(L.GLUCOSE))
+                log.error("Copying different");
             return;
         }
         value = other.value;
@@ -181,8 +182,7 @@ public class BgReading implements DataPointWithLabelInterface {
 
     @Override
     public double getY() {
-        String units = ProfileFunctions.getInstance().getProfileUnits();
-        return valueToUnits(units);
+        return valueToUnits(ProfileFunctions.getSystemUnits());
     }
 
     @Override
@@ -215,9 +215,9 @@ public class BgReading implements DataPointWithLabelInterface {
 
     @Override
     public int getColor() {
-        String units = ProfileFunctions.getInstance().getProfileUnits();
-        Double lowLine = OverviewPlugin.INSTANCE.determineLowLine(units);
-        Double highLine = OverviewPlugin.INSTANCE.determineHighLine(units);
+        String units = ProfileFunctions.getSystemUnits();
+        Double lowLine = OverviewPlugin.INSTANCE.determineLowLine();
+        Double highLine = OverviewPlugin.INSTANCE.determineHighLine();
         int color = MainApp.gc(R.color.inrange);
         if (isPrediction())
             return getPredectionColor();
@@ -246,4 +246,53 @@ public class BgReading implements DataPointWithLabelInterface {
         return isaCOBPrediction || isCOBPrediction || isIOBPrediction || isUAMPrediction || isZTPrediction;
     }
 
+
+    // Copied from xDrip+
+    String calculateDirection() {
+        // Rework to get bgreaings from internal DB and calculate on that base
+
+        List<BgReading> bgReadingsList = MainApp.getDbHelper().getAllBgreadingsDataFromTime(this.date - T.mins(10).msecs(), false);
+        if (bgReadingsList == null || bgReadingsList.size() < 2)
+            return "NONE";
+        BgReading current = bgReadingsList.get(1);
+        BgReading previous = bgReadingsList.get(0);
+
+        if (bgReadingsList.get(1).date < bgReadingsList.get(0).date) {
+            current = bgReadingsList.get(0);
+            previous = bgReadingsList.get(1);
+        }
+
+        double slope;
+
+        // Avoid division by 0
+        if (current.date == previous.date)
+            slope = 0;
+        else
+            slope = (previous.value - current.value) / (previous.date - current.date);
+
+        if (L.isEnabled(L.GLUCOSE))
+            log.debug("Slope is :" + slope + " delta " + (previous.value - current.value) + " date difference " + (current.date - previous.date));
+
+        double slope_by_minute = slope * 60000;
+        String arrow = "NONE";
+
+        if (slope_by_minute <= (-3.5)) {
+            arrow = "DoubleDown";
+        } else if (slope_by_minute <= (-2)) {
+            arrow = "SingleDown";
+        } else if (slope_by_minute <= (-1)) {
+            arrow = "FortyFiveDown";
+        } else if (slope_by_minute <= (1)) {
+            arrow = "Flat";
+        } else if (slope_by_minute <= (2)) {
+            arrow = "FortyFiveUp";
+        } else if (slope_by_minute <= (3.5)) {
+            arrow = "SingleUp";
+        } else if (slope_by_minute <= (40)) {
+            arrow = "DoubleUp";
+        }
+        if (L.isEnabled(L.GLUCOSE))
+            log.debug("Direction set to: " + arrow);
+        return arrow;
+    }
 }

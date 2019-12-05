@@ -260,11 +260,23 @@
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">XXXXXXXXXX +; + YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode">Para entregar bolo %1$.2fU responder con código %2$s</string>
+    <string name="smscommunicator_mealbolusreplywithcode">Para entregar bolo %1$.2fU responder con código %2$s</string>
+    <string name="smscommunicator_temptargetwithcode">Para establecer un basal temporal %1$s responder con el código %2$s</string>
+    <string name="smscommunicator_temptargetcancel">Para cancelar la basal temporal, responder con el código %1$s</string>
+    <string name="smscommunicator_stopsmswithcode">Para inhabilitar la respuesta de servicio remoto de SMS, responder con el código %1$s.\n\nTenga en cuenta que solamente será capaz de reactivarlo directamente desde el móvil con la AAPS maestro.</string>
+    <string name="smscommunicator_stoppedsms">Servicio remoto de SMS detenido. Para reactivarlo, utilice AAPS en el movil maestro.</string>
     <string name="smscommunicator_calibrationreplywithcode">Para enviar calibración %1$.2f responder con código %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolo falló</string>
+    <string name="smscommunicator_remotebolusmindistance_summary">Número mínimo de minutos que deben transcursar entre un bolus remoto y el siguiente</string>
+    <string name="smscommunicator_remotebolusmindistance">Cuántos minutos deben transcurrir, al menos, entre un bolo y el siguiente</string>
+    <string name="smscommunicator_remotebolusmindistance_caveat">Por su seguridad, para editar esta preferencia es necesario añadir al menos 2 números de teléfono.</string>
     <string name="bolusdelivered">El bolo %1$.2fU se ha infundido correctamente</string>
     <string name="bolusrequested">Se van a infundir %1$.2fU</string>
     <string name="smscommunicator_bolusdelivered">El bolo %1$.2fU se ha infundido correctamente</string>
+    <string name="smscommunicator_mealbolusdelivered">Bolo %1$.2fU entregado correctamente</string>
+    <string name="smscommunicator_mealbolusdelivered_tt">Objetivo %1$s para %2$d minutos</string>
+    <string name="smscommunicator_tt_set">Objetivo %1$s para %2$d minutos establecido correctamente</string>
+    <string name="smscommunicator_tt_canceled">Objetivo temporal cancelado con éxito</string>
     <string name="bolusdelivering">Infundiendo %1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Permitir comandos remotos vía SMS</string>
     <string name="glucosetype_finger">Dedo</string>
@@ -324,10 +336,13 @@
     <string name="smscommunicator_basalreplywithcode">Para iniciar una basal de %1$.2f% durante %2$d min, responder con el código %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Para cambiar el perfil a %1$s %2$d%% responder con el código %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">Para iniciar un bolo extendido de %1$.2fU durante %2$d minutos, responder con el código %3$s</string>
+    <string name="smscommunicator_carbsreplywithcode">Para introducir %1$dg en %2$s responder con código %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Para iniciar una basal de %1$d%% durante %2$d min, responder con el código %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Para cancelar lazo por %1$d minutos responde con código %2$s</string>
     <string name="smscommunicator_tempbasalset">Basal temporal %1$.2fU/h para %2$d min iniciada correctamente</string>
     <string name="smscommunicator_extendedset">Bolo ampliado de %1$.2fU durante %2$d min se inició correctamente</string>
+    <string name="smscommunicator_carbsset">Los carbohidratos %1$dg introducidos con éxito</string>
+    <string name="smscommunicator_carbsfailed">Error al introducir %1$dg de carbohidratos</string>
     <string name="smscommunicator_tempbasalset_percent">Basal temporal de %1$d%% durante %2$d min iniciada correctamente</string>
     <string name="smscommunicator_tempbasalfailed">Fallo inicio basal temporal</string>
     <string name="smscommunicator_extendedfailed">Error al iniciar el bolo extendido</string>
@@ -361,10 +376,8 @@
     <string name="button1">Botón 1</string>
     <string name="button2">Botón 2</string>
     <string name="button3">Botón 3</string>
-    <string name="units">Unidades:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA (Duración Insulina Activa):</string>
     <string name="target_range">Rango Objetivo:</string>
     <string name="prefs_range_title">Rango de visualización</string>
     <string name="prefs_range_summary">Marcas Alta y Baja para gráficos en pantalla Inicio y Smartwatch</string>
@@ -680,6 +693,7 @@
     <string name="shortgramm">g</string>
     <string name="shortminute">m</string>
     <string name="shorthour">h</string>
+    <string name="shortday">d</string>
     <string name="none"><![CDATA[<ninguno>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
@@ -708,6 +722,7 @@
     <string name="bgsource_upload">Ajuste de subida de datos de glucosa</string>
     <string name="wear_detailed_delta_title">Mostrar detalles delta</string>
     <string name="wear_detailed_delta_summary">Mostrar delta con un decimal mas</string>
+    <string name="smbmaxminutes">Minutos máximos SMB</string>
     <string name="smbmaxminutes_summary">Minutos máximos de basal para limitar SMB</string>
     <string name="unsupportedfirmware">Firmware de la bomba no soportado</string>
     <string name="dexcomg5_xdripupload_title">Mandar datos BG a xDrip+</string>
@@ -1147,8 +1162,8 @@
     <string name="tidepool_upload_tbr">Subir basales temporales</string>
     <string name="tidepool_upload_profile">Subir conmutaciones de perfil, objetivos temps</string>
     <string name="tidepool_upload_bg">Subir pruebas BG</string>
-    <string name="dst_in_24h_warning">Cambio al horario de verano/invierno en menos de 24 horas</string>
-    <string name="dst_loop_disabled_warning">Cambio al horario de verano/invierno hace menos de 3 horas - Lazo cerrado deshabilitado</string>
+    <string name="dst_in_24h_warning">Cambio al horario de verano en menos de 24 horas</string>
+    <string name="dst_loop_disabled_warning">Cambio al horario de verano hace menos de 3 horas - Lazo cerrado deshabilitado</string>
     <string name="storage">restricción de almacenamiento interno</string>
     <string name="diskfull">Libera al menos %1$d MB de almacenamiento interno. ¡Loop desactivado!</string>
     <string name="wrongformat">Formato incorrecto</string>
@@ -1236,6 +1251,8 @@
     <string name="medtronic_pump_battery_no">No seleccionado (Vista simple)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (vista extendida)</string>
     <string name="medtronic_pump_battery_lithium">Litio (vista extendida)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (vista ampliada)</string>
+    <string name="medtronic_bolus_debugging">Bolos/Depuración de Tratamientos</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">ESCANEAR</string>
     <string name="rileylink_scanner_scan_stop">DETENER</string>
@@ -1373,4 +1390,10 @@
     <string name="boluswizard">Asistente Bolus</string>
     <string name="unit_minute_short">min</string>
     <string name="format_carbs">%1$dg</string>
+    <string name="common_on">Activado</string>
+    <string name="common_off">Desactivado</string>
+    <string name="objectives_button_unfinish">Limpieza finalizada</string>
+    <string name="objectives_button_unstart">Limpieza iniciada</string>
+    <string name="timedetection">Detección de tiempo</string>
+    <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>
 </resources>

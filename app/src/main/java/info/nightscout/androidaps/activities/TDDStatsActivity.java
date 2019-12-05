@@ -54,7 +54,7 @@ import info.nightscout.androidaps.utils.SafeParse;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class TDDStatsActivity extends NoSplashActivity {
+public class TDDStatsActivity extends NoSplashAppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(TDDStatsActivity.class);
     private CompositeDisposable disposable = new CompositeDisposable();
 

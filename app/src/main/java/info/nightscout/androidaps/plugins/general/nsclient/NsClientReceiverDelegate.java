@@ -18,44 +18,19 @@ import info.nightscout.androidaps.utils.SP;
 
 class NsClientReceiverDelegate {
 
-    private final Context context;
-
-    private NetworkChangeReceiver networkChangeReceiver = new NetworkChangeReceiver();
-    private ChargingStateReceiver chargingStateReceiver = new ChargingStateReceiver();
-
     private boolean allowedChargingState = true;
     private boolean allowedNetworkState = true;
     boolean allowed = true;
 
-    NsClientReceiverDelegate(Context context) {
-        this.context = context;
-    }
-
-    void registerReceivers() {
+    void grabReceiversState() {
         Context context = MainApp.instance().getApplicationContext();
-        // register NetworkChangeReceiver --> https://developer.android.com/training/monitoring-device-state/connectivity-monitoring.html
-        // Nougat is not providing Connectivity-Action anymore ;-(
-        context.registerReceiver(networkChangeReceiver,
-                new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        context.registerReceiver(networkChangeReceiver,
-                new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION));
 
-        EventNetworkChange event = networkChangeReceiver.grabNetworkStatus(context);
-        if (event != null)
-            RxBus.INSTANCE.send(event);
+        EventNetworkChange event = NetworkChangeReceiver.grabNetworkStatus(context);
+        if (event != null) RxBus.INSTANCE.send(event);
 
-        context.registerReceiver(chargingStateReceiver,
-                new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        EventChargingState eventChargingState = ChargingStateReceiver.grabChargingState(context);
+        if (eventChargingState != null) RxBus.INSTANCE.send(eventChargingState);
 
-        EventChargingState eventChargingState = chargingStateReceiver.grabChargingState(context);
-        if (eventChargingState != null)
-            RxBus.INSTANCE.send(eventChargingState);
-
-    }
-
-    void unregisterReceivers() {
-        context.unregisterReceiver(networkChangeReceiver);
-        context.unregisterReceiver(chargingStateReceiver);
     }
 
     void onStatusEvent(EventPreferenceChange ev) {
@@ -63,11 +38,11 @@ class NsClientReceiverDelegate {
                 ev.isChanged(R.string.key_ns_wifi_ssids) ||
                 ev.isChanged(R.string.key_ns_allowroaming)
         ) {
-            EventNetworkChange event = networkChangeReceiver.grabNetworkStatus(MainApp.instance().getApplicationContext());
+            EventNetworkChange event = NetworkChangeReceiver.grabNetworkStatus(MainApp.instance().getApplicationContext());
             if (event != null)
                 RxBus.INSTANCE.send(event);
         } else if (ev.isChanged(R.string.key_ns_chargingonly)) {
-            EventChargingState event = chargingStateReceiver.grabChargingState(MainApp.instance().getApplicationContext());
+            EventChargingState event = ChargingStateReceiver.grabChargingState(MainApp.instance().getApplicationContext());
             if (event != null)
                 RxBus.INSTANCE.send(event);
         }
@@ -91,7 +66,7 @@ class NsClientReceiverDelegate {
         }
     }
 
-    void processStateChange() {
+    private void processStateChange() {
         boolean newAllowedState = allowedChargingState && allowedNetworkState;
         if (newAllowedState != allowed) {
             allowed = newAllowedState;
@@ -101,7 +76,6 @@ class NsClientReceiverDelegate {
 
     boolean calculateStatus(final EventChargingState ev) {
         boolean chargingOnly = SP.getBoolean(R.string.key_ns_chargingonly, false);
-
         boolean newAllowedState = true;
 
         if (!ev.isCharging() && chargingOnly) {
@@ -129,8 +103,6 @@ class NsClientReceiverDelegate {
             }
         }
 
-
         return newAllowedState;
     }
-
 }

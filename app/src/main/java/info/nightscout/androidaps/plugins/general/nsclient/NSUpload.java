@@ -312,21 +312,14 @@ public class NSUpload {
 
     public static void uploadTempTarget(TempTarget tempTarget) {
         try {
-            Profile profile = ProfileFunctions.getInstance().getProfile();
-
-            if (profile == null) {
-                log.error("Profile is null. Skipping upload");
-                return;
-            }
-
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPORARYTARGET);
             data.put("duration", tempTarget.durationInMinutes);
             data.put("reason", tempTarget.reason);
-            data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()));
-            data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()));
+            data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.low, ProfileFunctions.getSystemUnits()));
+            data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.high, ProfileFunctions.getSystemUnits()));
             data.put("created_at", DateUtil.toISOString(tempTarget.date));
-            data.put("units", profile.getUnits());
+            data.put("units", ProfileFunctions.getSystemUnits());
             data.put("enteredBy", MainApp.gs(R.string.app_name));
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
@@ -517,6 +510,21 @@ public class NSUpload {
         }
     }
 
+    public static void uploadProfileStore(JSONObject profileStore) {
+        if (SP.getBoolean(R.string.key_ns_uploadlocalprofile, false)) {
+            Context context = MainApp.instance().getApplicationContext();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "profile");
+            bundle.putString("data", String.valueOf(profileStore));
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+            DbLogger.dbAdd(intent, String.valueOf(profileStore));
+        }
+    }
+
     public static void uploadEvent(String careportalEvent, long time, @Nullable String notes) {
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();
@@ -594,7 +602,7 @@ public class NSUpload {
 
 
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
     }

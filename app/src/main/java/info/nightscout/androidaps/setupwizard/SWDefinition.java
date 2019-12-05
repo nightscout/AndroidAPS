@@ -33,10 +33,9 @@ import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
-import info.nightscout.androidaps.plugins.profile.simple.SimpleProfileFragment;
-import info.nightscout.androidaps.plugins.profile.simple.SimpleProfilePlugin;
 import info.nightscout.androidaps.setupwizard.elements.SWBreak;
 import info.nightscout.androidaps.setupwizard.elements.SWButton;
+import info.nightscout.androidaps.setupwizard.elements.SWEditNumberWithUnits;
 import info.nightscout.androidaps.setupwizard.elements.SWEditString;
 import info.nightscout.androidaps.setupwizard.elements.SWEditUrl;
 import info.nightscout.androidaps.setupwizard.elements.SWFragment;
@@ -109,6 +108,29 @@ public class SWDefinition {
                     }))
             .visibility(() -> !SP.getBoolean(R.string.key_i_understand, false))
             .validator(() -> SP.getBoolean(R.string.key_i_understand, false));
+
+    private SWScreen screenUnits = new SWScreen(R.string.units)
+            .skippable(false)
+            .add(new SWRadioButton()
+                    .option(R.array.unitsArray, R.array.unitsValues)
+                    .preferenceId(R.string.key_units).label(R.string.units)
+                    .comment(R.string.setupwizard_units_prompt))
+            .validator(() -> SP.contains(R.string.key_units));
+
+    private SWScreen displaySettings = new SWScreen(R.string.wear_display_settings)
+            .skippable(false)
+            .add(new SWEditNumberWithUnits(4d, 3d, 8d)
+                    .preferenceId(R.string.key_low_mark)
+                    .updateDelay(5)
+                    .label(R.string.low_mark)
+                    .comment(R.string.low_mark_comment))
+            .add(new SWBreak())
+            .add(new SWEditNumberWithUnits(10d, 5d, 20d)
+                    .preferenceId(R.string.key_high_mark)
+                    .updateDelay(5)
+                    .label(R.string.high_mark)
+                    .comment(R.string.high_mark_comment))
+            .validator(() -> SP.contains(R.string.key_low_mark) && SP.contains(R.string.key_high_mark));
 
     private SWScreen screenPermissionBattery = new SWScreen(R.string.permission)
             .skippable(false)
@@ -270,15 +292,8 @@ public class SWDefinition {
             .skippable(false)
             .add(new SWFragment(this)
                     .add(new LocalProfileFragment()))
-            .validator(() -> LocalProfilePlugin.getPlugin().getProfile() != null && LocalProfilePlugin.getPlugin().getProfile().getDefaultProfile() != null && LocalProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid("StartupWizard"))
-            .visibility(() -> LocalProfilePlugin.getPlugin().isEnabled(PluginType.PROFILE));
-
-    private SWScreen screenSimpleProfile = new SWScreen(R.string.simpleprofile)
-            .skippable(false)
-            .add(new SWFragment(this)
-                    .add(new SimpleProfileFragment()))
-            .validator(() -> SimpleProfilePlugin.getPlugin().getProfile() != null && SimpleProfilePlugin.getPlugin().getProfile().getDefaultProfile() != null && SimpleProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid("StartupWizard"))
-            .visibility(() -> SimpleProfilePlugin.getPlugin().isEnabled(PluginType.PROFILE));
+            .validator(() -> LocalProfilePlugin.INSTANCE.getProfile() != null && LocalProfilePlugin.INSTANCE.getProfile().getDefaultProfile() != null && LocalProfilePlugin.INSTANCE.getProfile().getDefaultProfile().isValid("StartupWizard"))
+            .visibility(() -> LocalProfilePlugin.INSTANCE.isEnabled(PluginType.PROFILE));
 
     private SWScreen screenProfileSwitch = new SWScreen(R.string.profileswitch)
             .skippable(false)
@@ -421,6 +436,8 @@ public class SWDefinition {
                 .add(screenPermissionBt)
                 .add(screenPermissionStore)
                 .add(screenImport)
+                .add(screenUnits)
+                .add(displaySettings)
                 .add(screenNsClient)
                 .add(screenAge)
                 .add(screenInsulin)
@@ -428,7 +445,6 @@ public class SWDefinition {
                 .add(screenProfile)
                 .add(screenNsProfile)
                 .add(screenLocalProfile)
-                .add(screenSimpleProfile)
                 .add(screenProfileSwitch)
                 .add(screenPump)
                 .add(screenAps)
@@ -448,6 +464,8 @@ public class SWDefinition {
                 .add(screenPermissionBt)
                 .add(screenPermissionStore)
                 .add(screenImport)
+                .add(screenUnits)
+                .add(displaySettings)
                 .add(screenNsClient)
                 .add(screenAge)
                 .add(screenInsulin)
@@ -455,7 +473,6 @@ public class SWDefinition {
                 .add(screenProfile)
                 .add(screenNsProfile)
                 .add(screenLocalProfile)
-                .add(screenSimpleProfile)
                 .add(screenProfileSwitch)
                 .add(screenPump)
                 .add(screenSensitivity)
@@ -470,6 +487,8 @@ public class SWDefinition {
                 .add(screenPermissionBattery)
                 .add(screenPermissionStore)
                 .add(screenImport)
+                .add(screenUnits)
+                .add(displaySettings)
                 .add(screenNsClient)
                 .add(screenBgSource)
                 .add(screenAge)

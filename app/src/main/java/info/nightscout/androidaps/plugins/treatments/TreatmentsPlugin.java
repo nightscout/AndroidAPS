@@ -349,7 +349,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         long time = System.currentTimeMillis();
         synchronized (treatments) {
             if (MedtronicHistoryData.doubleBolusDebug)
-                log.debug("DoubleBolusDebug: AllTreatmentsInDb: {}", MedtronicUtil.getGsonInstance().toJson(treatments));
+                log.debug("DoubleBolusDebug: AllTreatmentsInDb: {}", MedtronicUtil.getGsonInstanceCore().toJson(treatments));
 
             for (Treatment t : treatments) {
                 if (t.date <= time && t.date >= fromTimestamp)
@@ -357,7 +357,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             }
 
             if (MedtronicHistoryData.doubleBolusDebug)
-                log.debug("DoubleBolusDebug: FilteredTreatments: AfterTime={}, Items={}", fromTimestamp, MedtronicUtil.getGsonInstance().toJson(in5minback));
+                log.debug("DoubleBolusDebug: FilteredTreatments: AfterTime={}, Items={}", fromTimestamp, MedtronicUtil.getGsonInstanceCore().toJson(in5minback));
 
             return in5minback;
         }

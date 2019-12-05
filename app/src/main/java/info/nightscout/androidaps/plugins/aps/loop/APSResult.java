@@ -247,7 +247,7 @@ public class APSResult {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return array;
     }
@@ -280,7 +280,7 @@ public class APSResult {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
         return latest;

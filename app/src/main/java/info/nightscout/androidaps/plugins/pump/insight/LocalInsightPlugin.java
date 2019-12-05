@@ -1526,7 +1526,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             data.put("notes", note);
             NSUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -1554,7 +1554,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             data.put("eventType", event);
             NSUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
