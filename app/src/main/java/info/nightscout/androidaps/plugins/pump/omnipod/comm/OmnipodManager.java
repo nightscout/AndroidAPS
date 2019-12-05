@@ -52,8 +52,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.subjects.SingleSubject;
 
-import static info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION;
-
 public class OmnipodManager {
     private static final int ACTION_VERIFICATION_TRIES = 3;
 
@@ -161,22 +159,38 @@ public class OmnipodManager {
 
     // Returns a SingleSubject that returns when the bolus has finished.
     // When a bolus is cancelled, it will return after cancellation and report the estimated units delivered
-    public synchronized SingleSubject<BolusResult> bolus(Double units, BolusProgressIndicationConsumer progressIndicationConsumer) {
+    // Only throws OmnipodException[certainFailure=false]
+    public synchronized BolusCommandResult bolus(Double units, BolusProgressIndicationConsumer progressIndicationConsumer) {
         assertReadyForDelivery();
 
-        executeAndVerify(() -> communicationService.executeAction(new BolusAction(podState, units, true, true)));
+        CommandDeliveryStatus commandDeliveryStatus = CommandDeliveryStatus.SUCCESS;
 
-        DateTime startDate = DateTime.now().minus(AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
+        try {
+            executeAndVerify(() -> communicationService.executeAction(new BolusAction(podState, units, true, true)));
+        } catch (OmnipodException ex) {
+            if (ex.isCertainFailure()) {
+                throw ex;
+            }
+
+            // Catch uncertain exceptions as we still want to report bolus progress indication
+            if (isLoggingEnabled()) {
+                LOG.error("Caught exception[certainFailure=false] in bolus", ex);
+            }
+            commandDeliveryStatus = CommandDeliveryStatus.UNCERTAIN_FAILURE;
+        }
+
+        DateTime startDate = DateTime.now().minus(OmnipodConst.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
 
         CompositeDisposable disposables = new CompositeDisposable();
         Duration bolusDuration = calculateBolusDuration(units, OmnipodConst.POD_BOLUS_DELIVERY_RATE);
-        Duration estimatedRemainingBolusDuration = bolusDuration.minus(AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
+        Duration estimatedRemainingBolusDuration = bolusDuration.minus(OmnipodConst.AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION);
 
         if (progressIndicationConsumer != null) {
-            int numberOfProgressReports = 20;
+            int numberOfProgressReports = Math.max(20, Math.min(100, (int) Math.ceil(units) * 10));
             long progressReportInterval = estimatedRemainingBolusDuration.getMillis() / numberOfProgressReports;
 
-            disposables.add(Flowable.intervalRange(1, numberOfProgressReports, 0, progressReportInterval, TimeUnit.MILLISECONDS) //
+            disposables.add(Flowable.intervalRange(0, numberOfProgressReports + 1, 0, progressReportInterval, TimeUnit.MILLISECONDS) //
+                    .observeOn(AndroidSchedulers.mainThread()) //
                     .subscribe(count -> {
                         int percentage = (int) ((double) count / numberOfProgressReports * 100);
                         double estimatedUnitsDelivered = activeBolusData == null ? 0 : activeBolusData.estimateUnitsDelivered();
@@ -184,10 +198,11 @@ public class OmnipodManager {
                     }));
         }
 
-        SingleSubject<BolusResult> bolusCompletionSubject = SingleSubject.create();
+        SingleSubject<BolusDeliveryResult> bolusCompletionSubject = SingleSubject.create();
 
-        disposables.add(Completable.complete()
-                .delay(estimatedRemainingBolusDuration.getStandardSeconds(), TimeUnit.SECONDS)
+        disposables.add(Completable.complete() //
+                .delay(estimatedRemainingBolusDuration.getMillis() + 250, TimeUnit.MILLISECONDS) //
+                .observeOn(AndroidSchedulers.mainThread()) //
                 .doOnComplete(() -> {
                     synchronized (bolusDataLock) {
                         for (int i = 0; i < ACTION_VERIFICATION_TRIES; i++) {
@@ -207,7 +222,7 @@ public class OmnipodManager {
                         }
 
                         if (activeBolusData != null) {
-                            activeBolusData.bolusCompletionSubject.onSuccess(new BolusResult(units));
+                            activeBolusData.bolusCompletionSubject.onSuccess(new BolusDeliveryResult(units));
                             activeBolusData = null;
                         }
                     }
@@ -218,7 +233,7 @@ public class OmnipodManager {
             activeBolusData = new ActiveBolusData(units, startDate, bolusCompletionSubject, disposables);
         }
 
-        return bolusCompletionSubject;
+        return new BolusCommandResult(commandDeliveryStatus, bolusCompletionSubject);
     }
 
     public synchronized void cancelBolus() {
@@ -232,7 +247,7 @@ public class OmnipodManager {
             executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.BOLUS, true)));
 
             activeBolusData.getDisposables().dispose();
-            activeBolusData.getBolusCompletionSubject().onSuccess(new BolusResult(activeBolusData.estimateUnitsDelivered()));
+            activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(activeBolusData.estimateUnitsDelivered()));
             activeBolusData = null;
         }
     }
@@ -308,7 +323,7 @@ public class OmnipodManager {
             if (isCertainFailure(ex)) {
                 throw ex;
             } else {
-                CommandVerificationResult verificationResult = verifyCommand();
+                CommandDeliveryStatus verificationResult = verifyCommand();
                 switch (verificationResult) {
                     case CERTAIN_FAILURE:
                         if (ex instanceof OmnipodException) {
@@ -335,12 +350,12 @@ public class OmnipodManager {
         }
     }
 
-    private SetupActionResult verifySetupAction(StatusResponseHandler setupActionResponseHandler, SetupProgress expectedSetupProgress) {
+    private SetupActionResult verifySetupAction(StatusResponseConsumer setupActionResponseHandler, SetupProgress expectedSetupProgress) {
         SetupActionResult result = null;
         for (int i = 0; ACTION_VERIFICATION_TRIES > i; i++) {
             try {
                 StatusResponse delayedStatusResponse = communicationService.executeAction(new GetStatusAction(podState));
-                setupActionResponseHandler.handle(delayedStatusResponse);
+                setupActionResponseHandler.accept(delayedStatusResponse);
 
                 if (podState.getSetupProgress().equals(expectedSetupProgress)) {
                     result = new SetupActionResult(SetupActionResult.ResultType.SUCCESS);
@@ -359,7 +374,7 @@ public class OmnipodManager {
     }
 
     // Only works for commands which contain nonce resyncable message blocks
-    private CommandVerificationResult verifyCommand() {
+    private CommandDeliveryStatus verifyCommand() {
         if (isLoggingEnabled()) {
             LOG.warn("Verifying command by using cancel none command to verify nonce");
         }
@@ -370,12 +385,12 @@ public class OmnipodManager {
             if (isLoggingEnabled()) {
                 LOG.info("Command resolved to FAILURE (CERTAIN_FAILURE)");
             }
-            return CommandVerificationResult.CERTAIN_FAILURE;
+            return CommandDeliveryStatus.CERTAIN_FAILURE;
         } catch (Exception ex) {
             if (isLoggingEnabled()) {
                 LOG.error("Command unresolved (UNCERTAIN_FAILURE)");
             }
-            return CommandVerificationResult.UNCERTAIN_FAILURE;
+            return CommandDeliveryStatus.UNCERTAIN_FAILURE;
         }
 
         if (isLoggingEnabled()) {
@@ -383,7 +398,7 @@ public class OmnipodManager {
                 LOG.info("Command status resolved to SUCCESS");
             }
         }
-        return CommandVerificationResult.SUCCESS;
+        return CommandDeliveryStatus.SUCCESS;
     }
 
     private boolean isLoggingEnabled() {
@@ -402,10 +417,28 @@ public class OmnipodManager {
         return ex instanceof OmnipodException && ((OmnipodException) ex).isCertainFailure();
     }
 
-    public static class BolusResult {
+    public static class BolusCommandResult {
+        private final CommandDeliveryStatus commandDeliveryStatus;
+        private final SingleSubject<BolusDeliveryResult> deliveryResultSubject;
+
+        public BolusCommandResult(CommandDeliveryStatus commandDeliveryStatus, SingleSubject<BolusDeliveryResult> deliveryResultSubject) {
+            this.commandDeliveryStatus = commandDeliveryStatus;
+            this.deliveryResultSubject = deliveryResultSubject;
+        }
+
+        public CommandDeliveryStatus getCommandDeliveryStatus() {
+            return commandDeliveryStatus;
+        }
+
+        public SingleSubject<BolusDeliveryResult> getDeliveryResultSubject() {
+            return deliveryResultSubject;
+        }
+    }
+
+    public static class BolusDeliveryResult {
         private final double unitsDelivered;
 
-        public BolusResult(double unitsDelivered) {
+        public BolusDeliveryResult(double unitsDelivered) {
             this.unitsDelivered = unitsDelivered;
         }
 
@@ -414,7 +447,7 @@ public class OmnipodManager {
         }
     }
 
-    private enum CommandVerificationResult {
+    public enum CommandDeliveryStatus {
         SUCCESS,
         CERTAIN_FAILURE,
         UNCERTAIN_FAILURE
@@ -422,17 +455,17 @@ public class OmnipodManager {
 
     // TODO replace with Consumer when our min API level >= 24
     @FunctionalInterface
-    private interface StatusResponseHandler {
-        void handle(StatusResponse statusResponse);
+    private interface StatusResponseConsumer {
+        void accept(StatusResponse statusResponse);
     }
 
     private static class ActiveBolusData {
         private final double units;
         private volatile DateTime startDate;
-        private volatile SingleSubject<BolusResult> bolusCompletionSubject;
+        private volatile SingleSubject<BolusDeliveryResult> bolusCompletionSubject;
         private volatile CompositeDisposable disposables;
 
-        private ActiveBolusData(double units, DateTime startDate, SingleSubject<BolusResult> bolusCompletionSubject, CompositeDisposable disposables) {
+        private ActiveBolusData(double units, DateTime startDate, SingleSubject<BolusDeliveryResult> bolusCompletionSubject, CompositeDisposable disposables) {
             this.units = units;
             this.startDate = startDate;
             this.bolusCompletionSubject = bolusCompletionSubject;
@@ -451,11 +484,11 @@ public class OmnipodManager {
             return disposables;
         }
 
-        public SingleSubject<BolusResult> getBolusCompletionSubject() {
+        public SingleSubject<BolusDeliveryResult> getBolusCompletionSubject() {
             return bolusCompletionSubject;
         }
 
-        public void setBolusCompletionSubject(SingleSubject<BolusResult> bolusCompletionSubject) {
+        public void setBolusCompletionSubject(SingleSubject<BolusDeliveryResult> bolusCompletionSubject) {
             this.bolusCompletionSubject = bolusCompletionSubject;
         }
 

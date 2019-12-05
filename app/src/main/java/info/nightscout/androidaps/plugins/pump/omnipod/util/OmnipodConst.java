@@ -35,7 +35,7 @@ public class OmnipodConst {
     public static final Duration MAX_TEMP_BASAL_DURATION = Duration.standardHours(12);
     public static final int DEFAULT_ADDRESS = 0xffffffff;
 
-    public static final Duration AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION = Duration.standardSeconds(2);
+    public static final Duration AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION = Duration.millis(1500);
 
     public static final Duration SERVICE_DURATION = Duration.standardHours(80);
     public static final Duration EXPIRATION_ADVISORY_WINDOW = Duration.standardHours(2);

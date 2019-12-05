@@ -47,7 +47,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodExceptio
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodReturnedErrorResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
-import io.reactivex.Single;
 import io.reactivex.disposables.Disposable;
 
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
@@ -148,44 +147,42 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return new PumpEnactResult().success(true).enacted(true);
     }
 
+    // TODO add boolean isSmb so we can disable progress indication for SMB
     @Override
-    public PumpEnactResult setBolus(Double units) {
+    public PumpEnactResult setBolus(Double units/*, boolean isSmb*/) {
+        OmnipodManager.BolusCommandResult bolusCommandResult;
         try {
-            Single<OmnipodManager.BolusResult> responseObserver = delegate.bolus(units,
+            bolusCommandResult = delegate.bolus(units, /* isSmb ? null : */
                     (estimatedUnitsDelivered, percentage) -> {
                         EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
                         progressUpdateEvent.setStatus(getStringResource(R.string.bolusdelivering, units));
                         progressUpdateEvent.setPercent(percentage);
                         RxBus.INSTANCE.send(progressUpdateEvent);
                     });
-
-            // At this point, we know that the bolus command has been succesfully sent
-
-            double unitsDelivered = units;
-
-            try {
-                // Wait for the bolus to finish
-                OmnipodManager.BolusResult bolusResult = responseObserver.blockingGet();
-                unitsDelivered = bolusResult.getUnitsDelivered();
-            } catch (Exception ex) {
-                if (loggingEnabled()) {
-                    LOG.debug("Ignoring failed status response for bolus completion verification", ex);
-                }
-            }
-
-            return new PumpEnactResult().success(true).enacted(true).bolusDelivered(unitsDelivered);
         } catch (Exception ex) {
-            // Sending the command failed
             String comment = handleAndTranslateException(ex);
-            if (OmnipodManager.isCertainFailure(ex)) {
-                return new PumpEnactResult().success(false).enacted(false).comment(comment);
-            } else {
-                // TODO notify user about uncertain failure
-                //  we don't know if the bolus failed, so for safety reasons, we choose to register the bolus as succesful.
-                // TODO also manually sleep until the bolus should have been finished here (after notifying the user)
-                return new PumpEnactResult().success(true).enacted(true).comment(comment).bolusDelivered(units);
+            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+        }
+
+        if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus()) /* && !isSmb */) {
+            // TODO notify user about uncertain failure ---> we're unsure whether or not the bolus has been delivered
+            //  For safety reasons, we should treat this as a bolus that has been delivered, in order to prevent insulin overdose
+        }
+
+        double unitsDelivered = units;
+
+        try {
+            // Wait for the bolus to finish
+            OmnipodManager.BolusDeliveryResult bolusDeliveryResult =
+                    bolusCommandResult.getDeliveryResultSubject().blockingGet();
+            unitsDelivered = bolusDeliveryResult.getUnitsDelivered();
+        } catch (Exception ex) {
+            if (loggingEnabled()) {
+                LOG.debug("Ignoring failed status response for bolus completion verification", ex);
             }
         }
+
+        return new PumpEnactResult().success(true).enacted(true).bolusDelivered(unitsDelivered);
     }
 
     @Override
