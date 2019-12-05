@@ -205,7 +205,7 @@
     <string name="careportal_newnstreatment_carbtime_label">Heure glucides</string>
     <string name="careportal_newnstreatment_split_label">Diviser</string>
     <string name="careportal_newnstreatment_duration_label">Durée</string>
-    <string name="careportal_newnstreatment_percent_label">Pour cent</string>
+    <string name="careportal_newnstreatment_percent_label">Pourcentage</string>
     <string name="careportal_newnstreatment_absolute_label">Absolu</string>
     <string name="careportal_newnstreatment_notes_label">Notes</string>
     <string name="careportal_newnstreatment_eventtime_label">Heure de l\'événement</string>
@@ -253,7 +253,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enacted">Activé</string>
     <string name="comment">Commentaire</string>
     <string name="success">Succès</string>
-    <string name="percent">Pour cent</string>
+    <string name="percent">Pourcentage</string>
     <string name="absolute">Absolu</string>
     <string name="canceltemp">Annuler le basal temporaire</string>
     <string name="smscommunicator">Communicateur SMS</string>
@@ -377,10 +377,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="button1">Bouton 1</string>
     <string name="button2">Bouton 2</string>
     <string name="button3">Bouton 3</string>
-    <string name="units">Unités :</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DAI :</string>
     <string name="target_range">Fourchette cible :</string>
     <string name="prefs_range_title">Fourchette de visualisation</string>
     <string name="prefs_range_summary">Les repères hauts et bas sur les graphiques pour l\'aperçu et la montre</string>

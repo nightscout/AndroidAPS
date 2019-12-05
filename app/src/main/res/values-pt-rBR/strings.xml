@@ -361,10 +361,8 @@
     <string name="button1">Botão 1</string>
     <string name="button2">Botão 2</string>
     <string name="button3">Botão 3</string>
-    <string name="units">Unidades:</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">Intervalo Alvo:</string>
     <string name="prefs_range_title">Intervalo para visualização</string>
     <string name="prefs_range_summary">Marca alta e baixa para as cartas em Visão geral e Smartwatch</string>

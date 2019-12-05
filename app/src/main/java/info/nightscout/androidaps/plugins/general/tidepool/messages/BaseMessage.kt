@@ -1,8 +1,9 @@
 package info.nightscout.androidaps.plugins.general.tidepool.messages
 
 import info.nightscout.androidaps.plugins.general.tidepool.utils.GsonInstance
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 open class BaseMessage {
     private fun toS(): String {
@@ -10,7 +11,7 @@ open class BaseMessage {
     }
 
     fun getBody(): RequestBody {
-        return RequestBody.create(MediaType.parse("application/json"), this.toS())
+        return this.toS().toRequestBody("application/json".toMediaTypeOrNull())
     }
 
 }

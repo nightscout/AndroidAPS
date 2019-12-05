@@ -377,10 +377,8 @@ Eversense-appen.</string>
     <string name="button1">Knapp 1</string>
     <string name="button2">Knapp 2</string>
     <string name="button3">Knapp 3</string>
-    <string name="units">Enheter:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">Målområde:</string>
     <string name="prefs_range_title">Gränsvärden för visualisering</string>
     <string name="prefs_range_summary">Högt och lågt värde för grafen i Översikt och i klockan</string>

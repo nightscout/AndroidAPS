@@ -37,12 +37,10 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.activities.AgreementActivity;
 import info.nightscout.androidaps.activities.HistoryBrowseActivity;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.activities.PreferencesActivity;
 import info.nightscout.androidaps.activities.SingleFragmentActivity;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
@@ -51,7 +49,6 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
@@ -59,7 +56,6 @@ import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.androidaps.utils.AndroidPermission;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
-import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.PasswordProtection;
 import info.nightscout.androidaps.utils.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -141,11 +137,9 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 .subscribe(this::processPreferenceChange, FabricPrivacy::logException)
         );
 
-        if (!SP.getBoolean(R.string.key_setupwizard_processed, false)) {
+        if (!SP.getBoolean(R.string.key_setupwizard_processed, false) || !SP.contains(R.string.key_units)) {
             Intent intent = new Intent(this, SetupWizardActivity.class);
             startActivity(intent);
-        } else {
-            checkEula();
         }
 
         AndroidPermission.notifyForStoragePermission(this);
@@ -237,16 +231,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
         }
     }
 
-    private void checkEula() {
-        //SP.removeBoolean(R.string.key_i_understand);
-        boolean IUnderstand = SP.getBoolean(R.string.key_i_understand, false);
-        if (!IUnderstand) {
-            Intent intent = new Intent(getApplicationContext(), AgreementActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
-
     private void doMigrations() {
 
         // guarantee that the unreachable threshold is at least 30 and of type String
@@ -255,11 +239,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
         SP.remove(R.string.key_pump_unreachable_threshold);
         if (unreachable_threshold < 30) unreachable_threshold = 30;
         SP.putString(R.string.key_pump_unreachable_threshold, Integer.toString(unreachable_threshold));
-
-        if (!SP.contains(R.string.key_units)) {
-            Intent intent = new Intent(this, SetupWizardActivity.class);
-            startActivity(intent);
-        }
     }
 
 

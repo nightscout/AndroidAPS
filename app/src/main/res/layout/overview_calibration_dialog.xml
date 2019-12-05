@@ -47,7 +47,7 @@
                 android:layout_marginRight="30dp" />
 
 
-            <include layout="@layout/mdtp_done_button" />
+            <include layout="@layout/okcancel" />
 
         </LinearLayout>
 

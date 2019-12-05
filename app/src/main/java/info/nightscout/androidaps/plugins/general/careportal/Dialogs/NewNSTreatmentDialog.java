@@ -1,10 +1,8 @@
 package info.nightscout.androidaps.plugins.general.careportal.Dialogs;
 
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -20,9 +18,12 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.DialogFragment;
+
 import com.google.common.collect.Lists;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONException;
@@ -39,7 +40,6 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
@@ -51,6 +51,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
@@ -61,10 +62,8 @@ import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.Translator;
 
-public class NewNSTreatmentDialog extends DialogFragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class NewNSTreatmentDialog extends AppCompatDialogFragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static Logger log = LoggerFactory.getLogger(NewNSTreatmentDialog.class);
-
-    private Activity context;
 
     private static OptionsToShow options;
     private static String event;
@@ -117,18 +116,6 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         if (seconds == null) {
             seconds = Double.valueOf(Math.random() * 59).intValue();
         }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        context = activity;
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        this.context = null;
     }
 
     @Override
@@ -421,18 +408,18 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 );
                 dpd.setThemeDark(true);
                 dpd.dismissOnPause(true);
-                dpd.show(context.getFragmentManager(), "Datepickerdialog");
+                dpd.show(getActivity().getSupportFragmentManager(), "Datepickerdialog");
                 break;
             case R.id.careportal_newnstreatment_eventtime:
                 TimePickerDialog tpd = TimePickerDialog.newInstance(
                         this,
                         calendar.get(Calendar.HOUR_OF_DAY),
                         calendar.get(Calendar.MINUTE),
-                        DateFormat.is24HourFormat(context)
+                        DateFormat.is24HourFormat(getContext())
                 );
                 tpd.setThemeDark(true);
                 tpd.dismissOnPause(true);
-                tpd.show(context.getFragmentManager(), "Timepickerdialog");
+                tpd.show(getActivity().getSupportFragmentManager(), "Timepickerdialog");
                 break;
             case R.id.ok:
                 confirmNSTreatmentCreation();
@@ -469,14 +456,13 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     }
 
     @Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
         eventTime.setHours(hourOfDay);
         eventTime.setMinutes(minute);
         eventTime.setSeconds(this.seconds++); // randomize seconds to prevent creating record of the same time, if user choose time manually
         timeButton.setText(DateUtil.timeString(eventTime));
         updateBGforDateTime();
     }
-
 
     JSONObject gatherData() {
         String enteredBy = SP.getString("careportal_enteredby", "");
@@ -702,6 +688,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     }
 
     void confirmNSTreatmentCreation() {
+        Context context = getContext();
         if (context != null) {
             final JSONObject data = gatherData();
             final String confirmText = buildConfirmText(data);
@@ -715,7 +702,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     }
 
 
-    public void createNSTreatment(JSONObject data) {
+    void createNSTreatment(JSONObject data) {
         if (options.executeProfileSwitch) {
             if (data.has("profile")) {
                 ProfileFunctions.doProfileSwitch(profileStore, JsonHelper.safeGetString(data, "profile"), JsonHelper.safeGetInt(data, "duration"), JsonHelper.safeGetInt(data, "percentage"), JsonHelper.safeGetInt(data, "timeshift"));

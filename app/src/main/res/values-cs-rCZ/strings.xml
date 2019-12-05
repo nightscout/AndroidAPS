@@ -376,10 +376,11 @@
     <string name="button1">Tlačítko 1</string>
     <string name="button2">Tlačítko 2</string>
     <string name="button3">Tlačítko 3</string>
-    <string name="units">Jednotky:</string>
+    <string name="units_colon">Jednotky:</string>
+    <string name="units">Jednotky</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
-    <string name="dia">DIA:</string>
+    <string name="dia">DIA</string>
     <string name="target_range">Cílový rozsah:</string>
     <string name="prefs_range_title">Rozsah pro zobrazení</string>
     <string name="prefs_range_summary">Značka vysoké a nízké hodnoty v přehledu a na hodinkách Wear</string>
@@ -1391,6 +1392,10 @@
     <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Bolusová kalkulačka</string>
     <string name="unit_minute_short">min</string>
+    <string name="profile_name">Jméno profilu:</string>
+    <string name="selected_profile">Vybráno:</string>
+    <string name="unitsnosemicolon">Jednotky</string>
+    <string name="doyouwantswitchprofile">Chcete přepnout profil a zahodit změny provedené v aktuálním profilu?</string>
     <string name="format_carbs">%1$dg</string>
     <string name="common_on">ZAP</string>
     <string name="common_off">VYP</string>
@@ -1398,4 +1403,18 @@
     <string name="objectives_button_unstart">Vymazat start</string>
     <string name="timedetection">Detekce času</string>
     <string name="doyouwantresetstart">Chcete resetovat začátek cíle? Můžete přijít o svůj pokrok.</string>
+    <string name="nopumpselected">Nevybrána žádná pumpa</string>
+    <string name="setupwizard_units_prompt">Vyberte jednotky, ve kterých chcete zobrazit hodnoty</string>
+    <string name="ns_ploadlocalprofile">Odeslat změny lokálního profilu do NS</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">I:C</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">CÍL</string>
+    <string name="clone_label">Klonovat</string>
+    <string name="saveorresetchangesfirst">Nejprve uložte nebo resetujte aktuální změny</string>
+    <string name="deletecurrentprofile">Odstranit aktuální profil?</string>
+    <string name="copytolocalprofile">Chcete vytvořit nový lokální profil z tohoto přepnutí profilu?</string>
+    <string name="profilenamecontainsdot">Název profilu obsahuje tečky.\nToto není v NS podporováno.\nProfil není přenesen do NS.</string>
+    <string name="low_mark_comment">Spodní hodnota oblasti v rozsahu (pouze zobrazování)</string>
+    <string name="high_mark_comment">Horní hodnota oblasti v rozsahu (pouze zobrazování)</string>
 </resources>

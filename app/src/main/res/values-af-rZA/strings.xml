@@ -358,10 +358,8 @@
     <string name="button1">Knoppie 1</string>
     <string name="button2">Knoppie 2</string>
     <string name="button3">Knoppie 3</string>
-    <string name="units">Eenhede:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">Doelwit reeks:</string>
     <string name="prefs_range_title">Reeks vir visualisering</string>
     <string name="prefs_range_summary">Hoë en lae merke vir die diagramme in Overview en Smartwatch</string>

@@ -376,10 +376,11 @@
     <string name="button1">Tasto 1</string>
     <string name="button2">Tasto 2</string>
     <string name="button3">Tasto 3</string>
-    <string name="units">Unità:</string>
+    <string name="units_colon">Unità:</string>
+    <string name="units">Unità</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
+    <string name="dia">DIA</string>
     <string name="target_range">Intervallo target:</string>
     <string name="prefs_range_title">Intervallo di visualizzazione</string>
     <string name="prefs_range_summary">Limite alto e basso per i grafici nella sezione Panoramica e sullo Smartwatch</string>
@@ -852,7 +853,7 @@
     <string name="combo_activity_checking_pump_state">Aggiornamento stato micro</string>
     <string name="combo_warning_pump_basal_rate_changed">La velocità basale nel micro è cambiata e verrà aggiornata a breve</string>
     <string name="combo_error_failure_reading_changed_basal_rate">Velocità basale cambiata sul micro, ma la sua lettura è fallita</string>
-    <string name="combo_activity_checking_for_history_changes">Controllo delle modifiche allo storico</string>
+    <string name="combo_activity_checking_for_history_changes">Controllo modifiche allo storico</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Sono appena stati importati più boli con la stessa quantità nello stesso minuto. Solo un record può essere aggiunto ai trattamenti. Controlla il micro e aggiungi manualmente un record di bolo utilizzando la sezione Portale. Assicurati di creare un bolo con un orario non utilizzato da nessun altro bolo.</string>
     <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
     <string name="combo_check_date">L\'ultimo bolo è più vecchio di 24 ore o ha una data nel futuro. Controlla che la data sul micro sia impostata correttamente.</string>
@@ -1391,6 +1392,10 @@
     <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Calcolatore</string>
     <string name="unit_minute_short">min</string>
+    <string name="profile_name">Nome profilo:</string>
+    <string name="selected_profile">Selezionato:</string>
+    <string name="unitsnosemicolon">Unità</string>
+    <string name="doyouwantswitchprofile">Vuoi cambiare profilo e scartare le modifiche apportate al profilo corrente?</string>
     <string name="format_carbs">%1$dg</string>
     <string name="common_on">On</string>
     <string name="common_off">Off</string>
@@ -1398,4 +1403,18 @@
     <string name="objectives_button_unstart">Cancella avviato</string>
     <string name="timedetection">Rilevazione tempo</string>
     <string name="doyouwantresetstart">Vuoi resettare l\'avvio dell\'obiettivo? Potresti perdere i tuoi progressi.</string>
+    <string name="nopumpselected">Nessun micro selezionato</string>
+    <string name="setupwizard_units_prompt">Seleziona le unità in cui vuoi visualizzare i valori</string>
+    <string name="ns_ploadlocalprofile">Carica modifiche al profilo locale in NS</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">TARG</string>
+    <string name="clone_label">Clona</string>
+    <string name="saveorresetchangesfirst">Salva o reimposta prima le modifiche correnti</string>
+    <string name="deletecurrentprofile">Rimuovere il profilo corrente?</string>
+    <string name="copytolocalprofile">Creare nuovo profilo locale da questo cambio profilo?</string>
+    <string name="profilenamecontainsdot">Il nome profilo contiene dei punti.\nQuesto non è supportato da NS.\nIl profilo non viene caricato in NS.</string>
+    <string name="low_mark_comment">Valore più basso per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
+    <string name="high_mark_comment">Valore più alto per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
 </resources>

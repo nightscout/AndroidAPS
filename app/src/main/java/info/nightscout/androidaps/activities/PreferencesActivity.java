@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.activities;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -47,6 +48,7 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
+import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
@@ -64,6 +66,11 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         myPreferenceFragment.setArguments(args);
         getFragmentManager().beginTransaction().replace(android.R.id.content, myPreferenceFragment).commit();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.INSTANCE.wrap(newBase));
     }
 
     @Override
@@ -122,7 +129,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 }
             }
         }
-        adjustUnitDependentPrefs(pref);
+        if (pref != null)
+            adjustUnitDependentPrefs(pref);
     }
 
     public static void initSummary(Preference p) {
