@@ -48,6 +48,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodFaultExcepti
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodReturnedErrorResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import io.reactivex.Single;
+import io.reactivex.disposables.Disposable;
 
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
@@ -73,7 +74,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     public PumpEnactResult initPod(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, Profile profile) {
         if (PodInitActionType.PairAndPrimeWizardStep.equals(podInitActionType)) {
             try {
-                delegate.pairAndPrime(res -> //
+                Disposable disposable = delegate.pairAndPrime().subscribe(res -> //
                         handleSetupActionResult(podInitActionType, podInitReceiver, res));
                 return new PumpEnactResult().success(true).enacted(true);
             } catch (Exception ex) {
@@ -83,7 +84,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             }
         } else if (PodInitActionType.FillCannulaSetBasalProfileWizardStep.equals(podInitActionType)) {
             try {
-                delegate.insertCannula(mapProfileToBasalSchedule(profile), res -> //
+                Disposable disposable = delegate.insertCannula(mapProfileToBasalSchedule(profile)).subscribe(res -> //
                         handleSetupActionResult(podInitActionType, podInitReceiver, res));
                 return new PumpEnactResult().success(true).enacted(true);
             } catch (Exception ex) {
@@ -150,7 +151,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public PumpEnactResult setBolus(Double units) {
         try {
-            Single<StatusResponse> responseObserver = delegate.bolus(units,
+            Single<OmnipodManager.BolusResult> responseObserver = delegate.bolus(units,
                     (estimatedUnitsDelivered, percentage) -> {
                         EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
                         progressUpdateEvent.setStatus(getStringResource(R.string.bolusdelivering, units));
@@ -160,16 +161,19 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
             // At this point, we know that the bolus command has been succesfully sent
 
+            double unitsDelivered = units;
+
             try {
                 // Wait for the bolus to finish
-                StatusResponse statusResponse = responseObserver.blockingGet();
+                OmnipodManager.BolusResult bolusResult = responseObserver.blockingGet();
+                unitsDelivered = bolusResult.getUnitsDelivered();
             } catch (Exception ex) {
                 if (loggingEnabled()) {
                     LOG.debug("Ignoring failed status response for bolus completion verification", ex);
                 }
             }
 
-            return new PumpEnactResult().success(true).enacted(true);
+            return new PumpEnactResult().success(true).enacted(true).bolusDelivered(unitsDelivered);
         } catch (Exception ex) {
             // Sending the command failed
             String comment = handleAndTranslateException(ex);
@@ -179,7 +183,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 // TODO notify user about uncertain failure
                 //  we don't know if the bolus failed, so for safety reasons, we choose to register the bolus as succesful.
                 // TODO also manually sleep until the bolus should have been finished here (after notifying the user)
-                return new PumpEnactResult().success(true).enacted(true).comment(comment);
+                return new PumpEnactResult().success(true).enacted(true).comment(comment).bolusDelivered(units);
             }
         }
     }
