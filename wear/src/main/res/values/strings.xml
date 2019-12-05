@@ -5,11 +5,11 @@
     <string name="label_actions_activity">AAPS</string>
 
     <string-array name="chart_timeframe">
-        <item>1 hour</item>
-        <item>2 hours</item>
-        <item>3 hours</item>
-        <item>4 hours</item>
-        <item>5 hours</item>
+        <item>@string/pref_1_hour</item>
+        <item>@string/pref_2_hours</item>
+        <item>@string/pref_3_hours</item>
+        <item>@string/pref_4_hours</item>
+        <item>@string/pref_5_hours</item>
 
     </string-array>
     <string-array name="chart_timeframe_values">
@@ -21,9 +21,9 @@
     </string-array>
 
     <string-array name="delta_granularity">
-        <item>Low</item>
-        <item>Medium</item>
-        <item>High</item>
+        <item>@string/pref_low</item>
+        <item>@string/pref_medium</item>
+        <item>@string/pref_high</item>
     </string-array>
 
     <string-array name="delta_granularity_values">
@@ -33,10 +33,10 @@
     </string-array>
 
     <string-array name="input_design">
-        <item>Default</item>
-        <item>Quick righty</item>
-        <item>Quick lefty</item>
-        <item>Modern Sparse</item>
+        <item>@string/pref_default</item>
+        <item>@string/pref_quick_righty</item>
+        <item>@string/pref_quick_lefty</item>
+        <item>@string/pref_modern_sparse</item>
 
     </string-array>
     <string-array name="input_design_values">
@@ -46,16 +46,42 @@
         <item>4</item>
     </string-array>
 
+    <string-array name="complication_tap_action">
+        <item>@string/pref_default</item>
+        <item>Menu</item>
+        <item>@string/menu_wizard</item>
+        <item>@string/menu_bolus</item>
+        <item>@string/menu_ecarb</item>
+        <item>@string/menu_status</item>
+        <item>None</item>
+    </string-array>
+
+    <string-array name="complication_tap_action_values">
+        <item>default</item>
+        <item>menu</item>
+        <item>wizard</item>
+        <item>bolus</item>
+        <item>ecarb</item>
+        <item>status</item>
+        <item>none</item>
+    </string-array>
 
     <string name="label_xdrip">AAPS</string>
     <string name="label_xdrip_large">AAPS(Large)</string>
     <string name="label_xdrip_big_chart">AAPS(BigChart)</string>
     <string name="label_xdrip_no_chart">AAPS(NoChart)</string>
     <string name="label_xdrip_circle">AAPS(Circle)</string>
-
     <string name="label_xdrip_v2">AAPSv2</string>
     <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
     <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
+
+    <string name="label_warning_sync">No data!</string>
+    <string name="label_warning_old">Old data!</string>
+    <string name="label_warning_since">Since %1$s</string>
+    <string name="label_warning_sync_aaps">Sync with AAPS!</string>
+
+    <string name="msg_warning_sync">No data received since %1$s! Check if AAPS on the phone sends data to watch</string>
+    <string name="msg_warning_old">AAPS data is %1$s old! Check your sensor, xDrip+, NS, AAPS config or other!</string>
 
     <string name="pref_on">On</string>
     <string name="pref_off">Off</string>
@@ -77,7 +103,8 @@
     <string name="pref_show_ago">Show Ago</string>
     <string name="pref_dark">Dark</string>
     <string name="pref_highlight_basals">Highlight Basals</string>
-    <string name="pref_timeframe">Chart Timeframe</string>
+    <string name="pref_matching_divider">Matching divider</string>
+    <string name="pref_chart_timeframe">Chart Timeframe</string>
     <string name="pref_1_hour">1 hour</string>
     <string name="pref_2_hours">2 hours</string>
     <string name="pref_3_hours">3 hours</string>
@@ -100,6 +127,8 @@
     <string name="pref_prime_in_menu">Prime in Menu</string>
     <string name="pref_single_target">Single Target</string>
     <string name="pref_wizard_percentage">Wizard Percentage</string>
+    <string name="pref_complication_tap_action">Complication Tap Action</string>
+    <string name="pref_unicode_in_complications">Unicode in Complications</string>
     <string name="pref_version">Version:</string>
 
     <string name="menu_tempt">TempT</string>
@@ -127,6 +156,8 @@
     <string name="action_status_loop">STATUS LOOP</string>
     <string name="action_timeshift">timeshift</string>
     <string name="action_tdd_weighted">TDD weighted</string>
+    <string name="action_bolus">bolus</string>
+
 
     <string name="status_pump">Pump</string>
     <string name="status_loop">Loop</string>
