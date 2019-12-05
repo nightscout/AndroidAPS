@@ -80,7 +80,7 @@ public class WizardActivity extends ViewSelectorActivity {
                     editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), false);
 
                 }
-                setLabelToPlusMinusView(view, "carbs");
+                setLabelToPlusMinusView(view, getResources().getString(R.string.action_carbs));
                 container.addView(view);
                 return view;
             } else if(col == 1 && hasPercentage){
@@ -91,7 +91,7 @@ public class WizardActivity extends ViewSelectorActivity {
                     double def = SafeParse.stringToDouble(editPercentage.editText.getText().toString());
                     editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 50d, 150d, 1d, new DecimalFormat("0"), false);
                 }
-                setLabelToPlusMinusView(view, "percentage");
+                setLabelToPlusMinusView(view, getResources().getString(R.string.action_percentage));
                 container.addView(view);
                 return view;
             } else {

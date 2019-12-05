@@ -204,6 +204,7 @@
         android:title="@string/pref_wizard_in_menu"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
+
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="primefill"
@@ -211,6 +212,7 @@
         android:title="@string/pref_prime_in_menu"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
+
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="singletarget"
@@ -218,6 +220,7 @@
         android:title="@string/pref_single_target"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
+
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="wizardpercentage"
@@ -225,6 +228,7 @@
         android:title="@string/pref_wizard_percentage"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
+
     <ListPreference
         android:defaultValue="default"
         android:entries="@array/complication_tap_action"
@@ -232,6 +236,7 @@
         android:key="complication_tap_action"
         android:summary="What dialog to show after tap on complication"
         android:title="@string/pref_complication_tap_action" />
+
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="complication_unicode"
@@ -239,20 +244,7 @@
         android:title="@string/pref_unicode_in_complications"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
-    <ListPreference
-        android:defaultValue="default"
-        android:entries="@array/complication_tap_action"
-        android:entryValues="@array/complication_tap_action_values"
-        android:key="complication_tap_action"
-        android:summary="What dialog to show after tap on complication"
-        android:title="Complication Tap Action" />
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="complication_unicode"
-        android:summary="Use unicode special characters in complications."
-        android:title="Unicode in Complications"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
+
     <info.nightscout.androidaps.interaction.utils.VersionPreference
         android:defaultValue="1"
         android:entries="@array/input_design"

@@ -4,7 +4,6 @@
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
 
-
     <string name="label_xdrip">AAPS</string>
     <string name="label_xdrip_large">AAPS(Large)</string>
     <string name="label_xdrip_big_chart">AAPS(BigChart)</string>
@@ -26,8 +25,6 @@
     <string name="pref_off">Off</string>
     <string name="pref_vibrate_on_bolus">Vibrate on Bolus</string>
     <string name="pref_units_for_actions">Units for Actions</string>
-    <string name="pref_mg_dl">mg/dl</string>
-    <string name="pref_mmol_l">mmol/l</string>
     <string name="pref_show_date">Show Date</string>
     <string name="pref_show_iob">Show IOB</string>
     <string name="pref_show_cob">Show COB</string>
@@ -77,8 +74,12 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_status">Status</string>
     <string name="menu_prime_fill">Prime/Fill</string>
+    <string name="menu_none">None</string>
+    <string name="menu_default">Default</string>
+    <string name="menu_menu">Menu</string>
 
     <string name="action_duration">duration</string>
+    <string name="action_target">target</string>
     <string name="action_low">low</string>
     <string name="action_high">high</string>
     <string name="action_carbs">carbs</string>
@@ -105,17 +106,16 @@
 
     <string name="activity_carb">Carb</string>
     <string name="activity_IOB">IOB</string>
-    <string name="activity_g">g</string>
-    <string name="activity_U">U</string>
     <string name="activity_no_status">no status</string>
 
+    <string name="unit_mg_dl">mg/dl</string>
+    <string name="unit_mmol_l">mmol/l</string>
+    <string name="unit_g">g</string>
+    <string name="unit_u">U</string>
+    <string name="unit_u_p_h">U/h</string>
+    <string name="unit_h">h</string>
+    <string name="unit_d">d</string>
+    <string name="unit_w">w/s</string>
 
-    <string name="label_warning_sync">No data!</string>
-    <string name="label_warning_old">Old data!</string>
-    <string name="label_warning_since">Since %1$s</string>
-    <string name="label_warning_sync_aaps">Sync with AAPS!</string>
-
-    <string name="msg_warning_sync">No data received since %1$s! Check if AAPS on the phone sends data to watch</string>
-    <string name="msg_warning_old">AAPS data is %1$s old! Check your sensor, xDrip+, NS, AAPS config or other!</string>
 
 </resources>

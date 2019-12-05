@@ -85,7 +85,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
                     double def = SafeParse.stringToDouble(time.editText.getText().toString());
                     time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 24 * 60d, 5d, new DecimalFormat("0"), false);
                 }
-                 setLabelToPlusMinusView(view, "duration");
+                 setLabelToPlusMinusView(view, getResources().getString(R.string.action_duration));
                  container.addView(view);
                 return view;
 
@@ -105,9 +105,9 @@ public class TempTargetActivity extends ViewSelectorActivity {
                      lowRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 4d, 10d, 0.1d, new DecimalFormat("#0.0"), false);
                  }
                  if(isSingleTarget){
-                     setLabelToPlusMinusView(view, "target");
+                     setLabelToPlusMinusView(view, getResources().getString(R.string.action_target));
                  } else {
-                     setLabelToPlusMinusView(view, "low");
+                     setLabelToPlusMinusView(view, getResources().getString(R.string.action_low));
                  }
                  container.addView(view);
                  return view;
@@ -126,7 +126,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
                      }
                      highRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 4d, 10d, 0.1d, new DecimalFormat("#0.0"), false);
                  }
-                 setLabelToPlusMinusView(view, "high");
+                 setLabelToPlusMinusView(view, getResources().getString(R.string.action_high));
                  container.addView(view);
                  return view;
              }else {

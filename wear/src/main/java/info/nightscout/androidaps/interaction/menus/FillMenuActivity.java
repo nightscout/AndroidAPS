@@ -2,6 +2,7 @@ package info.nightscout.androidaps.interaction.menus;
 
 import android.content.Intent;
 
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.actions.FillActivity;
 import info.nightscout.androidaps.interaction.utils.MenuListActivity;
@@ -15,10 +16,10 @@ public class FillMenuActivity extends MenuListActivity {
     @Override
     protected String[] getElements() {
         return new String[]{
-                "Preset 1",
-                "Preset 2",
-                "Preset 3",
-                "Free amount"
+                getResources().getString(R.string.action_preset_1),
+                getResources().getString(R.string.action_preset_2),
+                getResources().getString(R.string.action_preset_3),
+                getResources().getString(R.string.action_free_amount)
         };
     }
 

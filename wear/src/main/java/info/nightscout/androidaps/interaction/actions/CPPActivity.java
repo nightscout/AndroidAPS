@@ -83,7 +83,7 @@ public class CPPActivity extends ViewSelectorActivity {
                     def = SafeParse.stringToDouble(editTimeshift.editText.getText().toString());
                 }
                 editTimeshift = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 23d, 1d, new DecimalFormat("0"), true, true);
-                setLabelToPlusMinusView(view, "timeshift");
+                setLabelToPlusMinusView(view, getResources().getString(R.string.action_timeshift));
                 container.addView(view);
                 return view;
             } else if(col == 1){
@@ -93,7 +93,7 @@ public class CPPActivity extends ViewSelectorActivity {
                     def = SafeParse.stringToDouble(editPercentage.editText.getText().toString());
                 }
                 editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 50d, 150d, 1d, new DecimalFormat("0"), false);
-                setLabelToPlusMinusView(view, "percentage");
+                setLabelToPlusMinusView(view, getResources().getString(R.string.action_percentage));
                 container.addView(view);
                 return view;
             } else {

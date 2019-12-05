@@ -70,7 +70,7 @@ public class FillActivity extends ViewSelectorActivity {
                     def = SafeParse.stringToDouble(editInsulin.editText.getText().toString());
                 }
                 editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 30d, 0.1d, new DecimalFormat("#0.0"), false);
-                setLabelToPlusMinusView(view, "insulin");
+                setLabelToPlusMinusView(view, getResources().getString(R.string.action_insulin));
                 container.addView(view);
                 return view;
             } else {
