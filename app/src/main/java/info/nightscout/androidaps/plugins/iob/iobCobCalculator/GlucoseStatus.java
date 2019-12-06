@@ -42,7 +42,7 @@ public class GlucoseStatus {
 
     public GlucoseStatus round() {
         this.glucose = Round.roundTo(this.glucose, 0.1);
-        this.noise = Round.roundTo(this.noise, 0.1);
+        this.noise = Round.roundTo(this.noise, 0.01);
         this.delta = Round.roundTo(this.delta, 0.01);
         this.avgdelta = Round.roundTo(this.avgdelta, 0.01);
         this.short_avgdelta = Round.roundTo(this.short_avgdelta, 0.01);
