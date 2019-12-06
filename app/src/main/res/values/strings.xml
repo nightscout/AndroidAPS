@@ -840,8 +840,6 @@
     <string name="key_carbsReqThreshold" translatable="false">carbsReqThreshold</string>
     <string name="carbsReqThreshold">Carb suggestion threshold</string>
     <string name="carbsReqThreshold_summary">When Carbs are suggested, how many carbs will prompt a notification</string>
-    <string name="key_bolus_increment" translatable="false">bolus_increment</string>
-    <string name="bolus_increment_summary">Minimum bolus that can be delivered as an SMB</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>
     <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
     <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
