@@ -410,10 +410,11 @@
     <string name="button1">Button 1</string>
     <string name="button2">Button 2</string>
     <string name="button3">Button 3</string>
-    <string name="units">Units:</string>
+    <string name="units_colon">Units:</string>
+    <string name="units">Units</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
+    <string name="dia">DIA</string>
     <string name="target_range">Target range:</string>
     <string name="prefs_range_title">Range for Visualization</string>
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
@@ -1641,9 +1642,38 @@
     <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Bolus wizard</string>
     <string name="unit_minute_short">min</string>
+    <string name="profile_name">Profile name:</string>
+    <string name="selected_profile">Selected:</string>
+    <string name="unitsnosemicolon">Units</string>
+    <string name="key_units" translatable="false">units</string>
+    <string name="doyouwantswitchprofile">Do you want to switch profile and discard changes made to current profile?</string>
     <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
     <string name="format_carbs">%1$dg</string>
     <string name="common_on">On</string>
     <string name="common_off">Off</string>
+    <string name="objectives_button_unfinish">Clear finished</string>
+    <string name="objectives_button_unstart">Clear started</string>
+    <string name="timedetection">Time detection</string>
+    <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
+    <string name="nopumpselected">No pump selected</string>
+    <string name="setupwizard_units_prompt">Select units you want to display values in</string>
+    <string name="key_ns_uploadlocalprofile" translatable="false">ns_uploadlocalprofile</string>
+    <string name="ns_ploadlocalprofile">Upload local profile changes to NS</string>
+    <string name="key_low_mark" translatable="false">low_mark</string>
+    <string name="key_high_mark" translatable="false">high_mark</string>
+    <string name="key_wear_detailediob" translatable="false">wear_detailediob</string>
+    <string name="key_wear_showbgi" translatable="false">wear_showbgi</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <string name="target_short">TARG</string>
+    <string name="clone_label">Clone</string>
+    <string name="saveorresetchangesfirst">Save or reset current changes first</string>
+    <string name="deletecurrentprofile">Delete current profile?</string>
+    <string name="copytolocalprofile">Create new local profile from this profile switch?</string>
+    <string name="profilenamecontainsdot">Profile name contains dots.\nThis is not supported by NS.\nProfile is not uploaded to NS.</string>
+    <string name="low_mark_comment">Lower value of in range area (display only)</string>
+    <string name="high_mark_comment">Higher value of in range area (display only)</string>
+    <string name="reorder_label">Reorder</string>
 
 </resources>

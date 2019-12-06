@@ -361,10 +361,8 @@
     <string name="button1">Πλήκτρο 1</string>
     <string name="button2">Πλήκτρο 2</string>
     <string name="button3">Πλήκτρο 3</string>
-    <string name="units">Μονάδες:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">Εύρος στόχου:</string>
     <string name="prefs_range_title">Εύρος εμφάνισης</string>
     <string name="prefs_range_summary">Υψηλό και Χαμηλό σημείο για την γραφική στην Επισκόπηση και Smartwatch</string>

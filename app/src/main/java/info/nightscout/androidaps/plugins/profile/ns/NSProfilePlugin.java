@@ -119,11 +119,6 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
     }
 
     @Override
-    public String getUnits() {
-        return profile != null ? profile.getUnits() : Constants.MGDL;
-    }
-
-    @Override
     public String getProfileName() {
         return profile.getDefaultProfileName();
     }

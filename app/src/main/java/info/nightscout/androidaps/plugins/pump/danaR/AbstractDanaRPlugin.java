@@ -445,11 +445,6 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
     }
 
     @Override
-    public String getUnits() {
-        return DanaRPump.getInstance().getUnits();
-    }
-
-    @Override
     public String getProfileName() {
         return DanaRPump.getInstance().createConvertedProfileName();
     }

@@ -45,7 +45,7 @@ import info.nightscout.androidaps.utils.T;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class HistoryBrowseActivity extends NoSplashActivity {
+public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(HistoryBrowseActivity.class);
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -150,7 +150,7 @@ public class HistoryBrowseActivity extends NoSplashActivity {
             );
             dpd.setThemeDark(true);
             dpd.dismissOnPause(true);
-            dpd.show(getFragmentManager(), "Datepickerdialog");
+            dpd.show(getSupportFragmentManager(), "Datepickerdialog");
         });
 
         bgGraph.getGridLabelRenderer().setGridColor(MainApp.gc(R.color.graphgrid));
@@ -231,9 +231,8 @@ public class HistoryBrowseActivity extends NoSplashActivity {
             noProfile.setVisibility(View.GONE);
         }
 
-        final String units = profile.getUnits();
-        final double lowLine = OverviewPlugin.INSTANCE.determineLowLine(units);
-        final double highLine = OverviewPlugin.INSTANCE.determineHighLine(units);
+        final double lowLine = OverviewPlugin.INSTANCE.determineLowLine();
+        final double highLine = OverviewPlugin.INSTANCE.determineHighLine();
 
         buttonDate.setText(DateUtil.dateAndTimeString(start));
         buttonZoom.setText(String.valueOf(rangeToDisplay));

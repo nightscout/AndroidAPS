@@ -361,10 +361,8 @@
     <string name="button1">Mygtukas 1</string>
     <string name="button2">Mygtukas 2</string>
     <string name="button3">Mygtukas 3</string>
-    <string name="units">Vienetai:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">IVT:</string>
     <string name="target_range">Tikslinis diapazonas:</string>
     <string name="prefs_range_title">Vizualizacijos diapazonas</string>
     <string name="prefs_range_summary">Aukštoji ir žemoji riba Apžvalgos grafikuose bei išmaniuosiuose laikrodžiuose</string>

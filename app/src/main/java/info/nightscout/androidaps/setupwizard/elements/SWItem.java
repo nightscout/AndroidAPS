@@ -3,6 +3,8 @@ package info.nightscout.androidaps.setupwizard.elements;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import androidx.annotation.StringRes;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +40,8 @@ public class SWItem {
         RADIOBUTTON,
         PLUGIN,
         BUTTON,
-        FRAGMENT
+        FRAGMENT,
+        UNITNUMBER
     }
 
     Type type;
@@ -66,12 +69,12 @@ public class SWItem {
         return type;
     }
 
-    public SWItem label(int label) {
+    public SWItem label(@StringRes int label) {
         this.label = label;
         return this;
     }
 
-    public SWItem comment(int comment) {
+    public SWItem comment(@StringRes int comment) {
         this.comment = comment;
         return this;
     }

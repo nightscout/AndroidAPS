@@ -124,9 +124,8 @@ public class ProfileFunctions {
         return getProfile(System.currentTimeMillis());
     }
 
-    public String getProfileUnits() {
-        Profile profile = getProfile();
-        return profile != null ? profile.getUnits() : Constants.MGDL;
+    public static String getSystemUnits() {
+        return SP.getString(R.string.key_units, Constants.MGDL);
     }
 
     @Nullable

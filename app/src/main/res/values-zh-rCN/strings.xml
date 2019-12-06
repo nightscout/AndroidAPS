@@ -357,10 +357,8 @@
     <string name="button1">按钮1</string>
     <string name="button2">按钮2</string>
     <string name="button3">按钮3</string>
-    <string name="units">单位:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">目标范围:</string>
     <string name="prefs_range_title">可视化范围</string>
     <string name="prefs_range_summary">在智能手表上的图表上的高值和低值标记</string>

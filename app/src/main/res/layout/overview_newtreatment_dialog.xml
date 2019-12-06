@@ -65,7 +65,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="15dp" />
 
-            <include layout="@layout/mdtp_done_button" />
+            <include layout="@layout/okcancel" />
 
         </LinearLayout>
 

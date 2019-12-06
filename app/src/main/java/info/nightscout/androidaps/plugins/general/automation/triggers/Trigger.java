@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.common.base.Optional;
@@ -84,11 +84,11 @@ public abstract class Trigger {
     }
 
     @Nullable
-    Activity scanForActivity(Context cont) {
+    AppCompatActivity scanForActivity(Context cont) {
         if (cont == null)
             return null;
-        else if (cont instanceof Activity)
-            return (Activity) cont;
+        else if (cont instanceof AppCompatActivity)
+            return (AppCompatActivity) cont;
         else if (cont instanceof ContextWrapper)
             return scanForActivity(((ContextWrapper) cont).getBaseContext());
 

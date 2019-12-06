@@ -333,10 +333,8 @@
     <string name="button1">Düğme 1</string>
     <string name="button2">Düğme 2</string>
     <string name="button3">Düğme 3</string>
-    <string name="units">Birim:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">Hedef aralığı:</string>
     <string name="prefs_range_title">Görselleştirme Aralığı</string>
     <string name="prefs_range_summary">Genel bakış ve akıllı saat göstergesi için yüksek ve düşük değerler</string>

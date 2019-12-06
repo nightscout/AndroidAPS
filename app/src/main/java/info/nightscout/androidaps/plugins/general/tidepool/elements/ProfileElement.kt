@@ -41,12 +41,12 @@ class ProfileElement private constructor(ps: ProfileSwitch)
         checkNotNull(profile)
         for (br in profile.basalValues)
             basalSchedules.Normal.add(BasalRate(br.timeAsSeconds * 1000, br.value))
-        for (target in profile.singleTargets)
-            bgTargets.Normal.add(Target(target.timeAsSeconds * 1000, Profile.toMgdl(target.value, profile.units)))
+        for (target in profile.singleTargetsMgdl)
+            bgTargets.Normal.add(Target(target.timeAsSeconds * 1000, target.value))
         for (ic in profile.ics)
             carbRatios.Normal.add(Ratio(ic.timeAsSeconds * 1000, ic.value))
-        for (isf in profile.isfs)
-            insulinSensitivities.Normal.add(Ratio(isf.timeAsSeconds * 1000, Profile.toMgdl(isf.value, profile.units)))
+        for (isf in profile.isfsMgdl)
+            insulinSensitivities.Normal.add(Ratio(isf.timeAsSeconds * 1000, isf.value))
     }
 
     inner class BasalProfile internal constructor(

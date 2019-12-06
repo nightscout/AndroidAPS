@@ -7,3 +7,5 @@ files:
     translation: /app/src/main/res/values-%android_code%/%original_file_name%
   - source: /app/src/main/res/values/objectives.xml
     translation: /app/src/main/res/values-%android_code%/%original_file_name%
+  - source: /wear/src/main/res/values/strings.xml
+    translation: /wear/src/main/res/values-%android_code%/strings.xml
