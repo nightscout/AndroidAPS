@@ -29,14 +29,16 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.T;
 
+import static info.nightscout.androidaps.plugins.general.automation.elements.InputLocationMode.Mode.*;
+
 public class TriggerLocation extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
 
     InputDouble latitude = new InputDouble(0d, -90d, +90d, 0.000001d, new DecimalFormat("0.000000"));
     InputDouble longitude = new InputDouble(0d, -180d, +180d, 0.000001d, new DecimalFormat("0.000000"));
     InputDouble distance = new InputDouble(200d, 0, 100000, 10d, new DecimalFormat("0"));
-    // Default mode selected is 0 - inside area
     InputLocationMode modeSelected = new InputLocationMode();
+    InputLocationMode.Mode lastMode = new InputLocationMode().getValue();
 
     InputString name = new InputString();
 
@@ -76,8 +78,15 @@ public class TriggerLocation extends Trigger {
         a.setLatitude(latitude.getValue());
         a.setLongitude(longitude.getValue());
         double calculatedDistance = location.distanceTo(a);
-        if (((modeSelected.getValue().ordinal()) == 1d) && (calculatedDistance < distance.getValue()) ||
-                ((modeSelected.getValue().ordinal() == 2d) && (calculatedDistance > distance.getValue()))) {
+        //Update lastmode every 5 mins
+        lastMode = currentMode(calculatedDistance);
+        log.debug("Last mode is: "+lastMode);
+        log.debug("Wanted mode is: "+modeSelected.getValue());
+        if ((modeSelected.getValue() == INSIDE) && (calculatedDistance <= distance.getValue()) ||
+                ((modeSelected.getValue() == OUTSIDE) && (calculatedDistance > distance.getValue())) ||
+                ((modeSelected.getValue() == GOING_IN) && (calculatedDistance <= distance.getValue()) && (lastMode == OUTSIDE)) ||
+                ((modeSelected.getValue() == GOING_OUT) && (calculatedDistance > distance.getValue()) && (lastMode == INSIDE))
+            ) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Ready for execution: " + friendlyDescription());
             return true;
@@ -108,12 +117,14 @@ public class TriggerLocation extends Trigger {
     @Override
     Trigger fromJSON(String data) {
         try {
+            log.debug("fromJSON: "+data);
             JSONObject d = new JSONObject(data);
             latitude.setValue(JsonHelper.safeGetDouble(d, "latitude"));
             longitude.setValue(JsonHelper.safeGetDouble(d, "longitude"));
             distance.setValue(JsonHelper.safeGetDouble(d, "distance"));
             name.setValue(JsonHelper.safeGetString(d, "name"));
             modeSelected.setValue(InputLocationMode.Mode.valueOf(JsonHelper.safeGetString(d, "mode")));
+            lastMode = modeSelected.getValue(); // load the asked mode as default
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
         } catch (Exception e) {
             log.error("Unhandled exception", e);
@@ -128,7 +139,7 @@ public class TriggerLocation extends Trigger {
 
     @Override
     public String friendlyDescription() {
-        return MainApp.gs(R.string.locationis, modeSelected.getValue() + " " + name.getValue());
+        return MainApp.gs(R.string.locationis, MainApp.gs(modeSelected.getValue().getStringRes()) + " " + name.getValue());
     }
 
     @Override
@@ -163,7 +174,6 @@ public class TriggerLocation extends Trigger {
     }
 
     TriggerLocation setMode(InputLocationMode.Mode value) {
-
         modeSelected.setValue(value);
         return this;
     }
@@ -181,4 +191,12 @@ public class TriggerLocation extends Trigger {
                 .build(root);
     }
 
+    // Method to return the actual mode based on the current distance
+    InputLocationMode.Mode currentMode(double currentDistance){
+        log.debug("Updating current mode!");
+        if ( currentDistance <= this.distance.getValue() )
+            return INSIDE;
+        else
+            return InputLocationMode.Mode.OUTSIDE;
+    }
 }

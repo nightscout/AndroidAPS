@@ -28,6 +28,10 @@ public class InputLocationMode extends Element {
                     return R.string.location_inside;
                 case OUTSIDE:
                     return R.string.location_outside;
+                case GOING_IN:
+                    return R.string.location_going_in;
+                case GOING_OUT:
+                    return R.string.location_going_out;
                 default:
                     return R.string.unknown;
             }
@@ -79,7 +83,6 @@ public class InputLocationMode extends Element {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                mode = Mode.values()[position];
                 setValue(Mode.values()[position]);
             }
 

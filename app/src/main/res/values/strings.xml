@@ -1414,6 +1414,8 @@
     <string name="location_mode">In/Out of defined area</string>
     <string name="location_inside">inside</string>
     <string name="location_outside">outside</string>
+    <string name="location_going_in">when you enter the area named</string>
+    <string name="location_going_out">when you leave the area named</string>
     <string name="lastboluslabel">Last bolus ago</string>
     <string name="lastboluscompared">Last bolus time %1$s %2$s min ago</string>
     <string name="triggercoblabel">COB</string>
