@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.constraints.versionChecker
 
+import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.*
@@ -8,6 +9,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.SP
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
 
 /**
  * Usually we would have a class here.
@@ -21,6 +23,15 @@ object VersionCheckerPlugin : PluginBase(PluginDescription()
         .alwaysEnabled(true)
         .showInList(false)
         .pluginName(R.string.versionChecker)), ConstraintsInterface {
+
+    override fun onStart() {
+        super.onStart()
+        if (BuildConfig.VERSION_NAME.contains("RC", ignoreCase = false)) {
+            GRACE_PERIOD_WARNING = TimeUnit.DAYS.toMillis(0)
+            GRACE_PERIOD_OLD = TimeUnit.DAYS.toMillis(7)
+            GRACE_PERIOD_VERY_OLD = TimeUnit.DAYS.toMillis(14)
+        }
+    }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         checkWarning()
@@ -45,7 +56,11 @@ object VersionCheckerPlugin : PluginBase(PluginDescription()
             SP.putLong(R.string.key_last_versionchecker_plugin_warning, now)
 
             //notify
-            val message = MainApp.gs(R.string.new_version_warning, Math.round((now - SP.getLong(R.string.key_last_time_this_version_detected, now)) / TimeUnit.DAYS.toMillis(1).toDouble()))
+            val message = MainApp.gs(R.string.new_version_warning,
+                    ((now - SP.getLong(R.string.key_last_time_this_version_detected, now)) / TimeUnit.DAYS.toMillis(1).toDouble()).roundToInt(),
+                    (GRACE_PERIOD_OLD / TimeUnit.DAYS.toMillis(1).toDouble()).roundToInt(),
+                    (GRACE_PERIOD_VERY_OLD / TimeUnit.DAYS.toMillis(1).toDouble()).roundToInt()
+            )
             val notification = Notification(Notification.OLDVERSION, message, Notification.NORMAL)
             RxBus.send(EventNewNotification(notification))
         }
@@ -65,9 +80,9 @@ object VersionCheckerPlugin : PluginBase(PluginDescription()
         return      now > SP.getLong(R.string.key_last_time_this_version_detected, 0) + gracePeriod
     }
 
-    val WARN_EVERY = TimeUnit.DAYS.toMillis(1)
-    val GRACE_PERIOD_WARNING = TimeUnit.DAYS.toMillis(30)
-    val GRACE_PERIOD_OLD = TimeUnit.DAYS.toMillis(60)
-    val GRACE_PERIOD_VERY_OLD = TimeUnit.DAYS.toMillis(90)
+    private val WARN_EVERY = TimeUnit.DAYS.toMillis(1)
+    private var GRACE_PERIOD_WARNING = TimeUnit.DAYS.toMillis(30)
+    private var GRACE_PERIOD_OLD = TimeUnit.DAYS.toMillis(60)
+    private var GRACE_PERIOD_VERY_OLD = TimeUnit.DAYS.toMillis(90)
 
 }
