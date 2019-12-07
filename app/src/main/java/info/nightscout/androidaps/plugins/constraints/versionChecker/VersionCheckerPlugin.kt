@@ -26,7 +26,7 @@ object VersionCheckerPlugin : PluginBase(PluginDescription()
 
     override fun onStart() {
         super.onStart()
-        if (BuildConfig.VERSION_NAME.contains("RC", ignoreCase = false)) {
+        if (BuildConfig.VERSION_NAME.contains("RC", ignoreCase = true)) {
             GRACE_PERIOD_WARNING = TimeUnit.DAYS.toMillis(0)
             GRACE_PERIOD_OLD = TimeUnit.DAYS.toMillis(7)
             GRACE_PERIOD_VERY_OLD = TimeUnit.DAYS.toMillis(14)
