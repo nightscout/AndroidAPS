@@ -110,7 +110,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public PumpEnactResult deactivatePod(PodInitReceiver podInitReceiver) {
         try {
-            delegate.deactivatePod();
+            delegate.deactivatePod(true);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, false, comment);
@@ -127,7 +127,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public PumpEnactResult setBasalProfile(Profile basalProfile) {
         try {
-            delegate.setBasalSchedule(mapProfileToBasalSchedule(basalProfile));
+            delegate.setBasalSchedule(mapProfileToBasalSchedule(basalProfile), isBasalBeepsEnabled());
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
@@ -151,8 +151,11 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public PumpEnactResult setBolus(Double units/*, boolean isSmb*/) {
         OmnipodManager.BolusCommandResult bolusCommandResult;
+
+        boolean beepsEnabled = /* isSmb ? isSmbBeepsEnabled() : */ isBolusBeepsEnabled();
+
         try {
-            bolusCommandResult = delegate.bolus(units, /* isSmb ? null : */
+            bolusCommandResult = delegate.bolus(units, beepsEnabled, beepsEnabled, /* isSmb ? null : */
                     (estimatedUnitsDelivered, percentage) -> {
                         EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
                         progressUpdateEvent.setStatus(getStringResource(R.string.bolusdelivering, units));
@@ -188,7 +191,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public PumpEnactResult cancelBolus() {
         try {
-            delegate.cancelBolus();
+            delegate.cancelBolus(isBolusBeepsEnabled());
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
@@ -199,8 +202,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     @Override
     public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
+        boolean beepsEnabled = isBasalBeepsEnabled();
         try {
-            delegate.setTemporaryBasal(tempBasalPair);
+            delegate.setTemporaryBasal(tempBasalPair, beepsEnabled, beepsEnabled);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
@@ -212,7 +216,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public PumpEnactResult cancelTemporaryBasal() {
         try {
-            delegate.cancelTemporaryBasal();
+            delegate.cancelTemporaryBasal(isBasalBeepsEnabled());
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
@@ -255,7 +259,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     public PumpEnactResult suspendDelivery() {
         try {
-            delegate.suspendDelivery();
+            delegate.suspendDelivery(isBasalBeepsEnabled());
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
@@ -266,7 +270,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     public PumpEnactResult resumeDelivery() {
         try {
-            delegate.resumeDelivery();
+            delegate.resumeDelivery(isBasalBeepsEnabled());
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
@@ -278,8 +282,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     // TODO should we add this to the OmnipodCommunicationManager interface?
     public PumpEnactResult setTime() {
         try {
-            delegate.setTime();
+            // CAUTION cancels TBR
+            delegate.setTime(isBasalBeepsEnabled());
         } catch (Exception ex) {
+            // CAUTION pod could be suspended
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
@@ -376,6 +382,21 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         }
 
         return comment;
+    }
+
+    private boolean isBolusBeepsEnabled() {
+        // TODO
+        return true;
+    }
+
+    private boolean isSmbBeepsEnabled() {
+        // TODO
+        return true;
+    }
+
+    private boolean isBasalBeepsEnabled() {
+        // TODO
+        return true;
     }
 
     private String getStringResource(int id, Object... args) {

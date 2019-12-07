@@ -136,37 +136,37 @@ public class OmnipodManager {
         executeAndVerify(() -> communicationService.executeAction(new AcknowledgeAlertsAction(podState, podState.getActiveAlerts())));
     }
 
-    public synchronized void setBasalSchedule(BasalSchedule schedule) {
+    public synchronized void setBasalSchedule(BasalSchedule schedule, boolean acknowledgementBeep) {
         assertReadyForDelivery();
 
         executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podState, schedule,
-                false, podState.getScheduleOffset(), true)));
+                false, podState.getScheduleOffset(), acknowledgementBeep)));
     }
 
-    public synchronized void setTemporaryBasal(TempBasalPair tempBasalPair) {
+    public synchronized void setTemporaryBasal(TempBasalPair tempBasalPair, boolean acknowledgementBeep, boolean completionBeep) {
         assertReadyForDelivery();
 
         executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(new SetTempBasalService(),
                 podState, tempBasalPair.getInsulinRate(), Duration.standardMinutes(tempBasalPair.getDurationMinutes()),
-                true, true)));
+                acknowledgementBeep, completionBeep)));
     }
 
-    public synchronized void cancelTemporaryBasal() {
+    public synchronized void cancelTemporaryBasal(boolean acknowledgementBeep) {
         assertReadyForDelivery();
 
-        executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.TEMP_BASAL, true)));
+        executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.TEMP_BASAL, acknowledgementBeep)));
     }
 
     // Returns a SingleSubject that returns when the bolus has finished.
     // When a bolus is cancelled, it will return after cancellation and report the estimated units delivered
     // Only throws OmnipodException[certainFailure=false]
-    public synchronized BolusCommandResult bolus(Double units, BolusProgressIndicationConsumer progressIndicationConsumer) {
+    public synchronized BolusCommandResult bolus(Double units, boolean acknowledgementBeep, boolean completionBeep, BolusProgressIndicationConsumer progressIndicationConsumer) {
         assertReadyForDelivery();
 
         CommandDeliveryStatus commandDeliveryStatus = CommandDeliveryStatus.SUCCESS;
 
         try {
-            executeAndVerify(() -> communicationService.executeAction(new BolusAction(podState, units, true, true)));
+            executeAndVerify(() -> communicationService.executeAction(new BolusAction(podState, units, acknowledgementBeep, completionBeep)));
         } catch (OmnipodException ex) {
             if (ex.isCertainFailure()) {
                 throw ex;
@@ -236,7 +236,7 @@ public class OmnipodManager {
         return new BolusCommandResult(commandDeliveryStatus, bolusCompletionSubject);
     }
 
-    public synchronized void cancelBolus() {
+    public synchronized void cancelBolus(boolean acknowledgementBeep) {
         assertReadyForDelivery();
 
         synchronized (bolusDataLock) {
@@ -244,7 +244,7 @@ public class OmnipodManager {
                 throw new IllegalDeliveryStatusException(DeliveryStatus.BOLUS_IN_PROGRESS, podState.getLastDeliveryStatus());
             }
 
-            executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.BOLUS, true)));
+            executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.BOLUS, acknowledgementBeep)));
 
             activeBolusData.getDisposables().dispose();
             activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(activeBolusData.estimateUnitsDelivered()));
@@ -253,40 +253,40 @@ public class OmnipodManager {
     }
 
     // CAUTION: cancels TBR and bolus
-    public synchronized void suspendDelivery() {
+    public synchronized void suspendDelivery(boolean acknowledgementBeep) {
         assertReadyForDelivery();
 
-        executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, EnumSet.allOf(DeliveryType.class), true)));
+        executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, EnumSet.allOf(DeliveryType.class), acknowledgementBeep)));
     }
 
-    public synchronized void resumeDelivery() {
+    public synchronized void resumeDelivery(boolean acknowledgementBeep) {
         assertReadyForDelivery();
 
         executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podState, podState.getBasalSchedule(),
-                true, podState.getScheduleOffset(), true)));
+                true, podState.getScheduleOffset(), acknowledgementBeep)));
     }
 
     // CAUTION: cancels TBR and bolus
     // CAUTION: suspends and then resumes delivery.
     //  If any error occurs during the command sequence, delivery could be suspended
-    public synchronized void setTime() {
+    public synchronized void setTime(boolean acknowledgementBeeps) {
         assertReadyForDelivery();
 
-        suspendDelivery();
+        suspendDelivery(acknowledgementBeeps);
 
         // Joda seems to cache the default time zone, so we use the JVM's
         DateTimeZone.setDefault(DateTimeZone.forTimeZone(TimeZone.getDefault()));
         podState.setTimeZone(DateTimeZone.getDefault());
 
-        resumeDelivery();
+        resumeDelivery(acknowledgementBeeps);
     }
 
-    public synchronized void deactivatePod() {
+    public synchronized void deactivatePod(boolean acknowledgementBeep) {
         if (podState == null) {
             throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, null);
         }
 
-        executeAndVerify(() -> communicationService.executeAction(new DeactivatePodAction(podState, true)));
+        executeAndVerify(() -> communicationService.executeAction(new DeactivatePodAction(podState, acknowledgementBeep)));
 
         resetPodState();
     }
