@@ -133,28 +133,28 @@ public class OmnipodManager {
     public synchronized void acknowledgeAlerts() {
         assertReadyForDelivery();
 
-        communicationService.executeAction(new AcknowledgeAlertsAction(podState, podState.getActiveAlerts()));
+        executeAndVerify(() -> communicationService.executeAction(new AcknowledgeAlertsAction(podState, podState.getActiveAlerts())));
     }
 
     public synchronized void setBasalSchedule(BasalSchedule schedule) {
         assertReadyForDelivery();
 
-        communicationService.executeAction(new SetBasalScheduleAction(podState, schedule,
-                false, podState.getScheduleOffset(), true));
+        executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podState, schedule,
+                false, podState.getScheduleOffset(), true)));
     }
 
     public synchronized void setTemporaryBasal(TempBasalPair tempBasalPair) {
         assertReadyForDelivery();
 
-        communicationService.executeAction(new SetTempBasalAction(new SetTempBasalService(),
+        executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(new SetTempBasalService(),
                 podState, tempBasalPair.getInsulinRate(), Duration.standardMinutes(tempBasalPair.getDurationMinutes()),
-                true, true));
+                true, true)));
     }
 
     public synchronized void cancelTemporaryBasal() {
         assertReadyForDelivery();
 
-        communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.TEMP_BASAL, true));
+        executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.TEMP_BASAL, true)));
     }
 
     // Returns a SingleSubject that returns when the bolus has finished.
@@ -252,33 +252,33 @@ public class OmnipodManager {
         }
     }
 
+    // CAUTION: cancels TBR and bolus
     public synchronized void suspendDelivery() {
         assertReadyForDelivery();
 
-        communicationService.executeAction(new CancelDeliveryAction(podState, EnumSet.allOf(DeliveryType.class), true));
+        executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, EnumSet.allOf(DeliveryType.class), true)));
     }
 
     public synchronized void resumeDelivery() {
         assertReadyForDelivery();
 
-        communicationService.executeAction(new SetBasalScheduleAction(podState, podState.getBasalSchedule(),
-                true, podState.getScheduleOffset(), true));
+        executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podState, podState.getBasalSchedule(),
+                true, podState.getScheduleOffset(), true)));
     }
 
-    // If this command fails, it it possible that delivery has been suspended
+    // CAUTION: cancels TBR and bolus
+    // CAUTION: suspends and then resumes delivery.
+    //  If any error occurs during the command sequence, delivery could be suspended
     public synchronized void setTime() {
         assertReadyForDelivery();
 
-        // Suspend delivery
-        communicationService.executeAction(new CancelDeliveryAction(podState, EnumSet.allOf(DeliveryType.class), false));
+        suspendDelivery();
 
         // Joda seems to cache the default time zone, so we use the JVM's
         DateTimeZone.setDefault(DateTimeZone.forTimeZone(TimeZone.getDefault()));
         podState.setTimeZone(DateTimeZone.getDefault());
 
-        // Resume delivery
-        StatusResponse statusResponse = communicationService.executeAction(new SetBasalScheduleAction(podState, podState.getBasalSchedule(),
-                true, podState.getScheduleOffset(), true));
+        resumeDelivery();
     }
 
     public synchronized void deactivatePod() {
@@ -286,7 +286,8 @@ public class OmnipodManager {
             throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, null);
         }
 
-        communicationService.executeAction(new DeactivatePodAction(podState, true));
+        executeAndVerify(() -> communicationService.executeAction(new DeactivatePodAction(podState, true)));
+
         resetPodState();
     }
 
@@ -383,12 +384,12 @@ public class OmnipodManager {
                     new CancelDeliveryCommand(podState.getCurrentNonce(), BeepType.NO_BEEP, DeliveryType.NONE), false);
         } catch (NonceOutOfSyncException ex) {
             if (isLoggingEnabled()) {
-                LOG.info("Command resolved to FAILURE (CERTAIN_FAILURE)");
+                LOG.info("Command resolved to FAILURE (CERTAIN_FAILURE)", ex);
             }
             return CommandDeliveryStatus.CERTAIN_FAILURE;
         } catch (Exception ex) {
             if (isLoggingEnabled()) {
-                LOG.error("Command unresolved (UNCERTAIN_FAILURE)");
+                LOG.error("Command unresolved (UNCERTAIN_FAILURE)", ex);
             }
             return CommandDeliveryStatus.UNCERTAIN_FAILURE;
         }
