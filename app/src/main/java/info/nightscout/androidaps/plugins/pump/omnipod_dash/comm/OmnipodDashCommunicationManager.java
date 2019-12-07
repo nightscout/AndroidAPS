@@ -85,7 +85,7 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
         return null;
     }
 
-    public PumpEnactResult setBolus(Double parameter) {
+    public PumpEnactResult setBolus(Double parameter, boolean isSmb) {
         return null;
     }
 

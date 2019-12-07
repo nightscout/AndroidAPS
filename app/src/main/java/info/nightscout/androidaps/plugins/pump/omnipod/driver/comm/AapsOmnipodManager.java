@@ -147,15 +147,14 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    // TODO add boolean isSmb so we can disable progress indication for SMB
     @Override
-    public PumpEnactResult setBolus(Double units/*, boolean isSmb*/) {
+    public PumpEnactResult setBolus(Double units, boolean isSmb) {
         OmnipodManager.BolusCommandResult bolusCommandResult;
 
-        boolean beepsEnabled = /* isSmb ? isSmbBeepsEnabled() : */ isBolusBeepsEnabled();
+        boolean beepsEnabled = isSmb ? isSmbBeepsEnabled() : isBolusBeepsEnabled();
 
         try {
-            bolusCommandResult = delegate.bolus(units, beepsEnabled, beepsEnabled, /* isSmb ? null : */
+            bolusCommandResult = delegate.bolus(units, beepsEnabled, beepsEnabled, isSmb ? null :
                     (estimatedUnitsDelivered, percentage) -> {
                         EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
                         progressUpdateEvent.setStatus(getStringResource(R.string.bolusdelivering, units));

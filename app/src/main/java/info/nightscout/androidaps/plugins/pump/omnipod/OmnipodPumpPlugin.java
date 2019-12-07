@@ -43,9 +43,6 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUITask;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
@@ -54,9 +51,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInt
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUITask;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.LogReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
@@ -314,7 +314,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public boolean isSuspended() {
-        return (pumpStatusLocal!=null && !pumpStatusLocal.podAvailable);
+        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable);
     }
 
     @Override
@@ -509,7 +509,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         try {
 
             OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.SetBolus,
-                    detailedBolusInfo.insulin);
+                    detailedBolusInfo.insulin, detailedBolusInfo.isSMB);
 
             PumpEnactResult result = responseTask.getResult();
 
