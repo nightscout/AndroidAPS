@@ -1400,8 +1400,8 @@ Unerwartetes Verhalten.</string>
     <string name="format_carbs">%1$dg</string>
     <string name="common_on">Ein</string>
     <string name="common_off">Aus</string>
-    <string name="objectives_button_unfinish">Löschen abgeschlossen</string>
-    <string name="objectives_button_unstart">Löschen gestartet</string>
+    <string name="objectives_button_unfinish">Ziel erneut öffnen</string>
+    <string name="objectives_button_unstart">Ziel neu starten</string>
     <string name="timedetection">Zeiterkennung</string>
     <string name="doyouwantresetstart">Möchtest Du den Start der Ziele zurücksetzen? Du verlierst Deine Fortschritte.</string>
     <string name="nopumpselected">Keine Pumpe ausgewählt</string>
@@ -1418,4 +1418,5 @@ Unerwartetes Verhalten.</string>
     <string name="profilenamecontainsdot">Profilname enthält Punkte.\nDies wird von NS nicht unterstützt.\nProfil wird nicht zu NS hochgeladen.</string>
     <string name="low_mark_comment">Unterer Wert des Zielbereichs (nur Anzeige)</string>
     <string name="high_mark_comment">Oberer Wert des Zielbereichs (nur Anzeige)</string>
+    <string name="reorder_label">Umsortieren</string>
 </resources>
