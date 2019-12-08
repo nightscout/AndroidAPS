@@ -26,7 +26,6 @@ public class InsertCannulaService {
 
     public StatusResponse executeExpirationRemindersAlertCommand(OmnipodCommunicationService communicationService,
                                                                  PodSessionState podState) {
-
         AlertConfiguration lowReservoirAlertConfiguration = AlertConfigurationFactory.createLowReservoirAlertConfiguration(OmnipodConst.LOW_RESERVOIR_ALERT);
 
         DateTime endOfServiceTime = podState.getActivatedAt().plus(OmnipodConst.SERVICE_DURATION);

@@ -20,8 +20,6 @@ import static org.junit.Assert.assertArrayEquals;
 public class ConfigureAlertsCommandTest {
     @Test
     public void testEncoding() {
-        // from https://github.com/ps2/rileylink_ios/blob/master/OmniKitTests/MessageTests.swift
-
         Duration softExpirationTime = Duration.standardHours(72).minus(Duration.standardMinutes(1));
         AlertConfiguration alertConfiguration1 = new AlertConfiguration( //
                 AlertType.EXPIRATION_ADVISORY_ALERT,
@@ -34,7 +32,7 @@ public class ConfigureAlertsCommandTest {
                 BeepRepeat.EVERY_MINUTE_FOR_15_MINUTES);
 
         assertArrayEquals( //
-                ByteUtil.fromHexString("79a410df0502"), //
+                ByteUtil.fromHexString("79a410df0205"), //
                 alertConfiguration1.getRawData());
 
         Duration hardExpirationTime = Duration.standardHours(79).minus(Duration.standardMinutes(1));
@@ -49,7 +47,7 @@ public class ConfigureAlertsCommandTest {
                 BeepRepeat.EVERY_MINUTE_FOR_15_MINUTES);
 
         assertArrayEquals( //
-                ByteUtil.fromHexString("280012830602"), //
+                ByteUtil.fromHexString("280012830206"), //
                 alertConfiguration2.getRawData());
 
         AlertConfiguration alertConfiguration3 = new AlertConfiguration( //
@@ -71,7 +69,7 @@ public class ConfigureAlertsCommandTest {
                 Arrays.asList(alertConfiguration1, alertConfiguration2, alertConfiguration3));
 
         assertArrayEquals( //
-                ByteUtil.fromHexString("1916feb6268b79a410df0502280012830602020f00000202"), //
+                ByteUtil.fromHexString("1916feb6268b79a410df0205280012830206020f00000202"), //
                 configureAlertsCommand.getRawData());
     }
 
@@ -84,8 +82,8 @@ public class ConfigureAlertsCommandTest {
                 false, //
                 Duration.ZERO, //
                 new UnitsRemainingAlertTrigger(10.0), //
-                BeepType.BEEP_BEEP_BEEP_BEEP, //
-                BeepRepeat.EVERY_MINUTE_FOR_15_MINUTES);
+                BeepType.BIP_BEEP_BIP_BEEP_BIP_BEEP_BIP_BEEP, //
+                BeepRepeat.EVERY_MINUTE_FOR_3_MINUTES_REPEAT_EVERY_60_MINUTES);
 
         ConfigureAlertsCommand configureAlertsCommand = new ConfigureAlertsCommand( //
                 0xae01a66c, //
