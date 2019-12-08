@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.defs;
 
+import java.util.Locale;
+
 public enum FaultEventCode {
     NO_FAULTS((byte) 0x00),
     FAILED_FLASH_ERASE((byte) 0x01),
@@ -137,5 +139,10 @@ public enum FaultEventCode {
 
     public byte getValue() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(Locale.getDefault(), "Pod fault (%d): %s", value, name());
     }
 }

@@ -43,6 +43,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalDelivery
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalSetupProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceOutOfSyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.SP;
 import io.reactivex.Completable;
@@ -286,7 +287,13 @@ public class OmnipodManager {
             throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, null);
         }
 
-        executeAndVerify(() -> communicationService.executeAction(new DeactivatePodAction(podState, acknowledgementBeep)));
+        try {
+            executeAndVerify(() -> communicationService.executeAction(new DeactivatePodAction(podState, acknowledgementBeep)));
+        } catch (PodFaultException ex) {
+            if (isLoggingEnabled()) {
+                LOG.info("Ignoring PodFaultException in deactivatePod", ex);
+            }
+        }
 
         resetPodState();
     }
