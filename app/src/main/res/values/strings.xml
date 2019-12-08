@@ -1380,7 +1380,7 @@
 
     <string name="old_version">old version</string>
     <string name="very_old_version">very old version</string>
-    <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after 60 days, loop will be disabled after 90 days</string>
+    <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after %2$d days, loop will be disabled after %3$d days</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
 
