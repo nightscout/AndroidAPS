@@ -1417,4 +1417,5 @@
     <string name="profilenamecontainsdot">Název profilu obsahuje tečky.\nToto není v NS podporováno.\nProfil není přenesen do NS.</string>
     <string name="low_mark_comment">Spodní hodnota oblasti v rozsahu (pouze zobrazování)</string>
     <string name="high_mark_comment">Horní hodnota oblasti v rozsahu (pouze zobrazování)</string>
+    <string name="reorder_label">Změna pořadí</string>
 </resources>
