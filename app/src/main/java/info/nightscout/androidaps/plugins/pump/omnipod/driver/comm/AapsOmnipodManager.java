@@ -77,10 +77,24 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     public AapsOmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState, OmnipodPumpStatus _pumpStatus) {
         delegate = new OmnipodManager(communicationService, podState, podSessionState -> {
             // Handle pod state changes
-
             OmnipodUtil.setPodSessionState(podSessionState);
+            updatePumpStatus(podSessionState);
+        });
+        this.pumpStatus = _pumpStatus;
+        instance = this;
+    }
 
-            if (pumpStatus != null) {
+    private void updatePumpStatus(PodSessionState podSessionState) {
+        if (pumpStatus != null) {
+            if (podSessionState == null) {
+                pumpStatus.ackAlertsText = null;
+                pumpStatus.ackAlertsAvailable = false;
+                pumpStatus.lastBolusTime = null;
+                pumpStatus.lastBolusAmount = null;
+                pumpStatus.reservoirRemainingUnits = 0.0;
+                sendEvent(new EventOmnipodAcknowledgeAlertsChanged());
+                sendEvent(new EventOmnipodPumpValuesChanged());
+            } else {
                 // Update active alerts
                 if (podSessionState.hasActiveAlerts()) {
                     List<String> alerts = translateActiveAlerts(podSessionState);
@@ -110,9 +124,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                     sendEvent(new EventOmnipodPumpValuesChanged());
                 }
             }
-        });
-        this.pumpStatus = _pumpStatus;
-        instance = this;
+        }
     }
 
     private static boolean isReservoirStatusUpToDate(OmnipodPumpStatus pumpStatus, Double unitsRemaining) {
@@ -300,6 +312,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     public void setPumpStatus(OmnipodPumpStatus pumpStatus) {
         this.pumpStatus = pumpStatus;
         this.getCommunicationService().setPumpStatus(pumpStatus);
+        updatePumpStatus(delegate.getPodState());
     }
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
