@@ -67,7 +67,7 @@ public class PodSessionState extends PodState {
 
     public void setStateChangedHandler(PodStateChangedHandler handler) {
         // FIXME this is an ugly workaround for not being able to serialize the PodStateChangedHandler
-        if(stateChangedHandler != null) {
+        if (stateChangedHandler != null) {
             throw new IllegalStateException("A PodStateChangedHandler has already been already registered");
         }
         stateChangedHandler = handler;
@@ -256,6 +256,7 @@ public class PodSessionState extends PodState {
                 ", pmVersion=" + pmVersion +
                 ", lot=" + lot +
                 ", tid=" + tid +
+                ", reservoirLevel=" + reservoirLevel +
                 ", suspended=" + suspended +
                 ", timeZone=" + timeZone +
                 ", nonceState=" + nonceState +
