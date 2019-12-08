@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatm
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.actions_fragment.*
@@ -84,7 +85,11 @@ class ActionsFragment : Fragment() {
                 })
             }
         }
-        actions_fill.setOnClickListener { fragmentManager?.let { FillDialog().show(it, "FillDialog") } }
+        actions_fill.setOnClickListener {
+            activity?.let { activity ->
+                ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, Runnable { fragmentManager?.let { FillDialog().show(it, "FillDialog") } })
+            }
+        }
         actions_historybrowser.setOnClickListener { startActivity(Intent(context, HistoryBrowseActivity::class.java)) }
         actions_tddstats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
 

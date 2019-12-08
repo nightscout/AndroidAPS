@@ -118,6 +118,7 @@ import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SingleClickButton;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.ToastUtils;
+import info.nightscout.androidaps.utils.protection.ProtectionCheck;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -825,11 +826,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 onClickAcceptTemp();
                 break;
             case R.id.overview_quickwizardbutton:
-                onClickQuickwizard();
+                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, this::onClickQuickwizard);
                 break;
             case R.id.overview_wizardbutton:
-                WizardDialog wizardDialog = new WizardDialog();
-                wizardDialog.show(manager, "WizardDialog");
+                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new WizardDialog().show(manager, "WizardDialog"));
                 break;
             case R.id.overview_calibrationbutton:
                 if (xdrip) {
@@ -863,14 +863,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 }
                 break;
             case R.id.overview_treatmentbutton:
-                NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
-                treatmentDialogFragment.show(manager, "TreatmentDialog");
+                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new NewTreatmentDialog().show(manager, "TreatmentDialog"));
                 break;
             case R.id.overview_insulinbutton:
-                new NewInsulinDialog().show(manager, "InsulinDialog");
+                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new NewInsulinDialog().show(manager, "InsulinDialog"));
                 break;
             case R.id.overview_carbsbutton:
-                new NewCarbsDialog().show(manager, "CarbsDialog");
+                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new NewCarbsDialog().show(manager, "CarbsDialog"));
                 break;
             case R.id.overview_pumpstatus:
                 if (ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended() || !ConfigBuilderPlugin.getPlugin().getActivePump().isInitialized())
