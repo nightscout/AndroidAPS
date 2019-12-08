@@ -33,6 +33,7 @@ public class PodSessionState extends PodState {
     private final FirmwareVersion pmVersion;
     private final int lot;
     private final int tid;
+    private Double reservoirLevel;
     private boolean suspended;
 
     private DateTimeZone timeZone;
@@ -66,7 +67,7 @@ public class PodSessionState extends PodState {
 
     public void setStateChangedHandler(PodStateChangedHandler handler) {
         // FIXME this is an ugly workaround for not being able to serialize the PodStateChangedHandler
-        if(stateChangedHandler != null) {
+        if (stateChangedHandler != null) {
             throw new IllegalStateException("A PodStateChangedHandler has already been already registered");
         }
         stateChangedHandler = handler;
@@ -98,7 +99,6 @@ public class PodSessionState extends PodState {
         return expiresAt == null ? "???" : DateUtil.dateAndTimeString(expiresAt.toDate());
     }
 
-
     public FirmwareVersion getPiVersion() {
         return piVersion;
     }
@@ -113,6 +113,10 @@ public class PodSessionState extends PodState {
 
     public int getTid() {
         return tid;
+    }
+
+    public Double getReservoirLevel() {
+        return reservoirLevel;
     }
 
     public synchronized void resyncNonce(int syncWord, int sentNonce, int sequenceNumber) {
@@ -225,6 +229,7 @@ public class PodSessionState extends PodState {
         suspended = (statusResponse.getDeliveryStatus() == DeliveryStatus.SUSPENDED);
         activeAlerts = statusResponse.getAlerts();
         lastDeliveryStatus = statusResponse.getDeliveryStatus();
+        reservoirLevel = statusResponse.getReservoirLevel();
         store();
     }
 
@@ -251,6 +256,7 @@ public class PodSessionState extends PodState {
                 ", pmVersion=" + pmVersion +
                 ", lot=" + lot +
                 ", tid=" + tid +
+                ", reservoirLevel=" + reservoirLevel +
                 ", suspended=" + suspended +
                 ", timeZone=" + timeZone +
                 ", nonceState=" + nonceState +

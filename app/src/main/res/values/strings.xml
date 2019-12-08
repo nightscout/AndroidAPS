@@ -1727,6 +1727,13 @@
     <string name="omnipod_dash_name" translatable="false">Omnipod Dash</string>
     <string name="omnipod_dash_name_short" translatable="false">DASH</string>
     <string name="description_pump_omnipod_dash">Pump integration for Omnipod Dash.</string>
+    <string name="omnipod_alert_finish_pairing_reminder">Finish pairing reminder</string>
+    <string name="omnipod_alert_finish_setup_reminder_reminder">Finish setup reminder</string>
+    <string name="omnipod_alert_expiration">Pod wil expire soon</string>
+    <string name="omnipod_alert_expiration_advisory">Pod will expire soon</string>
+    <string name="omnipod_alert_shutdown_imminent">Shutdown is imminent</string>
+    <string name="omnipod_alert_low_reservoir">Low reservoir</string>
+    <string name="omnipod_alert_unknown_alert">Unknown alert</string>
 
 
 </resources>

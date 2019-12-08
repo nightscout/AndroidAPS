@@ -42,6 +42,9 @@ public class PodHistory implements DbObjectBase {
     @DatabaseField
     private Boolean successConfirmed;
 
+    public PodHistory() {
+        generatePumpId();
+    }
 
 
     public PodHistory(PodHistoryEntryType podDbEntryType) {

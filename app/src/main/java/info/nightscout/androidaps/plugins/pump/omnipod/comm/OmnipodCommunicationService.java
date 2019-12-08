@@ -160,14 +160,14 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             encodedMessage = ByteUtil.substring(encodedMessage, encodedMessageInPacket.length, encodedMessage.length - encodedMessageInPacket.length);
             firstPacket = false;
 
-            // If this is not the last packet, the message wasn't fully sent,
-            // so it's impossible for the pod to have received the message
-            boolean isCertainFailure = encodedMessage.length > 0;
-
             try {
                 // We actually ignore previous (ack) responses if it was not last packet to send
                 response = exchangePackets(podState, packet);
             } catch (Exception ex) {
+                // If this is not the last packet, the message wasn't fully sent,
+                // so it's impossible for the pod to have received the message
+                boolean isCertainFailure = encodedMessage.length > 0;
+
                 OmnipodException newException;
                 if (ex instanceof OmnipodException) {
                     newException = (OmnipodException) ex;

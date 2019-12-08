@@ -1,17 +1,23 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.comm;
 
+import android.text.TextUtils;
+
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -21,6 +27,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.SetupActionResult;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
@@ -29,7 +37,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedu
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistoryEntryType;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodDbEntryType;
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodAcknowledgeAlertsChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommandInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommunicationException;
@@ -56,17 +66,66 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     private static AapsOmnipodManager instance;
     private OmnipodPumpStatus pumpStatus;
 
+    private Date lastBolusTime;
+    private Double lastBolusUnits;
+
     public static AapsOmnipodManager getInstance() {
         return instance;
     }
 
-    public AapsOmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState, OmnipodPumpStatus pumpStatus) {
+    public AapsOmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState, OmnipodPumpStatus _pumpStatus) {
         delegate = new OmnipodManager(communicationService, podState, podSessionState -> {
+            // Handle pod state changes
+
             OmnipodUtil.setPodSessionState(podSessionState);
-            // TODO update active alerts (and other stuff(?)) in UI
+
+            if (pumpStatus != null) {
+                // Update active alerts
+                if (podSessionState.hasActiveAlerts()) {
+                    List<String> alerts = translateActiveAlerts(podSessionState);
+                    String alertsText = TextUtils.join("\n", alerts);
+
+                    if (!pumpStatus.ackAlertsAvailable || !alertsText.equals(pumpStatus.ackAlertsText)) {
+                        pumpStatus.ackAlertsAvailable = true;
+                        pumpStatus.ackAlertsText = TextUtils.join("\n", alerts);
+
+                        sendEvent(new EventOmnipodAcknowledgeAlertsChanged());
+                    }
+                } else {
+                    if (pumpStatus.ackAlertsAvailable) {
+                        pumpStatus.ackAlertsAvailable = false;
+
+                        sendEvent(new EventOmnipodAcknowledgeAlertsChanged());
+                    }
+                }
+
+                // Update other info: last bolus, units remaining
+                if (!Objects.equals(lastBolusTime, pumpStatus.lastBolusTime) //
+                        || !Objects.equals(lastBolusUnits, pumpStatus.lastBolusAmount) //
+                        || !isReservoirStatusUpToDate(pumpStatus, podSessionState.getReservoirLevel())) {
+                    pumpStatus.lastBolusTime = lastBolusTime;
+                    pumpStatus.lastBolusAmount = lastBolusUnits;
+                    pumpStatus.reservoirRemainingUnits = podSessionState.getReservoirLevel() == null ? 75.0 : podSessionState.getReservoirLevel();
+                    sendEvent(new EventOmnipodPumpValuesChanged());
+                }
+            }
         });
-        this.pumpStatus = pumpStatus;
+        this.pumpStatus = _pumpStatus;
         instance = this;
+    }
+
+    private static boolean isReservoirStatusUpToDate(OmnipodPumpStatus pumpStatus, Double unitsRemaining) {
+        double expectedUnitsRemaining = unitsRemaining == null ? 75.0 : unitsRemaining;
+        return Math.abs(expectedUnitsRemaining - pumpStatus.reservoirRemainingUnits) < 0.000001;
+    }
+
+    @NotNull
+    private List<String> translateActiveAlerts(PodSessionState podSessionState) {
+        List<String> alerts = new ArrayList<>();
+        for (AlertSlot alertSlot : podSessionState.getActiveAlerts().getAlertSlots()) {
+            alerts.add(translateAlertType(podSessionState.getConfiguredAlertType(alertSlot)));
+        }
+        return alerts;
     }
 
     @Override
@@ -153,35 +212,36 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
         boolean beepsEnabled = isSmb ? isSmbBeepsEnabled() : isBolusBeepsEnabled();
 
+        Date bolusStarted;
         try {
             bolusCommandResult = delegate.bolus(units, beepsEnabled, beepsEnabled, isSmb ? null :
                     (estimatedUnitsDelivered, percentage) -> {
                         EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
                         progressUpdateEvent.setStatus(getStringResource(R.string.bolusdelivering, units));
                         progressUpdateEvent.setPercent(percentage);
-                        RxBus.INSTANCE.send(progressUpdateEvent);
+                        sendEvent(progressUpdateEvent);
                     });
+
+            bolusStarted = new Date();
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
-        if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus()) /* && !isSmb */) {
+        if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus()) && !isSmb /* TODO or should we also warn for SMB? */) {
             // TODO notify user about uncertain failure ---> we're unsure whether or not the bolus has been delivered
             //  For safety reasons, we should treat this as a bolus that has been delivered, in order to prevent insulin overdose
         }
 
-        double unitsDelivered = units;
+        // Wait for the bolus to finish
+        OmnipodManager.BolusDeliveryResult bolusDeliveryResult =
+                bolusCommandResult.getDeliveryResultSubject().blockingGet();
 
-        try {
-            // Wait for the bolus to finish
-            OmnipodManager.BolusDeliveryResult bolusDeliveryResult =
-                    bolusCommandResult.getDeliveryResultSubject().blockingGet();
-            unitsDelivered = bolusDeliveryResult.getUnitsDelivered();
-        } catch (Exception ex) {
-            if (loggingEnabled()) {
-                LOG.debug("Ignoring failed status response for bolus completion verification", ex);
-            }
+        double unitsDelivered = bolusDeliveryResult.getUnitsDelivered();
+
+        if (pumpStatus != null && !isSmb) {
+            lastBolusTime = bolusStarted;
+            lastBolusUnits = unitsDelivered;
         }
 
         return new PumpEnactResult().success(true).enacted(true).bolusDelivered(unitsDelivered);
@@ -279,6 +339,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
+    // Updates the pods current time based on the device timezone and the pod's time zone
     public PumpEnactResult setTime() {
         try {
             // CAUTION cancels TBR
@@ -308,7 +369,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
 
-    private void addToHistory(long requestTime, PodHistoryEntryType entryType, String data, boolean success) {
+    private void addToHistory(long requestTime, PodDbEntryType entryType, String data, boolean success) {
         // TODO andy needs to be refactored
 
         //PodDbEntry entry = new PodDbEntry(requestTime, entryType);
@@ -381,6 +442,32 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         }
 
         return comment;
+    }
+
+    private void sendEvent(Event event) {
+        RxBus.INSTANCE.send(event);
+    }
+
+    private String translateAlertType(AlertType alertType) {
+        if (alertType == null) {
+            return getStringResource(R.string.omnipod_alert_unknown_alert);
+        }
+        switch (alertType) {
+            case FINISH_PAIRING_REMINDER:
+                return getStringResource(R.string.omnipod_alert_finish_pairing_reminder);
+            case FINISH_SETUP_REMINDER:
+                return getStringResource(R.string.omnipod_alert_finish_setup_reminder_reminder);
+            case EXPIRATION_ALERT:
+                return getStringResource(R.string.omnipod_alert_expiration);
+            case EXPIRATION_ADVISORY_ALERT:
+                return getStringResource(R.string.omnipod_alert_expiration_advisory);
+            case SHUTDOWN_IMMINENT_ALARM:
+                return getStringResource(R.string.omnipod_alert_shutdown_imminent);
+            case LOW_RESERVOIR_ALERT:
+                return getStringResource(R.string.omnipod_alert_low_reservoir);
+            default:
+                return alertType.name();
+        }
     }
 
     private boolean isBolusBeepsEnabled() {
