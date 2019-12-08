@@ -155,17 +155,33 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             PacketType packetType = firstPacket ? PacketType.PDM : PacketType.CON;
             OmnipodPacket packet = new OmnipodPacket(packetAddress, packetType, podState.getPacketNumber(), encodedMessage);
             byte[] encodedMessageInPacket = packet.getEncodedMessage();
-            //getting the data remaining to be sent
+
+            // getting the data remaining to be sent
             encodedMessage = ByteUtil.substring(encodedMessage, encodedMessageInPacket.length, encodedMessage.length - encodedMessageInPacket.length);
             firstPacket = false;
+
+            // If this is not the last packet, the message wasn't fully sent,
+            // so it's impossible for the pod to have received the message
+            boolean isCertainFailure = encodedMessage.length > 0;
+
             try {
+                // We actually ignore previous (ack) responses if it was not last packet to send
                 response = exchangePackets(podState, packet);
-            } catch (OmnipodException ex) {
-                throw ex;
             } catch (Exception ex) {
-                throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
+                OmnipodException newException;
+                if (ex instanceof OmnipodException) {
+                    newException = (OmnipodException) ex;
+                } else {
+                    newException = new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
+                }
+
+                if (isLoggingEnabled()) {
+                    LOG.debug("Caught exception in transportMessages. Setting certainFailure to {} because encodedMessage.length={}", isCertainFailure, encodedMessage.length);
+                }
+                newException.setCertainFailure(isCertainFailure);
+
+                throw newException;
             }
-            //We actually ignore (ack) responses if it is not last packet to send
         }
 
         if (response.getPacketType() == PacketType.ACK) {
@@ -266,7 +282,7 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             OmnipodPacket response = null;
             try {
                 response = sendAndListen(packet, responseTimeoutMilliseconds, repeatCount, 9, preambleExtensionMilliseconds, OmnipodPacket.class);
-            } catch (RileyLinkCommunicationException ex) {
+            } catch (RileyLinkCommunicationException | OmnipodException ex) {
                 if (isLoggingEnabled()) {
                     LOG.debug("Ignoring exception in exchangePackets", ex);
                 }

@@ -80,9 +80,10 @@ public class OmnipodUITask {
 
             case SetBolus: {
                 Double amount = getDoubleFromParameters(0);
+                boolean isSmb = getBooleanFromParameters(1);
 
                 if (amount != null)
-                    returnData = communicationManager.setBolus(amount);
+                    returnData = communicationManager.setBolus(amount, isSmb);
 // TODO                    returnData = communicationManager.bolus(amount);
             }
             break;
@@ -138,6 +139,9 @@ public class OmnipodUITask {
         return (Double) parameters[index];
     }
 
+    public boolean getBooleanFromParameters(int index) {
+        return (boolean) parameters[index];
+    }
 
     public Integer getIntegerFromParameters(int index) {
         return (Integer) parameters[index];

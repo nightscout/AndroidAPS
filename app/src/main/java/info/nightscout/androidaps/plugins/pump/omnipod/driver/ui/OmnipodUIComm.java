@@ -31,7 +31,7 @@ public class OmnipodUIComm {
     }
 
 
-    public synchronized OmnipodUITask executeCommand(OmnipodCommandType commandType, Object... parameters) {
+    public OmnipodUITask executeCommand(OmnipodCommandType commandType, Object... parameters) {
 
         if (isLogEnabled())
             LOG.warn("Execute Command: " + commandType.name());

@@ -26,7 +26,7 @@ import info.nightscout.androidaps.utils.SP;
 
 public class PodSessionState extends PodState {
     private final Map<AlertSlot, AlertType> configuredAlerts;
-    private final PodStateChangedHandler stateChangedHandler;
+    private transient PodStateChangedHandler stateChangedHandler;
     private DateTime activatedAt;
     private DateTime expiresAt;
     private final FirmwareVersion piVersion;
@@ -43,8 +43,7 @@ public class PodSessionState extends PodState {
     private DeliveryStatus lastDeliveryStatus;
 
     public PodSessionState(DateTimeZone timeZone, int address, DateTime activatedAt, FirmwareVersion piVersion,
-                           FirmwareVersion pmVersion, int lot, int tid, int packetNumber, int messageNumber,
-                           PodStateChangedHandler stateChangedHandler) {
+                           FirmwareVersion pmVersion, int lot, int tid, int packetNumber, int messageNumber) {
         super(address, messageNumber, packetNumber);
         if (timeZone == null) {
             throw new IllegalArgumentException("Time zone can not be null");
@@ -61,9 +60,16 @@ public class PodSessionState extends PodState {
         this.pmVersion = pmVersion;
         this.lot = lot;
         this.tid = tid;
-        this.stateChangedHandler = stateChangedHandler;
         this.nonceState = new NonceState(lot, tid);
         store();
+    }
+
+    public void setStateChangedHandler(PodStateChangedHandler handler) {
+        // FIXME this is an ugly workaround for not being able to serialize the PodStateChangedHandler
+        if(stateChangedHandler != null) {
+            throw new IllegalStateException("A PodStateChangedHandler has already been already registered");
+        }
+        stateChangedHandler = handler;
     }
 
     public AlertType getConfiguredAlertType(AlertSlot alertSlot) {

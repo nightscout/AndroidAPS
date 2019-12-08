@@ -40,7 +40,7 @@ public interface OmnipodCommunicationManagerInterface {
      *
      * @param amount amount of bolus in U
      */
-    PumpEnactResult setBolus(Double amount);
+    PumpEnactResult setBolus(Double amount, boolean isSmb);
 
     /**
      * Cancel Bolus (if bolus is already stopped, return acknowledgment)
