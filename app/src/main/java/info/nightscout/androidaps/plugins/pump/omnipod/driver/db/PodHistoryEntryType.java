@@ -1,9 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.db;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by andy on 24.11.2019
  */
-public enum PodDbEntryType {
+public enum PodHistoryEntryType {
 
     PairAndPrime(1),
     InsertCannula(2),
@@ -29,9 +32,19 @@ public enum PodDbEntryType {
     ;
 
     private int code;
+    private static Map<Integer, PodHistoryEntryType> instanceMap;
 
-    PodDbEntryType(int code) {
 
+    static {
+        instanceMap = new HashMap<>();
+
+        for (PodHistoryEntryType value : values()) {
+            instanceMap.put(value.code, value);
+        }
+    }
+
+
+    PodHistoryEntryType(int code) {
         this.code = code;
     }
 

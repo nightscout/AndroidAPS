@@ -29,7 +29,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedu
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodDbEntryType;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistoryEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommandInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommunicationException;
@@ -308,7 +308,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
 
-    private void addToHistory(long requestTime, PodDbEntryType entryType, String data, boolean success) {
+    private void addToHistory(long requestTime, PodHistoryEntryType entryType, String data, boolean success) {
         // TODO andy needs to be refactored
 
         //PodDbEntry entry = new PodDbEntry(requestTime, entryType);

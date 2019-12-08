@@ -15,8 +15,10 @@ public class InitPodCancelAction extends AbstractCancelAction {
         }
 
         if (this.cancelActionText.equals("Cancel")) {
-            AapsOmnipodManager.getInstance().resetPodStatus();
+            //AapsOmnipodManager.getInstance().resetPodStatus();
         }
+
+        //refreshButtons()
 
     }
 }

@@ -22,7 +22,7 @@ public class PodHistory implements DbObjectBase {
     @DatabaseField(id = true)
     public long date;
 
-    private PodDbEntryType podDbEntryType;
+    private PodHistoryEntryType podHistoryEntryType;
 
     @DatabaseField
     private long podEntryTypeCode;
@@ -37,20 +37,25 @@ public class PodHistory implements DbObjectBase {
     private long pumpId;
 
     @DatabaseField
+    private String podSerial;
+
+    @DatabaseField
     private Boolean successConfirmed;
 
 
 
-    public PodHistory(PodDbEntryType podDbEntryType) {
+    public PodHistory(PodHistoryEntryType podDbEntryType) {
         this.date = System.currentTimeMillis();
-        this.podDbEntryType = podDbEntryType;
+        this.podHistoryEntryType = podDbEntryType;
+        this.podEntryTypeCode = podDbEntryType.getCode();
         generatePumpId();
     }
 
 
-    public PodHistory(long dateTimeInMillis, PodDbEntryType podDbEntryType) {
+    public PodHistory(long dateTimeInMillis, PodHistoryEntryType podDbEntryType) {
         this.date = dateTimeInMillis;
-        this.podDbEntryType = podDbEntryType;
+        this.podHistoryEntryType = podDbEntryType;
+        this.podEntryTypeCode = podDbEntryType.getCode();
         generatePumpId();
     }
 
@@ -64,12 +69,12 @@ public class PodHistory implements DbObjectBase {
         this.date = date;
     }
 
-    public PodDbEntryType getPodDbEntryType() {
-        return podDbEntryType;
+    public PodHistoryEntryType getPodDbEntryType() {
+        return podHistoryEntryType;
     }
 
-    public void setPodDbEntryType(PodDbEntryType podDbEntryType) {
-        this.podDbEntryType = podDbEntryType;
+    public void setPodDbEntryType(PodHistoryEntryType podDbEntryType) {
+        this.podHistoryEntryType = podDbEntryType;
         this.podEntryTypeCode = podDbEntryType.getCode();
     }
 
@@ -115,4 +120,11 @@ public class PodHistory implements DbObjectBase {
     }
 
 
+    public String getPodSerial() {
+        return podSerial;
+    }
+
+    public void setPodSerial(String podSerial) {
+        this.podSerial = podSerial;
+    }
 }

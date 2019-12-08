@@ -111,7 +111,7 @@ android {
         versionCode 1500
         version "omnipod-0.1-SNAPSHOT"
         buildConfigField "String", "VERSION", '"' + version + '"'
-        buildConfigField "String", "DEV_VERSION", "2.6-dev"
+        buildConfigField "String", "DEV_VERSION", '"2.6-dev"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'

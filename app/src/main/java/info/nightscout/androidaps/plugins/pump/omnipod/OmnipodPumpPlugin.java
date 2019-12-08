@@ -139,6 +139,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                                 if (omnipodCommunicationManager == null) {
                                     omnipodCommunicationManager = AapsOmnipodManager.getInstance();
                                     omnipodCommunicationManager.setPumpStatus(pumpStatusLocal);
+                                } else {
+                                    omnipodCommunicationManager.setPumpStatus(pumpStatusLocal);
                                 }
 
                                 omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager, plugin, pumpStatusLocal);

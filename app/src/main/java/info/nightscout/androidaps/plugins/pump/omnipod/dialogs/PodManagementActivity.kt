@@ -12,7 +12,9 @@ import info.nightscout.androidaps.activities.NoSplashActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodCancelAction
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodWizardModel
+import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitPodRefreshAction
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.RemovePodWizardModel
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
 import info.nightscout.androidaps.utils.OKDialog
 import kotlinx.android.synthetic.main.omnipod_pod_mgmt.*
 
@@ -42,6 +44,8 @@ class PodManagementActivity : NoSplashActivity() {
             showPodHistory()
         }
 
+        refreshButtons();
+
     }
 
 
@@ -50,13 +54,15 @@ class PodManagementActivity : NoSplashActivity() {
         // TODO check if RL is running and that pod is not active
 
         val pagerSettings = WizardPagerSettings()
+        var refreshAction = InitPodRefreshAction(this)
 
         pagerSettings.setWizardStepsWayType(WizardStepsWayType.CancelNext)
         pagerSettings.setFinishStringResourceId(R.string.close)
         pagerSettings.setFinishButtonBackground(R.drawable.finish_background)
         pagerSettings.setNextButtonBackground(R.drawable.selectable_item_background)
         pagerSettings.setBackStringResourceId(R.string.cancel)
-        pagerSettings.setCancelAction(InitPodCancelAction())
+        pagerSettings.cancelAction = refreshAction
+        pagerSettings.finishAction = refreshAction
 
         val wizardPagerContext = WizardPagerContext.getInstance();
 
@@ -72,13 +78,15 @@ class PodManagementActivity : NoSplashActivity() {
         // TODO check that pod is active
 
         val pagerSettings = WizardPagerSettings()
+        var refreshAction = InitPodRefreshAction(this)
 
         pagerSettings.setWizardStepsWayType(WizardStepsWayType.CancelNext)
         pagerSettings.setFinishStringResourceId(R.string.close)
         pagerSettings.setFinishButtonBackground(R.drawable.finish_background)
         pagerSettings.setNextButtonBackground(R.drawable.selectable_item_background)
         pagerSettings.setBackStringResourceId(R.string.cancel)
-        //pagerSettings.setCancelAction(InitPodCancelAction())
+        pagerSettings.cancelAction = refreshAction
+        pagerSettings.finishAction = refreshAction
 
         val wizardPagerContext = WizardPagerContext.getInstance();
 
@@ -103,6 +111,16 @@ class PodManagementActivity : NoSplashActivity() {
     fun showPodHistory() {
         OKDialog.showConfirmation(this,
                 MainApp.gs(R.string.omnipod_cmd_pod_history_na), null)
+    }
+
+
+    fun refreshButtons() {
+
+        val isPodSessionActive = (OmnipodUtil.getPodSessionState()!=null)
+
+        initpod_init_pod.isEnabled = !isPodSessionActive
+        initpod_remove_pod.isEnabled = isPodSessionActive
+        initpod_reset_pod.isEnabled = isPodSessionActive
     }
 
 }
