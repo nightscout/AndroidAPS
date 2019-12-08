@@ -34,7 +34,7 @@ class WizardInfoDialog : DialogFragment() {
         close.setOnClickListener { dismiss() }
 
         // BG
-        treatments_wizard_bg.text = DecimalFormatter.to1Decimal(JsonHelper.safeGetDouble(json, "bg")) + String.format(MainApp.gs(R.string.format_bg_isf), "" , JsonHelper.safeGetDouble(json, "isf"))
+        treatments_wizard_bg.text = MainApp.gs(R.string.format_bg_isf, JsonHelper.safeGetDouble(json, "bg") , JsonHelper.safeGetDouble(json, "isf"))
         treatments_wizard_bginsulin.text = StringUtils.formatInsulin(JsonHelper.safeGetDouble(json, "insulinbg"))
         treatments_wizard_bgcheckbox.isChecked = JsonHelper.safeGetBoolean(json, "insulinbgused")
         treatments_wizard_ttcheckbox.isChecked = JsonHelper.safeGetBoolean(json, "ttused")
@@ -43,7 +43,7 @@ class WizardInfoDialog : DialogFragment() {
         treatments_wizard_bgtrendinsulin.text = StringUtils.formatInsulin(JsonHelper.safeGetDouble(json, "insulintrend"))
         treatments_wizard_bgtrendcheckbox.isChecked = JsonHelper.safeGetBoolean(json, "trendused")
         // COB
-        treatments_wizard_cob.text = String.format(MainApp.gs(R.string.format_cob_ic), JsonHelper.safeGetDouble(json, "cob"), JsonHelper.safeGetDouble(json, "ic"))
+        treatments_wizard_cob.text = MainApp.gs(R.string.format_cob_ic, JsonHelper.safeGetDouble(json, "cob"), JsonHelper.safeGetDouble(json, "ic"))
         treatments_wizard_cobinsulin.text = StringUtils.formatInsulin(JsonHelper.safeGetDouble(json, "insulincob"))
         treatments_wizard_cobcheckbox.isChecked = JsonHelper.safeGetBoolean(json, "cobused")
         // Bolus IOB
@@ -56,7 +56,7 @@ class WizardInfoDialog : DialogFragment() {
         treatments_wizard_sbinsulin.text = StringUtils.formatInsulin(JsonHelper.safeGetDouble(json, "insulinsuperbolus"))
         treatments_wizard_sbcheckbox.isChecked = JsonHelper.safeGetBoolean(json, "superbolusused")
         // Carbs
-        treatments_wizard_carbs.text = String.format(MainApp.gs(R.string.format_carbs_ic), JsonHelper.safeGetDouble(json, "carbs"), JsonHelper.safeGetDouble(json, "ic"))
+        treatments_wizard_carbs.text = MainApp.gs(R.string.format_carbs_ic, JsonHelper.safeGetDouble(json, "carbs"), JsonHelper.safeGetDouble(json, "ic"))
         treatments_wizard_carbsinsulin.text = StringUtils.formatInsulin(JsonHelper.safeGetDouble(json, "insulincarbs"))
         // Correction
         treatments_wizard_correctioninsulin.text = StringUtils.formatInsulin(JsonHelper.safeGetDouble(json, "othercorrection"))
