@@ -3,6 +3,11 @@ package info.nightscout.androidaps.plugins.pump.omnipod.defs;
 import org.joda.time.Duration;
 
 public class AlertConfigurationFactory {
+    public static AlertConfiguration createLowReservoirAlertConfiguration(Double units) {
+        return new AlertConfiguration(AlertType.LOW_RESERVOIR_ALERT, AlertSlot.SLOT4, true, false, Duration.ZERO,
+                new UnitsRemainingAlertTrigger(units), BeepType.BIP_BEEP_BIP_BEEP_BIP_BEEP_BIP_BEEP, BeepRepeat.EVERY_15_MINUTES);
+    }
+
     public static AlertConfiguration createExpirationAdvisoryAlertConfiguration(Duration timeUntilAlert, Duration duration) {
         return new AlertConfiguration(AlertType.EXPIRATION_ADVISORY_ALERT, AlertSlot.SLOT7, true, false, duration,
                 new TimerAlertTrigger(timeUntilAlert), BeepType.BIP_BEEP_BIP_BEEP_BIP_BEEP_BIP_BEEP, BeepRepeat.EVERY_60_MINUTES);

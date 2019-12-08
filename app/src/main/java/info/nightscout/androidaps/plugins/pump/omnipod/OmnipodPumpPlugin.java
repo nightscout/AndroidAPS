@@ -173,6 +173,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     public void initPumpStatusData() {
 
         this.pumpStatusLocal = new OmnipodPumpStatus(pumpDescription);
+        if (omnipodCommunicationManager != null) {
+            omnipodCommunicationManager.setPumpStatus(pumpStatusLocal);
+        }
+
         OmnipodUtil.setPumpStatus(pumpStatusLocal);
 
         pumpStatusLocal.lastConnection = SP.getLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
@@ -493,6 +497,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             if (isLoggingEnabled())
                 LOG.warn("!!!! Reset Pump Status Local");
             pumpStatusLocal = OmnipodUtil.getPumpStatus();
+            if (omnipodCommunicationManager != null) {
+                omnipodCommunicationManager.setPumpStatus(pumpStatusLocal);
+            }
         }
 
         return pumpStatusLocal;

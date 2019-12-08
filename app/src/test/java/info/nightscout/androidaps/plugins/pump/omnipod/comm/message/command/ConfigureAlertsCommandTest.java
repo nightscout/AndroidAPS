@@ -4,6 +4,7 @@ import org.joda.time.Duration;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertConfiguration;
@@ -12,6 +13,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepRepeat;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.TimerAlertTrigger;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.UnitsRemainingAlertTrigger;
 
 import static org.junit.Assert.assertArrayEquals;
 
@@ -73,5 +75,24 @@ public class ConfigureAlertsCommandTest {
                 configureAlertsCommand.getRawData());
     }
 
-    // TODO add tests
+    @Test
+    public void testLowReservoirAlert() {
+        AlertConfiguration alertConfiguration = new AlertConfiguration(//
+                AlertType.LOW_RESERVOIR_ALERT, //
+                AlertSlot.SLOT4, //
+                true, //
+                false, //
+                Duration.ZERO, //
+                new UnitsRemainingAlertTrigger(10.0), //
+                BeepType.BEEP_BEEP_BEEP_BEEP, //
+                BeepRepeat.EVERY_MINUTE_FOR_15_MINUTES);
+
+        ConfigureAlertsCommand configureAlertsCommand = new ConfigureAlertsCommand( //
+                0xae01a66c, //
+                Collections.singletonList(alertConfiguration));
+
+        assertArrayEquals(
+                ByteUtil.fromHexString("190aae01a66c4c0000640102"), //
+                configureAlertsCommand.getRawData());
+    }
 }
