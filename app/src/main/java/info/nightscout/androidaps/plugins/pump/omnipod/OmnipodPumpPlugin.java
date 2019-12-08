@@ -542,9 +542,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
-                if (getPodPumpStatusObject().reservoirRemainingUnits != 0) {
-                    getPodPumpStatusObject().reservoirRemainingUnits -= detailedBolusInfo.insulin;
-                }
+//                if (getPodPumpStatusObject().reservoirRemainingUnits != 0) {
+//                    getPodPumpStatusObject().reservoirRemainingUnits -= detailedBolusInfo.insulin;
+//                }
 
                 incrementStatistics(detailedBolusInfo.isSMB ? OmnipodConst.Statistics.SMBBoluses
                         : OmnipodConst.Statistics.StandardBoluses);
