@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.comm;
 
 import android.text.TextUtils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
@@ -92,9 +93,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                         sendEvent(new EventOmnipodAcknowledgeAlertsChanged());
                     }
                 } else {
-                    if (pumpStatus.ackAlertsAvailable) {
+                    if (pumpStatus.ackAlertsAvailable || StringUtils.isNotEmpty(pumpStatus.ackAlertsText)) {
+                        pumpStatus.ackAlertsText = null;
                         pumpStatus.ackAlertsAvailable = false;
-
                         sendEvent(new EventOmnipodAcknowledgeAlertsChanged());
                     }
                 }

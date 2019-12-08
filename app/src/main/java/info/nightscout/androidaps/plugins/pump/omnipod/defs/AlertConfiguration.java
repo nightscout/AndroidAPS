@@ -63,8 +63,8 @@ public class AlertConfiguration {
             encodedData = ByteUtil.concat(encodedData, ByteUtil.getBytesFromInt16(durationInMinutes));
         }
 
-        encodedData = ByteUtil.concat(encodedData, beepType.getValue());
         encodedData = ByteUtil.concat(encodedData, beepRepeat.getValue());
+        encodedData = ByteUtil.concat(encodedData, beepType.getValue());
 
         return encodedData;
     }
