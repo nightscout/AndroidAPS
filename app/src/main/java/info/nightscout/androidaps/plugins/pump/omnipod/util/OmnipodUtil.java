@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.utils.OKDialog;
 
@@ -171,8 +172,8 @@ public class OmnipodUtil extends RileyLinkUtil {
     }
 
 
-    public static void setPodDeviceState(PodDeviceState podSessionState) {
-        omnipodPumpStatus.podDeviceState = podSessionState;
+    public static void setPodDeviceState(PodDeviceState podDeviceState) {
+        omnipodPumpStatus.podDeviceState = podDeviceState;
     }
 
 
