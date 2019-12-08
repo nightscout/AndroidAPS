@@ -23,6 +23,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpStatusType;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.SetupActionResult;
@@ -92,6 +93,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 pumpStatus.lastBolusTime = null;
                 pumpStatus.lastBolusAmount = null;
                 pumpStatus.reservoirRemainingUnits = 0.0;
+                pumpStatus.pumpStatusType = PumpStatusType.Suspended;
                 sendEvent(new EventOmnipodAcknowledgeAlertsChanged());
                 sendEvent(new EventOmnipodPumpValuesChanged());
             } else {
@@ -114,13 +116,15 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                     }
                 }
 
-                // Update other info: last bolus, units remaining
+                // Update other info: last bolus, units remaining, suspended
                 if (!Objects.equals(lastBolusTime, pumpStatus.lastBolusTime) //
                         || !Objects.equals(lastBolusUnits, pumpStatus.lastBolusAmount) //
-                        || !isReservoirStatusUpToDate(pumpStatus, podSessionState.getReservoirLevel())) {
+                        || !isReservoirStatusUpToDate(pumpStatus, podSessionState.getReservoirLevel())
+                        || podSessionState.isSuspended() != PumpStatusType.Suspended.equals(pumpStatus.pumpStatusType)) {
                     pumpStatus.lastBolusTime = lastBolusTime;
                     pumpStatus.lastBolusAmount = lastBolusUnits;
                     pumpStatus.reservoirRemainingUnits = podSessionState.getReservoirLevel() == null ? 75.0 : podSessionState.getReservoirLevel();
+                    pumpStatus.pumpStatusType = (podSessionState.hasFaultEvent() || podSessionState.isSuspended()) ? PumpStatusType.Suspended : PumpStatusType.Running;
                     sendEvent(new EventOmnipodPumpValuesChanged());
                 }
             }
@@ -253,8 +257,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         double unitsDelivered = bolusDeliveryResult.getUnitsDelivered();
 
         if (pumpStatus != null && !isSmb) {
-            pumpStatus.lastBolusTime = bolusStarted;
-            pumpStatus.lastBolusAmount = unitsDelivered;
+            lastBolusTime = pumpStatus.lastBolusTime = bolusStarted;
+            lastBolusUnits = pumpStatus.lastBolusAmount = unitsDelivered;
         }
 
         return new PumpEnactResult().success(true).enacted(true).bolusDelivered(unitsDelivered);
