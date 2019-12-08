@@ -8,6 +8,8 @@ import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.Constants
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.StringUtils
@@ -32,9 +34,11 @@ class WizardInfoDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         close.setOnClickListener { dismiss() }
-
+        val units = ProfileFunctions.getSystemUnits()
+        var bg_string= ""
+        if (units.equals(Constants.MGDL)) { bg_string = DecimalFormatter.to0Decimal(JsonHelper.safeGetDouble(json, "bg"))} else { bg_string = DecimalFormatter.to1Decimal(JsonHelper.safeGetDouble(json, "bg"))}
         // BG
-        treatments_wizard_bg.text = MainApp.gs(R.string.format_bg_isf, JsonHelper.safeGetDouble(json, "bg") , JsonHelper.safeGetDouble(json, "isf"))
+        treatments_wizard_bg.text = MainApp.gs(R.string.format_bg_isf, bg_string , JsonHelper.safeGetDouble(json, "isf"))
         treatments_wizard_bginsulin.text = StringUtils.formatInsulin(JsonHelper.safeGetDouble(json, "insulinbg"))
         treatments_wizard_bgcheckbox.isChecked = JsonHelper.safeGetBoolean(json, "insulinbgused")
         treatments_wizard_ttcheckbox.isChecked = JsonHelper.safeGetBoolean(json, "ttused")
