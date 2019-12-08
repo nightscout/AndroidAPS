@@ -54,6 +54,10 @@ public class OmnipodPumpStatus extends PumpStatus {
     public boolean ackAlertsAvailable = false;
     public String ackAlertsText = null;
 
+    public boolean beepBolusEnabled = true;
+    public boolean beepBasalEnabled = true;
+    public boolean beepSMBEnabled = true;
+
 
     public OmnipodPumpStatus(PumpDescription pumpDescription) {
         super(pumpDescription);
@@ -96,6 +100,10 @@ public class OmnipodPumpStatus extends PumpStatus {
                     }
                 }
             }
+
+            this.beepBasalEnabled = SP.getBoolean(OmnipodConst.Prefs.BeepBasalEnabled, true);
+            this.beepBolusEnabled = SP.getBoolean(OmnipodConst.Prefs.BeepBolusEnabled, true);
+            this.beepSMBEnabled = SP.getBoolean(OmnipodConst.Prefs.BeepSMBEnabled, true);
 
             reconfigureService();
 

@@ -11,5 +11,20 @@
             <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
         </info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference>
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_beep_bolus_enabled"
+            android:title="@string/omnipod_config_beep_bolus_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_beep_basal_enabled"
+            android:title="@string/omnipod_config_beep_basal_enabled" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_beep_smb_enabled"
+            android:title="@string/omnipod_config_beep_smb_enabled" />
+
     </PreferenceCategory>
 </PreferenceScreen>

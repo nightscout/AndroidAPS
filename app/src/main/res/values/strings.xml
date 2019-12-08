@@ -1645,6 +1645,14 @@
     <string name="omnipod_name_short" translatable="false">POD</string>
     <string name="description_pump_omnipod">Pump integration for Omnipod, requires RileyLink (with at least 2.0 firmware) device.</string>
 
+    <!-- Omnipod Configuration -->
+    <string name="key_omnipod_beep_bolus_enabled" translatable="false">pref_omnipod_beep_bolus_enabled</string>
+    <string name="key_omnipod_beep_basal_enabled" translatable="false">pref_omnipod_beep_basal_enabled</string>
+    <string name="key_omnipod_beep_smb_enabled" translatable="false">pref_omnipod_beep_smb_enabled</string>
+    <string name="omnipod_config_beep_bolus_enabled">Bolus Beep Enabled</string>
+    <string name="omnipod_config_beep_basal_enabled">Basal Beep Enabled</string>
+    <string name="omnipod_config_beep_smb_enabled">SMB Beep Enabled</string>
+
     <!-- Omnipod - Fragment -->
     <string name="omnipod_pod_mgmt">Pod Mgmt</string>
     <string name="omnipod_pod_status">Pod Status</string>

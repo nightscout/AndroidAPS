@@ -9,11 +9,13 @@ import com.atech.android.library.wizardpager.defs.WizardStepsWayType
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashActivity
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodCancelAction
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitPodRefreshAction
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.RemovePodWizardModel
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
 import info.nightscout.androidaps.utils.OKDialog
 import kotlinx.android.synthetic.main.omnipod_pod_mgmt.*
@@ -48,10 +50,14 @@ class PodManagementActivity : NoSplashActivity() {
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        RxBus.send(EventOmnipodPumpValuesChanged())
+    }
+
 
     fun initPodAction() {
-
-        // TODO check if RL is running and that pod is not active
 
         val pagerSettings = WizardPagerSettings()
         var refreshAction = InitPodRefreshAction(this)
@@ -75,8 +81,6 @@ class PodManagementActivity : NoSplashActivity() {
     }
 
     fun removePodAction() {
-        // TODO check that pod is active
-
         val pagerSettings = WizardPagerSettings()
         var refreshAction = InitPodRefreshAction(this)
 
@@ -100,11 +104,10 @@ class PodManagementActivity : NoSplashActivity() {
     }
 
     fun resetPodAction() {
-        // TODO check that pod is active
-
         OKDialog.showConfirmation(this,
                 MainApp.gs(R.string.omnipod_cmd_reset_pod_desc), Thread {
             AapsOmnipodManager.getInstance().resetPodStatus()
+            refreshButtons()
         })
     }
 

@@ -241,8 +241,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         double unitsDelivered = bolusDeliveryResult.getUnitsDelivered();
 
         if (pumpStatus != null && !isSmb) {
-            lastBolusTime = bolusStarted;
-            lastBolusUnits = unitsDelivered;
+            pumpStatus.lastBolusTime = bolusStarted;
+            pumpStatus.lastBolusAmount = unitsDelivered;
         }
 
         return new PumpEnactResult().success(true).enacted(true).bolusDelivered(unitsDelivered);
@@ -472,18 +472,15 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     private boolean isBolusBeepsEnabled() {
-        // TODO
-        return true;
+        return this.pumpStatus.beepBolusEnabled;
     }
 
     private boolean isSmbBeepsEnabled() {
-        // TODO
-        return true;
+        return this.pumpStatus.beepSMBEnabled;
     }
 
     private boolean isBasalBeepsEnabled() {
-        // TODO
-        return true;
+        return this.pumpStatus.beepBasalEnabled;
     }
 
     private String getStringResource(int id, Object... args) {

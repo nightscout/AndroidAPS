@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.util;
 
 import org.joda.time.Duration;
 
+import info.nightscout.androidaps.R;
+
 /**
  * Created by andy on 4.8.2019
  */
@@ -12,6 +14,9 @@ public class OmnipodConst {
 
     public class Prefs {
         public static final String PodState = Prefix + "pod_state";
+        public static final int BeepBasalEnabled = R.string.key_omnipod_beep_basal_enabled;
+        public static final int BeepBolusEnabled = R.string.key_omnipod_beep_bolus_enabled;
+        public static final int BeepSMBEnabled = R.string.key_omnipod_beep_smb_enabled;
     }
 
     public class Statistics {
