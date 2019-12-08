@@ -39,7 +39,9 @@ public class PodHistory implements DbObjectBase {
     @DatabaseField
     private Boolean successConfirmed;
 
-
+    public PodHistory() {
+        generatePumpId();
+    }
 
     public PodHistory(PodDbEntryType podDbEntryType) {
         this.date = System.currentTimeMillis();
@@ -47,13 +49,11 @@ public class PodHistory implements DbObjectBase {
         generatePumpId();
     }
 
-
     public PodHistory(long dateTimeInMillis, PodDbEntryType podDbEntryType) {
         this.date = dateTimeInMillis;
         this.podDbEntryType = podDbEntryType;
         generatePumpId();
     }
-
 
     @Override
     public long getDate() {
