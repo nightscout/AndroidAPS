@@ -149,7 +149,7 @@ public class IobCobOref1Thread extends Thread {
                     if (L.isEnabled(L.AUTOSENS))
                         log.debug("Processing calculation thread: " + from + " (" + i + "/" + bucketed_data.size() + ")");
 
-                    double sens = Profile.toMgdl(profile.getIsf(bgTime), profile.getUnits());
+                    double sens = profile.getIsfMgdl(bgTime);
 
                     AutosensData autosensData = new AutosensData();
                     autosensData.time = bgTime;

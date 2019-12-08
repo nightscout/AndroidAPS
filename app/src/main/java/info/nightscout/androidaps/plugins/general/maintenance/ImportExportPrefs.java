@@ -30,6 +30,7 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.ToastUtils;
 
 /**
@@ -113,27 +114,24 @@ public class ImportExportPrefs {
                 .setMessage(MainApp.gs(R.string.import_from) + " " + file + " ?")
                 .setPositiveButton(android.R.string.yes, (dialog, which) -> {
 
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                    SharedPreferences.Editor editor = prefs.edit();
                     String line;
                     String[] lineParts;
                     try {
-                        editor.clear();
-                        editor.commit();
+                        SP.clear();
 
                         BufferedReader reader = new BufferedReader(new FileReader(file));
                         while ((line = reader.readLine()) != null) {
                             lineParts = line.split("::");
                             if (lineParts.length == 2) {
                                 if (lineParts[1].equals("true") || lineParts[1].equals("false")) {
-                                    editor.putBoolean(lineParts[0], Boolean.parseBoolean(lineParts[1]));
+                                    SP.putBoolean(lineParts[0], Boolean.parseBoolean(lineParts[1]));
                                 } else {
-                                    editor.putString(lineParts[0], lineParts[1]);
+                                    SP.putString(lineParts[0], lineParts[1]);
                                 }
                             }
                         }
                         reader.close();
-                        editor.commit();
+                        SP.putBoolean(R.string.key_setupwizard_processed, true);
                         OKDialog.show(context, MainApp.gs(R.string.setting_imported), MainApp.gs(R.string.restartingapp), () -> {
                             log.debug("Exiting");
                             MainApp.instance().stopKeepAliveService();

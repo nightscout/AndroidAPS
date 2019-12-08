@@ -11,11 +11,9 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 
 /**
- * Created by andy on 9/23/18.
- */
-
-/**
  * History page contains data, sorted from newest to oldest (0=newest..n=oldest)
+ *
+ * Created by andy on 9/23/18.
  */
 public class PumpHistoryResult {
 
@@ -28,8 +26,6 @@ public class PumpHistoryResult {
     public List<PumpHistoryEntry> unprocessedEntries;
     public List<PumpHistoryEntry> validEntries;
 
-
-    // private Object validValues;
 
     public PumpHistoryResult(PumpHistoryEntry searchEntry, Long targetDate) {
         if (searchEntry != null) {
@@ -109,9 +105,8 @@ public class PumpHistoryResult {
                     if (unprocessedEntry.isAfter(this.searchDate)) {
                         this.validEntries.add(unprocessedEntry);
                     } else {
-                        LOG.debug("PE. PumpHistoryResult. Not after.. Unprocessed Entry [year={},entry={}]",
-                                DateTimeUtil.getYear(unprocessedEntry.atechDateTime), unprocessedEntry);
-
+//                        LOG.debug("PE. PumpHistoryResult. Not after.. Unprocessed Entry [year={},entry={}]",
+//                                DateTimeUtil.getYear(unprocessedEntry.atechDateTime), unprocessedEntry);
                         if (DateTimeUtil.getYear(unprocessedEntry.atechDateTime) > 2015)
                             olderEntries++;
                     }
@@ -128,14 +123,6 @@ public class PumpHistoryResult {
         } // switch
 
         //LOG.debug("PE. Valid Entries: {}", validEntries);
-    }
-
-
-    private void clearOrPrepareList() {
-        if (this.validEntries == null)
-            this.validEntries = new ArrayList<>();
-        else
-            this.validEntries.clear();
     }
 
 

@@ -100,8 +100,8 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
         String hours = " " + MainApp.gs(R.string.hours) + " ";
 
         if (useShortText) {
-            days = "d";
-            hours = "h";
+            days = MainApp.gs(R.string.shortday);
+            hours = MainApp.gs(R.string.shorthour);
         }
 
         return diff.get(TimeUnit.DAYS) + days + diff.get(TimeUnit.HOURS) + hours;
@@ -167,7 +167,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
 
     @Override
     public double getY() {
-        String units = ProfileFunctions.getInstance().getProfileUnits();
+        String units = ProfileFunctions.getSystemUnits();
         if (eventType.equals(MBG)) {
             double mbg = 0d;
             try {

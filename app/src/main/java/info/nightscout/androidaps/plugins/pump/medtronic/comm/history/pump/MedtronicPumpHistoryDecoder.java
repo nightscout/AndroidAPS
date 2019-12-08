@@ -412,24 +412,17 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             rate = body[1] * 0.025f;
         }
 
-        LOG.info("Basal Profile Start: offset={}, rate={}, index={}, body_raw={}", offset, rate, index,
-                body);
+        //LOG.info("Basal Profile Start: offset={}, rate={}, index={}, body_raw={}", offset, rate, index, body);
 
         if (rate == null) {
             LOG.warn("Basal Profile Start (ERROR): offset={}, rate={}, index={}, body_raw={}", offset, rate, index,
                     body);
             return RecordDecodeStatus.Error;
         } else {
-            // writeData(PumpBaseType.Basal, PumpBasalType.ValueChange, getFormattedFloat(rate, 3),
-            // entry.getATechDate());
             entry.addDecodedData("Value", getFormattedFloat(rate, 3));
             entry.setDisplayableValue(getFormattedFloat(rate, 3));
             return RecordDecodeStatus.OK;
         }
-
-//        profileIndex = asUINT8(data[1]);
-//        offset = asUINT8(data[7]) * 30 * 1000 * 60;
-//        rate = (double)(asUINT8(data[8])) / 40.0;
 
     }
 

@@ -111,6 +111,13 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             return;
         }
 
+        if (pump == null) {
+            RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.nopumpselected)));
+            if (L.isEnabled(L.APS))
+                log.debug(MainApp.gs(R.string.nopumpselected));
+            return;
+        }
+
         if (!isEnabled(PluginType.APS)) {
             RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_disabled)));
             if (L.isEnabled(L.APS))
@@ -125,16 +132,14 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             return;
         }
 
-        String units = profile.getUnits();
-
         Constraint<Double> inputConstraints = new Constraint<>(0d); // fake. only for collecting all results
 
         Constraint<Double> maxBasalConstraint = MainApp.getConstraintChecker().getMaxBasalAllowed(profile);
         inputConstraints.copyReasons(maxBasalConstraint);
         double maxBasal = maxBasalConstraint.value();
-        double minBg = Profile.toMgdl(profile.getTargetLow(), units);
-        double maxBg = Profile.toMgdl(profile.getTargetHigh(), units);
-        double targetBg = Profile.toMgdl(profile.getTarget(), units);
+        double minBg = profile.getTargetLowMgdl();
+        double maxBg = profile.getTargetHighMgdl();
+        double targetBg = profile.getTargetMgdl();
 
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
@@ -168,9 +173,9 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             return;
         if (!checkOnlyHardLimits(profile.getIcTimeFromMidnight(Profile.secondsFromMidnight()), "carbratio", HardLimits.MINIC, HardLimits.MAXIC))
             return;
-        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf(), units), "sens", HardLimits.MINISF, HardLimits.MAXISF))
+        if (!checkOnlyHardLimits(profile.getIsfMgdl(), "sens", HardLimits.MINISF, HardLimits.MAXISF))
             return;
-        if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.05, HardLimits.maxBasal()))
+        if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.02, HardLimits.maxBasal()))
             return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, HardLimits.maxBasal()))
             return;

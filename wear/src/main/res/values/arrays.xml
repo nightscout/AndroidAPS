@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="chart_timeframe">
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>3 hours</item>
+        <item>4 hours</item>
+        <item>5 hours</item>
+    </string-array>
+
+    <string-array name="chart_timeframe_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="delta_granularity">
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
+
+    <string-array name="delta_granularity_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="input_design">
+        <item>Default</item>
+        <item>Quick righty</item>
+        <item>Quick lefty</item>
+        <item>Modern Sparse</item>
+    </string-array>
+
+    <string-array name="input_design_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="complication_tap_action">
+        <item>Default</item>
+        <item>Menu</item>
+        <item>Wizard</item>
+        <item>Bolus</item>
+        <item>eCarb</item>
+        <item>Status</item>
+        <item>None</item>
+    </string-array>
+
+    <string-array name="complication_tap_action_values">
+        <item>default</item>
+        <item>menu</item>
+        <item>wizard</item>
+        <item>bolus</item>
+        <item>ecarb</item>
+        <item>status</item>
+        <item>none</item>
+    </string-array>
+
+</resources>

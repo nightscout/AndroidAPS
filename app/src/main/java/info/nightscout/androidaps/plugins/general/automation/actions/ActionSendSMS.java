@@ -21,6 +21,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.JsonHelper;
 
 public class ActionSendSMS extends Action {
+    private static final Logger log = LoggerFactory.getLogger(ActionSendSMS.class);
 
     public InputString text = new InputString();
 
@@ -36,7 +37,7 @@ public class ActionSendSMS extends Action {
 
     @Override
     public void doAction(Callback callback) {
-        boolean result = SmsCommunicatorPlugin.getPlugin().sendNotificationToAllNumbers(text.getValue());
+        boolean result = SmsCommunicatorPlugin.INSTANCE.sendNotificationToAllNumbers(text.getValue());
         if (callback != null)
             callback.result(new PumpEnactResult().success(result).comment(result ? R.string.ok : R.string.danar_error)).run();
 
@@ -56,7 +57,7 @@ public class ActionSendSMS extends Action {
             o.put("type", this.getClass().getName());
             o.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -67,7 +68,7 @@ public class ActionSendSMS extends Action {
             JSONObject o = new JSONObject(data);
             text.setValue(JsonHelper.safeGetString(o, "text"));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }

@@ -60,7 +60,7 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);
 
-        String units = ProfileFunctions.getInstance().getProfileUnits();
+        String units = ProfileFunctions.getSystemUnits();
         Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, units);
 
         bgNumber = (NumberPicker) view.findViewById(R.id.overview_calibration_bg);

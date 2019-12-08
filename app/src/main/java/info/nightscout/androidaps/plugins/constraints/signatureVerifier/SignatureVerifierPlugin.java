@@ -160,11 +160,12 @@ public class SignatureVerifierPlugin extends PluginBase implements ConstraintsIn
         return sb.toString();
     }
 
-    private String singleCharUnMap(String shortHash) {
+    public String singleCharUnMap(String shortHash) {
         byte[] array = new byte[shortHash.length()];
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < array.length; i++) {
-            sb.append(String.format("%02x",(int) map.charAt(map.indexOf(shortHash.charAt(i)))));
+            if (i != 0) sb.append(":");
+            sb.append(String.format("%02X", 0xFF & map.charAt(map.indexOf(shortHash.charAt(i)))));
         }
         return sb.toString();
     }

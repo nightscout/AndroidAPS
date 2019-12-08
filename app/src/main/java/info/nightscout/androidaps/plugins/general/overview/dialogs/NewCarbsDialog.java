@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview.dialogs;
 
 import android.os.Bundle;
-import android.os.HandlerThread;
 import androidx.fragment.app.DialogFragment;
 import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
@@ -316,36 +315,36 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
             int carbs = editCarbs.getValue().intValue();
             Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
 
-            final String units = currentProfile.getUnits();
+            final String units = ProfileFunctions.getSystemUnits();
             DefaultValueHelper helper = new DefaultValueHelper();
 
             int activityTTDuration = helper.determineActivityTTDuration();
-            double activityTT = helper.determineActivityTT(units);
+            double activityTT = helper.determineActivityTT();
 
             int eatingSoonTTDuration = helper.determineEatingSoonTTDuration();
-            double eatingSoonTT = helper.determineEatingSoonTT(units);
+            double eatingSoonTT = helper.determineEatingSoonTT();
 
             int hypoTTDuration = helper.determineHypoTTDuration();
-            double hypoTT = helper.determineHypoTT(units);
+            double hypoTT = helper.determineHypoTT();
 
             List<String> actions = new LinkedList<>();
 
             if (startActivityTTCheckbox.isChecked()) {
                 String unitLabel = "mg/dl";
-                if (currentProfile.getUnits().equals(Constants.MMOL)) {
+                if (units.equals(Constants.MMOL)) {
                     unitLabel = "mmol/l";
                 }
                 actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + activityTTDuration + " min)</font>");
             }
             if (startEatingSoonTTCheckbox.isChecked()) {
-                if (currentProfile.getUnits().equals(Constants.MMOL)) {
+                if (units.equals(Constants.MMOL)) {
                     actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(eatingSoonTT) + " mmol/l (" + eatingSoonTTDuration + " min)</font>");
                 } else {
                     actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to0Decimal(eatingSoonTT) + " mg/dl (" + eatingSoonTTDuration + " min)</font>");
                 }
             }
             if (startHypoTTCheckbox.isChecked()) {
-                if (currentProfile.getUnits().equals(Constants.MMOL)) {
+                if (units.equals(Constants.MMOL)) {
                     actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(hypoTT) + " mmol/l (" + hypoTTDuration + " min)</font>");
                 } else {
                     actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to0Decimal(hypoTT) + " mg/dl (" + hypoTTDuration + " min)</font>");
@@ -398,8 +397,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
                                     .duration(finalActivityTTDuration)
                                     .reason(MainApp.gs(R.string.activity))
                                     .source(Source.USER)
-                                    .low(Profile.toMgdl(finalActivityTT, currentProfile.getUnits()))
-                                    .high(Profile.toMgdl(finalActivityTT, currentProfile.getUnits()));
+                                    .low(Profile.toMgdl(finalActivityTT, ProfileFunctions.getSystemUnits()))
+                                    .high(Profile.toMgdl(finalActivityTT, ProfileFunctions.getSystemUnits()));
                             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
                         } else if (startEatingSoonTTCheckbox.isChecked()) {
                             TempTarget tempTarget = new TempTarget()
@@ -407,8 +406,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
                                     .duration(finalEatingSoonTTDuration)
                                     .reason(MainApp.gs(R.string.eatingsoon))
                                     .source(Source.USER)
-                                    .low(Profile.toMgdl(finalEatigSoonTT, currentProfile.getUnits()))
-                                    .high(Profile.toMgdl(finalEatigSoonTT, currentProfile.getUnits()));
+                                    .low(Profile.toMgdl(finalEatigSoonTT, ProfileFunctions.getSystemUnits()))
+                                    .high(Profile.toMgdl(finalEatigSoonTT, ProfileFunctions.getSystemUnits()));
                             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
                         } else if (startHypoTTCheckbox.isChecked()) {
                             TempTarget tempTarget = new TempTarget()
@@ -416,8 +415,8 @@ public class NewCarbsDialog extends DialogFragment implements OnClickListener, C
                                     .duration(finalHypoTTDuration)
                                     .reason(MainApp.gs(R.string.hypo))
                                     .source(Source.USER)
-                                    .low(Profile.toMgdl(finalHypoTT, currentProfile.getUnits()))
-                                    .high(Profile.toMgdl(finalHypoTT, currentProfile.getUnits()));
+                                    .low(Profile.toMgdl(finalHypoTT, ProfileFunctions.getSystemUnits()))
+                                    .high(Profile.toMgdl(finalHypoTT, ProfileFunctions.getSystemUnits()));
                             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
                         }
 

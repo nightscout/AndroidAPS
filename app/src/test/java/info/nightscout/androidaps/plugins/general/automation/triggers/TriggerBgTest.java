@@ -124,7 +124,7 @@ public class TriggerBgTest {
         try {
             list.add(new BgReading(new NSSgv(new JSONObject("{\"mgdl\":214,\"mills\":" + (now - 1) + ",\"direction\":\"Flat\"}"))));
         } catch (JSONException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return list;
     }
