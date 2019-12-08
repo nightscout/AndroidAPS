@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Behandelingen veiligheid</string>
     <string name="treatmentssafety_maxbolus_title">Max toegestane bolus [E]</string>
     <string name="treatmentssafety_maxcarbs_title">Max toegestane koolhydraten [g]</string>
@@ -99,6 +98,7 @@
     <string name="openapsma_profile_label">Profiel</string>
     <string name="openapsma_mealdata_label">Maaltijd gegevens</string>
     <string name="result">Resultaat</string>
+    <string name="result_insulin_carbs">Resultaat: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Geen BG gegevens beschikbaar</string>
     <string name="nochangerequested">Geen aanpassing noodzakelijk</string>
     <string name="openapsma_request_label">Voorstel</string>
@@ -216,7 +216,7 @@
     <string name="overview_tempbasal_button">Tijdelijk basaal</string>
     <string name="overview_extendedbolus_button">Vertraagde bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versie:</string>
-    <string name="missing">Te weinig</string>
+    <string name="missing_carbs">Ontbrekend %1$dg</string>
     <string name="exported">Voorkeuren geëxporteerd</string>
     <string name="export_to">Exporteer instellingen naar</string>
     <string name="import_from">Importeer instellingen van</string>
@@ -260,11 +260,23 @@
     <string name="smscommunicator_allowednumbers">Geautoriseerde telefoon nummers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode">Om de bolus %1$.2fU toe te dienen antwoord met de code %2$s</string>
+    <string name="smscommunicator_mealbolusreplywithcode">Antwoord met de code %2$s om de bolus %1$.2fE toe te dienen</string>
+    <string name="smscommunicator_temptargetwithcode">Antwoord met code %2$s om tijdelijk streefdoel %1$s in te stellen</string>
+    <string name="smscommunicator_temptargetcancel">Antwoord met code %1$s om tijdelijk streefdoel te annuleren</string>
+    <string name="smscommunicator_stopsmswithcode">Antwoord met code %1$s om de controle via SMS uit te zetten. \n\nDenk er aan dat je deze alleen weer aan kunt zetten op de AAPS master smartphone.</string>
+    <string name="smscommunicator_stoppedsms">De controle via SMS is uitgezet. Gebruik AAPS op de master smartphone om deze weer te aan te zetten.</string>
     <string name="smscommunicator_calibrationreplywithcode">Om calibratie %1$.2f te verzenden antwoord met de code %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus mislukt</string>
+    <string name="smscommunicator_remotebolusmindistance_summary">Minimum aantal minuten dat moet verstrijken tussen de ene bolus op afstand en de volgende</string>
+    <string name="smscommunicator_remotebolusmindistance">Hoeveel minuten er ten minste moeten verstrijken tussen de ene bolus en de volgende</string>
+    <string name="smscommunicator_remotebolusmindistance_caveat">Voor de veiligheid moet je ten minste 2 telefoonnummers toevoegen om deze instelling te kunnen bijwerken.</string>
     <string name="bolusdelivered">Bolus van %1$.2fE succesvol toegediend</string>
     <string name="bolusrequested">Er worden %1$.2fE toegediend</string>
     <string name="smscommunicator_bolusdelivered">Bolus van %1$.2fE succesvol toegediend</string>
+    <string name="smscommunicator_mealbolusdelivered">Bolus van %1$.2fE succesvol toegediend</string>
+    <string name="smscommunicator_mealbolusdelivered_tt">Streefdoel %1$s gedurende %2$d minuten</string>
+    <string name="smscommunicator_tt_set">Streefdoel %1$s gedurende %2$d minuten succesvol ingesteld</string>
+    <string name="smscommunicator_tt_canceled">Tijdelijk streefdoel is geannuleerd</string>
     <string name="bolusdelivering">Toedienen van %1$.2fE</string>
     <string name="smscommunicator_remotecommandsallowed">Sta SMS commando\'s toe</string>
     <string name="glucosetype_finger">Vingerprik</string>
@@ -324,10 +336,13 @@
     <string name="smscommunicator_basalreplywithcode">Om een basaal van %1$.2fE/u voor %2$d min te starten antwoord met code %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Om naar profiel %1$s %2$d%% te wisselen antwoord met code %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">Om een vertraagde bolus van %1$.2fE voor %2$d min te starten antwoord met code %3$s</string>
+    <string name="smscommunicator_carbsreplywithcode">Antwoord met code %3$s om %1$dg in te voeren op %2$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Om een basaal van %1$d% voor %2$d min te starten antwoord met code %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Om de loop te onderbreken voor %1$d minuten antwoord met de code %2$s</string>
     <string name="smscommunicator_tempbasalset">Tijdelijk basaal %1$.2fE/u voor %2$d minuten succesvol gestart</string>
     <string name="smscommunicator_extendedset">Vertraagde bolus %1$.2fE voor %2$d minuten succesvol gestart</string>
+    <string name="smscommunicator_carbsset">Koolhydraten %1$dg succesvol ingevoerd</string>
+    <string name="smscommunicator_carbsfailed">Invoeren van %1$dg koolhydraten is mislukt</string>
     <string name="smscommunicator_tempbasalset_percent">Tijdelijk basaal van %1$d%% voor %2$d minuten succesvol gestart</string>
     <string name="smscommunicator_tempbasalfailed">Start tijdelijk basaal mislukt</string>
     <string name="smscommunicator_extendedfailed">Starten vertraagde bolus is mislukt</string>
@@ -361,10 +376,11 @@
     <string name="button1">Knop 1</string>
     <string name="button2">Knop 2</string>
     <string name="button3">Knop 3</string>
-    <string name="units">Eenheden:</string>
+    <string name="units_colon">Eenheden:</string>
+    <string name="units">Eenheden</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
+    <string name="dia">DIA</string>
     <string name="target_range">Streefdoel:</string>
     <string name="prefs_range_title">Bereik voor visualisatie</string>
     <string name="prefs_range_summary">Hoge en lage grens voor grafieken op het Overzicht en op Wear</string>
@@ -544,10 +560,12 @@
     <string name="enablesuperbolus">Activeer superbolus in de wizard</string>
     <string name="enablesuperbolus_summary">Activeer de superbolus functie in de wizard. Activeer deze niet tot je begrijpt wat dit doet. OVERDOSIS IS MOGELIJK BIJ BLINDELINGS GEBRUIK!</string>
     <string name="show_statuslights">Toon statusindicatoren op startscherm</string>
+    <string name="show_statuslights_extended">Toon uitgebreide statusindicatoren op overzicht scherm</string>
+    <string name="show_statuslights_extended_summary">Statusindicatoren inschakelen voor cage, iage, sage, reservoir en batterijniveau op het overzicht scherm.</string>
     <string name="statuslights_res_warning">Drempel waarschuwing reservoir niveau [E]</string>
     <string name="statuslights_res_critical">Drempel alarm reservoir niveau [E]</string>
-    <string name="statuslights_bat_warning">Drempel waarschuwing batterij niveau [%%]</string>
-    <string name="statuslights_bat_critical">Drempel alarm voor batterij niveau [%%]</string>
+    <string name="statuslights_bat_warning">Drempel waarschuwing batterij niveau [%]</string>
+    <string name="statuslights_bat_critical">Drempel alarm batterij niveau [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -574,7 +592,7 @@
     <string name="hours">uren</string>
     <string name="overview_newtempbasal_basaltype_label">Basaal type</string>
     <string name="invalidprofile">Ongeldig profiel !!!</string>
-    <string name="profileswitch">Wisselen van profiel</string>
+    <string name="profileswitch">Profiel Wissel</string>
     <string name="careportal_pbage_label">Ouderdom batterij</string>
     <string name="careportal_pumpbatterychange">Pomp bat. wissel</string>
     <string name="ns_alarmoptions">Alarm opties</string>
@@ -617,6 +635,7 @@
     <string name="mdtp_cancel">Afbreken</string>
     <string name="notloadedplugins">Niet alle profielen zijn geladen!</string>
     <string name="valuesnotstored">Waarden niet opgeslagen!</string>
+    <string name="ns_localbroadcasts">Schakel broadcasts in naar andere apps (zoals xDrip). Schakel niet in als je NSClient of meer dan één installatie van AAPS hebt geïnstalleerd!</string>
     <string name="ns_localbroadcasts_title">Activeer locaal delen.</string>
     <string name="careportal_activity_label">ACTIVITEIT &amp; FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">KOOLHYDRATEN &amp; BOLUS</string>
@@ -677,6 +696,7 @@
     <string name="shortgramm">g</string>
     <string name="shortminute">m</string>
     <string name="shorthour">u</string>
+    <string name="shortday">d</string>
     <string name="none"><![CDATA[<geen>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
@@ -705,6 +725,7 @@
     <string name="bgsource_upload">BG upload instellingen</string>
     <string name="wear_detailed_delta_title">Toon gedetailleerde delta</string>
     <string name="wear_detailed_delta_summary">Toon delta met een extra decimaal punt</string>
+    <string name="smbmaxminutes">SMB max minuten</string>
     <string name="smbmaxminutes_summary">Max minuten basaal om SMB tot te limiteren</string>
     <string name="unsupportedfirmware">Niet ondersteunde pomp firmware</string>
     <string name="dexcomg5_xdripupload_title">Stuur BG data naar xDrip+</string>
@@ -1144,8 +1165,8 @@
     <string name="tidepool_upload_tbr">Tijdelijke basalen uploaden</string>
     <string name="tidepool_upload_profile">Upload profiel wisselingen, tijdelijke doelen</string>
     <string name="tidepool_upload_bg">Upload BG-tests</string>
-    <string name="dst_in_24h_warning">Zomer/wintertijd omschakeling binnen 24 uur</string>
-    <string name="dst_loop_disabled_warning">Omschakeling zomer/wintertijd minder dan 3 uur geleden - Closed Loop modus gedeactiveerd</string>
+    <string name="dst_in_24h_warning">Omschakeling van zomer- of wintertijd in 24 uur of minder</string>
+    <string name="dst_loop_disabled_warning">Omschakeling zomer/wintertijd minder dan 3 uur geleden - Gesloten Lus modus gedeactiveerd</string>
     <string name="storage">interne opslag bijna vol</string>
     <string name="diskfull">Maak minstens %1$d MB vrij in interne opslag! Loop is uitgeschakeld!</string>
     <string name="wrongformat">Verkeerde invoer</string>
@@ -1233,6 +1254,8 @@
     <string name="medtronic_pump_battery_no">Niet geselecteerd (Eenvoudige weergave)</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline (uitgebreide weergave)</string>
     <string name="medtronic_pump_battery_lithium">Lithium (uitgebreide weergave)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (uitgebreide weergave)</string>
+    <string name="medtronic_bolus_debugging">Bolus/Behandelingen Debuggen</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SCAN</string>
     <string name="rileylink_scanner_scan_stop">STOP</string>
@@ -1271,6 +1294,7 @@
     <string name="rileylink_state_not_started">Niet gestart</string>
     <string name="rileylink_state_rl_init">RileyLink initialiseren…</string>
     <string name="rileylink_state_rl_error">RileyLink fout</string>
+    <string name="rileylink_state_pc_tune_up">Tuning van RileyLink en Pomp</string>
     <string name="rileylink_state_pc_error">Probleem tijdens verbinden met de pomp</string>
     <string name="rileylink_state_connected">Verbonden</string>
     <!-- RL Errors -->
@@ -1340,6 +1364,15 @@
     <string name="medtronic_cmd_desc_get_tbr">Ophalen Tijdelijke Basaal</string>
     <string name="medtronic_cmd_desc_set_tbr">Instellen Tijdelijke Basaal</string>
     <string name="medtronic_cmd_desc_set_bolus">Instellen Bolus</string>
+    <string name="profilename">Wijzig profiel naar</string>
+    <string name="changengetoprofilename">Wijzig profiel in %1$s</string>
+    <string name="automation_trigger_pump_last_connection_label">Laatste verbinding met pomp</string>
+    <string name="automation_trigger_pump_last_connection_description">Laatste verbinding met pomp [minuten geleden]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Laatste verbinding met pomp %1$s %2$s min geleden</string>
+    <string name="sendsmsactionlabel">Stuur SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Stuur SMS naar alle nummers in voorkeuren</string>
+    <string name="sendsmsactiontext">Stuur SMS met tekst</string>
+    <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus limiet bereikt: %2$.2fU naar %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening nogmaals. COB kan zijn overschat waardoor er misschien meer insuline wordt afgegeven!!!</font> zijn]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d E</string>
@@ -1347,4 +1380,35 @@
     <string name="deliverpartofboluswizard">Bolus wizard voert de berekening uit maar alleen dit deel van berekende insuline wordt geleverd. Handig in combinatie met het SMB algoritme.</string>
     <string name="loading">Bezig met laden...</string>
     <string name="snooze">Sluimeren</string>
+    <string name="time_range">Tijdsinterval</string>
+    <string name="timerange_value">Tijd ligt tussen %1$s en %2$s</string>
+    <string name="between">Tussen </string>
+    <string name="close">Sluiten</string>
+    <string name="increasingmaxbasal">Verhogen van de maximale basaal waarde omdat de instelling lager is dan het maximum in het profiel</string>
+    <string name="smscommunicator_messagebody">Ongeldige inhoud van het bericht</string>
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg KH ratio: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg KH ratio: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
+    <string name="boluswizard">Bolus wizard</string>
+    <string name="unit_minute_short">min</string>
+    <string name="profile_name">Profielnaam:</string>
+    <string name="selected_profile">Geselecteerd:</string>
+    <string name="unitsnosemicolon">Eenheden</string>
+    <string name="format_carbs">%1$dg</string>
+    <string name="common_on">Aan</string>
+    <string name="common_off">Uit</string>
+    <string name="objectives_button_unfinish">Wissen voltooid</string>
+    <string name="objectives_button_unstart">Wissen gestart</string>
+    <string name="timedetection">Tijd detectie</string>
+    <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
+    <string name="nopumpselected">Geen pomp geselecteerd</string>
+    <string name="setupwizard_units_prompt">Selecteer eenheden waarin je waarden wilt weergeven</string>
+    <string name="ns_ploadlocalprofile">Upload lokale profielwijzigingen naar NS</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">KH ratio</string>
+    <string name="isf_short">ISF</string>
+    <string name="clone_label">Dupliceren</string>
+    <string name="deletecurrentprofile">Huidige profiel verwijderen?</string>
+    <string name="reorder_label">Sorteren</string>
 </resources>

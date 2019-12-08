@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.tidepool
 
+import android.preference.PreferenceFragment
 import android.text.Spanned
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -34,7 +35,6 @@ object TidepoolPlugin : PluginBase(PluginDescription()
         .preferencesId(R.xml.pref_tidepool)
         .description(R.string.description_tidepool)
 ) {
-
     private val log = LoggerFactory.getLogger(L.TIDEPOOL)
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -109,6 +109,16 @@ object TidepoolPlugin : PluginBase(PluginDescription()
     override fun onStop() {
         disposable.clear()
         super.onStop()
+    }
+
+    override fun preprocessPreferences(preferenceFragment: PreferenceFragment) {
+        super.preprocessPreferences(preferenceFragment)
+
+        val tidepoolTestLogin = preferenceFragment.findPreference(MainApp.gs(R.string.key_tidepool_test_login))
+        tidepoolTestLogin?.setOnPreferenceClickListener {
+            TidepoolUploader.testLogin(preferenceFragment.getActivity())
+            false
+        }
     }
 
     private fun doUpload() =

@@ -83,4 +83,24 @@ public class OKDialog {
                 .show();
     }
 
+    public static void showConfirmation(final Activity activity, String message, final Runnable ok, final Runnable cancel) {
+        AlertDialog alertDialog =  new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme))
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    dialog.dismiss();
+                    if (ok != null) {
+                        SystemClock.sleep(100);
+                        activity.runOnUiThread(ok);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel,  (dialog, which) -> {
+                    dialog.dismiss();
+                    if (cancel != null) {
+                        SystemClock.sleep(100);
+                        activity.runOnUiThread(cancel);
+                    }
+                })
+                .show();
+    }
+
 }

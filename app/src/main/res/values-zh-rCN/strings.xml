@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">治疗安全</string>
     <string name="treatmentssafety_maxbolus_title">允许的最大大剂量值[U]</string>
     <string name="treatmentssafety_maxcarbs_title">最大允许碳水化合物 [g]</string>
@@ -214,7 +213,6 @@
     <string name="overview_tempbasal_button">临时基础</string>
     <string name="overview_extendedbolus_button">扩展大剂量</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 版本:</string>
-    <string name="missing">缺少</string>
     <string name="exported">参数选项导出了</string>
     <string name="export_to">导出配置</string>
     <string name="import_from">导入配置</string>
@@ -359,10 +357,8 @@
     <string name="button1">按钮1</string>
     <string name="button2">按钮2</string>
     <string name="button3">按钮3</string>
-    <string name="units">单位:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">目标范围:</string>
     <string name="prefs_range_title">可视化范围</string>
     <string name="prefs_range_summary">在智能手表上的图表上的高值和低值标记</string>
@@ -542,8 +538,6 @@
     <string name="show_statuslights">在主屏幕上显示状态指示灯</string>
     <string name="statuslights_res_warning">储药器药量低于阈值[U] 警告</string>
     <string name="statuslights_res_critical">储药器药量低于阈值[U] 严重警告</string>
-    <string name="statuslights_bat_warning">电池电量低于阈值[%%] 警告</string>
-    <string name="statuslights_bat_critical">电池电量低于阈值[%%] 严重警告</string>
     <string name="iob">IOB活性胰岛素</string>
     <string name="cob">COB活性碳水</string>
     <string name="virtualpump_firmware_label">固件</string>
@@ -1095,8 +1089,6 @@
     <string name="tidepool_upload_tbr">上传临时基础率</string>
     <string name="tidepool_upload_profile">上传配置文件切换，临时目标</string>
     <string name="tidepool_upload_bg">上传血糖值</string>
-    <string name="dst_in_24h_warning">在24小时内或更少时间内更夏令时时间</string>
-    <string name="dst_loop_disabled_warning">不到3小时前夏令时时间变化了-已禁用闭环</string>
     <string name="storage">内部储存空间不足</string>
     <string name="diskfull">至少 剩余%1$d MB 内部存储！闭环已禁用！</string>
     <string name="wrongformat">格式错误</string>

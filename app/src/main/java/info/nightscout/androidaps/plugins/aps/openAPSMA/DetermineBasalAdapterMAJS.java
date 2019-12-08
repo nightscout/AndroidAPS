@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
@@ -160,8 +161,6 @@ public class DetermineBasalAdapterMAJS {
                         GlucoseStatus glucoseStatus,
                         MealData mealData) throws JSONException {
 
-        String units = profile.getUnits();
-
         mProfile = new JSONObject();
         mProfile.put("max_iob", maxIob);
         mProfile.put("dia", Math.min(profile.getDia(), 3d));
@@ -172,11 +171,11 @@ public class DetermineBasalAdapterMAJS {
         mProfile.put("max_bg", maxBg);
         mProfile.put("target_bg", targetBg);
         mProfile.put("carb_ratio", profile.getIc());
-        mProfile.put("sens", Profile.toMgdl(profile.getIsf(), units));
+        mProfile.put("sens", profile.getIsfMgdl());
 
         mProfile.put("current_basal", basalRate);
 
-        if (units.equals(Constants.MMOL)) {
+        if (ProfileFunctions.getSystemUnits().equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
         }
 

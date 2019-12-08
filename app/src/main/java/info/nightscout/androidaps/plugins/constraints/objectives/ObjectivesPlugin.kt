@@ -21,8 +21,8 @@ import java.util.*
 object ObjectivesPlugin : PluginBase(PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
         .fragmentClass(ObjectivesFragment::class.qualifiedName)
-        .alwaysEnabled(!Config.NSCLIENT)
-        .showInList(!Config.NSCLIENT)
+        .alwaysEnabled(Config.APS)
+        .showInList(Config.APS)
         .pluginName(R.string.objectives)
         .shortName(R.string.objectives_shortname)
         .description(R.string.description_objectives)), ConstraintsInterface {
@@ -104,8 +104,8 @@ object ObjectivesPlugin : PluginBase(PluginDescription()
     fun completeObjectives(activity: Activity, request: String) {
         val requestCode = SP.getString(R.string.key_objectives_request_code, "")
         var url = SP.getString(R.string.key_nsclientinternal_url, "").toLowerCase()
-        if (!url.endsWith("\"")) url = "$url/"
-        val hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID + "/" + requestCode, Charsets.UTF_8).toString()
+        if (!url.endsWith("/")) url = "$url/"
+        @Suppress("DEPRECATION") val hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID + "/" + requestCode, Charsets.UTF_8).toString()
         if (request.equals(hashNS.substring(0, 10), ignoreCase = true)) {
             SP.putLong("Objectives_" + "openloop" + "_started", DateUtil.now())
             SP.putLong("Objectives_" + "openloop" + "_accomplished", DateUtil.now())

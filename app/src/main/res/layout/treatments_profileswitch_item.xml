@@ -89,6 +89,16 @@
                 android:textColor="@color/colorSetTempButton" />
 
             <TextView
+                android:id="@+id/profileswitch_clone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="5dp"
+                android:paddingStart="10dp"
+                android:text="@string/clone_label"
+                android:textAlignment="viewEnd"
+                android:textColor="@android:color/holo_blue_light" />
+
+            <TextView
                 android:id="@+id/profileswitch_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -97,6 +107,7 @@
                 android:text="@string/overview_quickwizard_item_remove_button"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/holo_orange_light" />
+
         </LinearLayout>
 
         <View

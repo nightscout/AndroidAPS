@@ -69,7 +69,7 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
 
         @Override
         public void onBindViewHolder(TempTargetsViewHolder holder, int position) {
-            String units = ProfileFunctions.getInstance().getProfileUnits();
+            String units = ProfileFunctions.getSystemUnits();
             TempTarget tempTarget = tempTargetList.getReversed(position);
             holder.ph.setVisibility(tempTarget.source == Source.PUMP ? View.VISIBLE : View.GONE);
             holder.ns.setVisibility(NSUpload.isIdValid(tempTarget._id) ? View.VISIBLE : View.GONE);

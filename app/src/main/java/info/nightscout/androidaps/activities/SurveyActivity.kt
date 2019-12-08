@@ -27,7 +27,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
         val profileStore = ConfigBuilderPlugin.getPlugin().activeProfileInterface?.profile
         val profileList: ArrayList<CharSequence>
-        profileList = profileStore?.profileList ?: return
+        profileList = profileStore?.getProfileList() ?: return
         val adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
         survey_spinner.adapter = adapter
 
@@ -51,7 +51,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
                 ToastUtils.showToastInUiThread(this, R.string.invalidweight)
                 return@setOnClickListener
             }
-            val profile = DefaultProfile().profile(age, tdd, weight, ProfileFunctions.getInstance().profileUnits)
+            val profile = DefaultProfile().profile(age, tdd, weight, ProfileFunctions.getSystemUnits())
             val args = Bundle()
             args.putLong("time", DateUtil.now())
             args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)

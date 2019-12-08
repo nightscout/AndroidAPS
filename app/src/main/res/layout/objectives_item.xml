@@ -68,11 +68,18 @@
             android:text="@string/objectives_button_start" />
 
         <Button
-            android:id="@+id/objective_back"
+            android:id="@+id/objective_unfinish"
             style="@style/Widget.AppCompat.Button.Borderless.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/objectives_button_back" />
+            android:text="@string/objectives_button_unfinish" />
+
+        <Button
+            android:id="@+id/objective_unstart"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/objectives_button_unstart" />
 
         <TextView
             android:id="@+id/objective_inputhint"

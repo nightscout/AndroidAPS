@@ -30,6 +30,7 @@ import kotlinx.android.synthetic.main.overview_wizard_dialog.*
 import org.slf4j.LoggerFactory
 import java.text.DecimalFormat
 import java.util.*
+import kotlin.math.abs
 
 class WizardDialog : DialogFragment() {
     private val log = LoggerFactory.getLogger(WizardDialog::class.java)
@@ -69,10 +70,10 @@ class WizardDialog : DialogFragment() {
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
-        savedInstanceState.putDouble("treatments_wizard_bginput", treatments_wizard_bginput.value)
-        savedInstanceState.putDouble("treatments_wizard_carbsinput", treatments_wizard_carbsinput.value)
-        savedInstanceState.putDouble("treatments_wizard_correctioninput", treatments_wizard_correctioninput.value)
-        savedInstanceState.putDouble("treatments_wizard_carbtimeinput", treatments_wizard_carbtimeinput.value)
+        savedInstanceState.putDouble("treatments_wizard_bg_input", treatments_wizard_bg_input.value)
+        savedInstanceState.putDouble("treatments_wizard_carbs_input", treatments_wizard_carbs_input.value)
+        savedInstanceState.putDouble("treatments_wizard_correction_input", treatments_wizard_correction_input.value)
+        savedInstanceState.putDouble("treatments_wizard_carb_time_input", treatments_wizard_carb_time_input.value)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -94,25 +95,26 @@ class WizardDialog : DialogFragment() {
         val maxCarbs = MainApp.getConstraintChecker().maxCarbsAllowed.value()
         val maxCorrection = MainApp.getConstraintChecker().maxBolusAllowed.value()
 
-        treatments_wizard_bginput.setParams(savedInstanceState?.getDouble("treatments_wizard_bginput")
+        treatments_wizard_bg_input.setParams(savedInstanceState?.getDouble("treatments_wizard_bg_input")
                 ?: 0.0, 0.0, 500.0, 0.1, DecimalFormat("0.0"), false, ok, textWatcher)
-        treatments_wizard_carbsinput.setParams(savedInstanceState?.getDouble("treatments_wizard_carbsinput")
+        treatments_wizard_carbs_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carbs_input")
                 ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, ok, textWatcher)
-        val bolusstep = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription?.bolusStep
+        val bolusStep = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription?.bolusStep
                 ?: 0.1
-        treatments_wizard_correctioninput.setParams(savedInstanceState?.getDouble("treatments_wizard_correctioninput")
-                ?: 0.0, -maxCorrection, maxCorrection, bolusstep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
-        treatments_wizard_carbtimeinput.setParams(savedInstanceState?.getDouble("treatments_wizard_carbtimeinput")
+        treatments_wizard_correction_input.setParams(savedInstanceState?.getDouble("treatments_wizard_correction_input")
+                ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
+        treatments_wizard_carb_time_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carb_time_input")
                 ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
         initDialog()
 
-        treatments_wizard_percent_used.text = SP.getInt(R.string.key_boluswizard_percentage, 100).toString() + "%"
+        treatments_wizard_percent_used.text = MainApp.gs(R.string.format_percent, SP.getInt(R.string.key_boluswizard_percentage, 100))
         // ok button
         ok.setOnClickListener {
             if (okClicked) {
                 log.debug("guarding: ok already clicked")
             } else {
                 okClicked = true
+                calculateInsulin()
                 parentContext?.let { context ->
                     wizard?.confirmAndExecute(context)
                 }
@@ -130,10 +132,13 @@ class WizardDialog : DialogFragment() {
         treatments_wizard_bgtrendcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
         treatments_wizard_sbcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
 
-        treatments_wizard_delimiter.visibility = View.GONE
-        treatments_wizard_resulttable.visibility = View.GONE
+        val showCalc = SP.getBoolean(MainApp.gs(R.string.key_wizard_calculation_visible), false)
+        treatments_wizard_delimiter.visibility = if (showCalc) View.VISIBLE else View.GONE
+        treatments_wizard_resulttable.visibility = if (showCalc) View.VISIBLE else View.GONE
+        treatments_wizard_calculationcheckbox.isChecked = showCalc
         treatments_wizard_calculationcheckbox.setOnCheckedChangeListener { _, isChecked ->
             run {
+                SP.putBoolean(MainApp.gs(R.string.key_wizard_calculation_visible), isChecked)
                 treatments_wizard_delimiter.visibility = if (isChecked) View.VISIBLE else View.GONE
                 treatments_wizard_resulttable.visibility = if (isChecked) View.VISIBLE else View.GONE
             }
@@ -168,7 +173,7 @@ class WizardDialog : DialogFragment() {
         disposable.clear()
     }
 
-    fun onCheckedChanged(buttonView: CompoundButton) {
+    private fun onCheckedChanged(buttonView: CompoundButton) {
         saveCheckedStates()
         treatments_wizard_ttcheckbox.isEnabled = treatments_wizard_bgcheckbox.isChecked && TreatmentsPlugin.getPlugin().tempTargetFromHistory != null
         if (buttonView.id == treatments_wizard_cobcheckbox.id)
@@ -209,7 +214,7 @@ class WizardDialog : DialogFragment() {
         }
 
         val profileList: ArrayList<CharSequence>
-        profileList = profileStore.profileList
+        profileList = profileStore.getProfileList()
         profileList.add(0, MainApp.gs(R.string.active))
         context?.let { context ->
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
@@ -217,20 +222,20 @@ class WizardDialog : DialogFragment() {
         } ?: return
 
 
-        val units = profile.units
+        val units = ProfileFunctions.getSystemUnits()
         treatments_wizard_bgunits.text = units
         if (units == Constants.MGDL)
-            treatments_wizard_bginput.setStep(1.0)
+            treatments_wizard_bg_input.setStep(1.0)
         else
-            treatments_wizard_bginput.setStep(0.1)
+            treatments_wizard_bg_input.setStep(0.1)
 
         // Set BG if not old
         val lastBg = DatabaseHelper.actualBg()
 
         if (lastBg != null) {
-            treatments_wizard_bginput.value = lastBg.valueToUnits(units)
+            treatments_wizard_bg_input.value = lastBg.valueToUnits(units)
         } else {
-            treatments_wizard_bginput.value = 0.0
+            treatments_wizard_bg_input.value = 0.0
         }
         treatments_wizard_ttcheckbox.isEnabled = TreatmentsPlugin.getPlugin().tempTargetFromHistory != null
 
@@ -263,29 +268,29 @@ class WizardDialog : DialogFragment() {
         if (specificProfile == null) return
 
         // Entered values
-        var c_bg = SafeParse.stringToDouble(treatments_wizard_bginput.text)
-        val c_carbs = SafeParse.stringToInt(treatments_wizard_carbsinput.text)
-        val c_correction = SafeParse.stringToDouble(treatments_wizard_correctioninput.text)
-        val carbsAfterConstraint = MainApp.getConstraintChecker().applyCarbsConstraints(Constraint(c_carbs)).value()
-        if (Math.abs(c_carbs - carbsAfterConstraint) > 0.01) {
-            treatments_wizard_carbsinput.value = 0.0
+        var bg = SafeParse.stringToDouble(treatments_wizard_bg_input.text)
+        val carbs = SafeParse.stringToInt(treatments_wizard_carbs_input.text)
+        val correction = SafeParse.stringToDouble(treatments_wizard_correction_input.text)
+        val carbsAfterConstraint = MainApp.getConstraintChecker().applyCarbsConstraints(Constraint(carbs)).value()
+        if (abs(carbs - carbsAfterConstraint) > 0.01) {
+            treatments_wizard_carbs_input.value = 0.0
             ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.carbsconstraintapplied))
             return
         }
 
-        c_bg = if (treatments_wizard_bgcheckbox.isChecked) c_bg else 0.0
+        bg = if (treatments_wizard_bgcheckbox.isChecked) bg else 0.0
         val tempTarget = if (treatments_wizard_ttcheckbox.isChecked) TreatmentsPlugin.getPlugin().tempTargetFromHistory else null
 
         // COB
-        var c_cob = 0.0
+        var cob = 0.0
         if (treatments_wizard_cobcheckbox.isChecked) {
             val cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "Wizard COB")
-            cobInfo.displayCob?.let { c_cob = it }
+            cobInfo.displayCob?.let { cob = it }
         }
 
-        val carbTime = SafeParse.stringToInt(treatments_wizard_carbtimeinput.text)
+        val carbTime = SafeParse.stringToInt(treatments_wizard_carb_time_input.text)
 
-        wizard = BolusWizard(specificProfile, profileName, tempTarget, carbsAfterConstraint, c_cob, c_bg, c_correction,
+        wizard = BolusWizard(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction,
                 SP.getInt(R.string.key_boluswizard_percentage, 100).toDouble(),
                 treatments_wizard_bgcheckbox.isChecked,
                 treatments_wizard_cobcheckbox.isChecked,
@@ -297,10 +302,10 @@ class WizardDialog : DialogFragment() {
                 treatment_wizard_notes.text.toString(), carbTime)
 
         wizard?.let { wizard ->
-            treatments_wizard_bg.text = String.format(MainApp.gs(R.string.format_bg_isf), BgReading().value(Profile.toMgdl(c_bg, specificProfile.units)).valueToUnitsToString(specificProfile.units), wizard.sens)
+            treatments_wizard_bg.text = String.format(MainApp.gs(R.string.format_bg_isf), BgReading().value(Profile.toMgdl(bg, ProfileFunctions.getSystemUnits())).valueToUnitsToString(ProfileFunctions.getSystemUnits()), wizard.sens)
             treatments_wizard_bginsulin.text = StringUtils.formatInsulin(wizard.insulinFromBG)
 
-            treatments_wizard_carbs.text = String.format(MainApp.gs(R.string.format_carbs_ic), c_carbs.toDouble(), wizard.ic)
+            treatments_wizard_carbs.text = String.format(MainApp.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)
             treatments_wizard_carbsinsulin.text = StringUtils.formatInsulin(wizard.insulinFromCarbs)
 
             treatments_wizard_bolusiobinsulin.text = StringUtils.formatInsulin(wizard.insulinFromBolusIOB)
@@ -315,8 +320,8 @@ class WizardDialog : DialogFragment() {
             // Trend
             if (treatments_wizard_bgtrendcheckbox.isChecked && wizard.glucoseStatus != null) {
                 treatments_wizard_bgtrend.text = ((if (wizard.trend > 0) "+" else "")
-                        + Profile.toUnitsString(wizard.trend * 3, wizard.trend * 3 / Constants.MMOLL_TO_MGDL, specificProfile.units)
-                        + " " + specificProfile.units)
+                        + Profile.toUnitsString(wizard.trend * 3, wizard.trend * 3 / Constants.MMOLL_TO_MGDL, ProfileFunctions.getSystemUnits())
+                        + " " + ProfileFunctions.getSystemUnits())
             } else {
                 treatments_wizard_bgtrend.text = ""
             }
@@ -324,7 +329,7 @@ class WizardDialog : DialogFragment() {
 
             // COB
             if (treatments_wizard_cobcheckbox.isChecked) {
-                treatments_wizard_cob.text = String.format(MainApp.gs(R.string.format_cob_ic), c_cob, wizard.ic)
+                treatments_wizard_cob.text = String.format(MainApp.gs(R.string.format_cob_ic), cob, wizard.ic)
                 treatments_wizard_cobinsulin.text = StringUtils.formatInsulin(wizard.insulinFromCOB)
             } else {
                 treatments_wizard_cob.text = ""
@@ -332,12 +337,12 @@ class WizardDialog : DialogFragment() {
             }
 
             if (wizard.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0.0) {
-                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) DecimalFormatter.toPumpSupportedBolus(wizard.calculatedTotalInsulin) + "U" else ""
-                val carbsText = if (carbsAfterConstraint > 0.0) DecimalFormatter.to0Decimal(carbsAfterConstraint.toDouble()) + "g" else ""
-                treatments_wizard_total.text = MainApp.gs(R.string.result) + ": " + insulinText + " " + carbsText
+                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) MainApp.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin) else ""
+                val carbsText = if (carbsAfterConstraint > 0.0) MainApp.gs(R.string.format_carbs, carbsAfterConstraint) else ""
+                treatments_wizard_total.text = MainApp.gs(R.string.result_insulin_carbs, insulinText, carbsText)
                 ok.visibility = View.VISIBLE
             } else {
-                treatments_wizard_total.text = MainApp.gs(R.string.missing) + " " + DecimalFormatter.to0Decimal(wizard.carbsEquivalent) + "g"
+                treatments_wizard_total.text = MainApp.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt())
                 ok.visibility = View.INVISIBLE
             }
         }

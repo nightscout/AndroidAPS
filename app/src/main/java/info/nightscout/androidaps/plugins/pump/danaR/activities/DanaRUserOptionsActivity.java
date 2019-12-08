@@ -12,9 +12,8 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.activities.NoSplashActivity;
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
@@ -33,7 +32,7 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by Rumen Georgiev on 5/31/2018.
  */
 
-public class DanaRUserOptionsActivity extends NoSplashActivity {
+public class DanaRUserOptionsActivity extends NoSplashAppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(L.PUMP);
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -51,9 +50,9 @@ public class DanaRUserOptionsActivity extends NoSplashActivity {
     NumberPicker lowReservoir;
     Button saveToPumpButton;
     // This is for Dana pumps only
-    boolean isRS = MainApp.getSpecificPlugin(DanaRSPlugin.class) != null && MainApp.getSpecificPlugin(DanaRSPlugin.class).isEnabled(PluginType.PUMP);
-    boolean isDanaR = MainApp.getSpecificPlugin(DanaRPlugin.class) != null && MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginType.PUMP);
-    boolean isDanaRv2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class) != null && MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginType.PUMP);
+    boolean isRS = DanaRSPlugin.getPlugin().isEnabled(PluginType.PUMP);
+    boolean isDanaR = DanaRPlugin.getPlugin().isEnabled(PluginType.PUMP);
+    boolean isDanaRv2 = DanaRv2Plugin.getPlugin().isEnabled(PluginType.PUMP);
 
     @Override
     protected synchronized void onResume() {

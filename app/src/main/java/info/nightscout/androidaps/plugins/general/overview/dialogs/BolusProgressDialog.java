@@ -23,7 +23,7 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusprogressIfRunning;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -101,10 +101,10 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
                 .subscribe(event -> statusView.setText(event.getStatus()), FabricPrivacy::logException)
         );
         disposable.add(RxBus.INSTANCE
-                .toObservable(EventDismissBolusprogressIfRunning.class)
+                .toObservable(EventDismissBolusProgressIfRunning.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
-                    if (L.isEnabled(L.UI)) log.debug("EventDismissBolusprogressIfRunning");
+                    if (L.isEnabled(L.UI)) log.debug("EventDismissBolusProgressIfRunning");
                     if (BolusProgressDialog.running) dismiss();
                 }, FabricPrivacy::logException)
         );

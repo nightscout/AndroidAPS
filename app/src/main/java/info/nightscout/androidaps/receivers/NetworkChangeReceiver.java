@@ -24,6 +24,8 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
 
     private static EventNetworkChange lastEvent = null;
 
+    public static final NetworkChangeReceiver instance = new NetworkChangeReceiver();
+
     @Override
     public void onReceive(final Context context, final Intent intent) {
         EventNetworkChange event = grabNetworkStatus(context);
@@ -32,7 +34,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     }
 
     @Nullable
-    public EventNetworkChange grabNetworkStatus(final Context context) {
+    public static EventNetworkChange grabNetworkStatus(final Context context) {
         EventNetworkChange event = new EventNetworkChange();
 
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -72,7 +74,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         return lastEvent != null && lastEvent.getWifiConnected();
     }
 
-   public static boolean isConnected() {
+    public static boolean isConnected() {
         return lastEvent != null && (lastEvent.getWifiConnected() || lastEvent.getMobileConnected());
     }
 

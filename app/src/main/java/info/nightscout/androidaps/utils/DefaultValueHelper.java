@@ -2,6 +2,8 @@ package info.nightscout.androidaps.utils;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 
 public class DefaultValueHelper {
 
@@ -41,11 +43,12 @@ public class DefaultValueHelper {
     /**
      * returns the configured EatingSoon TempTarget, if this is set to 0, the Default-Value is returned.
      *
-     * @param units
      * @return
      */
-    public double determineEatingSoonTT(String units) {
+    public double determineEatingSoonTT() {
+        String units = ProfileFunctions.getSystemUnits();
         double value = SP.getDouble(R.string.key_eatingsoon_target, this.getDefaultEatingSoonTT(units));
+        value = Profile.toCurrentUnits(value);
         return value > 0 ? value : this.getDefaultEatingSoonTT(units);
     }
 
@@ -58,11 +61,12 @@ public class DefaultValueHelper {
     /**
      * returns the configured Activity TempTarget, if this is set to 0, the Default-Value is returned.
      *
-     * @param units
      * @return
      */
-    public double determineActivityTT(String units) {
+    public double determineActivityTT() {
+        String units = ProfileFunctions.getSystemUnits();
         double value = SP.getDouble(R.string.key_activity_target, this.getDefaultActivityTT(units));
+        value = Profile.toCurrentUnits(value);
         return value > 0 ? value : this.getDefaultActivityTT(units);
     }
 
@@ -74,11 +78,12 @@ public class DefaultValueHelper {
     /**
      * returns the configured Hypo TempTarget, if this is set to 0, the Default-Value is returned.
      *
-     * @param units
      * @return
      */
-    public double determineHypoTT(String units) {
+    public double determineHypoTT() {
+        String units = ProfileFunctions.getSystemUnits();
         double value = SP.getDouble(R.string.key_hypo_target, this.getDefaultHypoTT(units));
+        value = Profile.toCurrentUnits(value);
         return value > 0 ? value : this.getDefaultHypoTT(units);
     }
 

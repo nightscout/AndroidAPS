@@ -57,12 +57,11 @@ class ObjectivesExamDialog : DialogFragment() {
             objectives_exam_question.setText(task.question)
             // Options
             objectives_exam_options.removeAllViews()
-            for (o in task.options) {
-                val option: Option = o as Option;
-                val cb = option.generate(context)
+            task.options.forEach {
+                val cb = it.generate(context)
                 if (task.answered) {
                     cb.isEnabled = false
-                    if (option.isCorrect)
+                    if (it.isCorrect)
                         cb.isChecked = true
                 }
                 objectives_exam_options.addView(cb)

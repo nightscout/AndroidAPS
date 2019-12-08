@@ -131,12 +131,7 @@ public class ActionStringHandler {
             ///////////////////////////////////////////////////////// TEMPTARGET
             boolean isMGDL = Boolean.parseBoolean(act[1]);
 
-            Profile profile = ProfileFunctions.getInstance().getProfile();
-            if (profile == null) {
-                sendError("No profile found!");
-                return;
-            }
-            if (profile.getUnits().equals(Constants.MGDL) != isMGDL) {
+            if (ProfileFunctions.getSystemUnits().equals(Constants.MGDL) != isMGDL) {
                 sendError("Different units used on watch and phone!");
                 return;
             }
@@ -222,7 +217,7 @@ public class ActionStringHandler {
             DecimalFormat format = new DecimalFormat("0.00");
             DecimalFormat formatInt = new DecimalFormat("0");
             BolusWizard bolusWizard = new BolusWizard(profile, profileName, TreatmentsPlugin.getPlugin().getTempTargetFromHistory(),
-                    carbsAfterConstraints, cobInfo.displayCob, bgReading.valueToUnits(profile.getUnits()),
+                    carbsAfterConstraints, cobInfo.displayCob, bgReading.valueToUnits(ProfileFunctions.getSystemUnits()),
                     0d, percentage, useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend);
 
             if (Math.abs(bolusWizard.getInsulinAfterConstraints() - bolusWizard.getCalculatedTotalInsulin()) >= 0.01) {
@@ -437,11 +432,11 @@ public class ActionStringHandler {
 
     public static boolean isOldData(List<TDD> historyList) {
         Object activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
-        PumpInterface dana = MainApp.getSpecificPlugin(DanaRPlugin.class);
-        PumpInterface danaRS = MainApp.getSpecificPlugin(DanaRSPlugin.class);
-        PumpInterface danaV2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
-        PumpInterface danaKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
-        PumpInterface insight = MainApp.getSpecificPlugin(LocalInsightPlugin.class);
+        PumpInterface dana = DanaRPlugin.getPlugin();
+        PumpInterface danaRS = DanaRSPlugin.getPlugin();
+        PumpInterface danaV2 = DanaRv2Plugin.getPlugin();
+        PumpInterface danaKorean = DanaRKoreanPlugin.getPlugin();
+        PumpInterface insight = LocalInsightPlugin.getPlugin();
 
         boolean startsYesterday = activePump == dana || activePump == danaRS || activePump == danaV2 || activePump == danaKorean || activePump == insight;
 
@@ -534,14 +529,14 @@ public class ActionStringHandler {
         //Check for Temp-Target:
         TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
         if (tempTarget != null) {
-            ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.low, tempTarget.low, Constants.MGDL, profile.getUnits());
+            ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.low, tempTarget.low, Constants.MGDL, ProfileFunctions.getSystemUnits());
             ret += "\nuntil: " + DateUtil.timeString(tempTarget.originalEnd());
             ret += "\n\n";
         }
 
         ret += "DEFAULT RANGE: ";
-        ret += profile.getTargetLow() + " - " + profile.getTargetHigh();
-        ret += " target: " + profile.getTarget();
+        ret += Profile.fromMgdlToUnits(profile.getTargetLowMgdl(), ProfileFunctions.getSystemUnits()) + " - " + Profile.fromMgdlToUnits(profile.getTargetHighMgdl(), ProfileFunctions.getSystemUnits());
+        ret += " target: " + Profile.fromMgdlToUnits(profile.getTargetMgdl(), ProfileFunctions.getSystemUnits());
         return ret;
     }
 

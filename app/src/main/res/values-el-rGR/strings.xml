@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Ασφάλεια Θεραπειών</string>
     <string name="treatmentssafety_maxbolus_title">Μέγιστο Επιτρεπτό bolus[U]</string>
     <string name="treatmentssafety_maxcarbs_title">Μέγιστο Επιτρεπτό υδατανθράκων [g]</string>
@@ -99,6 +98,7 @@
     <string name="openapsma_profile_label">Προφίλ</string>
     <string name="openapsma_mealdata_label">Δεδομένα Γεύματος</string>
     <string name="result">Αποτέλεσμα</string>
+    <string name="result_insulin_carbs">Αποτέλεσμα: %1$s %2$s</string>
     <string name="openapsma_noglucosedata">Μη διαθέσιμα δεδομένα γλυκόζης</string>
     <string name="nochangerequested">Δεν απαιτείται αλλαγή</string>
     <string name="openapsma_request_label">Αίτημα</string>
@@ -216,7 +216,7 @@
     <string name="overview_tempbasal_button">Προσ Ρυθμός</string>
     <string name="overview_extendedbolus_button">Εκτεταμμένο Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Έκδοση Nightscout:</string>
-    <string name="missing">Χαμένες</string>
+    <string name="missing_carbs">Λείπει %1$dg</string>
     <string name="exported">Επιλογές εξήχθησαν</string>
     <string name="export_to">Εξαγωγή ρυθμίσεων σε</string>
     <string name="import_from">Εισαγωγή ρυθμίσεων από</string>
@@ -361,10 +361,8 @@
     <string name="button1">Πλήκτρο 1</string>
     <string name="button2">Πλήκτρο 2</string>
     <string name="button3">Πλήκτρο 3</string>
-    <string name="units">Μονάδες:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">Εύρος στόχου:</string>
     <string name="prefs_range_title">Εύρος εμφάνισης</string>
     <string name="prefs_range_summary">Υψηλό και Χαμηλό σημείο για την γραφική στην Επισκόπηση και Smartwatch</string>
@@ -548,8 +546,8 @@
     <string name="show_statuslights_extended_summary">Ενεργοποίηση του φωτισμού κατάστασης για cage, iage, sage, reservoir και επίπεδο μπαταρίας στην αρχική οθόνη.</string>
     <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
-    <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%%]</string>
-    <string name="statuslights_bat_critical">Όριο προειδοποίησης πολύ χαμηλής μπαταρίας [%%]</string>
+    <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%]</string>
+    <string name="statuslights_bat_critical">Όριο προειδοποίησης πολύ χαμηλής μπαταρίας [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Έκδοση</string>
@@ -1147,8 +1145,6 @@
     <string name="tidepool_upload_tbr">Αποστολή προσωρινών ρυθμών</string>
     <string name="tidepool_upload_profile">Αποστολή αλλαγών προφίλ, προσωρινών στόχων</string>
     <string name="tidepool_upload_bg">Αποστολή BG βαθμονομήσεων</string>
-    <string name="dst_in_24h_warning">Αλλαγή σε Θερινή ώρα σε 24h ή λιγότερο</string>
-    <string name="dst_loop_disabled_warning">Η Θερινή ώρα αλλάζει σε λιγότερο από 3 ώρες - Απενεργοποιήθηκε το κλειστό κύκλωμα</string>
     <string name="storage">περιορισμός εσωτερικής μνήμης</string>
     <string name="diskfull">Ελευθερώστε τουλάχιστον %1$d MB από εσωτερική μνήμη! Κύκλωμα απενεργοποιήθηκε!</string>
     <string name="wrongformat">Λάθος μορφή αρχείου</string>
@@ -1369,6 +1365,8 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Οδηγός Bolus</string>
     <string name="unit_minute_short">min</string>
+    <string name="format_carbs">%1$dg</string>
 </resources>

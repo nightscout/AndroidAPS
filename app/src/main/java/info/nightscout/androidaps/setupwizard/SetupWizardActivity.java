@@ -51,7 +51,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LocaleHelper.onCreate(this, "en");
+        LocaleHelper.INSTANCE.update(getApplicationContext());
         setContentView(R.layout.activity_setupwizard);
 
         scrollView = (ScrollView) findViewById(R.id.sw_scrollview);
@@ -70,18 +70,6 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
             generateLayout();
             updateButtons();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (currentWizardPage == 0)
-            OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
-        else showPreviousPage(null);
-    }
-
-    public void exitPressed(View view) {
-        SP.putBoolean(R.string.key_setupwizard_processed, true);
-        OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
     }
 
     @Override
@@ -155,6 +143,18 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
                 findViewById(R.id.previous_button).setVisibility(View.VISIBLE);
             currentScreen.processVisibility();
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (currentWizardPage == 0)
+            OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
+        else showPreviousPage(null);
+    }
+
+    public void exitPressed(View view) {
+        SP.putBoolean(R.string.key_setupwizard_processed, true);
+        OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
     }
 
     public void showNextPage(View view) {

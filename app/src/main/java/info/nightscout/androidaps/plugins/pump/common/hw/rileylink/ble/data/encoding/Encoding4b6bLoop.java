@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
  */
 
 public class Encoding4b6bLoop extends Encoding4b6bAbstract {
+    private static final Logger log = LoggerFactory.getLogger(Encoding4b6bLoop.class);
 
     public static final Logger LOG = LoggerFactory.getLogger(Encoding4b6bLoop.class);
     public Map<Integer, Byte> codesRev = null;
@@ -108,9 +109,8 @@ public class Encoding4b6bLoop extends Encoding4b6bAbstract {
                     int index2 = ((bitAccumulator >> (availBits - 12)) & 0b111111);
                     hiNibble = codesRev.get((bitAccumulator >> (availBits - 6)));
                     loNibble = codesRev.get(((bitAccumulator >> (availBits - 12)) & 0b111111));
-                } catch (Exception ex) {
-                    System.out.println("Exception: " + ex.getMessage());
-                    ex.printStackTrace();
+                } catch (Exception e) {
+                    log.error("Unhandled exception", e);
                     return null;
                 }
 

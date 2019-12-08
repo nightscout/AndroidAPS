@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">관리 안전설정</string>
     <string name="treatmentssafety_maxbolus_title">최대 허용 Bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">최대 허용 탄수화물 [g]</string>
@@ -216,7 +215,6 @@
     <string name="overview_tempbasal_button">임시Basal</string>
     <string name="overview_extendedbolus_button">확장 Bolus</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
-    <string name="missing">누락</string>
     <string name="exported">설정이 저장되었습니다</string>
     <string name="export_to">다음 위치에 설정을 저장하시겠습니까</string>
     <string name="import_from">다음 위치에서 설정을 불러오시겠습니까</string>
@@ -361,10 +359,8 @@
     <string name="button1">버튼1</string>
     <string name="button2">버튼2</string>
     <string name="button3">버튼3</string>
-    <string name="units">유닛:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">목표 범위:</string>
     <string name="prefs_range_title">차트 표시 범위</string>
     <string name="prefs_range_summary">스마트워치 차트 고/저혈당 선</string>
@@ -546,8 +542,6 @@
     <string name="show_statuslights">홈화면에 상태 표시등 보여주기</string>
     <string name="statuslights_res_warning">주사기량 경고 기준값[U]</string>
     <string name="statuslights_res_critical">주사기량 위험 기준값[U]</string>
-    <string name="statuslights_bat_warning">배터리량 경고 기준값[%%]</string>
-    <string name="statuslights_bat_critical">배터리량 위험 기준값[%%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">펌웨어</string>
@@ -1144,8 +1138,6 @@
     <string name="tidepool_upload_tbr">임시 Basal 업로드</string>
     <string name="tidepool_upload_profile">프로파일변경, 임시목표 업로드</string>
     <string name="tidepool_upload_bg">혈당 테스트 업로드</string>
-    <string name="dst_in_24h_warning">24시간 이내 썸머타임 변경</string>
-    <string name="dst_loop_disabled_warning">썸머타임 변경이 3시간 미만입니다 - Closed Loop 비활성됨</string>
     <string name="storage">내부 저장 용량 제한</string>
     <string name="diskfull">내부 저장 공간을 최소 %1$d MB 이상 비우세요! Loop가 비활성화되었습니다!</string>
     <string name="wrongformat">잘못된 형식</string>

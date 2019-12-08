@@ -163,4 +163,7 @@
     <string name="basalhelp_diabetesteam">K Vášmu lekárovi</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
+    <string name="other_medication_label">Iné Lieky</string>
+    <string name="other_medication_text">AAPS znižuje bazály na zvýšenie hladiny cukru v krvi. Lieky zo skupiny inhibítorov SGLT2 (gliflozíny) môžu zabrániť očakávanému zvýšeniu hodnoty glykémie a tak môžu produkovať nebezpečný nedostatok inzulínu (ketoacidózu).
+\nSpoločné značky sú: Invokana ®, Forxiga ®, Jardiance ®, Steglatro ®, Suglat ®, Apleway ®, Deberza ®, Synjardy ®, Vokanamet ®, Xigduo ®.\n\n. Týmto sľubujem, že tieto lieky neberiem pri používaní AAPS, alebo deaktivujem uzavretý okruh pred užívaním týchto liekov.</string>
 </resources>

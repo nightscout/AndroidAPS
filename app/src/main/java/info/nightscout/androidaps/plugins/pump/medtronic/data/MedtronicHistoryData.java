@@ -6,6 +6,8 @@ import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Minutes;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +22,7 @@ import java.util.Map;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -27,6 +30,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
@@ -45,7 +49,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 
 
@@ -59,9 +65,9 @@ import info.nightscout.androidaps.utils.SP;
 //  all times that time changed (TZ, DST, etc.). Data needs to be returned in batches (time_changed batches, so that we can
 //  handle it. It would help to assign sort_ids to items (from oldest (1) to newest (x)
 
+// All things marked with "TODO: Fix db code" needs to be updated in new 2.5 database code
 
 public class MedtronicHistoryData {
-
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     private List<PumpHistoryEntry> allHistory = null;
@@ -71,19 +77,32 @@ public class MedtronicHistoryData {
     private boolean isInit = false;
 
     private Gson gson;
+    private Gson gsonCore;
 
     private DatabaseHelper databaseHelper = MainApp.getDbHelper();
     private ClockDTO pumpTime;
 
     private long lastIdUsed = 0;
 
+    /**
+     * Double bolus debug. We seem to have small problem with double Boluses (or sometimes also missing boluses
+     * from history. This flag turns on debugging for that (default is off=false)... Debuging is pretty detailed,
+     * so log files will get bigger.
+     */
+    public static boolean doubleBolusDebug = false;
+
 
     public MedtronicHistoryData() {
         this.allHistory = new ArrayList<>();
         this.gson = MedtronicUtil.gsonInstance;
+        this.gsonCore = MedtronicUtil.getGsonInstanceCore();
 
         if (this.gson == null) {
             this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        }
+
+        if (this.gsonCore == null) {
+            this.gsonCore = new GsonBuilder().create();
         }
     }
 
@@ -311,6 +330,7 @@ public class MedtronicHistoryData {
                     pumpHistoryEntryType == PumpHistoryEntryType.BasalProfileStart || //
                     pumpHistoryEntryType == PumpHistoryEntryType.Bolus || //
                     pumpHistoryEntryType == PumpHistoryEntryType.Resume || //
+                    pumpHistoryEntryType == PumpHistoryEntryType.BatteryChange || //
                     pumpHistoryEntryType == PumpHistoryEntryType.Prime);
 
             if (isLogEnabled())
@@ -353,6 +373,7 @@ public class MedtronicHistoryData {
                 PumpHistoryEntryType.Resume, //
                 PumpHistoryEntryType.Rewind, //
                 PumpHistoryEntryType.NoDeliveryAlarm, //
+                PumpHistoryEntryType.BatteryChange, //
                 PumpHistoryEntryType.BasalProfileStart);
 
         newAndAll2 = filterPumpSuspend(newAndAll2, 10);
@@ -381,6 +402,22 @@ public class MedtronicHistoryData {
      * Process History Data: Boluses(Treatments), TDD, TBRs, Suspend-Resume (or other pump stops: battery, prime)
      */
     public void processNewHistoryData() {
+
+        // TODO: Fix db code
+        // Prime (for reseting autosense)
+        List<PumpHistoryEntry> primeRecords = getFilteredItems(PumpHistoryEntryType.Prime);
+
+        if (isLogEnabled())
+            LOG.debug("ProcessHistoryData: Prime [count={}, items={}]", primeRecords.size(), gson.toJson(primeRecords));
+
+        if (isCollectionNotEmpty(primeRecords)) {
+            try {
+                processPrime(primeRecords);
+            } catch (Exception ex) {
+                LOG.error("ProcessHistoryData: Error processing Prime entries: " + ex.getMessage(), ex);
+                throw ex;
+            }
+        }
 
         // TDD
         List<PumpHistoryEntry> tdds = getFilteredItems(PumpHistoryEntryType.EndResultTotals, getTDDType());
@@ -454,6 +491,49 @@ public class MedtronicHistoryData {
     }
 
 
+    private void processPrime(List<PumpHistoryEntry> primeRecords) {
+
+        long maxAllowedTimeInPast = DateTimeUtil.getATDWithAddedMinutes(new GregorianCalendar(), -30);
+
+        long lastPrimeRecord = 0L;
+
+        for (PumpHistoryEntry primeRecord : primeRecords) {
+
+            if (primeRecord.atechDateTime > maxAllowedTimeInPast) {
+                if (lastPrimeRecord < primeRecord.atechDateTime) {
+                    lastPrimeRecord = primeRecord.atechDateTime;
+                }
+            }
+        }
+
+        if (lastPrimeRecord != 0L) {
+            long lastPrimeFromAAPS = SP.getLong(MedtronicConst.Statistics.LastPrime, 0L);
+
+            if (lastPrimeRecord != lastPrimeFromAAPS) {
+                uploadCareportalEvent(DateTimeUtil.toMillisFromATD(lastPrimeRecord), CareportalEvent.SITECHANGE);
+
+                SP.putLong(MedtronicConst.Statistics.LastPrime, lastPrimeRecord);
+            }
+        }
+    }
+
+
+    private void uploadCareportalEvent(long date, String event) {
+        if (MainApp.getDbHelper().getCareportalEventFromTimestamp(date) != null)
+            return;
+        try {
+            JSONObject data = new JSONObject();
+            String enteredBy = SP.getString("careportal_enteredby", "");
+            if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
+            data.put("created_at", DateUtil.toISOString(date));
+            data.put("eventType", event);
+            NSUpload.uploadCareportalEntryToNS(data);
+        } catch (JSONException e) {
+            LOG.error("Unhandled exception", e);
+        }
+    }
+
+
     private void processTDDs(List<PumpHistoryEntry> tddsIn) {
 
         List<PumpHistoryEntry> tdds = filterTDDs(tddsIn);
@@ -517,23 +597,32 @@ public class MedtronicHistoryData {
 
         long oldestTimestamp = getOldestTimestamp(entryList);
 
+        Gson gson = MedtronicUtil.getGsonInstance();
+
         List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntriesByLastTimestamp(oldestTimestamp, ProcessHistoryRecord.Bolus);
 
-//        LOG.debug(processHistoryRecord.getDescription() + " List (before filter): {}, FromDb={}", gsonPretty.toJson(entryList),
-//                gsonPretty.toJson(entriesFromHistory));
+        if (doubleBolusDebug)
+            LOG.debug("DoubleBolusDebug: List (before filter): {}, FromDb={}", gson.toJson(entryList),
+                    gsonCore.toJson(entriesFromHistory));
 
         filterOutAlreadyAddedEntries(entryList, entriesFromHistory);
 
-        if (entryList.isEmpty())
+        if (entryList.isEmpty()) {
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: EntryList was filtered out.");
             return;
+        }
 
-//        LOG.debug(processHistoryRecord.getDescription() + " List (after filter): {}, FromDb={}", gsonPretty.toJson(entryList),
-//                gsonPretty.toJson(entriesFromHistory));
+        if (doubleBolusDebug)
+            LOG.debug("DoubleBolusDebug: List (after filter): {}, FromDb={}", gson.toJson(entryList),
+                    gsonCore.toJson(entriesFromHistory));
 
         if (isCollectionEmpty(entriesFromHistory)) {
             for (PumpHistoryEntry treatment : entryList) {
                 if (isLogEnabled())
                     LOG.debug("Add Bolus (no db entry): " + treatment);
+                if (doubleBolusDebug)
+                    LOG.debug("DoubleBolusDebug: Add Bolus: FromDb=null, Treatment={}", treatment);
 
                 addBolus(treatment, null);
             }
@@ -542,6 +631,8 @@ public class MedtronicHistoryData {
                 DbObjectBase treatmentDb = findDbEntry(treatment, entriesFromHistory);
                 if (isLogEnabled())
                     LOG.debug("Add Bolus {} - (entryFromDb={}) ", treatment, treatmentDb);
+                if (doubleBolusDebug)
+                    LOG.debug("DoubleBolusDebug: Add Bolus: FromDb={}, Treatment={}", treatmentDb, treatment);
 
                 addBolus(treatment, (Treatment) treatmentDb);
             }
@@ -681,12 +772,11 @@ public class MedtronicHistoryData {
 
     /**
      * findDbEntry - finds Db entries in database, while theoretically this should have same dateTime they
-     *   don't. Entry on pump is few seconds before treatment in AAPS, and on manual boluses on pump there
-     *   is no treatment at all. For now we look fro tratment that was from 0s - 1m59s within pump entry.
+     * don't. Entry on pump is few seconds before treatment in AAPS, and on manual boluses on pump there
+     * is no treatment at all. For now we look fro tratment that was from 0s - 1m59s within pump entry.
      *
-     * @param treatment Pump Entry
+     * @param treatment          Pump Entry
      * @param entriesFromHistory entries from history
-     *
      * @return DbObject from AAPS (if found)
      */
     private DbObjectBase findDbEntry(PumpHistoryEntry treatment, List<? extends DbObjectBase> entriesFromHistory) {
@@ -695,9 +785,30 @@ public class MedtronicHistoryData {
 
         //proposedTime += (this.pumpTime.timeDifference * 1000);
 
+        if (doubleBolusDebug)
+            LOG.debug("DoubleBolusDebug: findDbEntry Treatment={}, FromDb={}", treatment, gson.toJson(entriesFromHistory));
+
         if (entriesFromHistory.size() == 0) {
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: findDbEntry Treatment={}, FromDb=null", treatment);
             return null;
         } else if (entriesFromHistory.size() == 1) {
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: findDbEntry Treatment={}, FromDb={}. Type=SingleEntry", treatment, entriesFromHistory.get(0));
+
+            // TODO: Fix db code
+            // if difference is bigger than 2 minutes we discard entry
+            long maxMillisAllowed = DateTimeUtil.getMillisFromATDWithAddedMinutes(treatment.atechDateTime, 2);
+
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: findDbEntry maxMillisAllowed={}, AtechDateTime={} (add 2 minutes). ", maxMillisAllowed, treatment.atechDateTime);
+
+            if (entriesFromHistory.get(0).getDate() > maxMillisAllowed) {
+                if (doubleBolusDebug)
+                    LOG.debug("DoubleBolusDebug: findDbEntry entry filtered out, returning null. ");
+                return null;
+            }
+
             return entriesFromHistory.get(0);
         }
 
@@ -720,16 +831,19 @@ public class MedtronicHistoryData {
                     }
                 }
 
-//                LOG.debug("Entries: (timeDiff=[min={},sec={}],count={},list={})", min, sec, outList.size(),
-//                        gsonPretty.toJson(outList));
-
                 if (outList.size() == 1) {
+                    if (doubleBolusDebug)
+                        LOG.debug("DoubleBolusDebug: findDbEntry Treatment={}, FromDb={}. Type=EntrySelected, AtTimeMin={}, AtTimeSec={}", treatment, entriesFromHistory.get(0), min, sec);
+
                     return outList.get(0);
                 }
 
                 if (min == 0 && sec == 10 && outList.size() > 1) {
                     if (isLogEnabled())
                         LOG.error("Too many entries (with too small diff): (timeDiff=[min={},sec={}],count={},list={})",
+                                min, sec, outList.size(), gson.toJson(outList));
+                    if (doubleBolusDebug)
+                        LOG.debug("DoubleBolusDebug: findDbEntry Error - Too many entries (with too small diff): (timeDiff=[min={},sec={}],count={},list={})",
                                 min, sec, outList.size(), gson.toJson(outList));
                 }
             }
@@ -754,6 +868,7 @@ public class MedtronicHistoryData {
             return;
 
         List<DbObjectBase> removeTreatmentsFromHistory = new ArrayList<>();
+        List<PumpHistoryEntry> removeTreatmentsFromPH = new ArrayList<>();
 
         for (DbObjectBase treatment : treatmentsFromHistory) {
 
@@ -771,10 +886,16 @@ public class MedtronicHistoryData {
                 if (selectedBolus != null) {
                     entryList.remove(selectedBolus);
 
+                    removeTreatmentsFromPH.add(selectedBolus);
                     removeTreatmentsFromHistory.add(treatment);
                 }
             }
         }
+
+        if (doubleBolusDebug)
+            LOG.debug("DoubleBolusDebug: filterOutAlreadyAddedEntries: PumpHistory={}, Treatments={}",
+                    gson.toJson(removeTreatmentsFromPH),
+                    gsonCore.toJson(removeTreatmentsFromHistory));
 
         treatmentsFromHistory.removeAll(removeTreatmentsFromHistory);
     }
@@ -785,6 +906,8 @@ public class MedtronicHistoryData {
         BolusDTO bolusDTO = (BolusDTO) bolus.getDecodedData().get("Object");
 
         if (treatment == null) {
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: addBolus(tretament==null): Bolus={}", bolusDTO);
 
             switch (bolusDTO.getBolusType()) {
                 case Normal: {
@@ -796,6 +919,9 @@ public class MedtronicHistoryData {
                     detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();
 
                     addCarbsFromEstimate(detailedBolusInfo, bolus);
+
+                    if (doubleBolusDebug)
+                        LOG.debug("DoubleBolusDebug: addBolus(tretament==null): DetailedBolusInfo={}", detailedBolusInfo);
 
                     boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
 
@@ -819,6 +945,9 @@ public class MedtronicHistoryData {
 
                     bolus.setLinkedObject(extendedBolus);
 
+                    if (doubleBolusDebug)
+                        LOG.debug("DoubleBolusDebug: addBolus(tretament==null): ExtendedBolus={}", extendedBolus);
+
                     TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
 
                     if (isLogEnabled())
@@ -831,26 +960,23 @@ public class MedtronicHistoryData {
 
         } else {
 
-            DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.INSTANCE.findDetailedBolusInfo(treatment.date, bolusDTO.getDeliveredAmount());
-            if (detailedBolusInfo == null) {
-                detailedBolusInfo = new DetailedBolusInfo();
-            }
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: addBolus(OldTreatment={}): Bolus={}", treatment, bolusDTO);
 
-            detailedBolusInfo.date = treatment.date;
-            detailedBolusInfo.source = Source.PUMP;
-            detailedBolusInfo.pumpId = bolus.getPumpId();
-            detailedBolusInfo.insulin = bolusDTO.getDeliveredAmount();
-            detailedBolusInfo.carbs = treatment.carbs;
+            treatment.source = Source.PUMP;
+            treatment.pumpId = bolus.getPumpId();
+            treatment.insulin = bolusDTO.getDeliveredAmount();
 
-            addCarbsFromEstimate(detailedBolusInfo, bolus);
+            TreatmentService.UpdateReturn updateReturn = TreatmentsPlugin.getPlugin().getService().createOrUpdateMedtronic(treatment, false);
 
-            boolean newRecord = TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
-
-            bolus.setLinkedObject(detailedBolusInfo);
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: addBolus(tretament!=null): NewTreatment={}, UpdateReturn={}", treatment, updateReturn);
 
             if (isLogEnabled())
-                LOG.debug("editBolus - [date={},pumpId={}, insulin={}, newRecord={}]", detailedBolusInfo.date,
-                        detailedBolusInfo.pumpId, detailedBolusInfo.insulin, newRecord);
+                LOG.debug("editBolus - [date={},pumpId={}, insulin={}, newRecord={}]", treatment.date,
+                        treatment.pumpId, treatment.insulin, updateReturn.toString());
+
+            bolus.setLinkedObject(treatment);
 
         }
     }
@@ -861,6 +987,9 @@ public class MedtronicHistoryData {
         if (bolus.containsDecodedData("Estimate")) {
 
             BolusWizardDTO bolusWizard = (BolusWizardDTO) bolus.getDecodedData().get("Estimate");
+
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: addCarbsFromEstimate: Bolus={}, BolusWizardDTO={}", bolus, bolusWizard);
 
             detailedBolusInfo.carbs = bolusWizard.carbs;
         }
@@ -1210,23 +1339,25 @@ public class MedtronicHistoryData {
             }
         }
 
-        //LocalDateTime oldestEntryTime = null;
+        if (doubleBolusDebug)
+            LOG.debug("DoubleBolusDebug: getOldestTimestamp. Oldest entry found: time={}, object={}", dt, currentTreatment);
 
         try {
 
             GregorianCalendar oldestEntryTime = DateTimeUtil.toGregorianCalendar(dt);
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: getOldestTimestamp. oldestEntryTime: {}", DateTimeUtil.toString(oldestEntryTime));
             oldestEntryTime.add(Calendar.MINUTE, -2);
+
+            if (doubleBolusDebug)
+                LOG.debug("DoubleBolusDebug: getOldestTimestamp. oldestEntryTime (-2m): {}, timeInMillis={}", DateTimeUtil.toString(oldestEntryTime), oldestEntryTime.getTimeInMillis());
 
             return oldestEntryTime.getTimeInMillis();
 
-//            if (this.pumpTime.timeDifference < 0) {
-//                oldestEntryTime = oldestEntryTime.plusSeconds(this.pumpTime.timeDifference);
-//            }
         } catch (Exception ex) {
-            LOG.error("Problem decoding date from last record: {}" + currentTreatment);
+            LOG.error("Problem decoding date from last record: {}", currentTreatment);
             return 8; // default return of 6 minutes
         }
-
 
     }
 

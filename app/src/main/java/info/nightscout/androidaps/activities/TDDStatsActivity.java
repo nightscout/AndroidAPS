@@ -54,7 +54,7 @@ import info.nightscout.androidaps.utils.SafeParse;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class TDDStatsActivity extends NoSplashActivity {
+public class TDDStatsActivity extends NoSplashAppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(TDDStatsActivity.class);
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -536,11 +536,11 @@ public class TDDStatsActivity extends NoSplashActivity {
 
     public static boolean isOldData(List<TDD> historyList) {
         Object activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
-        PumpInterface dana = MainApp.getSpecificPlugin(DanaRPlugin.class);
-        PumpInterface danaRS = MainApp.getSpecificPlugin(DanaRSPlugin.class);
-        PumpInterface danaV2 = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
-        PumpInterface danaKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
-        PumpInterface insight = MainApp.getSpecificPlugin(LocalInsightPlugin.class);
+        PumpInterface dana = DanaRPlugin.getPlugin();
+        PumpInterface danaRS = DanaRSPlugin.getPlugin();
+        PumpInterface danaV2 = DanaRv2Plugin.getPlugin();
+        PumpInterface danaKorean = DanaRKoreanPlugin.getPlugin();
+        PumpInterface insight = LocalInsightPlugin.getPlugin();
 
         boolean startsYesterday = activePump == dana || activePump == danaRS || activePump == danaV2 || activePump == danaKorean || activePump == insight;
 

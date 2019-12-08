@@ -16,12 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -37,8 +36,6 @@ import io.reactivex.disposables.CompositeDisposable;
 public class BGSourceFragment extends Fragment {
     private CompositeDisposable disposable = new CompositeDisposable();
     RecyclerView recyclerView;
-
-    String units = Constants.MGDL;
 
     final long MILLS_TO_THE_PAST = T.hours(12).msecs();
 
@@ -56,9 +53,6 @@ public class BGSourceFragment extends Fragment {
             long now = System.currentTimeMillis();
             RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getDbHelper().getAllBgreadingsDataFromTime(now - MILLS_TO_THE_PAST, false));
             recyclerView.setAdapter(adapter);
-
-            if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null && ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile() != null && ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile().getDefaultProfile() != null)
-                units = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile().getDefaultProfile().getUnits();
 
             return view;
         } catch (Exception e) {
@@ -109,7 +103,7 @@ public class BGSourceFragment extends Fragment {
             holder.ns.setVisibility(NSUpload.isIdValid(bgReading._id) ? View.VISIBLE : View.GONE);
             holder.invalid.setVisibility(!bgReading.isValid ? View.VISIBLE : View.GONE);
             holder.date.setText(DateUtil.dateAndTimeString(bgReading.date));
-            holder.value.setText(bgReading.valueToUnitsToString(units));
+            holder.value.setText(bgReading.valueToUnitsToString(ProfileFunctions.getSystemUnits()));
             holder.direction.setText(bgReading.directionToSymbol());
             holder.remove.setTag(bgReading);
         }
@@ -147,7 +141,7 @@ public class BGSourceFragment extends Fragment {
                     case R.id.bgsource_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle(MainApp.gs(R.string.confirmation));
-                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(bgReading.date) + "\n" + bgReading.valueToUnitsToString(units));
+                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(bgReading.date) + "\n" + bgReading.valueToUnitsToString(ProfileFunctions.getSystemUnits()));
                         builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
 /*                                final String _id = bgReading._id;

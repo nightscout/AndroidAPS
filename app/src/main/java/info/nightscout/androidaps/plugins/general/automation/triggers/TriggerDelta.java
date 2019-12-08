@@ -45,7 +45,7 @@ public class TriggerDelta extends Trigger {
 
     public TriggerDelta() {
         super();
-        this.units = ProfileFunctions.getInstance().getProfileUnits();
+        this.units = ProfileFunctions.getSystemUnits();
         initializer();
     }
 
@@ -129,7 +129,7 @@ public class TriggerDelta extends Trigger {
             data.put("comparator", comparator.getValue().toString());
             o.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -144,7 +144,7 @@ public class TriggerDelta extends Trigger {
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
             comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }

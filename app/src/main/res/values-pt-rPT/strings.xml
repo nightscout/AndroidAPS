@@ -5,7 +5,6 @@
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ga_lang" translatable="false">Irish</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
-    <!--    <string name="pt_BR_lang" translatable="false">Portuguese, Brazilian</string> -->
     <string name="treatmentssafety_title">Segurança de tratamentos</string>
     <string name="treatmentssafety_maxbolus_title">Max bolus permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max hidratos permitidos [g]</string>
@@ -99,6 +98,7 @@
     <string name="openapsma_profile_label">Perfil</string>
     <string name="openapsma_mealdata_label">Dados de refeição</string>
     <string name="result">Resultado</string>
+    <string name="result_insulin_carbs">Resultado: %1$s %2$ss</string>
     <string name="openapsma_noglucosedata">Sem dados de glucose disponíveis</string>
     <string name="nochangerequested">Nenhuma alteração solicitada</string>
     <string name="openapsma_request_label">Pedido</string>
@@ -210,13 +210,13 @@
     <string name="careportal_newnstreatment_notes_label">Notas</string>
     <string name="careportal_newnstreatment_eventtime_label">Tempo do evento</string>
     <string name="careportal_newnstreatment_profile_label">Perfil</string>
-    <string name="careportal_newnstreatment_enteredby_title">Introduzido por</string>
+    <string name="careportal_newnstreatment_enteredby_title">Inserido por</string>
     <string name="careportal_newnstreatment_glucosetype">Tipo de glicose</string>
     <string name="noprofile">Sem perfil carregado do NS</string>
     <string name="overview_tempbasal_button">BasalTemp</string>
     <string name="overview_extendedbolus_button">Bólus estendido</string>
     <string name="configbuilder_nightscoutversion_label">Versão Nightscout:</string>
-    <string name="missing">Em falta</string>
+    <string name="missing_carbs">Falta %1$dg</string>
     <string name="exported">Preferências exportadas</string>
     <string name="export_to">Exportar configurações para</string>
     <string name="import_from">Importar configurações de</string>
@@ -260,11 +260,15 @@
     <string name="smscommunicator_allowednumbers">Número de telefones permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode">Para dar bolus %1$.2fU responder com código %2$s</string>
+    <string name="smscommunicator_temptargetcancel">Para cancelar Alvo Temp responda com o código %1$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Para enviar calibração %1$.2f responder com código %2$s</string>
     <string name="smscommunicator_bolusfailed">Bólus falhado</string>
     <string name="bolusdelivered">Bólus %1$.2fU enviado com êxito</string>
     <string name="bolusrequested">Vai ser enviado %1$.2fU</string>
     <string name="smscommunicator_bolusdelivered">Bólus %1$.2fU enviado com êxito</string>
+    <string name="smscommunicator_mealbolusdelivered_tt">Alvo %1$s para %2$d minutos</string>
+    <string name="smscommunicator_tt_set">Alvo %1$s para %2$d minutos definido com sucesso</string>
+    <string name="smscommunicator_tt_canceled">Alvo Temp cancelado com êxito</string>
     <string name="bolusdelivering">A enviar %1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Permitir comandos remotos via SMS</string>
     <string name="glucosetype_finger">Dedo</string>
@@ -296,7 +300,7 @@
     <string name="danar_history_dailyinsulin">Insulina diária</string>
     <string name="danar_history_errors">Erros</string>
     <string name="danar_history_glucose">Glicose</string>
-    <string name="danar_history_refill">Reabastecimento</string>
+    <string name="danar_history_refill">Recarregar</string>
     <string name="danar_history_syspend">Suspender</string>
     <string name="danar_history_connectingfor">A ligar durante %1$d s</string>
     <string name="danar_password_title">Senha da bomba</string>
@@ -324,10 +328,13 @@
     <string name="smscommunicator_basalreplywithcode">Para começar a basal %1$.2fU/h durante%2$d min responda com o código %3$s</string>
     <string name="smscommunicator_profilereplywithcode">Para mudar o perfil para %1$s %2$d%% responda com o código %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">Para começar o bólus estendido %1$.2fU/h para %2$d min responda com o código %3$s</string>
+    <string name="smscommunicator_carbsreplywithcode">Para inserir %1$dg em %2$s responda com código %3$s</string>
     <string name="smscommunicator_basalpctreplywithcode">Para começar a basal %1$d% U/h durante %2$d min responda com o código %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Para suspender o loop por %1$d minutos resposta com código %2$s</string>
     <string name="smscommunicator_tempbasalset">Basal temporária %1$.2fU/h para %2$d min iniciada com êxito</string>
     <string name="smscommunicator_extendedset">Bólus estendido %1$.2fU/h para %2$d min iniciado com êxito</string>
+    <string name="smscommunicator_carbsset">Hidratos %1$dg inseridos com sucesso</string>
+    <string name="smscommunicator_carbsfailed">Introdução de %1$dg de hidratos falhou</string>
     <string name="smscommunicator_tempbasalset_percent">Basal temporária %1$d% U/h durante%2$d min iniciada com êxito</string>
     <string name="smscommunicator_tempbasalfailed">Início basal temp falhou </string>
     <string name="smscommunicator_extendedfailed">Falha ao iniciar o bólus estendido</string>
@@ -361,10 +368,11 @@
     <string name="button1">Botão 1</string>
     <string name="button2">Botão 2</string>
     <string name="button3">Botão 3</string>
-    <string name="units">Unidades:</string>
+    <string name="units_colon">Unidades:</string>
+    <string name="units">Unidades</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
-    <string name="dia">DIA:</string>
+    <string name="dia">DIA</string>
     <string name="target_range">Intervalo Alvo:</string>
     <string name="prefs_range_title">Intervalo para visualização</string>
     <string name="prefs_range_summary">Marca Alto e Baixo para os gráficos em Sumário e Smartwatch</string>
@@ -548,8 +556,8 @@
     <string name="show_statuslights_extended_summary">Activar as luzes de estado para idade da cânula, idade da insulina, idade do sensor, reservatório e bateria no ecrã inicial.</string>
     <string name="statuslights_res_warning">Limite de aviso de nível de reservatório [U]</string>
     <string name="statuslights_res_critical">Limite crítico de nível de reservatório [U]</string>
-    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%%]</string>
-    <string name="statuslights_bat_critical">Limite crítico de nível de bateria [%%]</string>
+    <string name="statuslights_bat_warning">Limite de aviso de nível de bateria [%]</string>
+    <string name="statuslights_bat_critical">Limite de crítico de nível de bateria [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
     <string name="virtualpump_firmware_label">Firmware</string>
@@ -680,6 +688,7 @@
     <string name="shortgramm">g</string>
     <string name="shortminute">m</string>
     <string name="shorthour">h</string>
+    <string name="shortday">d</string>
     <string name="none"><![CDATA[<nenhum>]]></string>
     <string name="shortkilojoul">kJ</string>
     <string name="shortenergy">En</string>
@@ -708,6 +717,7 @@
     <string name="bgsource_upload">Configurações de upload de BG</string>
     <string name="wear_detailed_delta_title">Mostrar Delta detalho</string>
     <string name="wear_detailed_delta_summary">Mostrar delta com mais um ponto decimal</string>
+    <string name="smbmaxminutes">SMB máx. minutos</string>
     <string name="smbmaxminutes_summary">Limite de minutos de basal para SMB</string>
     <string name="unsupportedfirmware">Firmware bomba não suportado</string>
     <string name="dexcomg5_xdripupload_title">Enviar dados Glic. para xDrip+</string>
@@ -1236,6 +1246,8 @@
     <string name="medtronic_pump_battery_no">Não seleccionado (Visão simples)</string>
     <string name="medtronic_pump_battery_alkaline">Alcalina (Visão estendida)</string>
     <string name="medtronic_pump_battery_lithium">Lithium (visão estendida)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Vista Estendida)</string>
+    <string name="medtronic_bolus_debugging">Depuração de Bólus/Tratamentos</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">PROCURAR</string>
     <string name="rileylink_scanner_scan_stop">PARAR</string>
@@ -1369,6 +1381,30 @@
     <string name="format_bg_isf">%1$s FSI: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Assistente de Bólus</string>
     <string name="unit_minute_short">min</string>
+    <string name="profile_name">Nome do Perfil:</string>
+    <string name="selected_profile">Seleccionado:</string>
+    <string name="unitsnosemicolon">Unidades</string>
+    <string name="doyouwantswitchprofile">Deseja mudar de perfil e descartar as alterações feitas no perfil actual?</string>
+    <string name="format_carbs">%1$dg</string>
+    <string name="common_on">Ligado</string>
+    <string name="common_off">Desligado</string>
+    <string name="objectives_button_unfinish">Limpar terminado</string>
+    <string name="objectives_button_unstart">Limpar iniciado</string>
+    <string name="timedetection">Detecção de tempo</string>
+    <string name="nopumpselected">Nenhuma bomba seleccionada</string>
+    <string name="setupwizard_units_prompt">Seleccione as unidades em que deseja exibir os valores</string>
+    <string name="ns_ploadlocalprofile">Carregar as alterações do perfil local para NS</string>
+    <string name="dia_short">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">FSI</string>
+    <string name="target_short">ALV</string>
+    <string name="clone_label">Clone</string>
+    <string name="saveorresetchangesfirst">Guardar ou repor as alterações actuais primeiro</string>
+    <string name="deletecurrentprofile">Eliminar perfil actual?</string>
+    <string name="copytolocalprofile">Criar novo perfil local a partir desta troca de perfil?</string>
+    <string name="profilenamecontainsdot">Nome do perfil contém pontos.\nIsso não é suportado pelo NS.\nPerfil não é enviado para o NS.</string>
+    <string name="reorder_label">Reordenar</string>
 </resources>

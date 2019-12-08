@@ -36,12 +36,12 @@
     <string name="objectives_useloop">Просмотр содержимого модуля Цикл Loop</string>
     <string name="objectives_usescale">Применить функцию масштабирования по долгому нажатию на диаграмму ГК</string>
     <string name="objectives_button_enter">Ввод</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Введите код, полученный от разработчиков, чтобы обойти остальные цели</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Если прежде вы были пользователем OpenAPS и имеете в NS не менее 3 месяцев данных, отправьте электронное письмо на objectives@androidaps.org с вашим адресом NS и запросом кода для обхода остальных целей. Введите код, полученный от разработчиков</string>
     <string name="codeaccepted">Код принят</string>
     <string name="codeinvalid">Неверный код</string>
     <string name="objectives_exam_objective">Подтвердите ваши знания</string>
     <string name="objectives_exam_gate">Изучите вопросы и дайте точные ответы</string>
-    <string name="answerdisabledto">Рассмотрение ответов приостановлено на: %1$s</string>
+    <string name="answerdisabledto">Ответы отключены до: %1$s</string>
     <string name="wronganswer">Неверный ответ!</string>
     <string name="unfinshed_button">Следующий незавершенный</string>
     <string name="requestcode">Код запроса: %1$s</string>

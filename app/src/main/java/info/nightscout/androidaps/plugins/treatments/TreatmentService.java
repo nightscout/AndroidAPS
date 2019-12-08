@@ -39,6 +39,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
+import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.JsonHelper;
@@ -132,7 +133,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             try {
                 getDao().executeRaw("ALTER TABLE `" + Treatment.TABLE_TREATMENTS + "` ADD COLUMN boluscalc STRING;");
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         } else {
             if (L.isEnabled(L.DATATREATMENTS))
@@ -146,7 +147,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             try {
                 getDao().executeRaw("ALTER TABLE `" + Treatment.TABLE_TREATMENTS + "` DROP COLUMN boluscalc STRING;");
             } catch (SQLException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
     }
@@ -249,10 +250,14 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         try {
             Treatment treatment = Treatment.createFromJson(json);
             if (treatment != null) {
+
+                if (MedtronicHistoryData.doubleBolusDebug)
+                    log.debug("DoubleBolusDebug: createTreatmentFromJsonIfNotExists:: medtronicPump={}", MedtronicUtil.isMedtronicPump());
+
                 if (!MedtronicUtil.isMedtronicPump())
                     createOrUpdate(treatment);
                 else
-                    createOrUpdateMedtronic(treatment, false);
+                    createOrUpdateMedtronic(treatment, true);
             } else
                 log.error("Date is null: " + treatment.toString());
         } catch (JSONException e) {
@@ -392,10 +397,17 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
 
     public UpdateReturn createOrUpdateMedtronic(Treatment treatment, boolean fromNightScout) {
+
+        if (MedtronicHistoryData.doubleBolusDebug)
+            log.debug("DoubleBolusDebug: createOrUpdateMedtronic:: originalTreatment={}, fromNightScout={}", treatment, fromNightScout);
+
         try {
             treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
 
             Treatment existingTreatment = getRecord(treatment.pumpId, treatment.date);
+
+            if (MedtronicHistoryData.doubleBolusDebug)
+                log.debug("DoubleBolusDebug: createOrUpdateMedtronic:: existingTreatment={}", treatment);
 
             if (existingTreatment == null) {
                 getDao().create(treatment);
@@ -407,6 +419,9 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             } else {
 
                 if (existingTreatment.date == treatment.date) {
+                    if (MedtronicHistoryData.doubleBolusDebug)
+                        log.debug("DoubleBolusDebug: createOrUpdateMedtronic::(existingTreatment.date==treatment.date)");
+
                     // we will do update only, if entry changed
                     if (!optionalTreatmentCopy(existingTreatment, treatment, fromNightScout)) {
                         return new UpdateReturn(true, false);
@@ -416,6 +431,9 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     scheduleTreatmentChange(treatment);
                     return new UpdateReturn(true, false);
                 } else {
+                    if (MedtronicHistoryData.doubleBolusDebug)
+                        log.debug("DoubleBolusDebug: createOrUpdateMedtronic::(existingTreatment.date != treatment.date)");
+
                     // date is different, we need to remove entry
                     getDao().delete(existingTreatment);
                     optionalTreatmentCopy(existingTreatment, treatment, fromNightScout);
@@ -718,6 +736,14 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
         boolean newRecord;
         boolean success;
+
+        @Override
+        public String toString() {
+            return "UpdateReturn [" +
+                    "newRecord=" + newRecord +
+                    ", success=" + success +
+                    ']';
+        }
     }
 
 }

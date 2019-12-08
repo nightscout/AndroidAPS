@@ -122,10 +122,10 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
         this.medtronicPumpStatus = MedtronicUtil.getPumpStatus();
 
         if (medtronicPumpStatus != null) {
-            this.deviceType.setText(MainApp.gs(RileyLinkUtil.getTargetDevice().getResourceId()));
+            this.deviceType.setText(MainApp.gs(RileyLinkTargetDevice.MedtronicPump.getResourceId()));
             this.deviceModel.setText(medtronicPumpStatus.pumpType.getDescription());
             this.serialNumber.setText(medtronicPumpStatus.serialNumber);
-            this.pumpFrequency.setText(medtronicPumpStatus.pumpFrequency);
+            this.pumpFrequency.setText(MainApp.gs(medtronicPumpStatus.pumpFrequency.equals("medtronic_pump_frequency_us_ca") ? R.string.medtronic_pump_frequency_us_ca : R.string.medtronic_pump_frequency_worldwide));
 
             // TODO extend when Omnipod used
 
