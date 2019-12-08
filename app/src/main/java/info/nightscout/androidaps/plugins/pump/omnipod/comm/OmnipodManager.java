@@ -43,13 +43,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalDelivery
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalSetupProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceOutOfSyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.SP;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import io.reactivex.subjects.SingleSubject;
 
 public class OmnipodManager {
@@ -97,7 +98,7 @@ public class OmnipodManager {
         return Single.timer(delayInSeconds, TimeUnit.SECONDS) //
                 .map(o -> verifySetupAction(statusResponse ->
                         PrimeAction.updatePrimingStatus(podState, statusResponse), SetupProgress.PRIMING_FINISHED)) //
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(Schedulers.io());
     }
 
     public synchronized Single<SetupActionResult> insertCannula(BasalSchedule basalSchedule) {
@@ -113,7 +114,7 @@ public class OmnipodManager {
         return Single.timer(delayInSeconds, TimeUnit.SECONDS) //
                 .map(o -> verifySetupAction(statusResponse ->
                         InsertCannulaAction.updateCannulaInsertionStatus(podState, statusResponse), SetupProgress.COMPLETED)) //
-                .observeOn(AndroidSchedulers.mainThread());
+                .observeOn(Schedulers.io());
     }
 
     public synchronized StatusResponse getPodStatus() {
@@ -190,7 +191,7 @@ public class OmnipodManager {
             long progressReportInterval = estimatedRemainingBolusDuration.getMillis() / numberOfProgressReports;
 
             disposables.add(Flowable.intervalRange(0, numberOfProgressReports + 1, 0, progressReportInterval, TimeUnit.MILLISECONDS) //
-                    .observeOn(AndroidSchedulers.mainThread()) //
+                    .observeOn(Schedulers.io()) //
                     .subscribe(count -> {
                         int percentage = (int) ((double) count / numberOfProgressReports * 100);
                         double estimatedUnitsDelivered = activeBolusData == null ? 0 : activeBolusData.estimateUnitsDelivered();
@@ -200,9 +201,13 @@ public class OmnipodManager {
 
         SingleSubject<BolusDeliveryResult> bolusCompletionSubject = SingleSubject.create();
 
+        synchronized (bolusDataLock) {
+            activeBolusData = new ActiveBolusData(units, startDate, bolusCompletionSubject, disposables);
+        }
+
         disposables.add(Completable.complete() //
                 .delay(estimatedRemainingBolusDuration.getMillis() + 250, TimeUnit.MILLISECONDS) //
-                .observeOn(AndroidSchedulers.mainThread()) //
+                .observeOn(Schedulers.io()) //
                 .doOnComplete(() -> {
                     synchronized (bolusDataLock) {
                         for (int i = 0; i < ACTION_VERIFICATION_TRIES; i++) {
@@ -216,7 +221,7 @@ public class OmnipodManager {
                                 }
                             } catch (Exception ex) {
                                 if (isLoggingEnabled()) {
-                                    LOG.debug("Ignoring exception in bolus completion verfication", ex);
+                                    LOG.debug("Ignoring exception in bolus completion verification", ex);
                                 }
                             }
                         }
@@ -229,10 +234,6 @@ public class OmnipodManager {
                 })
                 .subscribe());
 
-        synchronized (bolusDataLock) {
-            activeBolusData = new ActiveBolusData(units, startDate, bolusCompletionSubject, disposables);
-        }
-
         return new BolusCommandResult(commandDeliveryStatus, bolusCompletionSubject);
     }
 
@@ -244,7 +245,13 @@ public class OmnipodManager {
                 throw new IllegalDeliveryStatusException(DeliveryStatus.BOLUS_IN_PROGRESS, podState.getLastDeliveryStatus());
             }
 
-            executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.BOLUS, acknowledgementBeep)));
+            try {
+                executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.BOLUS, acknowledgementBeep)));
+            } catch (PodFaultException ex) {
+                if (isLoggingEnabled()) {
+                    LOG.info("Ignoring PodFaultException in cancelBolus", ex);
+                }
+            }
 
             activeBolusData.getDisposables().dispose();
             activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(activeBolusData.estimateUnitsDelivered()));
@@ -281,12 +288,19 @@ public class OmnipodManager {
         resumeDelivery(acknowledgementBeeps);
     }
 
-    public synchronized void deactivatePod(boolean acknowledgementBeep) {
+    public synchronized void deactivatePod() {
         if (podState == null) {
             throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, null);
         }
 
-        executeAndVerify(() -> communicationService.executeAction(new DeactivatePodAction(podState, acknowledgementBeep)));
+        try {
+            // Never send acknowledgement beeps here. Matches the PDM's behavior
+            executeAndVerify(() -> communicationService.executeAction(new DeactivatePodAction(podState, false)));
+        } catch (PodFaultException ex) {
+            if (isLoggingEnabled()) {
+                LOG.info("Ignoring PodFaultException in deactivatePod", ex);
+            }
+        }
 
         resetPodState();
     }
