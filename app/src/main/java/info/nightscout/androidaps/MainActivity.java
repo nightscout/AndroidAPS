@@ -169,6 +169,12 @@ public class MainActivity extends NoSplashAppCompatActivity {
         disposable.clear();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ProtectionCheck.INSTANCE.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null, this::finish, this::finish);
+    }
+
     private void setWakeLock() {
         boolean keepScreenOn = SP.getBoolean(R.string.key_keep_screen_on, false);
         if (keepScreenOn)
