@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
@@ -19,6 +20,9 @@ import java.util.*
 class SurveyActivity : NoSplashAppCompatActivity() {
     private val log = LoggerFactory.getLogger(SurveyActivity::class.java)
 
+    val lowMgdl = 3.9 * Constants.MMOLL_TO_MGDL
+    val highMgdl = 10.0 * Constants.MMOLL_TO_MGDL
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.survey_fragment)
@@ -26,14 +30,16 @@ class SurveyActivity : NoSplashAppCompatActivity() {
         survey_id.text = InstanceId.instanceId()
 
         val profileStore = ConfigBuilderPlugin.getPlugin().activeProfileInterface?.profile
-        val profileList: ArrayList<CharSequence>
-        profileList = profileStore?.getProfileList() ?: return
-        val adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
-        survey_spinner.adapter = adapter
+        val profileList = profileStore?.getProfileList() ?: return
+        survey_spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 
         val tdds = TddCalculator.calculate(7)
         val averageTdd = TddCalculator.averageTDD(tdds)
         survey_tdds.text = MainApp.gs(R.string.tdd) + ":\n" + TddCalculator.toText(tdds) + MainApp.gs(R.string.average) + ":\n" + averageTdd.toText()
+
+        val tirs = TirCalculator.calculate(7, lowMgdl, highMgdl)
+        val averageTir = TirCalculator.averageTIR(tirs)
+        survey_tir.text = "\n" + MainApp.gs(R.string.tir) + ":\n" + TirCalculator.toText(tirs) + MainApp.gs(R.string.average) + ":\n" + averageTir.toText()
 
         survey_profile.setOnClickListener {
             val age = SafeParse.stringToDouble(survey_age.text.toString())
