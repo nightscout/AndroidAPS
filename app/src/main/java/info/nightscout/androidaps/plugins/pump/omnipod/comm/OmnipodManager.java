@@ -245,7 +245,13 @@ public class OmnipodManager {
                 throw new IllegalDeliveryStatusException(DeliveryStatus.BOLUS_IN_PROGRESS, podState.getLastDeliveryStatus());
             }
 
-            executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.BOLUS, acknowledgementBeep)));
+            try {
+                executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.BOLUS, acknowledgementBeep)));
+            } catch (PodFaultException ex) {
+                if (isLoggingEnabled()) {
+                    LOG.info("Ignoring PodFaultException in cancelBolus", ex);
+                }
+            }
 
             activeBolusData.getDisposables().dispose();
             activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(activeBolusData.estimateUnitsDelivered()));
