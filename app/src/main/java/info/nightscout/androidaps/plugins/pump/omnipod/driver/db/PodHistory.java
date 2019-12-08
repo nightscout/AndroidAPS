@@ -14,8 +14,6 @@ import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 /**
  * Created by andy on 30.11.2019.
  */
-
-
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_POD_HISTORY)
 public class PodHistory implements DbObjectBase {
 

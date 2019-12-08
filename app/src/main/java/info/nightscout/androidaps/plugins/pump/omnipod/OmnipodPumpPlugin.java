@@ -353,7 +353,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         // we would probably need to read Basal Profile here too
     }
 
-    //OmnipodStatusRequest pumpStatusRequest = null;
 
     List<OmnipodStatusRequest> omnipodStatusRequestList = new ArrayList<>();
 
@@ -385,12 +384,20 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         setRefreshButtonEnabled(false);
 
-        String podState = SP.getString(OmnipodConst.Prefs.PodState, null);
+        PodSessionState podSessionState = null;
 
-        if (podState != null) {
-            PodSessionState podSessionState = OmnipodUtil.getGsonInstance().fromJson(podState, PodSessionState.class);
-            OmnipodUtil.setPodSessionState(podSessionState);
+        if (OmnipodUtil.getPodSessionState()!=null) {
+            podSessionState = OmnipodUtil.getPodSessionState();
+        } else {
+            String podState = SP.getString(OmnipodConst.Prefs.PodState, null);
 
+            if (podState != null) {
+                podSessionState = OmnipodUtil.getGsonInstance().fromJson(podState, PodSessionState.class);
+                OmnipodUtil.setPodSessionState(podSessionState);
+            }
+        }
+
+        if (podSessionState!=null) {
             LOG.debug("PodSessionState (saved): " + podSessionState);
 
             // TODO handle if session state too old
@@ -399,16 +406,22 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
             // TODO handle time
 
+            if (!isRefresh) {
+                pumpState = PumpDriverState.Initialized;
+            }
+
+            triggerUIChange();
+            RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
+
             getPodPumpStatus();
+
         } else {
             LOG.debug("No PodSessionState found. Pod probably not running.");
         }
 
+
         setRefreshButtonEnabled(true);
 
-        if (!isRefresh) {
-            pumpState = PumpDriverState.Initialized;
-        }
 
         if (!sentIdToFirebase) {
             Bundle params = new Bundle();
