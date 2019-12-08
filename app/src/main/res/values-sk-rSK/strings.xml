@@ -1417,4 +1417,5 @@
     <string name="profilenamecontainsdot">Názov profilu obsahuje bodky.\nToto nie je podporované v NS.\nProfil nebude prenesený do NS.</string>
     <string name="low_mark_comment">Spodná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
     <string name="high_mark_comment">Horná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
+    <string name="reorder_label">Zmena poradia</string>
 </resources>

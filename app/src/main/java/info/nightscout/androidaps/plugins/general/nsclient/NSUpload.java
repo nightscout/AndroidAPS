@@ -315,11 +315,13 @@ public class NSUpload {
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPORARYTARGET);
             data.put("duration", tempTarget.durationInMinutes);
-            data.put("reason", tempTarget.reason);
-            data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.low, ProfileFunctions.getSystemUnits()));
-            data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.high, ProfileFunctions.getSystemUnits()));
+            if (tempTarget.low > 0) {
+                data.put("reason", tempTarget.reason);
+                data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.low, ProfileFunctions.getSystemUnits()));
+                data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.high, ProfileFunctions.getSystemUnits()));
+                data.put("units", ProfileFunctions.getSystemUnits());
+            }
             data.put("created_at", DateUtil.toISOString(tempTarget.date));
-            data.put("units", ProfileFunctions.getSystemUnits());
             data.put("enteredBy", MainApp.gs(R.string.app_name));
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
