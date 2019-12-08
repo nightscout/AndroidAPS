@@ -282,13 +282,14 @@ public class OmnipodManager {
         resumeDelivery(acknowledgementBeeps);
     }
 
-    public synchronized void deactivatePod(boolean acknowledgementBeep) {
+    public synchronized void deactivatePod() {
         if (podState == null) {
             throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, null);
         }
 
         try {
-            executeAndVerify(() -> communicationService.executeAction(new DeactivatePodAction(podState, acknowledgementBeep)));
+            // Never send acknowledgement beeps here. Matches the PDM's behavior
+            executeAndVerify(() -> communicationService.executeAction(new DeactivatePodAction(podState, false)));
         } catch (PodFaultException ex) {
             if (isLoggingEnabled()) {
                 LOG.info("Ignoring PodFaultException in deactivatePod", ex);

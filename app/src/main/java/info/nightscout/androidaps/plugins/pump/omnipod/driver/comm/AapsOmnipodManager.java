@@ -182,7 +182,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public PumpEnactResult deactivatePod(PodInitReceiver podInitReceiver) {
         try {
-            delegate.deactivatePod(true);
+            delegate.deactivatePod();
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, false, comment);
