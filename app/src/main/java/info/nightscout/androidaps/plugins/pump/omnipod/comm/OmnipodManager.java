@@ -200,6 +200,10 @@ public class OmnipodManager {
 
         SingleSubject<BolusDeliveryResult> bolusCompletionSubject = SingleSubject.create();
 
+        synchronized (bolusDataLock) {
+            activeBolusData = new ActiveBolusData(units, startDate, bolusCompletionSubject, disposables);
+        }
+
         disposables.add(Completable.complete() //
                 .delay(estimatedRemainingBolusDuration.getMillis() + 250, TimeUnit.MILLISECONDS) //
                 .observeOn(AndroidSchedulers.mainThread()) //
@@ -228,10 +232,6 @@ public class OmnipodManager {
                     }
                 })
                 .subscribe());
-
-        synchronized (bolusDataLock) {
-            activeBolusData = new ActiveBolusData(units, startDate, bolusCompletionSubject, disposables);
-        }
 
         return new BolusCommandResult(commandDeliveryStatus, bolusCompletionSubject);
     }
