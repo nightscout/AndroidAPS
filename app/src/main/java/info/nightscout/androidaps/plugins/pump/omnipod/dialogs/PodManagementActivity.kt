@@ -26,7 +26,7 @@ import kotlinx.android.synthetic.main.omnipod_pod_mgmt.*
  */
 class PodManagementActivity : NoSplashActivity() {
 
-    private var podSessionActiveOnStart:Boolean? = null
+    private var initPodChanged = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,14 +34,17 @@ class PodManagementActivity : NoSplashActivity() {
 
         initpod_init_pod.setOnClickListener {
             initPodAction()
+            initPodChanged = true
         }
 
         initpod_remove_pod.setOnClickListener {
             removePodAction()
+            initPodChanged = true
         }
 
         initpod_reset_pod.setOnClickListener {
             resetPodAction()
+            initPodChanged = true
         }
 
 
@@ -56,9 +59,9 @@ class PodManagementActivity : NoSplashActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        if (podSessionActiveOnStart!=(OmnipodUtil.getPodSessionState()!=null)) {
+        if (initPodChanged) {
             RxBus.send(EventOmnipodPumpValuesChanged())
-            RxBus.send(EventRefreshOverview())
+            RxBus.send(EventRefreshOverview("Omnipod Pod Management"))
         }
     }
 
@@ -124,12 +127,7 @@ class PodManagementActivity : NoSplashActivity() {
 
 
     fun refreshButtons() {
-
         val isPodSessionActive = (OmnipodUtil.getPodSessionState()!=null)
-
-        if (podSessionActiveOnStart==null) {
-            podSessionActiveOnStart = isPodSessionActive
-        }
 
         initpod_init_pod.isEnabled = !isPodSessionActive
         initpod_remove_pod.isEnabled = isPodSessionActive
