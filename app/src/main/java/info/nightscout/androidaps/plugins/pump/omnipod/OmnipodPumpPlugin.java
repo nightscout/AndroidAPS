@@ -28,6 +28,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -36,6 +37,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
+import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
@@ -62,8 +64,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.LogReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by andy on 23.04.18.
@@ -78,6 +83,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private RileyLinkOmnipodService omnipodService;
     protected OmnipodPumpStatus pumpStatusLocal = null;
     protected OmnipodUIComm omnipodUIComm;
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     // variables for handling statuses and history
     protected boolean firstRun = true;
@@ -165,6 +171,34 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         return plugin;
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        disposable.add(RxBus.INSTANCE
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if ((event.isChanged(R.string.key_omnipod_beep_basal_enabled)) ||
+                        (event.isChanged(R.string.key_omnipod_beep_bolus_enabled)) ||
+                        (event.isChanged(R.string.key_omnipod_beep_smb_enabled)))
+                        refreshConfiguration();
+                }, FabricPrivacy::logException)
+        );
+        refreshConfiguration();
+    }
+
+    private void refreshConfiguration() {
+        if (pumpStatusLocal!=null) {
+            pumpStatusLocal.refreshConfiguration();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        disposable.clear();
+        super.onStop();
+    }
 
     private String getLogPrefix() {
         return "OmnipodPlugin::";
@@ -417,7 +451,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             }
 
             triggerUIChange();
-            RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
+            RxBus.INSTANCE.send(new EventRefreshOverview("Omnipod Pump"));
 
             getPodPumpStatus();
 

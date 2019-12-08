@@ -9,6 +9,7 @@ import com.atech.android.library.wizardpager.defs.WizardStepsWayType
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashActivity
+import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodCancelAction
@@ -24,6 +25,8 @@ import kotlinx.android.synthetic.main.omnipod_pod_mgmt.*
  * Created by andy on 30/08/2019
  */
 class PodManagementActivity : NoSplashActivity() {
+
+    private var podSessionActiveOnStart:Boolean? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +56,10 @@ class PodManagementActivity : NoSplashActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        RxBus.send(EventOmnipodPumpValuesChanged())
+        if (podSessionActiveOnStart!=(OmnipodUtil.getPodSessionState()!=null)) {
+            RxBus.send(EventOmnipodPumpValuesChanged())
+            RxBus.send(EventRefreshOverview())
+        }
     }
 
 
@@ -120,6 +126,10 @@ class PodManagementActivity : NoSplashActivity() {
     fun refreshButtons() {
 
         val isPodSessionActive = (OmnipodUtil.getPodSessionState()!=null)
+
+        if (podSessionActiveOnStart==null) {
+            podSessionActiveOnStart = isPodSessionActive
+        }
 
         initpod_init_pod.isEnabled = !isPodSessionActive
         initpod_remove_pod.isEnabled = isPodSessionActive
