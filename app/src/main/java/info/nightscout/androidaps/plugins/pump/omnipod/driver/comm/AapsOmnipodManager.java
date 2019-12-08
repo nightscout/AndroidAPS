@@ -257,8 +257,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         double unitsDelivered = bolusDeliveryResult.getUnitsDelivered();
 
         if (pumpStatus != null && !isSmb) {
-            pumpStatus.lastBolusTime = bolusStarted;
-            pumpStatus.lastBolusAmount = unitsDelivered;
+            lastBolusTime = pumpStatus.lastBolusTime = bolusStarted;
+            lastBolusUnits = pumpStatus.lastBolusAmount = unitsDelivered;
         }
 
         return new PumpEnactResult().success(true).enacted(true).bolusDelivered(unitsDelivered);
