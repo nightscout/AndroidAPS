@@ -1676,5 +1676,6 @@
     <string name="average">Average</string>
     <string name="tdd">TDD</string>
     <string name="tir">TIR</string>
+    <string name="activitymonitor">Activity monitor</string>
 
 </resources>

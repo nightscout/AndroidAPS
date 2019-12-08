@@ -41,6 +41,8 @@ class SurveyActivity : NoSplashAppCompatActivity() {
         val averageTir = TirCalculator.averageTIR(tirs)
         survey_tir.text = "\n" + MainApp.gs(R.string.tir) + ":\n" + TirCalculator.toText(tirs) + MainApp.gs(R.string.average) + ":\n" + averageTir.toText()
 
+        survey_activity.text = "\n" + MainApp.gs(R.string.activitymonitor) + ":\n" + ActivityMonitor.toText()
+
         survey_profile.setOnClickListener {
             val age = SafeParse.stringToDouble(survey_age.text.toString())
             val weight = SafeParse.stringToDouble(survey_weight.text.toString())
