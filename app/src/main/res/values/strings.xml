@@ -1679,5 +1679,8 @@
     <string name="activitymonitor">Activity monitor</string>
     <string name="doyouwantresetstats">Do you want to reset activity stats?</string>
     <string name="statistics">Statistics</string>
+    <string name="randombg">Random BG</string>
+    <string name="description_source_randombg">Generate random BG data (Demo mode only)</string>
+    <string name="randombg_short">BG</string>
 
 </resources>
