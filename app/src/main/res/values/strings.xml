@@ -1662,4 +1662,22 @@
     <string name="high_mark_comment">Higher value of in range area (display only)</string>
     <string name="reorder_label">Reorder</string>
 
+    <string name="age">Age:</string>
+    <string name="weight">Weight:</string>
+    <string name="id">ID:</string>
+    <string name="submit">Submit</string>
+    <string name="mostcommonprofile">Most common profile:</string>
+    <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AndroidAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
+    <string name="nav_survey">Survey</string>
+    <string name="invalidage">Invalid age entry</string>
+    <string name="invalidweight">Invalid weight entry</string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+    <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
+    <string name="average">Average</string>
+    <string name="tdd">TDD</string>
+    <string name="tir">TIR</string>
+    <string name="activitymonitor">Activity monitor</string>
+    <string name="doyouwantresetstats">Do you want to reset activity stats?</string>
+    <string name="statistics">Statistics</string>
+
 </resources>

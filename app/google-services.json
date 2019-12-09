@@ -13,7 +13,12 @@
           "package_name": "info.nightscout.aapspumpcontrol"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "477603612366-a925drvlvs7qn7gt73r585erbqto8c79.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
@@ -37,7 +42,12 @@
           "package_name": "info.nightscout.androidaps"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "477603612366-a925drvlvs7qn7gt73r585erbqto8c79.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
@@ -61,7 +71,12 @@
           "package_name": "info.nightscout.nsclient"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "477603612366-a925drvlvs7qn7gt73r585erbqto8c79.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"
@@ -85,7 +100,12 @@
           "package_name": "info.nightscout.nsclient2"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "477603612366-a925drvlvs7qn7gt73r585erbqto8c79.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDcZpDRMaGjdhihXp531cVYM6LkEL8KbgM"

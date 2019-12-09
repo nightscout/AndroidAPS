@@ -51,6 +51,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.receivers.DBAccessRec
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.utils.ActivityMonitor;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
@@ -144,6 +145,8 @@ public class MainApp extends Application {
         } catch (Exception e) {
             log.error("Error with Fabric init! " + e);
         }
+
+        registerActivityLifecycleCallbacks(ActivityMonitor.INSTANCE);
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mFirebaseAnalytics.setAnalyticsCollectionEnabled(!Boolean.getBoolean("disableFirebase"));
@@ -430,7 +433,7 @@ public class MainApp extends Application {
         if (timeDateOrTZChangeReceiver != null) {
             unregisterReceiver(timeDateOrTZChangeReceiver);
         }
-
+        unregisterActivityLifecycleCallbacks(ActivityMonitor.INSTANCE);
     }
 
     public static int dpToPx(int dp) {
