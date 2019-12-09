@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule;
 
 import org.joda.time.Duration;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 public class BasalScheduleEntry {
@@ -31,7 +30,7 @@ public class BasalScheduleEntry {
     public String toString() {
         return "BasalScheduleEntry{" +
                 "rate=" + rate +
-                ", startTime=" + startTime +
+                ", startTime=" + startTime.getStandardSeconds() + "s" +
                 '}';
     }
 }
