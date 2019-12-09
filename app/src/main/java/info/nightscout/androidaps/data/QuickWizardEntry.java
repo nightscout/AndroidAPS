@@ -125,7 +125,8 @@ public class QuickWizardEntry {
             trend = true;
         }
 
-        return new BolusWizard(profile, profileName, tempTarget, carbs(), cob, bg, 0d, 100, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, "QuickWizard");
+        double percentage = SP.getDouble(R.string.key_boluswizard_percentage, 100.0);
+        return new BolusWizard(profile, profileName, tempTarget, carbs(), cob, bg, 0d, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, "QuickWizard");
     }
 
     public String buttonText() {
