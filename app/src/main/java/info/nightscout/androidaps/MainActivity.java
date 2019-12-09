@@ -345,9 +345,11 @@ public class MainActivity extends NoSplashAppCompatActivity {
                     startActivity(i);
                 }, null);
                 return true;
+/*
             case R.id.nav_survey:
                 startActivity(new Intent(this, SurveyActivity.class));
                 return true;
+*/
             case R.id.nav_stats:
                 startActivity(new Intent(this, StatsActivity.class));
                 return true;
