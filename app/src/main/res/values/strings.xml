@@ -1671,11 +1671,13 @@
     <string name="nav_survey">Survey</string>
     <string name="invalidage">Invalid age entry</string>
     <string name="invalidweight">Invalid weight entry</string>
-    <string name="tddformat">Total: %1$.2f Bolus: %2$.2f Basal: %3$.2f</string>
-    <string name="tirformat">%1$s: Low: %2$d%% In: %3$d%% High: %4$d%%</string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+    <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
     <string name="average">Average</string>
     <string name="tdd">TDD</string>
     <string name="tir">TIR</string>
     <string name="activitymonitor">Activity monitor</string>
+    <string name="doyouwantresetstats">Do you want to reset activity stats?</string>
+    <string name="statistics">Statistics</string>
 
 </resources>

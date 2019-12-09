@@ -117,6 +117,14 @@ public class DateUtil {
         return df.format(mills);
     }
 
+    public static String dateStringShort(long mills) {
+        String format = "MM/dd";
+        if (android.text.format.DateFormat.is24HourFormat(MainApp.instance())) {
+            format = "dd/MM";
+        }
+        return new DateTime(mills).toString(DateTimeFormat.forPattern(format));
+    }
+
     public static String timeString(Date date) {
         String format = "hh:mma";
         if (android.text.format.DateFormat.is24HourFormat(MainApp.instance())) {

@@ -3,6 +3,9 @@ package info.nightscout.androidaps.utils
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import android.text.Spanned
+import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.L
 import org.slf4j.LoggerFactory
 
@@ -50,13 +53,17 @@ object ActivityMonitor : Application.ActivityLifecycleCallbacks {
         var result = ""
         for ((key, value) in keys)
             if (key.startsWith("Monitor") && key.endsWith("total")) {
-                val activity = key.split("_")[1]
-                val seconds = value as Long / 1000
+                val activity = key.split("_")[1].replace("Activity", "")
+                val duration = DateUtil.niceTimeScalar(value as Long)
                 val start = SP.getLong(key.replace("total", "start"), 0)
                 val days = T.msecs(DateUtil.now() - start).days()
-                result += "$activity: $seconds s in $days days\n"
+                result += "<b><span style=\"color:yellow\">$activity:</span></b> <b>$duration</b> in <b>$days</b> days<br>"
             }
         return result
+    }
+
+    fun stats() :Spanned {
+        return HtmlHelper.fromHtml("<br><b>" + MainApp.gs(R.string.activitymonitor) + ":</b><br>" + toText())
     }
 
     fun reset() {

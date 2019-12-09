@@ -1,7 +1,11 @@
 package info.nightscout.androidaps.utils
 
+import android.text.Spanned
 import android.util.LongSparseArray
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.Profile
 
 object TirCalculator {
     fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
@@ -42,10 +46,36 @@ object TirCalculator {
         return totalTir
     }
 
+    fun stats(): Spanned {
+        val lowTirMgdl = 3.9 * Constants.MMOLL_TO_MGDL
+        val highTirMgdl = 10.0 * Constants.MMOLL_TO_MGDL
+        val lowTitMgdl = 3.9 * Constants.MMOLL_TO_MGDL
+        val highTitMgdl = 7.8 * Constants.MMOLL_TO_MGDL
+
+        val tir7 = calculate(7, lowTirMgdl, highTirMgdl)
+        val averageTir7 = averageTIR(tir7)
+        val tir30 = calculate(30, lowTirMgdl, highTirMgdl)
+        val averageTir30 = averageTIR(tir30)
+        val tit7 = calculate(7, lowTitMgdl, highTitMgdl)
+        val averageTit7 = averageTIR(tit7)
+        val tit30 = calculate(30, lowTitMgdl, highTitMgdl)
+        val averageTit30 = averageTIR(tit30)
+        return HtmlHelper.fromHtml(
+                "<br><b>" + MainApp.gs(R.string.tir) + ":</b><br>" +
+                        toText(tir7) +
+                        "<br><b>" + MainApp.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(lowTirMgdl) + "-" + Profile.toCurrentUnitsString(highTirMgdl) + "):</b><br>" +
+                        averageTir7.toText(tir7.size()) + "<br>" +
+                        averageTir30.toText(tir30.size()) +
+                        "<br><b>" + MainApp.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(lowTitMgdl) + "-" + Profile.toCurrentUnitsString(highTitMgdl) + "):</b><br>" +
+                        averageTit7.toText(tit7.size()) + "<br>" +
+                        averageTit30.toText(tit30.size())
+        )
+    }
+
     fun toText(tirs: LongSparseArray<TIR>): String {
         var t = ""
         for (i in 0 until tirs.size()) {
-            t += "${tirs.valueAt(i).toText()}\n"
+            t += "${tirs.valueAt(i).toText()}<br>"
         }
         return t
     }

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils
 
+import android.text.Spanned
 import android.util.LongSparseArray
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -60,10 +61,21 @@ object TddCalculator : TreatmentsPlugin() {
         return totalTdd
     }
 
-    fun toText(tdds: LongSparseArray<TDD>) : String {
+    fun stats(): Spanned {
+        val tdds = calculate(7)
+        val averageTdd = averageTDD(tdds)
+        return HtmlHelper.fromHtml(
+                "<b>" + MainApp.gs(R.string.tdd) + ":</b><br>" +
+                        toText(tdds) +
+                        "<b>" + MainApp.gs(R.string.average) + ":</b><br>" +
+                        averageTdd.toText(tdds.size())
+        )
+    }
+
+    fun toText(tdds: LongSparseArray<TDD>): String {
         var t = ""
         for (i in 0 until tdds.size()) {
-            t += "${tdds.valueAt(i).toText()}\n"
+            t += "${tdds.valueAt(i).toText()}<br>"
         }
         return t
     }

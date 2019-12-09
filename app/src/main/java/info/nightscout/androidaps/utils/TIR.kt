@@ -20,5 +20,7 @@ class TIR(val date: Long, val lowThreshold: Double, val highThreshold: Double) {
     fun inRangePct() = if (count > 0) (inRange.toDouble() / count * 100.0).roundToInt() else 0
     fun abovePct() = if (count > 0) (above.toDouble() / count * 100.0).roundToInt() else 0
 
-    fun toText(): String = MainApp.gs(R.string.tirformat, DateUtil.dateString(date), belowPct(), inRangePct(), abovePct())
+    fun toText(): String = MainApp.gs(R.string.tirformat, DateUtil.dateStringShort(date), belowPct(), inRangePct(), abovePct())
+
+    fun toText(days: Int): String = MainApp.gs(R.string.tirformat, "%02d".format(days) + " " + MainApp.gs(R.string.days), belowPct(), inRangePct(), abovePct())
 }

@@ -41,6 +41,7 @@ import info.nightscout.androidaps.activities.HistoryBrowseActivity;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.activities.PreferencesActivity;
 import info.nightscout.androidaps.activities.SingleFragmentActivity;
+import info.nightscout.androidaps.activities.StatsActivity;
 import info.nightscout.androidaps.activities.SurveyActivity;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -346,6 +347,9 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 return true;
             case R.id.nav_survey:
                 startActivity(new Intent(this, SurveyActivity.class));
+                return true;
+            case R.id.nav_stats:
+                startActivity(new Intent(this, StatsActivity.class));
                 return true;
         }
         return actionBarDrawerToggle.onOptionsItemSelected(item);

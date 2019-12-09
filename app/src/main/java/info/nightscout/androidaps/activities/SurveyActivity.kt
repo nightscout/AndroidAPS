@@ -20,9 +20,6 @@ import java.util.*
 class SurveyActivity : NoSplashAppCompatActivity() {
     private val log = LoggerFactory.getLogger(SurveyActivity::class.java)
 
-    val lowMgdl = 3.9 * Constants.MMOLL_TO_MGDL
-    val highMgdl = 10.0 * Constants.MMOLL_TO_MGDL
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.survey_fragment)
@@ -33,15 +30,9 @@ class SurveyActivity : NoSplashAppCompatActivity() {
         val profileList = profileStore?.getProfileList() ?: return
         survey_spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 
-        val tdds = TddCalculator.calculate(7)
-        val averageTdd = TddCalculator.averageTDD(tdds)
-        survey_tdds.text = MainApp.gs(R.string.tdd) + ":\n" + TddCalculator.toText(tdds) + MainApp.gs(R.string.average) + ":\n" + averageTdd.toText()
-
-        val tirs = TirCalculator.calculate(7, lowMgdl, highMgdl)
-        val averageTir = TirCalculator.averageTIR(tirs)
-        survey_tir.text = "\n" + MainApp.gs(R.string.tir) + ":\n" + TirCalculator.toText(tirs) + MainApp.gs(R.string.average) + ":\n" + averageTir.toText()
-
-        survey_activity.text = "\n" + MainApp.gs(R.string.activitymonitor) + ":\n" + ActivityMonitor.toText()
+        survey_tdds.text = TddCalculator.stats()
+        survey_tir.text = TirCalculator.stats()
+        survey_activity.text = ActivityMonitor.stats()
 
         survey_profile.setOnClickListener {
             val age = SafeParse.stringToDouble(survey_age.text.toString())
