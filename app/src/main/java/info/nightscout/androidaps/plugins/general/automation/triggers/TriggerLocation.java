@@ -48,6 +48,7 @@ public class TriggerLocation extends Trigger {
             latitude.setValue(location.getLatitude());
             longitude.setValue(location.getLongitude());
             log.debug(String.format("Grabbed location: %f %f", latitude.getValue(), longitude.getValue()));
+            log.debug("Location service:" +location.toString());
         }
     };
 
@@ -139,7 +140,7 @@ public class TriggerLocation extends Trigger {
 
     @Override
     public String friendlyDescription() {
-        return MainApp.gs(R.string.locationis, MainApp.gs(modeSelected.getValue().getStringRes()) + " " + name.getValue());
+        return MainApp.gs(R.string.locationis, MainApp.gs(modeSelected.getValue().getStringRes()), " " + name.getValue());
     }
 
     @Override
