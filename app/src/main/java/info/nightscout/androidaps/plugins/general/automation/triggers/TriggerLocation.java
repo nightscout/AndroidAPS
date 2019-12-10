@@ -68,7 +68,6 @@ public class TriggerLocation extends Trigger {
     @Override
     public synchronized boolean shouldRun() {
         Location location = LocationService.getLastLocation();
-        log.debug("Entered shouldRun()");
         if (location == null)
             return false;
 
@@ -202,5 +201,22 @@ public class TriggerLocation extends Trigger {
             return INSIDE;
         else
             return OUTSIDE;
+    }
+
+    double calculateDistance() {
+        Location location = LocationService.getLastLocation();
+        if (location == null)
+            return -1d;
+        Location a = new Location("Trigger");
+        a.setLatitude(latitude.getValue());
+        a.setLongitude(longitude.getValue());
+        return location.distanceTo(a);
+    }
+
+    String getLocation(){
+        Location location = LocationService.getLastLocation();
+        if (location == null)
+            return "No service!";
+        return location.toString();
     }
 }

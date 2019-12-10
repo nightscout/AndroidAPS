@@ -91,6 +91,33 @@ public class TriggerLocationTest {
         t = new TriggerLocation();
         t.distance.setValue(-500);
         Assert.assertFalse(t.shouldRun());
+
+        //Test of GOING_IN - last mode should be OUTSIDE, and current mode should be INSIDE
+        t = new TriggerLocation();
+        t.distance.setValue(50);
+        t.lastMode = t.currentMode(55d);
+        PowerMockito.when(LocationService.getLastLocation()).thenReturn(null);
+        PowerMockito.when(LocationService.getLastLocation()).thenReturn(mockedLocationOut());
+        t.modeSelected.setValue(InputLocationMode.Mode.GOING_IN);
+        Assert.assertEquals(t.lastMode, InputLocationMode.Mode.OUTSIDE);
+        Assert.assertEquals(t.currentMode(5d), InputLocationMode.Mode.INSIDE);
+        Assert.assertTrue(t.shouldRun());
+
+        //Test of GOING_OUT - last mode should be INSIDE, and current mode should be OUTSIDE
+        t = new TriggerLocation();
+        t.latitude.setValue(213);
+        t.longitude.setValue(212);
+        t.distance.setValue(2d);
+        t.lastMode = t.currentMode(1d);
+
+        PowerMockito.when(LocationService.getLastLocation()).thenReturn(mockedLocation());
+        t.modeSelected.setValue(InputLocationMode.Mode.GOING_OUT);
+        Assert.assertEquals(t.lastMode, InputLocationMode.Mode.INSIDE);
+        Assert.assertEquals(t.currentMode(55d), InputLocationMode.Mode.OUTSIDE);
+        PowerMockito.when(LocationService.getLastLocation()).thenReturn(null);
+        PowerMockito.when(LocationService.getLastLocation()).thenReturn(mockedLocationOut());
+        Assert.assertEquals(-1d, t.calculateDistance(), 0d);
+        Assert.assertTrue(t.shouldRun());
     }
 
     String locationJson = "{\"data\":{\"mode\":\"OUTSIDE\",\"distance\":2,\"lastRun\":0,\"latitude\":213,\"name\":\"\",\"longitude\":212},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerLocation\"}";
@@ -111,7 +138,6 @@ public class TriggerLocationTest {
         t.latitude.setValue(213);
         t.longitude.setValue(212);
         t.distance.setValue(2);
-//        t.setMode(t.stringToMode(new InputSelect(modes).getValue()));
         t.modeSelected.setValue(InputLocationMode.Mode.INSIDE);
 
         TriggerLocation t2 = (TriggerLocation) Trigger.instantiate(new JSONObject(t.toJSON()));
@@ -172,10 +198,25 @@ public class TriggerLocationTest {
         Assert.assertEquals(t.lastRun, 1514766900000L, 0d);
     }
 
+    @Test
+    public void getLocationTest() {
+        PowerMockito.when(LocationService.getLastLocation()).thenReturn(mockedLocationOut());
+        TriggerLocation t = new TriggerLocation();
+        Assert.assertEquals("", t.getLocation());
+    }
+
     public Location mockedLocation() {
         Location newLocation = new Location("test");
         newLocation.setLatitude(10);
         newLocation.setLongitude(11);
+        newLocation.setAccuracy(1f);
+        return newLocation;
+    }
+
+    public Location mockedLocationOut() {
+        Location newLocation = new Location("test");
+        newLocation.setLatitude(12f);
+        newLocation.setLongitude(13f);
         newLocation.setAccuracy(1f);
         return newLocation;
     }
