@@ -1413,7 +1413,7 @@
     <string name="locationis">%1$s %2$s</string>
     <string name="location_mode">When </string>
     <string name="location_inside">When you are inside the area</string>
-    <string name="location_outside">When you are inside the area</string>
+    <string name="location_outside">When you are outside the area</string>
     <string name="location_going_in">When you enter the area named</string>
     <string name="location_going_out">When you leave the area named</string>
     <string name="lastboluslabel">Last bolus ago</string>
