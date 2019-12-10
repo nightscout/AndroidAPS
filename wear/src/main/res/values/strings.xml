@@ -37,9 +37,9 @@
     <string name="pref_show_bg">Show BG</string>
     <string name="pref_show_direction_arrow">Show Direction Arrow</string>
     <string name="pref_show_ago">Show Ago</string>
-    <string name="pref_dark">Dark</string>
+    <string name="pref_dark" comment="Enables dark visual theme">Dark</string>
     <string name="pref_highlight_basals">Highlight Basals</string>
-    <string name="pref_matching_divider">Matching divider</string>
+    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Matching divider</string>
     <string name="pref_chart_timeframe">Chart Timeframe</string>
     <string name="pref_1_hour">1 hour</string>
     <string name="pref_2_hours">2 hours</string>
@@ -79,9 +79,9 @@
     <string name="menu_menu">Menu</string>
 
     <string name="action_duration">duration</string>
-    <string name="action_target">target</string>
-    <string name="action_low">low</string>
-    <string name="action_high">high</string>
+    <string name="action_target" comment="In temp target menu, single target value">target</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">low</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">high</string>
     <string name="action_carbs">carbs</string>
     <string name="action_percentage">percentage</string>
     <string name="action_start_min">start [min]</string>
@@ -90,7 +90,7 @@
     <string name="action_preset_1">Preset 1</string>
     <string name="action_preset_2">Preset 2</string>
     <string name="action_preset_3">Preset 3</string>
-    <string name="action_free_amount">Free amount</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Free amount</string>
     <string name="action_confirm">CONFIRM</string>
     <string name="action_status_pump">STATUS PUMP</string>
     <string name="action_status_loop">STATUS LOOP</string>
@@ -110,12 +110,12 @@
 
     <string name="unit_mg_dl">mg/dl</string>
     <string name="unit_mmol_l">mmol/l</string>
-    <string name="unit_g">g</string>
-    <string name="unit_u">U</string>
-    <string name="unit_u_p_h">U/h</string>
-    <string name="unit_h">h</string>
-    <string name="unit_d">d</string>
-    <string name="unit_w">w/s</string>
+    <string name="unit_g" comment="Shortcut for ISO unit: gram">g</string>
+    <string name="unit_u" comment="Shortcut for: insulin Unit">U</string>
+    <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">U/h</string>
+    <string name="unit_h" comment="One letter shortcut for: Hour" maxLength="1">h</string>
+    <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">d</string>
+    <string name="unit_w" comment="One letter shortcut for: Week" maxLength="1">w</string>
 
 
 </resources>
