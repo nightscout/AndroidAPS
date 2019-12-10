@@ -4,8 +4,7 @@ public enum DeliveryType {
     NONE((byte) 0x00),
     BASAL((byte) 0x01),
     TEMP_BASAL((byte) 0x02),
-    BOLUS((byte) 0x04),
-    EXTENDED_BOLUS((byte) 0x08);
+    BOLUS((byte) 0x04);
 
     private byte value;
 

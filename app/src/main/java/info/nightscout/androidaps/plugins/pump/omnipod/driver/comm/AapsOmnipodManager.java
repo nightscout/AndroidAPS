@@ -200,11 +200,15 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return new PumpEnactResult().success(true).enacted(true);
     }
 
+    // TODO cancels TBR. Notify treatments plugin
     @Override
     public PumpEnactResult setBasalProfile(Profile basalProfile) {
         try {
             delegate.setBasalSchedule(mapProfileToBasalSchedule(basalProfile), isBasalBeepsEnabled());
         } catch (Exception ex) {
+            if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
+                return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_basal_failed_uncertain));
+            }
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
@@ -358,12 +362,14 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
     // Updates the pods current time based on the device timezone and the pod's time zone
+    // TODO cancels TBR. Notify treatments plugin
     public PumpEnactResult setTime() {
         try {
-            // CAUTION cancels TBR
             delegate.setTime(isBasalBeepsEnabled());
         } catch (Exception ex) {
-            // CAUTION pod could be suspended
+            if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
+                return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_time_failed_uncertain));
+            }
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }

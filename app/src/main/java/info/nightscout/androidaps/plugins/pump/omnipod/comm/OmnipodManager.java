@@ -167,14 +167,32 @@ public class OmnipodManager {
         }
     }
 
+    // CAUTION: cancels all delivery
+    // CAUTION: suspends and then resumes delivery. An OmnipodException[certainFailure=false] indicates that the pod is or might be suspended
     public synchronized void setBasalSchedule(BasalSchedule schedule, boolean acknowledgementBeep) {
         assertReadyForDelivery();
 
         logStartingCommandExecution("setBasalSchedule [basalSchedule=" + schedule + ", acknowledgementBeep=" + acknowledgementBeep + "]");
 
         try {
-            executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podState, schedule,
-                    false, podState.getScheduleOffset(), acknowledgementBeep)));
+            // Never emit a beep for suspending delivery, so if the user has beeps enabled,
+            // they can verify that setting the basal schedule succeeded (not suspending the delivery)
+            cancelDelivery(EnumSet.allOf(DeliveryType.class), false);
+        } catch (Exception ex) {
+            logCommandExecutionFinished("setBasalSchedule");
+            throw ex;
+        }
+
+        try {
+            try {
+                executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podState, schedule,
+                        false, podState.getScheduleOffset(), acknowledgementBeep)));
+            } catch (OmnipodException ex) {
+                // Treat all exceptions as uncertain failures, because all delivery has been suspended here.
+                // Setting this to an uncertain failure will enable for the user to get an appropriate warning
+                ex.setCertainFailure(false);
+                throw ex;
+            }
         } finally {
             logCommandExecutionFinished("setBasalSchedule");
         }
@@ -195,14 +213,29 @@ public class OmnipodManager {
     }
 
     public synchronized void cancelTemporaryBasal(boolean acknowledgementBeep) {
+        cancelDelivery(EnumSet.of(DeliveryType.TEMP_BASAL), acknowledgementBeep);
+    }
+
+    private synchronized void cancelDelivery(EnumSet<DeliveryType> deliveryTypes, boolean acknowledgementBeep) {
         assertReadyForDelivery();
 
-        logStartingCommandExecution("cancelTemporaryBasal [acknowledgementBeep=" + acknowledgementBeep + "]");
+        logStartingCommandExecution("cancelDelivery [deliveryTypes=" + deliveryTypes + ", acknowledgementBeep=" + acknowledgementBeep + "]");
 
         try {
-            executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.TEMP_BASAL, acknowledgementBeep)));
+            // As the cancel delivery command is a single packet command,
+            // first verify that the pod is reachable by obtaining a status response
+            // FIXME is this actually necessary?
+            StatusResponse podStatus = getPodStatus();
+        } catch (OmnipodException ex) {
+            logCommandExecutionFinished("cancelDelivery");
+            ex.setCertainFailure(true);
+            throw ex;
+        }
+
+        try {
+            executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, deliveryTypes, acknowledgementBeep)));
         } finally {
-            logCommandExecutionFinished("cancelTemporaryBasal");
+            logCommandExecutionFinished("cancelDelivery");
         }
     }
 
@@ -300,7 +333,7 @@ public class OmnipodManager {
             logStartingCommandExecution("cancelBolus [acknowledgementBeep=" + acknowledgementBeep + "]");
 
             try {
-                executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, DeliveryType.BOLUS, acknowledgementBeep)));
+                cancelDelivery(EnumSet.of(DeliveryType.BOLUS), acknowledgementBeep);
             } catch (PodFaultException ex) {
                 if (isLoggingEnabled()) {
                     LOG.info("Ignoring PodFaultException in cancelBolus", ex);
@@ -315,48 +348,51 @@ public class OmnipodManager {
         }
     }
 
-    // CAUTION: cancels TBR and bolus
     public synchronized void suspendDelivery(boolean acknowledgementBeep) {
-        assertReadyForDelivery();
-
-        logStartingCommandExecution("suspendDelivery [acknowledgementBeep=" + acknowledgementBeep + "]");
-
-        try {
-            executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, EnumSet.allOf(DeliveryType.class), acknowledgementBeep)));
-        } finally {
-            logCommandExecutionFinished("suspendDelivery");
-        }
+        cancelDelivery(EnumSet.allOf(DeliveryType.class), acknowledgementBeep);
     }
 
+    // Same as setting basal schedule, but without suspending delivery first
     public synchronized void resumeDelivery(boolean acknowledgementBeep) {
         assertReadyForDelivery();
-
-        logStartingCommandExecution("resumeDelivery [acknowledgementBeep=" + acknowledgementBeep + "]");
+        logStartingCommandExecution("resumeDelivery");
 
         try {
             executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podState, podState.getBasalSchedule(),
-                    true, podState.getScheduleOffset(), acknowledgementBeep)));
+                    false, podState.getScheduleOffset(), acknowledgementBeep)));
         } finally {
             logCommandExecutionFinished("resumeDelivery");
         }
     }
 
-    // CAUTION: cancels TBR and bolus
-    // CAUTION: suspends and then resumes delivery.
-    //  If any error occurs during the command sequence, delivery could be suspended
+    // CAUTION: cancels all delivery
+    // CAUTION: suspends and then resumes delivery. An OmnipodException[certainFailure=false] indicates that the pod is or might be suspended
     public synchronized void setTime(boolean acknowledgementBeeps) {
         assertReadyForDelivery();
 
         logStartingCommandExecution("setTime [acknowledgementBeeps=" + acknowledgementBeeps + "]");
 
         try {
-            suspendDelivery(acknowledgementBeeps);
+            cancelDelivery(EnumSet.allOf(DeliveryType.class), acknowledgementBeeps);
+        } catch (Exception ex) {
+            logCommandExecutionFinished("setTime");
+            throw ex;
+        }
 
+        DateTimeZone oldTimeZone = podState.getTimeZone();
+
+        try {
             // Joda seems to cache the default time zone, so we use the JVM's
             DateTimeZone.setDefault(DateTimeZone.forTimeZone(TimeZone.getDefault()));
             podState.setTimeZone(DateTimeZone.getDefault());
 
-            resumeDelivery(acknowledgementBeeps);
+            setBasalSchedule(podState.getBasalSchedule(), acknowledgementBeeps);
+        } catch (OmnipodException ex) {
+            // Treat all exceptions as uncertain failures, because all delivery has been suspended here.
+            // Setting this to an uncertain failure will enable for the user to get an appropriate warning
+            podState.setTimeZone(oldTimeZone);
+            ex.setCertainFailure(false);
+            throw ex;
         } finally {
             logCommandExecutionFinished("setTime");
         }
