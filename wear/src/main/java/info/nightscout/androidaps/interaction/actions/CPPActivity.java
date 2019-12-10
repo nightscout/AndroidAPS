@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
@@ -83,7 +84,7 @@ public class CPPActivity extends ViewSelectorActivity {
                     def = SafeParse.stringToDouble(editTimeshift.editText.getText().toString());
                 }
                 editTimeshift = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 23d, 1d, new DecimalFormat("0"), true, true);
-                setLabelToPlusMinusView(view, "timeshift");
+                setLabelToPlusMinusView(view, aaps.gs(R.string.action_timeshift));
                 container.addView(view);
                 return view;
             } else if(col == 1){
@@ -93,7 +94,7 @@ public class CPPActivity extends ViewSelectorActivity {
                     def = SafeParse.stringToDouble(editPercentage.editText.getText().toString());
                 }
                 editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 50d, 150d, 1d, new DecimalFormat("0"), false);
-                setLabelToPlusMinusView(view, "percentage");
+                setLabelToPlusMinusView(view, aaps.gs(R.string.action_percentage));
                 container.addView(view);
                 return view;
             } else {
