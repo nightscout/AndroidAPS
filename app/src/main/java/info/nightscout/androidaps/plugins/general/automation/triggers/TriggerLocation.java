@@ -38,7 +38,7 @@ public class TriggerLocation extends Trigger {
     InputDouble longitude = new InputDouble(0d, -180d, +180d, 0.000001d, new DecimalFormat("0.000000"));
     InputDouble distance = new InputDouble(200d, 0, 100000, 10d, new DecimalFormat("0"));
     InputLocationMode modeSelected = new InputLocationMode();
-    InputLocationMode.Mode lastMode = new InputLocationMode().getValue();
+    InputLocationMode.Mode lastMode = INSIDE;
 
     InputString name = new InputString();
 
@@ -48,7 +48,6 @@ public class TriggerLocation extends Trigger {
             latitude.setValue(location.getLatitude());
             longitude.setValue(location.getLongitude());
             log.debug(String.format("Grabbed location: %f %f", latitude.getValue(), longitude.getValue()));
-            log.debug("Location service:" +location.toString());
         }
     };
 
@@ -69,6 +68,7 @@ public class TriggerLocation extends Trigger {
     @Override
     public synchronized boolean shouldRun() {
         Location location = LocationService.getLastLocation();
+        log.debug("Entered shouldRun()");
         if (location == null)
             return false;
 
@@ -80,9 +80,14 @@ public class TriggerLocation extends Trigger {
         a.setLongitude(longitude.getValue());
         double calculatedDistance = location.distanceTo(a);
         //Update lastmode every 5 mins
-        lastMode = currentMode(calculatedDistance);
-        log.debug("Last mode is: "+lastMode);
-        log.debug("Wanted mode is: "+modeSelected.getValue());
+
+        log.debug("Last mode: "+lastMode);
+        log.debug("Distance wanted: "+distance.getValue());
+        log.debug("Actual distance: "+calculatedDistance);
+        log.debug("Inside: "+(calculatedDistance <= distance.getValue()));
+        log.debug("Outside: "+(calculatedDistance > distance.getValue()));
+        log.debug("Wanted mode: "+modeSelected.getValue());
+
         if ((modeSelected.getValue() == INSIDE) && (calculatedDistance <= distance.getValue()) ||
                 ((modeSelected.getValue() == OUTSIDE) && (calculatedDistance > distance.getValue())) ||
                 ((modeSelected.getValue() == GOING_IN) && (calculatedDistance <= distance.getValue()) && (lastMode == OUTSIDE)) ||
@@ -90,8 +95,10 @@ public class TriggerLocation extends Trigger {
             ) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Ready for execution: " + friendlyDescription());
+            lastMode = currentMode(calculatedDistance);
             return true;
         }
+        lastMode = currentMode(calculatedDistance); // current mode will be last mode for the next check
         return false;
     }
 
@@ -111,21 +118,18 @@ public class TriggerLocation extends Trigger {
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
-        log.debug("JSON "+o.toString());
         return o.toString();
     }
 
     @Override
     Trigger fromJSON(String data) {
         try {
-            log.debug("fromJSON: "+data);
             JSONObject d = new JSONObject(data);
             latitude.setValue(JsonHelper.safeGetDouble(d, "latitude"));
             longitude.setValue(JsonHelper.safeGetDouble(d, "longitude"));
             distance.setValue(JsonHelper.safeGetDouble(d, "distance"));
             name.setValue(JsonHelper.safeGetString(d, "name"));
             modeSelected.setValue(InputLocationMode.Mode.valueOf(JsonHelper.safeGetString(d, "mode")));
-            lastMode = modeSelected.getValue(); // load the asked mode as default
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
         } catch (Exception e) {
             log.error("Unhandled exception", e);
@@ -194,10 +198,9 @@ public class TriggerLocation extends Trigger {
 
     // Method to return the actual mode based on the current distance
     InputLocationMode.Mode currentMode(double currentDistance){
-        log.debug("Updating current mode!");
         if ( currentDistance <= this.distance.getValue() )
             return INSIDE;
         else
-            return InputLocationMode.Mode.OUTSIDE;
+            return OUTSIDE;
     }
 }
