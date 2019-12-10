@@ -88,7 +88,7 @@ object VersionCheckerPlugin : PluginBase(PluginDescription()
 
 enum class GracePeriod(val warning: Long, val old: Long, val veryOld: Long) {
     RELEASE(30, 60, 90),
-    RC(0, 7, 14)
+    RC(1, 7, 14)
 }
 
 private fun Long.daysToMillis() = TimeUnit.DAYS.toMillis(this)
