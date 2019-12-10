@@ -18,6 +18,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
@@ -59,6 +61,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodExceptio
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodReturnedErrorResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import io.reactivex.disposables.Disposable;
 
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
@@ -200,7 +203,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    // TODO cancels TBR. Notify treatments plugin
     @Override
     public PumpEnactResult setBasalProfile(Profile basalProfile) {
         try {
@@ -212,6 +214,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
+
+        // Because setting a basal profile actually suspends and then resumes delivery, TBR is implicitly cancelled
+        reportImplicitlyCanceledTbr();
 
         return new PumpEnactResult().success(true).enacted(true);
     }
@@ -249,7 +254,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
-        if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus()) && !isSmb /* TODO or should we also warn for SMB? */) {
+        if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus())) {
             // TODO notify user about uncertain failure ---> we're unsure whether or not the bolus has been delivered
             //  For safety reasons, we should treat this as a bolus that has been delivered, in order to prevent insulin overdose
         }
@@ -362,7 +367,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
     // Updates the pods current time based on the device timezone and the pod's time zone
-    // TODO cancels TBR. Notify treatments plugin
     public PumpEnactResult setTime() {
         try {
             delegate.setTime(isBasalBeepsEnabled());
@@ -373,6 +377,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
+
+        // Because set time actually suspends and then resumes delivery, TBR is implicitly cancelled
+        reportImplicitlyCanceledTbr();
+
         return new PumpEnactResult().success(true).enacted(true);
     }
 
@@ -392,26 +400,40 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return delegate.getPodStateAsString();
     }
 
+    private void reportImplicitlyCanceledTbr() {
+        TreatmentsPlugin plugin = TreatmentsPlugin.getPlugin();
+        if (plugin.isTempBasalInProgress()) {
+            if (isLoggingEnabled()) {
+                LOG.debug("Reporting implicitly cancelled TBR to Treatments plugin");
+            }
+
+            TemporaryBasal temporaryBasal = new TemporaryBasal() //
+                    .date(System.currentTimeMillis()) //
+                    .duration(0) //
+                    // TODO bs should be Source.PUMP imo, but that doesn't work:
+                    //  it says a TEMPBASAL record already exists
+                    .source(Source.USER);
+            plugin.addToHistoryTempBasal(temporaryBasal);
+        }
+    }
 
     private void addToHistory(long requestTime, PodHistoryEntryType entryType, String data, boolean success) {
         // TODO andy needs to be refactored
 
         //PodDbEntry entry = new PodDbEntry(requestTime, entryType);
-
-
     }
 
     private void handleSetupActionResult(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, SetupActionResult res) {
         String comment = null;
         switch (res.getResultType()) {
             case FAILURE:
-                if (loggingEnabled()) {
+                if (isLoggingEnabled()) {
                     LOG.error("Setup action failed: illegal setup progress: {}", res.getSetupProgress());
                 }
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_progress_state, res.getSetupProgress());
                 break;
             case VERIFICATION_FAILURE:
-                if (loggingEnabled()) {
+                if (isLoggingEnabled()) {
                     LOG.error("Setup action verification failed: caught exception", res.getException());
                 }
                 comment = getStringResource(R.string.omnipod_driver_error_setup_action_verification_failed);
@@ -455,12 +477,12 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 // Shouldn't be reachable
                 comment = getStringResource(R.string.omnipod_driver_error_unexpected_exception_type, ex.getClass().getName());
             }
-            if (loggingEnabled()) {
+            if (isLoggingEnabled()) {
                 LOG.error(String.format("Caught OmnipodException[certainFailure=%s] from OmnipodManager (user-friendly error message: %s)", ((OmnipodException) ex).isCertainFailure(), comment), ex);
             }
         } else {
             comment = getStringResource(R.string.omnipod_driver_error_unexpected_exception_type, ex.getClass().getName());
-            if (loggingEnabled()) {
+            if (isLoggingEnabled()) {
                 LOG.error(String.format("Caught unexpected exception type[certainFailure=false] from OmnipodManager (user-friendly error message: %s)", comment), ex);
             }
         }
@@ -510,7 +532,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return MainApp.gs(id, args);
     }
 
-    private boolean loggingEnabled() {
+    private boolean isLoggingEnabled() {
         return L.isEnabled(L.PUMP);
     }
 
