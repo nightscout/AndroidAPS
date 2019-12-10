@@ -42,7 +42,7 @@ class TreatmentsProfileSwitchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         profileswitch_recyclerview.setHasFixedSize(true)
         profileswitch_recyclerview.layoutManager = LinearLayoutManager(view.context)
-        profileswitch_recyclerview.adapter = RecyclerProfileViewAdapter(MainApp.getDbHelper().getProfileSwitchData(false))
+        profileswitch_recyclerview.adapter = RecyclerProfileViewAdapter(MainApp.getDbHelper().getProfileSwitchData(DateUtil.now() - T.days(30).msecs(),false))
 
         profileswitch_refreshfromnightscout.setOnClickListener {
             val builder = AlertDialog.Builder(this.context!!)
@@ -77,7 +77,7 @@ class TreatmentsProfileSwitchFragment : Fragment() {
     }
 
     fun updateGUI() =
-            profileswitch_recyclerview?.swapAdapter(RecyclerProfileViewAdapter(MainApp.getDbHelper().getProfileSwitchData(false)), false)
+            profileswitch_recyclerview?.swapAdapter(RecyclerProfileViewAdapter(MainApp.getDbHelper().getProfileSwitchData(DateUtil.now() - T.days(30).msecs(),false)), false)
 
     inner class RecyclerProfileViewAdapter(var profileSwitchList: List<ProfileSwitch>) : RecyclerView.Adapter<ProfileSwitchViewHolder>() {
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ProfileSwitchViewHolder {

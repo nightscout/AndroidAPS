@@ -76,6 +76,8 @@
         </activity>
         <activity android:name=".plugins.pump.danaRS.activities.PairingHelperActivity" />
         <activity android:name=".activities.HistoryBrowseActivity" />
+        <activity android:name=".activities.SurveyActivity" />
+        <activity android:name=".activities.StatsActivity" />
 
         <!-- Receive new BG readings from other local apps -->
         <receiver

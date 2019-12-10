@@ -397,7 +397,7 @@ public class Profile {
         return toMgdl(getIsfTimeFromMidnight(secondsFromMidnight(time)), units);
     }
 
-    double getIsfTimeFromMidnight(int timeAsSeconds) {
+    public double getIsfTimeFromMidnight(int timeAsSeconds) {
         if (isf_v == null)
             isf_v = convertToSparseArray(isf);
         return getValueToTime(isf_v, timeAsSeconds);
