@@ -12,9 +12,9 @@ import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.SP
 import org.hamcrest.CoreMatchers.allOf
@@ -32,11 +32,6 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class SetupWizardActivityTest {
 
-    /**
-     * wait below 8000ms was sometimes not enough for reset all permissions on circle ci emulator
-     */
-    private val DELAY_FOR_COMMAND_EXECUTION = 8000L
-
     @Rule
     @JvmField
     var mActivityTestRule = ActivityTestRule(SetupWizardActivity::class.java)
@@ -50,16 +45,23 @@ class SetupWizardActivityTest {
                     android.Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
 
-    fun resetAllPermission() { // permissions handling only available since android marshmallow
-        InstrumentationRegistry.getInstrumentation().uiAutomation.executeShellCommand("pm reset-permissions")
-        SystemClock.sleep(DELAY_FOR_COMMAND_EXECUTION)
-    }
-
     @Before
     fun clear() {
-        //resetAllPermission()
         SP.clear()
     }
+/*
+
+To run from command line
+gradlew connectedFullDebugAndroidTest
+
+do not run when your production phone is connected !!!
+
+do this before for running in emulator
+adb shell settings put global window_animation_scale 0 &
+adb shell settings put global transition_animation_scale 0 &
+adb shell settings put global animator_duration_scale 0 &
+ */
+
 
     @Test
     fun setupWizardActivityTest() {
@@ -145,6 +147,7 @@ class SetupWizardActivityTest {
             askButton.perform(scrollTo(), click())
             onView(allOf(withId(R.id.ok), isDisplayed())).perform(click())
             onView(Matchers.allOf(withText("OK"), isDisplayed())).perform(click())
+            while (ProfileFunctions.getInstance().profile == null) SystemClock.sleep(100)
             onView(withId(R.id.next_button)).perform(click())
         }
         // Pump
