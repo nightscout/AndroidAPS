@@ -33,13 +33,14 @@ public class SafeParse {
        }
        return result;
    }
-       public static Float stringToFloat(String input) {
-           Float result = 0f;
-           input = input.replace(",", ".");
-           try {
-               result = Float.valueOf(input);
-           } catch (Exception e) {
-           }
-           return result;
+   
+   public static Float stringToFloat(String input) {
+       Float result = 0f;
+       input = input.replace(",", ".");
+       try {
+           result = Float.valueOf(input);
+       } catch (Exception e) {
+       }
+       return result;
     }
 }
