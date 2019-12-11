@@ -10,7 +10,7 @@ import android.view.animation.RotateAnimation;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
-
+import info.nightscout.androidaps.interaction.utils.SafeParse;
 /**
  * Created by andrew-warrington on 01/12/2017.
  */
@@ -124,34 +124,34 @@ public class Steampunk extends BaseWatchFace {
         float deltaIsNegative = 1f;         //by default go clockwise
         if (!rawData.sAvgDelta.equals("--")) {      //if a legitimate delta value is received, then...
             if (rawData.sAvgDelta.substring(0,1).equals("-")) deltaIsNegative = -1f;  //if the delta is negative, go counter-clockwise
-
+            Float AbssAvgDelta = SafeParse.stringToFloat(rawData.sAvgDelta.substring(1)) ;   //get rid of the sign so it can be converted to float.
             //ensure the delta gauge is the right units and granularity
             if (!rawData.sUnits.equals("-")) {
                 if (rawData.sUnits.equals("mmol")) {
                     if (sharedPrefs.getString("delta_granularity", "2").equals("1")) {  //low
                         mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_10);
-                        deltaRotationAngle = (Float.valueOf(rawData.sAvgDelta.substring(1)) * 30f);   //get rid of the sign so it can be converted to float.
+                        deltaRotationAngle = (AbssAvgDelta * 30f);
                     }
                     if (sharedPrefs.getString("delta_granularity", "2").equals("2")) {  //medium
                         mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_05);
-                        deltaRotationAngle = (Float.valueOf(rawData.sAvgDelta.substring(1)) * 60f);   //get rid of the sign so it can be converted to float.
+                        deltaRotationAngle = (AbssAvgDelta * 60f);
                     }
                     if (sharedPrefs.getString("delta_granularity", "2").equals("3")) {  //high
                         mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_03);
-                        deltaRotationAngle = (Float.valueOf(rawData.sAvgDelta.substring(1)) * 100f);   //get rid of the sign so it can be converted to float.
+                        deltaRotationAngle = (AbssAvgDelta * 100f);
                     }
                 } else {
                     if (sharedPrefs.getString("delta_granularity", "2").equals("1")) {  //low
                         mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_20);
-                        deltaRotationAngle = (Float.valueOf(rawData.sAvgDelta.substring(1)) * 1.5f);   //get rid of the sign so it can be converted to float.
+                        deltaRotationAngle = (AbssAvgDelta * 1.5f);
                     }
                     if (sharedPrefs.getString("delta_granularity", "2").equals("2")) {  //medium
                         mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_10);
-                        deltaRotationAngle = (Float.valueOf(rawData.sAvgDelta.substring(1)) * 3f);   //get rid of the sign so it can be converted to float.
+                        deltaRotationAngle = (AbssAvgDelta * 3f);
                     }
                     if (sharedPrefs.getString("delta_granularity", "2").equals("3")) {  //high
                         mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_5);
-                        deltaRotationAngle = (Float.valueOf(rawData.sAvgDelta.substring(1)) * 6f);   //get rid of the sign so it can be converted to float.
+                        deltaRotationAngle = (AbssAvgDelta * 6f);
                     }
                 }
             }
