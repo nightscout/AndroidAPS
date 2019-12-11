@@ -164,10 +164,6 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
                 // We actually ignore previous (ack) responses if it was not last packet to send
                 response = exchangePackets(podState, packet);
             } catch (Exception ex) {
-                // If this is not the last packet, the message wasn't fully sent,
-                // so it's impossible for the pod to have received the message
-                boolean isCertainFailure = encodedMessage.length > 0;
-
                 OmnipodException newException;
                 if (ex instanceof OmnipodException) {
                     newException = (OmnipodException) ex;
@@ -175,10 +171,15 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
                     newException = new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
                 }
 
+                boolean lastPacket = encodedMessage.length == 0;
+
+                // If this is not the last packet, the message wasn't fully sent,
+                // so it's impossible for the pod to have received the message
+                newException.setCertainFailure(!lastPacket);
+
                 if (isLoggingEnabled()) {
-                    LOG.debug("Caught exception in transportMessages. Setting certainFailure to {} because encodedMessage.length={}", isCertainFailure, encodedMessage.length);
+                    LOG.debug("Caught exception in transportMessages. Set certainFailure to {} because encodedMessage.length={}", newException.isCertainFailure(), encodedMessage.length);
                 }
-                newException.setCertainFailure(isCertainFailure);
 
                 throw newException;
             }

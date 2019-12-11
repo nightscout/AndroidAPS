@@ -1686,7 +1686,7 @@
     <string name="omnipod_driver_error_nonce_resync_failed">Communication failed: nonce resync failed.</string>
     <string name="omnipod_driver_error_nonce_out_of_sync">Communication failed: nonce out of sync.</string>
     <string name="omnipod_driver_error_not_enough_data">Communication failed: not enough data received from the pod.</string>
-    <string name="omnipod_driver_error_pod_fault">A pod fault (%1$s) has been detected. Please deactivate your pod and start a new one.</string>
+    <string name="omnipod_driver_error_pod_fault">A pod fault (%1$03d %2$s) has been detected. Please deactivate your pod and start a new one.</string>
     <string name="omnipod_driver_error_pod_returned_error_response">Communication failed: the pod returned an error response.</string>
 
     <!-- Omnipod - Pod Mgmt -->
@@ -1742,6 +1742,8 @@
     <string name="omnipod_alert_shutdown_imminent">Shutdown is imminent</string>
     <string name="omnipod_alert_low_reservoir">Low reservoir</string>
     <string name="omnipod_alert_unknown_alert">Unknown alert</string>
+    <string name="omnipod_error_set_basal_failed_uncertain">Setting basal profile failed. Delivery might be suspended! Please refresh pod status.</string>
+    <string name="omnipod_error_set_time_failed_uncertain">Setting time failed. Delivery might be suspended! Please refresh pod status.</string>
 
 
 </resources>

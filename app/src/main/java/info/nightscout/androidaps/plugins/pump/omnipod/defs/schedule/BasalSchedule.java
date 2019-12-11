@@ -84,7 +84,9 @@ public class BasalSchedule {
 
     @Override
     public String toString() {
-        return "BasalSchedule (" + entries.size() + " entries)";
+        return "BasalSchedule{" +
+                "entries=" + entries +
+                '}';
     }
 
     public static class BasalScheduleDurationEntry {

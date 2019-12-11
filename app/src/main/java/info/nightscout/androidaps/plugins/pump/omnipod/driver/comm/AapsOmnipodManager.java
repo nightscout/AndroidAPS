@@ -18,12 +18,15 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpStatusType;
+import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.SetupActionResult;
@@ -31,6 +34,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Sta
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
@@ -59,6 +63,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodExceptio
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodReturnedErrorResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import io.reactivex.disposables.Disposable;
 
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
@@ -205,9 +210,15 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             delegate.setBasalSchedule(mapProfileToBasalSchedule(basalProfile), isBasalBeepsEnabled());
         } catch (Exception ex) {
+            if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
+                return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_basal_failed_uncertain));
+            }
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
+
+        // Because setting a basal profile actually suspends and then resumes delivery, TBR is implicitly cancelled
+        reportImplicitlyCanceledTbr();
 
         return new PumpEnactResult().success(true).enacted(true);
     }
@@ -245,7 +256,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
-        if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus()) && !isSmb /* TODO or should we also warn for SMB? */) {
+        if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus())) {
             // TODO notify user about uncertain failure ---> we're unsure whether or not the bolus has been delivered
             //  For safety reasons, we should treat this as a bolus that has been delivered, in order to prevent insulin overdose
         }
@@ -360,13 +371,18 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     // Updates the pods current time based on the device timezone and the pod's time zone
     public PumpEnactResult setTime() {
         try {
-            // CAUTION cancels TBR
             delegate.setTime(isBasalBeepsEnabled());
         } catch (Exception ex) {
-            // CAUTION pod could be suspended
+            if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
+                return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_time_failed_uncertain));
+            }
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
+
+        // Because set time actually suspends and then resumes delivery, TBR is implicitly cancelled
+        reportImplicitlyCanceledTbr();
+
         return new PumpEnactResult().success(true).enacted(true);
     }
 
@@ -386,26 +402,40 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return delegate.getPodStateAsString();
     }
 
+    private void reportImplicitlyCanceledTbr() {
+        TreatmentsPlugin plugin = TreatmentsPlugin.getPlugin();
+        if (plugin.isTempBasalInProgress()) {
+            if (isLoggingEnabled()) {
+                LOG.debug("Reporting implicitly cancelled TBR to Treatments plugin");
+            }
+
+            TemporaryBasal temporaryBasal = new TemporaryBasal() //
+                    .date(System.currentTimeMillis()) //
+                    .duration(0) //
+                    // TODO bs should be Source.PUMP imo, but that doesn't work:
+                    //  it says a TEMPBASAL record already exists
+                    .source(Source.USER);
+            plugin.addToHistoryTempBasal(temporaryBasal);
+        }
+    }
 
     private void addToHistory(long requestTime, PodHistoryEntryType entryType, String data, boolean success) {
         // TODO andy needs to be refactored
 
         //PodDbEntry entry = new PodDbEntry(requestTime, entryType);
-
-
     }
 
     private void handleSetupActionResult(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, SetupActionResult res) {
         String comment = null;
         switch (res.getResultType()) {
             case FAILURE:
-                if (loggingEnabled()) {
+                if (isLoggingEnabled()) {
                     LOG.error("Setup action failed: illegal setup progress: {}", res.getSetupProgress());
                 }
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_progress_state, res.getSetupProgress());
                 break;
             case VERIFICATION_FAILURE:
-                if (loggingEnabled()) {
+                if (isLoggingEnabled()) {
                     LOG.error("Setup action verification failed: caught exception", res.getException());
                 }
                 comment = getStringResource(R.string.omnipod_driver_error_setup_action_verification_failed);
@@ -442,19 +472,21 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 comment = getStringResource(R.string.omnipod_driver_error_not_enough_data);
             } else if (ex instanceof PodFaultException) {
                 // TODO handle pod fault with some kind of dialog that has a button to start pod deactivation
-                comment = getStringResource(R.string.omnipod_driver_error_pod_fault, ((PodFaultException) ex).getFaultEvent().getFaultEventCode().name());
+                FaultEventCode faultEventCode = ((PodFaultException) ex).getFaultEvent().getFaultEventCode();
+                comment = getStringResource(R.string.omnipod_driver_error_pod_fault,
+                        ByteUtil.convertUnsignedByteToInt(faultEventCode.getValue()), faultEventCode.name());
             } else if (ex instanceof PodReturnedErrorResponseException) {
                 comment = getStringResource(R.string.omnipod_driver_error_pod_returned_error_response);
             } else {
                 // Shouldn't be reachable
                 comment = getStringResource(R.string.omnipod_driver_error_unexpected_exception_type, ex.getClass().getName());
             }
-            if (loggingEnabled()) {
+            if (isLoggingEnabled()) {
                 LOG.error(String.format("Caught OmnipodException[certainFailure=%s] from OmnipodManager (user-friendly error message: %s)", ((OmnipodException) ex).isCertainFailure(), comment), ex);
             }
         } else {
             comment = getStringResource(R.string.omnipod_driver_error_unexpected_exception_type, ex.getClass().getName());
-            if (loggingEnabled()) {
+            if (isLoggingEnabled()) {
                 LOG.error(String.format("Caught unexpected exception type[certainFailure=false] from OmnipodManager (user-friendly error message: %s)", comment), ex);
             }
         }
@@ -504,7 +536,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return MainApp.gs(id, args);
     }
 
-    private boolean loggingEnabled() {
+    private boolean isLoggingEnabled() {
         return L.isEnabled(L.PUMP);
     }
 
