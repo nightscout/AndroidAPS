@@ -1165,7 +1165,6 @@
     <string name="running_invalid_version">S-a detectat rularea unei versiuni invalide. Buclă dezactivată!</string>
     <string name="old_version">versiune veche</string>
     <string name="very_old_version">versiune foarte veche</string>
-    <string name="new_version_warning">Noua versiune este disponibilă de cel puțin %1$d zile! Revenire la LGS după 60 zile, bucla va fi dezactivată după 90 zile</string>
     <string name="twohours">2o</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">Aplicația Dexcom (modificată)</string>

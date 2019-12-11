@@ -1191,7 +1191,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="running_invalid_version">Nous avons détecté que vous utilisez une version invalide. Boucle désactivée !</string>
     <string name="old_version">ancienne version</string>
     <string name="very_old_version">très ancienne version</string>
-    <string name="new_version_warning">Une nouvelle version est disponible depuis au moins %1$d jours ! Retour au traitement par pompe assistée par capteur (Arrêt par Glycémie Basse (AGB), Low Glucose Suspend (LGS) ) après 60 jours et la Boucle sera désactivée après 90 jours</string>
+    <string name="new_version_warning">Nouvelle version disponible depuis %1$d jours ! Retour à Arrêt Glycémie Basse (AGB) dans %2$d jours, la boucle sera désactivée dans %3$d jours</string>
     <string name="twohours">2 h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">App Dexcom (patchée)</string>
@@ -1419,4 +1419,20 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="low_mark_comment">Valeur inférieure dans la plage (affichage uniquement)</string>
     <string name="high_mark_comment">Valeur supérieure dans la plage (affichage uniquement)</string>
     <string name="reorder_label">Réordonner</string>
+    <string name="age">Âge :</string>
+    <string name="weight">Poids :</string>
+    <string name="id">ID :</string>
+    <string name="submit">Envoyer</string>
+    <string name="mostcommonprofile">Profil le plus courant :</string>
+    <string name="survey_comment">Remarque : seules les données visibles sur cet écran seront téléchargées de manière anonyme. L\'ID est attribué à cette installation d\'AndroidAPS. Vous pouvez soumettre à nouveau des données si votre profil principal est modifié, mais laissez-le fonctionner au moins pendant une semaine pour rendre le résultat visible dans le temps. Votre aide est appréciée.</string>
+    <string name="nav_survey">Sondage</string>
+    <string name="invalidage">Âge invalide</string>
+    <string name="invalidweight">Poids invalide</string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+    <string name="tirformat"><![CDATA[<b>%1$s:</b> Bas: <b>%2$02d%%</b> Médian: <b>%3$02d%%</b> Haut: <b>%4$02d%%</b>]]></string>
+    <string name="average">Moyenne</string>
+    <string name="tdd">DTI</string>
+    <string name="activitymonitor">Moniteur d\'activité</string>
+    <string name="doyouwantresetstats">Voulez-vous réinitialiser les stats d\'activité ?</string>
+    <string name="statistics">Statistiques</string>
 </resources>

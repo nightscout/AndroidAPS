@@ -376,8 +376,11 @@
     <string name="button1">кнопка 1</string>
     <string name="button2">кнопка 2</string>
     <string name="button3">кнопка 3</string>
+    <string name="units_colon">Единицы:</string>
+    <string name="units">Единицы</string>
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммоль/л</string>
+    <string name="dia">Время действия инсулина DIA</string>
     <string name="target_range">целевой диапазон</string>
     <string name="prefs_range_title">диапазон для визуализации</string>
     <string name="prefs_range_summary">Нижняя и верхняя граница диаграммы в отчетах и Smartwatch</string>
@@ -1189,7 +1192,7 @@ Context | Edit Context</string>
     <string name="running_invalid_version">Мы обнаружили, что вы используете недопустимую версию. Цикл отключен!</string>
     <string name="old_version">старая версия</string>
     <string name="very_old_version">очень старая версия</string>
-    <string name="new_version_warning">Новая версия доступна не менее %1$d дней! После 60 дней переход на остановку при низкой гликемии LGS, замкнутый цикл будет отключен через 90 дней</string>
+    <string name="new_version_warning">Новая версия доступна уже %1$d дней! По истечении %2$d дн алгоритм переходит в режим работы только с остановкой при низкой гликемии LGS, замкнутый цикл будет отключен через %3$d дн</string>
     <string name="twohours">2ч</string>
     <string name="formatinsulinunits">%1$.2f ед</string>
     <string name="dexcom_app_patched">Приложение Dexcom (модифицированное)</string>
@@ -1391,6 +1394,10 @@ Context | Edit Context</string>
     <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Мастер Болюса</string>
     <string name="unit_minute_short">мин</string>
+    <string name="profile_name">Название профиля:</string>
+    <string name="selected_profile">Выбрано:</string>
+    <string name="unitsnosemicolon">Единицы</string>
+    <string name="doyouwantswitchprofile">Хотите переключить профиль и сбросить изменения, внесенные в текущий профиль?</string>
     <string name="format_carbs">%1$d гр</string>
     <string name="common_on">Вкл.</string>
     <string name="common_off">Выкл.</string>
@@ -1398,4 +1405,19 @@ Context | Edit Context</string>
     <string name="objectives_button_unstart">Очистить начатые</string>
     <string name="timedetection">Определение времени</string>
     <string name="doyouwantresetstart">Хотите сбросить начатую цель? Можете потерять уже достигнутое.</string>
+    <string name="nopumpselected">Помпа не выбрана</string>
+    <string name="setupwizard_units_prompt">Выберите единицы, в которых вы хотите отображать значения</string>
+    <string name="ns_ploadlocalprofile">Перенести изменения локального профиля в NS</string>
+    <string name="dia_short">Время действия инсулина DIA</string>
+    <string name="ic_short">IC (инсулин/углеводы)</string>
+    <string name="isf_short">ISF (чувствительность к инсулину)</string>
+    <string name="target_short">ЦЕЛЬ</string>
+    <string name="clone_label">Клонировать</string>
+    <string name="saveorresetchangesfirst">Сначала сохраните или сбросьте текущие изменения</string>
+    <string name="deletecurrentprofile">Удалить текущий профиль?</string>
+    <string name="copytolocalprofile">Создать новый локальный профиль из этого?</string>
+    <string name="profilenamecontainsdot">Имя профиля содержит точки.\nЭто не поддерживается NS.\nПрофиль не выгружен в NS.</string>
+    <string name="low_mark_comment">Меньшее значение диапазона целевых значений (только для дисплея)</string>
+    <string name="high_mark_comment">Большее значение диапазона целевых значений (только для дисплея)</string>
+    <string name="reorder_label">Повторный заказ</string>
 </resources>

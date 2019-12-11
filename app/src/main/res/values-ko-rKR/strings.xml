@@ -1161,7 +1161,6 @@
     <string name="running_invalid_version">유효하지 않은 버전을 이용 중입니다. Loop가 비활성화 되었습니다!</string>
     <string name="old_version">오래된 버전</string>
     <string name="very_old_version">아주 오래된 버전</string>
-    <string name="new_version_warning">최소 %1$d일 새버전이 가능합니다! 60일 후엔 LGS(저혈당 주입중지기능)으로 복귀되며, 90일이후엔 Loop가 비활성화 될 것입니다.</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">Dexcom 앱(패치버전)</string>

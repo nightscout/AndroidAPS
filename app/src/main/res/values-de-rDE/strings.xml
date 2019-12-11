@@ -1013,7 +1013,7 @@
     <string name="nsmalfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
     <string name="as">AS</string>
     <string name="versionavailable">Version %1$s ist verfügbar.</string>
-    <string name="time_offset">Zeit Verschiebung</string>
+    <string name="time_offset">Zeitversatz</string>
     <string name="setupwizard_preferred_aps_mode">Bevorzugter APS-Modus</string>
     <string name="treatments_wizard_total_label">Gesamt</string>
     <string name="calculation_short">Berech.</string>
@@ -1191,7 +1191,7 @@ Unerwartetes Verhalten.</string>
     <string name="running_invalid_version">Wir haben festgestellt, dass Du eine ungültige Version verwendest. Loop deaktiviert!</string>
     <string name="old_version">Vorherige Version</string>
     <string name="very_old_version">sehr alte Version</string>
-    <string name="new_version_warning">Neue Version für mindestens %1$d Tage verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach 60 Tagen, Loop wird nach 90 Tagen deaktiviert</string>
+    <string name="new_version_warning">Neue Version für mindestens %1$d Tage verfügbar! Rückfall zur sensorunterstützten Pumpentherapie nach %2$d Tagen, Loop wird nach  %3$d Tagen deaktiviert.</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2f IE</string>
     <string name="dexcom_app_patched">gepatchte Dexcom App</string>
@@ -1411,7 +1411,7 @@ Unerwartetes Verhalten.</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="target_short">ZIEL</string>
-    <string name="clone_label">Duplizieren</string>
+    <string name="clone_label">Klonen</string>
     <string name="saveorresetchangesfirst">Speichere oder verwerfe die aktuellen Änderungen zuerst</string>
     <string name="deletecurrentprofile">Aktuelles Profil löschen?</string>
     <string name="copytolocalprofile">Neues lokales Profil auf Basis dieses Profilwechsels erstellen?</string>
@@ -1419,4 +1419,21 @@ Unerwartetes Verhalten.</string>
     <string name="low_mark_comment">Unterer Wert des Zielbereichs (nur Anzeige)</string>
     <string name="high_mark_comment">Oberer Wert des Zielbereichs (nur Anzeige)</string>
     <string name="reorder_label">Umsortieren</string>
+    <string name="age">Alter:</string>
+    <string name="weight">Gewicht:</string>
+    <string name="id">ID:</string>
+    <string name="submit">Senden</string>
+    <string name="mostcommonprofile">Meistgenutztes Profil:</string>
+    <string name="survey_comment">Hinweis: Nur Daten, die auf diesem Bildschirm sichtbar sind, werden anonym hochgeladen. Die ID wird dieser Installation von AndroidAPS zugeordnet. Du kannst erneut Daten senden, wenn sich Dein Hauptprofil geändert hat. Lasse es aber es mindestens eine Woche lang laufen, damit dessen Ergebnis in der Time in Range sichtbar wird. Danke für Deine Unterstützung.</string>
+    <string name="nav_survey">Umfrage</string>
+    <string name="invalidage">Ungültige Altersangabe</string>
+    <string name="invalidweight">Ungültige Gewichtsangabe</string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+    <string name="tirformat"><![CDATA[<b>%1$s:</b> Low: <b>%2$02d%%</b> In: <b>%3$02d%%</b> High: <b>%4$02d%%</b>]]></string>
+    <string name="average">Durchschnitt</string>
+    <string name="tdd">TDD</string>
+    <string name="tir">TIR</string>
+    <string name="activitymonitor">Aktivitätsmonitor</string>
+    <string name="doyouwantresetstats">Willst Du die Aktivitätsstatistik zurücksetzen?</string>
+    <string name="statistics">Statistiken</string>
 </resources>

@@ -1159,7 +1159,6 @@
     <string name="running_invalid_version">Die weergawe is ongeldig. Lus afgeskakel!</string>
     <string name="old_version">ou weergawe</string>
     <string name="very_old_version">baie ou weergawe</string>
-    <string name="new_version_warning">Nuwe weergawe reeds beskikbaar vir %1$d! Sal na 60 dae terugval na LGS, lus sal ongeldig gemaak word na 90 dae</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">DexcomG App (opgedateerde)</string>

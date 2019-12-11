@@ -1168,7 +1168,6 @@
     <string name="running_invalid_version">Διαπιστώσαμε ότι εκτελείτε μη έγκυρη έκδοση. Κύκλωμα απενεργοποιήθηκε!</string>
     <string name="old_version">παλιά έκδοση</string>
     <string name="very_old_version">πολύ παλιά έκδοση</string>
-    <string name="new_version_warning">Νέα έκδοση για τουλάχιστον %1$d ημέρες διαθέσιμη! Επιστροφή σε LGS μετά από 60 ημέρες, το κύκλωμα θα απενεργοποιηθεί μετά από 90 ημέρες</string>
     <string name="twohours">2ώρες</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">Εφαρμογή Dexcom (τροποποιημένη)</string>

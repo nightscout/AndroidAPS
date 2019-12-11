@@ -1188,7 +1188,6 @@ Eversense-appen.</string>
     <string name="running_invalid_version">Du kör en ogiltig version. Loop avstängd!</string>
     <string name="old_version">gammal version</string>
     <string name="very_old_version">väldigt gammal version</string>
-    <string name="new_version_warning">Ny version tillgänglig sedan %1$d dagar! Systemet kommer att byta läge till \"stopp innan lågt\" efter 60 dagar och sluta loopa helt efter 90 dagar</string>
     <string name="twohours">2 tim</string>
     <string name="formatinsulinunits">%1$.2f U</string>
     <string name="dexcom_app_patched">Dexcoms app (modifierad)</string>

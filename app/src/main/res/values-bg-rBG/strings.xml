@@ -1190,7 +1190,7 @@
     <string name="running_invalid_version">Използвате грешна версия. APS е изключен!</string>
     <string name="old_version">стара версия</string>
     <string name="very_old_version">много стара версия</string>
-    <string name="new_version_warning">Има нова версия от най-малко %1$d дни! Връщане към LGS след 60 дни, цикълът ще бъде изключен след 90 дни</string>
+    <string name="new_version_warning">Има нова версия от най-малко %1$d дни! Ще спре подаването на инсулин след %2$d дни, цикълът ще бъде изключен след %3$d дни</string>
     <string name="twohours">2ч</string>
     <string name="formatinsulinunits">%1$.2fЕ</string>
     <string name="dexcom_app_patched">Dexcom приложение (модифицирано)</string>
@@ -1418,4 +1418,21 @@
     <string name="low_mark_comment">Ниската граница на диапазона (графика)</string>
     <string name="high_mark_comment">Високата граница на диапазона (графика)</string>
     <string name="reorder_label">Подреди</string>
+    <string name="age">Възраст:</string>
+    <string name="weight">Тегло:</string>
+    <string name="id">Номер:</string>
+    <string name="submit">Изпрати</string>
+    <string name="mostcommonprofile">Най-често използван профил:</string>
+    <string name="survey_comment">Забележка: Само данни, видими на този екран, ще бъдат анонимно изпратени. Номер се дава за тази инсталация на AndroidAPS. Отново можете да изпратите данните, ако вашият основен профил се промени, но нека да работи поне една седмица, за да  се види резултата във Време в границите. Много благодарим за Вашата помощ.</string>
+    <string name="nav_survey">Проучване</string>
+    <string name="invalidage">Невалидна възраст</string>
+    <string name="invalidweight">Невалидно тегло</string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Бол: <b>%3$.2f</b> Баз: <b>%4$.2f</b>]]></string>
+    <string name="tirformat"><![CDATA[<b>%1$s:</b> Ниски: <b>%2$02d%%</b> В: <b>%3$02d%%</b> Вис: <b>%4$02d%%</b>]]></string>
+    <string name="average">Средно</string>
+    <string name="tdd">ТДД</string>
+    <string name="tir">Време в границите</string>
+    <string name="activitymonitor">Мониторинг на активност</string>
+    <string name="doyouwantresetstats">Искате да нулирате статистиката?</string>
+    <string name="statistics">Статистика</string>
 </resources>

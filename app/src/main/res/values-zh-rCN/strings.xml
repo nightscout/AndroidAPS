@@ -1098,7 +1098,6 @@
     <string name="versionChecker">版本检查器</string>
     <string name="old_version">旧版本</string>
     <string name="very_old_version">非常旧版本</string>
-    <string name="new_version_warning">至少可用 %1$d 天的新版本！60 天后返回 LGS，90 天后循环将被禁用</string>
     <string name="twohours">2小时</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">德康app（补丁版）</string>

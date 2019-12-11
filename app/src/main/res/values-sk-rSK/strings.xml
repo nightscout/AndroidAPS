@@ -1190,7 +1190,7 @@
     <string name="running_invalid_version">Zistili sme, že používate neplatnú verziu. Uzavretý okruh zakázaný!</string>
     <string name="old_version">stará verzia</string>
     <string name="very_old_version">veľmi stará verzia</string>
-    <string name="new_version_warning">Nová verzia dostupná najmenej %1$d dní! Návrat k liečbe inzulínovou pumpou s podporou senzora po 60 dňoch, okruh bude deaktivovaný po 90 dňoch.</string>
+    <string name="new_version_warning">Nová verzia je dostupná minimálne %1$d dní! Prepnutie na ochranu pred nízkou glykémiou po %2$d dňoch, vypnutie uzavretého okruhu po %3$d dňoch</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fJI</string>
     <string name="dexcom_app_patched">Dexcom aplikácia (upravená)</string>
@@ -1418,4 +1418,21 @@
     <string name="low_mark_comment">Spodná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
     <string name="high_mark_comment">Horná hodnota v oblasti cieľového rozsahu (iba zobrazovanie)</string>
     <string name="reorder_label">Zmena poradia</string>
+    <string name="age">Vek:</string>
+    <string name="weight">Váha:</string>
+    <string name="id">ID:</string>
+    <string name="submit">Odoslať</string>
+    <string name="mostcommonprofile">Najčastejšie používaný profil:</string>
+    <string name="survey_comment">Poznámka: Len údaje zobrazené na tejto obrazovke budú odosielané anonymne. ID je pridelené na túto inštaláciu AndroidAPS. Údaje môžete odoslať znova, ak sa váš hlavný profil zmení, ale nechajte ho bežať aspoň týždeň, aby bol výsledok času v rozsahu viditeľný. Vaša pomoc je vítaná.</string>
+    <string name="nav_survey">Prieskum</string>
+    <string name="invalidage">Neplatný záznam veku</string>
+    <string name="invalidweight">Neplatný záznam váhy</string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Baz: <b>%4$.2f</b>]]></string>
+    <string name="tirformat"><![CDATA[<b>%1$s:</b> Pod: <b>%2$02d%%</b> V: <b>%3$02d%%</b> Nad: <b>%4$02d%%</b>]]></string>
+    <string name="average">Priemer</string>
+    <string name="tdd">CDD</string>
+    <string name="tir">Čas v rozsahu</string>
+    <string name="activitymonitor">Monitor aktivity</string>
+    <string name="doyouwantresetstats">Chcete resetovať štatistiky aktivity?</string>
+    <string name="statistics">Štatistiky</string>
 </resources>

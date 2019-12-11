@@ -260,6 +260,7 @@
     <string name="smscommunicator_allowednumbers">Números de telefone permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode">Para dar bolus %1$.2fU responder com código %2$s</string>
+    <string name="smscommunicator_temptargetcancel">Para cancelar Alvo Temp responda com o código %1$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Para enviar calibração %1$.2f responder com código %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolus falhou</string>
     <string name="bolusdelivered">Bolus %1$.2fU entregue com sucesso</string>
@@ -1181,7 +1182,6 @@
     <string name="running_invalid_version">Detectamos que está  a correr uma versão inválida. Loop desactivado!</string>
     <string name="old_version">versão antiga</string>
     <string name="very_old_version">versão muito antiga</string>
-    <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Voltar para o LGS após 60 dias, o loop será desativado após 90 dias</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">App Dexcom (com patch)</string>

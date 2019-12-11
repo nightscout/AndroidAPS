@@ -1190,7 +1190,7 @@
     <string name="running_invalid_version">Abbiamo rilevato che stai eseguendo una versione non valida. Loop disabilitato!</string>
     <string name="old_version">versione datata</string>
     <string name="very_old_version">versione molto datata</string>
-    <string name="new_version_warning">Nuova versione disponibile da %1$d giorni! Ritorno a LGS trascorsi 60 giorni, disattivazione del loop dopo 90 giorni</string>
+    <string name="new_version_warning">Nuova versione disponibile per almeno %1$d giorni! Ritorno a LGS dopo %2$d giorni, disattivazione del loop dopo %3$d giorni</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">Dexcom app (modificata)</string>

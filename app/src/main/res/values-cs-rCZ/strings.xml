@@ -1190,7 +1190,7 @@
     <string name="running_invalid_version">Zjistili jsme, že používáte neplatnou verzi, smyčka zakázána!</string>
     <string name="old_version">stará verze</string>
     <string name="very_old_version">velmi stará verze</string>
-    <string name="new_version_warning">Nová verze je dostupná minimálně %1$d dní! Přepnutí na ochranu před nízkou glykémií po 60 dnech, vypnutí smyčky po 90 dnech</string>
+    <string name="new_version_warning">Nová verze je dostupná minimálně %1$d dní! Přepnutí na ochranu před nízkou glykémií po %2$d dnech, vypnutí smyčky po %3$d dnech</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">Aplikace Dexcom (upravená)</string>
@@ -1418,4 +1418,21 @@
     <string name="low_mark_comment">Spodní hodnota oblasti v rozsahu (pouze zobrazování)</string>
     <string name="high_mark_comment">Horní hodnota oblasti v rozsahu (pouze zobrazování)</string>
     <string name="reorder_label">Změna pořadí</string>
+    <string name="age">Věk:</string>
+    <string name="weight">Váha:</string>
+    <string name="id">ID:</string>
+    <string name="submit">Odeslat</string>
+    <string name="mostcommonprofile">Nejběžnější profil:</string>
+    <string name="survey_comment">Poznámka: Pouze data viditelná na této obrazovce budou odesílána anonymně. ID je přiřazeno k této instalaci produktu AndroidAPS. Data můžete znovu odeslat, pokud se váš hlavní profil změní, ale nechte ho běžet alespoň týden, aby byl výsledek viditelný v čase v rozsahu. Vážíme si Vaši pomoci.</string>
+    <string name="nav_survey">Průzkum</string>
+    <string name="invalidage">Neplatná položka věku</string>
+    <string name="invalidweight">Neplatná položka váhy</string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Baz: <b>%4$.2f</b>]]></string>
+    <string name="tirformat"><![CDATA[<b>%1$s:</b> Pod: <b>%2$02d%%</b> V: <b>%3$02d%%</b> Nad: <b>%4$02d%%</b>]]></string>
+    <string name="average">Průměr</string>
+    <string name="tdd">CDD</string>
+    <string name="tir">Čas v rozsahu</string>
+    <string name="activitymonitor">Monitor aktivity</string>
+    <string name="doyouwantresetstats">Chcete resetovat statistiky aktivity?</string>
+    <string name="statistics">Statistika</string>
 </resources>

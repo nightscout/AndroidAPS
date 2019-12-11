@@ -260,6 +260,8 @@
     <string name="smscommunicator_allowednumbers">Leidžiami telefono numeriai</string>
     <string name="smscommunicator_allowednumbers_summary">+370XXXXXXXX; +370YYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode">Norėdami suleisti %1$.2fvv bolusą, atsakykite kodu %2$s</string>
+    <string name="smscommunicator_mealbolusreplywithcode">Norėdami suleisti %1$.2fvv bolusą, atsakykite su kodu %2$s</string>
+    <string name="smscommunicator_temptargetwithcode">Norėdami nustatyti laikiną tikslą %1$s, atsakykite su kodu %2$s</string>
     <string name="smscommunicator_calibrationreplywithcode">Norėdami nusiųsti kalibraciją %1$.2f, atsakykite kodu %2$s</string>
     <string name="smscommunicator_bolusfailed">Bolusas nesuleistas</string>
     <string name="bolusdelivered">%1$.2fvv bolusas sėkmingai suleistas</string>
@@ -1168,7 +1170,6 @@
     <string name="running_invalid_version">Nustatyta, kad naudojate neteisingą versiją. Ciklas išjungtas!</string>
     <string name="old_version">sena versija</string>
     <string name="very_old_version">labai sena versija</string>
-    <string name="new_version_warning">Nauja versija pasiekiama mažiausiai %1$d dienų! Po 60 d. grįšite prie stabdymo prie žemo, po 90 d. ciklas bus išjungtas.</string>
     <string name="twohours">2 val</string>
     <string name="formatinsulinunits">%1$.2fV</string>
     <string name="dexcom_app_patched">Dexcom programėlė (modifikuota)</string>
