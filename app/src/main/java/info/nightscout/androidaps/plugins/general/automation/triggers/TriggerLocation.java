@@ -61,13 +61,15 @@ public class TriggerLocation extends Trigger {
         longitude = new InputDouble(triggerLocation.longitude);
         distance = new InputDouble(triggerLocation.distance);
         modeSelected = new InputLocationMode(triggerLocation.modeSelected);
+        if (modeSelected.getValue() == GOING_OUT)
+            lastMode = OUTSIDE;
         lastRun = triggerLocation.lastRun;
         name = triggerLocation.name;
     }
 
     @Override
     public synchronized boolean shouldRun() {
-        Location location = LocationService.getLastLocation();;
+        Location location = this.getCurrentLocation();
         if (location == null)
             return false;
 
@@ -79,12 +81,8 @@ public class TriggerLocation extends Trigger {
         a.setLongitude(longitude.getValue());
         double calculatedDistance = location.distanceTo(a);
 
-        log.debug("Last mode: "+lastMode);
-        log.debug("Distance wanted: "+distance.getValue());
-        log.debug("Actual distance: "+calculatedDistance);
-        log.debug("Inside: "+(calculatedDistance <= distance.getValue()));
-        log.debug("Outside: "+(calculatedDistance > distance.getValue()));
-        log.debug("Wanted mode: "+modeSelected.getValue());
+//        log.debug("Moded(current/last/wanted): "+(currentMode(calculatedDistance))+"/"+lastMode+"/"+modeSelected.getValue());
+//        log.debug("Distance: "+calculatedDistance + "("+distance.getValue()+")");
 
         if ((modeSelected.getValue() == INSIDE) && (calculatedDistance <= distance.getValue()) ||
                 ((modeSelected.getValue() == OUTSIDE) && (calculatedDistance > distance.getValue())) ||
@@ -128,7 +126,9 @@ public class TriggerLocation extends Trigger {
             distance.setValue(JsonHelper.safeGetDouble(d, "distance"));
             name.setValue(JsonHelper.safeGetString(d, "name"));
             modeSelected.setValue(InputLocationMode.Mode.valueOf(JsonHelper.safeGetString(d, "mode")));
-            lastRun = JsonHelper.safeGetLong(d, "lastRun");
+            if (modeSelected.getValue() == GOING_OUT)
+                lastMode = OUTSIDE;
+            lastRun = DateUtil.now(); // set lastRun to now to give the service 5 mins to get the location properly
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
@@ -200,6 +200,10 @@ public class TriggerLocation extends Trigger {
             return INSIDE;
         else
             return OUTSIDE;
+    }
+
+    static Location getCurrentLocation(){
+        return LocationService.getLastLocation();
     }
 
 }
