@@ -54,7 +54,7 @@ object RandomBgPlugin : PluginBase(PluginDescription()
     }
 
     override fun specialEnableCondition(): Boolean {
-        return VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP)
+        return VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP) && MainApp.engineeringMode
     }
 
     override fun handleNewData(intent: Intent) {

@@ -213,7 +213,7 @@ public class MainApp extends Application {
             pluginsList.add(SourcePoctechPlugin.getPlugin());
             pluginsList.add(SourceTomatoPlugin.getPlugin());
             pluginsList.add(SourceEversensePlugin.getPlugin());
-            if (engineeringMode) pluginsList.add(RandomBgPlugin.INSTANCE);
+            pluginsList.add(RandomBgPlugin.INSTANCE);
             if (!Config.NSCLIENT) pluginsList.add(SmsCommunicatorPlugin.INSTANCE);
             pluginsList.add(FoodPlugin.getPlugin());
 
