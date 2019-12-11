@@ -13,8 +13,6 @@ import java.util.ArrayList;
  * Created by andy on 12/11/2019
  */
 public class PodInfoPage extends Page {
-    public static final String NAME_DATA_KEY = "name";
-    public static final String EMAIL_DATA_KEY = "email";
 
     public PodInfoPage(ModelCallbacks callbacks, String title) {
         super(callbacks, title);

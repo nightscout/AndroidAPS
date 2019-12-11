@@ -44,6 +44,8 @@ public class RemoveActionFragment extends InitActionFragment implements PodInitR
         if (!isOk) {
             errorView.setVisibility(View.VISIBLE);
             errorView.setText(callResult.comment);
+
+            retryButton.setVisibility(View.VISIBLE);
         }
 
         mPage.setActionCompleted(isOk);

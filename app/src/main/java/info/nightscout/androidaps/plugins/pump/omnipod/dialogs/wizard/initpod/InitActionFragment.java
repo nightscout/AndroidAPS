@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -42,6 +43,7 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
 
     protected ProgressBar progressBar;
     protected TextView errorView;
+    protected Button retryButton;
 
     protected PodInitActionType podInitActionType;
     protected List<PodInitActionType> children;
@@ -109,6 +111,11 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
             headerView.setText(R.string.omnipod_remove_pod_wizard_step2_action_header);
         }
 
+        this.retryButton = rootView.findViewById(R.id.initAction_RetryButton);
+
+        this.retryButton.setOnClickListener(view ->
+                new InitPodTask(instance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR));
+
         return rootView;
     }
 
@@ -146,41 +153,7 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
         //System.out.println("ACTION: setUserVisibleHint="+ isVisibleToUser);
         if (isVisibleToUser) {
             //System.out.println("ACTION: Visible");
-
-            new AsyncTask<Void, Void, String>() {
-
-                protected void onPreExecute() {
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-
-                @Override
-                protected String doInBackground(Void... params) {
-                    if (podInitActionType == PodInitActionType.PairAndPrimeWizardStep) {
-                        callResult = AapsOmnipodManager.getInstance().initPod(
-                                podInitActionType,
-                                instance,
-                                null
-                        );
-                    } else if (podInitActionType == PodInitActionType.FillCannulaSetBasalProfileWizardStep) {
-                        callResult = AapsOmnipodManager.getInstance().initPod(
-                                podInitActionType,
-                                instance,
-                                ProfileFunctions.getInstance().getProfile()
-                        );
-                    } else if (podInitActionType == PodInitActionType.DeactivatePodWizardStep) {
-                        callResult = AapsOmnipodManager.getInstance().deactivatePod(instance);
-                    }
-
-                    return "OK";
-                }
-
-                @Override
-                protected void onPostExecute(String result) {
-                    super.onPostExecute(result);
-
-                    actionOnReceiveResponse(result);
-                }
-            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new InitPodTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         } else {
             System.out.println("ACTION: Not visible");
@@ -230,6 +203,8 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
             if (!isOk) {
                 errorView.setVisibility(View.VISIBLE);
                 errorView.setText(errorMessage);
+
+                retryButton.setVisibility(View.VISIBLE);
             }
 
             mPage.setActionCompleted(isOk);

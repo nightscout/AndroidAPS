@@ -1707,7 +1707,7 @@
     <string name="omnipod_init_pod_wizard_step1_title">Fill the Pod</string>
     <string name="omnipod_init_pod_wizard_step1_desc">\nFill new Pod with Insulin.\n\n\nAfter filling Pod, listen for 2 beeps, then press "Next".\n\n\n<b>Note:</b> Do not remove needle cap at this time.</string>
     <string name="omnipod_init_pod_wizard_step2_title">Pair and Prime the Pod</string>
-    <string name="omnipod_init_pod_wizard_step2_action_header">We are trying to communicate with Pod.\n\nWhen all items are checked, you can press Next. If you decide to Cancel, you will have to discard the Pod.</string>
+    <string name="omnipod_init_pod_wizard_step2_action_header">We are trying to communicate with Pod.\n\nWhen all items are checked, you can press Next. If you decide to Cancel, you will have to discard the Pod. If there is an error you will get option to retry.</string>
     <string name="omnipod_init_pod_wizard_step3_title">Attach the Pod</string>
     <string name="omnipod_init_pod_wizard_step3_desc">\nPrepare infusion site. Remove Pods needle cap.\n\nIf cannula sticks out press <b>Cancel</b> (Pod will need to be discarded).\n\nPress <b>Next</b> to insert cannula and begin Basal Delivery.</string>
     <string name="omnipod_init_pod_wizard_step4_title">Fill Cannula and Start Basal delivery</string>
