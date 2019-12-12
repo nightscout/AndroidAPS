@@ -13,6 +13,7 @@ import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.isRunningTest
 import org.slf4j.LoggerFactory
 import java.util.*
 import kotlin.math.PI
@@ -54,7 +55,7 @@ object RandomBgPlugin : PluginBase(PluginDescription()
     }
 
     override fun specialEnableCondition(): Boolean {
-        return VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP) && MainApp.engineeringMode
+        return VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP) && (MainApp.engineeringMode || isRunningTest())
     }
 
     override fun handleNewData(intent: Intent) {

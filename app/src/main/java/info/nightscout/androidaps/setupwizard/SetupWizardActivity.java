@@ -187,7 +187,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
                 return page;
             page++;
         }
-        return currentWizardPage;
+        return Math.min(currentWizardPage, screens.size() -1);
     }
 
     private int previousPage() {
@@ -197,7 +197,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
                 return page;
             page--;
         }
-        return currentWizardPage;
+        return Math.max(currentWizardPage, 0);
     }
 
     @Override

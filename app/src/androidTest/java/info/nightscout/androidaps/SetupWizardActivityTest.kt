@@ -14,14 +14,26 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
+import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
+import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
+import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
+import info.nightscout.androidaps.plugins.source.RandomBgPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
+import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.SP
+import info.nightscout.androidaps.utils.isRunningTest
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
 import org.hamcrest.TypeSafeMatcher
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -65,26 +77,27 @@ adb shell settings put global animator_duration_scale 0 &
 
     @Test
     fun setupWizardActivityTest() {
+        Assert.assertTrue(isRunningTest())
         // Welcome page
         onView(withId(R.id.next_button)).perform(click())
         // Language selection
         onView(withText("English")).perform(scrollTo(), click())
-        onView(withId(R.id.next_button)).perform(click())
+        onView(withId(R.id.next_button)).waitAndPerform(click())
         // Agreement page
         onView(withText("I UNDERSTAND AND AGREE")).perform(scrollTo(), click())
-        onView(withId(R.id.next_button)).perform(click())
+        onView(withId(R.id.next_button)).waitAndPerform(click())
         // Loction permission
         var askButton = onView(withText("Ask for permission"))
         if (askButton.isDisplayed()) {
             askButton.perform(scrollTo(), click())
-            onView(withId(R.id.next_button)).perform(click())
+            onView(withId(R.id.next_button)).waitAndPerform(click())
         }
         // Store permission
         askButton = onView(withText("Ask for permission"))
         if (askButton.isDisplayed()) {
             askButton.perform(scrollTo(), click())
             onView(withText("OK")).perform(click())
-            onView(withId(R.id.next_button)).perform(click())
+            onView(withId(R.id.next_button)).waitAndPerform(click())
         }
         // Units selection
         onView(withText("mmol/L")).perform(scrollTo(), click())
@@ -97,16 +110,16 @@ adb shell settings put global animator_duration_scale 0 &
         onView(withId(R.id.next_button)).perform(click())
         // Age selection
         onView(withText("Adult")).perform(scrollTo(), click())
-        onView(withId(R.id.next_button)).perform(click())
+        onView(withId(R.id.next_button)).waitAndPerform(click())
         // Insulin selection
         onView(withText("Ultra-Rapid Oref")).perform(scrollTo(), click())
-        onView(withId(R.id.next_button)).perform(click())
+        onView(withId(R.id.next_button)).waitAndPerform(click())
         // BG source selection
         onView(withText("Random BG")).perform(scrollTo(), click())
-        onView(withId(R.id.next_button)).perform(click())
+        onView(withId(R.id.next_button)).waitAndPerform(click())
         // Profile selection
         onView(withText("Local Profile")).perform(scrollTo(), click())
-        onView(withId(R.id.next_button)).perform(click())
+        onView(withId(R.id.next_button)).waitAndPerform(click())
         // Local profile - DIA
         onView(withTagValue(Matchers.`is`("LP_DIA"))).perform(scrollTo(), ViewActions.replaceText("6.0"))
         // Local profile - IC
@@ -140,7 +153,7 @@ adb shell settings put global animator_duration_scale 0 &
                 .perform(scrollTo(), click())
         onView(allOf(withId(R.id.ok), isDisplayed())).perform(click())
         onView(Matchers.allOf(withText("OK"), isDisplayed())).perform(click())
-        onView(withId(R.id.next_button)).perform(click())
+        onView(withId(R.id.next_button)).waitAndPerform(click())
         // Profile switch
         askButton = onView(withText("Do Profile Switch"))
         if (askButton.isDisplayed()) {
@@ -148,28 +161,46 @@ adb shell settings put global animator_duration_scale 0 &
             onView(allOf(withId(R.id.ok), isDisplayed())).perform(click())
             onView(Matchers.allOf(withText("OK"), isDisplayed())).perform(click())
             while (ProfileFunctions.getInstance().profile == null) SystemClock.sleep(100)
-            onView(withId(R.id.next_button)).perform(click())
+            onView(withId(R.id.next_button)).waitAndPerform(click())
         }
         // Pump
         onView(withText("Virtual Pump")).perform(scrollTo(), click())
-        onView(withId(R.id.next_button)).perform(click())
+        onView(withId(R.id.next_button)).waitAndPerform(click())
         // APS
         onView(withText("OpenAPS SMB")).perform(scrollTo(), click())
-        onView(withId(R.id.next_button)).perform(click())
+        onView(withId(R.id.next_button)).waitAndPerform(click())
         // Open Closed Loop
         onView(withText("Closed Loop")).perform(scrollTo(), click())
-        onView(withId(R.id.next_button)).perform(click())
+        onView(withId(R.id.next_button)).waitAndPerform(click())
         // Loop
         askButton = onView(withText("Enable loop"))
         if (askButton.isDisplayed()) {
             askButton.perform(scrollTo(), click())
-            onView(withId(R.id.next_button)).perform(click())
+            onView(withId(R.id.next_button)).waitAndPerform(click())
         }
         // Sensitivity
         onView(withText("Sensitivity Oref1")).perform(scrollTo(), click())
-        onView(withId(R.id.next_button)).perform(click())
+        onView(withId(R.id.next_button)).waitAndPerform(click())
         // Objectives
         onView(allOf(withText("Start"), isDisplayed())).perform(scrollTo(), click())
+        onView(withId(R.id.finish_button)).waitAndPerform(click())
+
+        // Verify settings
+        Assert.assertEquals(Constants.MMOL, ProfileFunctions.getSystemUnits())
+        Assert.assertEquals(17.0, HardLimits.maxBolus(), 0.0001) // Adult
+        Assert.assertTrue(RandomBgPlugin.isEnabled(PluginType.BGSOURCE))
+        Assert.assertTrue(LocalProfilePlugin.isEnabled(PluginType.PROFILE))
+        val p = ProfileFunctions.getInstance().profile
+        Assert.assertNotNull(p)
+        Assert.assertEquals(2.0, p!!.ic, 0.0001)
+        Assert.assertEquals(3.0 * Constants.MMOLL_TO_MGDL, p.isfMgdl, 0.0001)
+        Assert.assertEquals(1.1, p.getBasalTimeFromMidnight(0), 0.0001)
+        Assert.assertEquals(6.0 * Constants.MMOLL_TO_MGDL, p.targetLowMgdl, 0.0001)
+        Assert.assertTrue(VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP))
+        Assert.assertTrue(OpenAPSSMBPlugin.getPlugin().isEnabled(PluginType.APS))
+        Assert.assertTrue(LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
+        Assert.assertTrue(SensitivityOref1Plugin.getPlugin().isEnabled(PluginType.SENSITIVITY))
+        Assert.assertTrue(ObjectivesPlugin.objectives[0].isStarted)
     }
 
     private fun childAtPosition(

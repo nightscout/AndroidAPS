@@ -28,6 +28,7 @@ import info.nightscout.androidaps.plugins.constraints.objectives.events.EventNtp
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
+import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -217,6 +218,7 @@ class ObjectivesFragment : Fragment() {
                     scrollToCurrentObjective()
                     startUpdateTimer()
                     RxBus.send(EventObjectivesUpdateGui())
+                    RxBus.send(EventSWUpdate(false))
                 } else {
                     // move out of UI thread
                     Thread {
@@ -234,6 +236,7 @@ class ObjectivesFragment : Fragment() {
                                         RxBus.send(EventNtpStatus(MainApp.gs(R.string.success), 100))
                                         SystemClock.sleep(1000)
                                         RxBus.send(EventObjectivesUpdateGui())
+                                        RxBus.send(EventSWUpdate(false))
                                         SystemClock.sleep(100)
                                         scrollToCurrentObjective()
                                     } else {
@@ -254,6 +257,7 @@ class ObjectivesFragment : Fragment() {
                     scrollToCurrentObjective()
                     startUpdateTimer()
                     RxBus.send(EventObjectivesUpdateGui())
+                    RxBus.send(EventSWUpdate(false))
                 } else
                 // move out of UI thread
                     Thread {
@@ -270,6 +274,7 @@ class ObjectivesFragment : Fragment() {
                                     RxBus.send(EventNtpStatus(MainApp.gs(R.string.success), 100))
                                     SystemClock.sleep(1000)
                                     RxBus.send(EventObjectivesUpdateGui())
+                                    RxBus.send(EventSWUpdate(false))
                                     SystemClock.sleep(100)
                                     scrollToCurrentObjective()
                                 } else {
@@ -284,12 +289,14 @@ class ObjectivesFragment : Fragment() {
                     objective.startedOn = 0
                     scrollToCurrentObjective()
                     RxBus.send(EventObjectivesUpdateGui())
+                    RxBus.send(EventSWUpdate(false))
                 }
             }
             holder.unFinish.setOnClickListener {
                 objective.accomplishedOn = 0
                 scrollToCurrentObjective()
                 RxBus.send(EventObjectivesUpdateGui())
+                RxBus.send(EventSWUpdate(false))
             }
             if (objective.hasSpecialInput && !objective.isAccomplished && objective.isStarted && objective.specialActionEnabled()) {
                 // generate random request code if none exists

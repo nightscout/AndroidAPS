@@ -434,7 +434,7 @@ public class SWDefinition {
         add(screenSetupWizard)
                 .add(screenLanguage)
                 .add(screenEula)
-                .add(isRunningTest() ? screenPermissionBattery : null) // cannot mock ask battery optimalization
+                .add(isRunningTest() ? null : screenPermissionBattery) // cannot mock ask battery optimalization
                 .add(screenPermissionBt)
                 .add(screenPermissionStore)
                 .add(screenImport)
@@ -462,7 +462,7 @@ public class SWDefinition {
         add(screenSetupWizard)
                 .add(screenLanguage)
                 .add(screenEula)
-                .add(isRunningTest() ? screenPermissionBattery : null)
+                .add(isRunningTest() ? null : screenPermissionBattery) // cannot mock ask battery optimalization
                 .add(screenPermissionBt)
                 .add(screenPermissionStore)
                 .add(screenImport)
@@ -486,7 +486,7 @@ public class SWDefinition {
         add(screenSetupWizard)
                 .add(screenLanguage)
                 .add(screenEula)
-                .add(isRunningTest() ? screenPermissionBattery : null)
+                .add(isRunningTest() ? null : screenPermissionBattery) // cannot mock ask battery optimalization
                 .add(screenPermissionStore)
                 .add(screenImport)
                 .add(screenUnits)
