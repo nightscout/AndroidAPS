@@ -55,6 +55,7 @@
     <string name="pref_low">Low</string>
     <string name="pref_medium">Medium</string>
     <string name="pref_high">High</string>
+    <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Big Numbers</string>
     <string name="pref_ring_history">Ring History</string>
     <string name="pref_light_ring_history">Light Ring History</string>
