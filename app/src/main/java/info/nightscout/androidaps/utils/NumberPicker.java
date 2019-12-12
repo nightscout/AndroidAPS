@@ -154,6 +154,11 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         });
     }
 
+    @Override
+    public void setTag(Object tag) {
+        editText.setTag(tag);
+    }
+
     public void setOnValueChangedListener(OnValueChangedListener onValueChangedListener) {
         mOnValueChangedListener = onValueChangedListener;
     }

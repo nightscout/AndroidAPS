@@ -78,4 +78,8 @@ public class Constants {
     //Storage [MB]
     public static final long MINIMUM_FREE_SPACE = 200;
 
+    // Overview
+    public static final double LOWMARK = 76.0;
+    public static final double HIGHMARK = 180.0;
+
 }
