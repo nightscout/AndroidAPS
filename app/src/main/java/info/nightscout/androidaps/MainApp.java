@@ -15,6 +15,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import info.nightscout.androidaps.data.ConstraintChecker;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -32,6 +34,7 @@ import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.constraints.dstHelper.DstHelperPlugin;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
@@ -90,6 +93,7 @@ import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
+import info.nightscout.androidaps.utils.SP;
 import io.fabric.sdk.android.Fabric;
 
 import static info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt.triggerCheckVersion;
@@ -243,7 +247,34 @@ public class MainApp extends Application {
                 startKeepAliveService();
             }).start();
         }
+
+        doMigrations();
     }
+
+    private void doMigrations() {
+
+        // guarantee that the unreachable threshold is at least 30 and of type String
+        // Added in 1.57 at 21.01.2018
+        int unreachable_threshold = SP.getInt(R.string.key_pump_unreachable_threshold, 30);
+        SP.remove(R.string.key_pump_unreachable_threshold);
+        if (unreachable_threshold < 30) unreachable_threshold = 30;
+        SP.putString(R.string.key_pump_unreachable_threshold, Integer.toString(unreachable_threshold));
+
+        // 2.5 -> 2.6
+        if (!SP.contains(R.string.key_units)) {
+            String newUnits = Constants.MGDL;
+            Profile p = ProfileFunctions.getInstance().getProfile();
+            if (p != null && p.getData() != null && p.getData().has("units")) {
+                try {
+                    newUnits = p.getData().getString("units");
+                } catch (JSONException e) {
+                    log.error("Unhandled exception", e);
+                }
+            }
+            SP.putString(R.string.key_units, newUnits);
+        }
+    }
+
 
     private void registerLocalBroadcastReceiver() {
         lbm = LocalBroadcastManager.getInstance(this);
