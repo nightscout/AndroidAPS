@@ -37,6 +37,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import dagger.android.AndroidInjection;
 import info.nightscout.androidaps.activities.HistoryBrowseActivity;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.activities.PreferencesActivity;
@@ -73,6 +74,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
 
         Iconify.with(new FontAwesomeModule());

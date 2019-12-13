@@ -21,8 +21,11 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 
+import dagger.android.AndroidInjector;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -51,8 +54,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.receivers.DBAccessRec
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
-import info.nightscout.androidaps.plugins.source.RandomBgPlugin;
-import info.nightscout.androidaps.utils.ActivityMonitor;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
@@ -74,6 +75,7 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
+import info.nightscout.androidaps.plugins.source.RandomBgPlugin;
 import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
 import info.nightscout.androidaps.plugins.source.SourceEversensePlugin;
 import info.nightscout.androidaps.plugins.source.SourceGlimpPlugin;
@@ -88,6 +90,7 @@ import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver;
 import info.nightscout.androidaps.services.Intents;
+import info.nightscout.androidaps.utils.ActivityMonitor;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import io.fabric.sdk.android.Fabric;
@@ -95,7 +98,7 @@ import io.fabric.sdk.android.Fabric;
 import static info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt.triggerCheckVersion;
 
 
-public class MainApp extends Application {
+public class MainApp extends Application implements HasAndroidInjector {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
     private static KeepAliveReceiver keepAliveReceiver;
 
@@ -120,9 +123,19 @@ public class MainApp extends Application {
     public static boolean devBranch;
     public static boolean engineeringMode;
 
+    AndroidInjector<Object> activityInjector;
+
+    @Override
+    public AndroidInjector<Object> androidInjector() {
+        return activityInjector;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
+        // Dagger injection
+        DaggerAppComponent.create().inject(this);
+
         log.debug("onCreate");
         sInstance = this;
         sResources = getResources();
@@ -442,4 +455,5 @@ public class MainApp extends Application {
         float scale = sResources.getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);
     }
+
 }
