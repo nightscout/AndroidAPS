@@ -589,7 +589,7 @@ public class Profile {
     public double getMaxDailyBasal() {
         double max = 0d;
         for (int hour = 0; hour < 24; hour++) {
-            double value = getBasalTimeFromMidnight((Integer) (hour * 60 * 60));
+            double value = getBasalTimeFromMidnight(hour * 60 * 60);
             if (value > max) max = value;
         }
         return max;
