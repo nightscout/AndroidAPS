@@ -593,6 +593,7 @@
     <string name="overview_newtempbasal_basaltype_label">Basaltyp</string>
     <string name="invalidprofile">Ungültiges oder defektes Profil!</string>
     <string name="profileswitch">Profilwechsel</string>
+    <string name="doprofileswitch">Profilwechsel durchführen</string>
     <string name="careportal_pbage_label">Batteriealter</string>
     <string name="careportal_pumpbatterychange">Pumpenbatterie Wechsel</string>
     <string name="ns_alarmoptions">Alarm-Optionen</string>
@@ -1436,4 +1437,7 @@ Unerwartetes Verhalten.</string>
     <string name="activitymonitor">Aktivitätsmonitor</string>
     <string name="doyouwantresetstats">Willst Du die Aktivitätsstatistik zurücksetzen?</string>
     <string name="statistics">Statistiken</string>
+    <string name="randombg">Zufalls-BZ</string>
+    <string name="description_source_randombg">Zufalls-BZ Daten erstellen (nur Demo-Modus)</string>
+    <string name="randombg_short">BZ</string>
 </resources>

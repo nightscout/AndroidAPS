@@ -593,6 +593,7 @@
     <string name="overview_newtempbasal_basaltype_label">Tipo de Basal</string>
     <string name="invalidprofile">Perfil inválido !!!</string>
     <string name="profileswitch">TrocaPerfil</string>
+    <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="careportal_pbage_label">Idade bateria bomba</string>
     <string name="careportal_pumpbatterychange">Troca bateria bomba</string>
     <string name="ns_alarmoptions">Opções Alarme</string>
@@ -1435,4 +1436,7 @@
     <string name="activitymonitor">Monitor de actividade</string>
     <string name="doyouwantresetstats">Quer reiniciar as estatísticas de actividade?</string>
     <string name="statistics">Estatísticas</string>
+    <string name="randombg">Glic. Aleatória</string>
+    <string name="description_source_randombg">Gerar dados de Glic. aleatórios (Somente modo de Demonstração)</string>
+    <string name="randombg_short">GLIC</string>
 </resources>

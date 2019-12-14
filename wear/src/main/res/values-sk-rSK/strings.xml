@@ -55,4 +55,42 @@
     <string name="pref_version">Verzia:</string>
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Sprievodca</string>
+    <string name="menu_settings">Nastavenia</string>
+    <string name="menu_status">Stav</string>
+    <string name="menu_prime_fill">Plnenie/Doplňovanie</string>
+    <string name="menu_none">Žiadny</string>
+    <string name="menu_default">Štandardný</string>
+    <string name="menu_menu">Ponuka</string>
+    <string name="action_duration">trvanie</string>
+    <string name="action_target" comment="In temp target menu, single target value">cieľ</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">nízka</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">vysoká</string>
+    <string name="action_carbs">sacharidy</string>
+    <string name="action_percentage">Percento</string>
+    <string name="action_start_min">začiatok [min]</string>
+    <string name="action_duration_h">trvanie [h]</string>
+    <string name="action_insulin">inzulín</string>
+    <string name="action_preset_1">Predvoľba 1</string>
+    <string name="action_preset_2">Predvoľba 2</string>
+    <string name="action_preset_3">Predvoľba 3</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Ľubovoľné množstvo</string>
+    <string name="action_confirm">POTVRDIŤ</string>
+    <string name="action_status_pump">STAV PUMPY</string>
+    <string name="action_status_loop">STAV UZAVRETÉHO OKRUHU</string>
+    <string name="action_timeshift">časový posun</string>
+    <string name="action_tdd_weighted">TDD vážený</string>
+    <string name="action_bolus">bolus</string>
+    <string name="status_pump">Pumpa</string>
+    <string name="status_loop">Uzavretý okruh</string>
+    <string name="status_tdd">TDD</string>
+    <string name="activity_carb">Sacharidy</string>
+    <string name="activity_IOB">IOB</string>
+    <string name="activity_no_status">žiadny stav</string>
+    <string name="unit_mg_dl">mg/dL</string>
+    <string name="unit_mmol_l">mmol/l</string>
+    <string name="unit_g" comment="Shortcut for ISO unit: gram">g</string>
+    <string name="unit_u" comment="Shortcut for: insulin Unit">JI</string>
+    <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">JI/h</string>
+    <string name="unit_h" comment="One letter shortcut for: Hour" maxLength="1">h</string>
+    <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">d</string>
 </resources>
