@@ -34,7 +34,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.PodI
  */
 public class InitPodWizardModel extends AbstractWizardModel {
 
-    boolean isFullInit = true;
+    boolean isFullInit;
 
     public InitPodWizardModel(Context context, boolean isFullInit) {
         super(context);

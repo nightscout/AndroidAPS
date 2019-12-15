@@ -81,11 +81,11 @@ class PodManagementActivity : NoSplashActivity() {
         pagerSettings.cancelAction = refreshAction
         pagerSettings.finishAction = refreshAction
 
-        val wizardPagerContext = WizardPagerContext.getInstance();
+        val wizardPagerContext = WizardPagerContext.getInstance()
 
         wizardPagerContext.clearContext()
         wizardPagerContext.pagerSettings = pagerSettings
-        wizardPagerContext.wizardModel = InitPodWizardModel(applicationContext, !podSessionFullyInitalized)
+        wizardPagerContext.wizardModel = InitPodWizardModel(applicationContext, OmnipodUtil.getPodSessionState() == null)
 
         val myIntent = Intent(this@PodManagementActivity, WizardPagerActivity::class.java)
         this@PodManagementActivity.startActivity(myIntent)
@@ -129,15 +129,10 @@ class PodManagementActivity : NoSplashActivity() {
 
 
     fun refreshButtons() {
-        val isPodSessionActive = (OmnipodUtil.getPodSessionState()!=null)
+        initpod_init_pod.isEnabled = (OmnipodUtil.getPodSessionState() == null ||
+                OmnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED))
 
-        if (isPodSessionActive) {
-            podSessionFullyInitalized = !OmnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED)
-            initpod_init_pod.isEnabled = !podSessionFullyInitalized
-        } else {
-            podSessionFullyInitalized = false
-            initpod_init_pod.isEnabled = true
-        }
+        val isPodSessionActive = (OmnipodUtil.getPodSessionState()!=null)
 
         initpod_remove_pod.isEnabled = isPodSessionActive
         initpod_reset_pod.isEnabled = isPodSessionActive
