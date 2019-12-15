@@ -11,6 +11,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashActivity
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodCancelAction
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodWizardModel
@@ -27,6 +28,7 @@ import kotlinx.android.synthetic.main.omnipod_pod_mgmt.*
 class PodManagementActivity : NoSplashActivity() {
 
     private var initPodChanged = false
+    private var podSessionFullyInitalized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +85,7 @@ class PodManagementActivity : NoSplashActivity() {
 
         wizardPagerContext.clearContext()
         wizardPagerContext.pagerSettings = pagerSettings
-        wizardPagerContext.wizardModel = InitPodWizardModel(applicationContext)
+        wizardPagerContext.wizardModel = InitPodWizardModel(applicationContext, !podSessionFullyInitalized)
 
         val myIntent = Intent(this@PodManagementActivity, WizardPagerActivity::class.java)
         this@PodManagementActivity.startActivity(myIntent)
@@ -129,7 +131,14 @@ class PodManagementActivity : NoSplashActivity() {
     fun refreshButtons() {
         val isPodSessionActive = (OmnipodUtil.getPodSessionState()!=null)
 
-        initpod_init_pod.isEnabled = !isPodSessionActive
+        if (isPodSessionActive) {
+            podSessionFullyInitalized = !OmnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED)
+            initpod_init_pod.isEnabled = !podSessionFullyInitalized
+        } else {
+            podSessionFullyInitalized = false
+            initpod_init_pod.isEnabled = true
+        }
+
         initpod_remove_pod.isEnabled = isPodSessionActive
         initpod_reset_pod.isEnabled = isPodSessionActive
     }

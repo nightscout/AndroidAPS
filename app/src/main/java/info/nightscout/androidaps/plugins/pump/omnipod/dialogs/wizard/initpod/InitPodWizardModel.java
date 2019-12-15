@@ -33,34 +33,57 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.PodI
  * Created by andy on 12/11/2019
  */
 public class InitPodWizardModel extends AbstractWizardModel {
-    public InitPodWizardModel(Context context) {
+
+    boolean isFullInit = true;
+
+    public InitPodWizardModel(Context context, boolean isFullInit) {
         super(context);
+        this.isFullInit = isFullInit;
     }
 
     @Override
     protected PageList onNewRootPageList() {
-        return new PageList(
 
-                new DisplayTextPage(this,
-                        R.string.omnipod_init_pod_wizard_step1_title,
-                        R.string.omnipod_init_pod_wizard_step1_desc,
-                        R.style.WizardPagePodContent).setRequired(true).setCancelReason("None"),
+        if (isFullInit) {
 
-                new InitActionPage(this,
-                        R.string.omnipod_init_pod_wizard_step2_title,
-                        PodInitActionType.PairAndPrimeWizardStep
-                ).setRequired(true).setCancelReason("Cancel"),
+            return new PageList(
 
-                new DisplayTextPage(this,
-                        R.string.omnipod_init_pod_wizard_step3_title,
-                        R.string.omnipod_init_pod_wizard_step3_desc,
-                        R.style.WizardPagePodContent).setRequired(true).setCancelReason("Cancel"),
+                    new DisplayTextPage(this,
+                            R.string.omnipod_init_pod_wizard_step1_title,
+                            R.string.omnipod_init_pod_wizard_step1_desc,
+                            R.style.WizardPagePodContent).setRequired(true).setCancelReason("None"),
 
-                new InitActionPage(this,
-                        R.string.omnipod_init_pod_wizard_step4_title,
-                        PodInitActionType.FillCannulaSetBasalProfileWizardStep
-                ).setRequired(true).setCancelReason("Cancel")
-        );
+                    new InitActionPage(this,
+                            R.string.omnipod_init_pod_wizard_step2_title,
+                            PodInitActionType.PairAndPrimeWizardStep
+                    ).setRequired(true).setCancelReason("Cancel"),
+
+                    new DisplayTextPage(this,
+                            R.string.omnipod_init_pod_wizard_step3_title,
+                            R.string.omnipod_init_pod_wizard_step3_desc,
+                            R.style.WizardPagePodContent).setRequired(true).setCancelReason("Cancel"),
+
+                    new InitActionPage(this,
+                            R.string.omnipod_init_pod_wizard_step4_title,
+                            PodInitActionType.FillCannulaSetBasalProfileWizardStep
+                    ).setRequired(true).setCancelReason("Cancel")
+            );
+        } else {
+
+            return new PageList(
+
+                    new DisplayTextPage(this,
+                            R.string.omnipod_init_pod_wizard_step3_title,
+                            R.string.omnipod_init_pod_wizard_step3_desc,
+                            R.style.WizardPagePodContent).setRequired(true).setCancelReason("Cancel"),
+
+                    new InitActionPage(this,
+                            R.string.omnipod_init_pod_wizard_step4_title,
+                            PodInitActionType.FillCannulaSetBasalProfileWizardStep
+                    ).setRequired(true).setCancelReason("Cancel")
+            );
+
+        }
     }
 
 

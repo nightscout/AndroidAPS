@@ -18,6 +18,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.Event;
@@ -43,6 +44,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedu
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistory;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistoryEntryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodAcknowledgeAlertsChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
@@ -419,10 +421,23 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         }
     }
 
-    private void addToHistory(long requestTime, PodHistoryEntryType entryType, String data, boolean success) {
-        // TODO andy needs to be refactored
+    public void addToHistory(long requestTime, PodHistoryEntryType entryType, Object data, boolean success) {
 
-        //PodDbEntry entry = new PodDbEntry(requestTime, entryType);
+        PodHistory podHistory = new PodHistory(requestTime, entryType);
+
+        if (data!=null) {
+            if (data instanceof String) {
+                podHistory.setData((String)data);
+            } else {
+                podHistory.setData(OmnipodUtil.getGsonInstance().toJson(data));
+            }
+        }
+
+        podHistory.setSuccess(success);
+        podHistory.setPodSerial(pumpStatus.podNumber);
+
+        MainApp.getDbHelper().createOrUpdate(podHistory);
+
     }
 
     private void handleSetupActionResult(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, SetupActionResult res) {
