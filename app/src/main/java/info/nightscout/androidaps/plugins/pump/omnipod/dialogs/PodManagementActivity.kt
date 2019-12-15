@@ -12,7 +12,8 @@ import info.nightscout.androidaps.activities.NoSplashActivity
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodWizardModel
+import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.FullInitPodWizardModel
+import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.ShortInitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitPodRefreshAction
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.RemovePodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
@@ -86,7 +87,11 @@ class PodManagementActivity : NoSplashActivity() {
         wizardPagerContext.pagerSettings = pagerSettings
         val podSessionState = OmnipodUtil.getPodSessionState()
         val isFullInit = podSessionState == null || podSessionState.setupProgress.isBefore(SetupProgress.PRIMING_FINISHED)
-        wizardPagerContext.wizardModel = InitPodWizardModel(applicationContext, isFullInit)
+        if(isFullInit) {
+            wizardPagerContext.wizardModel = FullInitPodWizardModel(applicationContext)
+        } else {
+            wizardPagerContext.wizardModel = ShortInitPodWizardModel(applicationContext)
+        }
 
         val myIntent = Intent(this@PodManagementActivity, WizardPagerActivity::class.java)
         this@PodManagementActivity.startActivity(myIntent)
