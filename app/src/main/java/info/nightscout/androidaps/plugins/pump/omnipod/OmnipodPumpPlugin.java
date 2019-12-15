@@ -576,10 +576,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
-                if (getPodPumpStatusObject().reservoirRemainingUnits != 0 &&
-                        getPodPumpStatusObject().reservoirRemainingUnits != 75 ) {
-                    getPodPumpStatusObject().reservoirRemainingUnits -= detailedBolusInfo.insulin;
-                }
+//                if (getPodPumpStatusObject().reservoirRemainingUnits != 0 &&
+//                        getPodPumpStatusObject().reservoirRemainingUnits != 75 ) {
+//                    getPodPumpStatusObject().reservoirRemainingUnits -= detailedBolusInfo.insulin;
+//                }
 
                 incrementStatistics(detailedBolusInfo.isSMB ? OmnipodConst.Statistics.SMBBoluses
                         : OmnipodConst.Statistics.StandardBoluses);
@@ -587,10 +587,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 // calculate time for bolus and set driver to busy for that time
 
                 // TODO fix this
-                int bolusTime = 1; //omnipodCommunicationManager.get;
-                long time = System.currentTimeMillis() + (bolusTime * 1000);
-
-                this.busyTimestamps.add(time);
+//                int bolusTime = 1; //omnipodCommunicationManager.get;
+//                long time = System.currentTimeMillis() + (bolusTime * 1000);
+//
+//                this.busyTimestamps.add(time);
                 result.bolusDelivered(detailedBolusInfo.insulin).carbsDelivered(detailedBolusInfo.carbs);
             }
 
