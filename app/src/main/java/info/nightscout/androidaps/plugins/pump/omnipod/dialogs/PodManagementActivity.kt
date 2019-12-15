@@ -12,11 +12,10 @@ import info.nightscout.androidaps.activities.NoSplashActivity
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodCancelAction
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitPodRefreshAction
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.RemovePodWizardModel
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
 import info.nightscout.androidaps.utils.OKDialog
@@ -85,7 +84,9 @@ class PodManagementActivity : NoSplashActivity() {
 
         wizardPagerContext.clearContext()
         wizardPagerContext.pagerSettings = pagerSettings
-        wizardPagerContext.wizardModel = InitPodWizardModel(applicationContext, OmnipodUtil.getPodSessionState() == null)
+        val podSessionState = OmnipodUtil.getPodSessionState()
+        val isFullInit = podSessionState == null || podSessionState.setupProgress.isBefore(SetupProgress.PRIMING_FINISHED)
+        wizardPagerContext.wizardModel = InitPodWizardModel(applicationContext, isFullInit)
 
         val myIntent = Intent(this@PodManagementActivity, WizardPagerActivity::class.java)
         this@PodManagementActivity.startActivity(myIntent)
@@ -132,7 +133,7 @@ class PodManagementActivity : NoSplashActivity() {
         initpod_init_pod.isEnabled = (OmnipodUtil.getPodSessionState() == null ||
                 OmnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED))
 
-        val isPodSessionActive = (OmnipodUtil.getPodSessionState()!=null)
+        val isPodSessionActive = (OmnipodUtil.getPodSessionState() != null)
 
         initpod_remove_pod.isEnabled = isPodSessionActive
         initpod_reset_pod.isEnabled = isPodSessionActive
