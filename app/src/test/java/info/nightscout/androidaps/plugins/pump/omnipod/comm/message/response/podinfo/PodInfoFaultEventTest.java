@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.LogEventErrorCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 
@@ -24,7 +24,7 @@ public class PodInfoFaultEventTest {
         assertEquals(DeliveryStatus.NORMAL, podInfoFaultEvent.getDeliveryStatus());
         assertEquals(0, podInfoFaultEvent.getInsulinNotDelivered(), 0.000001);
         assertEquals(0x0a, podInfoFaultEvent.getPodMessageCounter());
-        assertEquals(FaultEventCode.NO_FAULTS, podInfoFaultEvent.getFaultEventCode());
+        assertEquals(FaultEventType.NO_FAULTS, podInfoFaultEvent.getFaultEventType());
         assertTrue(Duration.ZERO.isEqual(podInfoFaultEvent.getFaultEventTime()));
         assertNull(podInfoFaultEvent.getReservoirLevel());
         assertTrue(Duration.standardSeconds(8100).isEqual(podInfoFaultEvent.getTimeSinceActivation()));
@@ -44,7 +44,7 @@ public class PodInfoFaultEventTest {
         assertEquals(DeliveryStatus.SUSPENDED, podInfoFaultEvent.getDeliveryStatus());
         assertEquals(0, podInfoFaultEvent.getInsulinNotDelivered(), 0.000001);
         assertEquals(0x09, podInfoFaultEvent.getPodMessageCounter());
-        assertEquals(FaultEventCode.PRIME_OPEN_COUNT_TOO_LOW, podInfoFaultEvent.getFaultEventCode());
+        assertEquals(FaultEventType.PRIME_OPEN_COUNT_TOO_LOW, podInfoFaultEvent.getFaultEventType());
         assertTrue(Duration.standardSeconds(60).isEqual(podInfoFaultEvent.getFaultEventTime()));
         assertNull(podInfoFaultEvent.getReservoirLevel());
         assertTrue(Duration.standardSeconds(60).isEqual(podInfoFaultEvent.getTimeSinceActivation()));
@@ -65,7 +65,7 @@ public class PodInfoFaultEventTest {
         assertEquals(101.7, podInfoFaultEvent.getTotalInsulinDelivered(), 0.000001);
         assertEquals(0, podInfoFaultEvent.getInsulinNotDelivered(), 0.000001);
         assertEquals(0x04, podInfoFaultEvent.getPodMessageCounter());
-        assertEquals(FaultEventCode.BASAL_OVER_INFUSION_PULSE, podInfoFaultEvent.getFaultEventCode());
+        assertEquals(FaultEventType.BASAL_OVER_INFUSION_PULSE, podInfoFaultEvent.getFaultEventType());
         assertTrue(Duration.standardMinutes(2559).isEqual(podInfoFaultEvent.getFaultEventTime()));
         assertNull(podInfoFaultEvent.getReservoirLevel());
         assertEquals(0, podInfoFaultEvent.getUnacknowledgedAlerts().getRawValue());
@@ -85,7 +85,7 @@ public class PodInfoFaultEventTest {
         assertEquals(11.8, podInfoFaultEvent.getTotalInsulinDelivered(), 0.000001);
         assertEquals(0.05, podInfoFaultEvent.getInsulinNotDelivered(), 0.000001);
         assertEquals(0x02, podInfoFaultEvent.getPodMessageCounter());
-        assertEquals(FaultEventCode.OCCLUSION_CHECK_ABOVE_THRESHOLD, podInfoFaultEvent.getFaultEventCode());
+        assertEquals(FaultEventType.OCCLUSION_CHECK_ABOVE_THRESHOLD, podInfoFaultEvent.getFaultEventType());
         assertTrue(Duration.standardMinutes(616).isEqual(podInfoFaultEvent.getFaultEventTime()));
         assertNull(podInfoFaultEvent.getReservoirLevel());
         assertEquals(0, podInfoFaultEvent.getUnacknowledgedAlerts().getRawValue());

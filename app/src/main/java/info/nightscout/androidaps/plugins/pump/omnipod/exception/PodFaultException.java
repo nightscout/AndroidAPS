@@ -6,7 +6,7 @@ public class PodFaultException extends OmnipodException {
     private final PodInfoFaultEvent faultEvent;
 
     public PodFaultException(PodInfoFaultEvent faultEvent) {
-        super(faultEvent.getFaultEventCode().toString(), true);
+        super(faultEvent.getFaultEventType().toString(), true);
         this.faultEvent = faultEvent;
     }
 

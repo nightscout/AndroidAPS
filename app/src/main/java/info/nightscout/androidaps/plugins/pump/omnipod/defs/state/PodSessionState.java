@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoFaultEvent;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
@@ -216,6 +217,13 @@ public class PodSessionState extends PodState {
     }
 
     @Override
+    public void setFaultEvent(PodInfoFaultEvent faultEvent) {
+        super.setFaultEvent(faultEvent);
+        suspended = true;
+        store();
+    }
+
+    @Override
     public void updateFromStatusResponse(StatusResponse statusResponse) {
         DateTime activatedAtCalculated = getTime().minus(statusResponse.getTimeActive());
         if (activatedAt == null) {
@@ -244,11 +252,7 @@ public class PodSessionState extends PodState {
     @Override
     public String toString() {
         return "PodSessionState{" +
-                "address=" + address +
-                ", packetNumber=" + packetNumber +
-                ", messageNumber=" + messageNumber +
-                ", faultEvent=" + faultEvent +
-                ", configuredAlerts=" + configuredAlerts +
+                "configuredAlerts=" + configuredAlerts +
                 ", stateChangedHandler=" + stateChangedHandler +
                 ", activatedAt=" + activatedAt +
                 ", expiresAt=" + expiresAt +
@@ -264,6 +268,10 @@ public class PodSessionState extends PodState {
                 ", activeAlerts=" + activeAlerts +
                 ", basalSchedule=" + basalSchedule +
                 ", lastDeliveryStatus=" + lastDeliveryStatus +
+                ", address=" + address +
+                ", packetNumber=" + packetNumber +
+                ", messageNumber=" + messageNumber +
+                ", faultEvent=" + faultEvent +
                 '}';
     }
 }

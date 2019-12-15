@@ -7,12 +7,12 @@ import java.util.Collections;
 import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 
 public class PodInfoDataLog extends PodInfo {
     private static final int MINIMUM_MESSAGE_LENGTH = 8;
-    private final FaultEventCode faultEventCode;
+    private final FaultEventType faultEventType;
     private final Duration timeFaultEvent;
     private final Duration timeSinceActivation;
     private final byte dataChunkSize;
@@ -26,7 +26,7 @@ public class PodInfoDataLog extends PodInfo {
             throw new IllegalArgumentException("Not enough data");
         }
 
-        faultEventCode = FaultEventCode.fromByte(encodedData[1]);
+        faultEventType = FaultEventType.fromByte(encodedData[1]);
         timeFaultEvent = Duration.standardMinutes(ByteUtil.toInt(encodedData[2], encodedData[3]));
         timeSinceActivation = Duration.standardMinutes(ByteUtil.toInt(encodedData[4], encodedData[5]));
         dataChunkSize = encodedData[6];
@@ -45,8 +45,8 @@ public class PodInfoDataLog extends PodInfo {
         return PodInfoType.DATA_LOG;
     }
 
-    public FaultEventCode getFaultEventCode() {
-        return faultEventCode;
+    public FaultEventType getFaultEventType() {
+        return faultEventType;
     }
 
     public Duration getTimeFaultEvent() {
@@ -72,7 +72,7 @@ public class PodInfoDataLog extends PodInfo {
     @Override
     public String toString() {
         return "PodInfoDataLog{" +
-                "faultEventCode=" + faultEventCode +
+                "faultEventType=" + faultEventType +
                 ", timeFaultEvent=" + timeFaultEvent +
                 ", timeSinceActivation=" + timeSinceActivation +
                 ", dataChunkSize=" + dataChunkSize +

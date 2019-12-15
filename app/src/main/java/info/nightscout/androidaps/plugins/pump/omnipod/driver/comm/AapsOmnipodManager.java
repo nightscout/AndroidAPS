@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.comm;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.slf4j.Logger;
@@ -18,7 +17,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.Event;
@@ -35,7 +33,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Sta
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
@@ -131,7 +129,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                     pumpStatus.lastBolusTime = lastBolusTime;
                     pumpStatus.lastBolusAmount = lastBolusUnits;
                     pumpStatus.reservoirRemainingUnits = podSessionState.getReservoirLevel() == null ? 75.0 : podSessionState.getReservoirLevel();
-                    pumpStatus.pumpStatusType = (podSessionState.hasFaultEvent() || podSessionState.isSuspended()) ? PumpStatusType.Suspended : PumpStatusType.Running;
+                    pumpStatus.pumpStatusType = podSessionState.isSuspended() ? PumpStatusType.Suspended : PumpStatusType.Running;
                     sendEvent(new EventOmnipodPumpValuesChanged());
                 }
             }
@@ -143,7 +141,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return Math.abs(expectedUnitsRemaining - pumpStatus.reservoirRemainingUnits) < 0.000001;
     }
 
-    @NotNull
     private List<String> translateActiveAlerts(PodSessionState podSessionState) {
         List<String> alerts = new ArrayList<>();
         for (AlertSlot alertSlot : podSessionState.getActiveAlerts().getAlertSlots()) {
@@ -425,9 +422,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
         PodHistory podHistory = new PodHistory(requestTime, entryType);
 
-        if (data!=null) {
+        if (data != null) {
             if (data instanceof String) {
-                podHistory.setData((String)data);
+                podHistory.setData((String) data);
             } else {
                 podHistory.setData(OmnipodUtil.getGsonInstance().toJson(data));
             }
@@ -487,9 +484,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 comment = getStringResource(R.string.omnipod_driver_error_not_enough_data);
             } else if (ex instanceof PodFaultException) {
                 // TODO handle pod fault with some kind of dialog that has a button to start pod deactivation
-                FaultEventCode faultEventCode = ((PodFaultException) ex).getFaultEvent().getFaultEventCode();
+                FaultEventType faultEventType = ((PodFaultException) ex).getFaultEvent().getFaultEventType();
                 comment = getStringResource(R.string.omnipod_driver_error_pod_fault,
-                        ByteUtil.convertUnsignedByteToInt(faultEventCode.getValue()), faultEventCode.name());
+                        ByteUtil.convertUnsignedByteToInt(faultEventType.getValue()), faultEventType.name());
             } else if (ex instanceof PodReturnedErrorResponseException) {
                 comment = getStringResource(R.string.omnipod_driver_error_pod_returned_error_response);
             } else {
