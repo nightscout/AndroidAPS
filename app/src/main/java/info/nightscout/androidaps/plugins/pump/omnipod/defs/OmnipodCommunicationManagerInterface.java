@@ -64,6 +64,11 @@ public interface OmnipodCommunicationManagerInterface {
      */
     PumpEnactResult acknowledgeAlerts();
 
+    /**
+     * Set Time on Pod
+     */
+    PumpEnactResult setTime();
+
 
     void setPumpStatus(OmnipodPumpStatus pumpStatusLocal);
 }

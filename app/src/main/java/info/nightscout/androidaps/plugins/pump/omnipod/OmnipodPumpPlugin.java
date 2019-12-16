@@ -97,6 +97,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     protected List<Long> busyTimestamps = new ArrayList<>();
     protected boolean sentIdToFirebase = false;
     protected boolean hasTimeDateOrTimeZoneChanged = false;
+    private int timeChangeRetries = 0;
 
     private Profile currentProfile;
 
@@ -247,7 +248,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                     clearBusyQueue();
                 }
 
-                if (!this.omnipodStatusRequestList.isEmpty()) {
+                if (!this.omnipodStatusRequestList.isEmpty() || this.hasTimeDateOrTimeZoneChanged) {
                     if (!ConfigBuilderPlugin.getPlugin().getCommandQueue().statusInQueue()) {
                         ConfigBuilderPlugin.getPlugin().getCommandQueue()
                                 .readStatus("Status Refresh Requested", null);
@@ -376,6 +377,20 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             omnipodStatusRequestList.removeAll(removeList);
 
             //getPodPumpStatus();
+        } else if (this.hasTimeDateOrTimeZoneChanged) {
+            OmnipodUITask omnipodUITask = omnipodUIComm.executeCommand(OmnipodCommandType.SetTime);
+
+            if (omnipodUITask.wasCommandSuccessful()) {
+                this.hasTimeDateOrTimeZoneChanged = false;
+                timeChangeRetries = 0;
+            } else {
+                timeChangeRetries++;
+
+                if (timeChangeRetries > 3) {
+                    this.hasTimeDateOrTimeZoneChanged = false;
+                    timeChangeRetries = 0;
+                }
+            }
         }
 
     }
@@ -890,12 +905,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @Override
     public void timeDateOrTimeZoneChanged() {
 
-//        if (isLoggingEnabled())
-//            LOG.warn(getLogPrefix() + "Time, Date and/or TimeZone changed. ");
-//
-//        this.hasTimeDateOrTimeZoneChanged = true;
+        if (isLoggingEnabled())
+            LOG.warn(getLogPrefix() + "Time, Date and/or TimeZone changed. ");
 
-        // TODO
+        this.hasTimeDateOrTimeZoneChanged = true;
     }
 
 

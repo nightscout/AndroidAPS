@@ -112,6 +112,10 @@ public class OmnipodUITask {
                 returnData = communicationManager.acknowledgeAlerts();
                 break;
 
+            case SetTime:
+                returnData = communicationManager.setTime();
+                break;
+
             default: {
                 LOG.warn("This commandType is not supported (yet) - {}.", commandType);
             }

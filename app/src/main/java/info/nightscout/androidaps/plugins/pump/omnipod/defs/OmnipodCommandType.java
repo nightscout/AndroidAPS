@@ -16,6 +16,7 @@ public enum OmnipodCommandType {
     CancelTemporaryBasal, //
     ResetPodStatus, //
     GetPodStatus, //
+    SetTime, //
     AcknowledgeAlerts;
 
 
