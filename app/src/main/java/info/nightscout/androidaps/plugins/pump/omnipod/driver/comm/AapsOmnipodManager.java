@@ -288,7 +288,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     @Override
     public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
-        boolean beepsEnabled = isBasalBeepsEnabled();
+        boolean beepsEnabled = isTempBasalBeepsEnabled();
         try {
             delegate.setTemporaryBasal(tempBasalPair, beepsEnabled, beepsEnabled);
         } catch (Exception ex) {
@@ -302,7 +302,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public PumpEnactResult cancelTemporaryBasal() {
         try {
-            delegate.cancelTemporaryBasal(isBasalBeepsEnabled());
+            delegate.cancelTemporaryBasal(isTempBasalBeepsEnabled());
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
@@ -541,6 +541,11 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     private boolean isBasalBeepsEnabled() {
+        return this.pumpStatus.beepBasalEnabled;
+    }
+
+    private boolean isTempBasalBeepsEnabled() {
+        // TODO add separate setting for temp basal beeps
         return this.pumpStatus.beepBasalEnabled;
     }
 
