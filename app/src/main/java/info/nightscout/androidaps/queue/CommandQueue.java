@@ -279,7 +279,7 @@ public class CommandQueue {
         }
         removeAll(Command.CommandType.BOLUS);
         removeAll(Command.CommandType.SMB_BOLUS);
-        ConfigBuilderPlugin.getPlugin().getActivePump().stopBolusDelivering();
+        new Thread(() -> ConfigBuilderPlugin.getPlugin().getActivePump().stopBolusDelivering()).run();
     }
 
     // returns true if command is queued
