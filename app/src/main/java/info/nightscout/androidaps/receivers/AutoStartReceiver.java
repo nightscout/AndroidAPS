@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.nsclient.receivers;
+package info.nightscout.androidaps.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

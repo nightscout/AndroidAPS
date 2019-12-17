@@ -116,7 +116,7 @@
 
         <!-- Auto start -->
         <receiver
-            android:name=".plugins.general.nsclient.receivers.AutoStartReceiver"
+            android:name=".receivers.AutoStartReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
