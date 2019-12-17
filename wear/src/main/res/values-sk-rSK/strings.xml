@@ -55,6 +55,8 @@
     <string name="pref_version">Verzia:</string>
     <string name="menu_tempt">TempT</string>
     <string name="menu_wizard">Sprievodca</string>
+    <string name="menu_bolus">Bolus</string>
+    <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Nastavenia</string>
     <string name="menu_status">Stav</string>
     <string name="menu_prime_fill">Plnenie/Doplňovanie</string>
@@ -93,4 +95,5 @@
     <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">JI/h</string>
     <string name="unit_h" comment="One letter shortcut for: Hour" maxLength="1">h</string>
     <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">d</string>
+    <string name="unit_w" comment="One letter shortcut for: Week" maxLength="1">t</string>
 </resources>
