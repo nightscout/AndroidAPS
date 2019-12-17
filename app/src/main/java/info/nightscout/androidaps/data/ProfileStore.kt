@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.data
 
 import androidx.collection.ArrayMap
+import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONException
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
@@ -40,21 +41,19 @@ class ProfileStore(val data: JSONObject) {
 
     fun getSpecificProfile(profileName: String): Profile? {
         var profile: Profile? = null
-        try {
-            getStore()?.let { store ->
-                if (store.has(profileName)) {
-                    profile = cachedObjects[profileName]
-                    if (profile == null) {
-                        val profileObject = store.getJSONObject(profileName)
-                        if (profileObject != null && profileObject.has("units")) {
-                            profile = Profile(profileObject, profileObject.getString("units"))
+        getStore()?.let { store ->
+            if (store.has(profileName)) {
+                profile = cachedObjects[profileName]
+                if (profile == null) {
+                    JsonHelper.safeGetJSONObject(store, profileName, null)?.let { profileObject ->
+                        // take units from profile and if N/A from store
+                        JsonHelper.safeGetStringAllowNull(profileObject, "units", JsonHelper.safeGetString(store, "units"))?.let { units ->
+                            profile = Profile(profileObject, units)
                             cachedObjects[profileName] = profile
                         }
                     }
                 }
             }
-        } catch (e: JSONException) {
-            log.error("Unhandled exception", e)
         }
         return profile
     }
