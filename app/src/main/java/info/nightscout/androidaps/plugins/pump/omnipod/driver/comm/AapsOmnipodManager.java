@@ -373,7 +373,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             // because the pod state we keep, doesn't get updated from a PodInfoResponse.
             // We use StatusResponses for that, which can be obtained from the getPodStatus method
             PodInfoResponse podInfo = delegate.getPodInfo(podInfoType);
-            addSuccessToHistory(time, PodHistoryEntryType.GetPodInfo, null);
+            addSuccessToHistory(time, PodHistoryEntryType.GetPodInfo, podInfo);
             return new PumpEnactResult().success(true).enacted(true);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
