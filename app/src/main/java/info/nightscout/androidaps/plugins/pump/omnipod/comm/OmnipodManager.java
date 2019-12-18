@@ -63,7 +63,7 @@ public class OmnipodManager {
     protected PodSessionState podState;
 
     private ActiveBolusData activeBolusData;
-    private final Object bolusDataLock = new Object();
+    private final Object bolusDataMutex = new Object();
 
     public OmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState,
                           PodStateChangedHandler podStateChangedHandler) {
@@ -224,7 +224,8 @@ public class OmnipodManager {
         try {
             // As the cancel delivery command is a single packet command,
             // first verify that the pod is reachable by obtaining a status response
-            // FIXME is this actually necessary?
+            // FIXME replace this with padding the CancelDelivery command message
+            //  with GetStatusResponse commands to ensure that the message > 1 packets
             StatusResponse podStatus = getPodStatus();
         } catch (OmnipodException ex) {
             logCommandExecutionFinished("cancelDelivery");
@@ -286,7 +287,7 @@ public class OmnipodManager {
 
         SingleSubject<BolusDeliveryResult> bolusCompletionSubject = SingleSubject.create();
 
-        synchronized (bolusDataLock) {
+        synchronized (bolusDataMutex) {
             activeBolusData = new ActiveBolusData(units, startDate, bolusCompletionSubject, disposables);
         }
 
@@ -294,7 +295,7 @@ public class OmnipodManager {
                 .delay(estimatedRemainingBolusDuration.getMillis() + 250, TimeUnit.MILLISECONDS) //
                 .observeOn(Schedulers.io()) //
                 .doOnComplete(() -> {
-                    synchronized (bolusDataLock) {
+                    synchronized (bolusDataMutex) {
                         for (int i = 0; i < ACTION_VERIFICATION_TRIES; i++) {
                             try {
                                 // Retrieve a status response in order to update the pod state
@@ -325,7 +326,7 @@ public class OmnipodManager {
     public synchronized void cancelBolus(boolean acknowledgementBeep) {
         assertReadyForDelivery();
 
-        synchronized (bolusDataLock) {
+        synchronized (bolusDataMutex) {
             if (activeBolusData == null) {
                 throw new IllegalDeliveryStatusException(DeliveryStatus.BOLUS_IN_PROGRESS, podState.getLastDeliveryStatus());
             }
@@ -335,6 +336,7 @@ public class OmnipodManager {
             try {
                 cancelDelivery(EnumSet.of(DeliveryType.BOLUS), acknowledgementBeep);
             } catch (PodFaultException ex) {
+                podState.setFaultEvent(ex.getFaultEvent());
                 if (isLoggingEnabled()) {
                     LOG.info("Ignoring PodFaultException in cancelBolus", ex);
                 }
