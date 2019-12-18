@@ -107,6 +107,11 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
     }
 
     @Override
+    public PumpEnactResult setTime() {
+        return null;
+    }
+
+    @Override
     public void setPumpStatus(OmnipodPumpStatus pumpStatusLocal) {
 
     }
