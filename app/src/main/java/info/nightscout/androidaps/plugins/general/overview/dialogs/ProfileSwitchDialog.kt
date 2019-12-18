@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.plugins.general.overview.dialogs
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
@@ -9,18 +11,18 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.OKDialog
 import kotlinx.android.synthetic.main.okcancel.*
 import kotlinx.android.synthetic.main.overview_profileswitch_dialog.*
-import org.slf4j.LoggerFactory
 import java.text.DecimalFormat
 import java.util.*
 
 class ProfileSwitchDialog : DialogFragmentWithDate() {
 
-     override fun onSaveInstanceState(savedInstanceState: Bundle) {
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putDouble("overview_profileswitch_duration", overview_profileswitch_duration.value)
         savedInstanceState.putDouble("overview_profileswitch_percentage", overview_profileswitch_percentage.value)
@@ -55,6 +57,19 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                 if (profileList[p] == ProfileFunctions.getInstance().getProfileName(false))
                     overview_profileswitch_profile.setSelection(p)
         } ?: return
+
+        TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(DateUtil.now())?.let { ps ->
+            if (ps.isCPP) {
+                overview_profileswitch_reuselayout.visibility = View.VISIBLE
+                overview_profileswitch_reusebutton.text = MainApp.gs(R.string.reuse) + " " + ps.percentage + "% " + ps.timeshift + "h"
+                overview_profileswitch_reusebutton.setOnClickListener {
+                    overview_profileswitch_percentage.value = ps.percentage.toDouble()
+                    overview_profileswitch_timeshift.value = ps.timeshift.toDouble()
+                }
+            } else {
+                overview_profileswitch_reuselayout.visibility = View.GONE
+            }
+        }
     }
 
     override fun submit() {
@@ -65,7 +80,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         if (duration > 0)
             actions.add(MainApp.gs(R.string.duration) + ": " + MainApp.gs(R.string.format_hours, duration))
         val profile = overview_profileswitch_profile.selectedItem.toString()
-        actions.add(MainApp.gs(R.string.profile).toString() + ": " + profile)
+        actions.add(MainApp.gs(R.string.profile) + ": " + profile)
         val percent = overview_profileswitch_percentage.value.toInt()
         if (percent != 100)
             actions.add(MainApp.gs(R.string.percent) + ": " + percent + "%")

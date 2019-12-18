@@ -200,7 +200,6 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
                 newDialog.setOptions(OPENAPSOFFLINE, R.string.careportal_openapsoffline);
                 break;
             case R.id.careportal_temporarytarget:
-                TEMPTARGET.executeTempTarget = false;
                 newDialog.setOptions(TEMPTARGET, R.string.careportal_temporarytarget);
                 break;
             default:
@@ -220,7 +219,7 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
             activity.runOnUiThread(
                     () -> {
                         CareportalEvent careportalEvent;
-                        NSSettingsStatus nsSettings = new NSSettingsStatus().getInstance();
+                        NSSettingsStatus nsSettings = NSSettingsStatus.getInstance();
 
                         double iageUrgent = nsSettings.getExtendedWarnValue("iage", "urgent", 96);
                         double iageWarn = nsSettings.getExtendedWarnValue("iage", "warn", 72);

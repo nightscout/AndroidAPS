@@ -94,6 +94,7 @@ import info.nightscout.androidaps.plugins.general.overview.dialogs.NewCarbsDialo
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewInsulinDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ProfileSwitchDialog;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.TempTargetDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
@@ -791,11 +792,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     .high(target);
             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(MainApp.gs(R.string.custom))) {
-            NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
-            final OptionsToShow temptarget = CareportalFragment.TEMPTARGET;
-            temptarget.executeTempTarget = true;
-            newTTDialog.setOptions(temptarget, R.string.careportal_temporarytarget);
-            newTTDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
+            FragmentManager manager = getFragmentManager();
+            if (manager != null)
+                new TempTargetDialog().show(manager, "Overview");
         } else if (item.getTitle().equals(MainApp.gs(R.string.cancel))) {
             TempTarget tempTarget = new TempTarget()
                     .source(Source.USER)
@@ -817,7 +816,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         FragmentManager manager = getFragmentManager();
         // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
         // https://stackoverflow.com/questions/14860239/checking-if-state-is-saved-before-committing-a-fragmenttransaction
-        if (manager.isStateSaved())
+        if (manager == null || manager.isStateSaved())
             return;
         switch (v.getId()) {
             case R.id.overview_accepttempbutton:

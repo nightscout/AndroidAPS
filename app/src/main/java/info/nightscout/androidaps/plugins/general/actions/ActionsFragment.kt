@@ -21,9 +21,8 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.dialogs.FillDialog
 import info.nightscout.androidaps.plugins.general.actions.dialogs.NewExtendedBolusDialog
 import info.nightscout.androidaps.plugins.general.actions.dialogs.NewTempBasalDialog
-import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ProfileSwitchDialog
+import info.nightscout.androidaps.plugins.general.overview.dialogs.TempTargetDialog
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
@@ -51,11 +50,7 @@ class ActionsFragment : Fragment() {
             fragmentManager?.let { ProfileSwitchDialog().show(it, "Actions") }
         }
         actions_temptarget.setOnClickListener {
-            val newTTDialog = NewNSTreatmentDialog()
-            val temptarget = CareportalFragment.TEMPTARGET
-            temptarget.executeTempTarget = true
-            newTTDialog.setOptions(temptarget, R.string.careportal_temporarytarget)
-            fragmentManager?.let { newTTDialog.show(it, "NewNSTreatmentDialog") }
+            fragmentManager?.let { TempTargetDialog().show(it, "Actions") }
         }
         actions_extendedbolus.setOnClickListener {
             fragmentManager?.let { NewExtendedBolusDialog().show(it, "NewExtendedDialog") }

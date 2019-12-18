@@ -19,9 +19,6 @@ public class OptionsToShow {
     public boolean split;
     public boolean tempTarget;
 
-    // perform direct actions
-    public boolean executeTempTarget = false;
-
     public OptionsToShow(int eventType, int eventName) {
         this.eventType = eventType;
         this.eventName = eventName;

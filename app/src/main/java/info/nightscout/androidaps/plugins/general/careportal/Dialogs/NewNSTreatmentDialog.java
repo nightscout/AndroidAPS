@@ -45,8 +45,6 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ProfileSwitch;
-import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
@@ -68,7 +66,7 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
     private static OptionsToShow options;
     private static String event;
 
-    Profile profile;
+    private Profile profile;
     public ProfileStore profileStore;
 
     TextView eventTypeText;
@@ -703,41 +701,18 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
 
 
     void createNSTreatment(JSONObject data) {
-        if (options.executeTempTarget) {
-            final int duration = JsonHelper.safeGetInt(data, "duration");
-            final double targetBottom = JsonHelper.safeGetDouble(data, "targetBottom");
-            final double targetTop = JsonHelper.safeGetDouble(data, "targetTop");
-            final String reason = JsonHelper.safeGetString(data, "reason", "");
-            if ((targetBottom != 0d && targetTop != 0d) || duration == 0) {
-                TempTarget tempTarget = new TempTarget()
-                        .date(eventTime.getTime())
-                        .duration(duration)
-                        .reason(reason)
-                        .source(Source.USER);
-                if (tempTarget.durationInMinutes != 0) {
-                    tempTarget.low(Profile.toMgdl(targetBottom, ProfileFunctions.getSystemUnits()))
-                            .high(Profile.toMgdl(targetTop, ProfileFunctions.getSystemUnits()));
-                } else {
-                    tempTarget.low(0).high(0);
-                }
-                TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
-            }
-            if (duration == 10)
-                SP.putBoolean(R.string.key_objectiveusetemptarget, true);
+        if (JsonHelper.safeGetString(data, "eventType").equals(CareportalEvent.PROFILESWITCH)) {
+            ProfileSwitch profileSwitch = ProfileFunctions.prepareProfileSwitch(
+                    profileStore,
+                    JsonHelper.safeGetString(data, "profile"),
+                    JsonHelper.safeGetInt(data, "duration"),
+                    JsonHelper.safeGetInt(data, "percentage"),
+                    JsonHelper.safeGetInt(data, "timeshift"),
+                    eventTime.getTime()
+            );
+            NSUpload.uploadProfileSwitch(profileSwitch);
         } else {
-            if (JsonHelper.safeGetString(data, "eventType").equals(CareportalEvent.PROFILESWITCH)) {
-                ProfileSwitch profileSwitch = ProfileFunctions.prepareProfileSwitch(
-                        profileStore,
-                        JsonHelper.safeGetString(data, "profile"),
-                        JsonHelper.safeGetInt(data, "duration"),
-                        JsonHelper.safeGetInt(data, "percentage"),
-                        JsonHelper.safeGetInt(data, "timeshift"),
-                        eventTime.getTime()
-                );
-                NSUpload.uploadProfileSwitch(profileSwitch);
-            } else {
-                NSUpload.uploadCareportalEntryToNS(data);
-            }
+            NSUpload.uploadCareportalEntryToNS(data);
         }
     }
 
