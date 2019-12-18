@@ -1744,6 +1744,7 @@
     <string name="omnipod_alert_unknown_alert">Unknown alert</string>
     <string name="omnipod_error_set_basal_failed_uncertain">Setting basal profile failed. Delivery might be suspended! Please refresh pod status.</string>
     <string name="omnipod_error_set_time_failed_uncertain">Setting time failed. Delivery might be suspended! Please refresh pod status.</string>
+    <string name="omnipod_bolus_failed_uncertain">Unable to verify whether the bolus succeeded. Please verify that your pod is bolusing or cancel the bolus.</string>
 
 
 </resources>

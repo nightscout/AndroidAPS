@@ -20,9 +20,12 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.Event;
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
+import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpStatusType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -101,6 +104,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 pumpStatus.pumpStatusType = PumpStatusType.Suspended;
                 sendEvent(new EventOmnipodAcknowledgeAlertsChanged());
                 sendEvent(new EventOmnipodPumpValuesChanged());
+                sendEvent(new EventRefreshOverview("Omnipod Pump"));
             } else {
                 // Update active alerts
                 if (podSessionState.hasActiveAlerts()) {
@@ -131,6 +135,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                     pumpStatus.reservoirRemainingUnits = podSessionState.getReservoirLevel() == null ? 75.0 : podSessionState.getReservoirLevel();
                     pumpStatus.pumpStatusType = podSessionState.isSuspended() ? PumpStatusType.Suspended : PumpStatusType.Running;
                     sendEvent(new EventOmnipodPumpValuesChanged());
+
+                    if (podSessionState.isSuspended() != PumpStatusType.Suspended.equals(pumpStatus.pumpStatusType)) {
+                        sendEvent(new EventRefreshOverview("Omnipod Pump"));
+                    }
                 }
             }
         }
@@ -269,8 +277,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         }
 
         if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus())) {
-            // TODO notify user about uncertain failure ---> we're unsure whether or not the bolus has been delivered
-            //  For safety reasons, we should treat this as a bolus that has been delivered, in order to prevent insulin overdose
+            // For safety reasons, we treat this as a bolus that has successfully been delivered, in order to prevent insulin overdose
+
+            // FIXME We can't dismiss the alert while the bolus progress dialog is open, so don't use a sound
+            showNotification(getStringResource(R.string.omnipod_bolus_failed_uncertain), Notification.URGENT, null);
         }
 
         // Wait for the bolus to finish
@@ -304,7 +314,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     @Override
     public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
-        boolean beepsEnabled = isBasalBeepsEnabled();
+        boolean beepsEnabled = isTempBasalBeepsEnabled();
         long time = System.currentTimeMillis();
         try {
             delegate.setTemporaryBasal(tempBasalPair, beepsEnabled, beepsEnabled);
@@ -322,7 +332,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     public PumpEnactResult cancelTemporaryBasal() {
         long time = System.currentTimeMillis();
         try {
-            delegate.cancelTemporaryBasal(isBasalBeepsEnabled());
+            delegate.cancelTemporaryBasal(isTempBasalBeepsEnabled());
             addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasal, null);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
@@ -555,6 +565,17 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         RxBus.INSTANCE.send(event);
     }
 
+    private void showNotification(String message, int urgency, Integer sound) {
+        Notification notification = new Notification( //
+                Notification.OMNIPOD_PUMP_ALARM, //
+                message, //
+                urgency);
+        if (sound != null) {
+            notification.soundId = sound;
+        }
+        sendEvent(new EventNewNotification(notification));
+    }
+
     private String translateAlertType(AlertType alertType) {
         if (alertType == null) {
             return getStringResource(R.string.omnipod_alert_unknown_alert);
@@ -586,6 +607,11 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     private boolean isBasalBeepsEnabled() {
+        return this.pumpStatus.beepBasalEnabled;
+    }
+
+    private boolean isTempBasalBeepsEnabled() {
+        // TODO add separate setting for temp basal beeps
         return this.pumpStatus.beepBasalEnabled;
     }
 
