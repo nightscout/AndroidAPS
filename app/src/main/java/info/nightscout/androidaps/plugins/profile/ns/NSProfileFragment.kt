@@ -12,6 +12,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.profile.ns.events.EventNSProfileUpdateGUI
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.OKDialog
@@ -42,7 +43,7 @@ class NSProfileFragment : Fragment() {
                     OKDialog.showConfirmation(activity,
                             MainApp.gs(R.string.activate_profile) + ": " + name + " ?"
                     ) {
-                        ProfileFunctions.doProfileSwitch(store, name, 0, 100, 0)
+                        ProfileFunctions.doProfileSwitch(store, name, 0, 100, 0, DateUtil.now())
                     }
                 }
             }

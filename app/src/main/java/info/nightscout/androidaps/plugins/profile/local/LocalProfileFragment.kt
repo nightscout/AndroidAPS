@@ -16,8 +16,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.MIN_DIA
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.*
@@ -170,11 +169,7 @@ class LocalProfileFragment : Fragment() {
 
         localprofile_profileswitch.setOnClickListener {
             // TODO: select in dialog LocalProfilePlugin.currentProfileIndex
-            val newDialog = NewNSTreatmentDialog()
-            val profileSwitch = CareportalFragment.PROFILESWITCHDIRECT
-            profileSwitch.executeProfileSwitch = true
-            newDialog.setOptions(profileSwitch, R.string.careportal_profileswitch)
-            fragmentManager?.let { newDialog.show(it, "NewNSTreatmentDialog") }
+            fragmentManager?.let { ProfileSwitchDialog().show(it, "NewNSTreatmentDialog") }
         }
 
         localprofile_reset.setOnClickListener {

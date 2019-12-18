@@ -170,8 +170,8 @@ public class ProfileFunctions {
         return profileSwitch;
     }
 
-    public static void doProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration, final int percentage, final int timeshift) {
-        ProfileSwitch profileSwitch = prepareProfileSwitch(profileStore, profileName, duration, percentage, timeshift, System.currentTimeMillis());
+    public static void doProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration, final int percentage, final int timeshift, final long date) {
+        ProfileSwitch profileSwitch = prepareProfileSwitch(profileStore, profileName, duration, percentage, timeshift, date);
         TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
         if (percentage == 90 && duration == 10)
             SP.putBoolean(R.string.key_objectiveuseprofileswitch, true);

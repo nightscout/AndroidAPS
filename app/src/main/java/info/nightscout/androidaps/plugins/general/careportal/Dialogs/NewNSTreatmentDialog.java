@@ -672,7 +672,7 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
             ret += "\n";
         }
         if (data.has("created_at")) {
-            ret += MainApp.gs(R.string.careportal_newnstreatment_eventtime_label);
+            ret += MainApp.gs(R.string.event_time_label);
             ret += ": ";
             ret += eventTime.toLocaleString();
             ret += "\n";
@@ -703,11 +703,7 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
 
 
     void createNSTreatment(JSONObject data) {
-        if (options.executeProfileSwitch) {
-            if (data.has("profile")) {
-                ProfileFunctions.doProfileSwitch(profileStore, JsonHelper.safeGetString(data, "profile"), JsonHelper.safeGetInt(data, "duration"), JsonHelper.safeGetInt(data, "percentage"), JsonHelper.safeGetInt(data, "timeshift"));
-            }
-        } else if (options.executeTempTarget) {
+        if (options.executeTempTarget) {
             final int duration = JsonHelper.safeGetInt(data, "duration");
             final double targetBottom = JsonHelper.safeGetDouble(data, "targetBottom");
             final double targetTop = JsonHelper.safeGetDouble(data, "targetTop");

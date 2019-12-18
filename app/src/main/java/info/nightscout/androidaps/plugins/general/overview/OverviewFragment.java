@@ -93,6 +93,7 @@ import info.nightscout.androidaps.plugins.general.overview.dialogs.CalibrationDi
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewCarbsDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewInsulinDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewTreatmentDialog;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ProfileSwitchDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
@@ -744,11 +745,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.careportal_profileswitch))) {
-            NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-            final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCHDIRECT;
-            profileswitch.executeProfileSwitch = true;
-            newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
-            newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
+            FragmentManager manager = getFragmentManager();
+            if (manager != null)
+                new ProfileSwitchDialog().show(manager, "Overview");
         } else if (item.getTitle().equals(MainApp.gs(R.string.danar_viewprofile))) {
             Bundle args = new Bundle();
             args.putLong("time", DateUtil.now());

@@ -20,7 +20,6 @@ public class OptionsToShow {
     public boolean tempTarget;
 
     // perform direct actions
-    public boolean executeProfileSwitch = false;
     public boolean executeTempTarget = false;
 
     public OptionsToShow(int eventType, int eventName) {

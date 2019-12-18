@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputProfi
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 
 public class ActionProfileSwitch extends Action {
@@ -66,7 +67,7 @@ public class ActionProfileSwitch extends Action {
             return;
         }
 
-        ProfileFunctions.doProfileSwitch(profileStore, profileName, 0, 100, 0);
+        ProfileFunctions.doProfileSwitch(profileStore, profileName, 0, 100, 0, DateUtil.now());
         if (callback != null)
             callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
     }

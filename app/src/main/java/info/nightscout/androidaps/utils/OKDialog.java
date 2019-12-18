@@ -5,9 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.text.Spanned;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
-import android.text.Spanned;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class OKDialog {
         return mainHandler.post(theRunnable);
     }
 
-   public static void show(final Activity activity, String title, Spanned message, final Runnable runnable) {
+    public static void show(final Activity activity, String title, Spanned message, final Runnable runnable) {
         try {
             AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme));
             builder.setTitle(title);
@@ -69,23 +70,18 @@ public class OKDialog {
         }
     }
 
-    public static void showConfirmation(final Activity activity, String message, final Runnable runnable) {
-        AlertDialog alertDialog =  new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme))
-                .setMessage(message)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                    dialog.dismiss();
-                    if (runnable != null) {
-                        SystemClock.sleep(100);
-                        activity.runOnUiThread(runnable);
-                    }
-                })
-                .setNegativeButton(android.R.string.cancel, null)
-                .show();
+    public static void showConfirmation(final Activity activity, String message, final Runnable ok) {
+        showConfirmation(activity, message, ok, null);
     }
 
-    public static void showConfirmation(final Activity activity, String message, final Runnable ok, final Runnable cancel) {
-        AlertDialog alertDialog =  new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme))
+    public static void showConfirmation(final Activity activity, Spanned message, final Runnable ok) {
+        showConfirmation(activity, message, ok, null);
+    }
+
+    public static void showConfirmation(final Activity activity, Spanned message, final Runnable ok, final Runnable cancel) {
+        new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme))
                 .setMessage(message)
+                .setTitle(MainApp.gs(R.string.confirmation))
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     dialog.dismiss();
                     if (ok != null) {
@@ -93,7 +89,29 @@ public class OKDialog {
                         activity.runOnUiThread(ok);
                     }
                 })
-                .setNegativeButton(android.R.string.cancel,  (dialog, which) -> {
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
+                    dialog.dismiss();
+                    if (cancel != null) {
+                        SystemClock.sleep(100);
+                        activity.runOnUiThread(cancel);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    public static void showConfirmation(final Activity activity, String message, final Runnable ok, final Runnable cancel) {
+        new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme))
+                .setMessage(message)
+                .setTitle(MainApp.gs(R.string.confirmation))
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                    dialog.dismiss();
+                    if (ok != null) {
+                        SystemClock.sleep(100);
+                        activity.runOnUiThread(ok);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> {
                     dialog.dismiss();
                     if (cancel != null) {
                         SystemClock.sleep(100);

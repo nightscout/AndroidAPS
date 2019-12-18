@@ -30,6 +30,7 @@ import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ProfileSwitchDialog;
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment;
@@ -304,11 +305,7 @@ public class SWDefinition {
             .add(new SWButton()
                     .text(R.string.doprofileswitch)
                     .action(() -> {
-                        NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                        final OptionsToShow profileSwitch = CareportalFragment.PROFILESWITCHDIRECT;
-                        profileSwitch.executeProfileSwitch = true;
-                        newDialog.setOptions(profileSwitch, R.string.careportal_profileswitch);
-                        newDialog.show(getActivity().getSupportFragmentManager(), "NewNSTreatmentDialog");
+                        new ProfileSwitchDialog().show(getActivity().getSupportFragmentManager(), "SetupWizard");
                     }))
             .validator(() -> ProfileFunctions.getInstance().getProfile() != null)
             .visibility(() -> ProfileFunctions.getInstance().getProfile() == null);

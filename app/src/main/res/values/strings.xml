@@ -238,7 +238,7 @@
     <string name="careportal_newnstreatment_percent_label">Percent</string>
     <string name="careportal_newnstreatment_absolute_label">Absolute</string>
     <string name="careportal_newnstreatment_notes_label">Notes</string>
-    <string name="careportal_newnstreatment_eventtime_label">Event time</string>
+    <string name="event_time_label">Event time</string>
     <string name="careportal_newnstreatment_profile_label">Profile</string>
     <string name="careportal_newnstreatment_enteredby_title">Entered By</string>
     <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
