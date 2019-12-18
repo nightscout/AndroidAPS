@@ -9,7 +9,7 @@ import java.util.Map;
 public enum PodHistoryEntryType {
 
     PairAndPrime(1),
-    InsertCannula(2),
+    FillCannulaSetBasalProfile(2),
     DeactivatePod(3),
     ResetPodState(4),
 
@@ -20,6 +20,7 @@ public enum PodHistoryEntryType {
 
     GetPodStatus(30),
     GetPodInfo(31),
+    SetTime(32),
 
     SetBolus(40),
     CancelBolus(41),
