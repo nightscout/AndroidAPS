@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.MainApp
@@ -216,8 +217,7 @@ class ActionsFragment : Fragment() {
                 val action = this.pumpCustomActions[b.text.toString()]
                 ConfigBuilderPlugin.getPlugin().activePump!!.executeCustomAction(action!!.customActionType)
             }
-
-            val top = resources.getDrawable(customAction.iconResourceId)
+            val top = activity?.let { ContextCompat.getDrawable(it, customAction.iconResourceId) }
             btn.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
 
             action_buttons_layout?.addView(btn)
