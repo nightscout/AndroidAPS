@@ -336,7 +336,6 @@ public class OmnipodManager {
             try {
                 cancelDelivery(EnumSet.of(DeliveryType.BOLUS), acknowledgementBeep);
             } catch (PodFaultException ex) {
-                podState.setFaultEvent(ex.getFaultEvent());
                 if (isLoggingEnabled()) {
                     LOG.info("Ignoring PodFaultException in cancelBolus", ex);
                 }
