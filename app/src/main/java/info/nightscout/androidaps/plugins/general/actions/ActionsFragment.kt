@@ -19,9 +19,11 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
+import info.nightscout.androidaps.plugins.general.actions.dialogs.CareDialog
 import info.nightscout.androidaps.plugins.general.actions.dialogs.FillDialog
 import info.nightscout.androidaps.plugins.general.actions.dialogs.NewExtendedBolusDialog
 import info.nightscout.androidaps.plugins.general.actions.dialogs.NewTempBasalDialog
+import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.plugins.general.overview.dialogs.TempTargetDialog
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -30,6 +32,7 @@ import info.nightscout.androidaps.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.actions_fragment.*
+import kotlinx.android.synthetic.main.careportal_stats_fragment.*
 import java.util.*
 
 class ActionsFragment : Fragment() {
@@ -80,6 +83,15 @@ class ActionsFragment : Fragment() {
         actions_fill.setOnClickListener { fragmentManager?.let { FillDialog().show(it, "FillDialog") } }
         actions_historybrowser.setOnClickListener { startActivity(Intent(context, HistoryBrowseActivity::class.java)) }
         actions_tddstats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
+        actions_bgcheck.setOnClickListener {
+            fragmentManager?.let { CareDialog().setOptions(CareDialog.EventType.BGCHECK, R.string.careportal_bgcheck).show(it, "Actions") }
+        }
+        actions_cgmsensorinsert.setOnClickListener {
+            fragmentManager?.let { CareDialog().setOptions(CareDialog.EventType.SENSOR_INSERT, R.string.careportal_cgmsensorinsert).show(it, "Actions") }
+        }
+        actions_pumpbatterychange.setOnClickListener {
+            fragmentManager?.let { CareDialog().setOptions(CareDialog.EventType.BATTERY_CHANGE, R.string.careportal_pumpbatterychange).show(it, "Actions") }
+        }
 
         SP.putBoolean(R.string.key_objectiveuseactions, true)
     }
@@ -90,43 +102,27 @@ class ActionsFragment : Fragment() {
         disposable += RxBus
                 .toObservable(EventInitializationChanged::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateGui()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
         disposable += RxBus
                 .toObservable(EventRefreshOverview::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateGui()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
         disposable += RxBus
                 .toObservable(EventExtendedBolusChange::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateGui()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
         disposable += RxBus
                 .toObservable(EventTempBasalChange::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateGui()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
         disposable += RxBus
                 .toObservable(EventCustomActionsChanged::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateGui()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+        disposable += RxBus
+                .toObservable(EventCareportalEventChange::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
         updateGui()
     }
 
@@ -193,6 +189,9 @@ class ActionsFragment : Fragment() {
 
         actions_temptarget?.visibility = if (!Config.APS) View.GONE else View.VISIBLE
         actions_tddstats?.visibility = if (!pump.pumpDescription.supportsTDDs) View.GONE else View.VISIBLE
+        activity?.let { activity ->
+            CareportalFragment.updateAge(activity, careportal_sensorage, careportal_insulinage, careportal_canulaage, careportal_pbage)
+        }
         checkPumpCustomActions()
     }
 

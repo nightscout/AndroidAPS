@@ -9,6 +9,8 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -103,9 +105,10 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
 
     private static Integer seconds = null;
 
-    public void setOptions(OptionsToShow options, int event) {
+    public NewNSTreatmentDialog setOptions(OptionsToShow options, int event) {
         this.options = options;
         this.event = MainApp.gs(event);
+        return this;
     }
 
     public NewNSTreatmentDialog() {
@@ -120,7 +123,10 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (options == null) return null;
-        getDialog().setTitle(MainApp.gs(options.eventName));
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        setCancelable(true);
+        getDialog().setCanceledOnTouchOutside(false);
         setStyle(DialogFragment.STYLE_NORMAL, getTheme());
         View view = inflater.inflate(R.layout.careportal_newnstreatment_dialog, container, false);
 
@@ -390,6 +396,13 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
             timeButton.setText(savedInstanceState.getString("timeButton"));
         }
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
     }
 
     @Override
