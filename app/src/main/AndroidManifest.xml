@@ -123,16 +123,6 @@
             </intent-filter>
         </receiver>
 
-        <!-- NSClient -->
-         <receiver
-            android:name=".plugins.general.nsclient.receivers.DBAccessReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="info.nightscout.client.DBACCESS" />
-            </intent-filter>
-        </receiver>
-
         <!-- Network change local receiver -->
         <receiver android:name=".receivers.NetworkChangeReceiver">
             <intent-filter>
