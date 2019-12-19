@@ -4,10 +4,16 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.format.DateFormat
-import android.view.*
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.SP
 import kotlinx.android.synthetic.main.datetime.*
+import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -96,6 +102,8 @@ abstract class DialogFragmentWithDate : DialogFragment() {
                 ).show()
             }
         }
+
+        notes_layout?.visibility = if (SP.getBoolean(R.string.key_show_notes_entry_dialogs, false)) View.VISIBLE else View.GONE
 
         ok.setOnClickListener {
             synchronized(okClicked) {

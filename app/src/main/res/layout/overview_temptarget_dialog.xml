@@ -34,8 +34,8 @@
                 android:text="@string/careportal_temporarytarget"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
-        </LinearLayout>
 
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

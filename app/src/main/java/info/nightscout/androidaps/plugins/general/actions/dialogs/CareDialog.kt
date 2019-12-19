@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.*
 import kotlinx.android.synthetic.main.actions_care_dialog.*
 import kotlinx.android.synthetic.main.okcancel.*
+import kotlinx.android.synthetic.main.notes.*
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.util.*
@@ -89,10 +90,10 @@ class CareDialog : DialogFragmentWithDate() {
 
         if (ProfileFunctions.getSystemUnits() == Constants.MMOL)
             actions_care_bg.setParams(savedInstanceState?.getDouble("actions_care_bg")
-                    ?: bg, 0.0, 30.0, 0.1, DecimalFormat("0.0"), false, ok, bgTextWatcher)
+                    ?: bg, 36.0, 30.0, 0.1, DecimalFormat("0.0"), false, ok, bgTextWatcher)
         else
             actions_care_bg.setParams(savedInstanceState?.getDouble("actions_care_bg")
-                    ?: bg, 0.0, 500.0, 1.0, DecimalFormat("0"), false, ok, bgTextWatcher)
+                    ?: bg, 2.0, 500.0, 1.0, DecimalFormat("0"), false, ok, bgTextWatcher)
     }
 
     override fun submit() {
@@ -114,14 +115,13 @@ class CareDialog : DialogFragmentWithDate() {
             json.put("glucose", actions_care_bg.value)
             json.put("glucoseType", type)
         }
-        val notes = actions_care_notes.text.toString()
+        val notes = notes.text.toString()
         if (notes.isNotEmpty()) {
             actions.add(MainApp.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
             json.put("notes", notes)
         }
-        if (eventTimeChanged) {
+        if (eventTimeChanged)
             actions.add(MainApp.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(eventTime))
-        }
 
         json.put("created_at", DateUtil.toISOString(eventTime))
         json.put("eventType", when (options) {

@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.OKDialog
+import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
 import kotlinx.android.synthetic.main.overview_profileswitch_dialog.*
 import java.text.DecimalFormat
@@ -87,7 +88,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         val timeShift = overview_profileswitch_timeshift.value.toInt()
         if (timeShift != 0)
             actions.add(MainApp.gs(R.string.careportal_newnstreatment_timeshift_label) + ": " + MainApp.gs(R.string.format_hours, timeShift.toDouble()))
-        val notes = overview_profileswitch_notes.text.toString()
+        val notes = notes.text.toString()
         if (notes.isNotEmpty())
             actions.add(MainApp.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
         if (eventTimeChanged)
