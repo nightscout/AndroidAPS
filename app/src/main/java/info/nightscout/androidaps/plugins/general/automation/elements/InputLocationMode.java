@@ -55,7 +55,6 @@ public class InputLocationMode extends Element {
     }
 
     private Mode mode;
-    private InputOption selected;
 
     public InputLocationMode() {
         super();

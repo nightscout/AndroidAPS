@@ -15,14 +15,10 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.general.automation.elements.InputOption;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputLocationMode;
 import info.nightscout.androidaps.services.LocationService;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -35,11 +31,6 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class TriggerLocationTest {
 
     long now = 1514766900000L;
-
-    private static final ArrayList<InputOption> modes = new ArrayList<>(Arrays.asList(
-            new InputOption(1, "inside"),
-            new InputOption(2, "outside")
-    ));
 
     @Before
     public void mock() {
