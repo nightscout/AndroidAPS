@@ -173,8 +173,7 @@
     <string name="constraints_violation">Constraints violation</string>
     <string name="treatmentdeliveryerror">Bolus delivery error</string>
     <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
-    <string name="overview_newtempbasal_basalpercent">Basal value [%%]</string>
-    <string name="overview_newtempbasal_percent_label">%% (100%% = current)</string>
+    <string name="overview_newtempbasal_basalpercent">Basal value [%]</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
     <string name="overview_treatment_label">Treatment</string>
     <string name="overview_calculator_label">Calculator</string>
@@ -658,7 +657,6 @@
     <string name="careportal_canulaage_label">Canula age</string>
     <string name="careportal_insulinage_label">Insulin age</string>
     <string name="hours">hours</string>
-    <string name="overview_newtempbasal_basaltype_label">Basal type</string>
     <string name="invalidprofile">Invalid profile !!!</string>
     <string name="profileswitch">ProfileSwitch</string>
     <string name="doprofileswitch">Do Profile Switch</string>
@@ -726,7 +724,6 @@
     <string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
     <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
     <string name="careportal_pump_label">PUMP</string>
-    <string name="overview_newtempbasal_basalabsolute">Basal value [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="smb_shortname">SMB</string>
@@ -902,6 +899,7 @@
     <string name="insightpump_shortname">Sight</string>
     <string name="ago">ago</string>
     <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d mins</string>
     <string name="key_enableSMB_always" translatable="false">enableSMB_always</string>
     <string name="key_enableSMB_with_COB" translatable="false">enableSMB_with_COB</string>
     <string name="key_enableSMB_with_temptarget" translatable="false">enableSMB_with_temptarget</string>

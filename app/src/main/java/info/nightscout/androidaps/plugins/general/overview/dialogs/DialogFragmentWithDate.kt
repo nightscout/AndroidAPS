@@ -52,8 +52,8 @@ abstract class DialogFragmentWithDate : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         eventTime = savedInstanceState?.getLong("eventTime") ?: DateUtil.now()
         eventTimeChanged = savedInstanceState?.getBoolean("eventTimeChanged") ?: false
-        overview_eventdate.text = DateUtil.dateString(eventTime)
-        overview_eventtime.text = DateUtil.timeString(eventTime)
+        overview_eventdate?.text = DateUtil.dateString(eventTime)
+        overview_eventtime?.text = DateUtil.timeString(eventTime)
 
         // create an OnDateSetListener
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
@@ -64,10 +64,10 @@ abstract class DialogFragmentWithDate : DialogFragment() {
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             eventTime = cal.timeInMillis
             eventTimeChanged = true
-            overview_eventdate.text = DateUtil.dateString(eventTime)
+            overview_eventdate?.text = DateUtil.dateString(eventTime)
         }
 
-        overview_eventdate.setOnClickListener {
+        overview_eventdate?.setOnClickListener {
             context?.let {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime
@@ -88,10 +88,10 @@ abstract class DialogFragmentWithDate : DialogFragment() {
             cal.set(Calendar.SECOND, seconds++) // randomize seconds to prevent creating record of the same time, if user choose time manually
             eventTime = cal.timeInMillis
             eventTimeChanged = true
-            overview_eventtime.text = DateUtil.timeString(eventTime)
+            overview_eventtime?.text = DateUtil.timeString(eventTime)
         }
 
-        overview_eventtime.setOnClickListener {
+        overview_eventtime?.setOnClickListener {
             context?.let {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime

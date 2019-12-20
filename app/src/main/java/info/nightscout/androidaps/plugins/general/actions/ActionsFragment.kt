@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.dialogs.CareDialog
 import info.nightscout.androidaps.plugins.general.actions.dialogs.FillDialog
 import info.nightscout.androidaps.plugins.general.actions.dialogs.NewExtendedBolusDialog
-import info.nightscout.androidaps.plugins.general.actions.dialogs.NewTempBasalDialog
+import info.nightscout.androidaps.plugins.general.actions.dialogs.TempBasalDialog
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.plugins.general.overview.dialogs.TempTargetDialog
@@ -69,7 +69,7 @@ class ActionsFragment : Fragment() {
                 })
             }
         }
-        actions_settempbasal.setOnClickListener { fragmentManager?.let { NewTempBasalDialog().show(it, "NewTempDialog") } }
+        actions_settempbasal.setOnClickListener { fragmentManager?.let { TempBasalDialog().show(it, "NewTempDialog") } }
         actions_canceltempbasal.setOnClickListener {
             if (TreatmentsPlugin.getPlugin().isTempBasalInProgress) {
                 ConfigBuilderPlugin.getPlugin().commandQueue.cancelTempBasal(true, object : Callback() {
