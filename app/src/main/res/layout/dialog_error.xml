@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/error"
-            android:src="@drawable/ic_error_red_24dp" />
+            android:src="@drawable/ic_error_red_48dp" />
 
         <TextView
             android:id="@+id/error_title"
