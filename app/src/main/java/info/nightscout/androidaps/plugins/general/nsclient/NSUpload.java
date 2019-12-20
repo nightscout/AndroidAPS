@@ -217,7 +217,7 @@ public class NSUpload {
             deviceStatus.uploaderBattery = batteryLevel;
 
             deviceStatus.created_at = DateUtil.toISOString(new Date());
-            UploadQueue.add(new DbRequest("dbAdd", "devicestatus", deviceStatus.mongoRecord().toString()));
+            UploadQueue.add(new DbRequest("dbAdd", "devicestatus", deviceStatus.mongoRecord()));
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
