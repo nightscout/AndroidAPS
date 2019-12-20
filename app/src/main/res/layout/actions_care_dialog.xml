@@ -40,7 +40,6 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
         </LinearLayout>
 
-
         <LinearLayout
             android:id="@+id/action_care_bg_layout"
             android:layout_width="match_parent"
@@ -73,7 +72,6 @@
                 android:paddingEnd="5dp"
                 android:text="@string/mgdl"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
-
 
         </LinearLayout>
 
