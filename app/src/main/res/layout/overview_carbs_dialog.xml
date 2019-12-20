@@ -7,7 +7,7 @@
     android:minWidth="300dp"
     android:orientation="vertical"
     android:padding="10dp"
-    tools:context=".plugins.general.overview.dialogs.ProfileSwitchDialog">
+    tools:context=".plugins.general.overview.dialogs.CarbsDialog">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,8 +24,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/careportal_profileswitch"
-                android:src="@drawable/icon_actions_profileswitch" />
+                android:contentDescription="@string/carbs"
+                android:src="@drawable/icon_cp_bolus_carbs" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -33,11 +33,44 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:text="@string/careportal_profileswitch"
+                android:text="@string/carbs"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/overview_carbs_activity_tt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:text="@string/start_activity_tt" />
+
+            <CheckBox
+                android:id="@+id/overview_carbs_eating_soon_tt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/start_eating_soon_tt" />
+
+            <CheckBox
+                android:id="@+id/overview_carbs_hypo_tt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/start_hypo_tt" />
 
         </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/listdelimiter" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,12 +83,12 @@
                 android:layout_gravity="center_horizontal"
                 android:width="120dp"
                 android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_duration_label"
+                android:text="@string/time_offset"
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.NumberPicker
-                android:id="@+id/overview_profileswitch_duration"
+                android:id="@+id/overview_carbs_time"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -83,24 +116,32 @@
                 android:layout_gravity="center_horizontal"
                 android:width="120dp"
                 android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_profile_label"
+                android:text="@string/careportal_newnstreatment_duration_label"
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/overview_profileswitch_profile"
+            <info.nightscout.androidaps.utils.NumberPicker
+                android:id="@+id/overview_carbs_duration"
+                android:layout_width="130dp"
+                android:layout_height="40dp" />
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" />
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:minWidth="45dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="@string/shorthour"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/overview_profileswitch_reuselayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -108,102 +149,61 @@
                 android:layout_gravity="center_horizontal"
                 android:width="120dp"
                 android:padding="10dp"
-                android:text=""
+                android:text="@string/overview_carbs_label"
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
+
+            <info.nightscout.androidaps.utils.NumberPicker
+                android:id="@+id/overview_carbs_carbs"
+                android:layout_width="130dp"
+                android:layout_height="40dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:minWidth="45dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="@string/shortgramm"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
 
             <Button
-                android:id="@+id/overview_profileswitch_reusebutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/reuse" />
+                android:id="@+id/overview_carbs_plus1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="+5" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="start"
-                android:minWidth="45dp"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:text=" "
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+            <Button
+                android:id="@+id/overview_carbs_plus2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="+10" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:width="120dp"
-                android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_percentage_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                android:textStyle="bold" />
-
-            <info.nightscout.androidaps.utils.NumberPicker
-                android:id="@+id/overview_profileswitch_percentage"
-                android:layout_width="130dp"
-                android:layout_height="40dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="start"
-                android:minWidth="45dp"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:text="%"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:width="120dp"
-                android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_timeshift_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                android:textStyle="bold" />
-
-            <info.nightscout.androidaps.utils.NumberPicker
-                android:id="@+id/overview_profileswitch_timeshift"
-                android:layout_width="130dp"
-                android:layout_height="40dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="start"
-                android:minWidth="45dp"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:text="@string/unit_hours"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+            <Button
+                android:id="@+id/overview_carbs_plus3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="+20" />
 
         </LinearLayout>
 
         <include layout="@layout/notes" />
-
-        <include layout="@layout/datetime" />
 
         <include layout="@layout/okcancel" />
 
     </LinearLayout>
 
 </ScrollView>
-

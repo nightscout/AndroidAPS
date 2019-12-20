@@ -84,13 +84,11 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
-import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.CalibrationDialog;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.NewCarbsDialog;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.CarbsDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewInsulinDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ProfileSwitchDialog;
@@ -759,33 +757,30 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (manager != null)
                 pvd.show(manager, "ProfileViewDialog");
         } else if (item.getTitle().equals(MainApp.gs(R.string.eatingsoon))) {
-            DefaultValueHelper defHelper = new DefaultValueHelper();
-            double target = Profile.toMgdl(defHelper.determineEatingSoonTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(DefaultValueHelper.determineEatingSoonTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(System.currentTimeMillis())
-                    .duration(defHelper.determineEatingSoonTTDuration())
+                    .duration(DefaultValueHelper.determineEatingSoonTTDuration())
                     .reason(MainApp.gs(R.string.eatingsoon))
                     .source(Source.USER)
                     .low(target)
                     .high(target);
             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(MainApp.gs(R.string.activity))) {
-            DefaultValueHelper defHelper = new DefaultValueHelper();
-            double target = Profile.toMgdl(defHelper.determineActivityTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(DefaultValueHelper.determineActivityTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
-                    .duration(defHelper.determineActivityTTDuration())
+                    .duration(DefaultValueHelper.determineActivityTTDuration())
                     .reason(MainApp.gs(R.string.activity))
                     .source(Source.USER)
                     .low(target)
                     .high(target);
             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(MainApp.gs(R.string.hypo))) {
-            DefaultValueHelper defHelper = new DefaultValueHelper();
-            double target = Profile.toMgdl(defHelper.determineHypoTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(DefaultValueHelper.determineHypoTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
-                    .duration(defHelper.determineHypoTTDuration())
+                    .duration(DefaultValueHelper.determineHypoTTDuration())
                     .reason(MainApp.gs(R.string.hypo))
                     .source(Source.USER)
                     .low(target)
@@ -868,7 +863,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 new NewInsulinDialog().show(manager, "InsulinDialog");
                 break;
             case R.id.overview_carbsbutton:
-                new NewCarbsDialog().show(manager, "CarbsDialog");
+                new CarbsDialog().show(manager, "Overview");
                 break;
             case R.id.overview_pumpstatus:
                 if (ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended() || !ConfigBuilderPlugin.getPlugin().getActivePump().isInitialized())

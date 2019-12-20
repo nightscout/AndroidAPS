@@ -68,19 +68,18 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
                     val defaultDuration: Double
                     val defaultTarget: Double
-                    val helper = DefaultValueHelper()
                     when (reasonList[position]) {
                         MainApp.gs(R.string.eatingsoon) -> {
-                            defaultDuration = helper.determineEatingSoonTTDuration().toDouble()
-                            defaultTarget = helper.determineEatingSoonTT()
+                            defaultDuration = DefaultValueHelper.determineEatingSoonTTDuration().toDouble()
+                            defaultTarget = DefaultValueHelper.determineEatingSoonTT()
                         }
                         MainApp.gs(R.string.activity) -> {
-                            defaultDuration = helper.determineActivityTTDuration().toDouble()
-                            defaultTarget = helper.determineActivityTT()
+                            defaultDuration = DefaultValueHelper.determineActivityTTDuration().toDouble()
+                            defaultTarget = DefaultValueHelper.determineActivityTT()
                         }
                         MainApp.gs(R.string.hypo) -> {
-                            defaultDuration = helper.determineHypoTTDuration().toDouble()
-                            defaultTarget = helper.determineHypoTT()
+                            defaultDuration = DefaultValueHelper.determineHypoTTDuration().toDouble()
+                            defaultTarget = DefaultValueHelper.determineHypoTT()
                         }
                         MainApp.gs(R.string.cancel) -> {
                             defaultDuration = 0.0

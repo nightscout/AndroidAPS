@@ -204,16 +204,15 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
                 boolean erase = false;
 
                 String units = ProfileFunctions.getSystemUnits();
-                DefaultValueHelper helper = new DefaultValueHelper();
                 if (MainApp.gs(R.string.eatingsoon).equals(reasonList.get(position))) {
-                    defaultDuration = helper.determineEatingSoonTTDuration();
-                    defaultTarget = helper.determineEatingSoonTT();
+                    defaultDuration = DefaultValueHelper.determineEatingSoonTTDuration();
+                    defaultTarget = DefaultValueHelper.determineEatingSoonTT();
                 } else if (MainApp.gs(R.string.activity).equals(reasonList.get(position))) {
-                    defaultDuration = helper.determineActivityTTDuration();
-                    defaultTarget = helper.determineActivityTT();
+                    defaultDuration = DefaultValueHelper.determineActivityTTDuration();
+                    defaultTarget = DefaultValueHelper.determineActivityTT();
                 } else if (MainApp.gs(R.string.hypo).equals(reasonList.get(position))) {
-                    defaultDuration = helper.determineHypoTTDuration();
-                    defaultTarget = helper.determineHypoTT();
+                    defaultDuration = DefaultValueHelper.determineHypoTTDuration();
+                    defaultTarget = DefaultValueHelper.determineHypoTT();
                 } else if (editDuration.getValue() != 0) {
                     defaultDuration = editDuration.getValue();
                 } else {

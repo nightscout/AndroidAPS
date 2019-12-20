@@ -88,7 +88,8 @@ class TempBasalDialog : DialogFragmentWithDate() {
             absolute = MainApp.getConstraintChecker().applyBasalConstraints(Constraint(basalAbsoluteInput), profile).value()
             actions.add(MainApp.gs(R.string.pump_basebasalrate, absolute))
             actions.add(MainApp.gs(R.string.duration) + ": " + MainApp.gs(R.string.format_mins, durationInMinutes))
-            if (abs(absolute - basalAbsoluteInput) > 0.01) actions.add(MainApp.gs(R.string.constraintapllied))
+            if (abs(absolute - basalAbsoluteInput) > 0.01)
+                actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.constraintapllied) + "</font>")
         }
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))) {
