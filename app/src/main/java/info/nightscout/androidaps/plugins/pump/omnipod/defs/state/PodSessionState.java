@@ -63,7 +63,7 @@ public class PodSessionState extends PodState {
         this.lot = lot;
         this.tid = tid;
         this.nonceState = new NonceState(lot, tid);
-        store();
+        handleUpdates();
     }
 
     public void setStateChangedHandler(PodStateChangedHandler handler) {
@@ -80,20 +80,20 @@ public class PodSessionState extends PodState {
 
     public void putConfiguredAlert(AlertSlot alertSlot, AlertType alertType) {
         configuredAlerts.put(alertSlot, alertType);
-        store();
+        handleUpdates();
     }
 
     public void removeConfiguredAlert(AlertSlot alertSlot) {
         configuredAlerts.remove(alertSlot);
-        store();
+        handleUpdates();
     }
 
     public DateTime getActivatedAt() {
-        return activatedAt;
+        return activatedAt == null ? null : activatedAt.withZone(timeZone);
     }
 
     public DateTime getExpiresAt() {
-        return expiresAt;
+        return expiresAt == null ? null : expiresAt.withZone(timeZone);
     }
 
     public String getExpiryDateAsString() {
@@ -128,7 +128,7 @@ public class PodSessionState extends PodState {
         int seed = ((sum & 0xFFFF) ^ syncWord);
 
         this.nonceState = new NonceState(lot, tid, (byte) (seed & 0xFF));
-        store();
+        handleUpdates();
     }
 
     public int getCurrentNonce() {
@@ -137,7 +137,7 @@ public class PodSessionState extends PodState {
 
     public synchronized void advanceToNextNonce() {
         nonceState.advanceToNextNonce();
-        store();
+        handleUpdates();
     }
 
     public SetupProgress getSetupProgress() {
@@ -149,7 +149,7 @@ public class PodSessionState extends PodState {
             throw new IllegalArgumentException("Setup state cannot be null");
         }
         this.setupProgress = setupProgress;
-        store();
+        handleUpdates();
     }
 
     public boolean isSuspended() {
@@ -173,11 +173,12 @@ public class PodSessionState extends PodState {
             throw new IllegalArgumentException("Time zone can not be null");
         }
         this.timeZone = timeZone;
-        store();
+        handleUpdates();
     }
 
     public DateTime getTime() {
-        return DateTime.now().withZone(timeZone);
+        DateTime now = DateTime.now();
+        return now.withZone(timeZone);
     }
 
     public Duration getScheduleOffset() {
@@ -194,13 +195,13 @@ public class PodSessionState extends PodState {
     @Override
     public void setPacketNumber(int packetNumber) {
         super.setPacketNumber(packetNumber);
-        store();
+        handleUpdates();
     }
 
     @Override
     public void setMessageNumber(int messageNumber) {
         super.setMessageNumber(messageNumber);
-        store();
+        handleUpdates();
     }
 
     public BasalSchedule getBasalSchedule() {
@@ -209,7 +210,7 @@ public class PodSessionState extends PodState {
 
     public void setBasalSchedule(BasalSchedule basalSchedule) {
         this.basalSchedule = basalSchedule;
-        store();
+        handleUpdates();
     }
 
     public DeliveryStatus getLastDeliveryStatus() {
@@ -220,7 +221,7 @@ public class PodSessionState extends PodState {
     public void setFaultEvent(PodInfoFaultEvent faultEvent) {
         super.setFaultEvent(faultEvent);
         suspended = true;
-        store();
+        handleUpdates();
     }
 
     @Override
@@ -238,10 +239,10 @@ public class PodSessionState extends PodState {
         activeAlerts = statusResponse.getAlerts();
         lastDeliveryStatus = statusResponse.getDeliveryStatus();
         reservoirLevel = statusResponse.getReservoirLevel();
-        store();
+        handleUpdates();
     }
 
-    private void store() {
+    private void handleUpdates() {
         Gson gson = OmnipodUtil.getGsonInstance();
         SP.putString(OmnipodConst.Prefs.PodState, gson.toJson(this));
         if (stateChangedHandler != null) {

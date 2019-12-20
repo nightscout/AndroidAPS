@@ -640,7 +640,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             throw new IllegalArgumentException("Profile can not be null");
         }
         Profile.ProfileValue[] basalValues = profile.getBasalValues();
-        if(basalValues == null) {
+        if (basalValues == null) {
             throw new IllegalArgumentException("Basal values can not be null");
         }
         List<BasalScheduleEntry> entries = new ArrayList<>();
