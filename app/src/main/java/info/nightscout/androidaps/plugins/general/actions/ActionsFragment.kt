@@ -20,15 +20,19 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.dialogs.CareDialog
+import info.nightscout.androidaps.plugins.general.actions.dialogs.ExtendedBolusDialog
 import info.nightscout.androidaps.plugins.general.actions.dialogs.FillDialog
-import info.nightscout.androidaps.plugins.general.actions.dialogs.NewExtendedBolusDialog
 import info.nightscout.androidaps.plugins.general.actions.dialogs.TempBasalDialog
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.plugins.general.overview.dialogs.TempTargetDialog
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.SP
+import info.nightscout.androidaps.utils.SingleClickButton
+import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.actions_fragment.*
@@ -57,25 +61,39 @@ class ActionsFragment : Fragment() {
             fragmentManager?.let { TempTargetDialog().show(it, "Actions") }
         }
         actions_extendedbolus.setOnClickListener {
-            fragmentManager?.let { NewExtendedBolusDialog().show(it, "NewExtendedDialog") }
+            fragmentManager?.let { ExtendedBolusDialog().show(it, "Actions") }
         }
         actions_extendedbolus_cancel.setOnClickListener {
             if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress) {
                 ConfigBuilderPlugin.getPlugin().commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
-                        if (!result.success)
-                            ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.extendedbolusdeliveryerror))
+                        if (!result.success) {
+                            val i = Intent(MainApp.instance(), ErrorHelperActivity::class.java)
+                            i.putExtra("soundid", R.raw.boluserror)
+                            i.putExtra("status", result.comment)
+                            i.putExtra("title", MainApp.gs(R.string.extendedbolusdeliveryerror))
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            MainApp.instance().startActivity(i)
+                        }
                     }
                 })
             }
         }
-        actions_settempbasal.setOnClickListener { fragmentManager?.let { TempBasalDialog().show(it, "NewTempDialog") } }
+        actions_settempbasal.setOnClickListener {
+            fragmentManager?.let { TempBasalDialog().show(it, "Actions") }
+        }
         actions_canceltempbasal.setOnClickListener {
             if (TreatmentsPlugin.getPlugin().isTempBasalInProgress) {
                 ConfigBuilderPlugin.getPlugin().commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
-                        if (!result.success)
-                            ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.tempbasaldeliveryerror))
+                        if (!result.success) {
+                            val i = Intent(MainApp.instance(), ErrorHelperActivity::class.java)
+                            i.putExtra("soundid", R.raw.boluserror)
+                            i.putExtra("status", result.comment)
+                            i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror))
+                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            MainApp.instance().startActivity(i)
+                        }
                     }
                 })
             }
