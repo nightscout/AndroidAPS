@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview.dialogs
+package info.nightscout.androidaps.dialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.*
 import kotlinx.android.synthetic.main.okcancel.*
-import kotlinx.android.synthetic.main.overview_temptarget_dialog.*
+import kotlinx.android.synthetic.main.dialog_temptarget.*
 import java.text.DecimalFormat
 import java.util.*
 
@@ -33,7 +33,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         onCreateView()
-        return inflater.inflate(R.layout.overview_temptarget_dialog, container, false)
+        return inflater.inflate(R.layout.dialog_temptarget, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,6 +53,8 @@ class TempTargetDialog : DialogFragmentWithDate() {
                             ?: Constants.MIN_TT_MGDL,
                     Constants.MIN_TT_MGDL, Constants.MAX_TT_MGDL, 1.0, DecimalFormat("0"), false, ok)
 
+        val units = ProfileFunctions.getSystemUnits()
+        overview_temptarget_units.text = if (units == Constants.MMOL) MainApp.gs(R.string.mmol) else MainApp.gs(R.string.mgdl)
         // temp target
         context?.let { context ->
             val reasonList: List<String> = Lists.newArrayList(

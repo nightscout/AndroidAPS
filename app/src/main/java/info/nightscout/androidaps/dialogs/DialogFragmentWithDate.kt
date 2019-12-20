@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview.dialogs
+package info.nightscout.androidaps.dialogs
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog

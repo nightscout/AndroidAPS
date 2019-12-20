@@ -16,7 +16,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.general.overview.dialogs.ProfileSwitchDialog
+import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.MIN_DIA
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.*

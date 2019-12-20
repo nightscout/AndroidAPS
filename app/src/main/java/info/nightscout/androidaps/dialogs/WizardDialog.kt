@@ -1,6 +1,5 @@
-package info.nightscout.androidaps.plugins.general.overview.dialogs
+package info.nightscout.androidaps.dialogs
 
-import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -26,7 +25,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.overview_wizard_dialog.*
+import kotlinx.android.synthetic.main.dialog_wizard.*
 import org.slf4j.LoggerFactory
 import java.text.DecimalFormat
 import java.util.*
@@ -36,16 +35,13 @@ class WizardDialog : DialogFragment() {
     private val log = LoggerFactory.getLogger(WizardDialog::class.java)
 
     private var wizard: BolusWizard? = null
-    private var parentContext: Context? = null
 
     //one shot guards
     private var okClicked: Boolean = false
 
     private val textWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {}
-
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             calculateInsulin()
         }
@@ -53,19 +49,9 @@ class WizardDialog : DialogFragment() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        this.parentContext = context
-    }
-
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        this.parentContext = null
     }
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -83,7 +69,7 @@ class WizardDialog : DialogFragment() {
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
 
-        return inflater.inflate(R.layout.overview_wizard_dialog, container, false)
+        return inflater.inflate(R.layout.dialog_wizard, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -115,7 +101,7 @@ class WizardDialog : DialogFragment() {
             } else {
                 okClicked = true
                 calculateInsulin()
-                parentContext?.let { context ->
+                context?.let { context ->
                     wizard?.confirmAndExecute(context)
                 }
             }

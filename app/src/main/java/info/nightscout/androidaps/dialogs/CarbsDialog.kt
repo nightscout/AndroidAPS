@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview.dialogs
+package info.nightscout.androidaps.dialogs
 
 import android.os.Bundle
 import android.text.Editable
@@ -23,8 +23,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
-import kotlinx.android.synthetic.main.overview_carbs_dialog.*
-import org.slf4j.LoggerFactory
+import kotlinx.android.synthetic.main.dialog_carbs.*
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.math.max
@@ -74,7 +73,7 @@ class CarbsDialog : DialogFragmentWithDate() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         onCreateView()
-        return inflater.inflate(R.layout.overview_carbs_dialog, container, false)
+        return inflater.inflate(R.layout.dialog_carbs, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

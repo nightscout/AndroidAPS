@@ -6,73 +6,70 @@
     android:focusableInTouchMode="true"
     android:minWidth="300dp"
     android:orientation="vertical"
-    android:padding="10dp"
-    tools:context=".plugins.general.overview.dialogs.CarbsDialog">
+    tools:context=".dialogs.InsulinDialog">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@color/dialog_title_backround"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/carbs"
-                android:src="@drawable/icon_cp_bolus_carbs" />
+                android:contentDescription="@string/overview_insulin_label"
+                android:src="@drawable/icon_bolus" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:text="@string/carbs"
+                android:text="@string/overview_insulin_label"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
-        </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/spacer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:padding="5dp"
             android:orientation="vertical">
 
             <CheckBox
-                android:id="@+id/overview_carbs_activity_tt"
+                android:id="@+id/overview_insulin_start_eating_soon_tt"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:text="@string/start_activity_tt" />
-
-            <CheckBox
-                android:id="@+id/overview_carbs_eating_soon_tt"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
                 android:text="@string/start_eating_soon_tt" />
 
             <CheckBox
-                android:id="@+id/overview_carbs_hypo_tt"
+                android:id="@+id/overview_insulin_record_only"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:text="@string/start_hypo_tt" />
+                android:text="@string/do_not_bolus_record_only" />
 
         </LinearLayout>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
-
         <LinearLayout
+            android:id="@+id/overview_insulin_time_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -83,12 +80,12 @@
                 android:layout_gravity="center_horizontal"
                 android:width="120dp"
                 android:padding="10dp"
-                android:text="@string/time_offset"
+                android:text="@string/time"
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.NumberPicker
-                android:id="@+id/overview_carbs_time"
+                android:id="@+id/overview_insulin_time"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -116,12 +113,12 @@
                 android:layout_gravity="center_horizontal"
                 android:width="120dp"
                 android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_duration_label"
+                android:text="@string/overview_insulin_label"
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.NumberPicker
-                android:id="@+id/overview_carbs_duration"
+                android:id="@+id/overview_insulin_amount"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -133,40 +130,7 @@
                 android:minWidth="45dp"
                 android:paddingStart="5dp"
                 android:paddingEnd="5dp"
-                android:text="@string/shorthour"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:width="120dp"
-                android:padding="10dp"
-                android:text="@string/overview_carbs_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                android:textStyle="bold" />
-
-            <info.nightscout.androidaps.utils.NumberPicker
-                android:id="@+id/overview_carbs_carbs"
-                android:layout_width="130dp"
-                android:layout_height="40dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="start"
-                android:minWidth="45dp"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:text="@string/shortgramm"
+                android:text="@string/insulin_unit_shortname"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
@@ -174,29 +138,29 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
+            android:padding="5dp"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/overview_carbs_plus1"
+                android:id="@+id/overview_insulin_plus05"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="+5" />
+                android:text="+0.5" />
 
             <Button
-                android:id="@+id/overview_carbs_plus2"
+                android:id="@+id/overview_insulin_plus10"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="+10" />
+                android:text="+1.0" />
 
             <Button
-                android:id="@+id/overview_carbs_plus3"
+                android:id="@+id/overview_insulin_plus20"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="+20" />
+                android:text="+2.0" />
 
         </LinearLayout>
 

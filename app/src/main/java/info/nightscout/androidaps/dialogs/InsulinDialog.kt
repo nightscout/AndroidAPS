@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview.dialogs
+package info.nightscout.androidaps.dialogs
 
 import android.content.Intent
 import android.os.Bundle
@@ -19,13 +19,13 @@ import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
-import kotlinx.android.synthetic.main.overview_insulin_dialog.*
-import org.slf4j.LoggerFactory
+import kotlinx.android.synthetic.main.dialog_insulin.*
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.math.abs
@@ -70,7 +70,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         onCreateView()
-        return inflater.inflate(R.layout.overview_insulin_dialog, container, false)
+        return inflater.inflate(R.layout.dialog_insulin, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

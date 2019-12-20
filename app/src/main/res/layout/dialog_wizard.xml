@@ -1,44 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     android:minWidth="300dp"
     android:orientation="vertical"
-    android:padding="10dp">
+    tools:context=".dialogs.InsulinDialog">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
+            android:background="@color/dialog_title_backround"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
             <ImageView
-                android:layout_width="33dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:srcCompat="@drawable/icon_calculator" />
+                android:contentDescription="@string/boluswizard"
+                android:src="@drawable/icon_calculator" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:text="@string/boluswizard"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/colorCalculatorButton" />
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/spacer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp" />
 
         <TableLayout
+            android:paddingEnd="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -65,9 +75,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:gravity="left"
-                    android:paddingLeft="5dp"
-                    android:text="mg/dl"
+                    android:gravity="start"
+                    android:padding="5dp"
+                    android:text="@string/mgdl"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
             </TableRow>
@@ -96,8 +106,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:gravity="left"
-                    android:paddingLeft="5dp"
+                    android:gravity="start"
+                    android:padding="5dp"
                     android:text="@string/shortgramm"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -126,8 +136,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:gravity="left"
-                    android:paddingStart="5dp"
+                    android:gravity="start"
+                    android:padding="5dp"
                     android:text="@string/insulin_unit_shortname"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -156,8 +166,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:gravity="left"
-                    android:paddingStart="5dp"
+                    android:gravity="start"
+                    android:padding="5dp"
                     android:text="@string/unit_minute_short"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -165,7 +175,7 @@
 
         </TableLayout>
 
-         <LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -193,6 +203,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
+                android:padding="5dp"
                 android:checked="false"
                 android:text="@string/superbolus" />
 
@@ -251,7 +262,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:autofillHints="@string/careportal_newnstreatment_notes_label"
-                android:gravity="left"
+                android:gravity="start"
                 android:inputType="text|textCapSentences"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -261,10 +272,10 @@
             android:id="@+id/done_background"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
             android:background="@android:color/transparent"
-             android:layout_gravity="center_vertical"
-            android:paddingBottom="8dp">
+            android:orientation="horizontal"
+            android:padding="5dp">
 
             <CheckBox
                 android:id="@+id/treatments_wizard_calculationcheckbox"
@@ -276,27 +287,26 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:contentDescription="@string/show_calculation"
                 android:layout_gravity="center_vertical"
-                app:srcCompat="@drawable/ic_visibility" />
+                android:src="@drawable/ic_visibility" />
 
             <Button
                 android:id="@+id/cancel"
                 style="@style/mdtp_ActionButton.Text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_weight="1"
                 android:text="@string/mdtp_cancel"
                 android:textAlignment="textEnd" />
 
             <Button
                 android:id="@+id/ok"
+                style="@style/mdtp_ActionButton.Text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
                 android:layout_marginEnd="16dp"
-                style="@style/mdtp_ActionButton.Text"
                 android:text="@string/mdtp_ok" />
         </LinearLayout>
 
@@ -312,7 +322,8 @@
         <TableLayout
             android:id="@+id/treatments_wizard_resulttable"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="5dp">
 
             <TableRow
                 android:layout_width="match_parent"

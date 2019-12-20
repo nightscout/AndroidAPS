@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.actions.dialogs
+package info.nightscout.androidaps.dialogs
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,11 +14,10 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.general.overview.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
-import kotlinx.android.synthetic.main.actions_fill_dialog.*
+import kotlinx.android.synthetic.main.dialog_fill.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
 import java.util.*
@@ -34,7 +33,7 @@ class FillDialog : DialogFragmentWithDate() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         onCreateView()
-        return inflater.inflate(R.layout.actions_fill_dialog, container, false)
+        return inflater.inflate(R.layout.dialog_fill, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

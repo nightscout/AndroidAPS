@@ -6,36 +6,111 @@
     android:focusableInTouchMode="true"
     android:minWidth="300dp"
     android:orientation="vertical"
-    android:padding="10dp"
-    tools:context=".plugins.general.overview.dialogs.ProfileSwitchDialog">
+    tools:context=".dialogs.TempBasalDialog">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@color/dialog_title_backround"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/careportal_profileswitch"
-                android:src="@drawable/icon_actions_profileswitch" />
+                android:contentDescription="@string/pump_tempbasal_label"
+                android:src="@drawable/icon_cp_basal_start" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:text="@string/careportal_profileswitch"
+                android:text="@string/pump_tempbasal_label"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/spacer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp" />
+
+        <LinearLayout
+            android:id="@+id/actions_tempbasal_percent_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:width="120dp"
+                android:padding="10dp"
+                android:text="@string/basal_rate"
+                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textStyle="bold" />
+
+            <info.nightscout.androidaps.utils.NumberPicker
+                android:id="@+id/actions_tempbasal_basalpercentinput"
+                android:layout_width="130dp"
+                android:layout_height="40dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:minWidth="45dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="%"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/actions_tempbasal_absolute_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:width="120dp"
+                android:padding="10dp"
+                android:text="@string/basal_rate"
+                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textStyle="bold" />
+
+            <info.nightscout.androidaps.utils.NumberPicker
+                android:id="@+id/actions_tempbasal_basalabsoluteinput"
+                android:layout_width="130dp"
+                android:layout_height="40dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:minWidth="45dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="@string/profile_ins_units_per_hour"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
 
@@ -55,7 +130,7 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.NumberPicker
-                android:id="@+id/overview_profileswitch_duration"
+                android:id="@+id/actions_tempbasal_duration"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -72,138 +147,8 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:width="120dp"
-                android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_profile_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/overview_profileswitch_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/overview_profileswitch_reuselayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:width="120dp"
-                android:padding="10dp"
-                android:text=""
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/overview_profileswitch_reusebutton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/reuse" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="start"
-                android:minWidth="45dp"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:text=" "
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:width="120dp"
-                android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_percentage_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                android:textStyle="bold" />
-
-            <info.nightscout.androidaps.utils.NumberPicker
-                android:id="@+id/overview_profileswitch_percentage"
-                android:layout_width="130dp"
-                android:layout_height="40dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="start"
-                android:minWidth="45dp"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:text="%"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:width="120dp"
-                android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_timeshift_label"
-                android:textAppearance="@android:style/TextAppearance.Material.Small"
-                android:textStyle="bold" />
-
-            <info.nightscout.androidaps.utils.NumberPicker
-                android:id="@+id/overview_profileswitch_timeshift"
-                android:layout_width="130dp"
-                android:layout_height="40dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="start"
-                android:minWidth="45dp"
-                android:paddingStart="5dp"
-                android:paddingEnd="5dp"
-                android:text="@string/unit_hours"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        </LinearLayout>
-
-        <include layout="@layout/notes" />
-
-        <include layout="@layout/datetime" />
-
         <include layout="@layout/okcancel" />
 
     </LinearLayout>
 
 </ScrollView>
-

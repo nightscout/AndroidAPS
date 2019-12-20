@@ -6,20 +6,20 @@
     android:focusableInTouchMode="true"
     android:minWidth="300dp"
     android:orientation="vertical"
-    android:padding="10dp"
-    tools:context=".plugins.general.actions.dialogs.FillDialog">
+    tools:context=".dialogs.FillDialog">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@color/dialog_title_backround"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -30,6 +30,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
@@ -37,13 +38,20 @@
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/spacer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <CheckBox
                 android:id="@+id/fill_catheter_change"
@@ -60,24 +68,17 @@
 
         </LinearLayout>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@color/listdelimiter" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:width="120dp"
+                android:padding="10dp"
                 android:text="@string/overview_insulin_label"
                 android:textStyle="bold" />
 
@@ -98,7 +99,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="5dp">
 
             <Button
                 android:id="@+id/fill_preset_button1"

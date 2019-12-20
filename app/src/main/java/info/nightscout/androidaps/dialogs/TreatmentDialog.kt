@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview.dialogs
+package info.nightscout.androidaps.dialogs
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,11 +15,12 @@ import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import kotlinx.android.synthetic.main.okcancel.*
-import kotlinx.android.synthetic.main.overview_treatment_dialog.*
+import kotlinx.android.synthetic.main.dialog_treatment.*
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.math.abs
@@ -56,7 +57,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         onCreateView()
-        return inflater.inflate(R.layout.overview_treatment_dialog, container, false)
+        return inflater.inflate(R.layout.dialog_treatment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

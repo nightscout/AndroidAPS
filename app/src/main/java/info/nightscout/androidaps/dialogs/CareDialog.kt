@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.actions.dialogs
+package info.nightscout.androidaps.dialogs
 
 import android.os.Bundle
 import android.text.Editable
@@ -15,10 +15,9 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.plugins.general.overview.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.*
-import kotlinx.android.synthetic.main.actions_care_dialog.*
+import kotlinx.android.synthetic.main.dialog_care.*
 import kotlinx.android.synthetic.main.okcancel.*
 import kotlinx.android.synthetic.main.notes.*
 import org.json.JSONObject
@@ -51,7 +50,7 @@ class CareDialog : DialogFragmentWithDate() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         onCreateView()
-        return inflater.inflate(R.layout.actions_care_dialog, container, false)
+        return inflater.inflate(R.layout.dialog_care, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.overview.dialogs
+package info.nightscout.androidaps.dialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,7 +17,7 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.OKDialog
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
-import kotlinx.android.synthetic.main.overview_profileswitch_dialog.*
+import kotlinx.android.synthetic.main.dialog_profileswitch.*
 import java.text.DecimalFormat
 import java.util.*
 
@@ -33,7 +33,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         onCreateView()
-        return inflater.inflate(R.layout.overview_profileswitch_dialog, container, false)
+        return inflater.inflate(R.layout.dialog_profileswitch, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
