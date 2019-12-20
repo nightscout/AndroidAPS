@@ -30,7 +30,6 @@ import java.util.*
 import kotlin.math.max
 
 class CarbsDialog : DialogFragmentWithDate() {
-    private val log = LoggerFactory.getLogger(CarbsDialog::class.java)
 
     companion object {
         private const val FAV1_DEFAULT = 5
@@ -163,10 +162,11 @@ class CarbsDialog : DialogFragmentWithDate() {
         val duration = overview_carbs_duration.value.toInt()
         if (duration > 0)
             actions.add(MainApp.gs(R.string.duration) + ": " + duration + MainApp.gs(R.string.shorthour))
-        if (carbs > 0)
+        if (carbsAfterConstraints > 0) {
             actions.add(MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.carbs) + "'>" + MainApp.gs(R.string.format_carbs, carbsAfterConstraints) + "</font>")
-        if (carbsAfterConstraints != carbs)
-            actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.carbsconstraintapplied) + "</font>")
+            if (carbsAfterConstraints != carbs)
+                actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.carbsconstraintapplied) + "</font>")
+        }
         val notes = notes.text.toString()
         if (notes.isNotEmpty())
             actions.add(MainApp.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)

@@ -3,11 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:focusableInTouchMode="true"
-    android:minWidth="300dp"
-    android:orientation="vertical"
-    android:padding="10dp"
-    tools:context=".plugins.general.actions.dialogs.ExtendedBolusDialog">
+    tools:context=".plugins.general.overview.dialogs.TreatmentDialog">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,8 +20,8 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/virtualpump_extendedbolus_label"
-                android:src="@drawable/icon_actions_startextbolus" />
+                android:contentDescription="@string/overview_treatment_label"
+                android:src="@drawable/icon_bolus" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -33,11 +29,26 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:text="@string/virtualpump_extendedbolus_label"
+                android:text="@string/overview_treatment_label"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/overview_treatment_record_only"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:text="@string/do_not_bolus_record_only" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,7 +66,7 @@
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.NumberPicker
-                android:id="@+id/actions_extendedbolus_insulin"
+                android:id="@+id/overview_treatment_insulin"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -65,8 +76,8 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="start"
                 android:minWidth="45dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
                 android:text="@string/insulin_unit_shortname"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -83,12 +94,12 @@
                 android:layout_gravity="center_horizontal"
                 android:width="120dp"
                 android:padding="10dp"
-                android:text="@string/careportal_newnstreatment_duration_label"
+                android:text="@string/overview_carbs_label"
                 android:textAppearance="@android:style/TextAppearance.Material.Small"
                 android:textStyle="bold" />
 
             <info.nightscout.androidaps.utils.NumberPicker
-                android:id="@+id/actions_extendedbolus_duration"
+                android:id="@+id/overview_treatment_carbs"
                 android:layout_width="130dp"
                 android:layout_height="40dp" />
 
@@ -98,13 +109,12 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="start"
                 android:minWidth="45dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="@string/unit_minute_short"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="@string/shortgramm"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
-
 
         <include layout="@layout/okcancel" />
 

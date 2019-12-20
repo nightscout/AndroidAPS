@@ -32,7 +32,6 @@ import kotlin.math.abs
 import kotlin.math.max
 
 class InsulinDialog : DialogFragmentWithDate() {
-    private val log = LoggerFactory.getLogger(InsulinDialog::class.java)
 
     companion object {
         private const val PLUS1_DEFAULT = 0.5
@@ -122,13 +121,13 @@ class InsulinDialog : DialogFragmentWithDate() {
         val recordOnlyChecked = overview_insulin_record_only.isChecked
         val eatingSoonChecked = overview_insulin_start_eating_soon_tt.isChecked
 
-        if (insulin > 0) {
+        if (insulinAfterConstraints > 0) {
             actions.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + MainApp.gs(R.string.insulin_unit_shortname) + "</font>")
             if (recordOnlyChecked)
                 actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.bolusrecordedonly) + "</font>")
+            if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
+                actions.add(MainApp.gs(R.string.bolusconstraintappliedwarning, MainApp.gc(R.color.warning), insulin, insulinAfterConstraints))
         }
-        if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-            actions.add(MainApp.gs(R.string.bolusconstraintappliedwarning, MainApp.gc(R.color.warning), insulin, insulinAfterConstraints))
         val eatingSoonTTDuration = DefaultValueHelper.determineEatingSoonTTDuration()
         val eatingSoonTT = DefaultValueHelper.determineEatingSoonTT()
         if (eatingSoonChecked)
