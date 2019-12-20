@@ -54,7 +54,7 @@
             android:name=".plugins.general.overview.dialogs.BolusProgressHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
-            android:name=".plugins.general.overview.dialogs.ErrorHelperActivity"
+            android:name=".activities.ErrorHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".plugins.pump.danaR.activities.DanaRHistoryActivity" />
         <activity android:name=".plugins.pump.danaR.activities.DanaRUserOptionsActivity" />

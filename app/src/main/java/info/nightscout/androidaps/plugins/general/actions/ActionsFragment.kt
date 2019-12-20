@@ -24,7 +24,7 @@ import info.nightscout.androidaps.dialogs.ExtendedBolusDialog
 import info.nightscout.androidaps.dialogs.FillDialog
 import info.nightscout.androidaps.dialogs.TempBasalDialog
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
-import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity
+import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.dialogs.TempTargetDialog
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
