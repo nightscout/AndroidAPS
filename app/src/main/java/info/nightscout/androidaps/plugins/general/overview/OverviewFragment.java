@@ -89,7 +89,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.CarbsDialog;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.NewInsulinDialog;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.InsulinDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ProfileSwitchDialog;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.TempTargetDialog;
@@ -860,7 +860,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 treatmentDialogFragment.show(manager, "TreatmentDialog");
                 break;
             case R.id.overview_insulinbutton:
-                new NewInsulinDialog().show(manager, "InsulinDialog");
+                new InsulinDialog().show(manager, "Overview");
                 break;
             case R.id.overview_carbsbutton:
                 new CarbsDialog().show(manager, "Overview");

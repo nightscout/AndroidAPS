@@ -38,7 +38,7 @@ class CarbsDialog : DialogFragmentWithDate() {
         private const val FAV3_DEFAULT = 20
     }
 
-    private var maxCarbs = MainApp.getConstraintChecker().maxCarbsAllowed.value().toDouble()
+    private val maxCarbs = MainApp.getConstraintChecker().maxCarbsAllowed.value().toDouble()
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
@@ -55,13 +55,11 @@ class CarbsDialog : DialogFragmentWithDate() {
             overview_carbs_time.value = 0.0
             ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.constraintapllied))
         }
-        val duration = overview_carbs_duration.value
-        if (duration > 10) {
+        if (overview_carbs_duration.value > 10) {
             overview_carbs_duration.value = 0.0
             ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.constraintapllied))
         }
-        val carbs = overview_carbs_carbs.value.toInt()
-        if (carbs > maxCarbs) {
+        if (overview_carbs_carbs.value.toInt() > maxCarbs) {
             overview_carbs_carbs.value = 0.0
             ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.carbsconstraintapplied))
         }
