@@ -42,29 +42,29 @@ public class DbRequest {
 
     // dbAdd
     public DbRequest(String action, String collection, JSONObject data) {
+        this.action = action;
+        this.collection = collection;
+        this.nsClientID = "" + DateUtil.now();
         try {
             data.put("NSCLIENT_ID", nsClientID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        this.action = action;
-        this.collection = collection;
         this.data = data.toString();
-        this.nsClientID = "" + DateUtil.now();
         this._id = "";
     }
 
     // dbUpdate, dbUpdateUnset
     public DbRequest(String action, String collection, String _id, JSONObject data) {
+        this.action = action;
+        this.collection = collection;
+        this.nsClientID = "" + DateUtil.now();
         try {
             data.put("NSCLIENT_ID", nsClientID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        this.action = action;
-        this.collection = collection;
         this.data = data.toString();
-        this.nsClientID = "" + DateUtil.now();
         this._id = _id;
     }
 
@@ -72,15 +72,15 @@ public class DbRequest {
     public DbRequest(String action, String collection,
                      String _id) {
         JSONObject data = new JSONObject();
+        this.action = action;
+        this.collection = collection;
+        this.nsClientID = "" + DateUtil.now();
         try {
             data.put("NSCLIENT_ID", nsClientID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        this.action = action;
-        this.collection = collection;
         this.data = data.toString();
-        this.nsClientID = "" + DateUtil.now();
         this._id = _id;
     }
 
