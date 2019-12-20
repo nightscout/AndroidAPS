@@ -9,10 +9,14 @@ public class BasalScheduleEntry {
     private final Duration startTime;
 
     public BasalScheduleEntry(double rate, Duration startTime) {
-        if (rate < 0D) {
+        if (startTime.isLongerThan(Duration.standardHours(24).minus(Duration.standardSeconds(1))) || startTime.isShorterThan(Duration.ZERO)) {
+            throw new IllegalArgumentException("Invalid start time");
+        } else if (rate < 0D) {
             throw new IllegalArgumentException("Rate should be >= 0");
         } else if (rate > OmnipodConst.MAX_BASAL_RATE) {
             throw new IllegalArgumentException("Rate exceeds max basal rate");
+        } else if (rate % OmnipodConst.POD_PULSE_SIZE > 0.000001 && rate % OmnipodConst.POD_PULSE_SIZE - OmnipodConst.POD_PULSE_SIZE < -0.000001) {
+            throw new IllegalArgumentException("Unsupported basal rate precision");
         }
         this.rate = rate;
         this.startTime = startTime;

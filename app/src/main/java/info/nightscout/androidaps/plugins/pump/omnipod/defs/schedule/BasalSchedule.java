@@ -10,8 +10,10 @@ public class BasalSchedule {
     private final List<BasalScheduleEntry> entries;
 
     public BasalSchedule(List<BasalScheduleEntry> entries) {
-        if (entries == null) {
-            throw new IllegalArgumentException("Entries cannot be null");
+        if (entries == null || entries.size() == 0) {
+            throw new IllegalArgumentException("Entries can not be empty");
+        } else if (!entries.get(0).getStartTime().isEqual(Duration.ZERO)) {
+            throw new IllegalArgumentException("First basal schedule entry should have 0 offset");
         }
         this.entries = entries;
     }

@@ -173,7 +173,13 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             }
         } else if (PodInitActionType.FillCannulaSetBasalProfileWizardStep.equals(podInitActionType)) {
             try {
-                Disposable disposable = delegate.insertCannula(mapProfileToBasalSchedule(profile)).subscribe(res -> //
+                BasalSchedule basalSchedule;
+                try {
+                    basalSchedule = mapProfileToBasalSchedule(profile);
+                } catch (Exception ex) {
+                    throw new CommandInitializationException("Basal profile mapping failed", ex);
+                }
+                Disposable disposable = delegate.insertCannula(basalSchedule).subscribe(res -> //
                         handleSetupActionResult(podInitActionType, podInitReceiver, res, time));
                 return new PumpEnactResult().success(true).enacted(true);
             } catch (Exception ex) {
@@ -222,11 +228,17 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     @Override
-    public PumpEnactResult setBasalProfile(Profile basalProfile) {
+    public PumpEnactResult setBasalProfile(Profile profile) {
         long time = System.currentTimeMillis();
         try {
-            delegate.setBasalSchedule(mapProfileToBasalSchedule(basalProfile), isBasalBeepsEnabled());
-            addSuccessToHistory(time, PodHistoryEntryType.SetBasalSchedule, basalProfile);
+            BasalSchedule basalSchedule;
+            try {
+                basalSchedule = mapProfileToBasalSchedule(profile);
+            } catch (Exception ex) {
+                throw new CommandInitializationException("Basal profile mapping failed", ex);
+            }
+            delegate.setBasalSchedule(basalSchedule, isBasalBeepsEnabled());
+            addSuccessToHistory(time, PodHistoryEntryType.SetBasalSchedule, profile);
         } catch (Exception ex) {
             if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
                 addToHistory(time, PodHistoryEntryType.SetBasalSchedule, "Uncertain failure", false);
@@ -623,9 +635,14 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return L.isEnabled(L.PUMP);
     }
 
-    // TODO add tests
     static BasalSchedule mapProfileToBasalSchedule(Profile profile) {
+        if (profile == null) {
+            throw new IllegalArgumentException("Profile can not be null");
+        }
         Profile.ProfileValue[] basalValues = profile.getBasalValues();
+        if(basalValues == null) {
+            throw new IllegalArgumentException("Basal values can not be null");
+        }
         List<BasalScheduleEntry> entries = new ArrayList<>();
         for (Profile.ProfileValue basalValue : basalValues) {
             entries.add(new BasalScheduleEntry(basalValue.value, Duration.standardSeconds(basalValue.timeAsSeconds)));
