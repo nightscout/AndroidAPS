@@ -11,6 +11,7 @@ import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.CareportalEvent
@@ -19,13 +20,12 @@ import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
+import kotlinx.android.synthetic.main.dialog_insulin.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
-import kotlinx.android.synthetic.main.dialog_insulin.*
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.math.abs
@@ -69,7 +69,7 @@ class InsulinDialog : DialogFragmentWithDate() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        onCreateView()
+        onCreateViewGeneral()
         return inflater.inflate(R.layout.dialog_insulin, container, false)
     }
 
@@ -77,32 +77,32 @@ class InsulinDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         overview_insulin_time.setParams(savedInstanceState?.getDouble("overview_insulin_time")
-                ?: 0.0, -12 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
+            ?: 0.0, -12 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
         overview_insulin_amount.setParams(savedInstanceState?.getDouble("overview_insulin_amount")
-                ?: 0.0, 0.0, maxInsulin, ConfigBuilderPlugin.getPlugin().activePump!!.pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
+            ?: 0.0, 0.0, maxInsulin, ConfigBuilderPlugin.getPlugin().activePump!!.pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
 
         overview_insulin_plus05.text = toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
         overview_insulin_plus05.setOnClickListener {
             overview_insulin_amount.value = max(0.0, overview_insulin_amount.value
-                    + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
+                + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
             validateInputs()
         }
         overview_insulin_plus10.text = toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
         overview_insulin_plus10.setOnClickListener {
             overview_insulin_amount.value = max(0.0, overview_insulin_amount.value
-                    + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
+                + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
             validateInputs()
         }
         overview_insulin_plus20.text = toSignedString(SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
         overview_insulin_plus20.setOnClickListener {
             overview_insulin_amount.value = Math.max(0.0, overview_insulin_amount.value
-                    + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
+                + SP.getDouble(MainApp.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
             validateInputs()
         }
 
         overview_insulin_time_layout.visibility = View.GONE
         overview_insulin_record_only.setOnCheckedChangeListener { _, isChecked: Boolean ->
-            overview_insulin_time_layout.visibility = if (isChecked) View.VISIBLE else View.GONE
+            overview_insulin_time_layout.visibility = isChecked.toVisibility()
         }
     }
 
@@ -147,12 +147,12 @@ class InsulinDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))) {
                     if (eatingSoonChecked) {
                         val tempTarget = TempTarget()
-                                .date(System.currentTimeMillis())
-                                .duration(eatingSoonTTDuration)
-                                .reason(MainApp.gs(R.string.eatingsoon))
-                                .source(Source.USER)
-                                .low(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
-                                .high(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
+                            .date(System.currentTimeMillis())
+                            .duration(eatingSoonTTDuration)
+                            .reason(MainApp.gs(R.string.eatingsoon))
+                            .source(Source.USER)
+                            .low(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
+                            .high(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
                         TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
                     }
                     if (insulinAfterConstraints > 0) {

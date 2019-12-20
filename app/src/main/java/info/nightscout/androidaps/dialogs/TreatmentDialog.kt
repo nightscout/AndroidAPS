@@ -10,17 +10,21 @@ import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.*
-import kotlinx.android.synthetic.main.okcancel.*
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.OKDialog
+import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.ToastUtils
 import kotlinx.android.synthetic.main.dialog_treatment.*
+import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.math.abs
@@ -56,7 +60,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        onCreateView()
+        onCreateViewGeneral()
         return inflater.inflate(R.layout.dialog_treatment, container, false)
     }
 
@@ -65,9 +69,9 @@ class TreatmentDialog : DialogFragmentWithDate() {
 
         val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription ?: return
         overview_treatment_carbs.setParams(savedInstanceState?.getDouble("overview_treatment_carbs")
-                ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, ok, textWatcher)
+            ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, ok, textWatcher)
         overview_treatment_insulin.setParams(savedInstanceState?.getDouble("overview_treatment_insulin")
-                ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
+            ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
     }
 
     override fun submit() {

@@ -16,10 +16,14 @@ import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.OKDialog
+import info.nightscout.androidaps.utils.SP
+import info.nightscout.androidaps.utils.Translator
 import kotlinx.android.synthetic.main.dialog_care.*
-import kotlinx.android.synthetic.main.okcancel.*
 import kotlinx.android.synthetic.main.notes.*
+import kotlinx.android.synthetic.main.okcancel.*
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.util.*
@@ -49,7 +53,7 @@ class CareDialog : DialogFragmentWithDate() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        onCreateView()
+        onCreateViewGeneral()
         return inflater.inflate(R.layout.dialog_care, container, false)
     }
 
@@ -57,13 +61,13 @@ class CareDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         actions_care_icon.setImageResource(when (options) {
-            EventType.BGCHECK -> R.drawable.icon_cp_bgcheck
-            EventType.SENSOR_INSERT -> R.drawable.icon_cp_cgm_insert
+            EventType.BGCHECK        -> R.drawable.icon_cp_bgcheck
+            EventType.SENSOR_INSERT  -> R.drawable.icon_cp_cgm_insert
             EventType.BATTERY_CHANGE -> R.drawable.icon_cp_pump_battery
         })
         actions_care_title.text = MainApp.gs(when (options) {
-            EventType.BGCHECK -> R.string.careportal_bgcheck
-            EventType.SENSOR_INSERT -> R.string.careportal_cgmsensorinsert
+            EventType.BGCHECK        -> R.string.careportal_bgcheck
+            EventType.SENSOR_INSERT  -> R.string.careportal_cgmsensorinsert
             EventType.BATTERY_CHANGE -> R.string.careportal_pumpbatterychange
         })
 
@@ -73,12 +77,13 @@ class CareDialog : DialogFragmentWithDate() {
                 action_care_bg_layout.visibility = View.GONE
                 actions_care_bgsource.visibility = View.GONE
             }
-            else -> {
+
+            else                     -> {
             }
         }
 
         val bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData()?.glucose
-                ?: 0.0, ProfileFunctions.getSystemUnits())
+            ?: 0.0, ProfileFunctions.getSystemUnits())
         val bgTextWatcher: TextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -89,10 +94,10 @@ class CareDialog : DialogFragmentWithDate() {
 
         if (ProfileFunctions.getSystemUnits() == Constants.MMOL)
             actions_care_bg.setParams(savedInstanceState?.getDouble("actions_care_bg")
-                    ?: bg, 36.0, 30.0, 0.1, DecimalFormat("0.0"), false, ok, bgTextWatcher)
+                ?: bg, 36.0, 30.0, 0.1, DecimalFormat("0.0"), false, ok, bgTextWatcher)
         else
             actions_care_bg.setParams(savedInstanceState?.getDouble("actions_care_bg")
-                    ?: bg, 2.0, 500.0, 1.0, DecimalFormat("0"), false, ok, bgTextWatcher)
+                ?: bg, 2.0, 500.0, 1.0, DecimalFormat("0"), false, ok, bgTextWatcher)
     }
 
     override fun submit() {
@@ -104,11 +109,11 @@ class CareDialog : DialogFragmentWithDate() {
         actions.add("<b>" + MainApp.gs(event) + "</b>")
         if (options == EventType.BGCHECK) {
             val type =
-                    when {
-                        actions_care_meter.isChecked -> "Finger"
-                        actions_care_sensor.isChecked -> "Sensor"
-                        else -> "Manual"
-                    }
+                when {
+                    actions_care_meter.isChecked  -> "Finger"
+                    actions_care_sensor.isChecked -> "Sensor"
+                    else                          -> "Manual"
+                }
             actions.add(MainApp.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + Translator.translate(type))
             actions.add(MainApp.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(actions_care_bg.value) + " " + MainApp.gs(unitResId))
             json.put("glucose", actions_care_bg.value)
@@ -124,8 +129,8 @@ class CareDialog : DialogFragmentWithDate() {
 
         json.put("created_at", DateUtil.toISOString(eventTime))
         json.put("eventType", when (options) {
-            EventType.BGCHECK -> CareportalEvent.BGCHECK
-            EventType.SENSOR_INSERT -> CareportalEvent.SENSORCHANGE
+            EventType.BGCHECK        -> CareportalEvent.BGCHECK
+            EventType.SENSOR_INSERT  -> CareportalEvent.SENSORCHANGE
             EventType.BATTERY_CHANGE -> CareportalEvent.PUMPBATTERYCHANGE
         })
         json.put("units", ProfileFunctions.getSystemUnits())

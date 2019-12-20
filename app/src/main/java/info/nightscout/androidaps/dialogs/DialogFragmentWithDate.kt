@@ -12,6 +12,7 @@ import androidx.fragment.app.DialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.SP
+import info.nightscout.androidaps.utils.toVisibility
 import kotlinx.android.synthetic.main.datetime.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
@@ -42,7 +43,7 @@ abstract class DialogFragmentWithDate : DialogFragment() {
         savedInstanceState.putBoolean("eventTimeChanged", eventTimeChanged)
     }
 
-    fun onCreateView() {
+    fun onCreateViewGeneral() {
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
@@ -72,9 +73,9 @@ abstract class DialogFragmentWithDate : DialogFragment() {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime
                 DatePickerDialog(it, dateSetListener,
-                        cal.get(Calendar.YEAR),
-                        cal.get(Calendar.MONTH),
-                        cal.get(Calendar.DAY_OF_MONTH)
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)
                 ).show()
             }
         }
@@ -96,14 +97,14 @@ abstract class DialogFragmentWithDate : DialogFragment() {
                 val cal = Calendar.getInstance()
                 cal.timeInMillis = eventTime
                 TimePickerDialog(it, timeSetListener,
-                        cal.get(Calendar.HOUR_OF_DAY),
-                        cal.get(Calendar.MINUTE),
-                        DateFormat.is24HourFormat(context)
+                    cal.get(Calendar.HOUR_OF_DAY),
+                    cal.get(Calendar.MINUTE),
+                    DateFormat.is24HourFormat(context)
                 ).show()
             }
         }
 
-        notes_layout?.visibility = if (SP.getBoolean(R.string.key_show_notes_entry_dialogs, false)) View.VISIBLE else View.GONE
+        notes_layout?.visibility = SP.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
         ok.setOnClickListener {
             synchronized(okClicked) {

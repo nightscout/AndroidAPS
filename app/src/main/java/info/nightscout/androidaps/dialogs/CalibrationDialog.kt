@@ -14,8 +14,8 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.OKDialog
 import info.nightscout.androidaps.utils.XdripCalibrations
-import kotlinx.android.synthetic.main.okcancel.*
 import kotlinx.android.synthetic.main.dialog_calibration.*
+import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
 import java.util.*
 
@@ -28,7 +28,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        onCreateView()
+        onCreateViewGeneral()
         return inflater.inflate(R.layout.dialog_calibration, container, false)
     }
 
@@ -37,13 +37,13 @@ class CalibrationDialog : DialogFragmentWithDate() {
 
         val units = ProfileFunctions.getSystemUnits()
         val bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData()?.glucose
-                ?: 0.0, units)
+            ?: 0.0, units)
         if (units == Constants.MMOL)
             overview_calibration_bg.setParams(savedInstanceState?.getDouble("overview_calibration_bg")
-                    ?: bg, 2.0, 30.0, 0.1, DecimalFormat("0.0"), false, ok)
+                ?: bg, 2.0, 30.0, 0.1, DecimalFormat("0.0"), false, ok)
         else
             overview_calibration_bg.setParams(savedInstanceState?.getDouble("overview_calibration_bg")
-                    ?: bg, 36.0, 500.0, 1.0, DecimalFormat("0"), false, ok)
+                ?: bg, 36.0, 500.0, 1.0, DecimalFormat("0"), false, ok)
         overview_calibration_units.text = if (units == Constants.MMOL) MainApp.gs(R.string.mmol) else MainApp.gs(R.string.mgdl)
     }
 

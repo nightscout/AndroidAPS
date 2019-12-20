@@ -3,7 +3,11 @@ package info.nightscout.androidaps.dialogs
 import android.app.Activity
 import android.os.Bundle
 import android.os.SystemClock
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -87,25 +91,25 @@ class BolusProgressDialog : DialogFragment() {
         else running = true
 
         disposable.add(toObservable(EventPumpStatusChanged::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ overview_bolusprogress_status.text = it.getStatus() }) { FabricPrivacy.logException(it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ overview_bolusprogress_status.text = it.getStatus() }) { FabricPrivacy.logException(it) }
         )
         disposable.add(toObservable(EventDismissBolusProgressIfRunning::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ if (running) dismiss() }) { FabricPrivacy.logException(it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ if (running) dismiss() }) { FabricPrivacy.logException(it) }
         )
         disposable.add(toObservable(EventOverviewBolusProgress::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (L.isEnabled(L.UI)) log.debug("Status: " + it.status + " Percent: " + it.percent)
-                    overview_bolusprogress_status.text = it.status
-                    overview_bolusprogress_progressbar.progress = it.percent
-                    if (it.percent == 100) {
-                        overview_bolusprogress_stop.visibility = View.INVISIBLE
-                        scheduleDismiss()
-                    }
-                    state = it.status
-                }) { FabricPrivacy.logException(it) }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                if (L.isEnabled(L.UI)) log.debug("Status: " + it.status + " Percent: " + it.percent)
+                overview_bolusprogress_status.text = it.status
+                overview_bolusprogress_progressbar.progress = it.percent
+                if (it.percent == 100) {
+                    overview_bolusprogress_stop.visibility = View.INVISIBLE
+                    scheduleDismiss()
+                }
+                state = it.status
+            }) { FabricPrivacy.logException(it) }
         )
     }
 

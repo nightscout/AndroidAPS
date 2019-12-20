@@ -16,9 +16,13 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.*
-import kotlinx.android.synthetic.main.okcancel.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DefaultValueHelper
+import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.OKDialog
+import info.nightscout.androidaps.utils.SP
 import kotlinx.android.synthetic.main.dialog_temptarget.*
+import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
 import java.util.*
 
@@ -32,7 +36,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        onCreateView()
+        onCreateViewGeneral()
         return inflater.inflate(R.layout.dialog_temptarget, container, false)
     }
 
@@ -40,29 +44,29 @@ class TempTargetDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         overview_temptarget_duration.setParams(savedInstanceState?.getDouble("overview_temptarget_duration")
-                ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, ok)
+            ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, ok)
 
         if (ProfileFunctions.getSystemUnits() == Constants.MMOL)
             overview_temptarget_temptarget.setParams(
-                    savedInstanceState?.getDouble("overview_temptarget_temptarget")
-                            ?: Constants.MIN_TT_MMOL,
-                    Constants.MIN_TT_MMOL, Constants.MAX_TT_MMOL, 0.1, DecimalFormat("0.0"), false, ok)
+                savedInstanceState?.getDouble("overview_temptarget_temptarget")
+                    ?: Constants.MIN_TT_MMOL,
+                Constants.MIN_TT_MMOL, Constants.MAX_TT_MMOL, 0.1, DecimalFormat("0.0"), false, ok)
         else
             overview_temptarget_temptarget.setParams(
-                    savedInstanceState?.getDouble("overview_temptarget_temptarget")
-                            ?: Constants.MIN_TT_MGDL,
-                    Constants.MIN_TT_MGDL, Constants.MAX_TT_MGDL, 1.0, DecimalFormat("0"), false, ok)
+                savedInstanceState?.getDouble("overview_temptarget_temptarget")
+                    ?: Constants.MIN_TT_MGDL,
+                Constants.MIN_TT_MGDL, Constants.MAX_TT_MGDL, 1.0, DecimalFormat("0"), false, ok)
 
         val units = ProfileFunctions.getSystemUnits()
         overview_temptarget_units.text = if (units == Constants.MMOL) MainApp.gs(R.string.mmol) else MainApp.gs(R.string.mgdl)
         // temp target
         context?.let { context ->
             val reasonList: List<String> = Lists.newArrayList(
-                    MainApp.gs(R.string.manual),
-                    MainApp.gs(R.string.cancel),
-                    MainApp.gs(R.string.eatingsoon),
-                    MainApp.gs(R.string.activity),
-                    MainApp.gs(R.string.hypo)
+                MainApp.gs(R.string.manual),
+                MainApp.gs(R.string.cancel),
+                MainApp.gs(R.string.eatingsoon),
+                MainApp.gs(R.string.activity),
+                MainApp.gs(R.string.hypo)
             )
             val adapterReason = ArrayAdapter(context, R.layout.spinner_centered, reasonList)
             overview_temptarget_reason.adapter = adapterReason
@@ -75,19 +79,23 @@ class TempTargetDialog : DialogFragmentWithDate() {
                             defaultDuration = DefaultValueHelper.determineEatingSoonTTDuration().toDouble()
                             defaultTarget = DefaultValueHelper.determineEatingSoonTT()
                         }
-                        MainApp.gs(R.string.activity) -> {
+
+                        MainApp.gs(R.string.activity)   -> {
                             defaultDuration = DefaultValueHelper.determineActivityTTDuration().toDouble()
                             defaultTarget = DefaultValueHelper.determineActivityTT()
                         }
-                        MainApp.gs(R.string.hypo) -> {
+
+                        MainApp.gs(R.string.hypo)       -> {
                             defaultDuration = DefaultValueHelper.determineHypoTTDuration().toDouble()
                             defaultTarget = DefaultValueHelper.determineHypoTT()
                         }
-                        MainApp.gs(R.string.cancel) -> {
+
+                        MainApp.gs(R.string.cancel)     -> {
                             defaultDuration = 0.0
                             defaultTarget = 0.0
                         }
-                        else -> {
+
+                        else                            -> {
                             defaultDuration = overview_temptarget_duration.value
                             defaultTarget = overview_temptarget_temptarget.value
                         }
@@ -121,19 +129,19 @@ class TempTargetDialog : DialogFragmentWithDate() {
             OKDialog.showConfirmation(activity, HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))) {
                 if (target == 0.0 || duration == 0.0) {
                     val tempTarget = TempTarget()
-                            .date(eventTime)
-                            .duration(0)
-                            .low(0.0).high(0.0)
-                            .source(Source.USER)
+                        .date(eventTime)
+                        .duration(0)
+                        .low(0.0).high(0.0)
+                        .source(Source.USER)
                     TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
                 } else {
                     val tempTarget = TempTarget()
-                            .date(eventTime)
-                            .duration(duration.toInt())
-                            .reason(reason)
-                            .source(Source.USER)
-                            .low(Profile.toMgdl(target, ProfileFunctions.getSystemUnits()))
-                            .high(Profile.toMgdl(target, ProfileFunctions.getSystemUnits()))
+                        .date(eventTime)
+                        .duration(duration.toInt())
+                        .reason(reason)
+                        .source(Source.USER)
+                        .low(Profile.toMgdl(target, ProfileFunctions.getSystemUnits()))
+                        .high(Profile.toMgdl(target, ProfileFunctions.getSystemUnits()))
                     TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
                 }
                 if (duration == 10.0) SP.putBoolean(R.string.key_objectiveusetemptarget, true)

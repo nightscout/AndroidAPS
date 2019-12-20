@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import kotlinx.android.synthetic.main.dialog_fill.*
@@ -32,7 +32,7 @@ class FillDialog : DialogFragmentWithDate() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        onCreateView()
+        onCreateViewGeneral()
         return inflater.inflate(R.layout.dialog_fill, container, false)
     }
 
@@ -42,7 +42,7 @@ class FillDialog : DialogFragmentWithDate() {
         val maxInsulin = MainApp.getConstraintChecker().maxBolusAllowed.value()
         val bolusStep = ConfigBuilderPlugin.getPlugin().activePump!!.pumpDescription.bolusStep
         fill_insulinamount.setParams(savedInstanceState?.getDouble("fill_insulinamount")
-                ?: 0.0, 0.0, maxInsulin, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), true, ok)
+            ?: 0.0, 0.0, maxInsulin, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), true, ok)
         val amount1 = SP.getDouble("fill_button1", 0.3)
         if (amount1 > 0) {
             fill_preset_button1.visibility = View.VISIBLE
