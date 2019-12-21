@@ -24,7 +24,7 @@ import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRUserOptions
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRNewStatus
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.plugins.treatments.fragments.ProfileViewerDialog
+import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -59,9 +59,14 @@ class DanaRFragment : Fragment() {
         danar_history.setOnClickListener { startActivity(Intent(context, DanaRHistoryActivity::class.java)) }
         danar_viewprofile.setOnClickListener {
             fragmentManager?.let { fragmentManager ->
+                val profile = DanaRPump.getInstance().createConvertedProfile()?.getDefaultProfile() ?: return@let
+                val profileName = DanaRPump.getInstance().createConvertedProfile()?.getDefaultProfileName() ?: return@let
                 val args = Bundle()
                 args.putLong("time", DateUtil.now())
-                args.putInt("mode", ProfileViewerDialog.Mode.PUMP_PROFILE.ordinal)
+                args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
+                args.putString("customProfile", profile.data.toString())
+                args.putString("customProfileUnits", profile.units)
+                args.putString("customProfileName", profileName)
                 val pvd = ProfileViewerDialog()
                 pvd.arguments = args
                 pvd.show(fragmentManager, "ProfileViewDialog")

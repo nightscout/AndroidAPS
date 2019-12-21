@@ -1,20 +1,20 @@
-package info.nightscout.androidaps.plugins.treatments.fragments
+package info.nightscout.androidaps.dialogs
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.interfaces.ProfileInterface
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import kotlinx.android.synthetic.main.close.*
-import kotlinx.android.synthetic.main.profileviewer_fragment.*
+import kotlinx.android.synthetic.main.dialog_profileviewer.*
 import org.json.JSONObject
 
 class ProfileViewerDialog : DialogFragment() {
@@ -22,8 +22,7 @@ class ProfileViewerDialog : DialogFragment() {
 
     enum class Mode(val i: Int) {
         RUNNING_PROFILE(1),
-        PUMP_PROFILE(2),
-        CUSTOM_PROFILE(3)
+        CUSTOM_PROFILE(2)
     }
 
     private var mode: Mode = Mode.RUNNING_PROFILE
@@ -42,17 +41,18 @@ class ProfileViewerDialog : DialogFragment() {
             customProfileName = bundle.getString("customProfileName", "")
         }
 
-        return inflater.inflate(R.layout.profileviewer_fragment, container, false)
+        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
+        dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
+        isCancelable = true
+        dialog?.setCanceledOnTouchOutside(false)
+
+        return inflater.inflate(R.layout.dialog_profileviewer, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         close.setOnClickListener { dismiss() }
-        profileview_reload.setOnClickListener {
-            ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("ProfileViewDialog", null)
-            dismiss()
-        }
 
         val profile: Profile?
         val profileName: String?
@@ -62,22 +62,14 @@ class ProfileViewerDialog : DialogFragment() {
                 profile = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(time)?.profileObject
                 profileName = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(time)?.customizedName
                 date = DateUtil.dateAndTimeString(TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(time)?.date
-                        ?: 0)
-                profileview_reload.visibility = View.GONE
+                    ?: 0)
                 profileview_datelayout.visibility = View.VISIBLE
             }
-            Mode.PUMP_PROFILE -> {
-                profile = (ConfigBuilderPlugin.getPlugin().activePump as ProfileInterface?)?.profile?.getDefaultProfile()
-                profileName = (ConfigBuilderPlugin.getPlugin().activePump as ProfileInterface?)?.profileName
-                date = ""
-                profileview_reload.visibility = View.VISIBLE
-                profileview_datelayout.visibility = View.GONE
-            }
-            Mode.CUSTOM_PROFILE -> {
+
+            Mode.CUSTOM_PROFILE  -> {
                 profile = Profile(JSONObject(customProfileJson), customProfileUnits)
                 profileName = customProfileName
                 date = ""
-                profileview_reload.visibility = View.GONE
                 profileview_datelayout.visibility = View.GONE
             }
         }
@@ -99,9 +91,9 @@ class ProfileViewerDialog : DialogFragment() {
         }
     }
 
-    override fun onResume() {
+    override fun onStart() {
+        super.onStart()
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        super.onResume()
     }
 
     override fun onSaveInstanceState(bundle: Bundle) {

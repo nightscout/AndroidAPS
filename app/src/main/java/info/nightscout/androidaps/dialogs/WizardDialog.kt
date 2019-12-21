@@ -163,7 +163,7 @@ class WizardDialog : DialogFragment() {
         disposable.clear()
     }
 
-    private fun onCheckedChanged(buttonView: CompoundButton, ignored: Boolean) {
+    private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("UNUSED_PARAMETER") state: Boolean) {
         saveCheckedStates()
         treatments_wizard_ttcheckbox.isEnabled = treatments_wizard_bgcheckbox.isChecked && TreatmentsPlugin.getPlugin().tempTargetFromHistory != null
         if (buttonView.id == treatments_wizard_cobcheckbox.id)

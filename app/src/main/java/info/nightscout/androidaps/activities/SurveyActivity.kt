@@ -4,18 +4,14 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
-import info.nightscout.androidaps.plugins.treatments.fragments.ProfileViewerDialog
+import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.utils.*
 import kotlinx.android.synthetic.main.survey_fragment.*
 import org.slf4j.LoggerFactory
-import java.util.*
-
 
 class SurveyActivity : NoSplashAppCompatActivity() {
     private val log = LoggerFactory.getLogger(SurveyActivity::class.java)

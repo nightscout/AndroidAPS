@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.treatments.fragments
 
-import android.content.DialogInterface
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +16,7 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.db.Source
+import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
