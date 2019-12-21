@@ -47,7 +47,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
         overview_calibration_units.text = if (units == Constants.MMOL) MainApp.gs(R.string.mmol) else MainApp.gs(R.string.mgdl)
     }
 
-    override fun submit() {
+    override fun submit() :Boolean {
         val units = ProfileFunctions.getSystemUnits()
         val unitLabel = if (units == Constants.MMOL) MainApp.gs(R.string.mmol) else MainApp.gs(R.string.mgdl)
         val actions: LinkedList<String?> = LinkedList()
@@ -62,5 +62,6 @@ class CalibrationDialog : DialogFragmentWithDate() {
             }
         } else
             OKDialog.show(activity, "", MainApp.gs(R.string.no_action_selected), null)
+        return true
     }
 }

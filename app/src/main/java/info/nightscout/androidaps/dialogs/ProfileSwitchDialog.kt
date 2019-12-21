@@ -73,8 +73,9 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         }
     }
 
-    override fun submit() {
-        val profileStore = ConfigBuilderPlugin.getPlugin().activeProfileInterface?.profile ?: return
+    override fun submit(): Boolean {
+        val profileStore = ConfigBuilderPlugin.getPlugin().activeProfileInterface?.profile
+            ?: return false
 
         val actions: LinkedList<String> = LinkedList()
         val duration = overview_profileswitch_duration.value
@@ -99,5 +100,6 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                 ProfileFunctions.doProfileSwitch(profileStore, profile, duration.toInt(), percent, timeShift, eventTime)
             }
         }
+        return true
     }
 }

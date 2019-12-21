@@ -112,13 +112,13 @@ abstract class DialogFragmentWithDate : DialogFragment() {
                     log.debug("guarding: ok already clicked")
                 } else {
                     okClicked = true
-                    submit()
+                    if (submit()) dismiss()
+                    else okClicked = false
                 }
-                dismiss()
             }
         }
         cancel.setOnClickListener { dismiss() }
     }
 
-    abstract fun submit()
+    abstract fun submit(): Boolean
 }

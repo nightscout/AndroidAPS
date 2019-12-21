@@ -1419,8 +1419,8 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="taskname">Task name</string>
     <string name="edit_short">EDIT</string>
-    <string name="please_choose_an_action_type">Please choose an action type:</string>
-    <string name="please_choose_a_trigger_type">Please choose a trigger type:</string>
+    <string name="please_choose_an_action_type">Choose an action type</string>
+    <string name="please_choose_a_trigger_type">Choose a trigger type</string>
     <string name="triggers">Triggers:</string>
     <string name="remove_label">REMOVE</string>
     <string name="preconditions">Preconditions:</string>
@@ -1604,7 +1604,7 @@
     <string name="automation_trigger_pump_last_connection_description">Last connection to pump [minutes ago]</string>
     <string name="automation_trigger_pump_last_connection_compared">Last connection to pump %1$s %2$s min ago</string>
     <string name="sendsmsactionlabel">Send SMS: %1$s</string>
-    <string name="sendsmsactiondescription">Send SMS to all numbers in preferences</string>
+    <string name="sendsmsactiondescription">Send SMS to all numbers</string>
     <string name="sendsmsactiontext">Send SMS with text</string>
 
 
@@ -1689,5 +1689,6 @@
     <string name="error">Error</string>
     <string name="timeformat12h">12h</string>
     <string name="timeformat24h">24h</string>
+    <string name="automation_event">Automation event</string>
 
 </resources>

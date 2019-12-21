@@ -23,7 +23,6 @@
             android:padding="5dp">
 
             <ImageView
-                android:id="@+id/actions_care_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/overview_calibration"
@@ -40,6 +39,7 @@
                 android:text="@string/overview_calibration"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
+
         </RelativeLayout>
 
         <LinearLayout

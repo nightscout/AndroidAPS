@@ -109,7 +109,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
         }
     }
 
-    override fun submit() {
+    override fun submit(): Boolean {
         val actions: LinkedList<String> = LinkedList()
         val reason = overview_temptarget_reason.selectedItem.toString()
         val unitResId = if (ProfileFunctions.getSystemUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
@@ -147,5 +147,6 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 if (duration == 10.0) SP.putBoolean(R.string.key_objectiveusetemptarget, true)
             }
         }
+        return true
     }
 }

@@ -74,8 +74,9 @@ class TreatmentDialog : DialogFragmentWithDate() {
             ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
     }
 
-    override fun submit() {
-        val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription ?: return
+    override fun submit(): Boolean {
+        val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription
+            ?: return false
         val insulin = SafeParse.stringToDouble(overview_treatment_insulin.text)
         val carbs = SafeParse.stringToInt(overview_treatment_carbs.text)
         val recordOnlyChecked = overview_treatment_record_only.isChecked
@@ -125,5 +126,6 @@ class TreatmentDialog : DialogFragmentWithDate() {
             }
         } else
             OKDialog.show(activity, "", MainApp.gs(R.string.no_action_selected), null)
+        return true
     }
 }

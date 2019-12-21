@@ -69,11 +69,11 @@ class TempBasalDialog : DialogFragmentWithDate() {
         }
     }
 
-    override fun submit() {
+    override fun submit(): Boolean {
         var percent = 0
         var absolute = 0.0
         val durationInMinutes = SafeParse.stringToInt(actions_tempbasal_duration.text)
-        val profile = ProfileFunctions.getInstance().profile ?: return
+        val profile = ProfileFunctions.getInstance().profile ?: return false
         val actions: LinkedList<String> = LinkedList()
         actions.add("<b>" + MainApp.gs(R.string.setbasalquestion) + "</b>")
         if (isPercentPump) {
@@ -111,5 +111,6 @@ class TempBasalDialog : DialogFragmentWithDate() {
                 }
             }
         }
+        return true
     }
 }

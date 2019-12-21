@@ -131,7 +131,7 @@ class CarbsDialog : DialogFragmentWithDate() {
         return if (value > 0) "+$value" else value.toString()
     }
 
-    override fun submit() {
+    override fun submit(): Boolean {
         val carbs = overview_carbs_carbs.value.toInt()
         val carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(Constraint(carbs)).value()
         val units = ProfileFunctions.getSystemUnits()
@@ -213,5 +213,6 @@ class CarbsDialog : DialogFragmentWithDate() {
             }
         } else
             OKDialog.show(activity, "", MainApp.gs(R.string.no_action_selected), null)
+        return true
     }
 }

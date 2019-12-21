@@ -111,8 +111,9 @@ class InsulinDialog : DialogFragmentWithDate() {
         return if (value > 0) "+$formatted" else formatted
     }
 
-    override fun submit() {
-        val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription ?: return
+    override fun submit(): Boolean {
+        val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription
+            ?: return false
         val insulin = SafeParse.stringToDouble(overview_insulin_amount.text)
         val insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(Constraint(insulin)).value()
         val actions: LinkedList<String?> = LinkedList()
@@ -185,5 +186,6 @@ class InsulinDialog : DialogFragmentWithDate() {
             }
         } else
             OKDialog.show(activity, "", MainApp.gs(R.string.no_action_selected), null)
+        return true
     }
 }

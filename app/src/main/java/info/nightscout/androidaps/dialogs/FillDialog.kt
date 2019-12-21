@@ -70,7 +70,7 @@ class FillDialog : DialogFragmentWithDate() {
 
     }
 
-    override fun submit() {
+    override fun submit(): Boolean {
         val insulin = SafeParse.stringToDouble(fill_insulinamount.text)
         val actions: LinkedList<String?> = LinkedList()
 
@@ -125,5 +125,6 @@ class FillDialog : DialogFragmentWithDate() {
             OKDialog.show(activity, "", MainApp.gs(R.string.no_action_selected), null)
         }
         dismiss()
+        return true
     }
 }

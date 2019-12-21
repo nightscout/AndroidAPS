@@ -51,7 +51,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
             ?: extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, DecimalFormat("0"), false, ok)
     }
 
-    override fun submit() {
+    override fun submit(): Boolean {
         val insulin = SafeParse.stringToDouble(actions_extendedbolus_insulin.text)
         val durationInMinutes = SafeParse.stringToInt(actions_extendedbolus_duration.text)
         val actions: LinkedList<String> = LinkedList()
@@ -78,5 +78,6 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
                 })
             }
         }
+        return true
     }
 }

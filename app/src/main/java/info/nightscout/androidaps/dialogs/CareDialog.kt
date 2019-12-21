@@ -100,7 +100,7 @@ class CareDialog : DialogFragmentWithDate() {
                 ?: bg, 2.0, 500.0, 1.0, DecimalFormat("0"), false, ok, bgTextWatcher)
     }
 
-    override fun submit() {
+    override fun submit(): Boolean {
         val enteredBy = SP.getString("careportal_enteredby", "")
         val unitResId = if (ProfileFunctions.getSystemUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
 
@@ -143,5 +143,6 @@ class CareDialog : DialogFragmentWithDate() {
                 NSUpload.uploadCareportalEntryToNS(json)
             }
         }
+        return true
     }
 }
