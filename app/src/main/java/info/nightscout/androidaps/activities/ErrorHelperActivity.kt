@@ -2,7 +2,6 @@ package info.nightscout.androidaps.activities
 
 import android.os.Bundle
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.dialogs.ErrorDialog
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.SP
