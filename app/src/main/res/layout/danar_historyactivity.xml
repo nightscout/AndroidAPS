@@ -19,7 +19,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/carbs"
+            android:contentDescription="@string/danar_history"
             android:src="@drawable/icon_danarhistory" />
 
         <TextView
