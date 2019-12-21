@@ -10,7 +10,7 @@ import javax.inject.Singleton
  * Created by mike on 17.02.2017.
  */
 @Singleton
-class SP @Inject internal constructor(private val sharedPreferences: SharedPreferences) {
+class SP @Inject constructor(private val sharedPreferences: SharedPreferences) {
 
     fun getAll(): Map<String, *> = sharedPreferences.all
 

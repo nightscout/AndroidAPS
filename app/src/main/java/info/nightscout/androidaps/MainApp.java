@@ -1,6 +1,5 @@
 package info.nightscout.androidaps;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.content.res.Resources;
@@ -22,7 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import dagger.android.AndroidInjector;
-import dagger.android.HasAndroidInjector;
+import dagger.android.DaggerApplication;
 import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent;
@@ -98,43 +97,34 @@ import io.fabric.sdk.android.Fabric;
 import static info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt.triggerCheckVersion;
 
 
-public class MainApp extends Application implements HasAndroidInjector {
-    private static Logger log = LoggerFactory.getLogger(L.CORE);
-    private static KeepAliveReceiver keepAliveReceiver;
+public class MainApp extends DaggerApplication {
+    static Logger log = LoggerFactory.getLogger(L.CORE);
+    static KeepAliveReceiver keepAliveReceiver;
 
-    private static MainApp sInstance;
+    static MainApp sInstance;
     public static Resources sResources;
 
-    private static FirebaseAnalytics mFirebaseAnalytics;
+    static FirebaseAnalytics mFirebaseAnalytics;
 
-    private static DatabaseHelper sDatabaseHelper = null;
-    private static ConstraintChecker sConstraintsChecker = null;
+    static DatabaseHelper sDatabaseHelper = null;
+    static ConstraintChecker sConstraintsChecker = null;
 
-    private static ArrayList<PluginBase> pluginsList = null;
+    static ArrayList<PluginBase> pluginsList = null;
 
-    private static DataReceiver dataReceiver = new DataReceiver();
-    private static NSAlarmReceiver alarmReciever = new NSAlarmReceiver();
-    private static AckAlarmReceiver ackAlarmReciever = new AckAlarmReceiver();
-    private static DBAccessReceiver dbAccessReciever = new DBAccessReceiver();
-    private LocalBroadcastManager lbm;
+    static DataReceiver dataReceiver = new DataReceiver();
+    static NSAlarmReceiver alarmReciever = new NSAlarmReceiver();
+    static AckAlarmReceiver ackAlarmReciever = new AckAlarmReceiver();
+    static DBAccessReceiver dbAccessReciever = new DBAccessReceiver();
+    LocalBroadcastManager lbm;
     BroadcastReceiver btReceiver;
     TimeDateOrTZChangeReceiver timeDateOrTZChangeReceiver;
 
     public static boolean devBranch;
     public static boolean engineeringMode;
 
-    AndroidInjector<Object> activityInjector;
-
-    @Override
-    public AndroidInjector<Object> androidInjector() {
-        return activityInjector;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
-        // Dagger injection
-        DaggerAppComponent.create().inject(this);
 
         log.debug("onCreate");
         sInstance = this;
@@ -256,6 +246,15 @@ public class MainApp extends Application implements HasAndroidInjector {
                 startKeepAliveService();
             }).start();
         }
+    }
+
+    @Override
+    protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
+
+        return DaggerAppComponent
+                .builder()
+                .application(this)
+                .build();
     }
 
     private void registerLocalBroadcastReceiver() {

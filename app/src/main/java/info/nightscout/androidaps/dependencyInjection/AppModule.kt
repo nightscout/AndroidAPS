@@ -1,31 +1,27 @@
 package info.nightscout.androidaps.dependencyInjection
 
+import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Singleton
 
-
-@Module
-class AppModule(private val application: MainApp) {
-    @Provides
-    @Singleton
-    fun provideApplication(): MainApp {
-        return application
-    }
-
-    @Provides
-    fun provideContext(): Context {
-        return application.applicationContext
-    }
+@Module(includes = [AppModule.AppBindings::class])
+class AppModule() {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(): SP {
-        return SP(PreferenceManager.getDefaultSharedPreferences(provideContext()))
+    fun provideSharedPreferences(context: Context): SP {
+        return SP(PreferenceManager.getDefaultSharedPreferences(context))
+    }
+
+    @Module
+    interface AppBindings {
+
+        @Binds
+        fun bindContext(application: Application): Context
     }
 }
