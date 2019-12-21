@@ -33,6 +33,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.SingleClickButton
 import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.toVisibility
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.actions_fragment.*
@@ -205,8 +206,8 @@ class ActionsFragment : Fragment() {
                 if (!pump.pumpDescription.isRefillingCapable || !pump.isInitialized || pump.isSuspended) View.GONE
                 else View.VISIBLE
 
-        actions_temptarget?.visibility = if (!Config.APS) View.GONE else View.VISIBLE
-        actions_tddstats?.visibility = if (!pump.pumpDescription.supportsTDDs) View.GONE else View.VISIBLE
+        actions_temptarget?.visibility = Config.APS.toVisibility()
+        actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
         activity?.let { activity ->
             CareportalFragment.updateAge(activity, careportal_sensorage, careportal_insulinage, careportal_canulaage, careportal_pbage)
         }

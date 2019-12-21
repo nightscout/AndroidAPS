@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.OKDialog
@@ -31,7 +31,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        onCreateView()
+        onCreateViewGeneral()
         return inflater.inflate(R.layout.dialog_extendedbolus, container, false)
     }
 
@@ -43,12 +43,12 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         val maxInsulin = MainApp.getConstraintChecker().maxExtendedBolusAllowed.value()
         val extendedStep = pumpDescription.extendedBolusStep
         actions_extendedbolus_insulin.setParams(savedInstanceState?.getDouble("actions_extendedbolus_insulin")
-                ?: extendedStep, extendedStep, maxInsulin, extendedStep, DecimalFormat("0.00"), false, ok)
+            ?: extendedStep, extendedStep, maxInsulin, extendedStep, DecimalFormat("0.00"), false, ok)
 
         val extendedDurationStep = pumpDescription.extendedBolusDurationStep
         val extendedMaxDuration = pumpDescription.extendedBolusMaxDuration
         actions_extendedbolus_duration.setParams(savedInstanceState?.getDouble("actions_extendedbolus_duration")
-                ?: extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, DecimalFormat("0"), false, ok)
+            ?: extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, DecimalFormat("0"), false, ok)
     }
 
     override fun submit() {

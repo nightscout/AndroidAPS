@@ -1,10 +1,13 @@
 package info.nightscout.androidaps.dialogs
 
-
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -87,5 +90,5 @@ class ErrorDialog : DialogFragment() {
     }
 
     private fun stopAlarm() =
-            MainApp.instance().stopService(Intent(MainApp.instance().applicationContext, AlarmSoundService::class.java))
+        MainApp.instance().stopService(Intent(MainApp.instance().applicationContext, AlarmSoundService::class.java))
 }

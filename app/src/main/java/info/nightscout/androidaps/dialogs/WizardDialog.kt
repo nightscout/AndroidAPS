@@ -3,7 +3,11 @@ package info.nightscout.androidaps.dialogs
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
@@ -75,22 +79,22 @@ class WizardDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         loadCheckedStates()
         processCobCheckBox()
-        treatments_wizard_sbcheckbox.visibility = if (SP.getBoolean(R.string.key_usesuperbolus, false)) View.VISIBLE else View.GONE
-        treatments_wizard_notes_layout.visibility = if (SP.getBoolean(R.string.key_show_notes_entry_dialogs, false)) View.VISIBLE else View.GONE
+        treatments_wizard_sbcheckbox.visibility = SP.getBoolean(R.string.key_usesuperbolus, false).toVisibility()
+        treatments_wizard_notes_layout.visibility = SP.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
         val maxCarbs = MainApp.getConstraintChecker().maxCarbsAllowed.value()
         val maxCorrection = MainApp.getConstraintChecker().maxBolusAllowed.value()
 
         treatments_wizard_bg_input.setParams(savedInstanceState?.getDouble("treatments_wizard_bg_input")
-                ?: 0.0, 0.0, 500.0, 0.1, DecimalFormat("0.0"), false, ok, textWatcher)
+            ?: 0.0, 0.0, 500.0, 0.1, DecimalFormat("0.0"), false, ok, textWatcher)
         treatments_wizard_carbs_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carbs_input")
-                ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, ok, textWatcher)
+            ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, ok, textWatcher)
         val bolusStep = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription?.bolusStep
-                ?: 0.1
+            ?: 0.1
         treatments_wizard_correction_input.setParams(savedInstanceState?.getDouble("treatments_wizard_correction_input")
-                ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
+            ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
         treatments_wizard_carb_time_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carb_time_input")
-                ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
+            ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
         initDialog()
 
         treatments_wizard_percent_used.text = MainApp.gs(R.string.format_percent, SP.getInt(R.string.key_boluswizard_percentage, 100))
@@ -110,23 +114,23 @@ class WizardDialog : DialogFragment() {
         // cancel button
         cancel.setOnClickListener { dismiss() }
         // checkboxes
-        treatments_wizard_bgcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
-        treatments_wizard_ttcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
-        treatments_wizard_cobcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
-        treatments_wizard_basaliobcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
-        treatments_wizard_bolusiobcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
-        treatments_wizard_bgtrendcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
-        treatments_wizard_sbcheckbox.setOnCheckedChangeListener { buttonView, _ -> onCheckedChanged(buttonView) }
+        treatments_wizard_bgcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        treatments_wizard_ttcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        treatments_wizard_cobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        treatments_wizard_basaliobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        treatments_wizard_bolusiobcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        treatments_wizard_bgtrendcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
+        treatments_wizard_sbcheckbox.setOnCheckedChangeListener(::onCheckedChanged)
 
         val showCalc = SP.getBoolean(MainApp.gs(R.string.key_wizard_calculation_visible), false)
-        treatments_wizard_delimiter.visibility = if (showCalc) View.VISIBLE else View.GONE
-        treatments_wizard_resulttable.visibility = if (showCalc) View.VISIBLE else View.GONE
+        treatments_wizard_delimiter.visibility = showCalc.toVisibility()
+        treatments_wizard_resulttable.visibility = showCalc.toVisibility()
         treatments_wizard_calculationcheckbox.isChecked = showCalc
         treatments_wizard_calculationcheckbox.setOnCheckedChangeListener { _, isChecked ->
             run {
                 SP.putBoolean(MainApp.gs(R.string.key_wizard_calculation_visible), isChecked)
-                treatments_wizard_delimiter.visibility = if (isChecked) View.VISIBLE else View.GONE
-                treatments_wizard_resulttable.visibility = if (isChecked) View.VISIBLE else View.GONE
+                treatments_wizard_delimiter.visibility = isChecked.toVisibility()
+                treatments_wizard_resulttable.visibility = isChecked.toVisibility()
             }
         }
         // profile spinner
@@ -143,13 +147,13 @@ class WizardDialog : DialogFragment() {
         }
         // bus
         disposable.add(RxBus
-                .toObservable(EventAutosensCalculationFinished::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    activity?.runOnUiThread { calculateInsulin() }
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+            .toObservable(EventAutosensCalculationFinished::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                activity?.runOnUiThread { calculateInsulin() }
+            }, {
+                FabricPrivacy.logException(it)
+            })
         )
 
     }
@@ -159,7 +163,7 @@ class WizardDialog : DialogFragment() {
         disposable.clear()
     }
 
-    private fun onCheckedChanged(buttonView: CompoundButton) {
+    private fun onCheckedChanged(buttonView: CompoundButton, ignored: Boolean) {
         saveCheckedStates()
         treatments_wizard_ttcheckbox.isEnabled = treatments_wizard_bgcheckbox.isChecked && TreatmentsPlugin.getPlugin().tempTargetFromHistory != null
         if (buttonView.id == treatments_wizard_cobcheckbox.id)
@@ -207,7 +211,6 @@ class WizardDialog : DialogFragment() {
             treatments_wizard_profile.adapter = adapter
         } ?: return
 
-
         val units = ProfileFunctions.getSystemUnits()
         treatments_wizard_bgunits.text = units
         if (units == Constants.MGDL)
@@ -236,7 +239,7 @@ class WizardDialog : DialogFragment() {
 
         calculateInsulin()
 
-        treatments_wizard_percent_used.visibility = if (SP.getInt(R.string.key_boluswizard_percentage, 100) != 100) View.VISIBLE else View.GONE
+        treatments_wizard_percent_used.visibility = (SP.getInt(R.string.key_boluswizard_percentage, 100) != 100).toVisibility()
     }
 
     private fun calculateInsulin() {
@@ -277,15 +280,15 @@ class WizardDialog : DialogFragment() {
         val carbTime = SafeParse.stringToInt(treatments_wizard_carb_time_input.text)
 
         wizard = BolusWizard(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction,
-                SP.getInt(R.string.key_boluswizard_percentage, 100).toDouble(),
-                treatments_wizard_bgcheckbox.isChecked,
-                treatments_wizard_cobcheckbox.isChecked,
-                treatments_wizard_bolusiobcheckbox.isChecked,
-                treatments_wizard_basaliobcheckbox.isChecked,
-                treatments_wizard_sbcheckbox.isChecked,
-                treatments_wizard_ttcheckbox.isChecked,
-                treatments_wizard_bgtrendcheckbox.isChecked,
-                treatment_wizard_notes.text.toString(), carbTime)
+            SP.getInt(R.string.key_boluswizard_percentage, 100).toDouble(),
+            treatments_wizard_bgcheckbox.isChecked,
+            treatments_wizard_cobcheckbox.isChecked,
+            treatments_wizard_bolusiobcheckbox.isChecked,
+            treatments_wizard_basaliobcheckbox.isChecked,
+            treatments_wizard_sbcheckbox.isChecked,
+            treatments_wizard_ttcheckbox.isChecked,
+            treatments_wizard_bgtrendcheckbox.isChecked,
+            treatment_wizard_notes.text.toString(), carbTime)
 
         wizard?.let { wizard ->
             treatments_wizard_bg.text = String.format(MainApp.gs(R.string.format_bg_isf), BgReading().value(Profile.toMgdl(bg, ProfileFunctions.getSystemUnits())).valueToUnitsToString(ProfileFunctions.getSystemUnits()), wizard.sens)
@@ -306,8 +309,8 @@ class WizardDialog : DialogFragment() {
             // Trend
             if (treatments_wizard_bgtrendcheckbox.isChecked && wizard.glucoseStatus != null) {
                 treatments_wizard_bgtrend.text = ((if (wizard.trend > 0) "+" else "")
-                        + Profile.toUnitsString(wizard.trend * 3, wizard.trend * 3 / Constants.MMOLL_TO_MGDL, ProfileFunctions.getSystemUnits())
-                        + " " + ProfileFunctions.getSystemUnits())
+                    + Profile.toUnitsString(wizard.trend * 3, wizard.trend * 3 / Constants.MMOLL_TO_MGDL, ProfileFunctions.getSystemUnits())
+                    + " " + ProfileFunctions.getSystemUnits())
             } else {
                 treatments_wizard_bgtrend.text = ""
             }

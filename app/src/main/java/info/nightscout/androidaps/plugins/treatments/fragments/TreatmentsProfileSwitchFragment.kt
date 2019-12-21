@@ -79,15 +79,15 @@ class TreatmentsProfileSwitchFragment : Fragment() {
     fun updateGUI() =
             profileswitch_recyclerview?.swapAdapter(RecyclerProfileViewAdapter(MainApp.getDbHelper().getProfileSwitchData(DateUtil.now() - T.days(30).msecs(),false)), false)
 
-    inner class RecyclerProfileViewAdapter(var profileSwitchList: List<ProfileSwitch>) : RecyclerView.Adapter<ProfileSwitchViewHolder>() {
+    inner class RecyclerProfileViewAdapter(private var profileSwitchList: List<ProfileSwitch>) : RecyclerView.Adapter<ProfileSwitchViewHolder>() {
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ProfileSwitchViewHolder {
             return ProfileSwitchViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_profileswitch_item, viewGroup, false))
         }
 
         override fun onBindViewHolder(holder: ProfileSwitchViewHolder, position: Int) {
             val profileSwitch = profileSwitchList[position]
-            holder.ph.visibility = if (profileSwitch.source == Source.PUMP) View.VISIBLE else View.GONE
-            holder.ns.visibility = if (NSUpload.isIdValid(profileSwitch._id)) View.VISIBLE else View.GONE
+            holder.ph.visibility = (profileSwitch.source == Source.PUMP).toVisibility()
+            holder.ns.visibility = NSUpload.isIdValid(profileSwitch._id).toVisibility()
             holder.date.text = DateUtil.dateAndTimeString(profileSwitch.date)
             if (!profileSwitch.isEndingEvent) {
                 holder.duration.text = DecimalFormatter.to0Decimal(profileSwitch.durationInMinutes.toDouble()) + " " + MainApp.gs(R.string.unit_minute_short)

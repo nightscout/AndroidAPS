@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
-import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.OKDialog
@@ -35,7 +35,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        onCreateView()
+        onCreateViewGeneral()
         return inflater.inflate(R.layout.dialog_tempbasal, container, false)
     }
 
@@ -49,15 +49,15 @@ class TempBasalDialog : DialogFragmentWithDate() {
         val tempPercentStep = pumpDescription.tempPercentStep.toDouble()
 
         actions_tempbasal_basalpercentinput.setParams(savedInstanceState?.getDouble("actions_tempbasal_basalpercentinput")
-                ?: 100.0, 0.0, maxTempPercent, tempPercentStep, DecimalFormat("0"), true, ok)
+            ?: 100.0, 0.0, maxTempPercent, tempPercentStep, DecimalFormat("0"), true, ok)
 
         actions_tempbasal_basalabsoluteinput.setParams(savedInstanceState?.getDouble("actions_tempbasal_basalabsoluteinput")
-                ?: profile.basal, 0.0, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, DecimalFormat("0.00"), true, ok)
+            ?: profile.basal, 0.0, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, DecimalFormat("0.00"), true, ok)
 
         val tempDurationStep = pumpDescription.tempDurationStep.toDouble()
         val tempMaxDuration = pumpDescription.tempMaxDuration.toDouble()
         actions_tempbasal_duration.setParams(savedInstanceState?.getDouble("actions_tempbasal_duration")
-                ?: tempDurationStep, tempDurationStep, tempMaxDuration, tempDurationStep, DecimalFormat("0"), false, ok)
+            ?: tempDurationStep, tempDurationStep, tempMaxDuration, tempDurationStep, DecimalFormat("0"), false, ok)
 
         isPercentPump = pumpDescription.tempBasalStyle and PumpDescription.PERCENT == PumpDescription.PERCENT
         if (isPercentPump) {

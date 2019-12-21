@@ -15,9 +15,9 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.OKDialog
+import kotlinx.android.synthetic.main.dialog_profileswitch.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
-import kotlinx.android.synthetic.main.dialog_profileswitch.*
 import java.text.DecimalFormat
 import java.util.*
 
@@ -32,7 +32,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        onCreateView()
+        onCreateViewGeneral()
         return inflater.inflate(R.layout.dialog_profileswitch, container, false)
     }
 
@@ -40,16 +40,16 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         overview_profileswitch_duration.setParams(savedInstanceState?.getDouble("overview_profileswitch_duration")
-                ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, ok)
+            ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, ok)
         overview_profileswitch_percentage.setParams(savedInstanceState?.getDouble("overview_profileswitch_percentage")
-                ?: 100.0, Constants.CPP_MIN_PERCENTAGE.toDouble(), Constants.CPP_MAX_PERCENTAGE.toDouble(), 1.0, DecimalFormat("0"), false, ok)
+            ?: 100.0, Constants.CPP_MIN_PERCENTAGE.toDouble(), Constants.CPP_MAX_PERCENTAGE.toDouble(), 1.0, DecimalFormat("0"), false, ok)
         overview_profileswitch_timeshift.setParams(savedInstanceState?.getDouble("overview_profileswitch_timeshift")
-                ?: 0.0, Constants.CPP_MIN_TIMESHIFT.toDouble(), Constants.CPP_MAX_TIMESHIFT.toDouble(), 1.0, DecimalFormat("0"), false, ok)
+            ?: 0.0, Constants.CPP_MIN_TIMESHIFT.toDouble(), Constants.CPP_MAX_TIMESHIFT.toDouble(), 1.0, DecimalFormat("0"), false, ok)
 
         // profile
         context?.let { context ->
             val profileStore = ConfigBuilderPlugin.getPlugin().activeProfileInterface?.profile
-                    ?: return
+                ?: return
             val profileList = profileStore.getProfileList()
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
             overview_profileswitch_profile.adapter = adapter
