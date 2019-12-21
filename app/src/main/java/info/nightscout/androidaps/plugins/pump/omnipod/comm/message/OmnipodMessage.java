@@ -1,14 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.comm.message;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.GetStatusCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.CrcMismatchException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.MessageDecodingException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.NotEnoughDataException;
@@ -16,10 +14,15 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmniCRC;
 
 public class OmnipodMessage {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OmnipodCommunicationService.class);
     private final int address;
     private final List<MessageBlock> messageBlocks;
     private final int sequenceNumber;
+
+    public OmnipodMessage(OmnipodMessage other) {
+        address = other.address;
+        messageBlocks = new ArrayList<>(other.messageBlocks);
+        sequenceNumber = other.sequenceNumber;
+    }
 
     public OmnipodMessage(int address, List<MessageBlock> messageBlocks, int sequenceNumber) {
         this.address = address;
@@ -88,6 +91,12 @@ public class OmnipodMessage {
         return encodedData;
     }
 
+    public void padWithGetStatusCommands(int packetSize) {
+        while (getEncoded().length < packetSize) {
+            messageBlocks.add(new GetStatusCommand(PodInfoType.NORMAL));
+        }
+    }
+
     public List<MessageBlock> getMessageBlocks() {
         return messageBlocks;
     }
@@ -106,14 +115,21 @@ public class OmnipodMessage {
     }
 
     public boolean isNonceResyncable() {
-        return messageBlocks.size() > 0 && (messageBlocks.get(0) instanceof NonceResyncableMessageBlock);
+        for (MessageBlock messageBlock : messageBlocks) {
+            if (messageBlock instanceof NonceResyncableMessageBlock) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public int getSentNonce() {
-        if (!isNonceResyncable()) {
-            throw new UnsupportedOperationException("Message is not nonce resyncable");
+        for (MessageBlock messageBlock : messageBlocks) {
+            if (messageBlock instanceof NonceResyncableMessageBlock) {
+                return ((NonceResyncableMessageBlock) messageBlock).getNonce();
+            }
         }
-        return ((NonceResyncableMessageBlock) messageBlocks.get(0)).getNonce();
+        throw new UnsupportedOperationException("Message is not nonce resyncable");
     }
 
     public void resyncNonce(int nonce) {

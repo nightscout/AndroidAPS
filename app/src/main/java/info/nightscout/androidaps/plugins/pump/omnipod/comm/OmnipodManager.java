@@ -222,18 +222,6 @@ public class OmnipodManager {
         logStartingCommandExecution("cancelDelivery [deliveryTypes=" + deliveryTypes + ", acknowledgementBeep=" + acknowledgementBeep + "]");
 
         try {
-            // As the cancel delivery command is a single packet command,
-            // first verify that the pod is reachable by obtaining a status response
-            // FIXME replace this with padding the CancelDelivery command message
-            //  with GetStatusResponse commands to ensure that the message > 1 packets
-            StatusResponse podStatus = getPodStatus();
-        } catch (OmnipodException ex) {
-            logCommandExecutionFinished("cancelDelivery");
-            ex.setCertainFailure(true);
-            throw ex;
-        }
-
-        try {
             executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, deliveryTypes, acknowledgementBeep)));
         } finally {
             logCommandExecutionFinished("cancelDelivery");

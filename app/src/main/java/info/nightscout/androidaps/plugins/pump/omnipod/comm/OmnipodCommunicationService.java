@@ -148,7 +148,20 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
         }
 
         boolean firstPacket = true;
-        byte[] encodedMessage = message.getEncoded();
+        byte[] encodedMessage;
+        if (message.isNonceResyncable()) {
+            OmnipodMessage paddedMessage = new OmnipodMessage(message);
+            // If messages are nonce resyncable, we want do distinguish between certain and uncertain failures for verification purposes
+            // However, some commands (e.g. cancel delivery) are single packet command by nature. When we get a timeout with a single packet,
+            // we are unsure whether or not the command was received by the pod
+            // However, if we send > 1 packet, we know that the command wasn't received if we never send the subsequent packets,
+            // because the last packet contains the CRC.
+            // So we pad the message with get status commands to make it > packet
+            paddedMessage.padWithGetStatusCommands(PacketType.PDM.getMaxBodyLength()); // First packet is of type PDM
+            encodedMessage = paddedMessage.getEncoded();
+        } else {
+            encodedMessage = message.getEncoded();
+        }
 
         OmnipodPacket response = null;
         while (encodedMessage.length > 0) {
