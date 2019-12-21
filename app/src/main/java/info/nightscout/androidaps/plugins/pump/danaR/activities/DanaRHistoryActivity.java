@@ -108,9 +108,9 @@ public class DanaRHistoryActivity extends NoSplashAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.danar_historyactivity);
 
-        historyTypeSpinner = findViewById(R.id.danar_historytype);
-        statusView = findViewById(R.id.danar_historystatus);
-        reloadButton = findViewById(R.id.danar_historyreload);
+        historyTypeSpinner = findViewById(R.id.danar_history_spinner);
+        statusView = findViewById(R.id.danar_history_status);
+        reloadButton = findViewById(R.id.danar_history_reload);
         recyclerView = findViewById(R.id.danar_history_recyclerview);
 
         recyclerView.setHasFixedSize(true);
