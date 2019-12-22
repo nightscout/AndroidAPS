@@ -137,6 +137,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, InsightHistoryOffset.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightBolusID.class);
             TableUtils.createTableIfNotExists(connectionSource, InsightPumpID.class);
+            //TableUtils.dropTable(connectionSource, PodHistory.class, true);
             TableUtils.createTableIfNotExists(connectionSource, PodHistory.class);
             database.execSQL("INSERT INTO sqlite_sequence (name, seq) SELECT \"" + DATABASE_INSIGHT_BOLUS_IDS + "\", " + System.currentTimeMillis() + " " +
                     "WHERE NOT EXISTS (SELECT 1 FROM sqlite_sequence WHERE name = \"" + DATABASE_INSIGHT_BOLUS_IDS + "\")");

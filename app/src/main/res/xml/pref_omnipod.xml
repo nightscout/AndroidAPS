@@ -26,5 +26,10 @@
             android:key="@string/key_omnipod_beep_smb_enabled"
             android:title="@string/omnipod_config_beep_smb_enabled" />
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_omnipod_beep_tbr_enabled"
+            android:title="@string/omnipod_config_beep_tbr_enabled" />
+
     </PreferenceCategory>
 </PreferenceScreen>

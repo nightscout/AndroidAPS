@@ -17,6 +17,7 @@ public class OmnipodConst {
         public static final int BeepBasalEnabled = R.string.key_omnipod_beep_basal_enabled;
         public static final int BeepBolusEnabled = R.string.key_omnipod_beep_bolus_enabled;
         public static final int BeepSMBEnabled = R.string.key_omnipod_beep_smb_enabled;
+        public static final int BeepTBREnabled = R.string.key_omnipod_beep_tbr_enabled;
     }
 
     public class Statistics {

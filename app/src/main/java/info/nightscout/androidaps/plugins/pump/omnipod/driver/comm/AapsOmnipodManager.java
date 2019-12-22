@@ -623,8 +623,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     private boolean isTempBasalBeepsEnabled() {
-        // TODO add separate setting for temp basal beeps
-        return this.pumpStatus.beepBasalEnabled;
+        return this.pumpStatus.beepTBREnabled;
     }
 
     private String getStringResource(int id, Object... args) {

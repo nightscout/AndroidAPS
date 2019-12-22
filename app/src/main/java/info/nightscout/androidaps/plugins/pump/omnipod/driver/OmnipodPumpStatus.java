@@ -57,7 +57,7 @@ public class OmnipodPumpStatus extends PumpStatus {
     public boolean beepBolusEnabled = true;
     public boolean beepBasalEnabled = true;
     public boolean beepSMBEnabled = true;
-
+    public boolean beepTBREnabled = true;
 
     public OmnipodPumpStatus(PumpDescription pumpDescription) {
         super(pumpDescription);
@@ -104,8 +104,9 @@ public class OmnipodPumpStatus extends PumpStatus {
             this.beepBasalEnabled = SP.getBoolean(OmnipodConst.Prefs.BeepBasalEnabled, true);
             this.beepBolusEnabled = SP.getBoolean(OmnipodConst.Prefs.BeepBolusEnabled, true);
             this.beepSMBEnabled = SP.getBoolean(OmnipodConst.Prefs.BeepSMBEnabled, true);
+            this.beepTBREnabled = SP.getBoolean(OmnipodConst.Prefs.BeepTBREnabled, true);
 
-            LOG.debug("Beeps [basal={}, bolus={}, SMB={}]", this.beepBasalEnabled, this.beepBolusEnabled, this.beepSMBEnabled);
+            LOG.debug("Beeps [basal={}, bolus={}, SMB={}, TBR={}]", this.beepBasalEnabled, this.beepBolusEnabled, this.beepSMBEnabled, this.beepTBREnabled);
 
             reconfigureService();
 

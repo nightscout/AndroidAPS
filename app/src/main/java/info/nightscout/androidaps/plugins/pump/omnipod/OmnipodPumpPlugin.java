@@ -182,6 +182,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 .subscribe(event -> {
                     if ((event.isChanged(R.string.key_omnipod_beep_basal_enabled)) ||
                         (event.isChanged(R.string.key_omnipod_beep_bolus_enabled)) ||
+                        (event.isChanged(R.string.key_omnipod_beep_tbr_enabled)) ||
                         (event.isChanged(R.string.key_omnipod_beep_smb_enabled)))
                         refreshConfiguration();
                 }, FabricPrivacy::logException)
@@ -355,7 +356,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public boolean isSuspended() {
-        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable);
+        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
+                (OmnipodUtil.getPodSessionState()!=null && OmnipodUtil.getPodSessionState().isSuspended());
     }
 
     @Override
