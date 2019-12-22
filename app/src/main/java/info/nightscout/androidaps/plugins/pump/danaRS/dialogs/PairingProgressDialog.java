@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.danaRS.activities;
+package info.nightscout.androidaps.plugins.pump.danaRS.dialogs;
 
 
 import android.app.Activity;
@@ -8,6 +8,8 @@ import android.os.HandlerThread;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,23 +19,22 @@ import androidx.fragment.app.DialogFragment;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.pump.danaRS.activities.PairingHelperActivity;
 import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSPairingSuccess;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 
-public class PairingProgressDialog extends DialogFragment implements View.OnClickListener {
+public class PairingProgressDialog extends DialogFragment {
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    TextView statusView;
-    ProgressBar progressBar;
-    Button button;
-    PairingHelperActivity helperActivity;
+    private TextView statusView;
+    private ProgressBar progressBar;
+    private Button button;
+    private PairingHelperActivity helperActivity;
 
-    static int secondsPassed = 0;
-    public static boolean pairingEnded = false;
-    public static boolean running = true;
+    private static boolean pairingEnded = false;
 
     private static Handler sHandler;
     private static HandlerThread sHandlerThread;
@@ -46,7 +47,6 @@ public class PairingProgressDialog extends DialogFragment implements View.OnClic
             sHandlerThread.start();
             sHandler = new Handler(sHandlerThread.getLooper());
         }
-        secondsPassed = 0;
     }
 
 
@@ -54,17 +54,21 @@ public class PairingProgressDialog extends DialogFragment implements View.OnClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.danars_pairingprogressdialog, container, false);
-        getDialog().setTitle(MainApp.gs(R.string.pairing));
-        statusView = (TextView) view.findViewById(R.id.danars_pairingprogress_status);
-        progressBar = (ProgressBar) view.findViewById(R.id.danars_pairingprogress_progressbar);
-        button = (Button) view.findViewById(R.id.ok);
+
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        setCancelable(false);
+        getDialog().setCanceledOnTouchOutside(false);
+
+        statusView = view.findViewById(R.id.danars_pairingprogress_status);
+        progressBar = view.findViewById(R.id.danars_pairingprogress_progressbar);
+        button = view.findViewById(R.id.ok);
 
         progressBar.setMax(100);
         progressBar.setProgress(0);
         statusView.setText(MainApp.gs(R.string.waitingforpairing));
         button.setVisibility(View.GONE);
-        button.setOnClickListener(this);
-        setCancelable(false);
+        button.setOnClickListener(v -> dismiss());
 
         sHandler.post(() -> {
             for (int i = 0; i < 20; i++) {
@@ -110,8 +114,8 @@ public class PairingProgressDialog extends DialogFragment implements View.OnClic
                 .observeOn(Schedulers.io())
                 .subscribe(event -> pairingEnded = true, FabricPrivacy::logException)
         );
-        running = true;
         if (pairingEnded) dismiss();
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override
@@ -126,16 +130,10 @@ public class PairingProgressDialog extends DialogFragment implements View.OnClic
     public void onPause() {
         super.onPause();
         disposable.clear();
-        running = false;
     }
 
-    public void setHelperActivity(PairingHelperActivity activity) {
+    public PairingProgressDialog setHelperActivity(PairingHelperActivity activity) {
         this.helperActivity = activity;
-    }
-
-    @Override
-    public void onClick(View v) {
-        running = false;
-        dismiss();
+        return this;
     }
 }

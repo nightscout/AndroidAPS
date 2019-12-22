@@ -744,7 +744,7 @@
     <string name="waitingforpairing">Waiting for pairing on pump</string>
     <string name="pairingok">Pairing OK</string>
     <string name="pairingtimedout">Pairing timed out</string>
-    <string name="pairing">PAIRING</string>
+    <string name="pairing">Pairing</string>
     <string name="key_danars_pairingkey" translatable="false">danars_pairing_key_</string>
     <string name="key_danars_address" translatable="false">danars_address</string>
     <string name="key_danars_name" translatable="false">danars_name</string>
