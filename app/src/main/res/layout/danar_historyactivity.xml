@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_gravity="center"
-        android:background="@color/cardColorBackground"
+        android:background="@color/activity_title_background"
         android:orientation="horizontal"
         android:padding="5dp">
 

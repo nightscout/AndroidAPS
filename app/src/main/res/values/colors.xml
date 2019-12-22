@@ -45,6 +45,7 @@
     <color name="colorInitializingBorder">#00695c</color>
 
     <color name="dialog_title_background">#303030</color>
+    <color name="activity_title_background">#121212</color>
 
     <color name="cardColorBackground">#121212</color>
     <color name="cardObjectiveText">#779ECB</color>
