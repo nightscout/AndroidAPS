@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.careportal.Dialogs;
 
 
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,7 +19,6 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.fragment.app.DialogFragment;
 
@@ -58,6 +56,7 @@ import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.NumberPicker;
+import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.Translator;
@@ -595,12 +594,12 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
 
     String buildConfirmText(JSONObject data) {
         String ret = "";
-        if (data.has("eventType")) {
-            ret += MainApp.gs(R.string.careportal_newnstreatment_eventtype);
-            ret += ": ";
-            ret += Translator.translate(JsonHelper.safeGetString(data, "eventType", ""));
-            ret += "\n";
-        }
+//        if (data.has("eventType")) {
+//            ret += MainApp.gs(R.string.careportal_newnstreatment_eventtype);
+//            ret += ": ";
+//            ret += Translator.translate(JsonHelper.safeGetString(data, "eventType", ""));
+//            ret += "\n";
+//        }
         if (data.has("glucose")) {
             ret += MainApp.gs(R.string.treatments_wizard_bg_label);
             ret += ": ";
@@ -697,18 +696,9 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
         return ret;
     }
 
-    void confirmNSTreatmentCreation() {
-        Context context = getContext();
-        if (context != null) {
-            final JSONObject data = gatherData();
-            final String confirmText = buildConfirmText(data);
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle(MainApp.gs(R.string.confirmation));
-            builder.setMessage(confirmText);
-            builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> createNSTreatment(data));
-            builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
-            builder.show();
-        }
+    private void confirmNSTreatmentCreation() {
+        final JSONObject data = gatherData();
+        OKDialog.showConfirmation(getContext(), Translator.translate(JsonHelper.safeGetString(data, "eventType", MainApp.gs(R.string.overview_treatment_label))), buildConfirmText(data), () -> createNSTreatment(data));
     }
 
 

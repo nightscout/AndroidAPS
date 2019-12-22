@@ -109,7 +109,6 @@ class CareDialog : DialogFragmentWithDate() {
 
         val json = JSONObject()
         val actions: LinkedList<String> = LinkedList()
-        actions.add("<b>" + MainApp.gs(event) + "</b>")
         if (options == EventType.BGCHECK) {
             val type =
                 when {
@@ -141,10 +140,10 @@ class CareDialog : DialogFragmentWithDate() {
             json.put("enteredBy", enteredBy)
 
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))) {
+            OKDialog.showConfirmation(activity, MainApp.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                 MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(json)
                 NSUpload.uploadCareportalEntryToNS(json)
-            }
+            }, null)
         }
         return true
     }

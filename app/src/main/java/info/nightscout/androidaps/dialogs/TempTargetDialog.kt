@@ -126,7 +126,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
             actions.add(MainApp.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(eventTime))
 
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))) {
+            OKDialog.showConfirmation(activity, MainApp.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                 if (target == 0.0 || duration == 0.0) {
                     val tempTarget = TempTarget()
                         .date(eventTime)
@@ -145,7 +145,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                     TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
                 }
                 if (duration == 10.0) SP.putBoolean(R.string.key_objectiveusetemptarget, true)
-            }
+            })
         }
         return true
     }

@@ -75,23 +75,22 @@ class TempBasalDialog : DialogFragmentWithDate() {
         val durationInMinutes = SafeParse.stringToInt(actions_tempbasal_duration.text)
         val profile = ProfileFunctions.getInstance().profile ?: return false
         val actions: LinkedList<String> = LinkedList()
-        actions.add("<b>" + MainApp.gs(R.string.setbasalquestion) + "</b>")
         if (isPercentPump) {
             val basalPercentInput = SafeParse.stringToInt(actions_tempbasal_basalpercentinput.text)
             percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(Constraint(basalPercentInput), profile).value()
-            actions.add("$percent%")
+            actions.add(MainApp.gs(R.string.pump_tempbasal_label)+ ": $percent%")
             actions.add(MainApp.gs(R.string.duration) + ": " + MainApp.gs(R.string.format_mins, durationInMinutes))
             if (percent != basalPercentInput) actions.add(MainApp.gs(R.string.constraintapllied))
         } else {
             val basalAbsoluteInput = SafeParse.stringToDouble(actions_tempbasal_basalabsoluteinput.text)
             absolute = MainApp.getConstraintChecker().applyBasalConstraints(Constraint(basalAbsoluteInput), profile).value()
-            actions.add(MainApp.gs(R.string.pump_basebasalrate, absolute))
+            actions.add(MainApp.gs(R.string.pump_tempbasal_label)+ ": " + MainApp.gs(R.string.pump_basebasalrate, absolute))
             actions.add(MainApp.gs(R.string.duration) + ": " + MainApp.gs(R.string.format_mins, durationInMinutes))
             if (abs(absolute - basalAbsoluteInput) > 0.01)
                 actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.constraintapllied) + "</font>")
         }
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))) {
+            OKDialog.showConfirmation(activity, MainApp.gs(R.string.pump_tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                 val callback: Callback = object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -109,7 +108,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
                 } else {
                     ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
                 }
-            }
+            })
         }
         return true
     }

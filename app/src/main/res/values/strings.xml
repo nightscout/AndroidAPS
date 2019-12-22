@@ -136,7 +136,6 @@
     <string name="overview">Overview</string>
     <string name="nsprofile">NS Profile</string>
     <string name="simpleprofile">Simple profile</string>
-    <string name="tempbasal">TempBasal</string>
     <string name="treatments">Treatments</string>
     <string name="virtualpump">Virtual Pump</string>
     <string name="careportal">Careportal</string>
@@ -177,14 +176,12 @@
     <string name="overview_calculator_label">Calculator</string>
     <string name="constraintapllied">Constraint applied!</string>
     <string name="confirmation">Confirmation</string>
-    <string name="entertreatmentquestion">Enter new treatment:</string>
     <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="carbs">Carbs</string>
     <string name="changeyourinput">Change your input!</string>
-    <string name="setextendedbolusquestion">Set new extended bolus:</string>
     <string name="configbuilder_bgsource">BG Source</string>
     <string name="configbuilder_bgsource_description">Where should AndroidAPS gain  it\'s data from?</string>
     <string name="xdrip">xDrip</string>
@@ -213,7 +210,7 @@
     <string name="careportal_cgmsensorinsert">CGM Sensor Insert</string>
     <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
     <string name="careportal_insulincartridgechange">Insulin Cartridge Change</string>
-    <string name="careportal_profileswitch">Profile Switch</string>
+    <string name="careportal_profileswitch">Profile switch</string>
     <string name="careportal_snackbolus">Snack Bolus</string>
     <string name="careportal_mealbolus">Meal Bolus</string>
     <string name="careportal_correctionbolus">Correction Bolus</string>
@@ -312,8 +309,8 @@
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
-    <string name="careportal_temporarytarget">Temporary Target</string>
-    <string name="careportal_temporarytargetcancel">Temporary Target Cancel</string>
+    <string name="careportal_temporarytarget">Temporary target</string>
+    <string name="careportal_temporarytargetcancel">Temporary target cancel</string>
     <string name="danarprofile">DanaR profile settings</string>
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="danarprofile_dia_summary">Duration of Insulin Activity</string>
@@ -453,7 +450,7 @@
     <string name="eatingsoon">Eating Soon</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Activity</string>
-    <string name="removerecord">Remove record:</string>
+    <string name="removerecord">Remove record</string>
     <string name="danar_stats">DanaR Stats</string>
     <string name="danar_stats_cumulative_tdd">Cumulative TDD</string>
     <string name="danar_stats_expweight">Exponentially Weighted TDD</string>
@@ -648,15 +645,12 @@
     <string name="key_ns_noupload" translatable="false">ns_noupload</string>
     <string name="basal_step">Basal Step</string>
     <string name="bolus_step">Bolus Step</string>
-    <string name="extendedbolus">ExtendedBolus</string>
-    <string name="temptarget">TempTarget</string>
     <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
     <string name="careportal_sensorage_label">Sensor age</string>
     <string name="careportal_canulaage_label">Canula age</string>
     <string name="careportal_insulinage_label">Insulin age</string>
     <string name="hours">hours</string>
     <string name="invalidprofile">Invalid profile !!!</string>
-    <string name="profileswitch">ProfileSwitch</string>
     <string name="doprofileswitch">Do Profile Switch</string>
     <string name="careportal_pbage_label">Pump battery age</string>
     <string name="careportal_pumpbatterychange">Pump Battery Change</string>
@@ -1692,5 +1686,6 @@
     <string name="automation_event">Automation event</string>
     <string name="alreadyset">Already set</string>
     <string name="message">Message</string>
+    <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
 
 </resources>

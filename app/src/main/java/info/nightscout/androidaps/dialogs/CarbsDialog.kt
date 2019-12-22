@@ -172,7 +172,7 @@ class CarbsDialog : DialogFragmentWithDate() {
 
         if (carbsAfterConstraints > 0 || activitySelected || eatingSoonSelected || hypoSelected) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))) {
+                OKDialog.showConfirmation(activity, MainApp.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                     if (activitySelected) {
                         val tempTarget = TempTarget()
                             .date(System.currentTimeMillis())
@@ -209,10 +209,12 @@ class CarbsDialog : DialogFragmentWithDate() {
                             NSUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, MainApp.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
                     }
-                }
+                }, null)
             }
         } else
-            OKDialog.show(activity, "", MainApp.gs(R.string.no_action_selected), null)
+            activity?.let { activity ->
+                OKDialog.show(activity, MainApp.gs(R.string.carbs), MainApp.gs(R.string.no_action_selected))
+            }
         return true
     }
 }

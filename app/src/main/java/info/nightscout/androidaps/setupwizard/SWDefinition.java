@@ -295,7 +295,7 @@ public class SWDefinition {
             .validator(() -> LocalProfilePlugin.INSTANCE.getProfile() != null && LocalProfilePlugin.INSTANCE.getProfile().getDefaultProfile() != null && LocalProfilePlugin.INSTANCE.getProfile().getDefaultProfile().isValid("StartupWizard"))
             .visibility(() -> LocalProfilePlugin.INSTANCE.isEnabled(PluginType.PROFILE));
 
-    private SWScreen screenProfileSwitch = new SWScreen(R.string.profileswitch)
+    private SWScreen screenProfileSwitch = new SWScreen(R.string.careportal_profileswitch)
             .skippable(false)
             .add(new SWInfotext()
                     .label(R.string.profileswitch_ismissing))

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -42,18 +41,15 @@ class TreatmentsProfileSwitchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         profileswitch_recyclerview.setHasFixedSize(true)
         profileswitch_recyclerview.layoutManager = LinearLayoutManager(view.context)
-        profileswitch_recyclerview.adapter = RecyclerProfileViewAdapter(MainApp.getDbHelper().getProfileSwitchData(DateUtil.now() - T.days(30).msecs(),false))
+        profileswitch_recyclerview.adapter = RecyclerProfileViewAdapter(MainApp.getDbHelper().getProfileSwitchData(DateUtil.now() - T.days(30).msecs(), false))
 
         profileswitch_refreshfromnightscout.setOnClickListener {
-            val builder = AlertDialog.Builder(this.context!!)
-            builder.setTitle(MainApp.gs(R.string.confirmation))
-            builder.setMessage(MainApp.gs(R.string.refresheventsfromnightscout) + "?")
-            builder.setPositiveButton(MainApp.gs(R.string.ok)) { _ , _->
-                MainApp.getDbHelper().resetProfileSwitch()
-                RxBus.send(EventNSClientRestart())
+            activity?.let { activity ->
+                OKDialog.showConfirmation(activity, MainApp.gs(R.string.refresheventsfromnightscout) + "?", Runnable {
+                    MainApp.getDbHelper().resetProfileSwitch()
+                    RxBus.send(EventNSClientRestart())
+                })
             }
-            builder.setNegativeButton(MainApp.gs(R.string.cancel), null)
-            builder.show()
         }
         if (SP.getBoolean(R.string.key_ns_upload_only, false)) profileswitch_refreshfromnightscout.visibility = View.GONE
 
@@ -63,9 +59,9 @@ class TreatmentsProfileSwitchFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         disposable.add(RxBus
-                .toObservable(EventProfileNeedsUpdate::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGUI() }) { FabricPrivacy.logException(it) }
+            .toObservable(EventProfileNeedsUpdate::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGUI() }) { FabricPrivacy.logException(it) }
         )
         updateGUI()
     }
@@ -77,7 +73,7 @@ class TreatmentsProfileSwitchFragment : Fragment() {
     }
 
     fun updateGUI() =
-            profileswitch_recyclerview?.swapAdapter(RecyclerProfileViewAdapter(MainApp.getDbHelper().getProfileSwitchData(DateUtil.now() - T.days(30).msecs(),false)), false)
+        profileswitch_recyclerview?.swapAdapter(RecyclerProfileViewAdapter(MainApp.getDbHelper().getProfileSwitchData(DateUtil.now() - T.days(30).msecs(), false)), false)
 
     inner class RecyclerProfileViewAdapter(private var profileSwitchList: List<ProfileSwitch>) : RecyclerView.Adapter<ProfileSwitchViewHolder>() {
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ProfileSwitchViewHolder {
@@ -121,21 +117,28 @@ class TreatmentsProfileSwitchFragment : Fragment() {
             override fun onClick(v: View) {
                 val profileSwitch = v.tag as ProfileSwitch
                 when (v.id) {
-                    R.id.profileswitch_remove ->
-                        OKDialog.showConfirmation(activity, MainApp.gs(R.string.removerecord) + "\n" + profileSwitch.profileName + "\n" + DateUtil.dateAndTimeString(profileSwitch.date)) {
-                            val id = profileSwitch._id
-                            if (NSUpload.isIdValid(id)) NSUpload.removeCareportalEntryFromNS(id)
-                            else UploadQueue.removeID("dbAdd", id)
-                            MainApp.getDbHelper().delete(profileSwitch)
+                    R.id.profileswitch_remove                        ->
+                        activity?.let { activity ->
+                            OKDialog.showConfirmation(activity, MainApp.gs(R.string.removerecord),
+                                MainApp.gs(R.string.careportal_profileswitch) + ": " + profileSwitch.profileName +
+                                    "\n" + MainApp.gs(R.string.date) + ": " + DateUtil.dateAndTimeString(profileSwitch.date), Runnable {
+                                val id = profileSwitch._id
+                                if (NSUpload.isIdValid(id)) NSUpload.removeCareportalEntryFromNS(id)
+                                else UploadQueue.removeID("dbAdd", id)
+                                MainApp.getDbHelper().delete(profileSwitch)
+                            })
                         }
-                    R.id.profileswitch_clone ->
-                        OKDialog.showConfirmation(activity, MainApp.gs(R.string.copytolocalprofile) + "\n" + profileSwitch.customizedName + "\n" + DateUtil.dateAndTimeString(profileSwitch.date)) {
-                            profileSwitch.profileObject?.let {
-                                val nonCustomized = it.convertToNonCustomizedProfile()
-                                LocalProfilePlugin.addProfile(LocalProfilePlugin.SingleProfile().copyFrom(nonCustomized, profileSwitch.customizedName + " " + DateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_")))
-                                RxBus.send(EventLocalProfileChanged())
-                            }
+                    R.id.profileswitch_clone                         ->
+                        activity?.let { activity ->
+                            OKDialog.showConfirmation(activity, MainApp.gs(R.string.careportal_profileswitch), MainApp.gs(R.string.copytolocalprofile) + "\n" + profileSwitch.customizedName + "\n" + DateUtil.dateAndTimeString(profileSwitch.date), Runnable {
+                                profileSwitch.profileObject?.let {
+                                    val nonCustomized = it.convertToNonCustomizedProfile()
+                                    LocalProfilePlugin.addProfile(LocalProfilePlugin.SingleProfile().copyFrom(nonCustomized, profileSwitch.customizedName + " " + DateUtil.dateAndTimeString(profileSwitch.date).replace(".", "_")))
+                                    RxBus.send(EventLocalProfileChanged())
+                                }
+                            })
                         }
+
                     R.id.profileswitch_date, R.id.profileswitch_name -> {
                         val args = Bundle()
                         args.putLong("time", (v.tag as ProfileSwitch).date)

@@ -61,6 +61,14 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.dialogs.CalibrationDialog;
+import info.nightscout.androidaps.dialogs.CarbsDialog;
+import info.nightscout.androidaps.dialogs.InsulinDialog;
+import info.nightscout.androidaps.dialogs.ProfileSwitchDialog;
+import info.nightscout.androidaps.dialogs.ProfileViewerDialog;
+import info.nightscout.androidaps.dialogs.TempTargetDialog;
+import info.nightscout.androidaps.dialogs.TreatmentDialog;
+import info.nightscout.androidaps.dialogs.WizardDialog;
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
@@ -87,13 +95,6 @@ import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity;
-import info.nightscout.androidaps.dialogs.CalibrationDialog;
-import info.nightscout.androidaps.dialogs.CarbsDialog;
-import info.nightscout.androidaps.dialogs.InsulinDialog;
-import info.nightscout.androidaps.dialogs.TreatmentDialog;
-import info.nightscout.androidaps.dialogs.ProfileSwitchDialog;
-import info.nightscout.androidaps.dialogs.TempTargetDialog;
-import info.nightscout.androidaps.dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
@@ -105,7 +106,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCa
 import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
 import info.nightscout.androidaps.plugins.source.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.dialogs.ProfileViewerDialog;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.BolusWizard;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -883,10 +883,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             getContext().startActivity(intent);
             return true;
         } catch (ActivityNotFoundException e) {
-            new AlertDialog.Builder(getContext())
-                    .setMessage(R.string.error_starting_cgm)
-                    .setPositiveButton("OK", null)
-                    .show();
+            OKDialog.show(getContext(), "", MainApp.gs(R.string.error_starting_cgm));
             return false;
         }
     }
@@ -912,16 +909,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             LoopPlugin.getPlugin().invoke("Accept temp button", false);
             final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
             if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.isChangeRequested()) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle(MainApp.gs(R.string.confirmation));
-                builder.setMessage(MainApp.gs(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
-                builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
+                OKDialog.showConfirmation(context, MainApp.gs(R.string.pump_tempbasal_label), finalLastRun.constraintsProcessed.toSpanned(), () -> {
                     hideTempRecommendation();
                     clearNotification();
                     LoopPlugin.getPlugin().acceptChangeRequest();
                 });
-                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
-                builder.show();
             }
         }
     }
@@ -941,7 +933,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(quickWizardEntry.carbs())).value();
 
                 if (Math.abs(wizard.getInsulinAfterConstraints() - wizard.getCalculatedTotalInsulin()) >= pump.getPumpDescription().pumpType.determineCorrectBolusStepSize(wizard.getInsulinAfterConstraints()) || !carbsAfterConstraints.equals(quickWizardEntry.carbs())) {
-                    OKDialog.show(getContext(), MainApp.gs(R.string.treatmentdeliveryerror), MainApp.gs(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput), null);
+                    OKDialog.show(getContext(), MainApp.gs(R.string.treatmentdeliveryerror), MainApp.gs(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput));
                     return;
                 }
 
@@ -1170,7 +1162,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 if (activeTemp != null) {
                     fullText += MainApp.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
                 }
-                OKDialog.show(getActivity(), MainApp.gs(R.string.basal), fullText, null);
+                OKDialog.show(getActivity(), MainApp.gs(R.string.basal), fullText);
             });
 
         } else {
@@ -1206,7 +1198,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
             extendedBolusView.setText(extendedBolusText);
             if (Config.NSCLIENT) {
-                extendedBolusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.extendedbolus), extendedBolus.toString(), null));
+                extendedBolusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.extended_bolus), extendedBolus.toString()));
             }
             if (extendedBolusText.equals(""))
                 extendedBolusView.setVisibility(Config.NSCLIENT ? View.INVISIBLE : View.GONE);
@@ -1300,7 +1292,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 String iobtext1 = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U\n"
                         + MainApp.gs(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U\n"
                         + MainApp.gs(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U\n";
-                OKDialog.show(getActivity(), MainApp.gs(R.string.iob), iobtext1, null);
+                OKDialog.show(getActivity(), MainApp.gs(R.string.iob), iobtext1);
             });
         } else if (MainApp.sResources.getBoolean(R.bool.isTablet)) {
             String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
@@ -1352,19 +1344,19 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         // pump status from ns
         if (pumpDeviceStatusView != null) {
             pumpDeviceStatusView.setText(NSDeviceStatus.getInstance().getPumpStatus());
-            pumpDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.pump), NSDeviceStatus.getInstance().getExtendedPumpStatus(), null));
+            pumpDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.pump), NSDeviceStatus.getInstance().getExtendedPumpStatus()));
         }
 
         // OpenAPS status from ns
         if (openapsDeviceStatusView != null) {
             openapsDeviceStatusView.setText(NSDeviceStatus.getInstance().getOpenApsStatus());
-            openapsDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.openaps), NSDeviceStatus.getInstance().getExtendedOpenApsStatus(), null));
+            openapsDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.openaps), NSDeviceStatus.getInstance().getExtendedOpenApsStatus()));
         }
 
         // Uploader status from ns
         if (uploaderDeviceStatusView != null) {
             uploaderDeviceStatusView.setText(NSDeviceStatus.getInstance().getUploaderStatusSpanned());
-            uploaderDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.uploader), NSDeviceStatus.getInstance().getExtendedUploaderStatus(), null));
+            uploaderDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.uploader), NSDeviceStatus.getInstance().getExtendedUploaderStatus()));
         }
 
         // Sensitivity

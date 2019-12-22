@@ -52,16 +52,17 @@ class CalibrationDialog : DialogFragmentWithDate() {
         val unitLabel = if (units == Constants.MMOL) MainApp.gs(R.string.mmol) else MainApp.gs(R.string.mgdl)
         val actions: LinkedList<String?> = LinkedList()
         val bg = overview_calibration_bg.value
-        actions.add("<b>" + MainApp.gs(R.string.overview_calibration) + "</b>")
         actions.add(MainApp.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(bg) + " " + unitLabel)
         if (bg > 0) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))) {
+                OKDialog.showConfirmation(activity, MainApp.gs(R.string.overview_calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                     XdripCalibrations.confirmAndSendCalibration(bg, context)
-                }
+                })
             }
         } else
-            OKDialog.show(activity, "", MainApp.gs(R.string.no_action_selected), null)
+            activity?.let { activity ->
+                OKDialog.show(activity, MainApp.gs(R.string.overview_calibration), MainApp.gs(R.string.no_action_selected))
+            }
         return true
     }
 }

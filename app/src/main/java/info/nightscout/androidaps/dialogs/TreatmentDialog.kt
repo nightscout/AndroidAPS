@@ -84,7 +84,6 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(Constraint(insulin)).value()
         val carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(Constraint(carbs)).value()
 
-        actions.add("<b>" + MainApp.gs(R.string.entertreatmentquestion) + "</b>")
         if (insulinAfterConstraints > 0) {
             actions.add(MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + MainApp.gs(R.string.insulin_unit_shortname) + "</font>")
             if (recordOnlyChecked)
@@ -99,7 +98,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         }
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))) {
+                OKDialog.showConfirmation(activity, MainApp.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                     val detailedBolusInfo = DetailedBolusInfo()
                     if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION
                     if (carbsAfterConstraints == 0) detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS
@@ -122,10 +121,12 @@ class TreatmentDialog : DialogFragmentWithDate() {
                         })
                     } else
                         TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false)
-                }
+                })
             }
         } else
-            OKDialog.show(activity, "", MainApp.gs(R.string.no_action_selected), null)
+            activity?.let { activity ->
+                OKDialog.show(activity, MainApp.gs(R.string.overview_treatment_label), MainApp.gs(R.string.no_action_selected))
+            }
         return true
     }
 }

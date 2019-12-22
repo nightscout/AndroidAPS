@@ -55,7 +55,6 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         val insulin = SafeParse.stringToDouble(actions_extendedbolus_insulin.text)
         val durationInMinutes = SafeParse.stringToInt(actions_extendedbolus_duration.text)
         val actions: LinkedList<String> = LinkedList()
-        actions.add("<b>" + MainApp.gs(R.string.setextendedbolusquestion) + "</b>")
         val insulinAfterConstraint = MainApp.getConstraintChecker().applyExtendedBolusConstraints(Constraint(insulin)).value()
         actions.add(MainApp.gs(R.string.formatinsulinunits, insulinAfterConstraint))
         actions.add(MainApp.gs(R.string.duration) + ": " + MainApp.gs(R.string.format_mins, durationInMinutes))
@@ -63,7 +62,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
             actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.constraintapllied) + "</font>")
 
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))) {
+            OKDialog.showConfirmation(activity, MainApp.gs(R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                 ConfigBuilderPlugin.getPlugin().commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -76,7 +75,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
                         }
                     }
                 })
-            }
+            }, null)
         }
         return true
     }

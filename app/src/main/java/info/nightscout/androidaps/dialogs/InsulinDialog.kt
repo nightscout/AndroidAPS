@@ -145,7 +145,7 @@ class InsulinDialog : DialogFragmentWithDate() {
 
         if (insulinAfterConstraints > 0 || eatingSoonChecked) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))) {
+                OKDialog.showConfirmation(activity, MainApp.gs(R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                     if (eatingSoonChecked) {
                         val tempTarget = TempTarget()
                             .date(System.currentTimeMillis())
@@ -182,10 +182,12 @@ class InsulinDialog : DialogFragmentWithDate() {
                             })
                         }
                     }
-                }
+                })
             }
         } else
-            OKDialog.show(activity, "", MainApp.gs(R.string.no_action_selected), null)
+            activity?.let { activity ->
+                OKDialog.show(activity, MainApp.gs(R.string.bolus), MainApp.gs(R.string.no_action_selected))
+            }
         return true
     }
 }

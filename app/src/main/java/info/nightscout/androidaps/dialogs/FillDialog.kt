@@ -96,7 +96,7 @@ class FillDialog : DialogFragmentWithDate() {
 
         if (insulinAfterConstraints > 0 || fill_catheter_change.isChecked || fill_cartridge_change.isChecked) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))) {
+                OKDialog.showConfirmation(activity, MainApp.gs(R.string.primefill), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                     if (insulinAfterConstraints > 0) {
                         val detailedBolusInfo = DetailedBolusInfo()
                         detailedBolusInfo.insulin = insulinAfterConstraints
@@ -119,10 +119,12 @@ class FillDialog : DialogFragmentWithDate() {
                     }
                     if (siteChange) NSUpload.uploadEvent(CareportalEvent.SITECHANGE, eventTime, notes)
                     if (insulinChange) NSUpload.uploadEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
-                }
+                }, null)
             }
         } else {
-            OKDialog.show(activity, "", MainApp.gs(R.string.no_action_selected), null)
+            activity?.let { activity ->
+                OKDialog.show(activity, MainApp.gs(R.string.primefill), MainApp.gs(R.string.no_action_selected))
+            }
         }
         dismiss()
         return true
