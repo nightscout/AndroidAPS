@@ -39,8 +39,7 @@ public class SingleFragmentActivity extends AppCompatActivity {
         if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
-        }
-        else if (item.getItemId() == R.id.nav_plugin_preferences) {
+        } else if (item.getItemId() == R.id.nav_plugin_preferences) {
             PasswordProtection.QueryPassword(this, R.string.settings_password, "settings_password", () -> {
                 Intent i = new Intent(this, PreferencesActivity.class);
                 i.putExtra("id", plugin.getPreferencesId());

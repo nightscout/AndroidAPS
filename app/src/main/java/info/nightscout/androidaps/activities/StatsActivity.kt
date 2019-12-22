@@ -9,7 +9,6 @@ import info.nightscout.androidaps.utils.TddCalculator
 import info.nightscout.androidaps.utils.TirCalculator
 import kotlinx.android.synthetic.main.stats_activity.*
 
-
 class StatsActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
