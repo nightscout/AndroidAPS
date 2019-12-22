@@ -26,13 +26,24 @@ import info.nightscout.androidaps.utils.JsonHelper;
 
 public class ActionProfileSwitch extends Action {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
-    public InputProfileName inputProfileName = new InputProfileName(ProfileFunctions.getInstance().getProfileName());
+    InputProfileName inputProfileName;
     String profileName = "";
 
     public ActionProfileSwitch() {
         // Prevent action if active profile is already active
         // but we don't have a trigger IS_NOT_EQUAL
         // so check is in the doRun()
+        ProfileInterface profileInterface =  ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
+        if (profileInterface != null) {
+            ProfileStore profileStore = profileInterface.getProfile();
+            if (profileStore != null) {
+                String name = profileStore.getDefaultProfileName();
+                if (name != null) {
+                    profileName = name;
+                }
+            }
+        }
+        inputProfileName = new InputProfileName(profileName);
     }
 
     @Override
@@ -51,19 +62,39 @@ public class ActionProfileSwitch extends Action {
 
         String activeProfileName = ProfileFunctions.getInstance().getProfileName();
         //Check for uninitialized profileName
-        if ( profileName.equals("")){ profileName = activeProfileName; }
-
+        if ( profileName.equals("")){
+            log.error("Selected profile not initialized");
+            if (callback != null)
+                callback.result(new PumpEnactResult().success(false).comment(R.string.error_field_must_not_be_empty)).run();
+            return;
+        }
+        if ( ProfileFunctions.getInstance().getProfile() == null){
+            log.error("ProfileFunctions not initialized");
+            if (callback != null)
+                callback.result(new PumpEnactResult().success(false).comment(R.string.noprofile)).run();
+            return;
+        }
         if (profileName.equals(activeProfileName)) {
-            // Profile is already switched
+            if (L.isEnabled(L.AUTOMATION))
+                log.debug("Profile is already switched");
+            if (callback != null)
+                callback.result(new PumpEnactResult().success(true).comment(R.string.alreadyset)).run();
             return;
         }
         ProfileInterface activeProfile = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
-        if (activeProfile == null) return;
+        if (activeProfile == null) {
+            log.error("ProfileInterface not initialized");
+            if (callback != null)
+                callback.result(new PumpEnactResult().success(false).comment(R.string.noprofile)).run();
+            return;
+        }
         ProfileStore profileStore = activeProfile.getProfile();
         if (profileStore == null) return;
         if(profileStore.getSpecificProfile(profileName) == null) {
             if (L.isEnabled(L.AUTOMATION))
                 log.error("Selected profile does not exist! - "+ profileName);
+            if (callback != null)
+                callback.result(new PumpEnactResult().success(false).comment(R.string.notexists)).run();
             return;
         }
 
