@@ -92,12 +92,15 @@ class CareDialog : DialogFragmentWithDate() {
             }
         }
 
-        if (ProfileFunctions.getSystemUnits() == Constants.MMOL)
+        if (ProfileFunctions.getSystemUnits() == Constants.MMOL) {
+            actions_care_bgunits.text = MainApp.gs(R.string.mmol)
             actions_care_bg.setParams(savedInstanceState?.getDouble("actions_care_bg")
-                ?: bg, 36.0, 30.0, 0.1, DecimalFormat("0.0"), false, ok, bgTextWatcher)
-        else
+                ?: bg, 2.0, 30.0, 0.1, DecimalFormat("0.0"), false, ok, bgTextWatcher)
+        } else {
+            actions_care_bgunits.text = MainApp.gs(R.string.mgdl)
             actions_care_bg.setParams(savedInstanceState?.getDouble("actions_care_bg")
-                ?: bg, 2.0, 500.0, 1.0, DecimalFormat("0"), false, ok, bgTextWatcher)
+                ?: bg, 36.0, 500.0, 1.0, DecimalFormat("0"), false, ok, bgTextWatcher)
+        }
     }
 
     override fun submit(): Boolean {
