@@ -1691,5 +1691,6 @@
     <string name="timeformat24h">24h</string>
     <string name="automation_event">Automation event</string>
     <string name="alreadyset">Already set</string>
+    <string name="message">Message</string>
 
 </resources>

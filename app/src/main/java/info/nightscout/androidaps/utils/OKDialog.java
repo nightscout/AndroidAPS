@@ -1,47 +1,41 @@
 package info.nightscout.androidaps.utils;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.Spanned;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 
-/**
- * Created by mike on 31.03.2017.
- */
-
 public class OKDialog {
-    private static Logger log = LoggerFactory.getLogger(OKDialog.class);
-
     public static void show(final Context context, String title, String message, final Runnable runnable) {
-        try {
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AppTheme));
-            builder.setTitle(title);
-            builder.setMessage(message);
-            builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
+        if (title.isEmpty()) title = MainApp.gs(R.string.message);
+        View titleLayout = LayoutInflater.from(context).inflate(R.layout.dialog_alert_custom, null);
+        ((TextView)titleLayout.findViewById(R.id.alertdialog_title)).setText(title);
+        ((ImageView)titleLayout.findViewById(R.id.alertdialog_icon)).setImageResource(R.drawable.ic_check_while_48dp);
+
+        new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AppTheme))
+                .setCustomTitle(titleLayout)
+                .setMessage(message)
+                .setPositiveButton(MainApp.gs(R.string.ok), (dialog, which) -> {
                     dialog.dismiss();
                     if (runnable != null) {
                         SystemClock.sleep(100);
                         runOnUiThread(runnable);
                     }
-                }
-            });
-
-            builder.create().show();
-        } catch (Exception e) {
-            log.debug("show_dialog exception: ", e);
-        }
+                })
+                .show()
+                .setCanceledOnTouchOutside(false);
     }
 
     public static boolean runOnUiThread(Runnable theRunnable) {
@@ -50,24 +44,23 @@ public class OKDialog {
     }
 
     public static void show(final Activity activity, String title, Spanned message, final Runnable runnable) {
-        try {
-            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme));
-            builder.setTitle(title);
-            builder.setMessage(message);
-            builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
+        if (title.isEmpty()) title = MainApp.gs(R.string.message);
+        View titleLayout = activity.getLayoutInflater().inflate(R.layout.dialog_alert_custom, null);
+        ((TextView)titleLayout.findViewById(R.id.alertdialog_title)).setText(title);
+        ((ImageView)titleLayout.findViewById(R.id.alertdialog_icon)).setImageResource(R.drawable.ic_check_while_48dp);
+
+        new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme))
+                .setCustomTitle(titleLayout)
+                .setMessage(message)
+                .setPositiveButton(MainApp.gs(R.string.ok), (dialog, which) -> {
                     dialog.dismiss();
                     if (runnable != null) {
                         SystemClock.sleep(100);
                         activity.runOnUiThread(runnable);
                     }
-                }
-            });
-
-            builder.create().show();
-        } catch (Exception e) {
-            log.debug("show_dialog exception: " + e);
-        }
+                })
+                .show()
+                .setCanceledOnTouchOutside(false);
     }
 
     public static void showConfirmation(final Activity activity, String message, final Runnable ok) {
@@ -79,9 +72,13 @@ public class OKDialog {
     }
 
     public static void showConfirmation(final Activity activity, Spanned message, final Runnable ok, final Runnable cancel) {
+        View titleLayout = activity.getLayoutInflater().inflate(R.layout.dialog_alert_custom, null);
+        ((TextView)titleLayout.findViewById(R.id.alertdialog_title)).setText(R.string.confirmation);
+        ((ImageView)titleLayout.findViewById(R.id.alertdialog_icon)).setImageResource(R.drawable.ic_check_while_48dp);
+
         new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme))
                 .setMessage(message)
-                .setTitle(MainApp.gs(R.string.confirmation))
+                .setCustomTitle(titleLayout)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     dialog.dismiss();
                     if (ok != null) {
@@ -97,13 +94,19 @@ public class OKDialog {
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null)
-                .show();
+                .show()
+                .setCanceledOnTouchOutside(false);
     }
 
     public static void showConfirmation(final Activity activity, String message, final Runnable ok, final Runnable cancel) {
+        View titleLayout = activity.getLayoutInflater().inflate(R.layout.dialog_alert_custom, null);
+        ((TextView)titleLayout.findViewById(R.id.alertdialog_title)).setText(R.string.confirmation);
+        ((ImageView)titleLayout.findViewById(R.id.alertdialog_icon)).setImageResource(R.drawable.ic_check_while_48dp);
+
         new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme))
                 .setMessage(message)
-                .setTitle(MainApp.gs(R.string.confirmation))
+                .setCustomTitle(titleLayout)
+                .setView(R.layout.dialog_alert_custom)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     dialog.dismiss();
                     if (ok != null) {
@@ -118,7 +121,8 @@ public class OKDialog {
                         activity.runOnUiThread(cancel);
                     }
                 })
-                .show();
+                .show()
+                .setCanceledOnTouchOutside(false);
     }
 
 }
