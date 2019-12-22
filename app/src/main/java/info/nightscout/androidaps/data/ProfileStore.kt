@@ -47,7 +47,7 @@ class ProfileStore(val data: JSONObject) {
                 if (profile == null) {
                     JsonHelper.safeGetJSONObject(store, profileName, null)?.let { profileObject ->
                         // take units from profile and if N/A from store
-                        JsonHelper.safeGetStringAllowNull(profileObject, "units", JsonHelper.safeGetString(store, "units"))?.let { units ->
+                        JsonHelper.safeGetStringAllowNull(profileObject, "units", JsonHelper.safeGetString(data, "units"))?.let { units ->
                             profile = Profile(profileObject, units)
                             cachedObjects[profileName] = profile
                         }
