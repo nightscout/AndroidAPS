@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.profile.local
 
-
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,10 +13,9 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.MIN_DIA
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.*
@@ -108,7 +106,7 @@ class LocalProfileFragment : Fragment() {
         // Spinner
         spinner = SpinnerHelper(view?.findViewById(R.id.localprofile_spinner))
         val profileList: ArrayList<CharSequence> = LocalProfilePlugin.profile?.getProfileList()
-                ?: ArrayList()
+            ?: ArrayList()
         context?.let { context ->
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
             spinner?.adapter = adapter
@@ -121,10 +119,10 @@ class LocalProfileFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (LocalProfilePlugin.isEdited) {
                     activity?.let { activity ->
-                        OKDialog.showConfirmation(activity, MainApp.gs(R.string.doyouwantswitchprofile), {
+                        OKDialog.showConfirmation(activity, MainApp.gs(R.string.doyouwantswitchprofile), Runnable {
                             LocalProfilePlugin.currentProfileIndex = position
                             build()
-                        }, {
+                        }, Runnable {
                             spinner?.setSelection(LocalProfilePlugin.currentProfileIndex)
                         })
                     }
@@ -137,7 +135,7 @@ class LocalProfileFragment : Fragment() {
 
         localprofile_profile_add.setOnClickListener {
             if (LocalProfilePlugin.isEdited) {
-                activity?.let { OKDialog.show(it, "", MainApp.gs(R.string.saveorresetchangesfirst), null) }
+                activity?.let { OKDialog.show(it, "", MainApp.gs(R.string.saveorresetchangesfirst)) }
             } else {
                 LocalProfilePlugin.addNewProfile()
                 build()
@@ -146,7 +144,7 @@ class LocalProfileFragment : Fragment() {
 
         localprofile_profile_clone.setOnClickListener {
             if (LocalProfilePlugin.isEdited) {
-                activity?.let { OKDialog.show(it, "", MainApp.gs(R.string.saveorresetchangesfirst), null) }
+                activity?.let { OKDialog.show(it, "", MainApp.gs(R.string.saveorresetchangesfirst)) }
             } else {
                 LocalProfilePlugin.cloneProfile()
                 build()
@@ -155,7 +153,7 @@ class LocalProfileFragment : Fragment() {
 
         localprofile_profile_remove.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, MainApp.gs(R.string.deletecurrentprofile), {
+                OKDialog.showConfirmation(activity, MainApp.gs(R.string.deletecurrentprofile), Runnable {
                     LocalProfilePlugin.removeCurrentProfile()
                     build()
                 }, null)
@@ -170,11 +168,7 @@ class LocalProfileFragment : Fragment() {
 
         localprofile_profileswitch.setOnClickListener {
             // TODO: select in dialog LocalProfilePlugin.currentProfileIndex
-            val newDialog = NewNSTreatmentDialog()
-            val profileSwitch = CareportalFragment.PROFILESWITCHDIRECT
-            profileSwitch.executeProfileSwitch = true
-            newDialog.setOptions(profileSwitch, R.string.careportal_profileswitch)
-            fragmentManager?.let { newDialog.show(it, "NewNSTreatmentDialog") }
+            fragmentManager?.let { ProfileSwitchDialog().show(it, "NewNSTreatmentDialog") }
         }
 
         localprofile_reset.setOnClickListener {
@@ -204,9 +198,9 @@ class LocalProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         disposable.add(RxBus
-                .toObservable(EventLocalProfileChanged::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ build() }, { FabricPrivacy.logException(it) })
+            .toObservable(EventLocalProfileChanged::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ build() }, { FabricPrivacy.logException(it) })
         )
         build()
     }

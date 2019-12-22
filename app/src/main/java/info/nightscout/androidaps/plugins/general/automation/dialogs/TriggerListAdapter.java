@@ -75,7 +75,7 @@ public class TriggerListAdapter {
 
     private Spinner createSpinner() {
         Spinner spinner = new Spinner(mContext);
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_spinner_item, TriggerConnector.Type.labels());
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_centered, TriggerConnector.Type.labels());
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerArrayAdapter);
         return spinner;

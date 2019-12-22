@@ -32,7 +32,7 @@ class ActionListAdapter(private val fragmentManager: FragmentManager, private va
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
-        fun bind(action: Action, fragmentManager: FragmentManager, recyclerView: RecyclerView.Adapter<ViewHolder>, position : Int, actionList: MutableList<Action>) {
+        fun bind(action: Action, fragmentManager: FragmentManager, recyclerView: RecyclerView.Adapter<ViewHolder>, position: Int, actionList: MutableList<Action>) {
             view.findViewById<LinearLayout>(R.id.automation_layoutText).setOnClickListener {
                 if (action.hasDialog()) {
                     val args = Bundle()
@@ -48,6 +48,7 @@ class ActionListAdapter(private val fragmentManager: FragmentManager, private va
                 recyclerView.notifyDataSetChanged()
                 RxBus.send(EventAutomationUpdateGui())
             }
+            if (action.icon().isPresent) view.findViewById<ImageView>(R.id.automation_action_image).setImageResource(action.icon().get())
             view.findViewById<TextView>(R.id.automation_viewActionTitle).text = action.shortDescription()
         }
     }
