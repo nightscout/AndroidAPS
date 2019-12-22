@@ -106,7 +106,6 @@ public class OKDialog {
         new AlertDialog.Builder(new ContextThemeWrapper(activity, R.style.AppTheme))
                 .setMessage(message)
                 .setCustomTitle(titleLayout)
-                .setView(R.layout.dialog_alert_custom)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     dialog.dismiss();
                     if (ok != null) {
