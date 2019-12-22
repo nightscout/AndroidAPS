@@ -1479,8 +1479,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             LOG.info(getLogPrefix() + "Basal Profile was set: " + response);
 
         if (response) {
+            Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
+
             return new PumpEnactResult().success(true).enacted(true);
         } else {
+            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
+            RxBus.INSTANCE.send(new EventNewNotification(notification));
+
             return new PumpEnactResult().success(response).enacted(response) //
                     .comment(MainApp.gs(R.string.medtronic_cmd_basal_profile_could_not_be_set));
         }

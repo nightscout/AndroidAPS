@@ -3,6 +3,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
+
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
@@ -31,6 +34,22 @@ public class OmnipodUIPostprocessor {
     public void postProcessData(OmnipodUITask uiTask) {
 
         switch (uiTask.commandType) {
+
+            case SetBolus: {
+                if (uiTask.returnData!=null) {
+
+                    PumpEnactResult result = uiTask.returnData;
+
+                    if (result.success) {
+                        boolean isSmb = uiTask.getBooleanFromParameters(1);
+
+                        if (!isSmb) {
+                            pumpStatus.lastBolusAmount = uiTask.getDoubleFromParameters(0);
+                            pumpStatus.lastBolusTime = new Date();
+                        }
+                    }
+                }
+            } break;
 
 //            case PairAndPrimePod: {
 //                if (uiTask.returnData.success) {
