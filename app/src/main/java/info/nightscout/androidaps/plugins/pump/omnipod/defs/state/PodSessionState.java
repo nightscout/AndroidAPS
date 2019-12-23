@@ -44,7 +44,7 @@ public class PodSessionState extends PodState {
     private BasalSchedule basalSchedule;
     private DeliveryStatus lastDeliveryStatus;
 
-    public PodSessionState(DateTimeZone timeZone, int address, DateTime activatedAt, FirmwareVersion piVersion,
+    public PodSessionState(DateTimeZone timeZone, int address, FirmwareVersion piVersion,
                            FirmwareVersion pmVersion, int lot, int tid, int packetNumber, int messageNumber) {
         super(address, messageNumber, packetNumber);
         if (timeZone == null) {
@@ -57,7 +57,6 @@ public class PodSessionState extends PodState {
 
         this.timeZone = timeZone;
         this.setupProgress = SetupProgress.ADDRESS_ASSIGNED;
-        this.activatedAt = activatedAt;
         this.piVersion = piVersion;
         this.pmVersion = pmVersion;
         this.lot = lot;

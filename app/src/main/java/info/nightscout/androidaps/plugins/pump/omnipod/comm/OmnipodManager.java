@@ -13,18 +13,18 @@ import java.util.concurrent.TimeUnit;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AcknowledgeAlertsAction;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AssignAddressAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.BolusAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.CancelDeliveryAction;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.ConfigurePodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.DeactivatePodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.GetPodInfoAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.GetStatusAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.InsertCannulaAction;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.PairAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.PrimeAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.SetBasalScheduleAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.SetTempBasalAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.InsertCannulaService;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.PairService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.PrimeService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.SetTempBasalService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.CancelDeliveryCommand;
@@ -88,16 +88,20 @@ public class OmnipodManager {
         try {
             if (podState == null) {
                 podState = communicationService.executeAction(
-                        new PairAction(new PairService(), podStateChangedHandler));
-            }
-            if (!podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
+                        new AssignAddressAction(podStateChangedHandler));
+            } else if (SetupProgress.PRIMING.isBefore(podState.getSetupProgress())) {
                 throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, podState.getSetupProgress());
+            }
+
+            if (SetupProgress.ADDRESS_ASSIGNED.equals(podState.getSetupProgress())) {
+                communicationService.executeAction(new ConfigurePodAction(podState));
             }
 
             communicationService.executeAction(new PrimeAction(new PrimeService(), podState));
         } finally {
             logCommandExecutionFinished("pairAndPrime");
         }
+
         long delayInSeconds = calculateBolusDuration(OmnipodConst.POD_PRIME_BOLUS_UNITS, OmnipodConst.POD_PRIMING_DELIVERY_RATE).getStandardSeconds();
 
         return Single.timer(delayInSeconds, TimeUnit.SECONDS) //
