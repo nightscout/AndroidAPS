@@ -7,7 +7,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +24,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
@@ -184,7 +182,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     boolean smallWidth;
     boolean smallHeight;
 
-    public static boolean shorttextmode = false;
+    public static boolean shorttextmode = true;
 
     private boolean accepted;
 
@@ -239,7 +237,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         timeAgoShortView = (TextView) view.findViewById(R.id.overview_timeagoshort);
         deltaView = (TextView) view.findViewById(R.id.overview_delta);
         deltaShortView = (TextView) view.findViewById(R.id.overview_deltashort);
-        avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
+        // TODO: avgdeltaView in Expertmode
+        //avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
         baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
         extendedBolusView = (TextView) view.findViewById(R.id.overview_extendedbolus);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
@@ -1162,9 +1161,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 if (activeTemp != null) {
                     fullText += MainApp.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
                 }
-                OKDialog.show(getActivity(), MainApp.gs(R.string.basal), fullText);
+                OKDialog.show(getActivity(), MainApp.gs(R.string.basal), fullText, null);
             });
-
         } else {
             if (activeTemp != null) {
                 basalText = activeTemp.toStringFull() + " ";
@@ -1174,12 +1172,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             else if (pump.getPumpDescription().isTempBasalCapable) {
                 basalText += "(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + "U/h)";
             }
-        }
-        if (activeTemp != null) {
-            baseBasalView.setTextColor(MainApp.gc(R.color.basal));
-        } else {
-            baseBasalView.setTextColor(Color.WHITE);
-
         }
 
         baseBasalView.setText(basalText);
