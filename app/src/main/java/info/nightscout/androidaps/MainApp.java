@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
 import info.nightscout.androidaps.data.ConstraintChecker;
@@ -92,6 +94,7 @@ import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.ActivityMonitor;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SPImpl;
 import io.fabric.sdk.android.Fabric;
 
 import static info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt.triggerCheckVersion;
@@ -121,6 +124,9 @@ public class MainApp extends DaggerApplication {
 
     public static boolean devBranch;
     public static boolean engineeringMode;
+
+    @Inject
+    InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
 
     @Override
     public void onCreate() {
@@ -181,7 +187,7 @@ public class MainApp extends DaggerApplication {
             if (!Config.NSCLIENT) pluginsList.add(ActionsPlugin.INSTANCE);
             pluginsList.add(InsulinOrefRapidActingPlugin.getPlugin());
             pluginsList.add(InsulinOrefUltraRapidActingPlugin.getPlugin());
-            pluginsList.add(InsulinOrefFreePeakPlugin.getPlugin());
+            pluginsList.add(insulinOrefFreePeakPlugin);
             pluginsList.add(SensitivityOref0Plugin.getPlugin());
             pluginsList.add(SensitivityAAPSPlugin.getPlugin());
             pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());

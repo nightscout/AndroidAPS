@@ -7,15 +7,16 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.sharedPreferences.SPImpl
 import javax.inject.Singleton
 
 @Module(includes = [AppModule.AppBindings::class])
-class AppModule() {
+class AppModule {
 
     @Provides
     @Singleton
     fun provideSharedPreferences(context: Context): SP {
-        return SP(PreferenceManager.getDefaultSharedPreferences(context))
+        return SPImpl(PreferenceManager.getDefaultSharedPreferences(context))
     }
 
     @Module
