@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo;
 
+import android.text.TextUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,9 +49,15 @@ public class PodInfoRecentHighFlashLogDump extends PodInfo {
 
     @Override
     public String toString() {
-        return "PodInfoRecentHighFlashLogDump{" +
+        String out = "PodInfoRecentHighFlashLogDump{" +
                 "lastEntryIndex=" + lastEntryIndex +
-                ",dwords=" + dwords +
-                '}';
+                ",dwords=[";
+        List<String> hexDwords = new ArrayList<>();
+        for (byte[] dword : dwords) {
+            hexDwords.add(ByteUtil.shortHexString(dword));
+        }
+        out += TextUtils.join(",", hexDwords);
+        out += "]}";
+        return out;
     }
 }
