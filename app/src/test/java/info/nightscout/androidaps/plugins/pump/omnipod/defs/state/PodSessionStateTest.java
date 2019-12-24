@@ -5,16 +5,29 @@ import org.joda.time.DateTimeUtils;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+import info.AAPSMocker;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
+import info.nightscout.androidaps.utils.SP;
 
 import static org.junit.Assert.assertEquals;
 
-// FIXME these tests fail because of some android stuff:
-//  java.lang.NoClassDefFoundError: android/app/Application
-//  it's caused by the PodSessionState class using the SP class for storage
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({MainApp.class, SP.class, L.class})
 public class PodSessionStateTest {
+    @Before
+    public void setup() {
+        AAPSMocker.mockMainApp();
+        AAPSMocker.mockApplicationContext();
+        AAPSMocker.mockSP();
+    }
 
     @Test
     public void times() {
@@ -26,12 +39,11 @@ public class PodSessionStateTest {
 
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        PodSessionState podSessionState = new PodSessionState(timeZone, 0x0, initialized,
+        PodSessionState podSessionState = new PodSessionState(timeZone, 0x0,
                 new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2),
                 0, 0, 0, 0);
 
-        assertEquals(initialized, podSessionState.getActivatedAt());
         assertEquals(now, podSessionState.getTime());
         assertEquals(Duration.standardHours(1).plus(Duration.standardMinutes(2).plus(Duration.standardSeconds(3))), podSessionState.getScheduleOffset());
     }
@@ -46,7 +58,7 @@ public class PodSessionStateTest {
 
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        PodSessionState podSessionState = new PodSessionState(timeZone, 0x0, initialized,
+        PodSessionState podSessionState = new PodSessionState(timeZone, 0x0,
                 new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2),
                 0, 0, 0, 0);
@@ -56,7 +68,6 @@ public class PodSessionStateTest {
 
         // The system time zone has been updated, but the pod session state's time zone hasn't
         // So the pods time should not have been changed
-        assertEquals(initialized, podSessionState.getActivatedAt());
         assertEquals(now, podSessionState.getTime());
         assertEquals(Duration.standardHours(1).plus(Duration.standardMinutes(2).plus(Duration.standardSeconds(3))), podSessionState.getScheduleOffset());
     }
@@ -71,7 +82,7 @@ public class PodSessionStateTest {
 
         DateTimeUtils.setCurrentMillisFixed(now.getMillis());
 
-        PodSessionState podSessionState = new PodSessionState(timeZone, 0x0, initialized,
+        PodSessionState podSessionState = new PodSessionState(timeZone, 0x0,
                 new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2),
                 0, 0, 0, 0);
@@ -82,7 +93,6 @@ public class PodSessionStateTest {
 
         // Both the system time zone have been updated
         // So the pods time should have been changed (to +2 hours)
-        assertEquals(initialized.withZone(newTimeZone), podSessionState.getActivatedAt());
         assertEquals(now.withZone(newTimeZone), podSessionState.getTime());
         assertEquals(Duration.standardHours(3).plus(Duration.standardMinutes(2).plus(Duration.standardSeconds(3))), podSessionState.getScheduleOffset());
     }
