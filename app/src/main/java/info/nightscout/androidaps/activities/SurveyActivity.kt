@@ -8,7 +8,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
-import info.nightscout.androidaps.plugins.treatments.fragments.ProfileViewerDialog
+import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.utils.*
 import kotlinx.android.synthetic.main.survey_activity.*
 import org.slf4j.LoggerFactory

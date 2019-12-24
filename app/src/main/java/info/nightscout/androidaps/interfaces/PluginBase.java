@@ -4,7 +4,6 @@ import android.os.SystemClock;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +19,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.EventConfigBuilderUpdateGui;
 import info.nightscout.androidaps.queue.CommandQueue;
+import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -58,20 +58,16 @@ public abstract class PluginBase {
             if (allowHardwarePump || activity == null) {
                 performPluginSwitch(newState, type);
             } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setMessage(R.string.allow_hardware_pump_text)
-                        .setPositiveButton(R.string.yes, (dialog, id) -> {
-                            performPluginSwitch(newState, type);
-                            SP.putBoolean("allow_hardware_pump", true);
-                            if (L.isEnabled(L.PUMP))
-                                log.debug("First time HW pump allowed!");
-                        })
-                        .setNegativeButton(R.string.cancel, (dialog, id) -> {
-                            RxBus.INSTANCE.send(new EventConfigBuilderUpdateGui());
-                            if (L.isEnabled(L.PUMP))
-                                log.debug("User does not allow switching to HW pump!");
-                        });
-                builder.create().show();
+                OKDialog.showConfirmation(activity, MainApp.gs(R.string.allow_hardware_pump_text), () -> {
+                    performPluginSwitch(newState, type);
+                    SP.putBoolean("allow_hardware_pump", true);
+                    if (L.isEnabled(L.PUMP))
+                        log.debug("First time HW pump allowed!");
+                }, () -> {
+                    RxBus.INSTANCE.send(new EventConfigBuilderUpdateGui());
+                    if (L.isEnabled(L.PUMP))
+                        log.debug("User does not allow switching to HW pump!");
+                });
             }
         } else {
             performPluginSwitch(newState, type);

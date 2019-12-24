@@ -42,7 +42,6 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.activities.PreferencesActivity;
 import info.nightscout.androidaps.activities.SingleFragmentActivity;
 import info.nightscout.androidaps.activities.StatsActivity;
-import info.nightscout.androidaps.activities.SurveyActivity;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
@@ -58,6 +57,7 @@ import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.androidaps.utils.AndroidPermission;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
+import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.PasswordProtection;
 import info.nightscout.androidaps.utils.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -239,10 +239,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 switch (requestCode) {
                     case AndroidPermission.CASE_STORAGE:
                         //show dialog after permission is granted
-                        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                        alert.setMessage(R.string.alert_dialog_storage_permission_text);
-                        alert.setPositiveButton(R.string.ok, null);
-                        alert.show();
+                        OKDialog.show(this, "", MainApp.gs(R.string.alert_dialog_storage_permission_text));
                         break;
                     case AndroidPermission.CASE_LOCATION:
                     case AndroidPermission.CASE_SMS:

@@ -97,8 +97,6 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_newtreatment_insulinamount_label">Insulin</string>
-    <string name="treatments_newtreatment_carbsamount_label">Carbs</string>
     <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Carbs</string>
@@ -138,7 +136,6 @@
     <string name="overview">Overview</string>
     <string name="nsprofile">NS Profile</string>
     <string name="simpleprofile">Simple profile</string>
-    <string name="tempbasal">TempBasal</string>
     <string name="treatments">Treatments</string>
     <string name="virtualpump">Virtual Pump</string>
     <string name="careportal">Careportal</string>
@@ -173,21 +170,18 @@
     <string name="constraints_violation">Constraints violation</string>
     <string name="treatmentdeliveryerror">Bolus delivery error</string>
     <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
-    <string name="overview_newtempbasal_basalpercent">Basal value [%%]</string>
-    <string name="overview_newtempbasal_percent_label">%% (100%% = current)</string>
+    <string name="overview_newtempbasal_basalpercent">Basal value [%]</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
     <string name="overview_treatment_label">Treatment</string>
     <string name="overview_calculator_label">Calculator</string>
     <string name="constraintapllied">Constraint applied!</string>
     <string name="confirmation">Confirmation</string>
-    <string name="entertreatmentquestion">Enter new treatment:</string>
     <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="carbs">Carbs</string>
     <string name="changeyourinput">Change your input!</string>
-    <string name="setextendedbolusquestion">Set new extended bolus:</string>
     <string name="configbuilder_bgsource">BG Source</string>
     <string name="configbuilder_bgsource_description">Where should AndroidAPS gain  it\'s data from?</string>
     <string name="xdrip">xDrip</string>
@@ -216,7 +210,7 @@
     <string name="careportal_cgmsensorinsert">CGM Sensor Insert</string>
     <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
     <string name="careportal_insulincartridgechange">Insulin Cartridge Change</string>
-    <string name="careportal_profileswitch">Profile Switch</string>
+    <string name="careportal_profileswitch">Profile switch</string>
     <string name="careportal_snackbolus">Snack Bolus</string>
     <string name="careportal_mealbolus">Meal Bolus</string>
     <string name="careportal_correctionbolus">Correction Bolus</string>
@@ -238,7 +232,7 @@
     <string name="careportal_newnstreatment_percent_label">Percent</string>
     <string name="careportal_newnstreatment_absolute_label">Absolute</string>
     <string name="careportal_newnstreatment_notes_label">Notes</string>
-    <string name="careportal_newnstreatment_eventtime_label">Event time</string>
+    <string name="event_time_label">Event time</string>
     <string name="careportal_newnstreatment_profile_label">Profile</string>
     <string name="careportal_newnstreatment_enteredby_title">Entered By</string>
     <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
@@ -265,7 +259,7 @@
     <string name="connecting">Connecting</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
-    <string name="danar_pump_settings">DanaR pump settings</string>
+    <string name="danar_pump_settings">Dana pump settings</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">I UNDERSTAND AND AGREE</string>
@@ -315,8 +309,8 @@
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manual</string>
-    <string name="careportal_temporarytarget">Temporary Target</string>
-    <string name="careportal_temporarytargetcancel">Temporary Target Cancel</string>
+    <string name="careportal_temporarytarget">Temporary target</string>
+    <string name="careportal_temporarytargetcancel">Temporary target cancel</string>
     <string name="danarprofile">DanaR profile settings</string>
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="danarprofile_dia_summary">Duration of Insulin Activity</string>
@@ -456,7 +450,7 @@
     <string name="eatingsoon">Eating Soon</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Activity</string>
-    <string name="removerecord">Remove record:</string>
+    <string name="removerecord">Remove record</string>
     <string name="danar_stats">DanaR Stats</string>
     <string name="danar_stats_cumulative_tdd">Cumulative TDD</string>
     <string name="danar_stats_expweight">Exponentially Weighted TDD</string>
@@ -651,16 +645,12 @@
     <string name="key_ns_noupload" translatable="false">ns_noupload</string>
     <string name="basal_step">Basal Step</string>
     <string name="bolus_step">Bolus Step</string>
-    <string name="extendedbolus">ExtendedBolus</string>
-    <string name="temptarget">TempTarget</string>
     <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
     <string name="careportal_sensorage_label">Sensor age</string>
     <string name="careportal_canulaage_label">Canula age</string>
     <string name="careportal_insulinage_label">Insulin age</string>
     <string name="hours">hours</string>
-    <string name="overview_newtempbasal_basaltype_label">Basal type</string>
     <string name="invalidprofile">Invalid profile !!!</string>
-    <string name="profileswitch">ProfileSwitch</string>
     <string name="doprofileswitch">Do Profile Switch</string>
     <string name="careportal_pbage_label">Pump battery age</string>
     <string name="careportal_pumpbatterychange">Pump Battery Change</string>
@@ -726,7 +716,6 @@
     <string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
     <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
     <string name="careportal_pump_label">PUMP</string>
-    <string name="overview_newtempbasal_basalabsolute">Basal value [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="smb_shortname">SMB</string>
@@ -749,7 +738,7 @@
     <string name="waitingforpairing">Waiting for pairing on pump</string>
     <string name="pairingok">Pairing OK</string>
     <string name="pairingtimedout">Pairing timed out</string>
-    <string name="pairing">PAIRING</string>
+    <string name="pairing">Pairing</string>
     <string name="key_danars_pairingkey" translatable="false">danars_pairing_key_</string>
     <string name="key_danars_address" translatable="false">danars_address</string>
     <string name="key_danars_name" translatable="false">danars_name</string>
@@ -882,7 +871,7 @@
     <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last two minutes. To prevent accidental double boluses and to guard against bugs this is disallowed.</string>
     <string name="combo_pump_connected_now">Now</string>
     <string name="combo_activity_reading_pump_history">Reading pump history</string>
-    <string name="danar_history">pump history</string>
+    <string name="danar_history">Pump history</string>
     <string name="combo_activity_setting_basal_profile">Setting basal profile</string>
     <string name="combo_pump_cartridge_low_warrning">Pump cartridge level is low</string>
     <string name="combo_pump_battery_low_warrning">Pump battery is low</string>
@@ -902,6 +891,7 @@
     <string name="insightpump_shortname">Sight</string>
     <string name="ago">ago</string>
     <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d mins</string>
     <string name="key_enableSMB_always" translatable="false">enableSMB_always</string>
     <string name="key_enableSMB_with_COB" translatable="false">enableSMB_with_COB</string>
     <string name="key_enableSMB_with_temptarget" translatable="false">enableSMB_with_temptarget</string>
@@ -1125,11 +1115,11 @@
     <string name="danar_pumpalarm_sound">Sound</string>
     <string name="danar_pumpalarm_vibrate">Vibrate</string>
     <string name="danar_pumpalarm_both">Both</string>
-    <string name="danar_screentimeout">LCD on time [s]</string>
-    <string name="danar_backlight">Backlight on time [s]</string>
+    <string name="danar_screentimeout">LCD on time [seconds]</string>
+    <string name="danar_backlight">Backlight on time [seconds]</string>
     <string name="danar_glucoseunits">Glucose units</string>
-    <string name="danar_shutdown">Shutdown(hours)</string>
-    <string name="danar_lowreservoir">Low reservoir (Units)</string>
+    <string name="danar_shutdown">Shutdown [hours]</string>
+    <string name="danar_lowreservoir">Low reservoir [Units]</string>
     <string name="danar_saveuseroptions">Save options to pump</string>
     <string name="option_on">On</string>
     <string name="option_off">Off</string>
@@ -1423,8 +1413,8 @@
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="taskname">Task name</string>
     <string name="edit_short">EDIT</string>
-    <string name="please_choose_an_action_type">Please choose an action type:</string>
-    <string name="please_choose_a_trigger_type">Please choose a trigger type:</string>
+    <string name="please_choose_an_action_type">Choose an action type</string>
+    <string name="please_choose_a_trigger_type">Choose a trigger type</string>
     <string name="triggers">Triggers:</string>
     <string name="remove_label">REMOVE</string>
     <string name="preconditions">Preconditions:</string>
@@ -1608,7 +1598,7 @@
     <string name="automation_trigger_pump_last_connection_description">Last connection to pump [minutes ago]</string>
     <string name="automation_trigger_pump_last_connection_compared">Last connection to pump %1$s %2$s min ago</string>
     <string name="sendsmsactionlabel">Send SMS: %1$s</string>
-    <string name="sendsmsactiondescription">Send SMS to all numbers in preferences</string>
+    <string name="sendsmsactiondescription">Send SMS to all numbers</string>
     <string name="sendsmsactiontext">Send SMS with text</string>
 
 
@@ -1688,5 +1678,14 @@
     <string name="randombg">Random BG</string>
     <string name="description_source_randombg">Generate random BG data (Demo mode only)</string>
     <string name="randombg_short">BG</string>
+    <string name="tools">Tools</string>
+    <string name="show_calculation">Show calcuation</string>
+    <string name="error">Error</string>
+    <string name="timeformat12h">12h</string>
+    <string name="timeformat24h">24h</string>
+    <string name="automation_event">Automation event</string>
+    <string name="alreadyset">Already set</string>
+    <string name="message">Message</string>
+    <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
 
 </resources>

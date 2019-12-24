@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.automation
 
 import android.os.Bundle
+import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +17,11 @@ import info.nightscout.androidaps.plugins.general.automation.dragHelpers.SimpleI
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.automation_fragment.*
-
 
 class AutomationFragment : Fragment(), OnStartDragListener {
 
@@ -39,6 +40,8 @@ class AutomationFragment : Fragment(), OnStartDragListener {
         eventListAdapter = EventListAdapter(AutomationPlugin.automationEvents, fragmentManager, activity, this)
         automation_eventListView.layoutManager = LinearLayoutManager(context)
         automation_eventListView.adapter = eventListAdapter
+
+        automation_logView.setMovementMethod(ScrollingMovementMethod())
 
         automation_fabAddEvent.setOnClickListener {
             val dialog = EditEventDialog()
@@ -88,8 +91,8 @@ class AutomationFragment : Fragment(), OnStartDragListener {
         eventListAdapter?.notifyDataSetChanged()
         val sb = StringBuilder()
         for (l in AutomationPlugin.executionLog.reversed())
-            sb.append(l).append("\n")
-        automation_logView?.text = sb.toString()
+            sb.append(l).append("<br>")
+        automation_logView?.text = HtmlHelper.fromHtml(sb.toString())
     }
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {

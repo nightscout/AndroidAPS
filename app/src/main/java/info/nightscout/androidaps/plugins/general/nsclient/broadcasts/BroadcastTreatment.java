@@ -25,12 +25,11 @@ import info.nightscout.androidaps.utils.SP;
 public class BroadcastTreatment {
     private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
 
-    public static void handleNewTreatment(JSONObject treatment, boolean isDelta, boolean isLocalBypass) {
+    public static void handleNewTreatment(JSONObject treatment, boolean isDelta) {
 
         Bundle bundle = new Bundle();
         bundle.putString("treatment", treatment.toString());
         bundle.putBoolean("delta", isDelta);
-        bundle.putBoolean("islocal", isLocalBypass);
         Intent intent = new Intent(Intents.ACTION_NEW_TREATMENT);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);

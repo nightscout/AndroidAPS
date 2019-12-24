@@ -93,7 +93,7 @@ public class TriggerTempTarget extends Trigger {
 
     @Override
     public int friendlyName() {
-        return R.string.temptarget;
+        return R.string.careportal_temporarytarget;
     }
 
     @Override
@@ -124,7 +124,7 @@ public class TriggerTempTarget extends Trigger {
     @Override
     public void generateDialog(LinearLayout root, FragmentManager fragmentManager) {
         new LayoutBuilder()
-                .add(new StaticLabel(R.string.temptarget))
+                .add(new StaticLabel(R.string.careportal_temporarytarget))
                 .add(comparator)
                 .build(root);
     }
