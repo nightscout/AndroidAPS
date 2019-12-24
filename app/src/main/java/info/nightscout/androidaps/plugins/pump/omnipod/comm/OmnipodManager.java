@@ -328,17 +328,20 @@ public class OmnipodManager {
             try {
                 cancelDelivery(EnumSet.of(DeliveryType.BOLUS), acknowledgementBeep);
             } catch (PodFaultException ex) {
-                if (isLoggingEnabled()) {
-                    LOG.info("Ignoring PodFaultException in cancelBolus", ex);
-                }
+                discardActiveBolusData();
+                throw ex;
             } finally {
                 logCommandExecutionFinished("cancelBolus");
             }
 
-            activeBolusData.getDisposables().dispose();
-            activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(activeBolusData.estimateUnitsDelivered()));
-            activeBolusData = null;
+            discardActiveBolusData();
         }
+    }
+
+    private void discardActiveBolusData() {
+        activeBolusData.getDisposables().dispose();
+        activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(activeBolusData.estimateUnitsDelivered()));
+        activeBolusData = null;
     }
 
     public synchronized void suspendDelivery(boolean acknowledgementBeep) {
@@ -399,8 +402,8 @@ public class OmnipodManager {
         logStartingCommandExecution("deactivatePod");
 
         try {
-            // Never send acknowledgement beeps here. Matches the PDM's behavior
-            executeAndVerify(() -> communicationService.executeAction(new DeactivatePodAction(podState, false)));
+            // Always send acknowledgement beeps here. Matches the PDM's behavior
+            executeAndVerify(() -> communicationService.executeAction(new DeactivatePodAction(podState, true)));
         } catch (PodFaultException ex) {
             if (isLoggingEnabled()) {
                 LOG.info("Ignoring PodFaultException in deactivatePod", ex);
@@ -445,7 +448,12 @@ public class OmnipodManager {
             if (isCertainFailure(ex)) {
                 throw ex;
             } else {
+                if (isLoggingEnabled()) {
+                    LOG.debug("Caught exception in executeAndVerify: ", ex);
+                }
+
                 CommandDeliveryStatus verificationResult = verifyCommand();
+
                 switch (verificationResult) {
                     case CERTAIN_FAILURE:
                         if (ex instanceof OmnipodException) {
@@ -501,6 +509,7 @@ public class OmnipodManager {
             LOG.warn("Verifying command by using cancel none command to verify nonce");
         }
         try {
+            logStartingCommandExecution("verifyCommand");
             communicationService.sendCommand(StatusResponse.class, podState,
                     new CancelDeliveryCommand(podState.getCurrentNonce(), BeepType.NO_BEEP, DeliveryType.NONE), false);
         } catch (NonceOutOfSyncException ex) {
@@ -513,6 +522,8 @@ public class OmnipodManager {
                 LOG.error("Command unresolved (UNCERTAIN_FAILURE)", ex);
             }
             return CommandDeliveryStatus.UNCERTAIN_FAILURE;
+        } finally {
+            logCommandExecutionFinished("verifyCommand");
         }
 
         if (isLoggingEnabled()) {
@@ -627,8 +638,6 @@ public class OmnipodManager {
         }
 
         public double estimateUnitsDelivered() {
-            // TODO this needs improvement
-            //  take (average) radio communication time into account
             long elapsedMillis = new Duration(startDate, DateTime.now()).getMillis();
             long totalDurationMillis = (long) (units / OmnipodConst.POD_BOLUS_DELIVERY_RATE * 1000);
             double factor = (double) elapsedMillis / totalDurationMillis;

@@ -292,7 +292,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             // For safety reasons, we treat this as a bolus that has successfully been delivered, in order to prevent insulin overdose
 
             // FIXME We can't dismiss the alert while the bolus progress dialog is open, so don't use a sound
-            showNotification(getStringResource(R.string.omnipod_bolus_failed_uncertain), Notification.URGENT, null);
+            showNotificationWithDialog(getStringResource(R.string.omnipod_bolus_failed_uncertain), Notification.URGENT, null);
         }
 
         // Wait for the bolus to finish
@@ -315,6 +315,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             delegate.cancelBolus(isBolusBeepsEnabled());
             addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
+        } catch(PodFaultException ex) {
+            showNotificationWithDialog(createPodFaultErrorMessage(ex.getFaultEvent().getFaultEventType()), Notification.URGENT, null);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             addFailureToHistory(time, PodHistoryEntryType.CancelBolus, comment);
@@ -550,10 +552,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             } else if (ex instanceof NotEnoughDataException) {
                 comment = getStringResource(R.string.omnipod_driver_error_not_enough_data);
             } else if (ex instanceof PodFaultException) {
-                // TODO handle pod fault with some kind of dialog that has a button to start pod deactivation
                 FaultEventType faultEventType = ((PodFaultException) ex).getFaultEvent().getFaultEventType();
-                comment = getStringResource(R.string.omnipod_driver_error_pod_fault,
-                        ByteUtil.convertUnsignedByteToInt(faultEventType.getValue()), faultEventType.name());
+                comment = createPodFaultErrorMessage(faultEventType);
             } else if (ex instanceof PodReturnedErrorResponseException) {
                 comment = getStringResource(R.string.omnipod_driver_error_pod_returned_error_response);
             } else {
@@ -573,8 +573,20 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return comment;
     }
 
+    private String createPodFaultErrorMessage(FaultEventType faultEventType) {
+        String comment;
+        comment = getStringResource(R.string.omnipod_driver_error_pod_fault,
+                ByteUtil.convertUnsignedByteToInt(faultEventType.getValue()), faultEventType.name());
+        return comment;
+    }
+
     private void sendEvent(Event event) {
         RxBus.INSTANCE.send(event);
+    }
+
+    private void showNotificationWithDialog(String message, int urgency, Integer sound) {
+        // TODO
+        showNotification(message, urgency, sound);
     }
 
     private void showNotification(String message, int urgency, Integer sound) {
