@@ -403,7 +403,7 @@ public class OmnipodManager {
 
         try {
             // Always send acknowledgement beeps here. Matches the PDM's behavior
-            executeAndVerify(() -> communicationService.executeAction(new DeactivatePodAction(podState, true)));
+            communicationService.executeAction(new DeactivatePodAction(podState, true));
         } catch (PodFaultException ex) {
             if (isLoggingEnabled()) {
                 LOG.info("Ignoring PodFaultException in deactivatePod", ex);

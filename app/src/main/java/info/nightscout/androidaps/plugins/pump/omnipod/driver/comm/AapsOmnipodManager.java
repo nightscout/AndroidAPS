@@ -316,7 +316,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             delegate.cancelBolus(isBolusBeepsEnabled());
             addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
-        } catch(PodFaultException ex) {
+        } catch (PodFaultException ex) {
             showNotificationWithDialog(createPodFaultErrorMessage(ex.getFaultEvent().getFaultEventType()), Notification.URGENT, null);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);

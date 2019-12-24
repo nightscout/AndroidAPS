@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.OmnipodAction
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodPacket;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.DeactivatePodCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.ErrorResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoFaultEvent;
@@ -149,7 +150,9 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
 
         boolean firstPacket = true;
         byte[] encodedMessage;
-        if (message.isNonceResyncable()) {
+        // this does not work well with the deactivate pod command, we somehow either
+        // receive an ACK instead of a normal response, or a partial response and a communication timeout
+        if (message.isNonceResyncable() && !message.containsBlock(DeactivatePodCommand.class)) {
             OmnipodMessage paddedMessage = new OmnipodMessage(message);
             // If messages are nonce resyncable, we want do distinguish between certain and uncertain failures for verification purposes
             // However, some commands (e.g. cancel delivery) are single packet command by nature. When we get a timeout with a single packet,

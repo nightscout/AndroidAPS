@@ -115,12 +115,7 @@ public class OmnipodMessage {
     }
 
     public boolean isNonceResyncable() {
-        for (MessageBlock messageBlock : messageBlocks) {
-            if (messageBlock instanceof NonceResyncableMessageBlock) {
-                return true;
-            }
-        }
-        return false;
+        return containsBlock(NonceResyncableMessageBlock.class);
     }
 
     public int getSentNonce() {
@@ -138,5 +133,14 @@ public class OmnipodMessage {
                 ((NonceResyncableMessageBlock) messageBlock).setNonce(nonce);
             }
         }
+    }
+
+    public boolean containsBlock(Class<? extends MessageBlock> blockType) {
+        for (MessageBlock messageBlock : messageBlocks) {
+            if (blockType.isInstance(messageBlock)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
