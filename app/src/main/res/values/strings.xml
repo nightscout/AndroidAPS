@@ -1636,7 +1636,7 @@
     <string name="objectives_button_unstart">Clear started</string>
     <string name="timedetection">Time detection</string>
     <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
-
+    <string name="time_or_timezone_change">Time and/or Timezone change on pump</string>
 
     <!-- Omnipod -->
 

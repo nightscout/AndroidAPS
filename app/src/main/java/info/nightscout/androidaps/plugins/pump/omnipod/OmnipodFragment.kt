@@ -118,7 +118,7 @@ class OmnipodFragment : Fragment() {
             } else {
                 val readPulseLog = AapsOmnipodManager.getInstance().readPulseLog()
 
-                OKDialog.showConfirmation(null,
+                OKDialog.show(MainApp.instance().applicationContext, MainApp.gs(R.string.action),
                         "Pulse Log:\n" + readPulseLog.toString(), null)
             }
         }

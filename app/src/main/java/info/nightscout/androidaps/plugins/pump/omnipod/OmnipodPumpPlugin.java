@@ -387,6 +387,13 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             if (omnipodUITask.wasCommandSuccessful()) {
                 this.hasTimeDateOrTimeZoneChanged = false;
                 timeChangeRetries = 0;
+
+                Notification notification = new Notification(
+                        Notification.TIME_OR_TIMEZONE_CHANGE,
+                        MainApp.gs(R.string.time_or_timezone_change),
+                        Notification.INFO, 60);
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
+
             } else {
                 timeChangeRetries++;
 

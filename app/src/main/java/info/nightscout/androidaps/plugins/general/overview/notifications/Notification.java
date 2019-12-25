@@ -79,6 +79,7 @@ public class Notification {
     public static final int OVER_24H_TIME_CHANGE_REQUESTED = 54;
     public static final int INVALID_VERSION = 55;
     public static final int OMNIPOD_PUMP_ALARM = 56;
+    public static final int TIME_OR_TIMEZONE_CHANGE = 57;
 
 
     public int id;
