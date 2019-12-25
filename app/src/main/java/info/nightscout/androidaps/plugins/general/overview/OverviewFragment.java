@@ -1151,7 +1151,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         String basalText = "";
         if (shorttextmode) {
             if (activeTemp != null) {
-                basalText = "T: " + activeTemp.toStringVeryShort();
+                basalText = activeTemp.percentRate + "% " + activeTemp.toDuration() + " " + DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h";
             } else {
                 basalText = DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h";
             }
@@ -1160,8 +1160,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 if (activeTemp != null) {
                     fullText += MainApp.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
                 }
-                OKDialog.show(getActivity(), MainApp.gs(R.string.basal), fullText, null);
+                OKDialog.show(getActivity(), MainApp.gs(R.string.basal), fullText);
             });
+
         } else {
             if (activeTemp != null) {
                 basalText = activeTemp.toStringFull() + " ";
@@ -1171,6 +1172,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             else if (pump.getPumpDescription().isTempBasalCapable) {
                 basalText += "(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + "U/h)";
             }
+        }
+        if (activeTemp != null) {
+            baseBasalView.setTextColor(MainApp.gc(R.color.basal));
+        } else {
+            baseBasalView.setTextColor(android.R.attr.textColor);
+
         }
 
         baseBasalView.setText(basalText);
