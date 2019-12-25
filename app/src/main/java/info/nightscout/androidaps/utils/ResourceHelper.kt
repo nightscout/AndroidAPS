@@ -9,7 +9,7 @@ import javax.inject.Inject
 /**
  * Created by adrian on 2019-12-23.
  */
-class ResourceHelper @Inject constructor() {
+open class ResourceHelper @Inject constructor() {
 
     fun gs(@StringRes id: Int): String = MainApp.sResources.getString(id)
 
