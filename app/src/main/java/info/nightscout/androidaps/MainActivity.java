@@ -313,9 +313,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 return true;
             case R.id.nav_exit:
                 log.debug("Exiting");
-                MainApp.instance().stopKeepAliveService();
                 RxBus.INSTANCE.send(new EventAppExit());
-                MainApp.closeDbHelper();
                 finish();
                 System.runFinalization();
                 System.exit(0);

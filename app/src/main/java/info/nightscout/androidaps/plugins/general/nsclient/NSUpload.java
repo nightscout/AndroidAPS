@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.nsclient;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
@@ -25,6 +24,7 @@ import java.util.Locale;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
@@ -39,6 +39,7 @@ import info.nightscout.androidaps.plugins.aps.loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.utils.BatteryLevel;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
@@ -52,7 +53,6 @@ public class NSUpload {
 
     public static void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
         try {
-            Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPBASAL);
             data.put("duration", temporaryBasal.durationInMinutes);
@@ -87,7 +87,6 @@ public class NSUpload {
                     uploadTempBasalStartAbsolute(t, null);
                 }
             } else {
-                Context context = MainApp.instance().getApplicationContext();
                 JSONObject data = new JSONObject();
                 data.put("eventType", CareportalEvent.TEMPBASAL);
                 data.put("duration", temporaryBasal.durationInMinutes);
@@ -107,7 +106,6 @@ public class NSUpload {
 
     public static void uploadTempBasalEnd(long time, boolean isFakedTempBasal, long pumpId) {
         try {
-            Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPBASAL);
             data.put("created_at", DateUtil.toISOString(time));
@@ -124,7 +122,6 @@ public class NSUpload {
 
     public static void uploadExtendedBolus(ExtendedBolus extendedBolus) {
         try {
-            Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.COMBOBOLUS);
             data.put("duration", extendedBolus.durationInMinutes);
@@ -144,7 +141,6 @@ public class NSUpload {
 
     public static void uploadExtendedBolusEnd(long time, long pumpId) {
         try {
-            Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.COMBOBOLUS);
             data.put("duration", 0);
@@ -205,7 +201,12 @@ public class NSUpload {
                 }
             } else {
                 if (L.isEnabled(L.NSCLIENT))
-                    log.debug("OpenAPS data too old to upload");
+                    log.debug("OpenAPS data too old to upload, sending iob only");
+                IobTotal[] iob = IobCobCalculatorPlugin.getPlugin().calculateIobArrayInDia(profile);
+                if (iob.length > 0) {
+                    deviceStatus.iob = iob[0].json();
+                    deviceStatus.iob.put("time", DateUtil.toISOString(DateUtil.now()));
+                }
             }
             deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
             JSONObject pumpstatus = ConfigBuilderPlugin.getPlugin().getActivePump().getJSONStatus(profile, profileName);
@@ -335,7 +336,6 @@ public class NSUpload {
 
     public static void uploadOpenAPSOffline(double durationInMinutes) {
         try {
-            Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", "OpenAPS Offline");
             data.put("duration", durationInMinutes);

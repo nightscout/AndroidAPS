@@ -194,15 +194,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return newVersion;
     }
 
-    /**
-     * Close the database connections and clear any cached DAOs.
-     */
-    @Override
-    public void close() {
-        super.close();
-    }
-
-
     public long size(String database) {
         return DatabaseUtils.queryNumEntries(getReadableDatabase(), database);
     }
