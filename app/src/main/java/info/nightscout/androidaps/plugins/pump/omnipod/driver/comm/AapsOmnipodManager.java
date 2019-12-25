@@ -316,7 +316,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             delegate.cancelBolus(isBolusBeepsEnabled());
             addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
-        } catch(PodFaultException ex) {
+        } catch (PodFaultException ex) {
             showNotificationWithDialog(createPodFaultErrorMessage(ex.getFaultEvent().getFaultEventType()), Notification.URGENT, null);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
@@ -335,6 +335,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             delegate.setTemporaryBasal(tempBasalPair, beepsEnabled, beepsEnabled);
             addSuccessToHistory(time, PodHistoryEntryType.SetTemporaryBasal, tempBasalPair);
         } catch (Exception ex) {
+            if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
+                addToHistory(time, PodHistoryEntryType.SetTemporaryBasal, "Uncertain failure", false);
+                return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_temp_basal_failed_uncertain));
+            }
             String comment = handleAndTranslateException(ex);
             addFailureToHistory(time, PodHistoryEntryType.SetTemporaryBasal, comment);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);

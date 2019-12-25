@@ -9,9 +9,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessa
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.BasalScheduleExtraCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.SetInsulinScheduleCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalDeliveryStatusException;
 
 public class SetBasalScheduleAction implements OmnipodAction<StatusResponse> {
     private final PodSessionState podState;

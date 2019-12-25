@@ -28,7 +28,6 @@ public class DeactivatePodAction implements OmnipodAction<StatusResponse> {
                     EnumSet.allOf(DeliveryType.class), acknowledgementBeep));
         }
 
-        DeactivatePodCommand deactivatePodCommand = new DeactivatePodCommand(podState.getCurrentNonce());
-        return communicationService.sendCommand(StatusResponse.class, podState, deactivatePodCommand);
+        return communicationService.sendCommand(StatusResponse.class, podState, new DeactivatePodCommand(podState.getCurrentNonce()));
     }
 }

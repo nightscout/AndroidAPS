@@ -26,9 +26,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.SetBasalSched
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.SetTempBasalAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.InsertCannulaService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.PrimeService;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.SetTempBasalService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.CancelDeliveryCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentHighFlashLogDump;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
@@ -202,15 +202,30 @@ public class OmnipodManager {
         }
     }
 
+    // CAUTION: cancels temp basal and then sets new temp basal. An OmnipodException[certainFailure=false] indicates that the pod might have cancelled the previous temp basal, but did not set a new temp basal
     public synchronized void setTemporaryBasal(TempBasalPair tempBasalPair, boolean acknowledgementBeep, boolean completionBeep) {
         assertReadyForDelivery();
 
         logStartingCommandExecution("setTemporaryBasal [tempBasalPair=" + tempBasalPair + ", acknowledgementBeep=" + acknowledgementBeep + ", completionBeep=" + completionBeep + "]");
 
         try {
-            executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(new SetTempBasalService(),
+            // Never emit a beep for cancelling temp basal, so if the user has beeps enabled,
+            // they can verify that setting the temp basal succeeded (and not cancelling it)
+            cancelDelivery(EnumSet.of(DeliveryType.TEMP_BASAL), false);
+        } catch (Exception ex) {
+            logCommandExecutionFinished("setTemporaryBasal");
+            throw ex;
+        }
+
+        try {
+            executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(
                     podState, tempBasalPair.getInsulinRate(), Duration.standardMinutes(tempBasalPair.getDurationMinutes()),
                     acknowledgementBeep, completionBeep)));
+        } catch (OmnipodException ex) {
+            // Treat all exceptions as uncertain failures, because all delivery has been suspended here.
+            // Setting this to an uncertain failure will enable for the user to get an appropriate warning
+            ex.setCertainFailure(false);
+            throw ex;
         } finally {
             logCommandExecutionFinished("setTemporaryBasal");
         }
@@ -401,9 +416,21 @@ public class OmnipodManager {
 
         logStartingCommandExecution("deactivatePod");
 
+        // Try to get pulse log for diagnostics
+        // FIXME replace by storing to file
+        if (isLoggingEnabled()) {
+            try {
+                PodInfoResponse podInfoResponse = communicationService.executeAction(new GetPodInfoAction(podState, PodInfoType.RECENT_HIGH_FLASH_LOG_DUMP));
+                PodInfoRecentHighFlashLogDump pulseLogInfo = podInfoResponse.getPodInfo();
+                LOG.info("Retrieved pulse log from the pod: {}", pulseLogInfo.toString());
+            } catch (Exception ex) {
+                LOG.warn("Failed to retrieve pulse log from the pod", ex);
+            }
+        }
+
         try {
             // Always send acknowledgement beeps here. Matches the PDM's behavior
-            executeAndVerify(() -> communicationService.executeAction(new DeactivatePodAction(podState, true)));
+            communicationService.executeAction(new DeactivatePodAction(podState, true));
         } catch (PodFaultException ex) {
             if (isLoggingEnabled()) {
                 LOG.info("Ignoring PodFaultException in deactivatePod", ex);
