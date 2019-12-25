@@ -156,7 +156,7 @@
                                 android:layout_marginTop="-2dp"
                                 android:paddingStart="2dp"
                                 android:layout_weight="0.5"
-                                android:textSize="16sp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/overview_delta"
@@ -166,7 +166,15 @@
                                 android:layout_marginTop="-2dp"
                                 android:paddingStart="2dp"
                                 android:layout_weight="0.5"
-                                android:textSize="16sp" />
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/overview_avgdelta"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="0.5"
+                                android:textSize="12sp"/>
                         </LinearLayout>
                     </LinearLayout>
 

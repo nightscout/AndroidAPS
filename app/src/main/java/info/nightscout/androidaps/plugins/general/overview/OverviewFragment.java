@@ -237,8 +237,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         timeAgoShortView = (TextView) view.findViewById(R.id.overview_timeagoshort);
         deltaView = (TextView) view.findViewById(R.id.overview_delta);
         deltaShortView = (TextView) view.findViewById(R.id.overview_deltashort);
-        // TODO: avgdeltaView in Expertmode
-        //avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
+        avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
         baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
         extendedBolusView = (TextView) view.findViewById(R.id.overview_extendedbolus);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);

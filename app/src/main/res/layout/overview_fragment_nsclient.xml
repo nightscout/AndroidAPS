@@ -5,9 +5,17 @@
     android:layout_height="match_parent"
     tools:context=".plugins.general.overview.OverviewFragment">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp">
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/overview_buttons"
+        android:fillViewport="false">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -91,76 +99,11 @@
             </LinearLayout>
 
             <LinearLayout
+                android:baselineAligned="false"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/overview_bg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="00.0"
-                    android:textSize="40dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/overview_arrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="-5dp"
-                    android:paddingLeft="-2dp"
-                    android:paddingRight="-2dp"
-                    android:text="→"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/overview_deltashort"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="-0.5"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/overview_sensitivity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.5"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="100%"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/overview_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="8:00 PM"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/overview_timeagoshort"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
-                    android:text="(-5)"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_weight="0"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -171,173 +114,246 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/overview_bg"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="6dp"
+                            android:text="00.0"
+                            android:textSize="42sp"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/basal_short"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:text=":"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:id="@+id/overview_basebasal"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0.50U/h @17:35 1/30min - 0.40U/h"
-                                android:textColor="@android:color/white"
-                                android:textSize="14sp" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="fill_parent"
-                            android:layout_height="2dip"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginLeft="2dp"
-                            android:layout_marginRight="2dp"
-                            android:layout_marginTop="2dp"
-                            android:background="@color/listdelimiter" />
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/overview_arrow"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/virtualpump_extendedbolus_label_short"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:text=":"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:id="@+id/overview_extendedbolus"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0.50U/h @17:35 1/30min"
-                                android:textColor="@android:color/white"
-                                android:textSize="14sp" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="fill_parent"
-                            android:layout_height="2dip"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginLeft="2dp"
-                            android:layout_marginRight="2dp"
-                            android:layout_marginTop="2dp"
-                            android:background="@color/listdelimiter" />
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/iob"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:text=":"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:id="@+id/overview_iob"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=""
-                                android:textColor="@android:color/white"
-                                android:textSize="14sp" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="fill_parent"
-                            android:layout_height="2dip"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginLeft="2dp"
-                            android:layout_marginRight="2dp"
-                            android:layout_marginTop="2dp"
-                            android:background="@color/listdelimiter" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/cob"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:layout_width="5dp"
-                                android:layout_height="wrap_content"
-                                android:text=":"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:id="@+id/overview_cob"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text=""
-                                android:textColor="@android:color/white"
-                                android:textSize="14sp" />
-
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="fill_parent"
-                            android:layout_height="2dip"
-                            android:layout_marginBottom="2dp"
-                            android:layout_marginLeft="2dp"
-                            android:layout_marginRight="2dp"
-                            android:layout_marginTop="2dp"
-                            android:background="@color/listdelimiter" />
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginTop="-5dp"
+                            android:layout_marginEnd="4dp"
+                            android:paddingStart="-2dp"
+                            android:paddingEnd="0dp"
+                            android:text="→"
+                            android:textSize="28sp"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/overview_timeago"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="-2dp"
+                            android:paddingStart="2dp"
+                            android:layout_weight="0.5"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/overview_delta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="-2dp"
+                            android:paddingStart="2dp"
+                            android:layout_weight="0.5"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/overview_avgdelta"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="0.5"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_marginTop="6dp"
                     android:orientation="vertical">
 
-                    <include
-                        layout="@layout/careportal_stats_fragment_short"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:orientation="horizontal">
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="1dp"
+                            android:text="@string/iob"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/overview_iob"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:text=""
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="1dp"
+                            android:text="@string/cob"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/overview_cob"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text=""
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="1dp"
+                            android:text="@string/basal_short"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/overview_basebasal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="0.50U/h @17:35 1/30min - 0.40U/h"
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="1dp"
+                            android:text="AS"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/overview_sensitivity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:text=""
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="1dp"
+                            android:text="@string/virtualpump_extendedbolus_label_short"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:text=":"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:id="@+id/overview_extendedbolus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:text=""
+                            android:textSize="16sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
                 </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <include
+                    layout="@layout/careportal_stats_fragment_short"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -354,6 +370,7 @@
                             android:id="@+id/overview_pump"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:paddingStart="4sp"
                             android:text=""
                             android:textColor="@android:color/white"
                             android:textSize="14sp" />
@@ -374,39 +391,43 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_weight="1">
 
                         <TextView
                             android:id="@+id/overview_openaps"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:paddingLeft="2dp"
+                            android:paddingStart="4sp"
                             android:text=""
                             android:textColor="@android:color/white"
                             android:textSize="14sp" />
 
-                    </LinearLayout>
+                        </LinearLayout>
 
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="2dip"
-                        android:layout_marginBottom="2dp"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginRight="2dp"
-                        android:layout_marginTop="2dp"
-                        android:background="@color/listdelimiter" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="right"
+                            android:layout_marginEnd="4dp"
+                            android:layout_weight="1">
 
                         <TextView
                             android:id="@+id/overview_uploader"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:gravity="right"
+                            android:paddingEnd="4sp"
                             android:text=""
                             android:textColor="@android:color/white"
                             android:textSize="14sp" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -462,6 +483,17 @@
                     android:layout_height="100dp" />
 
             </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/overview_buttons"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -541,11 +573,8 @@
                     android:textColor="@color/colorQuickWizardButton"
                     android:textSize="10sp"
                     android:visibility="gone" />
-
-
             </LinearLayout>
 
-        </LinearLayout>
-
-    </ScrollView>
+            </LinearLayout>
+    </RelativeLayout>
 </FrameLayout>
