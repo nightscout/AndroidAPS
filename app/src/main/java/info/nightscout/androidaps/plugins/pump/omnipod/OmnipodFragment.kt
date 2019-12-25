@@ -151,13 +151,13 @@ class OmnipodFragment : Fragment() {
                 .toObservable(EventOmnipodAcknowledgeAlertsChanged::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ updateAcknowledgeAlerts(OmnipodUtil.getPumpStatus()) }, { FabricPrivacy.logException(it) })
-        disposable.add(RxBus
+        disposable += RxBus
                 .toObservable(EventPreferenceChange::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe({ event ->
                     setVisibilityOfPodDebugButton()
                 }, { FabricPrivacy.logException(it) })
-        )
+        
     }
 
 
