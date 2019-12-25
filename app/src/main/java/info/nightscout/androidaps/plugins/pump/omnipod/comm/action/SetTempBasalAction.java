@@ -2,34 +2,33 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.action;
 
 import org.joda.time.Duration;
 
+import java.util.Arrays;
+import java.util.List;
+
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.SetTempBasalService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.MessageBlock;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.SetInsulinScheduleCommand;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.TempBasalExtraCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalDeliveryStatusException;
 
 public class SetTempBasalAction implements OmnipodAction<StatusResponse> {
-    private final SetTempBasalService service;
     private final PodSessionState podState;
     private final double rate;
     private final Duration duration;
     private final boolean acknowledgementBeep;
     private final boolean completionBeep;
 
-    public SetTempBasalAction(SetTempBasalService setTempBasalService, PodSessionState podState,
-                              double rate, Duration duration, boolean acknowledgementBeep, boolean completionBeep) {
-        if (setTempBasalService == null) {
-            throw new ActionInitializationException("Set temp basal service cannot be null");
-        }
+    public SetTempBasalAction(PodSessionState podState, double rate, Duration duration,
+                              boolean acknowledgementBeep, boolean completionBeep) {
         if (podState == null) {
             throw new ActionInitializationException("Pod state cannot be null");
         }
         if (duration == null) {
             throw new ActionInitializationException("Duration cannot be null");
         }
-        this.service = setTempBasalService;
         this.podState = podState;
         this.rate = rate;
         this.duration = duration;
@@ -39,13 +38,11 @@ public class SetTempBasalAction implements OmnipodAction<StatusResponse> {
 
     @Override
     public StatusResponse execute(OmnipodCommunicationService communicationService) {
-        StatusResponse statusResponse = service.cancelTempBasal(communicationService, podState);
+        List<MessageBlock> messageBlocks = Arrays.asList( //
+                new SetInsulinScheduleCommand(podState.getCurrentNonce(), rate, duration),
+                new TempBasalExtraCommand(rate, duration, acknowledgementBeep, completionBeep, Duration.ZERO));
 
-        if (statusResponse.getDeliveryStatus() != DeliveryStatus.NORMAL) {
-            throw new IllegalDeliveryStatusException(DeliveryStatus.NORMAL, statusResponse.getDeliveryStatus());
-        }
-
-        return service.executeTempBasalCommand(communicationService, podState, rate, duration,
-                acknowledgementBeep, completionBeep);
+        OmnipodMessage message = new OmnipodMessage(podState.getAddress(), messageBlocks, podState.getMessageNumber());
+        return communicationService.exchangeMessages(StatusResponse.class, podState, message);
     }
 }

@@ -5,10 +5,13 @@ import com.google.gson.Gson;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoFaultEvent;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSet;
@@ -26,6 +29,8 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 
 public class PodSessionState extends PodState {
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+
     private final Map<AlertSlot, AlertType> configuredAlerts;
     private transient PodStateChangedHandler stateChangedHandler;
     private DateTime activatedAt;
@@ -234,7 +239,11 @@ public class PodSessionState extends PodState {
             expiresAt = expiresAtCalculated;
         }
 
-        suspended = (statusResponse.getDeliveryStatus() == DeliveryStatus.SUSPENDED);
+        boolean newSuspendedState = statusResponse.getDeliveryStatus() == DeliveryStatus.SUSPENDED;
+        if (suspended != newSuspendedState) {
+            LOG.info("Updating pod suspended state in updateFromStatusResponse. newSuspendedState={}, statusResponse={}", newSuspendedState, statusResponse.toString());
+            suspended = newSuspendedState;
+        }
         activeAlerts = statusResponse.getAlerts();
         lastDeliveryStatus = statusResponse.getDeliveryStatus();
         reservoirLevel = statusResponse.getReservoirLevel();

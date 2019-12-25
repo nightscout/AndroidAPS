@@ -34,11 +34,6 @@ public class CancelDeliveryAction implements OmnipodAction<StatusResponse> {
         this.acknowledgementBeep = acknowledgementBeep;
     }
 
-    public CancelDeliveryAction(PodSessionState podState, DeliveryType deliveryType,
-                                boolean acknowledgementBeep) {
-        this(podState, EnumSet.of(deliveryType), acknowledgementBeep);
-    }
-
     @Override
     public StatusResponse execute(OmnipodCommunicationService communicationService) {
         List<MessageBlock> messageBlocks = new ArrayList<>();
