@@ -11,6 +11,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashActivity
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.pump.medtronic.dialog.MedtronicHistoryActivity
+import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.FullInitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.ShortInitPodWizardModel
@@ -129,8 +131,10 @@ class PodManagementActivity : NoSplashActivity() {
     }
 
     fun showPodHistory() {
-        OKDialog.showConfirmation(this,
-                MainApp.gs(R.string.omnipod_cmd_pod_history_na), null)
+//        OKDialog.showConfirmation(this,
+//                MainApp.gs(R.string.omnipod_cmd_pod_history_na), null)
+
+        startActivity(Intent(applicationContext, PodHistoryActivity::class.java))
     }
 
 

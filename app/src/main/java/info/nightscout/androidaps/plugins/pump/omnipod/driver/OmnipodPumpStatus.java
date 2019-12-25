@@ -58,6 +58,7 @@ public class OmnipodPumpStatus extends PumpStatus {
     public boolean beepBasalEnabled = true;
     public boolean beepSMBEnabled = true;
     public boolean beepTBREnabled = true;
+    public boolean podExpertDebugModeEnabled = false;
 
     public OmnipodPumpStatus(PumpDescription pumpDescription) {
         super(pumpDescription);
@@ -105,6 +106,7 @@ public class OmnipodPumpStatus extends PumpStatus {
             this.beepBolusEnabled = SP.getBoolean(OmnipodConst.Prefs.BeepBolusEnabled, true);
             this.beepSMBEnabled = SP.getBoolean(OmnipodConst.Prefs.BeepSMBEnabled, true);
             this.beepTBREnabled = SP.getBoolean(OmnipodConst.Prefs.BeepTBREnabled, true);
+            this.podExpertDebugModeEnabled = SP.getBoolean(OmnipodConst.Prefs.PodExpertDebugModeEnabled, false);
 
             LOG.debug("Beeps [basal={}, bolus={}, SMB={}, TBR={}]", this.beepBasalEnabled, this.beepBolusEnabled, this.beepSMBEnabled, this.beepTBREnabled);
 

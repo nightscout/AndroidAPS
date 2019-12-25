@@ -369,7 +369,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return getDao(InsightHistoryOffset.class);
     }
 
-    private Dao<PodHistory, String> getDaoPodHistory() throws SQLException {
+    private Dao<PodHistory, Long> getDaoPodHistory() throws SQLException {
         return getDao(PodHistory.class);
     }
 
@@ -1912,5 +1912,23 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
+    public List<PodHistory> getPodHistoryFromTime(long from, boolean ascending) {
+        try {
+            Dao<PodHistory, Long> daoPodHistory = getDaoPodHistory();
+            List<PodHistory> podHistories;
+            QueryBuilder<PodHistory, Long> queryBuilder = daoPodHistory.queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            //queryBuilder.limit(100L);
+            Where where = queryBuilder.where();
+            where.ge("date", from);
+            PreparedQuery<PodHistory> preparedQuery = queryBuilder.prepare();
+            podHistories = daoPodHistory.query(preparedQuery);
+            return podHistories;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<>();
+    }
 
 }

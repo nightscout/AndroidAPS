@@ -1650,10 +1650,12 @@
     <string name="key_omnipod_beep_basal_enabled" translatable="false">pref_omnipod_beep_basal_enabled</string>
     <string name="key_omnipod_beep_smb_enabled" translatable="false">pref_omnipod_beep_smb_enabled</string>
     <string name="key_omnipod_beep_tbr_enabled" translatable="false">pref_omnipod_beep_tbr_enabled</string>
+    <string name="key_omnipod_pod_expert_debug_enabled" translatable="false">key_omnipod_pod_expert_debug_enabled</string>
     <string name="omnipod_config_beep_bolus_enabled">Bolus Beep Enabled</string>
     <string name="omnipod_config_beep_basal_enabled">Basal Beep Enabled</string>
     <string name="omnipod_config_beep_smb_enabled">SMB Beep Enabled</string>
     <string name="omnipod_config_beep_tbr_enabled">TBR Beep Enabled</string>
+    <string name="omnipod_config_pod_expert_debug_enabled">Pod Debug Expert Mode</string>
 
     <!-- Omnipod - Fragment -->
     <string name="omnipod_pod_mgmt">Pod Mgmt</string>
@@ -1697,6 +1699,20 @@
     <string name="omnipod_cmd_deactivate_pod">Deactivate Pod</string>
     <string name="omnipod_cmd_reset_pod">Reset Pod</string>
     <string name="omnipod_cmd_pod_history">Pod History</string>
+
+    <string name="omnipod_cmd_set_bolus">Set Bolus</string>
+    <string name="omnipod_cmd_cancel_bolus">Cancel Bolus</string>
+    <string name="omnipod_cmd_set_tbr">Set Temporary Basal</string>
+    <string name="omnipod_cmd_cancel_tbr">Cancel Temporary Basal</string>
+    <string name="omnipod_cmd_set_basal_schedule">Set Basal Schedule</string>
+    <string name="omnipod_cmd_get_pod_status">Get Pod Status</string>
+    <string name="omnipod_cmd_get_pod_info">Get Pod Info</string>
+    <string name="omnipod_cmd_set_time">Set Time</string>
+    <string name="omnipod_cmd_configure_alerts">Configure Alerts</string>
+    <string name="omnipod_cmd_acknowledge_alerts">Acknowledge Alerts</string>
+    <string name="omnipod_cmd_suspend_delivery">Suspend Delivery</string>
+    <string name="omnipod_cmd_resume_delivery">Resume Delivery</string>
+    <string name="omnipod_cmd_umknown_entry">Unknown Entry</string>
 
     <string name="omnipod_cmd_reset_pod_desc">If you press "OK" Pod will be forcefully removed. Do this only if you can not communicate with Pod anymore.</string>
     <string name="omnipod_cmd_pod_history_na">Pod History not available at the moment.</string>

@@ -17,14 +17,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashActivity;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryGroup;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistory;
 
 public class PodHistoryActivity extends NoSplashActivity {
 
@@ -37,7 +42,8 @@ public class PodHistoryActivity extends NoSplashActivity {
 
     static TypeList showingType = null;
     static PumpHistoryEntryGroup selectedGroup = PumpHistoryEntryGroup.All;
-    List<PumpHistoryEntry> filteredHistoryList = new ArrayList<>();
+    List<PodHistory> fullHistoryList = new ArrayList<>();
+    List<PodHistory> filteredHistoryList = new ArrayList<>();
 
     RecyclerViewAdapter recyclerViewAdapter;
     boolean manualChange = false;
@@ -50,24 +56,37 @@ public class PodHistoryActivity extends NoSplashActivity {
     }
 
 
+    private void prepareData() {
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.add(Calendar.HOUR_OF_DAY, -24);
+
+        MainApp.getDbHelper().getPodHistoryFromTime(gc.getTimeInMillis(), false);
+
+        fullHistoryList.addAll(MainApp.getDbHelper().getPodHistoryFromTime(gc.getTimeInMillis(), true));
+    }
+
+
     private void filterHistory(PumpHistoryEntryGroup group) {
 
         this.filteredHistoryList.clear();
 
-        List<PumpHistoryEntry> list = new ArrayList<>();
-        list.addAll(MedtronicPumpPlugin.getPlugin().getMedtronicHistoryData().getAllHistory());
+
 
         //LOG.debug("Items on full list: {}", list.size());
 
-        if (group == PumpHistoryEntryGroup.All) {
-            this.filteredHistoryList.addAll(list);
-        } else {
-            for (PumpHistoryEntry pumpHistoryEntry : list) {
-                if (pumpHistoryEntry.getEntryType().getGroup() == group) {
-                    this.filteredHistoryList.add(pumpHistoryEntry);
-                }
-            }
-        }
+        this.filteredHistoryList.addAll(fullHistoryList);
+
+        // TODO
+
+//        if (group == PumpHistoryEntryGroup.All) {
+//            this.filteredHistoryList.addAll(list);
+//        } else {
+//            for (PumpHistoryEntry pumpHistoryEntry : list) {
+//                if (pumpHistoryEntry.getEntryType().getGroup() == group) {
+//                    this.filteredHistoryList.add(pumpHistoryEntry);
+//                }
+//            }
+//        }
 
         if (this.recyclerViewAdapter != null) {
             this.recyclerViewAdapter.setHistoryList(this.filteredHistoryList);
@@ -119,6 +138,8 @@ public class PodHistoryActivity extends NoSplashActivity {
         recyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
+
+        prepareData();
 
         recyclerViewAdapter = new RecyclerViewAdapter(filteredHistoryList);
         recyclerView.setAdapter(recyclerViewAdapter);
@@ -185,15 +206,15 @@ public class PodHistoryActivity extends NoSplashActivity {
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder> {
 
-        List<PumpHistoryEntry> historyList;
+        List<PodHistory> historyList;
 
 
-        RecyclerViewAdapter(List<PumpHistoryEntry> historyList) {
+        RecyclerViewAdapter(List<PodHistory> historyList) {
             this.historyList = historyList;
         }
 
 
-        public void setHistoryList(List<PumpHistoryEntry> historyList) {
+        public void setHistoryList(List<PodHistory> historyList) {
             // this.historyList.clear();
             // this.historyList.addAll(historyList);
 
@@ -213,12 +234,12 @@ public class PodHistoryActivity extends NoSplashActivity {
 
         @Override
         public void onBindViewHolder(HistoryViewHolder holder, int position) {
-            PumpHistoryEntry record = historyList.get(position);
+            PodHistory record = historyList.get(position);
 
             if (record != null) {
                 holder.timeView.setText(record.getDateTimeString());
-                holder.typeView.setText(record.getEntryType().getDescription());
-                holder.valueView.setText(record.getDisplayableValue());
+                holder.typeView.setText(record.getPodDbEntryType().getResourceId());
+                holder.valueView.setText(""); // TODO
             }
         }
 
@@ -234,18 +255,18 @@ public class PodHistoryActivity extends NoSplashActivity {
             super.onAttachedToRecyclerView(recyclerView);
         }
 
+
         static class HistoryViewHolder extends RecyclerView.ViewHolder {
 
             TextView timeView;
             TextView typeView;
             TextView valueView;
 
-
             HistoryViewHolder(View itemView) {
                 super(itemView);
-                timeView = (TextView) itemView.findViewById(R.id.omnipod_history_time);
-                typeView = (TextView) itemView.findViewById(R.id.omnipod_history_source);
-                valueView = (TextView) itemView.findViewById(R.id.omnipod_history_description);
+                timeView = itemView.findViewById(R.id.omnipod_history_time);
+                typeView = itemView.findViewById(R.id.omnipod_history_source);
+                valueView = itemView.findViewById(R.id.omnipod_history_description);
             }
         }
     }

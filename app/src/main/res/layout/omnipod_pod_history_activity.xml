@@ -36,7 +36,7 @@
             android:layout_weight="1"
             android:background="@drawable/pillborder"
             android:gravity="center_horizontal"
-            android:text="@string/medtronic_pump_history" />
+            android:text="@string/omnipod_cmd_pod_history" />
 
 
     </LinearLayout>

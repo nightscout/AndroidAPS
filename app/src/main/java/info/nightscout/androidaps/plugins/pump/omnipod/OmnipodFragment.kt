@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
@@ -25,17 +26,17 @@ import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDevice
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodAcknowledgeAlertsChanged
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SetWarnColor
-import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.omnipod_fragment.*
 import org.slf4j.LoggerFactory
 
@@ -65,8 +66,6 @@ class OmnipodFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //omnipod_pod_status.setBackgroundColor(MainApp.gc(R.color.colorInitializingBorder))
 
         omnipod_rl_status.text = MainApp.gs(RileyLinkServiceState.NotStarted.getResourceId(RileyLinkTargetDevice.Omnipod))
 
@@ -113,6 +112,19 @@ class OmnipodFragment : Fragment() {
             }
         }
 
+        omnipod_pod_debug.setOnClickListener {
+            if (!OmnipodUtil.getPumpStatus().verifyConfiguration()) {
+                OmnipodUtil.displayNotConfiguredDialog(context)
+            } else {
+                val readPulseLog = AapsOmnipodManager.getInstance().readPulseLog()
+
+                OKDialog.showConfirmation(null,
+                        "Pulse Log:\n" + readPulseLog.toString(), null)
+            }
+        }
+
+        setVisibilityOfPodDebugButton()
+
         updateGUI()
     }
 
@@ -139,9 +151,24 @@ class OmnipodFragment : Fragment() {
                 .toObservable(EventOmnipodAcknowledgeAlertsChanged::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ updateAcknowledgeAlerts(OmnipodUtil.getPumpStatus()) }, { FabricPrivacy.logException(it) })
+        disposable.add(RxBus
+                .toObservable(EventPreferenceChange::class.java)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ event ->
+                    setVisibilityOfPodDebugButton()
+                }, { FabricPrivacy.logException(it) })
+        )
     }
 
 
+    fun setVisibilityOfPodDebugButton() {
+        val isEnabled = SP.getBoolean(OmnipodConst.Prefs.PodExpertDebugModeEnabled, false)
+
+        if (isEnabled)
+            omnipod_pod_debug.visibility = View.VISIBLE
+        else
+            omnipod_pod_debug.visibility = View.GONE
+    }
 
 
     override fun onPause() {
@@ -196,11 +223,6 @@ class OmnipodFragment : Fragment() {
                 pumpStatus.rileyLinkError?.let {
                     MainApp.gs(it.getResourceId(RileyLinkTargetDevice.Omnipod))
                 } ?: "-"
-
-        if (pumpStatus.podNumber == null) {
-
-        }
-
 
         if (pumpStatus.podSessionState == null) {
             omnipod_pod_address.text = MainApp.gs(R.string.omnipod_pod_name_no_info)

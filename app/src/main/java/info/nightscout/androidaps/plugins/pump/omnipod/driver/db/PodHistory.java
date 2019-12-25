@@ -72,12 +72,16 @@ public class PodHistory implements DbObjectBase {
         this.date = date;
     }
 
+    public String getDateTimeString() {
+        return DateTimeUtil.toStringFromTimeInMillis(this.date);
+    }
+
     public PodHistoryEntryType getPodDbEntryType() {
-        return podHistoryEntryType;
+        return PodHistoryEntryType.getByCode((int)this.podEntryTypeCode);
     }
 
     public void setPodDbEntryType(PodHistoryEntryType podDbEntryType) {
-        this.podHistoryEntryType = podDbEntryType;
+        //this.podHistoryEntryType = podDbEntryType;
         this.podEntryTypeCode = podDbEntryType.getCode();
     }
 

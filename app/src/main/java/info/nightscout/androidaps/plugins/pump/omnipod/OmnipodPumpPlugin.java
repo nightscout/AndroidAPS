@@ -185,6 +185,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                     if ((event.isChanged(R.string.key_omnipod_beep_basal_enabled)) ||
                         (event.isChanged(R.string.key_omnipod_beep_bolus_enabled)) ||
                         (event.isChanged(R.string.key_omnipod_beep_tbr_enabled)) ||
+                        (event.isChanged(R.string.key_omnipod_pod_expert_debug_enabled)) ||
                         (event.isChanged(R.string.key_omnipod_beep_smb_enabled)))
                         refreshConfiguration();
                 }, FabricPrivacy::logException)
@@ -380,7 +381,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
             omnipodStatusRequestList.removeAll(removeList);
 
-            //getPodPumpStatus();
         } else if (this.hasTimeDateOrTimeZoneChanged) {
             OmnipodUITask omnipodUITask = omnipodUIComm.executeCommand(OmnipodCommandType.SetTime);
 
@@ -396,7 +396,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 }
             }
         }
-
     }
 
 

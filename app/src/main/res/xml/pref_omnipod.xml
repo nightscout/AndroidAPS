@@ -31,5 +31,10 @@
             android:key="@string/key_omnipod_beep_tbr_enabled"
             android:title="@string/omnipod_config_beep_tbr_enabled" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_pod_expert_debug_enabled"
+            android:title="@string/omnipod_config_pod_expert_debug_enabled" />
+
     </PreferenceCategory>
 </PreferenceScreen>
