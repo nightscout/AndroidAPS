@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.Prime
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.SetTempBasalService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.CancelDeliveryCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentHighFlashLogDump;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
@@ -400,6 +401,18 @@ public class OmnipodManager {
         }
 
         logStartingCommandExecution("deactivatePod");
+
+        // Try to get pulse log for diagnostics
+        // FIXME replace by storing to file
+        if(isLoggingEnabled()) {
+            try {
+                PodInfoResponse podInfoResponse = communicationService.executeAction(new GetPodInfoAction(podState, PodInfoType.RECENT_HIGH_FLASH_LOG_DUMP));
+                PodInfoRecentHighFlashLogDump pulseLogInfo = podInfoResponse.getPodInfo();
+                LOG.info("Retrieved pulse log from the pod: {}", pulseLogInfo.toString());
+            } catch(Exception ex) {
+                LOG.warn("Failed to retrieve pulse log from the pod", ex);
+            }
+        }
 
         try {
             // Always send acknowledgement beeps here. Matches the PDM's behavior
