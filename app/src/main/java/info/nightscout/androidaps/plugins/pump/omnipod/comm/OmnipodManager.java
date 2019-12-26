@@ -538,8 +538,11 @@ public class OmnipodManager {
         }
         try {
             logStartingCommandExecution("verifyCommand");
-            communicationService.sendCommand(StatusResponse.class, podState,
+            StatusResponse statusResponse = communicationService.sendCommand(StatusResponse.class, podState,
                     new CancelDeliveryCommand(podState.getCurrentNonce(), BeepType.NO_BEEP, DeliveryType.NONE), false);
+            if (isLoggingEnabled()) {
+                LOG.info("Status response after verifyCommand (cancelDelivery[types=DeliveryType.NONE]): {}", statusResponse.toString());
+            }
         } catch (NonceOutOfSyncException ex) {
             if (isLoggingEnabled()) {
                 LOG.info("Command resolved to FAILURE (CERTAIN_FAILURE)", ex);
