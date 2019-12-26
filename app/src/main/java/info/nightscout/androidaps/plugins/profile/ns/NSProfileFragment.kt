@@ -42,7 +42,7 @@ class NSProfileFragment : Fragment() {
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, MainApp.gs(R.string.nsprofile),
                             MainApp.gs(R.string.activate_profile) + ": " + name + " ?", Runnable {
-                            ProfileFunctions.doProfileSwitch(store, name, 0, 100, 0, DateUtil.now())
+                            ProfileFunctions.getInstance().doProfileSwitch(store, name, 0, 100, 0, DateUtil.now())
                         })
                     }
                 }
@@ -121,7 +121,7 @@ class NSProfileFragment : Fragment() {
             nsprofile_spinner.adapter = adapter
             // set selected to actual profile
             for (p in profileList.indices) {
-                if (profileList[p] == ProfileFunctions.getInstance().profileName)
+                if (profileList[p] == ProfileFunctions.getInstance().getProfileName())
                     nsprofile_spinner.setSelection(p)
             }
             profileview_noprofile.visibility = View.GONE

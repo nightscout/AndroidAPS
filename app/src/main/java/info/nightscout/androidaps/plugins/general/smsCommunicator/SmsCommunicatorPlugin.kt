@@ -428,9 +428,15 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             receivedSms.processed = true
             return
         }
+        val profileName = ProfileFunctions.getInstance().getProfileName()
+        if (profileName == null) {
+            sendSMS(Sms(receivedSms.phoneNumber, R.string.notconfigured))
+            receivedSms.processed = true
+            return
+        }
         val list = store.getProfileList()
         if (splitted[1].toUpperCase(Locale.getDefault()) == "STATUS") {
-            sendSMS(Sms(receivedSms.phoneNumber, ProfileFunctions.getInstance().profileName))
+            sendSMS(Sms(receivedSms.phoneNumber, profileName))
         } else if (splitted[1].toUpperCase(Locale.getDefault()) == "LIST") {
             if (list.isEmpty()) sendSMS(Sms(receivedSms.phoneNumber, R.string.invalidprofile))
             else {
@@ -459,7 +465,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                     val finalPercentage = percentage
                     messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction(list[pindex - 1] as String, finalPercentage) {
                         override fun run() {
-                            ProfileFunctions.doProfileSwitch(store, list[pindex - 1] as String, 0, finalPercentage, 0, DateUtil.now())
+                            ProfileFunctions.getInstance().doProfileSwitch(store, list[pindex - 1] as String, 0, finalPercentage, 0, DateUtil.now())
                             sendSMS(Sms(receivedSms.phoneNumber, R.string.profileswitchcreated))
                         }
                     })
@@ -495,7 +501,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             var tempBasalPct = SafeParse.stringToInt(StringUtils.removeEnd(splitted[1], "%"))
             var duration = 30
             if (splitted.size > 2) duration = SafeParse.stringToInt(splitted[2])
-            val profile = ProfileFunctions.getInstance().profile
+            val profile = ProfileFunctions.getInstance().getProfile()
             if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, R.string.noprofile))
             else if (tempBasalPct == 0 && splitted[1] != "0%") sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
             else if (duration == 0) sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
@@ -527,7 +533,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             var tempBasal = SafeParse.stringToDouble(splitted[1])
             var duration = 30
             if (splitted.size > 2) duration = SafeParse.stringToInt(splitted[2])
-            val profile = ProfileFunctions.getInstance().profile
+            val profile = ProfileFunctions.getInstance().getProfile()
             if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, R.string.noprofile))
             else if (tempBasal == 0.0 && splitted[1] != "0") sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
             else if (duration == 0) sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
@@ -644,7 +650,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                                         replyText += "\n" + ConfigBuilderPlugin.getPlugin().activePump?.shortStatus(true)
                                         lastRemoteBolusTime = DateUtil.now()
                                         if (isMeal) {
-                                            ProfileFunctions.getInstance().profile?.let { currentProfile ->
+                                            ProfileFunctions.getInstance().getProfile()?.let { currentProfile ->
                                                 var eatingSoonTTDuration = SP.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
                                                 eatingSoonTTDuration =
                                                         if (eatingSoonTTDuration > 0) eatingSoonTTDuration

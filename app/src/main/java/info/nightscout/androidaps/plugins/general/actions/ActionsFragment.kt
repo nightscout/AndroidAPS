@@ -157,7 +157,7 @@ class ActionsFragment : Fragment() {
                 if (ConfigBuilderPlugin.getPlugin().activeProfileInterface?.profile != null) View.VISIBLE
                 else View.GONE
 
-        if (ProfileFunctions.getInstance().profile == null) {
+        if (ProfileFunctions.getInstance().getProfile() == null) {
             actions_temptarget?.visibility = View.GONE
             actions_extendedbolus?.visibility = View.GONE
             actions_extendedbolus_cancel?.visibility = View.GONE

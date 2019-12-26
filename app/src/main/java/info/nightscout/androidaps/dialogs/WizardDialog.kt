@@ -194,7 +194,7 @@ class WizardDialog : DialogFragment() {
     }
 
     private fun initDialog() {
-        val profile = ProfileFunctions.getInstance().profile
+        val profile = ProfileFunctions.getInstance().getProfile()
         val profileStore = ConfigBuilderPlugin.getPlugin().activeProfileInterface?.profile
 
         if (profile == null || profileStore == null) {
@@ -249,8 +249,8 @@ class WizardDialog : DialogFragment() {
         var profileName = treatments_wizard_profile.selectedItem.toString()
         val specificProfile: Profile?
         if (profileName == MainApp.gs(R.string.active)) {
-            specificProfile = ProfileFunctions.getInstance().profile
-            profileName = ProfileFunctions.getInstance().profileName
+            specificProfile = ProfileFunctions.getInstance().getProfile()
+            profileName = ProfileFunctions.getInstance().getProfileName() ?: return
         } else
             specificProfile = profileStore.getSpecificProfile(profileName)
 

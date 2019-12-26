@@ -262,7 +262,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
     }
 
     fun confirmAndExecute(context: Context) {
-        val profile = ProfileFunctions.getInstance().profile ?: return
+        val profile = ProfileFunctions.getInstance().getProfile() ?: return
         val pump = ConfigBuilderPlugin.getPlugin().activePump ?: return
 
         if (calculatedTotalInsulin > 0.0 || carbs > 0.0) {

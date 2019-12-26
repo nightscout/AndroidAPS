@@ -6,6 +6,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -19,6 +21,12 @@ class AppModule {
     @Singleton
     fun provideSharedPreferences(context: Context): SP {
         return SPImplementation(PreferenceManager.getDefaultSharedPreferences(context))
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfileFunction(sp : SP): ProfileFunction {
+        return ProfileFunctionImplementation(sp)
     }
 
     @Provides

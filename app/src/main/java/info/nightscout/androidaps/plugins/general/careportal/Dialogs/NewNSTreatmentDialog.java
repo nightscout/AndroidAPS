@@ -704,7 +704,7 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
 
     void createNSTreatment(JSONObject data) {
         if (JsonHelper.safeGetString(data, "eventType", "").equals(CareportalEvent.PROFILESWITCH)) {
-            ProfileSwitch profileSwitch = ProfileFunctions.prepareProfileSwitch(
+            ProfileSwitch profileSwitch = ProfileFunctions.getInstance().prepareProfileSwitch(
                     profileStore,
                     JsonHelper.safeGetString(data, "profile"),
                     JsonHelper.safeGetInt(data, "duration"),

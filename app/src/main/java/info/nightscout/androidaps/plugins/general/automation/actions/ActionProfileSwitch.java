@@ -98,7 +98,7 @@ public class ActionProfileSwitch extends Action {
             return;
         }
 
-        ProfileFunctions.doProfileSwitch(profileStore, profileName, 0, 100, 0, DateUtil.now());
+        ProfileFunctions.getInstance().doProfileSwitch(profileStore, profileName, 0, 100, 0, DateUtil.now());
         if (callback != null)
             callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
     }

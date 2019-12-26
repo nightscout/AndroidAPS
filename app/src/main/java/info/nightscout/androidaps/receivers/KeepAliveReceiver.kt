@@ -90,7 +90,7 @@ class KeepAliveReceiver : BroadcastReceiver() {
 
     private fun checkPump() {
         val pump = ConfigBuilderPlugin.getPlugin().activePump
-        val profile = ProfileFunctions.getInstance().profile
+        val profile = ProfileFunctions.getInstance().getProfile()
         if (pump != null && profile != null) {
             val lastConnection = pump.lastDataTime()
             val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis()

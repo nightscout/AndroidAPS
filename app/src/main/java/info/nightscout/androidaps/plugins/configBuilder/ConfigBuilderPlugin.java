@@ -2,10 +2,13 @@ package info.nightscout.androidaps.plugins.configBuilder;
 
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -22,6 +25,7 @@ import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin;
+import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
@@ -52,6 +56,9 @@ public class ConfigBuilderPlugin extends PluginBase {
     private ArrayList<PluginBase> pluginList;
 
     private CommandQueue commandQueue = new CommandQueue();
+
+    @Inject
+    LocalProfilePlugin localProfilePlugin;
 
     public ConfigBuilderPlugin() {
         super(new PluginDescription()
@@ -237,9 +244,10 @@ public class ConfigBuilderPlugin extends PluginBase {
         return activeBgSource;
     }
 
-    @Nullable
+    @NotNull
     public ProfileInterface getActiveProfileInterface() {
-        return activeProfile;
+        if (activeProfile != null) return activeProfile;
+        else return localProfilePlugin;
     }
 
     @Nullable

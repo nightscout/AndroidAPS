@@ -43,7 +43,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription ?: return
-        val profile = ProfileFunctions.getInstance().profile ?: return
+        val profile = ProfileFunctions.getInstance().getProfile() ?: return
 
         val maxTempPercent = pumpDescription.maxTempPercent.toDouble()
         val tempPercentStep = pumpDescription.tempPercentStep.toDouble()
@@ -73,7 +73,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
         var percent = 0
         var absolute = 0.0
         val durationInMinutes = SafeParse.stringToInt(actions_tempbasal_duration.text)
-        val profile = ProfileFunctions.getInstance().profile ?: return false
+        val profile = ProfileFunctions.getInstance().getProfile() ?: return false
         val actions: LinkedList<String> = LinkedList()
         if (isPercentPump) {
             val basalPercentInput = SafeParse.stringToInt(actions_tempbasal_basalpercentinput.text)

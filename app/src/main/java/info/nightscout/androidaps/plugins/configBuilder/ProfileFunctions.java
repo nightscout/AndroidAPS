@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.ProfileSwitch;
@@ -24,7 +26,6 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -33,7 +34,7 @@ import info.nightscout.androidaps.utils.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class ProfileFunctions {
+public class ProfileFunctions implements ProfileFunction {
     private static Logger log = LoggerFactory.getLogger(L.PROFILE);
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -75,18 +76,22 @@ public class ProfileFunctions {
         );
     }
 
+    @NotNull
     public String getProfileName() {
         return getProfileName(System.currentTimeMillis(), true, false);
     }
 
+    @NotNull
     public String getProfileName(boolean customized) {
         return getProfileName(System.currentTimeMillis(), customized, false);
     }
 
+    @NotNull
     public String getProfileNameWithDuration() {
         return getProfileName(System.currentTimeMillis(), true, true);
     }
 
+    @NotNull
     public String getProfileName(long time, boolean customized, boolean showRemainingTime) {
         String profileName = MainApp.gs(R.string.noprofileselected);
 
@@ -114,7 +119,7 @@ public class ProfileFunctions {
         return profileName;
     }
 
-    public boolean isProfileValid(String from) {
+    public boolean isProfileValid(@NotNull String from) {
         Profile profile = getProfile();
         return profile != null && profile.isValid(from);
     }
@@ -124,6 +129,12 @@ public class ProfileFunctions {
         return getProfile(System.currentTimeMillis());
     }
 
+    @NotNull
+    public String getUnits() {
+        return getSystemUnits();
+    }
+
+    @NotNull
     public static String getSystemUnits() {
         return SP.getString(R.string.key_units, Constants.MGDL);
     }
@@ -156,7 +167,8 @@ public class ProfileFunctions {
         return null;
     }
 
-    public static ProfileSwitch prepareProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration, final int percentage, final int timeshift, long date) {
+    @NotNull
+    public ProfileSwitch prepareProfileSwitch(@NotNull final ProfileStore profileStore, @NotNull final String profileName, final int duration, final int percentage, final int timeShift, long date) {
         ProfileSwitch profileSwitch = new ProfileSwitch();
         profileSwitch.date = date;
         profileSwitch.source = Source.USER;
@@ -164,20 +176,20 @@ public class ProfileFunctions {
         profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).getData().toString();
         profileSwitch.profilePlugin = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getClass().getName();
         profileSwitch.durationInMinutes = duration;
-        profileSwitch.isCPP = percentage != 100 || timeshift != 0;
-        profileSwitch.timeshift = timeshift;
+        profileSwitch.isCPP = percentage != 100 || timeShift != 0;
+        profileSwitch.timeshift = timeShift;
         profileSwitch.percentage = percentage;
         return profileSwitch;
     }
 
-    public static void doProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration, final int percentage, final int timeshift, final long date) {
-        ProfileSwitch profileSwitch = prepareProfileSwitch(profileStore, profileName, duration, percentage, timeshift, date);
+    public void doProfileSwitch(@NotNull final ProfileStore profileStore, @NotNull final String profileName, final int duration, final int percentage, final int timeShift, final long date) {
+        ProfileSwitch profileSwitch = prepareProfileSwitch(profileStore, profileName, duration, percentage, timeShift, date);
         TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
         if (percentage == 90 && duration == 10)
             SP.putBoolean(R.string.key_objectiveuseprofileswitch, true);
     }
 
-    public static void doProfileSwitch(final int duration, final int percentage, final int timeshift) {
+    public void doProfileSwitch(final int duration, final int percentage, final int timeShift) {
         ProfileSwitch profileSwitch = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(System.currentTimeMillis());
         if (profileSwitch != null) {
             profileSwitch = new ProfileSwitch();
@@ -187,8 +199,8 @@ public class ProfileFunctions {
             profileSwitch.profileJson = getInstance().getProfile().getData().toString();
             profileSwitch.profilePlugin = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getClass().getName();
             profileSwitch.durationInMinutes = duration;
-            profileSwitch.isCPP = percentage != 100 || timeshift != 0;
-            profileSwitch.timeshift = timeshift;
+            profileSwitch.isCPP = percentage != 100 || timeShift != 0;
+            profileSwitch.timeshift = timeShift;
             profileSwitch.percentage = percentage;
             TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
         } else {

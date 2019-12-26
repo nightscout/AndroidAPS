@@ -47,7 +47,7 @@ public class ActionProfileSwitchPercent extends Action {
 
     @Override
     public void doAction(Callback callback) {
-        ProfileFunctions.doProfileSwitch((int) duration.getValue(), (int) pct.getValue(), 0);
+        ProfileFunctions.getInstance().doProfileSwitch((int) duration.getValue(), (int) pct.getValue(), 0);
         if (callback != null)
             callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
     }
