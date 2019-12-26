@@ -241,7 +241,12 @@ public class OmnipodManager {
         logStartingCommandExecution("cancelDelivery [deliveryTypes=" + deliveryTypes + ", acknowledgementBeep=" + acknowledgementBeep + "]");
 
         try {
-            executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, deliveryTypes, acknowledgementBeep)));
+            executeAndVerify(() -> {
+                StatusResponse statusResponse = communicationService.executeAction(new CancelDeliveryAction(podState, deliveryTypes, acknowledgementBeep));
+                if (isLoggingEnabled()) {
+                    LOG.info("Status response after cancel delivery[types={}]: {}", deliveryTypes.toString(), statusResponse.toString());
+                }
+            });
         } finally {
             logCommandExecutionFinished("cancelDelivery");
         }
