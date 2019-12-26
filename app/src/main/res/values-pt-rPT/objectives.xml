@@ -46,10 +46,10 @@
     <string name="unfinshed_button">Próximo inacabado</string>
     <string name="requestcode">Pedir Código: %1$s</string>
     <string name="objectives_hint">(marque todas as respostas correctas)</string>
-    <string name="disconnectpump_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Não está ligado à internet</string>
     <string name="failedretrievetime">Falha ao recuperar tempo</string>
     <string name="requirementnotmet">Requisitos de objectivo não cumpridos</string>

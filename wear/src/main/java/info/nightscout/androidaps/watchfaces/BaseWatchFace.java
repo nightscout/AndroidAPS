@@ -34,6 +34,7 @@ import com.ustwo.clockwise.common.WatchShape;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.complications.BaseComplicationProviderService;
 import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.data.ListenerService;
@@ -341,7 +342,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                     mIOB1.setText(rawData.sIOB1);
                     mIOB2.setText(rawData.sIOB2);
                 } else {
-                    mIOB1.setText("IOB");
+                    mIOB1.setText(aaps.gs(R.string.activity_IOB));
                     mIOB2.setText(rawData.sIOB1);
                 }
             } else {

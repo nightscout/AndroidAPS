@@ -593,6 +593,7 @@
     <string name="overview_newtempbasal_basaltype_label">Tipo basal</string>
     <string name="invalidprofile">Perfil invalido !!!</string>
     <string name="profileswitch">Cambio Perfil</string>
+    <string name="doprofileswitch">Cambio de perfil</string>
     <string name="careportal_pbage_label">Edad batería bomba</string>
     <string name="careportal_pumpbatterychange">Cambio batería bomba</string>
     <string name="ns_alarmoptions">Opciones alarma</string>
@@ -1435,4 +1436,6 @@
     <string name="activitymonitor">Monitor de actividad</string>
     <string name="doyouwantresetstats">¿Desea restablecer las estadísticas de actividad?</string>
     <string name="statistics">Estadísticas</string>
+    <string name="randombg">BG aleatorio</string>
+    <string name="randombg_short">BG</string>
 </resources>
