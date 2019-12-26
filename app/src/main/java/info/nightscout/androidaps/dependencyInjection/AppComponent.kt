@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.dependencyInjection
 
-import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -23,7 +22,7 @@ interface AppComponent : AndroidInjector<MainApp> {
     interface Builder {
 
         @BindsInstance
-        fun application(application: Application): Builder
+        fun application(mainApp: MainApp): Builder
 
         fun build(): AppComponent
     }
