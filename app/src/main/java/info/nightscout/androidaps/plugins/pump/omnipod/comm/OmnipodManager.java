@@ -179,9 +179,7 @@ public class OmnipodManager {
         logStartingCommandExecution("setBasalSchedule [basalSchedule=" + schedule + ", acknowledgementBeep=" + acknowledgementBeep + "]");
 
         try {
-            // Never emit a beep for suspending delivery, so if the user has beeps enabled,
-            // they can verify that setting the basal schedule succeeded (not suspending the delivery)
-            cancelDelivery(EnumSet.allOf(DeliveryType.class), false);
+            cancelDelivery(EnumSet.allOf(DeliveryType.class), acknowledgementBeep);
         } catch (Exception ex) {
             logCommandExecutionFinished("setBasalSchedule");
             throw ex;
@@ -209,9 +207,7 @@ public class OmnipodManager {
         logStartingCommandExecution("setTemporaryBasal [tempBasalPair=" + tempBasalPair + ", acknowledgementBeep=" + acknowledgementBeep + ", completionBeep=" + completionBeep + "]");
 
         try {
-            // Never emit a beep for cancelling temp basal, so if the user has beeps enabled,
-            // they can verify that setting the temp basal succeeded (and not cancelling it)
-            cancelDelivery(EnumSet.of(DeliveryType.TEMP_BASAL), false);
+            cancelDelivery(EnumSet.of(DeliveryType.TEMP_BASAL), acknowledgementBeep);
         } catch (Exception ex) {
             logCommandExecutionFinished("setTemporaryBasal");
             throw ex;
