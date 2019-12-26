@@ -38,7 +38,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:text="@string/extendedbolus" />
+                android:text="@string/extended_bolus" />
 
             <TextView
                 android:id="@+id/treatments_tempbasals"
@@ -48,7 +48,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:text="@string/tempbasal" />
+                android:text="@string/pump_tempbasal_label" />
 
             <TextView
                 android:id="@+id/treatments_temptargets"
@@ -58,7 +58,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:text="@string/temptarget" />
+                android:text="@string/careportal_temporarytarget" />
 
             <TextView
                 android:id="@+id/treatments_profileswitches"
@@ -68,7 +68,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:text="@string/profileswitch" />
+                android:text="@string/careportal_profileswitch" />
 
             <TextView
                 android:id="@+id/treatments_careportal"

@@ -19,7 +19,6 @@ object TddCalculator : TreatmentsPlugin() {
         val endTime = MidnightTime.calc(DateUtil.now())
         initializeData(range)
 
-
         val result = LongSparseArray<TDD>()
         for (t in treatmentsFromHistory) {
             if (!t.isValid) continue
@@ -65,10 +64,10 @@ object TddCalculator : TreatmentsPlugin() {
         val tdds = calculate(7)
         val averageTdd = averageTDD(tdds)
         return HtmlHelper.fromHtml(
-                "<b>" + MainApp.gs(R.string.tdd) + ":</b><br>" +
-                        toText(tdds) +
-                        "<b>" + MainApp.gs(R.string.average) + ":</b><br>" +
-                        averageTdd.toText(tdds.size())
+            "<b>" + MainApp.gs(R.string.tdd) + ":</b><br>" +
+                toText(tdds) +
+                "<b>" + MainApp.gs(R.string.average) + ":</b><br>" +
+                averageTdd.toText(tdds.size())
         )
     }
 

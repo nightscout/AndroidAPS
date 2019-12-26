@@ -62,7 +62,7 @@ object ActivityMonitor : Application.ActivityLifecycleCallbacks {
         return result
     }
 
-    fun stats() :Spanned {
+    fun stats(): Spanned {
         return HtmlHelper.fromHtml("<br><b>" + MainApp.gs(R.string.activitymonitor) + ":</b><br>" + toText())
     }
 

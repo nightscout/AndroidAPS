@@ -459,7 +459,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                     val finalPercentage = percentage
                     messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction(list[pindex - 1] as String, finalPercentage) {
                         override fun run() {
-                            ProfileFunctions.doProfileSwitch(store, list[pindex - 1] as String, 0, finalPercentage, 0)
+                            ProfileFunctions.doProfileSwitch(store, list[pindex - 1] as String, 0, finalPercentage, 0, DateUtil.now())
                             sendSMS(Sms(receivedSms.phoneNumber, R.string.profileswitchcreated))
                         }
                     })

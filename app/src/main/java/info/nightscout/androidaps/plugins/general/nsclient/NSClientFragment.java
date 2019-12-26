@@ -1,9 +1,6 @@
 package info.nightscout.androidaps.plugins.general.nsclient;
 
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Html;
@@ -25,6 +22,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientN
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -113,20 +111,11 @@ public class NSClientFragment extends Fragment implements View.OnClickListener, 
                 NSClientPlugin.getPlugin().clearLog();
                 break;
             case R.id.nsclientinternal_clearqueue:
-                final Context context = getContext();
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
-                builder.setTitle(MainApp.gs(R.string.confirmation));
-                builder.setMessage("Clear queue? All data in queue will be lost!");
-                builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        UploadQueue.clearQueue();
-                        updateGui();
-                        FabricPrivacy.getInstance().logCustom("NSClientClearQueue");
-                    }
+                OKDialog.showConfirmation(getContext(),MainApp.gs(R.string.nsclientinternal), MainApp.gs(R.string.clearqueueconfirm), () -> {
+                    UploadQueue.clearQueue();
+                    updateGui();
+                    FabricPrivacy.getInstance().logCustom("NSClientClearQueue");
                 });
-                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
-                builder.show();
                 break;
             case R.id.nsclientinternal_showqueue:
                 RxBus.INSTANCE.send(new EventNSClientNewLog("QUEUE", NSClientPlugin.getPlugin().queue().textList()));

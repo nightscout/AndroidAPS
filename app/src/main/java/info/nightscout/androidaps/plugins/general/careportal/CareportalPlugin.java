@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.careportal;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -22,10 +23,14 @@ public class CareportalPlugin extends PluginBase {
                 .fragmentClass(CareportalFragment.class.getName())
                 .pluginName(R.string.careportal)
                 .shortName(R.string.careportal_shortname)
-                .visibleByDefault(true)
-                .enableByDefault(true)
+                .visibleByDefault(Config.NSCLIENT)
+                .enableByDefault(Config.NSCLIENT)
                 .description(R.string.description_careportal)
         );
     }
 
+    @Override
+    public boolean specialEnableCondition() {
+        return Config.NSCLIENT;
+    }
 }

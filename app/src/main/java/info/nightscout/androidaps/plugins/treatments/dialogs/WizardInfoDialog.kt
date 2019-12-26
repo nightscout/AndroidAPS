@@ -35,7 +35,7 @@ class WizardInfoDialog : DialogFragment() {
 
         close.setOnClickListener { dismiss() }
         val units = ProfileFunctions.getSystemUnits()
-        var bg_string= ""
+        val bg_string: String
         if (units.equals(Constants.MGDL)) { bg_string = DecimalFormatter.to0Decimal(JsonHelper.safeGetDouble(json, "bg"))} else { bg_string = DecimalFormatter.to1Decimal(JsonHelper.safeGetDouble(json, "bg"))}
         // BG
         treatments_wizard_bg.text = MainApp.gs(R.string.format_bg_isf, bg_string , JsonHelper.safeGetDouble(json, "isf"))

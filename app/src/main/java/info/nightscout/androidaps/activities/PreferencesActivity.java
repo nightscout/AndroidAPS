@@ -76,7 +76,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             return;
         }
         if (key.equals(MainApp.gs(R.string.key_openapsama_useautosens)) && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
-            OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity), MainApp.gs(R.string.sensitivity_warning), null);
+            OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity), MainApp.gs(R.string.sensitivity_warning));
         }
         updatePrefSummary(myPreferenceFragment.findPreference(key));
     }

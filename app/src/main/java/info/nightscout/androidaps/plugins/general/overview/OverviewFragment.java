@@ -61,6 +61,14 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.dialogs.CalibrationDialog;
+import info.nightscout.androidaps.dialogs.CarbsDialog;
+import info.nightscout.androidaps.dialogs.InsulinDialog;
+import info.nightscout.androidaps.dialogs.ProfileSwitchDialog;
+import info.nightscout.androidaps.dialogs.ProfileViewerDialog;
+import info.nightscout.androidaps.dialogs.TempTargetDialog;
+import info.nightscout.androidaps.dialogs.TreatmentDialog;
+import info.nightscout.androidaps.dialogs.WizardDialog;
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
@@ -84,16 +92,9 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
-import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.CalibrationDialog;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.NewCarbsDialog;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.NewInsulinDialog;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.NewTreatmentDialog;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
@@ -105,7 +106,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCa
 import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
 import info.nightscout.androidaps.plugins.source.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.plugins.treatments.fragments.ProfileViewerDialog;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.BolusWizard;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -744,11 +744,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.careportal_profileswitch))) {
-            NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-            final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCHDIRECT;
-            profileswitch.executeProfileSwitch = true;
-            newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
-            newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
+            FragmentManager manager = getFragmentManager();
+            if (manager != null)
+                new ProfileSwitchDialog().show(manager, "Overview");
         } else if (item.getTitle().equals(MainApp.gs(R.string.danar_viewprofile))) {
             Bundle args = new Bundle();
             args.putLong("time", DateUtil.now());
@@ -759,44 +757,39 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (manager != null)
                 pvd.show(manager, "ProfileViewDialog");
         } else if (item.getTitle().equals(MainApp.gs(R.string.eatingsoon))) {
-            DefaultValueHelper defHelper = new DefaultValueHelper();
-            double target = Profile.toMgdl(defHelper.determineEatingSoonTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(DefaultValueHelper.determineEatingSoonTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(System.currentTimeMillis())
-                    .duration(defHelper.determineEatingSoonTTDuration())
+                    .duration(DefaultValueHelper.determineEatingSoonTTDuration())
                     .reason(MainApp.gs(R.string.eatingsoon))
                     .source(Source.USER)
                     .low(target)
                     .high(target);
             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(MainApp.gs(R.string.activity))) {
-            DefaultValueHelper defHelper = new DefaultValueHelper();
-            double target = Profile.toMgdl(defHelper.determineActivityTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(DefaultValueHelper.determineActivityTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
-                    .duration(defHelper.determineActivityTTDuration())
+                    .duration(DefaultValueHelper.determineActivityTTDuration())
                     .reason(MainApp.gs(R.string.activity))
                     .source(Source.USER)
                     .low(target)
                     .high(target);
             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(MainApp.gs(R.string.hypo))) {
-            DefaultValueHelper defHelper = new DefaultValueHelper();
-            double target = Profile.toMgdl(defHelper.determineHypoTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(DefaultValueHelper.determineHypoTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
-                    .duration(defHelper.determineHypoTTDuration())
+                    .duration(DefaultValueHelper.determineHypoTTDuration())
                     .reason(MainApp.gs(R.string.hypo))
                     .source(Source.USER)
                     .low(target)
                     .high(target);
             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(MainApp.gs(R.string.custom))) {
-            NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
-            final OptionsToShow temptarget = CareportalFragment.TEMPTARGET;
-            temptarget.executeTempTarget = true;
-            newTTDialog.setOptions(temptarget, R.string.careportal_temporarytarget);
-            newTTDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
+            FragmentManager manager = getFragmentManager();
+            if (manager != null)
+                new TempTargetDialog().show(manager, "Overview");
         } else if (item.getTitle().equals(MainApp.gs(R.string.cancel))) {
             TempTarget tempTarget = new TempTarget()
                     .source(Source.USER)
@@ -818,7 +811,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         FragmentManager manager = getFragmentManager();
         // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
         // https://stackoverflow.com/questions/14860239/checking-if-state-is-saved-before-committing-a-fragmenttransaction
-        if (manager.isStateSaved())
+        if (manager == null || manager.isStateSaved())
             return;
         switch (v.getId()) {
             case R.id.overview_accepttempbutton:
@@ -863,14 +856,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 }
                 break;
             case R.id.overview_treatmentbutton:
-                NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
-                treatmentDialogFragment.show(manager, "TreatmentDialog");
+                new TreatmentDialog().show(manager, "Overview");
                 break;
             case R.id.overview_insulinbutton:
-                new NewInsulinDialog().show(manager, "InsulinDialog");
+                new InsulinDialog().show(manager, "Overview");
                 break;
             case R.id.overview_carbsbutton:
-                new NewCarbsDialog().show(manager, "CarbsDialog");
+                new CarbsDialog().show(manager, "Overview");
                 break;
             case R.id.overview_pumpstatus:
                 if (ConfigBuilderPlugin.getPlugin().getActivePump().isSuspended() || !ConfigBuilderPlugin.getPlugin().getActivePump().isInitialized())
@@ -891,10 +883,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             getContext().startActivity(intent);
             return true;
         } catch (ActivityNotFoundException e) {
-            new AlertDialog.Builder(getContext())
-                    .setMessage(R.string.error_starting_cgm)
-                    .setPositiveButton("OK", null)
-                    .show();
+            OKDialog.show(getContext(), "", MainApp.gs(R.string.error_starting_cgm));
             return false;
         }
     }
@@ -920,16 +909,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             LoopPlugin.getPlugin().invoke("Accept temp button", false);
             final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
             if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.isChangeRequested()) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle(MainApp.gs(R.string.confirmation));
-                builder.setMessage(MainApp.gs(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
-                builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
+                OKDialog.showConfirmation(context, MainApp.gs(R.string.pump_tempbasal_label), finalLastRun.constraintsProcessed.toSpanned(), () -> {
                     hideTempRecommendation();
                     clearNotification();
                     LoopPlugin.getPlugin().acceptChangeRequest();
                 });
-                builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
-                builder.show();
             }
         }
     }
@@ -949,7 +933,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(quickWizardEntry.carbs())).value();
 
                 if (Math.abs(wizard.getInsulinAfterConstraints() - wizard.getCalculatedTotalInsulin()) >= pump.getPumpDescription().pumpType.determineCorrectBolusStepSize(wizard.getInsulinAfterConstraints()) || !carbsAfterConstraints.equals(quickWizardEntry.carbs())) {
-                    OKDialog.show(getContext(), MainApp.gs(R.string.treatmentdeliveryerror), MainApp.gs(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput), null);
+                    OKDialog.show(getContext(), MainApp.gs(R.string.treatmentdeliveryerror), MainApp.gs(R.string.constraints_violation) + "\n" + MainApp.gs(R.string.changeyourinput));
                     return;
                 }
 
@@ -1178,7 +1162,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 if (activeTemp != null) {
                     fullText += MainApp.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
                 }
-                OKDialog.show(getActivity(), MainApp.gs(R.string.basal), fullText, null);
+                OKDialog.show(getActivity(), MainApp.gs(R.string.basal), fullText);
             });
 
         } else {
@@ -1214,7 +1198,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
             extendedBolusView.setText(extendedBolusText);
             if (Config.NSCLIENT) {
-                extendedBolusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.extendedbolus), extendedBolus.toString(), null));
+                extendedBolusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.extended_bolus), extendedBolus.toString()));
             }
             if (extendedBolusText.equals(""))
                 extendedBolusView.setVisibility(Config.NSCLIENT ? View.INVISIBLE : View.GONE);
@@ -1308,7 +1292,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 String iobtext1 = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U\n"
                         + MainApp.gs(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U\n"
                         + MainApp.gs(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U\n";
-                OKDialog.show(getActivity(), MainApp.gs(R.string.iob), iobtext1, null);
+                OKDialog.show(getActivity(), MainApp.gs(R.string.iob), iobtext1);
             });
         } else if (MainApp.sResources.getBoolean(R.bool.isTablet)) {
             String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
@@ -1360,19 +1344,19 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         // pump status from ns
         if (pumpDeviceStatusView != null) {
             pumpDeviceStatusView.setText(NSDeviceStatus.getInstance().getPumpStatus());
-            pumpDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.pump), NSDeviceStatus.getInstance().getExtendedPumpStatus(), null));
+            pumpDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.pump), NSDeviceStatus.getInstance().getExtendedPumpStatus()));
         }
 
         // OpenAPS status from ns
         if (openapsDeviceStatusView != null) {
             openapsDeviceStatusView.setText(NSDeviceStatus.getInstance().getOpenApsStatus());
-            openapsDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.openaps), NSDeviceStatus.getInstance().getExtendedOpenApsStatus(), null));
+            openapsDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.openaps), NSDeviceStatus.getInstance().getExtendedOpenApsStatus()));
         }
 
         // Uploader status from ns
         if (uploaderDeviceStatusView != null) {
             uploaderDeviceStatusView.setText(NSDeviceStatus.getInstance().getUploaderStatusSpanned());
-            uploaderDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.uploader), NSDeviceStatus.getInstance().getExtendedUploaderStatus(), null));
+            uploaderDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.uploader), NSDeviceStatus.getInstance().getExtendedUploaderStatus()));
         }
 
         // Sensitivity

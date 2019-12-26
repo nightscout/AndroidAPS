@@ -4,25 +4,21 @@ import android.os.Bundle
 import android.widget.ArrayAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
-import info.nightscout.androidaps.plugins.treatments.fragments.ProfileViewerDialog
+import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.utils.*
-import kotlinx.android.synthetic.main.survey_fragment.*
+import kotlinx.android.synthetic.main.survey_activity.*
 import org.slf4j.LoggerFactory
-import java.util.*
-
 
 class SurveyActivity : NoSplashAppCompatActivity() {
     private val log = LoggerFactory.getLogger(SurveyActivity::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.survey_fragment)
+        setContentView(R.layout.survey_activity)
 
         survey_id.text = InstanceId.instanceId()
 
@@ -85,21 +81,21 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
             val auth = FirebaseAuth.getInstance()
             auth.signInAnonymously()
-                    .addOnCompleteListener(this) { task ->
-                        if (task.isSuccessful) {
-                            log.debug("signInAnonymously:success")
-                            val user = auth.currentUser
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        log.debug("signInAnonymously:success")
+                        val user = auth.currentUser // TODO: do we need this, seems unused?
 
-                            val database = FirebaseDatabase.getInstance().reference
-                            database.child("survey").child(r.id).setValue(r)
-                        } else {
-                            log.error("signInAnonymously:failure", task.exception)
-                            ToastUtils.showToastInUiThread(this, "Authentication failed.")
-                            //updateUI(null)
-                        }
-
-                        // ...
+                        val database = FirebaseDatabase.getInstance().reference
+                        database.child("survey").child(r.id).setValue(r)
+                    } else {
+                        log.error("signInAnonymously:failure", task.exception)
+                        ToastUtils.showToastInUiThread(this, "Authentication failed.")
+                        //updateUI(null)
                     }
+
+                    // ...
+                }
             finish()
         }
     }

@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
@@ -17,9 +17,8 @@ import info.nightscout.androidaps.utils.ToastUtils
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.automation_dialog_event.*
-import kotlinx.android.synthetic.main.okcancel.*
 
-class EditEventDialog : DialogFragment() {
+class EditEventDialog : DialogFragmentWithDate() {
 
     private var actionListAdapter: ActionListAdapter? = null
     private var event: AutomationEvent = AutomationEvent()
@@ -35,7 +34,7 @@ class EditEventDialog : DialogFragment() {
             bundle.getString("event")?.let { event = AutomationEvent().fromJSON(it) }
         }
 
-        dialog?.setCanceledOnTouchOutside(false)
+        onCreateViewGeneral()
         return inflater.inflate(R.layout.automation_dialog_event, container, false)
     }
 
@@ -59,39 +58,6 @@ class EditEventDialog : DialogFragment() {
         automation_actionListView.adapter = actionListAdapter
 
         automation_addAction.setOnClickListener { fragmentManager?.let { ChooseActionDialog().show(it, "ChooseActionDialog") } }
-
-        // OK button
-        ok.setOnClickListener {
-            // check for title
-            val title = automation_inputEventTitle.text.toString()
-            if (title.isEmpty()) {
-                ToastUtils.showToastInUiThread(context, R.string.automation_missing_task_name)
-                return@setOnClickListener
-            }
-            event.title = title
-            // check for at least one trigger
-            val con = event.trigger as TriggerConnector
-            if (con.size() == 0) {
-                ToastUtils.showToastInUiThread(context, R.string.automation_missing_trigger)
-                return@setOnClickListener
-            }
-            // check for at least one action
-            if (event.actions.isEmpty()) {
-                ToastUtils.showToastInUiThread(context, R.string.automation_missing_action)
-                return@setOnClickListener
-            }
-            // store
-            if (position == -1)
-                AutomationPlugin.automationEvents.add(event)
-            else
-                AutomationPlugin.automationEvents[position] = event
-
-            dismiss()
-            RxBus.send(EventAutomationDataChanged())
-        }
-
-        // Cancel button
-        cancel.setOnClickListener { dismiss() }
 
         showPreconditions()
 
@@ -137,9 +103,33 @@ class EditEventDialog : DialogFragment() {
         )
     }
 
-    override fun onStart() {
-        super.onStart()
-        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    override fun submit() : Boolean{
+        // check for title
+        val title = automation_inputEventTitle.text.toString()
+        if (title.isEmpty()) {
+            ToastUtils.showToastInUiThread(context, R.string.automation_missing_task_name)
+            return false
+        }
+        event.title = title
+        // check for at least one trigger
+        val con = event.trigger as TriggerConnector
+        if (con.size() == 0) {
+            ToastUtils.showToastInUiThread(context, R.string.automation_missing_trigger)
+            return false
+        }
+        // check for at least one action
+        if (event.actions.isEmpty()) {
+            ToastUtils.showToastInUiThread(context, R.string.automation_missing_action)
+            return false
+        }
+        // store
+        if (position == -1)
+            AutomationPlugin.automationEvents.add(event)
+        else
+            AutomationPlugin.automationEvents[position] = event
+
+        RxBus.send(EventAutomationDataChanged())
+        return true
     }
 
     override fun onDestroyView() {
@@ -147,10 +137,10 @@ class EditEventDialog : DialogFragment() {
         disposable.clear()
     }
 
-    override fun onSaveInstanceState(bundle: Bundle) {
-        super.onSaveInstanceState(bundle)
-        bundle.putString("event", event.toJSON())
-        bundle.putInt("position", position)
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        savedInstanceState.putString("event", event.toJSON())
+        savedInstanceState.putInt("position", position)
     }
 
     private fun showPreconditions() {
@@ -164,5 +154,4 @@ class EditEventDialog : DialogFragment() {
             automation_forcedTriggerDescriptionLabel.visibility = View.GONE
         }
     }
-
 }

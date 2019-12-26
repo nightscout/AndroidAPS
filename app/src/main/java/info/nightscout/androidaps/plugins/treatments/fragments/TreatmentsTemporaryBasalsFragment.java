@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.treatments.fragments;
 
-import android.content.Context;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -33,6 +31,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.OKDialog;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -40,12 +39,9 @@ import io.reactivex.disposables.CompositeDisposable;
 public class TreatmentsTemporaryBasalsFragment extends Fragment {
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    RecyclerView recyclerView;
-    LinearLayoutManager llm;
+    private RecyclerView recyclerView;
 
-    TextView tempBasalTotalView;
-
-    Context context;
+    private TextView tempBasalTotalView;
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempBasalsViewHolder> {
 
@@ -55,6 +51,7 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
             this.tempBasalList = tempBasalList;
         }
 
+        @NonNull
         @Override
         public TempBasalsViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.treatments_tempbasals_item, viewGroup, false);
@@ -123,11 +120,11 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
         }
 
         @Override
-        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
         }
 
-        public class TempBasalsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        class TempBasalsViewHolder extends RecyclerView.ViewHolder {
             CardView cv;
             TextView date;
             TextView duration;
@@ -144,45 +141,37 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
 
             TempBasalsViewHolder(View itemView) {
                 super(itemView);
-                cv = (CardView) itemView.findViewById(R.id.tempbasals_cardview);
-                date = (TextView) itemView.findViewById(R.id.tempbasals_date);
-                duration = (TextView) itemView.findViewById(R.id.tempbasals_duration);
-                absolute = (TextView) itemView.findViewById(R.id.tempbasals_absolute);
-                percent = (TextView) itemView.findViewById(R.id.tempbasals_percent);
-                realDuration = (TextView) itemView.findViewById(R.id.tempbasals_realduration);
-                netRatio = (TextView) itemView.findViewById(R.id.tempbasals_netratio);
-                netInsulin = (TextView) itemView.findViewById(R.id.tempbasals_netinsulin);
-                iob = (TextView) itemView.findViewById(R.id.tempbasals_iob);
-                extendedFlag = (TextView) itemView.findViewById(R.id.tempbasals_extendedflag);
-                ph = (TextView) itemView.findViewById(R.id.pump_sign);
-                ns = (TextView) itemView.findViewById(R.id.ns_sign);
-                remove = (TextView) itemView.findViewById(R.id.tempbasals_remove);
-                remove.setOnClickListener(this);
+                cv = itemView.findViewById(R.id.tempbasals_cardview);
+                date = itemView.findViewById(R.id.tempbasals_date);
+                duration = itemView.findViewById(R.id.tempbasals_duration);
+                absolute = itemView.findViewById(R.id.tempbasals_absolute);
+                percent = itemView.findViewById(R.id.tempbasals_percent);
+                realDuration = itemView.findViewById(R.id.tempbasals_realduration);
+                netRatio = itemView.findViewById(R.id.tempbasals_netratio);
+                netInsulin = itemView.findViewById(R.id.tempbasals_netinsulin);
+                iob = itemView.findViewById(R.id.tempbasals_iob);
+                extendedFlag = itemView.findViewById(R.id.tempbasals_extendedflag);
+                ph = itemView.findViewById(R.id.pump_sign);
+                ns = itemView.findViewById(R.id.ns_sign);
+                remove = itemView.findViewById(R.id.tempbasals_remove);
+                remove.setOnClickListener(v -> {
+                    final TemporaryBasal tempBasal = (TemporaryBasal) v.getTag();
+                    OKDialog.showConfirmation(getContext(), MainApp.gs(R.string.removerecord),
+                            MainApp.gs(R.string.pump_tempbasal_label) + ": " + tempBasal.toStringFull() +
+                                    "\n" + MainApp.gs(R.string.date) + ": " + DateUtil.dateAndTimeString(tempBasal.date),
+                            ((dialog, id) -> {
+                                final String _id = tempBasal._id;
+                                if (NSUpload.isIdValid(_id)) {
+                                    NSUpload.removeCareportalEntryFromNS(_id);
+                                } else {
+                                    UploadQueue.removeID("dbAdd", _id);
+                                }
+                                MainApp.getDbHelper().delete(tempBasal);
+                            }), null);
+                });
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             }
 
-            @Override
-            public void onClick(View v) {
-                final TemporaryBasal tempBasal = (TemporaryBasal) v.getTag();
-                switch (v.getId()) {
-                    case R.id.tempbasals_remove:
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle(MainApp.gs(R.string.confirmation));
-                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(tempBasal.date));
-                        builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> {
-                            final String _id = tempBasal._id;
-                            if (NSUpload.isIdValid(_id)) {
-                                NSUpload.removeCareportalEntryFromNS(_id);
-                            } else {
-                                UploadQueue.removeID("dbAdd", _id);
-                            }
-                            MainApp.getDbHelper().delete(tempBasal);
-                        });
-                        builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
-                        builder.show();
-                        break;
-                }
-            }
         }
     }
 
@@ -191,17 +180,15 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.treatments_tempbasals_fragment, container, false);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.tempbasals_recyclerview);
+        recyclerView = view.findViewById(R.id.tempbasals_recyclerview);
         recyclerView.setHasFixedSize(true);
-        llm = new LinearLayoutManager(view.getContext());
+        LinearLayoutManager llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.getPlugin().getTemporaryBasalsFromHistory());
         recyclerView.setAdapter(adapter);
 
-        tempBasalTotalView = (TextView) view.findViewById(R.id.tempbasals_totaltempiob);
-
-        context = getContext();
+        tempBasalTotalView = view.findViewById(R.id.tempbasals_totaltempiob);
 
         return view;
     }
