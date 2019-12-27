@@ -1761,7 +1761,6 @@
     <string name="omnipod_alert_low_reservoir">Low reservoir</string>
     <string name="omnipod_alert_unknown_alert">Unknown alert</string>
     <string name="omnipod_error_set_basal_failed_uncertain">Setting basal profile might have failed. Delivery might be suspended! Please refresh pod status.</string>
-    <string name="omnipod_error_set_temp_basal_failed_uncertain">Setting temp basal might have failed. If there was a temp basal already running, that may have been cancelled! Please refresh pod status.</string>
     <string name="omnipod_error_set_time_failed_uncertain">Setting time might have failed. Delivery might be suspended! Please refresh pod status.</string>
     <string name="omnipod_bolus_failed_uncertain">Unable to verify whether the bolus succeeded. Please verify that your pod is bolusing or cancel the bolus.</string>
 
