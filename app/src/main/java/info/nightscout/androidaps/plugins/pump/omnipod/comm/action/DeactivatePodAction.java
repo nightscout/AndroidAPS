@@ -8,6 +8,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Sta
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodFaultException;
 
 public class DeactivatePodAction implements OmnipodAction<StatusResponse> {
     private final PodSessionState podState;
@@ -24,8 +25,12 @@ public class DeactivatePodAction implements OmnipodAction<StatusResponse> {
     @Override
     public StatusResponse execute(OmnipodCommunicationService communicationService) {
         if (!podState.isSuspended() && !podState.hasFaultEvent()) {
-            communicationService.executeAction(new CancelDeliveryAction(podState,
-                    EnumSet.allOf(DeliveryType.class), acknowledgementBeep));
+            try {
+                communicationService.executeAction(new CancelDeliveryAction(podState,
+                        EnumSet.allOf(DeliveryType.class), acknowledgementBeep));
+            } catch(PodFaultException ex) {
+                // Ignore
+            }
         }
 
         return communicationService.sendCommand(StatusResponse.class, podState, new DeactivatePodCommand(podState.getCurrentNonce()));

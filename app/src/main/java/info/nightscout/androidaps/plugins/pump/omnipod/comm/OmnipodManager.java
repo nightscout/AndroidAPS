@@ -179,9 +179,7 @@ public class OmnipodManager {
         logStartingCommandExecution("setBasalSchedule [basalSchedule=" + schedule + ", acknowledgementBeep=" + acknowledgementBeep + "]");
 
         try {
-            // Never emit a beep for suspending delivery, so if the user has beeps enabled,
-            // they can verify that setting the basal schedule succeeded (not suspending the delivery)
-            cancelDelivery(EnumSet.allOf(DeliveryType.class), false);
+            cancelDelivery(EnumSet.allOf(DeliveryType.class), acknowledgementBeep);
         } catch (Exception ex) {
             logCommandExecutionFinished("setBasalSchedule");
             throw ex;
@@ -209,9 +207,7 @@ public class OmnipodManager {
         logStartingCommandExecution("setTemporaryBasal [tempBasalPair=" + tempBasalPair + ", acknowledgementBeep=" + acknowledgementBeep + ", completionBeep=" + completionBeep + "]");
 
         try {
-            // Never emit a beep for cancelling temp basal, so if the user has beeps enabled,
-            // they can verify that setting the temp basal succeeded (and not cancelling it)
-            cancelDelivery(EnumSet.of(DeliveryType.TEMP_BASAL), false);
+            cancelDelivery(EnumSet.of(DeliveryType.TEMP_BASAL), acknowledgementBeep);
         } catch (Exception ex) {
             logCommandExecutionFinished("setTemporaryBasal");
             throw ex;
@@ -241,7 +237,12 @@ public class OmnipodManager {
         logStartingCommandExecution("cancelDelivery [deliveryTypes=" + deliveryTypes + ", acknowledgementBeep=" + acknowledgementBeep + "]");
 
         try {
-            executeAndVerify(() -> communicationService.executeAction(new CancelDeliveryAction(podState, deliveryTypes, acknowledgementBeep)));
+            executeAndVerify(() -> {
+                StatusResponse statusResponse = communicationService.executeAction(new CancelDeliveryAction(podState, deliveryTypes, acknowledgementBeep));
+                if (isLoggingEnabled()) {
+                    LOG.info("Status response after cancel delivery[types={}]: {}", deliveryTypes.toString(), statusResponse.toString());
+                }
+            });
         } finally {
             logCommandExecutionFinished("cancelDelivery");
         }
@@ -537,8 +538,11 @@ public class OmnipodManager {
         }
         try {
             logStartingCommandExecution("verifyCommand");
-            communicationService.sendCommand(StatusResponse.class, podState,
+            StatusResponse statusResponse = communicationService.sendCommand(StatusResponse.class, podState,
                     new CancelDeliveryCommand(podState.getCurrentNonce(), BeepType.NO_BEEP, DeliveryType.NONE), false);
+            if (isLoggingEnabled()) {
+                LOG.info("Status response after verifyCommand (cancelDelivery[types=DeliveryType.NONE]): {}", statusResponse.toString());
+            }
         } catch (NonceOutOfSyncException ex) {
             if (isLoggingEnabled()) {
                 LOG.info("Command resolved to FAILURE (CERTAIN_FAILURE)", ex);
