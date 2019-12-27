@@ -18,7 +18,8 @@ class ConstraintChecker @Inject constructor(private val mainApp: MainApp) : Cons
 
     companion object {
         @JvmStatic
-        lateinit var instance: ConstraintChecker
+        @Deprecated("Get via Dagger. Will be removed once fully transitioned to Dagger")
+        lateinit var instance: ConstraintChecker //TODO: remove as soon as Dagger is fully set up
     }
 
     fun isLoopInvocationAllowed(): Constraint<Boolean> =
