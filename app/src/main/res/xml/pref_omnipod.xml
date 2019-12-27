@@ -33,8 +33,8 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:key="@string/key_omnipod_pod_expert_debug_enabled"
-            android:title="@string/omnipod_config_pod_expert_debug_enabled" />
+            android:key="@string/key_omnipod_pod_debugging_options_enabled"
+            android:title="@string/omnipod_config_pod_debugging_options_enabled" />
 
     </PreferenceCategory>
 </PreferenceScreen>

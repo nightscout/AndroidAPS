@@ -38,7 +38,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
@@ -54,7 +53,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionT
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
@@ -63,7 +61,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUITask;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
-import info.nightscout.androidaps.plugins.pump.omnipod.util.LogReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -186,7 +183,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                     if ((event.isChanged(R.string.key_omnipod_beep_basal_enabled)) ||
                         (event.isChanged(R.string.key_omnipod_beep_bolus_enabled)) ||
                         (event.isChanged(R.string.key_omnipod_beep_tbr_enabled)) ||
-                        (event.isChanged(R.string.key_omnipod_pod_expert_debug_enabled)) ||
+                        (event.isChanged(R.string.key_omnipod_pod_debugging_options_enabled)) ||
                         (event.isChanged(R.string.key_omnipod_beep_smb_enabled)))
                         refreshConfiguration();
                 }, FabricPrivacy::logException)

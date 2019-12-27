@@ -26,7 +26,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDevice
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodAcknowledgeAlertsChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
@@ -172,7 +171,7 @@ class OmnipodFragment : Fragment() {
 
 
     fun setVisibilityOfPodDebugButton() {
-        val isEnabled = SP.getBoolean(OmnipodConst.Prefs.PodExpertDebugModeEnabled, false)
+        val isEnabled = SP.getBoolean(OmnipodConst.Prefs.PodDebuggingOptionsEnabled, false)
 
         if (isEnabled)
             omnipod_pod_debug.visibility = View.VISIBLE

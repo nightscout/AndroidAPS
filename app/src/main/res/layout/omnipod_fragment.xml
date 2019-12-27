@@ -610,7 +610,7 @@
                     android:drawableTop="@drawable/icon_danarstats"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="RL Stats" />
+                    android:text="@string/omnipod_rl_stats" />
 
                 <Button
                     android:id="@+id/omnipod_pod_debug"
@@ -621,7 +621,7 @@
                     android:drawableTop="@drawable/icon_cp_bolus_correction"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="Pod Debug"
+                    android:text="@string/omnipod_read_pulse_log_short"
                     />
 
             </LinearLayout>

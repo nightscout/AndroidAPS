@@ -1650,12 +1650,12 @@
     <string name="key_omnipod_beep_basal_enabled" translatable="false">pref_omnipod_beep_basal_enabled</string>
     <string name="key_omnipod_beep_smb_enabled" translatable="false">pref_omnipod_beep_smb_enabled</string>
     <string name="key_omnipod_beep_tbr_enabled" translatable="false">pref_omnipod_beep_tbr_enabled</string>
-    <string name="key_omnipod_pod_expert_debug_enabled" translatable="false">key_omnipod_pod_expert_debug_enabled</string>
+    <string name="key_omnipod_pod_debugging_options_enabled" translatable="false">pref_omnipod_pod_debugging_options_enabled</string>
     <string name="omnipod_config_beep_bolus_enabled">Bolus Beep Enabled</string>
     <string name="omnipod_config_beep_basal_enabled">Basal Beep Enabled</string>
     <string name="omnipod_config_beep_smb_enabled">SMB Beep Enabled</string>
     <string name="omnipod_config_beep_tbr_enabled">TBR Beep Enabled</string>
-    <string name="omnipod_config_pod_expert_debug_enabled">Pod Debug Expert Mode</string>
+    <string name="omnipod_config_pod_debugging_options_enabled">Pod Debugging Options Enabled</string>
 
     <!-- Omnipod - Fragment -->
     <string name="omnipod_pod_mgmt">Pod Mgmt</string>
@@ -1763,6 +1763,8 @@
     <string name="omnipod_error_set_basal_failed_uncertain">Setting basal profile might have failed. Delivery might be suspended! Please refresh pod status.</string>
     <string name="omnipod_error_set_time_failed_uncertain">Setting time might have failed. Delivery might be suspended! Please refresh pod status.</string>
     <string name="omnipod_bolus_failed_uncertain">Unable to verify whether the bolus succeeded. Please verify that your pod is bolusing or cancel the bolus.</string>
+    <string name="omnipod_rl_stats">RL Stats</string>
+    <string name="omnipod_read_pulse_log_short">Pulse Log</string>
 
 
 </resources>
