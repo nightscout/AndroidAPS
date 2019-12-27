@@ -17,11 +17,13 @@ import androidx.core.content.ContextCompat;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction;
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
 
 public class AndroidPermission {
 
@@ -78,8 +80,8 @@ public class AndroidPermission {
         return !selfCheck;
     }
 
-    public static synchronized void notifyForSMSPermissions(Activity activity) {
-        if (SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)) {
+    public static synchronized void notifyForSMSPermissions(Activity activity, SmsCommunicatorPlugin smsCommunicatorPlugin) {
+        if (smsCommunicatorPlugin.isEnabled(PluginType.GENERAL)) {
             if (permissionNotGranted(activity, Manifest.permission.RECEIVE_SMS)) {
                 NotificationWithAction notification = new NotificationWithAction(Notification.PERMISSION_SMS, MainApp.gs(R.string.smscommunicator_missingsmspermission), Notification.URGENT);
                 notification.action(R.string.request, () -> AndroidPermission.askForPermission(activity, new String[]{Manifest.permission.RECEIVE_SMS,

@@ -20,11 +20,6 @@ public interface Intents {
     String ACTION_URGENT_ALARM = "info.nightscout.client.URGENT_ALARM";
     String ACTION_CLEAR_ALARM = "info.nightscout.client.CLEAR_ALARM";
 
-
-    // App -> NSClient
-    String ACTION_DATABASE = "info.nightscout.client.DBACCESS";
-    String ACTION_ACK_ALARM = "info.nightscout.client.ACK_ALARM";
-
     // xDrip -> App
     String RECEIVER_PERMISSION = "com.eveningoutpost.dexdrip.permissions.RECEIVE_BG_ESTIMATE";
 

@@ -1,7 +1,8 @@
 package info.nightscout.androidaps.plugins.insulin
 
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.ResourceHelper
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import junit.framework.Assert.assertEquals
 import org.junit.Before

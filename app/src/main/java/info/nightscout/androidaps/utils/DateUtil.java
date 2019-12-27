@@ -217,6 +217,11 @@ public class DateUtil {
         return diff < T.mins(2).msecs();
     }
 
+    public static boolean isOlderThan(long date, long minutes) {
+        long diff = now() - date;
+        return diff > T.mins(minutes).msecs();
+    }
+
     public static GregorianCalendar gregorianCalendar() {
         return new GregorianCalendar();
     }

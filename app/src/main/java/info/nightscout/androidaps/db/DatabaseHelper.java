@@ -194,15 +194,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return newVersion;
     }
 
-    /**
-     * Close the database connections and clear any cached DAOs.
-     */
-    @Override
-    public void close() {
-        super.close();
-    }
-
-
     public long size(String database) {
         return DatabaseUtils.queryNumEntries(getReadableDatabase(), database);
     }
@@ -1602,20 +1593,41 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             queryBuilder.limit(100L);
             Where where = queryBuilder.where();
             where.ge("date", from);
-            queryBuilder.setCountOf(true);
             PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
-            long count = daoProfileSwitch.countOf(preparedQuery);
-            // now do query of count + 1
-            queryBuilder = daoProfileSwitch.queryBuilder();
-            queryBuilder.orderBy("date", ascending);
-            queryBuilder.limit(count + 1);
-            preparedQuery = queryBuilder.prepare();
             profileSwitches = daoProfileSwitch.query(preparedQuery);
+            //add last one without duration
+            ProfileSwitch last = getLastProfileSwitchWithoutDuration();
+            if (last != null) {
+                if (!profileSwitches.contains(last))
+                    profileSwitches.add(last);
+            }
             return profileSwitches;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
         return new ArrayList<>();
+    }
+
+    @Nullable
+    private ProfileSwitch getLastProfileSwitchWithoutDuration() {
+        try {
+            Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
+            List<ProfileSwitch> profileSwitches;
+            QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
+            queryBuilder.orderBy("date", false);
+            queryBuilder.limit(1L);
+            Where where = queryBuilder.where();
+            where.eq("durationInMinutes", 0);
+            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
+            profileSwitches = daoProfileSwitch.query(preparedQuery);
+            if (profileSwitches.size() > 0)
+                return profileSwitches.get(0);
+            else
+                return null;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return null;
     }
 
     public List<ProfileSwitch> getProfileSwitchEventsFromTime(long mills, boolean ascending) {

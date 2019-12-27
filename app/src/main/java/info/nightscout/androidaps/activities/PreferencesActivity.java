@@ -25,7 +25,6 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
@@ -76,7 +75,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             return;
         }
         if (key.equals(MainApp.gs(R.string.key_openapsama_useautosens)) && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
-            OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity), MainApp.gs(R.string.sensitivity_warning), null);
+            OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity), MainApp.gs(R.string.sensitivity_warning));
         }
         updatePrefSummary(myPreferenceFragment.findPreference(key));
     }

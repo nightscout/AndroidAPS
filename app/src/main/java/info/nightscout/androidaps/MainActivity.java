@@ -37,13 +37,17 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+
 import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.activities.HistoryBrowseActivity;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.activities.PreferencesActivity;
 import info.nightscout.androidaps.activities.SingleFragmentActivity;
 import info.nightscout.androidaps.activities.StatsActivity;
-import info.nightscout.androidaps.activities.SurveyActivity;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
@@ -54,23 +58,32 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.androidaps.utils.AndroidPermission;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
+import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.PasswordProtection;
 import info.nightscout.androidaps.utils.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class MainActivity extends NoSplashAppCompatActivity {
+public class MainActivity extends NoSplashAppCompatActivity implements HasAndroidInjector {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
+
+    @Inject
+    DispatchingAndroidInjector<Object> androidInjector;
+
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
     private MenuItem pluginPreferencesMenuItem;
+
+    @Inject
+    SmsCommunicatorPlugin smsCommunicatorPlugin;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,8 +106,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
 
         // initialize screen wake lock
         processPreferenceChange(new EventPreferenceChange(R.string.key_keep_screen_on));
-
-        doMigrations();
 
         final ViewPager viewPager = findViewById(R.id.pager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -141,7 +152,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 .subscribe(this::processPreferenceChange, FabricPrivacy::logException)
         );
 
-        if (!SP.getBoolean(R.string.key_setupwizard_processed, false) || !SP.contains(R.string.key_units)) {
+        if (!SP.getBoolean(R.string.key_setupwizard_processed, false)) {
             Intent intent = new Intent(this, SetupWizardActivity.class);
             startActivity(intent);
         }
@@ -150,7 +161,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         AndroidPermission.notifyForBatteryOptimizationPermission(this);
         if (Config.PUMPDRIVERS) {
             AndroidPermission.notifyForLocationPermissions(this);
-            AndroidPermission.notifyForSMSPermissions(this);
+            AndroidPermission.notifyForSMSPermissions(this, smsCommunicatorPlugin);
         }
     }
 
@@ -235,17 +246,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
         }
     }
 
-    private void doMigrations() {
-
-        // guarantee that the unreachable threshold is at least 30 and of type String
-        // Added in 1.57 at 21.01.2018
-        int unreachable_threshold = SP.getInt(R.string.key_pump_unreachable_threshold, 30);
-        SP.remove(R.string.key_pump_unreachable_threshold);
-        if (unreachable_threshold < 30) unreachable_threshold = 30;
-        SP.putString(R.string.key_pump_unreachable_threshold, Integer.toString(unreachable_threshold));
-    }
-
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -254,10 +254,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 switch (requestCode) {
                     case AndroidPermission.CASE_STORAGE:
                         //show dialog after permission is granted
-                        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                        alert.setMessage(R.string.alert_dialog_storage_permission_text);
-                        alert.setPositiveButton(R.string.ok, null);
-                        alert.show();
+                        OKDialog.show(this, "", MainApp.gs(R.string.alert_dialog_storage_permission_text));
                         break;
                     case AndroidPermission.CASE_LOCATION:
                     case AndroidPermission.CASE_SMS:
@@ -331,9 +328,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 return true;
             case R.id.nav_exit:
                 log.debug("Exiting");
-                MainApp.instance().stopKeepAliveService();
                 RxBus.INSTANCE.send(new EventAppExit());
-                MainApp.closeDbHelper();
                 finish();
                 System.runFinalization();
                 System.exit(0);
@@ -357,5 +352,14 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 return true;
         }
         return actionBarDrawerToggle.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     * Returns an {@link AndroidInjector}.
+     */
+    @Override
+    public AndroidInjector<Object> androidInjector() {
+        return androidInjector;
     }
 }

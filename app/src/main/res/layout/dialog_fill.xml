@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:minWidth="300dp"
+    android:orientation="vertical"
+    tools:context=".dialogs.FillDialog">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/dialog_title_background"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/primefill"
+                android:src="@drawable/icon_cp_pump_canula" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/primefill"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/spacer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <CheckBox
+                android:id="@+id/fill_catheter_change"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/careportal_pumpsitechange" />
+
+            <CheckBox
+                android:id="@+id/fill_cartridge_change"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/careportal_insulincartridgechange" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:width="120dp"
+                android:padding="10dp"
+                android:text="@string/overview_insulin_label"
+                android:textStyle="bold" />
+
+            <info.nightscout.androidaps.utils.NumberPicker
+                android:id="@+id/fill_insulinamount"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_gravity="end"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/insulin_unit_shortname" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <Button
+                android:id="@+id/fill_preset_button1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="0.3U" />
+
+            <Button
+                android:id="@+id/fill_preset_button2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="0.7U" />
+
+            <Button
+                android:id="@+id/fill_preset_button3"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="1.2U" />
+
+        </LinearLayout>
+
+        <include layout="@layout/notes" />
+
+        <include layout="@layout/datetime" />
+
+        <include layout="@layout/okcancel" />
+
+    </LinearLayout>
+
+</ScrollView>

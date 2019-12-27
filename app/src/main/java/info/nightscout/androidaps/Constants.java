@@ -25,8 +25,6 @@ public class Constants {
     public static final int hoursToKeepInDatabase = 72;
     public static final int daysToKeepHistoryInDatabase = 30;
 
-    public static final long keepAliveMsecs = 5 * 60 * 1000L;
-
     // SMS COMMUNICATOR
     public static final long remoteBolusMinDistance = 15 * 60 * 1000L;
 
@@ -81,5 +79,12 @@ public class Constants {
     // Overview
     public static final double LOWMARK = 76.0;
     public static final double HIGHMARK = 180.0;
+
+    // STATISTICS
+    public static final double STATS_TARGET_LOW_MMOL = 3.9;
+    public static final double STATS_TARGET_HIGH_MMOL = 7.8;
+    public static final double STATS_RANGE_LOW_MMOL = 3.9;
+    public static final double STATS_RANGE_HIGH_MMOL = 10.0;
+
 
 }

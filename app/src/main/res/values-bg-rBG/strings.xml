@@ -593,6 +593,7 @@
     <string name="overview_newtempbasal_basaltype_label">Тип базал</string>
     <string name="invalidprofile">Грешен профил !!!</string>
     <string name="profileswitch">Смяна на профил</string>
+    <string name="doprofileswitch">Смени профил</string>
     <string name="careportal_pbage_label">Възраст на батерията на помпата</string>
     <string name="careportal_pumpbatterychange">Смяна на батерия</string>
     <string name="ns_alarmoptions">Опции за аларми</string>
@@ -1435,4 +1436,7 @@
     <string name="activitymonitor">Мониторинг на активност</string>
     <string name="doyouwantresetstats">Искате да нулирате статистиката?</string>
     <string name="statistics">Статистика</string>
+    <string name="randombg">Произволна КЗ</string>
+    <string name="description_source_randombg">Генерира произволни захари(демо режим)</string>
+    <string name="randombg_short">КЗ</string>
 </resources>

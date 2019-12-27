@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.bus.RxBus.toObservable
 import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
@@ -15,10 +16,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.smscommunicator_fragment.*
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.max
 
-class SmsCommunicatorFragment : Fragment() {
+class SmsCommunicatorFragment : DaggerFragment() {
     private val disposable = CompositeDisposable()
+
+    @Inject
+    lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -47,12 +52,12 @@ class SmsCommunicatorFragment : Fragment() {
                 return (object1.date - object2.date).toInt()
             }
         }
-        Collections.sort(SmsCommunicatorPlugin.messages, CustomComparator())
+        Collections.sort(smsCommunicatorPlugin.messages, CustomComparator())
         val messagesToShow = 40
-        val start = max(0, SmsCommunicatorPlugin.messages.size - messagesToShow)
+        val start = max(0, smsCommunicatorPlugin.messages.size - messagesToShow)
         var logText = ""
-        for (x in start until SmsCommunicatorPlugin.messages.size) {
-            val sms = SmsCommunicatorPlugin.messages[x]
+        for (x in start until smsCommunicatorPlugin.messages.size) {
+            val sms = smsCommunicatorPlugin.messages[x]
             when {
                 sms.ignored -> {
                     logText += DateUtil.timeString(sms.date) + " &lt;&lt;&lt; " + "░ " + sms.phoneNumber + " <b>" + sms.text + "</b><br>"

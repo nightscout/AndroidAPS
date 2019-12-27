@@ -46,10 +46,10 @@
     <string name="unfinshed_button">Volgende onvoltooide</string>
     <string name="requestcode">Aanvraagcode: %1$s</string>
     <string name="objectives_hint">(controleer alle juiste antwoorden)</string>
-    <string name="disconnectpump_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Getting-Started/FAQ.html#wat-te-doen-tijdens-het-douchen</string>
-    <string name="usetemptarget_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Getting-Started/Screenshots.html#overzicht-scherm</string>
-    <string name="useaction_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Getting-Started/Screenshots.html#configurator</string>
-    <string name="usescale_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Getting-Started/Screenshots.html#overzicht-scherm</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Getting-Started/FAQ.html#wat-te-doen-tijdens-het-douchen</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Getting-Started/Screenshots.html#overzicht-scherm</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Getting-Started/Screenshots.html#configurator</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Getting-Started/Screenshots.html#overzicht-scherm</string>
     <string name="notconnected">Niet verbonden met het internet</string>
     <string name="failedretrievetime">Ophalen tijd mislukt</string>
     <string name="requirementnotmet">Vereisten van doel niet behaald</string>

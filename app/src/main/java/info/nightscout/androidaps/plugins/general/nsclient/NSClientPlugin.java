@@ -32,6 +32,8 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck;
+import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI;
@@ -250,4 +252,25 @@ public class NSClientPlugin extends PluginBase {
     public boolean hasWritePermission() {
         return nsClientService.hasWriteAuth;
     }
+
+    public void handleClearAlarm(NSAlarm originalAlarm, long silenceTimeInMsec) {
+
+        if (!isEnabled(PluginType.GENERAL)) {
+            return;
+        }
+        if (SP.getBoolean(R.string.key_ns_noupload, false)) {
+            if (L.isEnabled(L.NSCLIENT))
+                log.debug("Upload disabled. Message dropped");
+            return;
+        }
+
+        AlarmAck ack = new AlarmAck();
+        ack.level = originalAlarm.getLevel();
+        ack.group = originalAlarm.getGroup();
+        ack.silenceTime = silenceTimeInMsec;
+
+        if (nsClientService != null)
+            nsClientService.sendAlarmAck(ack);
+    }
+
 }

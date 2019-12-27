@@ -3,6 +3,8 @@ package info.nightscout.androidaps.queue.commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -25,10 +27,14 @@ public class CommandSetProfile extends Command {
 
     private Profile profile;
 
+    @Inject
+    SmsCommunicatorPlugin smsCommunicatorPlugin;
+
     public CommandSetProfile(Profile profile, Callback callback) {
         commandType = CommandType.BASALPROFILE;
         this.profile = profile;
         this.callback = callback;
+        MainApp.instance().androidInjector().inject(this); // TODO: Inject via constructor
     }
 
     @Override
@@ -50,7 +56,6 @@ public class CommandSetProfile extends Command {
         // Send SMS notification if ProfileSwitch is comming from NS
         ProfileSwitch profileSwitch = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(System.currentTimeMillis());
         if (profileSwitch != null && r.enacted && profileSwitch.source == Source.NIGHTSCOUT) {
-            SmsCommunicatorPlugin smsCommunicatorPlugin = SmsCommunicatorPlugin.INSTANCE;
             if (smsCommunicatorPlugin.isEnabled(PluginType.GENERAL)) {
                 smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.gs(R.string.profile_set_ok));
             }

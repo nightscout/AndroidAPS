@@ -4,13 +4,13 @@
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
     <string name="label_xdrip">AAPS</string>
-    <string name="label_xdrip_large">AAPS(Large)</string>
-    <string name="label_xdrip_big_chart">AAPS(GrandGraph)</string>
-    <string name="label_xdrip_no_chart">AAPS(SansGraph)</string>
-    <string name="label_xdrip_circle">AAPS(Cercle)</string>
+    <string name="label_xdrip_large">AAPS (Large)</string>
+    <string name="label_xdrip_big_chart">AAPS (GrandGraph)</string>
+    <string name="label_xdrip_no_chart">AAPS (SansGraph)</string>
+    <string name="label_xdrip_circle">AAPS (Cercle)</string>
     <string name="label_xdrip_v2">AAPSv2</string>
-    <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
-    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
+    <string name="label_xdrip_cockpit">AAPS (Cockpit)</string>
+    <string name="label_xdrip_steampunk">AAPS (Steampunk)</string>
     <string name="label_warning_sync">Pas de données !</string>
     <string name="label_warning_old">Données anciennes!</string>
     <string name="label_warning_since">Depuis %1$s</string>
@@ -20,7 +20,7 @@
     <string name="pref_on">Oui</string>
     <string name="pref_off">Non</string>
     <string name="pref_vibrate_on_bolus">Vibrer sur Bolus</string>
-    <string name="pref_units_for_actions">Unités des Actions</string>
+    <string name="pref_units_for_actions">Unités pour les Actions</string>
     <string name="pref_show_date">Afficher Date</string>
     <string name="pref_show_iob">Afficher IA</string>
     <string name="pref_show_cob">Afficher GA</string>
@@ -93,7 +93,7 @@
     <string name="action_bolus">bolus</string>
     <string name="status_pump">Pompe</string>
     <string name="status_loop">Boucle</string>
-    <string name="status_cpp">PROFIL</string>
+    <string name="status_cpp">Profil</string>
     <string name="status_tdd">DTI</string>
     <string name="activity_carb">GA</string>
     <string name="activity_IOB">IA</string>
@@ -105,4 +105,5 @@
     <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">U/h</string>
     <string name="unit_h" comment="One letter shortcut for: Hour" maxLength="1">h</string>
     <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">j</string>
+    <string name="unit_w" comment="One letter shortcut for: Week" maxLength="1">s</string>
 </resources>

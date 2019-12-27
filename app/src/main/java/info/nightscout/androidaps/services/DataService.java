@@ -11,6 +11,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
@@ -47,6 +49,16 @@ public class DataService extends IntentService {
         super("DataService");
     }
 
+    @Inject
+    SmsCommunicatorPlugin smsCommunicatorPlugin;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        ((MainApp) getApplication()).androidInjector().inject(this);
+
+    }
+
     @Override
     protected void onHandleIntent(final Intent intent) {
         if (L.isEnabled(L.DATASERVICE)) {
@@ -56,10 +68,6 @@ public class DataService extends IntentService {
 
         boolean acceptNSData = !SP.getBoolean(R.string.key_ns_upload_only, false);
         Bundle bundles = intent.getExtras();
-        if (bundles != null && bundles.containsKey("islocal")) {
-            acceptNSData = acceptNSData || bundles.getBoolean("islocal");
-        }
-
 
         final String action = intent.getAction();
         if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
@@ -103,7 +111,7 @@ public class DataService extends IntentService {
         ) {
             handleNewDataFromNSClient(intent);
         } else if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)) {
-            SmsCommunicatorPlugin.INSTANCE.handleNewData(intent);
+            smsCommunicatorPlugin.handleNewData(intent);
         }
 
         if (L.isEnabled(L.DATASERVICE))

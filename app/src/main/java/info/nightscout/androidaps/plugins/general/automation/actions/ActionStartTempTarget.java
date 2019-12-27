@@ -75,7 +75,7 @@ public class ActionStartTempTarget extends Action {
         int unitResId = value.getUnits().equals(Constants.MGDL) ? R.string.mgdl : R.string.mmol;
 
         new LayoutBuilder()
-                .add(new LabelWithElement(MainApp.gs(R.string.careportal_temporarytarget) + " [" + MainApp.gs(unitResId) + "]", "", value))
+                .add(new LabelWithElement(MainApp.gs(R.string.careportal_temporarytarget) + "\n[" + MainApp.gs(unitResId) + "]", "", value))
                 .add(new LabelWithElement(MainApp.gs(R.string.careportal_newnstreatment_duration_min_label), "", duration))
                 .build(root);
     }

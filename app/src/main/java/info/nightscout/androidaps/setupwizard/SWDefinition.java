@@ -23,13 +23,11 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
-import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
-import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
+import info.nightscout.androidaps.dialogs.ProfileSwitchDialog;
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment;
@@ -297,18 +295,14 @@ public class SWDefinition {
             .validator(() -> LocalProfilePlugin.INSTANCE.getProfile() != null && LocalProfilePlugin.INSTANCE.getProfile().getDefaultProfile() != null && LocalProfilePlugin.INSTANCE.getProfile().getDefaultProfile().isValid("StartupWizard"))
             .visibility(() -> LocalProfilePlugin.INSTANCE.isEnabled(PluginType.PROFILE));
 
-    private SWScreen screenProfileSwitch = new SWScreen(R.string.profileswitch)
+    private SWScreen screenProfileSwitch = new SWScreen(R.string.careportal_profileswitch)
             .skippable(false)
             .add(new SWInfotext()
                     .label(R.string.profileswitch_ismissing))
             .add(new SWButton()
                     .text(R.string.doprofileswitch)
                     .action(() -> {
-                        NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                        final OptionsToShow profileSwitch = CareportalFragment.PROFILESWITCHDIRECT;
-                        profileSwitch.executeProfileSwitch = true;
-                        newDialog.setOptions(profileSwitch, R.string.careportal_profileswitch);
-                        newDialog.show(getActivity().getSupportFragmentManager(), "NewNSTreatmentDialog");
+                        new ProfileSwitchDialog().show(getActivity().getSupportFragmentManager(), "SetupWizard");
                     }))
             .validator(() -> ProfileFunctions.getInstance().getProfile() != null)
             .visibility(() -> ProfileFunctions.getInstance().getProfile() == null);

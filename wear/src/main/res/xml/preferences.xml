@@ -133,14 +133,6 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="match_divider"
-        android:summary="Status bar divider background matches watchface background"
-        android:title="Matching divider"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on"/>
-
     <ListPreference
         android:defaultValue="3"
         android:entries="@array/chart_timeframe"

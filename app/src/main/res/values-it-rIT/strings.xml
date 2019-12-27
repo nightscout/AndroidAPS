@@ -161,7 +161,7 @@
     <string name="carbs">CHO</string>
     <string name="changeyourinput">Cambia il tuo input!</string>
     <string name="setextendedbolusquestion">Imposta nuovo bolo esteso:</string>
-    <string name="configbuilder_bgsource">Origine glicemia</string>
+    <string name="configbuilder_bgsource">Origine BG</string>
     <string name="configbuilder_bgsource_description">Da dove AndroidAPS dovrebbe ottenere i suoi dati?</string>
     <string name="xdrip">xDrip</string>
     <string name="apsmode_title">Modalità APS</string>
@@ -178,7 +178,7 @@
     <string name="treatments_wizard_basaliob_label">IOB da basale</string>
     <string name="bolusconstraintapplied">Vincolo bolo applicato</string>
     <string name="carbsconstraintapplied">Vincolo CHO applicato</string>
-    <string name="careportal_bgcheck">Controllo glicemia</string>
+    <string name="careportal_bgcheck">Controllo BG</string>
     <string name="careportal_announcement">Annuncio</string>
     <string name="careportal_note">Nota</string>
     <string name="careportal_question">Domanda</string>
@@ -401,8 +401,8 @@
     <string name="danar_enableextendedbolus">Abilita bolo esteso sul micro</string>
     <string name="danar_switchtouhmode">Cambia la modalità da U/d a U/h nel micro</string>
     <string name="basalvaluebelowminimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
-    <string name="sms_actualbg">Glicemia:</string>
-    <string name="sms_lastbg">Ultima glicemia:</string>
+    <string name="sms_actualbg">BG:</string>
+    <string name="sms_lastbg">Ultimo BG:</string>
     <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Notifica in corso</string>
@@ -593,6 +593,7 @@
     <string name="overview_newtempbasal_basaltype_label">Tipo basale</string>
     <string name="invalidprofile">Profilo non valido !!!</string>
     <string name="profileswitch">Cambio profilo</string>
+    <string name="doprofileswitch">Cambia profilo</string>
     <string name="careportal_pbage_label">Età batteria micro</string>
     <string name="careportal_pumpbatterychange">Cambio batteria micro</string>
     <string name="ns_alarmoptions">Opzioni allarme</string>
@@ -709,10 +710,10 @@
     <string name="executingrightnow">Il comando verrà eseguito ora</string>
     <string name="pumpdrivercorrected">Driver del micro corretto</string>
     <string name="pump_unreachable">Micro irraggiungibile</string>
-    <string name="missed_bg_readings">Letture glicemia mancanti</string>
+    <string name="missed_bg_readings">Letture BG mancanti</string>
     <string name="raise_notifications_as_android_notifications">Usa le notifiche di sistema per gli avvisi</string>
     <string name="localalertsettings_title">Allarmi locali</string>
-    <string name="enable_missed_bg_readings_alert">Allarme se non si ricevono dati glicemia</string>
+    <string name="enable_missed_bg_readings_alert">Allarme se non si ricevono dati BG</string>
     <string name="enable_pump_unreachable_alert">Allarme se il micro non è raggiungibile</string>
     <string name="pump_unreachable_threshold">Soglia micro irraggiungibile [min]</string>
     <string name="urgent_alarm">Allarme urgente</string>
@@ -721,19 +722,19 @@
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Spegne il bluetooth del telefono per qualche secondo se non è possibile alcuna connessione al micro. Questo può essere utile su alcuni telefoni.</string>
     <string name="eversense">Eversense app (modificata)</string>
-    <string name="dexcomg5_nsupload_title">Carica dati glicemia su NS</string>
-    <string name="bgsource_upload">Impostazioni caricamento glicemia</string>
+    <string name="dexcomg5_nsupload_title">Carica dati BG su NS</string>
+    <string name="bgsource_upload">Impostazioni caricamento BG</string>
     <string name="wear_detailed_delta_title">Mostra delta dettagliato</string>
     <string name="wear_detailed_delta_summary">Mostra delta con una cifra decimale in più</string>
     <string name="smbmaxminutes">Max minuti SMB</string>
     <string name="smbmaxminutes_summary">Max minuti di basale a cui limitare SMB</string>
     <string name="unsupportedfirmware">Firmware del micro non supportato</string>
-    <string name="dexcomg5_xdripupload_title">Invia dati glicemia a xDrip+</string>
+    <string name="dexcomg5_xdripupload_title">Invia dati BG a xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ seleziona origine dati 640g/Eversense</string>
-    <string name="nsclientbg">Glicemia NSClient</string>
+    <string name="nsclientbg">BG NSClient</string>
     <string name="minimalbasalvaluereplaced">Valore basale sostituito dal minimo valore supportato: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valore basale sostituito dal massimo valore supportato: %1$s</string>
-    <string name="overview_editquickwizard_usebg">Calcolo glicemia</string>
+    <string name="overview_editquickwizard_usebg">Calcolo BG</string>
     <string name="overview_editquickwizard_usebolusiob">Calcolo IOB da bolo</string>
     <string name="overview_editquickwizard_usebasaliob">Calcolo IOB da basale</string>
     <string name="overview_editquickwizard_usetrend">Calcolo trend</string>
@@ -749,7 +750,7 @@
     <string name="nsclienthaswritepermission">NSClient ha il permesso di scrittura</string>
     <string name="closedmodeenabled">Modalità chiusa abilitata</string>
     <string name="maxiobset">Max IOB impostata correttamente</string>
-    <string name="hasbgdata">Glicemia disponibile da sorgente selezionata</string>
+    <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
     <string name="basalprofilenotaligned">Valori basali non allineati alle ore: %1$s</string>
     <string name="zerovalueinprofile">Profilo non valido: %1$s</string>
     <string name="combo_programming_bolus">Programmazione micro per erogazione</string>
@@ -931,7 +932,7 @@
     <string name="virtualpump_definition">Definizione micro</string>
     <string name="virtualpump_pump_def">Bolo: Step=%1$s\nBolo Esteso: [Step=%2$s, Durata=%3$smin-%4$sh]\nBasale: Step=%5$s\nTBR: %6$s (di %7$s), Durata=%8$smin-%9$sh\n%10$s</string>
     <string name="virtualpump_pump_def_extended_note">* Sono supportati solo valori discreti, non intervalli di valori, come incrementi per basale/bolo nel micro virtuale.</string>
-    <string name="ns_autobackfill_title">Riempimento automatico glicemie</string>
+    <string name="ns_autobackfill_title">Riempimento automatico BG</string>
     <string name="wear_wizard_settings">Impostazioni Calcolatore</string>
     <string name="wear_wizard_settings_summary">Calcoli inclusi nel risultato del Calcolatore:</string>
     <string name="wear_display_settings">Impostazioni di visualizzazione</string>
@@ -949,7 +950,7 @@
     <string name="setupwizard_sensitivity_url">https://github.com/MilosKozak/AndroidAPS/wiki/Sensitivity-detection-and-COB</string>
     <string name="nsclientinfotext">NSClient gestisce la connessione a Nightscout. Puoi saltare questa parte ora, ma non sarai in grado di superare gli obiettivi fino a quando non ne porterai a termine la configurazione.</string>
     <string name="diawarning">Ricorda: i nuovi profili di insulina richiedono una DIA di almeno 5h. DIA di 5 - 6h sui nuovi profili sono uguali a DIA di 3h sui vecchi profili di insulina.</string>
-    <string name="bgsourcesetup">Configura sorgente glicemia</string>
+    <string name="bgsourcesetup">Configura sorgente BG</string>
     <string name="setupwizard_profile_description">Seleziona il tipo di profilo. Se il paziente è un bambino dovresti utilizzare il profilo di NS. Se non c\'è nessuno a seguirti su Nightscout probabilmente preferirai il profilo locale. Ricorda che stai solo selezionando la sorgente del profilo. Per utilizzarlo devi attivarlo tramite l\'esecuzione del comando \"Cambio profilo\"</string>
     <string name="setupwizard_aps_description">Seleziona uno degli algoritmi disponibili. Sono ordinati dal più vecchio al più recente. L\'algoritmo più recente è solitamente più potente e più aggressivo. Pertanto, se sei un nuovo utente, probabilmente dovresti iniziare con AMA e non con l\'ultimo. Non dimenticare di leggere la documentazione di OpenAPS e di configurarlo prima dell\'uso.</string>
     <string name="startobjective">Avvia il tuo primo obiettivo</string>
@@ -1164,7 +1165,7 @@
     <string name="tidepool_upload_bolus">Carica trattamenti (insulina, carboidrati)</string>
     <string name="tidepool_upload_tbr">Carica basali temporanee</string>
     <string name="tidepool_upload_profile">Carica cambi profilo, target temporanei</string>
-    <string name="tidepool_upload_bg">Carica test glicemia</string>
+    <string name="tidepool_upload_bg">Carica test BG</string>
     <string name="dst_in_24h_warning">Cambio all\'ora legale in 24h o meno</string>
     <string name="dst_loop_disabled_warning">Cambio all\'ora legale avvenuto meno di 3 ore fa - Loop chiuso disabilitato</string>
     <string name="storage">vincolo di archiviazione interna</string>
@@ -1210,8 +1211,8 @@
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
-    <string name="deltalabel">Differenza glicemia</string>
-    <string name="deltalabel_u">Differenza glicemia [%1$s]</string>
+    <string name="deltalabel">Differenza BG</string>
+    <string name="deltalabel_u">Differenza BG [%1$s]</string>
     <string name="currentlocation">Posizione corrente</string>
     <string name="location">Posizione</string>
     <string name="latitude_short">Lat:</string>
@@ -1418,4 +1419,24 @@
     <string name="low_mark_comment">Valore più basso per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="high_mark_comment">Valore più alto per l\'intervallo di visualizzazione dell\'area \"in range\"</string>
     <string name="reorder_label">Riordina</string>
+    <string name="age">Età:</string>
+    <string name="weight">Peso:</string>
+    <string name="id">ID:</string>
+    <string name="submit">Invia</string>
+    <string name="mostcommonprofile">Profilo più comune:</string>
+    <string name="survey_comment">Nota: solo i dati visibili su questa schermata verranno caricati (in modo anonimo). Un ID è assegnato a questa installazione di AndroidAPS. Puoi inviare nuovamente i dati se il tuo profilo principale viene modificato, ma lascialo in esecuzione almeno per una settimana per rendere visibili i risultati nel time in range. Il tuo aiuto è apprezzato.</string>
+    <string name="nav_survey">Sondaggio</string>
+    <string name="invalidage">Inserimento età non valido</string>
+    <string name="invalidweight">Inserimento peso non valido</string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+    <string name="tirformat"><![CDATA[<b>%1$s:</b> Basso: <b>%2$02d%%</b> In: <b>%3$02d%%</b> Alto: <b>%4$02d%%</b>]]></string>
+    <string name="average">Media</string>
+    <string name="tdd">TDD</string>
+    <string name="tir">TIR</string>
+    <string name="activitymonitor">Monitor attività</string>
+    <string name="doyouwantresetstats">Vuoi resettare le statistiche sull\'attività?</string>
+    <string name="statistics">Statistiche</string>
+    <string name="randombg">BG casuale</string>
+    <string name="description_source_randombg">Genera dati glicemia casuali (solo modalità demo)</string>
+    <string name="randombg_short">BG</string>
 </resources>

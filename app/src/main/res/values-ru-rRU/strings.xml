@@ -1420,4 +1420,21 @@ Context | Edit Context</string>
     <string name="low_mark_comment">Меньшее значение диапазона целевых значений (только для дисплея)</string>
     <string name="high_mark_comment">Большее значение диапазона целевых значений (только для дисплея)</string>
     <string name="reorder_label">Повторный заказ</string>
+    <string name="age">Возраст:</string>
+    <string name="weight">Вес:</string>
+    <string name="id">Идентификатор:</string>
+    <string name="submit">Отправить</string>
+    <string name="mostcommonprofile">Наиболее часто применяемый профиль:</string>
+    <string name="survey_comment">Примечание: Данные, видимые на этом экране, будут загружены анонимно. Для этой установки AndroidAPS назначен идентификатор. Вы можете снова передать данные, если ваш основной профиль будет изменен, но пусть он работает по крайней мере в течение недели, чтобы результат был виден в динамике. Ваша помощь ценна.</string>
+    <string name="nav_survey">Опрос</string>
+    <string name="invalidage">Некорректное значение возраст</string>
+    <string name="invalidweight">Некорректное значение вес</string>
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+    <string name="tirformat"><![CDATA[<b>%1$s:</b> Низкий: <b>%2$02d%%</b> В целевом диапазоне: <b>%3$02d%%</b> Высокий: <b>%4$02d%%</b>]]></string>
+    <string name="average">Средний</string>
+    <string name="tdd">TDD/общая суточная доза</string>
+    <string name="tir">Время в целевом диапазоне TIR</string>
+    <string name="activitymonitor">Монитор активности</string>
+    <string name="doyouwantresetstats">Хотите сбросить статистику активности?</string>
+    <string name="statistics">Статистика</string>
 </resources>

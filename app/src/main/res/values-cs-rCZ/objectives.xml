@@ -46,10 +46,10 @@
     <string name="unfinshed_button">Další nedokončená</string>
     <string name="requestcode">Kód žádosti: %1$s</string>
     <string name="objectives_hint">(zatrhněte všechny správné odpovědi)</string>
-    <string name="disconnectpump_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/FAQ.html#co-delat-pri-sprchovani-a-koupani</string>
-    <string name="usetemptarget_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/Screenshots.html#hlavni-stranka</string>
-    <string name="useaction_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/Screenshots.html#konfigurace</string>
-    <string name="usescale_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/Screenshots.html#hlavni-stranka</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/FAQ.html#co-delat-pri-sprchovani-a-koupani</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/Screenshots.html#hlavni-stranka</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/Screenshots.html#konfigurace</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/Screenshots.html#hlavni-stranka</string>
     <string name="notconnected">Chybí připojení k internetu</string>
     <string name="failedretrievetime">Nepodařilo se načíst čas</string>
     <string name="requirementnotmet">Požadavky cíle nejsou splněny</string>
