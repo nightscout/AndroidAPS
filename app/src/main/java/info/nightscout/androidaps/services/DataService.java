@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
+import dagger.android.DaggerIntentService;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
@@ -39,10 +40,10 @@ import info.nightscout.androidaps.plugins.source.SourceTomatoPlugin;
 import info.nightscout.androidaps.plugins.source.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.utils.JsonHelper;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 
-public class DataService extends IntentService {
+public class DataService extends DaggerIntentService {
     private Logger log = LoggerFactory.getLogger(L.DATASERVICE);
 
     public DataService() {
@@ -52,12 +53,8 @@ public class DataService extends IntentService {
     @Inject
     SmsCommunicatorPlugin smsCommunicatorPlugin;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        ((MainApp) getApplication()).androidInjector().inject(this);
-
-    }
+    @Inject
+    SP sp;
 
     @Override
     protected void onHandleIntent(final Intent intent) {
@@ -66,7 +63,7 @@ public class DataService extends IntentService {
             log.debug("onHandleIntent " + BundleLogger.log(intent.getExtras()));
         }
 
-        boolean acceptNSData = !SP.getBoolean(R.string.key_ns_upload_only, false);
+        boolean acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, false);
         Bundle bundles = intent.getExtras();
 
         final String action = intent.getAction();
@@ -250,7 +247,7 @@ public class DataService extends IntentService {
             String enteredBy = JsonHelper.safeGetString(json, "enteredBy", "");
             String notes = JsonHelper.safeGetString(json, "notes", "");
             if (date > now - 15 * 60 * 1000L && !notes.isEmpty()
-                    && !enteredBy.equals(SP.getString("careportal_enteredby", "AndroidAPS"))) {
+                    && !enteredBy.equals(sp.getString("careportal_enteredby", "AndroidAPS"))) {
                 Notification announcement = new Notification(Notification.NSANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
                 RxBus.INSTANCE.send(new EventNewNotification(announcement));
             }

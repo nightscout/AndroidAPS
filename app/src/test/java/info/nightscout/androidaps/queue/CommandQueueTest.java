@@ -113,6 +113,7 @@ public class CommandQueueTest extends CommandQueue {
     }
 
     private void prepareMock(Double insulin, Integer carbs) throws Exception {
+        PowerMockito.mockStatic(ConstraintChecker.class);
         ConstraintChecker constraintChecker = mock(ConstraintChecker.class);
 
         AAPSMocker.mockMainApp();
@@ -120,7 +121,7 @@ public class CommandQueueTest extends CommandQueue {
         PumpInterface pump = VirtualPumpPlugin.getPlugin();
         when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
 
-        when(MainApp.getConstraintChecker()).thenReturn(constraintChecker);
+        when(ConstraintChecker.getInstance()).thenReturn(constraintChecker);
         when(MainApp.isEngineeringModeOrRelease()).thenReturn(true);
         Constraint<Double> bolusConstraint = new Constraint<>(0d);
         when(ConstraintChecker.getInstance().applyBolusConstraints(any())).thenReturn(bolusConstraint);

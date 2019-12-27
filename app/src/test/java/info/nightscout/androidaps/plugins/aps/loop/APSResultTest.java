@@ -30,7 +30,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, SP.class, Context.class, ProfileFunctions.class, TreatmentsPlugin.class, L.class})
+@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, SP.class, Context.class, ProfileFunctions.class, TreatmentsPlugin.class, L.class, ConstraintChecker.class})
 public class APSResultTest {
     VirtualPumpPlugin virtualPumpPlugin;
     TreatmentsPlugin treatmentsPlugin;
@@ -183,12 +183,12 @@ public class APSResultTest {
         AAPSMocker.mockTreatmentService();
         AAPSMocker.mockL();
         treatmentsPlugin = AAPSMocker.mockTreatmentPlugin();
-        ConstraintChecker constraintChecker = AAPSMocker.mockConstraintsChecker();
+        AAPSMocker.mockConstraintsChecker();
+        when(ConstraintChecker.getInstance().isClosedLoopAllowed()).thenReturn(closedLoopEnabled);
+
 
         virtualPumpPlugin = VirtualPumpPlugin.getPlugin();
         when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(virtualPumpPlugin);
-
-        when(constraintChecker.isClosedLoopAllowed()).thenReturn(closedLoopEnabled);
 
         Mockito.when(SP.getDouble(anyInt(), anyDouble())).thenReturn(30d);
 
