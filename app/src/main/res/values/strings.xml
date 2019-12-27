@@ -1682,16 +1682,16 @@
     <string name="omnipod_driver_error_unexpected_exception_type">An unexpected error occured. Please report! (type: %1$s).</string>
     <string name="omnipod_driver_error_invalid_parameters">Communication failed: received invalid input parameters.</string>
     <string name="omnipod_driver_error_communication_failed">Communication failed.</string>
-    <string name="omnipod_driver_error_crc_mismatch">Communication failed: Message integrity verification failed.</string>
-    <string name="omnipod_driver_error_invalid_packet_type">Communication failed: received an invalid packet from the pod.</string>
-    <string name="omnipod_driver_error_invalid_progress_state">Communication failed: the pod is in a wrong state.</string>
-    <string name="omnipod_driver_error_invalid_response">Communication failed: received an invalid response from the pod.</string>
-    <string name="omnipod_driver_error_message_decoding_failed">Communication failed: failed to decode message from the pod.</string>
+    <string name="omnipod_driver_error_crc_mismatch">Communication failed: message integrity verification failed.</string>
+    <string name="omnipod_driver_error_invalid_packet_type">Communication failed: received an invalid packet from the Pod.</string>
+    <string name="omnipod_driver_error_invalid_progress_state">Communication failed: the Pod is in a wrong state.</string>
+    <string name="omnipod_driver_error_invalid_response">Communication failed: received an invalid response from the Pod.</string>
+    <string name="omnipod_driver_error_message_decoding_failed">Communication failed: failed to decode message from the Pod.</string>
     <string name="omnipod_driver_error_nonce_resync_failed">Communication failed: nonce resync failed.</string>
     <string name="omnipod_driver_error_nonce_out_of_sync">Communication failed: nonce out of sync.</string>
-    <string name="omnipod_driver_error_not_enough_data">Communication failed: not enough data received from the pod.</string>
-    <string name="omnipod_driver_error_pod_fault">A pod fault (%1$03d %2$s) has been detected. Please deactivate your pod and start a new one.</string>
-    <string name="omnipod_driver_error_pod_returned_error_response">Communication failed: the pod returned an error response.</string>
+    <string name="omnipod_driver_error_not_enough_data">Communication failed: not enough data received from the Pod.</string>
+    <string name="omnipod_driver_error_pod_fault">A Pod fault (%1$03d %2$s) has been detected. Please deactivate your Pod and start a new one.</string>
+    <string name="omnipod_driver_error_pod_returned_error_response">Communication failed: the Pod returned an error response.</string>
 
     <!-- Omnipod - Pod Mgmt -->
     <string name="omnipod_pod_mgmt_title">Pod Management</string>
@@ -1714,7 +1714,7 @@
     <string name="omnipod_cmd_resume_delivery">Resume Delivery</string>
     <string name="omnipod_cmd_umknown_entry">Unknown Entry</string>
 
-    <string name="omnipod_cmd_reset_pod_desc">If you press "OK" Pod will be forcefully removed. Do this only if you can not communicate with Pod anymore.</string>
+    <string name="omnipod_cmd_reset_pod_desc">If you press <b>OK</b>, the Pod state will be forcibly reset and you will not be able to communicate with the Pod anymore. Do this only if you can not communicate with the Pod anymore. If you can still communicate with the Pod, please use the <b>Deactivate Pod</b> option.</string>
     <string name="omnipod_cmd_pod_history_na">Pod History not available at the moment.</string>
 
     <string name="omnipod_namex" translatable="false">Omnipod</string>
@@ -1723,21 +1723,21 @@
 
 
     <string name="omnipod_init_pod_wizard_step1_title">Fill the Pod</string>
-    <string name="omnipod_init_pod_wizard_step1_desc">\nFill new Pod with Insulin.\n\n\nAfter filling Pod, listen for 2 beeps, then press "Next".\n\n\n<b>Note:</b> Do not remove needle cap at this time.</string>
-    <string name="omnipod_init_pod_wizard_step2_title">Pair and Prime the Pod</string>
-    <string name="omnipod_init_pod_wizard_step2_action_header">We are trying to communicate with Pod.\n\nWhen all items are checked, you can press Next. If you decide to Cancel, you will have to discard the Pod. If there is an error you will get option to retry.</string>
+    <string name="omnipod_init_pod_wizard_step1_desc">\nFill the new Pod with insulin.\n\nListen for two beeps from the Pod during the filling process. Be sure to completely empty the fill syringe, even after hearing the two beeps.\n\nAfter filling the Pod, please press <b>Next</b>.\n\n<b>Note:</b> do not remove the Pod\'s needle cap at this time.</string>
+    <string name="omnipod_init_pod_wizard_step2_title">Priming</string>
+    <string name="omnipod_init_pod_wizard_step2_action_header">Trying to pair with and prime the new Pod.\n\nWhen all items are checked, you can press <b>Next</b>.\n\n<b>Note:</b> please keep the Pod very close to the RileyLink at this time.</string>
     <string name="omnipod_init_pod_wizard_step3_title">Attach the Pod</string>
-    <string name="omnipod_init_pod_wizard_step3_desc">\nPrepare infusion site. Remove Pods needle cap.\n\nIf cannula sticks out press <b>Cancel</b> (Pod will need to be discarded).\n\nPress <b>Next</b> to insert cannula and begin Basal Delivery.</string>
-    <string name="omnipod_init_pod_wizard_step4_title">Fill Cannula and Start Basal delivery</string>
+    <string name="omnipod_init_pod_wizard_step3_desc">\nPrepare the infusion site. Remove the Pod\'s needle cap and adhesive backing and attach the pod to the infusion site.\n\nIf the cannula sticks out, please press <b>Cancel</b> and discard your Pod.\n\nPress <b>Next</b> to insert the cannula and begin basal delivery.</string>
+    <string name="omnipod_init_pod_wizard_step4_title">Inserting cannula</string>
     <string name="omnipod_init_pod_wizard_pod_info_title">Pod Info</string>
-    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">Pod is now active.\n\nBasal has been programmed.\n\nCheck infusion site and cannula. If cannula seems incorrectly inserted, please replace the Pod.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nThe Pod is now active.\n\nYour basal schedule has been programmed and the cannula has been inserted.\n\nPlease verify that the cannula has been inserted correctly and replace your Pod if you feel hasn\'t.</string>
 
-    <string name="omnipod_remove_pod_wizard_step1_title">Prepare for Pod Removal</string>
-    <string name="omnipod_remove_pod_wizard_step1_desc">\nPress <b>Next</b> to begin Pod removal process.\n\n\nThis will stop delivery of insulin and deactivate Pod.</string>
-    <string name="omnipod_remove_pod_wizard_step2_title">Remove the Pod</string>
-    <string name="omnipod_remove_pod_wizard_step2_action_header">We are trying to communicate with Pod.\n\nWhen all items are checked, you can press Next. If Pod removal fails you need to click on Cancel.</string>
+    <string name="omnipod_remove_pod_wizard_step1_title">Deactivate Pod</string>
+    <string name="omnipod_remove_pod_wizard_step1_desc">\nPress <b>Next</b> to deactivate the Pod.\n\n<b>Note:</b> This will suspend all insulin delivery and deactivate the Pod.</string>
+    <string name="omnipod_remove_pod_wizard_step2_title">Deactivating the Pod</string>
+    <string name="omnipod_remove_pod_wizard_step2_action_header">Deactivating the Pod.\n\nWhen all items are checked, you can press <b>Next</b>.\n\n<b>Note:</b> If deactivating continuously fails, please press <b>Cancel</b> and use the <b>Reset Pod</b> option to forcibly reset the pod state.</string>
 
-    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod deactivated.\n\nRemove and discard the Pod.\n\nWhen you are ready, prepare the next Pod and start <b>Init Pod</b> action.</string>
+    <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod deactivated.\n\nPlease remove the Pod from your body and discard it.</string>
 
     <string name="omnipod_init_pod_pair_pod">Pair Pod</string>
     <string name="omnipod_init_pod_prime_pod">Prime Pod</string>
