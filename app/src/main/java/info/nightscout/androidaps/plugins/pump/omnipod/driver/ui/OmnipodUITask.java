@@ -31,6 +31,7 @@ public class OmnipodUITask {
     private String errorDescription;
     private Object[] parameters;
     private PodResponseType responseType;
+    public Object returnDataObject;
 
 
     public OmnipodUITask(OmnipodCommandType commandType) {
@@ -87,6 +88,10 @@ public class OmnipodUITask {
 // TODO                    returnData = communicationManager.bolus(amount);
             }
             break;
+
+            case GetPodPulseLog:
+                returnDataObject = communicationManager.readPulseLog();
+                break;
 
             case GetPodStatus:
                 returnData = communicationManager.getPodStatus();

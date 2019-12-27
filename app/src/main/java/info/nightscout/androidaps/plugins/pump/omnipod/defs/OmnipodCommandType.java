@@ -17,7 +17,8 @@ public enum OmnipodCommandType {
     ResetPodStatus, //
     GetPodStatus, //
     SetTime, //
-    AcknowledgeAlerts;
+    AcknowledgeAlerts, //
+    GetPodPulseLog;
 
 
 }

@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory
 class OmnipodFragment : Fragment() {
     private val LOG = LoggerFactory.getLogger(L.PUMP)
     private var disposable: CompositeDisposable = CompositeDisposable()
-    private var podAvailable = false
+    //private var podAvailable = false
 
     operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
         add(disposable)
@@ -116,10 +116,20 @@ class OmnipodFragment : Fragment() {
             if (!OmnipodUtil.getPumpStatus().verifyConfiguration()) {
                 OmnipodUtil.displayNotConfiguredDialog(context)
             } else {
-                val readPulseLog = AapsOmnipodManager.getInstance().readPulseLog()
+//                val readPulseLog = AapsOmnipodManager.getInstance().readPulseLog()
+//
+//                OKDialog.show(MainApp.instance().applicationContext, MainApp.gs(R.string.action),
+//                        "Pulse Log:\n" + readPulseLog.toString(), null)
+//
 
-                OKDialog.show(MainApp.instance().applicationContext, MainApp.gs(R.string.action),
-                        "Pulse Log:\n" + readPulseLog.toString(), null)
+                omnipod_pod_debug.isEnabled = false
+                OmnipodUtil.getPlugin().addPodStatusRequest(OmnipodStatusRequest.GetPodPulseLog);
+                ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("Clicked Refresh", object : Callback() {
+                    override fun run() {
+                        activity?.runOnUiThread { omnipod_pod_debug.isEnabled = true }
+                    }
+                })
+
             }
         }
 
@@ -157,7 +167,7 @@ class OmnipodFragment : Fragment() {
                 .subscribe({ event ->
                     setVisibilityOfPodDebugButton()
                 }, { FabricPrivacy.logException(it) })
-        
+
     }
 
 
@@ -177,25 +187,6 @@ class OmnipodFragment : Fragment() {
         loopHandler.removeCallbacks(refreshLoop)
     }
 
-//    @Subscribe
-//    fun onStatusEvent(c: EventPumpStatusChanged) {
-//        activity?.runOnUiThread { updateGUI() }
-//    }
-//
-//    @Subscribe
-//    fun onStatusEvent(s: EventTempBasalChange) {
-//        activity?.runOnUiThread { updateGUI() }
-//    }
-//
-//    @Subscribe
-//    fun onStatusEvent(s: EventExtendedBolusChange) {
-//        activity?.runOnUiThread { updateGUI() }
-//    }
-//
-//    @Subscribe
-//    fun onStatusEvent(s: EventQueueChanged) {
-//        activity?.runOnUiThread { updateGUI() }
-//    }
 
     @Synchronized
     private fun setDeviceStatus() {
@@ -231,7 +222,7 @@ class OmnipodFragment : Fragment() {
             pumpStatus.podAvailable = false
             pumpStatus.podNumber == null
         } else {
-            podAvailable = true
+            //podAvailable = true
             pumpStatus.podAvailable = true
             omnipod_pod_address.text = pumpStatus.podSessionState.address.toString()
             omnipod_pod_expiry.text = pumpStatus.podSessionState.expiryDateAsString
@@ -339,7 +330,7 @@ class OmnipodFragment : Fragment() {
 
         setDeviceStatus()
 
-        if (podAvailable) {
+        if (pumpStatus.podAvailable) {
         // last connection
             if (pumpStatus.lastConnection != 0L) {
                 val minAgo = DateUtil.minAgo(pumpStatus.lastConnection)
@@ -372,7 +363,7 @@ class OmnipodFragment : Fragment() {
             // last bolus
             val bolus = pumpStatus.lastBolusAmount
             val bolusTime = pumpStatus.lastBolusTime
-            if (bolus != null && bolusTime != null && podAvailable) {
+            if (bolus != null && bolusTime != null && pumpStatus.podAvailable) {
                 val agoMsc = System.currentTimeMillis() - pumpStatus.lastBolusTime.time
                 val bolusMinAgo = agoMsc.toDouble() / 60.0 / 1000.0
                 val unit = MainApp.gs(R.string.insulin_unit_shortname)
@@ -411,7 +402,6 @@ class OmnipodFragment : Fragment() {
             omnipod_lastbolus.text = ""
             omnipod_lastconnection.text = ""
             omnipod_lastconnection.setTextColor(Color.WHITE)
-
         }
 
         omnipod_errors.text = pumpStatus.errorInfo

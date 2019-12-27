@@ -47,6 +47,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentHighFlashLogDump;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
@@ -374,8 +375,23 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             List<OmnipodStatusRequest> removeList = new ArrayList<>();
 
             for (OmnipodStatusRequest omnipodStatusRequest : omnipodStatusRequestList) {
-                // TODO when we get more commands this needs to be extended
-                omnipodUIComm.executeCommand(omnipodStatusRequest.getCommandType());
+                if (omnipodStatusRequest==OmnipodStatusRequest.GetPodPulseLog) {
+                    OmnipodUITask omnipodUITask = omnipodUIComm.executeCommand(omnipodStatusRequest.getCommandType());
+
+                    PodInfoRecentHighFlashLogDump result = (PodInfoRecentHighFlashLogDump)omnipodUITask.returnDataObject;
+
+                    if (result==null) {
+                        LOG.warn("Result was null.");
+                    } else {
+                        LOG.warn("Result was NOT null.");
+
+                        OKDialog.show(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.action),
+                                "Pulse Log:\n" + result.toString(), null);
+                    }
+
+                } else {
+                    omnipodUIComm.executeCommand(omnipodStatusRequest.getCommandType());
+                }
                 removeList.add(omnipodStatusRequest);
             }
 
