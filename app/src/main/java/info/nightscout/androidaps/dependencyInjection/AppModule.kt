@@ -7,6 +7,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionSendSMS
@@ -31,6 +32,12 @@ class AppModule {
     @Singleton
     fun provideProfileFunction(sp: SP): ProfileFunction {
         return ProfileFunctionImplementation(sp)
+    }
+
+    @Provides
+    @Singleton
+    fun provideConstraintChecker(mainApp: MainApp): ConstraintChecker {
+        return ConstraintChecker(mainApp)
     }
 
     @Provides

@@ -1,0 +1,62 @@
+package info.nightscout.androidaps.interfaces
+
+import info.nightscout.androidaps.data.Profile
+
+interface ConstraintsInterface {
+
+    fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+        return value
+    }
+
+    fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
+        return value
+    }
+
+    fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        return value
+    }
+
+    fun isAMAModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        return value
+    }
+
+    fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        return value
+    }
+
+    fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        return value
+    }
+
+    fun isAdvancedFilteringEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        return value
+    }
+
+    fun isSuperBolusEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        return value
+    }
+
+    fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
+        return absoluteRate
+    }
+
+    fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
+        return percentRate
+    }
+
+    fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
+        return insulin
+    }
+
+    fun applyExtendedBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
+        return insulin
+    }
+
+    fun applyCarbsConstraints(carbs: Constraint<Int>): Constraint<Int> {
+        return carbs
+    }
+
+    fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
+        return maxIob
+    }
+}

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ConstraintChecker;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
@@ -63,7 +63,7 @@ public class ConstraintsCheckerTest {
         comboPlugin.setPluginEnabled(PluginType.PUMP, true);
         comboPlugin.setValidBasalRateProfileSelectedOnPump(false);
 
-        Constraint<Boolean> c = constraintChecker.isLoopInvokationAllowed();
+        Constraint<Boolean> c = constraintChecker.isLoopInvocationAllowed();
         Assert.assertEquals(true, c.getReasonList().size() == 2); // Combo & Objectives
         Assert.assertEquals(true, c.getMostLimitedReasonList().size() == 2); // Combo & Objectives
         Assert.assertEquals(Boolean.FALSE, c.value());
@@ -129,7 +129,7 @@ public class ConstraintsCheckerTest {
     public void isSMBModeEnabledTest() throws Exception {
         objectivesPlugin.getObjectives().get(ObjectivesPlugin.INSTANCE.getSMB_OBJECTIVE()).setStartedOn(0);
         when(SP.getBoolean(R.string.key_use_smb, false)).thenReturn(false);
-        when(MainApp.getConstraintChecker().isClosedLoopAllowed()).thenReturn(new Constraint<>(true));
+        when(ConstraintChecker.getInstance().isClosedLoopAllowed()).thenReturn(new Constraint<>(true));
 
         Constraint<Boolean> c = constraintChecker.isSMBModeEnabled();
         Assert.assertEquals(true, c.getReasonList().size() == 2); // Safety & Objectives

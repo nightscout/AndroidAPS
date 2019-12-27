@@ -17,7 +17,7 @@ import java.util.Date;
 import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.data.ConstraintChecker;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -123,14 +123,14 @@ public class CommandQueueTest extends CommandQueue {
         when(MainApp.getConstraintChecker()).thenReturn(constraintChecker);
         when(MainApp.isEngineeringModeOrRelease()).thenReturn(true);
         Constraint<Double> bolusConstraint = new Constraint<>(0d);
-        when(MainApp.getConstraintChecker().applyBolusConstraints(any())).thenReturn(bolusConstraint);
-        when(MainApp.getConstraintChecker().applyExtendedBolusConstraints(any())).thenReturn(bolusConstraint);
+        when(ConstraintChecker.getInstance().applyBolusConstraints(any())).thenReturn(bolusConstraint);
+        when(ConstraintChecker.getInstance().applyExtendedBolusConstraints(any())).thenReturn(bolusConstraint);
         Constraint<Integer> carbsConstraint = new Constraint<>(0);
-        when(MainApp.getConstraintChecker().applyCarbsConstraints(any())).thenReturn(carbsConstraint);
+        when(ConstraintChecker.getInstance().applyCarbsConstraints(any())).thenReturn(carbsConstraint);
         Constraint<Double> rateConstraint = new Constraint<>(0d);
-        when(MainApp.getConstraintChecker().applyBasalConstraints(any(), any())).thenReturn(rateConstraint);
+        when(ConstraintChecker.getInstance().applyBasalConstraints(any(), any())).thenReturn(rateConstraint);
         Constraint<Integer> percentageConstraint = new Constraint<>(0);
-        when(MainApp.getConstraintChecker().applyBasalPercentConstraints(any(), any())).thenReturn(percentageConstraint);
+        when(ConstraintChecker.getInstance().applyBasalPercentConstraints(any(), any())).thenReturn(percentageConstraint);
 
         PowerMockito.mockStatic(ToastUtils.class);
         Context context = mock(Context.class);

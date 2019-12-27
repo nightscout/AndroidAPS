@@ -10,7 +10,6 @@ import android.telephony.SmsMessage
 import android.text.TextUtils
 import com.andreabaccega.widget.ValidatingEditTextPreference
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
@@ -28,6 +27,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus.send
 import info.nightscout.androidaps.plugins.bus.RxBus.toObservable
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
@@ -52,7 +52,8 @@ import javax.inject.Singleton
 @Singleton
 class SmsCommunicatorPlugin @Inject constructor(
     val configBuilderPlugin: ConfigBuilderPlugin,
-    val resourceHelper: ResourceHelper
+    val resourceHelper: ResourceHelper,
+    val constraintChecker: ConstraintChecker
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(SmsCommunicatorFragment::class.java.name)
@@ -506,7 +507,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             else if (tempBasalPct == 0 && splitted[1] != "0%") sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
             else if (duration == 0) sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
             else {
-                tempBasalPct = MainApp.getConstraintChecker().applyBasalPercentConstraints(Constraint(tempBasalPct), profile).value()
+                tempBasalPct = constraintChecker.applyBasalPercentConstraints(Constraint(tempBasalPct), profile).value()
                 val passCode = generatePasscode()
                 val reply = String.format(resourceHelper.gs(R.string.smscommunicator_basalpctreplywithcode), tempBasalPct, duration, passCode)
                 receivedSms.processed = true
@@ -538,7 +539,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             else if (tempBasal == 0.0 && splitted[1] != "0") sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
             else if (duration == 0) sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
             else {
-                tempBasal = MainApp.getConstraintChecker().applyBasalConstraints(Constraint(tempBasal), profile).value()
+                tempBasal = constraintChecker.applyBasalConstraints(Constraint(tempBasal), profile).value()
                 val passCode = generatePasscode()
                 val reply = String.format(resourceHelper.gs(R.string.smscommunicator_basalreplywithcode), tempBasal, duration, passCode)
                 receivedSms.processed = true
@@ -591,7 +592,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         } else {
             var extended = SafeParse.stringToDouble(splitted[1])
             val duration = SafeParse.stringToInt(splitted[2])
-            extended = MainApp.getConstraintChecker().applyExtendedBolusConstraints(Constraint(extended)).value()
+            extended = constraintChecker.applyExtendedBolusConstraints(Constraint(extended)).value()
             if (extended == 0.0 || duration == 0) sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
             else {
                 val passCode = generatePasscode()
@@ -621,7 +622,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private fun processBOLUS(splitted: Array<String>, receivedSms: Sms) {
         var bolus = SafeParse.stringToDouble(splitted[1])
         val isMeal = splitted.size > 2 && splitted[2].equals("MEAL", ignoreCase = true)
-        bolus = MainApp.getConstraintChecker().applyBolusConstraints(Constraint(bolus)).value()
+        bolus = constraintChecker.applyBolusConstraints(Constraint(bolus)).value()
         if (splitted.size == 3 && !isMeal) {
             sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
         } else if (bolus > 0.0) {
@@ -701,7 +702,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             }
             time = midnight + T.secs(seconds.toLong()).msecs()
         }
-        grams = MainApp.getConstraintChecker().applyCarbsConstraints(Constraint(grams)).value()
+        grams = constraintChecker.applyCarbsConstraints(Constraint(grams)).value()
         if (grams == 0) sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
         else {
             val passCode = generatePasscode()

@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.constraints.safety;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
@@ -18,6 +17,7 @@ import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
@@ -90,8 +90,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         boolean enabled = SP.getBoolean(R.string.key_use_smb, false);
         if (!enabled)
             value.set(false, MainApp.gs(R.string.smbdisabledinpreferences), this);
-        ConstraintChecker constraintChecker = MainApp.getConstraintChecker();
-        Constraint<Boolean> closedLoop = constraintChecker.isClosedLoopAllowed();
+        Constraint<Boolean> closedLoop = ConstraintChecker.getInstance().isClosedLoopAllowed();
         if (!closedLoop.value())
             value.set(false, MainApp.gs(R.string.smbnotallowedinopenloopmode), this);
         return value;

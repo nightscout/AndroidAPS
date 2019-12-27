@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import androidx.fragment.app.DialogFragment
+import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.SP
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.okcancel.*
 import org.slf4j.LoggerFactory
 import java.util.*
 
-abstract class DialogFragmentWithDate : DialogFragment() {
+abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     private val log = LoggerFactory.getLogger(DialogFragmentWithDate::class.java)
 
     var eventTime = DateUtil.now()

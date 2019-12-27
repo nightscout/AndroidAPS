@@ -46,6 +46,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -272,11 +273,11 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
             }
         });
 
-        Integer maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
+        Integer maxCarbs = ConstraintChecker.getInstance().getMaxCarbsAllowed().value();
         editCarbs = view.findViewById(R.id.careportal_newnstreatment_carbsinput);
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
 
-        Double maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
+        Double maxInsulin = ConstraintChecker.getInstance().getMaxBolusAllowed().value();
         editInsulin = view.findViewById(R.id.careportal_newnstreatment_insulininput);
         editInsulin.setParams(0d, 0d, maxInsulin, 0.05d, new DecimalFormat("0.00"), false, view.findViewById(R.id.ok));
 
@@ -305,7 +306,7 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
 
         Integer maxPercent = 200;
         if (profile != null)
-            maxPercent = MainApp.getConstraintChecker().getMaxBasalPercentAllowed(profile).value();
+            maxPercent = ConstraintChecker.getInstance().getMaxBasalPercentAllowed(profile).value();
         editPercent = view.findViewById(R.id.careportal_newnstreatment_percentinput);
         editPercent.setParams(0d, -100d, (double) maxPercent, 5d, new DecimalFormat("0"), true, view.findViewById(R.id.ok), percentTextWatcher);
 
@@ -329,7 +330,7 @@ public class NewNSTreatmentDialog extends AppCompatDialogFragment implements Vie
 
         Double maxAbsolute = HardLimits.maxBasal();
         if (profile != null)
-            maxAbsolute = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
+            maxAbsolute = ConstraintChecker.getInstance().getMaxBasalAllowed(profile).value();
         editAbsolute = view.findViewById(R.id.careportal_newnstreatment_absoluteinput);
         editAbsolute.setParams(0d, 0d, maxAbsolute, 0.05d, new DecimalFormat("0.00"), true, view.findViewById(R.id.ok), absoluteTextWatcher);
 

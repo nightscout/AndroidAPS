@@ -5,9 +5,9 @@ import com.cozmo.danar.util.BleCommandUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 
 public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
     private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
@@ -28,7 +28,7 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
         this();
 
         // HARDCODED LIMIT - if there is one that could be created
-        amount = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
+        amount = ConstraintChecker.getInstance().applyBolusConstraints(new Constraint<>(amount)).value();
 
         this.amount = amount;
         this.speed = speed;

@@ -11,17 +11,29 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.OKDialog
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.dialog_extendedbolus.*
 import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.abs
 
 class ExtendedBolusDialog : DialogFragmentWithDate() {
+
+    @Inject
+    lateinit var mainApp: MainApp
+
+    @Inject
+    lateinit var resourceHelper: ResourceHelper
+
+    @Inject
+    lateinit var constraintChecker: ConstraintChecker
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -40,7 +52,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
 
         val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription ?: return
 
-        val maxInsulin = MainApp.getConstraintChecker().maxExtendedBolusAllowed.value()
+        val maxInsulin = constraintChecker.getMaxExtendedBolusAllowed().value()
         val extendedStep = pumpDescription.extendedBolusStep
         actions_extendedbolus_insulin.setParams(savedInstanceState?.getDouble("actions_extendedbolus_insulin")
             ?: extendedStep, extendedStep, maxInsulin, extendedStep, DecimalFormat("0.00"), false, ok)
@@ -55,23 +67,23 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         val insulin = SafeParse.stringToDouble(actions_extendedbolus_insulin.text)
         val durationInMinutes = SafeParse.stringToInt(actions_extendedbolus_duration.text)
         val actions: LinkedList<String> = LinkedList()
-        val insulinAfterConstraint = MainApp.getConstraintChecker().applyExtendedBolusConstraints(Constraint(insulin)).value()
-        actions.add(MainApp.gs(R.string.formatinsulinunits, insulinAfterConstraint))
-        actions.add(MainApp.gs(R.string.duration) + ": " + MainApp.gs(R.string.format_mins, durationInMinutes))
+        val insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(Constraint(insulin)).value()
+        actions.add(resourceHelper.gs(R.string.formatinsulinunits, insulinAfterConstraint))
+        actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, durationInMinutes))
         if (abs(insulinAfterConstraint - insulin) > 0.01)
-            actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.constraintapllied) + "</font>")
+            actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.constraintapllied) + "</font>")
 
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, MainApp.gs(R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                 ConfigBuilderPlugin.getPlugin().commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(MainApp.instance(), ErrorHelperActivity::class.java)
+                            val i = Intent(mainApp, ErrorHelperActivity::class.java)
                             i.putExtra("soundid", R.raw.boluserror)
                             i.putExtra("status", result.comment)
-                            i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror))
+                            i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            MainApp.instance().startActivity(i)
+                            mainApp.startActivity(i)
                         }
                     }
                 })

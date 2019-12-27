@@ -16,27 +16,37 @@ import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.dialog_carbs.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.max
 
 class CarbsDialog : DialogFragmentWithDate() {
+
+    @Inject
+    lateinit var mainApp: MainApp
+
+    @Inject
+    lateinit var resourceHelper: ResourceHelper
+
+    @Inject
+    lateinit var constraintChecker: ConstraintChecker
 
     companion object {
         private const val FAV1_DEFAULT = 5
         private const val FAV2_DEFAULT = 10
         private const val FAV3_DEFAULT = 20
     }
-
-    private val maxCarbs = MainApp.getConstraintChecker().maxCarbsAllowed.value().toDouble()
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
@@ -48,18 +58,19 @@ class CarbsDialog : DialogFragmentWithDate() {
     }
 
     private fun validateInputs() {
+        val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         val time = overview_carbs_time.value.toInt()
         if (time > 12 * 60 || time < -12 * 60) {
             overview_carbs_time.value = 0.0
-            ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.constraintapllied))
+            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.constraintapllied))
         }
         if (overview_carbs_duration.value > 10) {
             overview_carbs_duration.value = 0.0
-            ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.constraintapllied))
+            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.constraintapllied))
         }
         if (overview_carbs_carbs.value.toInt() > maxCarbs) {
             overview_carbs_carbs.value = 0.0
-            ToastUtils.showToastInUiThread(MainApp.instance().applicationContext, MainApp.gs(R.string.carbsconstraintapplied))
+            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.carbsconstraintapplied))
         }
     }
 
@@ -79,6 +90,7 @@ class CarbsDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         overview_carbs_time.setParams(savedInstanceState?.getDouble("overview_carbs_time")
             ?: 0.0, -12 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
 
@@ -133,7 +145,7 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         val carbs = overview_carbs_carbs.value.toInt()
-        val carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(Constraint(carbs)).value()
+        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         val units = ProfileFunctions.getSystemUnits()
         val activityTTDuration = DefaultValueHelper.determineActivityTTDuration()
         val activityTT = DefaultValueHelper.determineActivityTT()
@@ -142,42 +154,42 @@ class CarbsDialog : DialogFragmentWithDate() {
         val hypoTTDuration = DefaultValueHelper.determineHypoTTDuration()
         val hypoTT = DefaultValueHelper.determineHypoTT()
         val actions: LinkedList<String?> = LinkedList()
-        val unitLabel = if (units == Constants.MMOL) MainApp.gs(R.string.mmol) else MainApp.gs(R.string.mgdl)
+        val unitLabel = if (units == Constants.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
 
         val activitySelected = overview_carbs_activity_tt.isChecked
         if (activitySelected)
-            actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + activityTTDuration + " " + MainApp.gs(R.string.unit_minute_short) + ")</font>")
+            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + "<font color='" + resourceHelper.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(activityTT) + " " + unitLabel + " (" + activityTTDuration + " " + resourceHelper.gs(R.string.unit_minute_short) + ")</font>")
         val eatingSoonSelected = overview_carbs_eating_soon_tt.isChecked
         if (eatingSoonSelected)
-            actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + eatingSoonTTDuration + " " + MainApp.gs(R.string.unit_minute_short) + ")</font>")
+            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + "<font color='" + resourceHelper.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + eatingSoonTTDuration + " " + resourceHelper.gs(R.string.unit_minute_short) + ")</font>")
         val hypoSelected = overview_carbs_hypo_tt.isChecked
         if (hypoSelected)
-            actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + hypoTTDuration + " " + MainApp.gs(R.string.unit_minute_short) + ")</font>")
+            actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + "<font color='" + resourceHelper.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + hypoTTDuration + " " + resourceHelper.gs(R.string.unit_minute_short) + ")</font>")
 
         val timeOffset = overview_carbs_time.value.toInt()
         val time = DateUtil.now() + timeOffset * 1000 * 60
         if (timeOffset != 0)
-            actions.add(MainApp.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(time))
+            actions.add(resourceHelper.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(time))
         val duration = overview_carbs_duration.value.toInt()
         if (duration > 0)
-            actions.add(MainApp.gs(R.string.duration) + ": " + duration + MainApp.gs(R.string.shorthour))
+            actions.add(resourceHelper.gs(R.string.duration) + ": " + duration + resourceHelper.gs(R.string.shorthour))
         if (carbsAfterConstraints > 0) {
-            actions.add(MainApp.gs(R.string.carbs) + ": " + "<font color='" + MainApp.gc(R.color.carbs) + "'>" + MainApp.gs(R.string.format_carbs, carbsAfterConstraints) + "</font>")
+            actions.add(resourceHelper.gs(R.string.carbs) + ": " + "<font color='" + resourceHelper.gc(R.color.carbs) + "'>" + resourceHelper.gs(R.string.format_carbs, carbsAfterConstraints) + "</font>")
             if (carbsAfterConstraints != carbs)
-                actions.add("<font color='" + MainApp.gc(R.color.warning) + "'>" + MainApp.gs(R.string.carbsconstraintapplied) + "</font>")
+                actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.carbsconstraintapplied) + "</font>")
         }
         val notes = notes.text.toString()
         if (notes.isNotEmpty())
-            actions.add(MainApp.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
+            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
 
         if (carbsAfterConstraints > 0 || activitySelected || eatingSoonSelected || hypoSelected) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, MainApp.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                     if (activitySelected) {
                         val tempTarget = TempTarget()
                             .date(System.currentTimeMillis())
                             .duration(activityTTDuration)
-                            .reason(MainApp.gs(R.string.activity))
+                            .reason(resourceHelper.gs(R.string.activity))
                             .source(Source.USER)
                             .low(Profile.toMgdl(activityTT, ProfileFunctions.getSystemUnits()))
                             .high(Profile.toMgdl(activityTT, ProfileFunctions.getSystemUnits()))
@@ -186,7 +198,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         val tempTarget = TempTarget()
                             .date(System.currentTimeMillis())
                             .duration(eatingSoonTTDuration)
-                            .reason(MainApp.gs(R.string.eatingsoon))
+                            .reason(resourceHelper.gs(R.string.eatingsoon))
                             .source(Source.USER)
                             .low(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
                             .high(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
@@ -195,7 +207,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         val tempTarget = TempTarget()
                             .date(System.currentTimeMillis())
                             .duration(hypoTTDuration)
-                            .reason(MainApp.gs(R.string.hypo))
+                            .reason(resourceHelper.gs(R.string.hypo))
                             .source(Source.USER)
                             .low(Profile.toMgdl(hypoTT, ProfileFunctions.getSystemUnits()))
                             .high(Profile.toMgdl(hypoTT, ProfileFunctions.getSystemUnits()))
@@ -206,14 +218,14 @@ class CarbsDialog : DialogFragmentWithDate() {
                             CarbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes)
                         } else {
                             CarbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
-                            NSUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, MainApp.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
+                            NSUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
                     }
                 }, null)
             }
         } else
             activity?.let { activity ->
-                OKDialog.show(activity, MainApp.gs(R.string.carbs), MainApp.gs(R.string.no_action_selected))
+                OKDialog.show(activity, resourceHelper.gs(R.string.carbs), resourceHelper.gs(R.string.no_action_selected))
             }
         return true
     }

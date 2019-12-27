@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdat
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -127,7 +128,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
             return;
         }
 
-        double maxBasal = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
+        double maxBasal = ConstraintChecker.getInstance().getMaxBasalAllowed(profile).value();
 
         double minBg = profile.getTargetLowMgdl();
         double maxBg = profile.getTargetHighMgdl();
@@ -146,7 +147,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
 
         MealData mealData = TreatmentsPlugin.getPlugin().getMealData();
 
-        double maxIob = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
+        double maxIob = ConstraintChecker.getInstance().getMaxIOBAllowed().value();
         if (L.isEnabled(L.APS))
             Profiler.log(log, "MA data gathering", start);
 

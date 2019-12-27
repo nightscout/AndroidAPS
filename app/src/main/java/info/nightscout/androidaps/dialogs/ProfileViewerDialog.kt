@@ -6,18 +6,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import androidx.fragment.app.DialogFragment
+import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.close.*
 import kotlinx.android.synthetic.main.dialog_profileviewer.*
 import org.json.JSONObject
+import javax.inject.Inject
 
-class ProfileViewerDialog : DialogFragment() {
+class ProfileViewerDialog : DaggerDialogFragment() {
+
+    @Inject
+    lateinit var resourceHelper: ResourceHelper
+
     private var time: Long = 0
 
     enum class Mode(val i: Int) {
@@ -77,7 +82,7 @@ class ProfileViewerDialog : DialogFragment() {
 
         profile?.let {
             profileview_units.text = it.units
-            profileview_dia.text = MainApp.gs(R.string.format_hours, it.dia)
+            profileview_dia.text = resourceHelper.gs(R.string.format_hours, it.dia)
             profileview_activeprofile.text = profileName
             profileview_date.text = date
             profileview_ic.text = it.icList

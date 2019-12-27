@@ -29,6 +29,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin;
@@ -552,7 +553,7 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("BASAL 10% 0", smsCommunicatorPlugin.getMessages().get(0).getText());
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.getMessages().get(1).getText());
 
-        when(MainApp.getConstraintChecker().applyBasalPercentConstraints(any(), any())).thenReturn(new Constraint<>(20));
+        when(ConstraintChecker.getInstance().applyBasalPercentConstraints(any(), any())).thenReturn(new Constraint<>(20));
 
         //BASAL 20% 20
         smsCommunicatorPlugin.setMessages(new ArrayList<>());
@@ -579,7 +580,7 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("BASAL 1 0", smsCommunicatorPlugin.getMessages().get(0).getText());
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.getMessages().get(1).getText());
 
-        when(MainApp.getConstraintChecker().applyBasalConstraints(any(), any())).thenReturn(new Constraint<>(1d));
+        when(ConstraintChecker.getInstance().applyBasalConstraints(any(), any())).thenReturn(new Constraint<>(1d));
 
         //BASAL 1 20
         smsCommunicatorPlugin.setMessages(new ArrayList<>());
@@ -632,7 +633,7 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("EXTENDED a%", smsCommunicatorPlugin.getMessages().get(0).getText());
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.getMessages().get(1).getText());
 
-        when(MainApp.getConstraintChecker().applyExtendedBolusConstraints(any())).thenReturn(new Constraint<>(1d));
+        when(ConstraintChecker.getInstance().applyExtendedBolusConstraints(any())).thenReturn(new Constraint<>(1d));
 
         //EXTENDED 1 0
         smsCommunicatorPlugin.setMessages(new ArrayList<>());
@@ -673,7 +674,7 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("BOLUS", smsCommunicatorPlugin.getMessages().get(0).getText());
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.getMessages().get(1).getText());
 
-        when(MainApp.getConstraintChecker().applyBolusConstraints(any())).thenReturn(new Constraint<>(1d));
+        when(ConstraintChecker.getInstance().applyBolusConstraints(any())).thenReturn(new Constraint<>(1d));
 
         when(DateUtil.now()).thenReturn(1000L);
         //BOLUS 1
@@ -683,7 +684,7 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("BOLUS 1", smsCommunicatorPlugin.getMessages().get(0).getText());
         Assert.assertEquals("Remote bolus not available. Try again later.", smsCommunicatorPlugin.getMessages().get(1).getText());
 
-        when(MainApp.getConstraintChecker().applyBolusConstraints(any())).thenReturn(new Constraint<>(0d));
+        when(ConstraintChecker.getInstance().applyBolusConstraints(any())).thenReturn(new Constraint<>(0d));
 
         when(DateUtil.now()).thenReturn(Constants.remoteBolusMinDistance + 1002L);
 
@@ -701,9 +702,9 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("BOLUS a", smsCommunicatorPlugin.getMessages().get(0).getText());
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.getMessages().get(1).getText());
 
-        when(MainApp.getConstraintChecker().applyExtendedBolusConstraints(any())).thenReturn(new Constraint<>(1d));
+        when(ConstraintChecker.getInstance().applyExtendedBolusConstraints(any())).thenReturn(new Constraint<>(1d));
 
-        when(MainApp.getConstraintChecker().applyBolusConstraints(any())).thenReturn(new Constraint<>(1d));
+        when(ConstraintChecker.getInstance().applyBolusConstraints(any())).thenReturn(new Constraint<>(1d));
 
         //BOLUS 1
         smsCommunicatorPlugin.setMessages(new ArrayList<>());
@@ -807,7 +808,7 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("CARBS", smsCommunicatorPlugin.getMessages().get(0).getText());
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.getMessages().get(1).getText());
 
-        when(MainApp.getConstraintChecker().applyCarbsConstraints(any())).thenReturn(new Constraint<>(0));
+        when(ConstraintChecker.getInstance().applyCarbsConstraints(any())).thenReturn(new Constraint<>(0));
 
         //CARBS 0
         smsCommunicatorPlugin.setMessages(new ArrayList<>());
@@ -816,7 +817,7 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("CARBS 0", smsCommunicatorPlugin.getMessages().get(0).getText());
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.getMessages().get(1).getText());
 
-        when(MainApp.getConstraintChecker().applyCarbsConstraints(any())).thenReturn(new Constraint<>(1));
+        when(ConstraintChecker.getInstance().applyCarbsConstraints(any())).thenReturn(new Constraint<>(1));
 
         //CARBS 1
         smsCommunicatorPlugin.setMessages(new ArrayList<>());

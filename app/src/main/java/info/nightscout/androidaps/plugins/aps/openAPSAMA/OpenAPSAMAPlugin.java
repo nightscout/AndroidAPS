@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -128,7 +129,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
             return;
         }
 
-        double maxBasal = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
+        double maxBasal = ConstraintChecker.getInstance().getMaxBasalAllowed(profile).value();
         double minBg = profile.getTargetLowMgdl();
         double maxBg = profile.getTargetHighMgdl();
         double targetBg = profile.getTargetMgdl();
@@ -147,7 +148,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         if (L.isEnabled(L.APS))
             Profiler.log(log, "getMealData()", startPart);
 
-        double maxIob = MainApp.getConstraintChecker().getMaxIOBAllowed().value();
+        double maxIob = ConstraintChecker.getInstance().getMaxIOBAllowed().value();
 
         minBg = HardLimits.verifyHardLimits(minBg, "minBg", HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]);
         maxBg = HardLimits.verifyHardLimits(maxBg, "maxBg", HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]);
@@ -175,7 +176,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
             return;
 
         startPart = System.currentTimeMillis();
-        if (MainApp.getConstraintChecker().isAutosensModeEnabled().value()) {
+        if (ConstraintChecker.getInstance().isAutosensModeEnabled().value()) {
             AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("OpenAPSPlugin");
             if (autosensData == null) {
                 RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openaps_noasdata)));

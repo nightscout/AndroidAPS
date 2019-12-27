@@ -23,6 +23,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
@@ -287,7 +288,7 @@ public class APSResult {
     }
 
     public boolean isChangeRequested() {
-        Constraint<Boolean> closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed();
+        Constraint<Boolean> closedLoopEnabled = ConstraintChecker.getInstance().isClosedLoopAllowed();
         // closed loop mode: handle change at driver level
         if (closedLoopEnabled.value()) {
             if (L.isEnabled(L.APS))

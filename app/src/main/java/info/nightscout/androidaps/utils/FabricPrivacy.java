@@ -14,6 +14,7 @@ import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin;
 
 /**
@@ -113,7 +114,7 @@ public class FabricPrivacy {
     public static void setUserStats() {
         if (!fabricEnabled()) return;
 
-        String closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed().value() ? "CLOSED_LOOP_ENABLED" : "CLOSED_LOOP_DISABLED";
+        String closedLoopEnabled = ConstraintChecker.getInstance().isClosedLoopAllowed().value() ? "CLOSED_LOOP_ENABLED" : "CLOSED_LOOP_DISABLED";
         // Size is limited to 36 chars
         String remote = BuildConfig.REMOTE.toLowerCase()
                 .replace("https://", "")

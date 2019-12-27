@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.aps.openAPSSMB;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,7 @@ import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdat
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
@@ -134,7 +136,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
 
         Constraint<Double> inputConstraints = new Constraint<>(0d); // fake. only for collecting all results
 
-        Constraint<Double> maxBasalConstraint = MainApp.getConstraintChecker().getMaxBasalAllowed(profile);
+        Constraint<Double> maxBasalConstraint = ConstraintChecker.getInstance().getMaxBasalAllowed(profile);
         inputConstraints.copyReasons(maxBasalConstraint);
         double maxBasal = maxBasalConstraint.value();
         double minBg = profile.getTargetLowMgdl();
@@ -151,7 +153,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         if (L.isEnabled(L.APS))
             Profiler.log(log, "getMealData()", startPart);
 
-        Constraint<Double> maxIOBAllowedConstraint = MainApp.getConstraintChecker().getMaxIOBAllowed();
+        Constraint<Double> maxIOBAllowedConstraint = ConstraintChecker.getInstance().getMaxIOBAllowed();
         inputConstraints.copyReasons(maxIOBAllowedConstraint);
         double maxIob = maxIOBAllowedConstraint.value();
 
@@ -181,7 +183,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             return;
 
         startPart = System.currentTimeMillis();
-        if (MainApp.getConstraintChecker().isAutosensModeEnabled().value()) {
+        if (ConstraintChecker.getInstance().isAutosensModeEnabled().value()) {
             AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("OpenAPSPlugin");
             if (autosensData == null) {
                 RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openaps_noasdata)));
@@ -199,15 +201,15 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
 
         startPart = System.currentTimeMillis();
         Constraint<Boolean> smbAllowed = new Constraint<>(!tempBasalFallback);
-        MainApp.getConstraintChecker().isSMBModeEnabled(smbAllowed);
+        ConstraintChecker.getInstance().isSMBModeEnabled(smbAllowed);
         inputConstraints.copyReasons(smbAllowed);
 
         Constraint<Boolean> advancedFiltering = new Constraint<>(!tempBasalFallback);
-        MainApp.getConstraintChecker().isAdvancedFilteringEnabled(advancedFiltering);
+        ConstraintChecker.getInstance().isAdvancedFilteringEnabled(advancedFiltering);
         inputConstraints.copyReasons(advancedFiltering);
 
         Constraint<Boolean> uam = new Constraint<>(true);
-        MainApp.getConstraintChecker().isUAMEnabled(uam);
+        ConstraintChecker.getInstance().isUAMEnabled(uam);
         inputConstraints.copyReasons(uam);
 
         if (L.isEnabled(L.APS))
@@ -285,6 +287,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         return newvalue;
     }
 
+    @NotNull
+    @Override
     public Constraint<Boolean> isSuperBolusEnabled(Constraint<Boolean> value) {
         value.set(false);
         return value;

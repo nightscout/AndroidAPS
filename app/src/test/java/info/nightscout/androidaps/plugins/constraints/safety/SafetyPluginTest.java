@@ -69,7 +69,7 @@ public class SafetyPluginTest {
     @Test
     public void notEnabledSMBInPreferencesDisablesSMB() {
         when(SP.getBoolean(R.string.key_use_smb, false)).thenReturn(false);
-        when(MainApp.getConstraintChecker().isClosedLoopAllowed()).thenReturn(new Constraint<>(true));
+        when(ConstraintChecker.getInstance().isClosedLoopAllowed()).thenReturn(new Constraint<>(true));
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = safetyPlugin.isSMBModeEnabled(c);
@@ -80,7 +80,7 @@ public class SafetyPluginTest {
     @Test
     public void openLoopPreventsSMB() {
         when(SP.getBoolean(R.string.key_use_smb, false)).thenReturn(true);
-        when(MainApp.getConstraintChecker().isClosedLoopAllowed()).thenReturn(new Constraint<>(false));
+        when(ConstraintChecker.getInstance().isClosedLoopAllowed()).thenReturn(new Constraint<>(false));
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = safetyPlugin.isSMBModeEnabled(c);

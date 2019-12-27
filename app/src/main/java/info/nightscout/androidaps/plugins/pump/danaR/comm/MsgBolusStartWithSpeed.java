@@ -3,9 +3,9 @@ package info.nightscout.androidaps.plugins.pump.danaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 
 public class MsgBolusStartWithSpeed extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
@@ -20,7 +20,7 @@ public class MsgBolusStartWithSpeed extends MessageBase {
         this();
 
         // HARDCODED LIMIT
-        amount = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
+        amount = ConstraintChecker.getInstance().applyBolusConstraints(new Constraint<>(amount)).value();
 
         AddParamInt((int) (amount * 100));
         AddParamByte((byte) speed);

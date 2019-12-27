@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -95,7 +96,7 @@ public class ActionStringHandler {
             } else {
                 return;
             }
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
+            Double insulinAfterConstraints = ConstraintChecker.getInstance().applyBolusConstraints(new Constraint<>(amount)).value();
             rMessage += MainApp.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U";
             if (insulinAfterConstraints - amount != 0)
                 rMessage += "\n" + MainApp.gs(R.string.constraintapllied);
@@ -106,7 +107,7 @@ public class ActionStringHandler {
             ////////////////////////////////////////////// PRIME/FILL
             double amount = SafeParse.stringToDouble(act[1]);
 
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
+            Double insulinAfterConstraints = ConstraintChecker.getInstance().applyBolusConstraints(new Constraint<>(amount)).value();
             rMessage += MainApp.gs(R.string.primefill) + ": " + insulinAfterConstraints + "U";
             if (insulinAfterConstraints - amount != 0)
                 rMessage += "\n" + MainApp.gs(R.string.constraintapllied);
@@ -117,8 +118,8 @@ public class ActionStringHandler {
             ////////////////////////////////////////////// BOLUS
             double insulin = SafeParse.stringToDouble(act[1]);
             int carbs = SafeParse.stringToInt(act[2]);
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(insulin)).value();
-            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
+            Double insulinAfterConstraints = ConstraintChecker.getInstance().applyBolusConstraints(new Constraint<>(insulin)).value();
+            Integer carbsAfterConstraints = ConstraintChecker.getInstance().applyCarbsConstraints(new Constraint<>(carbs)).value();
             rMessage += MainApp.gs(R.string.bolus) + ": " + insulinAfterConstraints + "U\n";
             rMessage += MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
 
@@ -180,7 +181,7 @@ public class ActionStringHandler {
         } else if ("wizard2".equals(act[0])) {
             ////////////////////////////////////////////// WIZARD
             Integer carbsBeforeConstraints = SafeParse.stringToInt(act[1]);
-            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbsBeforeConstraints)).value();
+            Integer carbsAfterConstraints = ConstraintChecker.getInstance().applyCarbsConstraints(new Constraint<>(carbsBeforeConstraints)).value();
 
             if (carbsAfterConstraints - carbsBeforeConstraints != 0) {
                 sendError("Carb constraint violation!");
@@ -324,7 +325,7 @@ public class ActionStringHandler {
             int starttime = SafeParse.stringToInt(act[2]);
             int duration = SafeParse.stringToInt(act[3]);
             long starttimestamp = System.currentTimeMillis() + starttime * 60 * 1000;
-            Integer carbsAfterConstraints = MainApp.getConstraintChecker().applyCarbsConstraints(new Constraint<>(carbs)).value();
+            Integer carbsAfterConstraints = ConstraintChecker.getInstance().applyCarbsConstraints(new Constraint<>(carbs)).value();
             rMessage += MainApp.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g";
             rMessage += "\n" + MainApp.gs(R.string.time) + ": " + DateUtil.timeString(starttimestamp);
             rMessage += "\n" + MainApp.gs(R.string.duration) + ": " + duration + "h";
@@ -491,7 +492,7 @@ public class ActionStringHandler {
         // decide if enabled/disabled closed/open; what Plugin as APS?
         final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
         if (loopPlugin.isEnabled(loopPlugin.getType())) {
-            if (MainApp.getConstraintChecker().isClosedLoopAllowed().value()) {
+            if (ConstraintChecker.getInstance().isClosedLoopAllowed().value()) {
                 ret += "CLOSED LOOP\n";
             } else {
                 ret += "OPEN LOOP\n";
@@ -591,7 +592,7 @@ public class ActionStringHandler {
 
         if ("fill".equals(act[0])) {
             Double amount = SafeParse.stringToDouble(act[1]);
-            Double insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(new Constraint<>(amount)).value();
+            Double insulinAfterConstraints = ConstraintChecker.getInstance().applyBolusConstraints(new Constraint<>(amount)).value();
             if (amount - insulinAfterConstraints != 0) {
                 ToastUtils.showToastInUiThread(MainApp.instance(), "aborting: previously applied constraint changed");
                 sendError("aborting: previously applied constraint changed");

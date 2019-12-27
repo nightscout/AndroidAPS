@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -48,6 +50,7 @@ import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
@@ -271,7 +274,7 @@ public class LoopPlugin extends PluginBase {
         try {
             if (L.isEnabled(L.APS))
                 log.debug("invoke from " + initiator);
-            Constraint<Boolean> loopEnabled = MainApp.getConstraintChecker().isLoopInvokationAllowed();
+            Constraint<Boolean> loopEnabled = ConstraintChecker.getInstance().isLoopInvocationAllowed();
 
             if (!loopEnabled.value()) {
                 String message = MainApp.gs(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
@@ -319,13 +322,13 @@ public class LoopPlugin extends PluginBase {
             // check rate for constrais
             final APSResult resultAfterConstraints = result.clone();
             resultAfterConstraints.rateConstraint = new Constraint<>(resultAfterConstraints.rate);
-            resultAfterConstraints.rate = MainApp.getConstraintChecker().applyBasalConstraints(resultAfterConstraints.rateConstraint, profile).value();
+            resultAfterConstraints.rate = ConstraintChecker.getInstance().applyBasalConstraints(resultAfterConstraints.rateConstraint, profile).value();
 
             resultAfterConstraints.percentConstraint = new Constraint<>(resultAfterConstraints.percent);
-            resultAfterConstraints.percent = MainApp.getConstraintChecker().applyBasalPercentConstraints(resultAfterConstraints.percentConstraint, profile).value();
+            resultAfterConstraints.percent = ConstraintChecker.getInstance().applyBasalPercentConstraints(resultAfterConstraints.percentConstraint, profile).value();
 
             resultAfterConstraints.smbConstraint = new Constraint<>(resultAfterConstraints.smb);
-            resultAfterConstraints.smb = MainApp.getConstraintChecker().applyBolusConstraints(resultAfterConstraints.smbConstraint).value();
+            resultAfterConstraints.smb = ConstraintChecker.getInstance().applyBolusConstraints(resultAfterConstraints.smbConstraint).value();
 
             // safety check for multiple SMBs
             long lastBolusTime = TreatmentsPlugin.getPlugin().getLastBolusTime();
@@ -359,7 +362,7 @@ public class LoopPlugin extends PluginBase {
                 return;
             }
 
-            Constraint<Boolean> closedLoopEnabled = MainApp.getConstraintChecker().isClosedLoopAllowed();
+            Constraint<Boolean> closedLoopEnabled = ConstraintChecker.getInstance().isClosedLoopAllowed();
 
             if (closedLoopEnabled.value()) {
                 if (resultAfterConstraints.isChangeRequested()

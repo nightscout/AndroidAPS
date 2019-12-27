@@ -27,7 +27,6 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
-import info.nightscout.androidaps.data.ConstraintChecker;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent;
@@ -112,7 +111,6 @@ public class MainApp extends DaggerApplication {
     static FirebaseAnalytics mFirebaseAnalytics;
 
     static DatabaseHelper sDatabaseHelper = null;
-    static ConstraintChecker sConstraintsChecker = null;
 
     static ArrayList<PluginBase> pluginsList = null;
 
@@ -138,7 +136,6 @@ public class MainApp extends DaggerApplication {
         sInstance = this;
         sResources = getResources();
         LocaleHelper.INSTANCE.update(this);
-        sConstraintsChecker = new ConstraintChecker();
         sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
 
         Thread.setDefaultUncaughtExceptionHandler((thread, ex) -> {
@@ -258,7 +255,6 @@ public class MainApp extends DaggerApplication {
     }
 
 
-
     private void doMigrations() {
 
         // guarantee that the unreachable threshold is at least 30 and of type String
@@ -345,10 +341,6 @@ public class MainApp extends DaggerApplication {
         return mFirebaseAnalytics;
     }
 
-    public static ConstraintChecker getConstraintChecker() {
-        return sConstraintsChecker;
-    }
-
     public static ArrayList<PluginBase> getPluginsList() {
         return pluginsList;
     }
@@ -382,7 +374,7 @@ public class MainApp extends DaggerApplication {
         return newList;
     }
 
-    public static ArrayList<PluginBase> getSpecificPluginsListByInterface(Class interfaceClass) {
+    public ArrayList<PluginBase> getSpecificPluginsListByInterface(Class interfaceClass) {
         ArrayList<PluginBase> newList = new ArrayList<>();
 
         if (pluginsList != null) {

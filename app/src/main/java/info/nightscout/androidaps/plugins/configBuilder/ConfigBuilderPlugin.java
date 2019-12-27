@@ -367,7 +367,7 @@ public class ConfigBuilderPlugin extends PluginBase {
      */
     private <T> T determineActivePlugin(Class<T> pluginInterface, PluginType pluginType) {
         ArrayList<PluginBase> pluginsInCategory;
-        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(pluginInterface);
+        pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(pluginInterface);
 
         return this.determineActivePlugin(pluginsInCategory, pluginType);
     }
@@ -443,23 +443,23 @@ public class ConfigBuilderPlugin extends PluginBase {
                 break;
             // Single selection allowed
             case INSULIN:
-                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(InsulinInterface.class);
+                pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(InsulinInterface.class);
                 break;
             case SENSITIVITY:
-                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(SensitivityInterface.class);
+                pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(SensitivityInterface.class);
                 break;
             case APS:
-                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(APSInterface.class);
+                pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(APSInterface.class);
                 break;
             case PROFILE:
-                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(ProfileInterface.class);
+                pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(ProfileInterface.class);
                 break;
             case BGSOURCE:
-                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(BgSourceInterface.class);
+                pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(BgSourceInterface.class);
                 break;
             case TREATMENT:
             case PUMP:
-                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(PumpInterface.class);
+                pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(PumpInterface.class);
                 break;
         }
         if (pluginsInCategory != null) {
