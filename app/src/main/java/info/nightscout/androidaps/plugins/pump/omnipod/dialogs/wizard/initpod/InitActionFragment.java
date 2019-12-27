@@ -113,8 +113,17 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
 
         this.retryButton = rootView.findViewById(R.id.initAction_RetryButton);
 
-        this.retryButton.setOnClickListener(view ->
-                new InitPodTask(instance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR));
+        this.retryButton.setOnClickListener(view -> {
+
+            getActivity().runOnUiThread(() -> {
+                for (PodInitActionType actionType : mapCheckBoxes.keySet()) {
+                    mapCheckBoxes.get(actionType).setChecked(false);
+                    mapCheckBoxes.get(actionType).setTextColor(headerView.getTextColors().getDefaultColor());
+                }
+            });
+
+            new InitPodTask(instance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        });
 
         return rootView;
     }

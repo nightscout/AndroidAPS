@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -37,6 +38,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -385,8 +387,15 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                     } else {
                         LOG.warn("Result was NOT null.");
 
-                        OKDialog.show(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.action),
-                                "Pulse Log:\n" + result.toString(), null);
+                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                        i.putExtra("soundid", R.raw.boluserror);
+                        i.putExtra("status", "Pulse Log:\n" + result.toString());
+                        i.putExtra("title", MainApp.gs(R.string.combo_warning));
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        MainApp.instance().startActivity(i);
+
+//                        OKDialog.show(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.action),
+//                                "Pulse Log:\n" + result.toString(), null);
                     }
 
                 } else {
