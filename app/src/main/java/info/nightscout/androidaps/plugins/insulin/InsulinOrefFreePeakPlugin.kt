@@ -21,7 +21,7 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
     }
 
     override fun getFriendlyName(): String {
-        return resourceHelper.gs(R.string.free_peak_oref) ?: ""
+        return resourceHelper.gs(R.string.free_peak_oref)
     }
 
     override fun commentStandardText(): String {
