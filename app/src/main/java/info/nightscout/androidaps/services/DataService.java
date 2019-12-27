@@ -40,7 +40,7 @@ import info.nightscout.androidaps.plugins.source.SourceTomatoPlugin;
 import info.nightscout.androidaps.plugins.source.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.utils.JsonHelper;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 
 public class DataService extends DaggerIntentService {
@@ -53,6 +53,9 @@ public class DataService extends DaggerIntentService {
     @Inject
     SmsCommunicatorPlugin smsCommunicatorPlugin;
 
+    @Inject
+    SP sp;
+
     @Override
     protected void onHandleIntent(final Intent intent) {
         if (L.isEnabled(L.DATASERVICE)) {
@@ -60,7 +63,7 @@ public class DataService extends DaggerIntentService {
             log.debug("onHandleIntent " + BundleLogger.log(intent.getExtras()));
         }
 
-        boolean acceptNSData = !SP.getBoolean(R.string.key_ns_upload_only, false);
+        boolean acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, false);
         Bundle bundles = intent.getExtras();
 
         final String action = intent.getAction();
@@ -244,7 +247,7 @@ public class DataService extends DaggerIntentService {
             String enteredBy = JsonHelper.safeGetString(json, "enteredBy", "");
             String notes = JsonHelper.safeGetString(json, "notes", "");
             if (date > now - 15 * 60 * 1000L && !notes.isEmpty()
-                    && !enteredBy.equals(SP.getString("careportal_enteredby", "AndroidAPS"))) {
+                    && !enteredBy.equals(sp.getString("careportal_enteredby", "AndroidAPS"))) {
                 Notification announcement = new Notification(Notification.NSANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
                 RxBus.INSTANCE.send(new EventNewNotification(announcement));
             }
