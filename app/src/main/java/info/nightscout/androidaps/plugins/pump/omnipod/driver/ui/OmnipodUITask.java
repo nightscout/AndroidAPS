@@ -90,7 +90,14 @@ public class OmnipodUITask {
             break;
 
             case GetPodPulseLog:
-                returnDataObject = communicationManager.readPulseLog();
+                try {
+                    returnDataObject = communicationManager.readPulseLog();
+                } catch(Exception ex) {
+                    if(isLogEnabled()) {
+                        LOG.warn("Failed to retrieve pulse log", ex);
+                    }
+                    returnDataObject = null;
+                }
                 break;
 
             case GetPodStatus:
