@@ -39,7 +39,7 @@ public class CancelDeliveryAction implements OmnipodAction<StatusResponse> {
         List<MessageBlock> messageBlocks = new ArrayList<>();
 
         messageBlocks.add(new CancelDeliveryCommand(podState.getCurrentNonce(),
-                acknowledgementBeep && deliveryTypes.size() == 1 ? BeepType.BEEEEEEP : BeepType.NO_BEEP, deliveryTypes));
+                acknowledgementBeep && deliveryTypes.size() == 1 ? BeepType.BEEP : BeepType.NO_BEEP, deliveryTypes));
 
         if (acknowledgementBeep && deliveryTypes.size() > 1) {
             // Workaround for strange beep behaviour when cancelling multiple delivery types at the same time
@@ -49,7 +49,7 @@ public class CancelDeliveryAction implements OmnipodAction<StatusResponse> {
             //  we should keep the beep config for delivery types that we're not cancelling.
             //  We currently have no use case that though,
             //  as we either cancel 1 type or all types,
-            messageBlocks.add(new BeepConfigCommand(BeepConfigType.BEEEEEEP));
+            messageBlocks.add(new BeepConfigCommand(BeepConfigType.BEEP));
         }
 
         return communicationService.exchangeMessages(StatusResponse.class, podState,
