@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
+import dagger.android.DaggerIntentService;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
@@ -42,7 +43,7 @@ import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.SP;
 
 
-public class DataService extends IntentService {
+public class DataService extends DaggerIntentService {
     private Logger log = LoggerFactory.getLogger(L.DATASERVICE);
 
     public DataService() {
@@ -51,13 +52,6 @@ public class DataService extends IntentService {
 
     @Inject
     SmsCommunicatorPlugin smsCommunicatorPlugin;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        ((MainApp) getApplication()).androidInjector().inject(this);
-
-    }
 
     @Override
     protected void onHandleIntent(final Intent intent) {
