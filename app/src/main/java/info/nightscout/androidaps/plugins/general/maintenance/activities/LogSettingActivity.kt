@@ -40,7 +40,7 @@ class LogSettingActivity : NoSplashAppCompatActivity() {
             (baseView.findViewById<View>(R.id.logsettings_description) as TextView).text = element.name
             val enabled = baseView.findViewById<CheckBox>(R.id.logsettings_visibility)
             enabled.isChecked = element.enabled
-            enabled.setOnClickListener { element.setEnabled(enabled.isChecked) }
+            enabled.setOnClickListener { element.enable(enabled.isChecked) }
         }
 
     }
