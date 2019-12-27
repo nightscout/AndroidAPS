@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+import dagger.Lazy;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppInitialized;
@@ -35,14 +37,20 @@ import info.nightscout.androidaps.utils.SP;
 /**
  * Created by mike on 05.08.2016.
  */
+@Singleton
 public class ConfigBuilderPlugin extends PluginBase {
     private Logger log = LoggerFactory.getLogger(L.CONFIGBUILDER);
 
     private static ConfigBuilderPlugin configBuilderPlugin;
 
+
+    /**
+     * @deprecated Use dagger to get an instance
+     */
+    @Deprecated
     static public ConfigBuilderPlugin getPlugin() {
         if (configBuilderPlugin == null)
-            configBuilderPlugin = new ConfigBuilderPlugin();
+            throw new IllegalStateException("Accessing ConfigBuilder before first instantiation");
         return configBuilderPlugin;
     }
 
@@ -57,10 +65,20 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     private CommandQueue commandQueue = new CommandQueue();
 
-    @Inject
-    LocalProfilePlugin localProfilePlugin;
+    private Lazy<InsulinOrefRapidActingPlugin> insulinOrefRapidActingPlugin;
 
-    public ConfigBuilderPlugin() {
+    //TODO: inject
+    LocalProfilePlugin localProfilePlugin = LocalProfilePlugin.INSTANCE;
+
+    /*
+     * Written by Adrian:
+     * The ConfigBuilderPlugin.getPlugin() method is used at 333 places throughout the app.
+     * In order to make the transition to DI, while legacy code is still calling `getPlugin()`,
+     * I'd instantiate this plugin very very early on (first injected dependency in MainApp) and use
+     * Lazy dependencies in this constructor.
+     * */
+    @Inject
+    public ConfigBuilderPlugin(Lazy<InsulinOrefRapidActingPlugin> insulinOrefRapidActingPlugin) {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
                 .fragmentClass(ConfigBuilderFragment.class.getName())
@@ -71,6 +89,8 @@ public class ConfigBuilderPlugin extends PluginBase {
                 .shortName(R.string.configbuilder_shortname)
                 .description(R.string.description_config_builder)
         );
+        this.insulinOrefRapidActingPlugin = insulinOrefRapidActingPlugin;
+        configBuilderPlugin = this;  // TODO: only while transitioning to Dagger
     }
 
     @Override
@@ -298,8 +318,8 @@ public class ConfigBuilderPlugin extends PluginBase {
         pluginsInCategory = MainApp.getSpecificPluginsList(PluginType.INSULIN);
         activeInsulin = (InsulinInterface) getTheOneEnabledInArray(pluginsInCategory, PluginType.INSULIN);
         if (activeInsulin == null) {
-            activeInsulin = InsulinOrefRapidActingPlugin.getPlugin();
-            InsulinOrefRapidActingPlugin.getPlugin().setPluginEnabled(PluginType.INSULIN, true);
+            activeInsulin = insulinOrefRapidActingPlugin.get();
+            insulinOrefRapidActingPlugin.get().setPluginEnabled(PluginType.INSULIN, true);
             if (L.isEnabled(L.CONFIGBUILDER))
                 log.debug("Defaulting InsulinOrefRapidActingPlugin");
         }
@@ -457,7 +477,7 @@ public class ConfigBuilderPlugin extends PluginBase {
                 if (type == PluginType.PUMP)
                     VirtualPumpPlugin.getPlugin().setPluginEnabled(type, true);
                 else if (type == PluginType.INSULIN)
-                    InsulinOrefRapidActingPlugin.getPlugin().setPluginEnabled(type, true);
+                    insulinOrefRapidActingPlugin.get().setPluginEnabled(type, true);
                 else if (type == PluginType.SENSITIVITY)
                     SensitivityOref0Plugin.getPlugin().setPluginEnabled(type, true);
                 else if (type == PluginType.PROFILE)

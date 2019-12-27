@@ -53,6 +53,9 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
     @Inject
     InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
 
+    @Inject
+    SmsCommunicatorPlugin smsCommunicatorPlugin;
+
     @Override
     public void setArguments(Bundle args) {
         super.setArguments(args);
@@ -132,7 +135,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
 
             addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), PluginType.GENERAL);
             addPreferencesFromResourceIfEnabled(TidepoolPlugin.INSTANCE, PluginType.GENERAL);
-            addPreferencesFromResourceIfEnabled(SmsCommunicatorPlugin.INSTANCE, PluginType.GENERAL);
+            addPreferencesFromResourceIfEnabled(smsCommunicatorPlugin, PluginType.GENERAL);
             addPreferencesFromResourceIfEnabled(AutomationPlugin.INSTANCE, PluginType.GENERAL);
 
             addPreferencesFromResource(R.xml.pref_others);

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.insulin
 
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import junit.framework.Assert.assertEquals
@@ -34,7 +35,7 @@ class InsulinOrefFreePeakPluginTest {
     lateinit var sp: SP
 
     @Mock
-    lateinit var resourceHelper: ResourceHelperImplementation
+    lateinit var resourceHelper: ResourceHelper
 
     @Before
     fun setup() {

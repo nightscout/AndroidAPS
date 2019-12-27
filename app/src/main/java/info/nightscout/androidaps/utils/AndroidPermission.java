@@ -80,8 +80,8 @@ public class AndroidPermission {
         return !selfCheck;
     }
 
-    public static synchronized void notifyForSMSPermissions(Activity activity) {
-        if (SmsCommunicatorPlugin.INSTANCE.isEnabled(PluginType.GENERAL)) {
+    public static synchronized void notifyForSMSPermissions(Activity activity, SmsCommunicatorPlugin smsCommunicatorPlugin) {
+        if (smsCommunicatorPlugin.isEnabled(PluginType.GENERAL)) {
             if (permissionNotGranted(activity, Manifest.permission.RECEIVE_SMS)) {
                 NotificationWithAction notification = new NotificationWithAction(Notification.PERMISSION_SMS, MainApp.gs(R.string.smscommunicator_missingsmspermission), Notification.URGENT);
                 notification.action(R.string.request, () -> AndroidPermission.askForPermission(activity, new String[]{Manifest.permission.RECEIVE_SMS,

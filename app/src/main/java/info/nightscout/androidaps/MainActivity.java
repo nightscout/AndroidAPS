@@ -37,7 +37,12 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+
 import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.activities.HistoryBrowseActivity;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.activities.PreferencesActivity;
@@ -53,6 +58,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.androidaps.utils.AndroidPermission;
@@ -64,13 +70,20 @@ import info.nightscout.androidaps.utils.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class MainActivity extends NoSplashAppCompatActivity {
+public class MainActivity extends NoSplashAppCompatActivity implements HasAndroidInjector {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
+
+    @Inject
+    DispatchingAndroidInjector<Object> androidInjector;
+
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
     private MenuItem pluginPreferencesMenuItem;
+
+    @Inject
+    SmsCommunicatorPlugin smsCommunicatorPlugin;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -148,7 +161,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         AndroidPermission.notifyForBatteryOptimizationPermission(this);
         if (Config.PUMPDRIVERS) {
             AndroidPermission.notifyForLocationPermissions(this);
-            AndroidPermission.notifyForSMSPermissions(this);
+            AndroidPermission.notifyForSMSPermissions(this, smsCommunicatorPlugin);
         }
     }
 
@@ -339,5 +352,14 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 return true;
         }
         return actionBarDrawerToggle.onOptionsItemSelected(item);
+    }
+
+
+    /**
+     * Returns an {@link AndroidInjector}.
+     */
+    @Override
+    public AndroidInjector<Object> androidInjector() {
+        return androidInjector;
     }
 }

@@ -82,7 +82,7 @@ public class InsulinOrefBasePluginTest extends InsulinOrefBasePlugin {
       * @return
      */
     @Override
-    int getPeak() {
+    public int getPeak() {
         return this.peak;
     }
 
@@ -95,7 +95,7 @@ public class InsulinOrefBasePluginTest extends InsulinOrefBasePlugin {
         return this.dia;
     }
 
-    void sendShortDiaNotification(double dia) {
+    public void sendShortDiaNotification(double dia) {
         this.shortDiaNotificationSend = true;
     }
 
@@ -110,7 +110,7 @@ public class InsulinOrefBasePluginTest extends InsulinOrefBasePlugin {
     }
 
     @Override
-    String commentStandardText() {
+    public String commentStandardText() {
         return null;
     }
 

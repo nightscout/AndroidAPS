@@ -123,8 +123,12 @@ public class MainApp extends DaggerApplication {
     public static boolean devBranch;
     public static boolean engineeringMode;
 
-    @Inject
-    InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
+    @Inject ConfigBuilderPlugin configBuilderPlugin;
+
+    @Inject InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
+    @Inject InsulinOrefRapidActingPlugin insulinOrefRapidActingPlugin;
+    @Inject InsulinOrefUltraRapidActingPlugin insulinOrefUltraRapidActingPlugin;
+    @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
 
     @Override
     public void onCreate() {
@@ -182,8 +186,8 @@ public class MainApp extends DaggerApplication {
             pluginsList.add(OverviewPlugin.INSTANCE);
             pluginsList.add(IobCobCalculatorPlugin.getPlugin());
             if (!Config.NSCLIENT) pluginsList.add(ActionsPlugin.INSTANCE);
-            pluginsList.add(InsulinOrefRapidActingPlugin.getPlugin());
-            pluginsList.add(InsulinOrefUltraRapidActingPlugin.getPlugin());
+            pluginsList.add(insulinOrefRapidActingPlugin);
+            pluginsList.add(insulinOrefUltraRapidActingPlugin);
             pluginsList.add(insulinOrefFreePeakPlugin);
             pluginsList.add(SensitivityOref0Plugin.getPlugin());
             pluginsList.add(SensitivityAAPSPlugin.getPlugin());
@@ -220,7 +224,7 @@ public class MainApp extends DaggerApplication {
             pluginsList.add(SourceTomatoPlugin.getPlugin());
             pluginsList.add(SourceEversensePlugin.getPlugin());
             pluginsList.add(RandomBgPlugin.INSTANCE);
-            if (!Config.NSCLIENT) pluginsList.add(SmsCommunicatorPlugin.INSTANCE);
+            if (!Config.NSCLIENT) pluginsList.add(smsCommunicatorPlugin);
             pluginsList.add(FoodPlugin.getPlugin());
 
             pluginsList.add(WearPlugin.initPlugin(this));
@@ -231,27 +235,29 @@ public class MainApp extends DaggerApplication {
             pluginsList.add(MaintenancePlugin.initPlugin(this));
             pluginsList.add(AutomationPlugin.INSTANCE);
 
-            pluginsList.add(ConfigBuilderPlugin.getPlugin());
+            pluginsList.add(configBuilderPlugin);
 
             pluginsList.add(DstHelperPlugin.getPlugin());
 
 
-            ConfigBuilderPlugin.getPlugin().initialize();
+            configBuilderPlugin.initialize();
         }
 
         NSUpload.uploadAppStart();
 
-        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+        final PumpInterface pump = configBuilderPlugin.getActivePump();
         if (pump != null) {
             new Thread(() -> {
                 SystemClock.sleep(5000);
-                ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("Initialization", null);
+                configBuilderPlugin.getCommandQueue().readStatus("Initialization", null);
             }).start();
         }
 
         new Thread(() -> KeepAliveReceiver.setAlarm(this)).start();
         doMigrations();
     }
+
+
 
     private void doMigrations() {
 
@@ -279,7 +285,6 @@ public class MainApp extends DaggerApplication {
 
     @Override
     protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
-
         return DaggerAppComponent
                 .builder()
                 .application(this)

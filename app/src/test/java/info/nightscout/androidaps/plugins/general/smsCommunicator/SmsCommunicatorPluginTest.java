@@ -15,6 +15,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.Lazy;
 import info.AAPSMocker;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -30,6 +31,7 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
@@ -902,7 +904,9 @@ public class SmsCommunicatorPluginTest {
         when(SmsManager.getDefault()).thenReturn(smsManager);
 
         when(SP.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678");
-        smsCommunicatorPlugin = SmsCommunicatorPlugin.INSTANCE;
+        Lazy<InsulinOrefRapidActingPlugin> insulinOrefRapidActingPlugin = InsulinOrefRapidActingPlugin::new;
+        ConfigBuilderPlugin configBuilderPlugin = new ConfigBuilderPlugin(insulinOrefRapidActingPlugin);
+        smsCommunicatorPlugin = new SmsCommunicatorPlugin(configBuilderPlugin);
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true);
 
         mockStatic(LoopPlugin.class);

@@ -9,10 +9,11 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
@@ -24,6 +25,14 @@ public class ActionSendSMS extends Action {
     private static final Logger log = LoggerFactory.getLogger(ActionSendSMS.class);
 
     public InputString text = new InputString();
+
+    @Inject
+    SmsCommunicatorPlugin smsCommunicatorPlugin;
+
+    public ActionSendSMS() {
+        super();
+        MainApp.instance().androidInjector().inject(this); // TODO inject or pass itno constructor once AutomationPlugin is prepared for Dagger
+    }
 
     @Override
     public int friendlyName() {
@@ -37,7 +46,7 @@ public class ActionSendSMS extends Action {
 
     @Override
     public void doAction(Callback callback) {
-        boolean result = SmsCommunicatorPlugin.INSTANCE.sendNotificationToAllNumbers(text.getValue());
+        boolean result = smsCommunicatorPlugin.sendNotificationToAllNumbers(text.getValue());
         if (callback != null)
             callback.result(new PumpEnactResult().success(result).comment(result ? R.string.ok : R.string.danar_error)).run();
 

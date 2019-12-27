@@ -5,9 +5,13 @@ import android.preference.PreferenceManager
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
+import info.nightscout.androidaps.plugins.general.automation.actions.ActionSendSMS
+import info.nightscout.androidaps.queue.commands.CommandSetProfile
+import info.nightscout.androidaps.services.DataService
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -25,7 +29,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideProfileFunction(sp : SP): ProfileFunction {
+    fun provideProfileFunction(sp: SP): ProfileFunction {
         return ProfileFunctionImplementation(sp)
     }
 
@@ -37,6 +41,15 @@ class AppModule {
 
     @Module
     interface AppBindings {
+
+        @ContributesAndroidInjector
+        fun bindDataService(): DataService
+
+        @ContributesAndroidInjector
+        fun bindCommandSetProfile(): CommandSetProfile
+
+        @ContributesAndroidInjector
+        fun bindActionSendSMS(): ActionSendSMS
 
         @Binds
         fun bindContext(mainApp: MainApp): Context

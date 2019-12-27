@@ -24,13 +24,12 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
         return resourceHelper.gs(R.string.free_peak_oref) ?: ""
     }
 
-    public override fun commentStandardText(): String {
+    override fun commentStandardText(): String {
         return resourceHelper.gs(R.string.insulin_peak_time) + ": " + peak
     }
 
-    public override fun getPeak(): Int {
-        return sp.getInt(R.string.key_insulin_oref_peak, DEFAULT_PEAK)
-    }
+    override val peak: Int
+        get() = sp.getInt(R.string.key_insulin_oref_peak, DEFAULT_PEAK)
 
     companion object {
         private const val DEFAULT_PEAK = 75
