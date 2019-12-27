@@ -43,6 +43,7 @@ import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.XdripCalibrations;
+import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -889,7 +890,7 @@ public class SmsCommunicatorPluginTest {
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockCommandQueue();
         AAPSMocker.mockNSUpload();
-        AAPSMocker.mockConstraintsChecker();
+        ConstraintChecker constraintChecker = AAPSMocker.mockConstraintsChecker();
 
         BgReading reading = new BgReading();
         reading.value = 100;
@@ -907,7 +908,8 @@ public class SmsCommunicatorPluginTest {
         when(SP.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678");
         Lazy<InsulinOrefRapidActingPlugin> insulinOrefRapidActingPlugin = InsulinOrefRapidActingPlugin::new;
         ConfigBuilderPlugin configBuilderPlugin = new ConfigBuilderPlugin(insulinOrefRapidActingPlugin);
-        smsCommunicatorPlugin = new SmsCommunicatorPlugin(configBuilderPlugin);
+        ResourceHelperImplementation resourceHelperImplementation = mock(ResourceHelperImplementation.class);
+        smsCommunicatorPlugin = new SmsCommunicatorPlugin(configBuilderPlugin, resourceHelperImplementation, constraintChecker);
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true);
 
         mockStatic(LoopPlugin.class);
