@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputProfileName;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
@@ -33,7 +34,7 @@ public class ActionProfileSwitch extends Action {
         // Prevent action if active profile is already active
         // but we don't have a trigger IS_NOT_EQUAL
         // so check is in the doRun()
-        ProfileInterface profileInterface =  ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
+        ProfileInterface profileInterface = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
         if (profileInterface != null) {
             ProfileStore profileStore = profileInterface.getProfile();
             if (profileStore != null) {
@@ -62,13 +63,13 @@ public class ActionProfileSwitch extends Action {
 
         String activeProfileName = ProfileFunctions.getInstance().getProfileName();
         //Check for uninitialized profileName
-        if ( profileName.equals("")){
+        if (profileName.equals("")) {
             log.error("Selected profile not initialized");
             if (callback != null)
                 callback.result(new PumpEnactResult().success(false).comment(R.string.error_field_must_not_be_empty)).run();
             return;
         }
-        if ( ProfileFunctions.getInstance().getProfile() == null){
+        if (ProfileFunctions.getInstance().getProfile() == null) {
             log.error("ProfileFunctions not initialized");
             if (callback != null)
                 callback.result(new PumpEnactResult().success(false).comment(R.string.noprofile)).run();
@@ -90,15 +91,15 @@ public class ActionProfileSwitch extends Action {
         }
         ProfileStore profileStore = activeProfile.getProfile();
         if (profileStore == null) return;
-        if(profileStore.getSpecificProfile(profileName) == null) {
+        if (profileStore.getSpecificProfile(profileName) == null) {
             if (L.isEnabled(L.AUTOMATION))
-                log.error("Selected profile does not exist! - "+ profileName);
+                log.error("Selected profile does not exist! - " + profileName);
             if (callback != null)
                 callback.result(new PumpEnactResult().success(false).comment(R.string.notexists)).run();
             return;
         }
 
-        ProfileFunctions.getInstance().doProfileSwitch(profileStore, profileName, 0, 100, 0, DateUtil.now());
+        TreatmentsPlugin.getPlugin().doProfileSwitch(profileStore, profileName, 0, 100, 0, DateUtil.now());
         if (callback != null)
             callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
     }

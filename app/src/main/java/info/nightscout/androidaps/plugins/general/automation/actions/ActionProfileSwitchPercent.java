@@ -6,21 +6,21 @@ import com.google.common.base.Optional;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputPercent;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerProfilePercent;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.JsonHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ActionProfileSwitchPercent extends Action {
     private static final Logger log = LoggerFactory.getLogger(ActionProfileSwitchPercent.class);
@@ -47,7 +47,7 @@ public class ActionProfileSwitchPercent extends Action {
 
     @Override
     public void doAction(Callback callback) {
-        ProfileFunctions.getInstance().doProfileSwitch((int) duration.getValue(), (int) pct.getValue(), 0);
+        TreatmentsPlugin.getPlugin().doProfileSwitch((int) duration.getValue(), (int) pct.getValue(), 0);
         if (callback != null)
             callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
     }

@@ -14,6 +14,4 @@ interface ProfileFunction {
     fun getUnits(): String
     fun getProfile(time: Long): Profile?
     fun prepareProfileSwitch(profileStore: ProfileStore, profileName: String, duration: Int, percentage: Int, timeShift: Int, date: Long): ProfileSwitch
-    fun doProfileSwitch(profileStore: ProfileStore, profileName: String, duration: Int, percentage: Int, timeShift: Int, date: Long)
-    fun doProfileSwitch(duration: Int, percentage: Int, timeShift: Int)
 }

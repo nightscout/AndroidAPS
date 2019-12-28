@@ -12,9 +12,13 @@ import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.utils.*
 import kotlinx.android.synthetic.main.survey_activity.*
 import org.slf4j.LoggerFactory
+import javax.inject.Inject
 
 class SurveyActivity : NoSplashAppCompatActivity() {
     private val log = LoggerFactory.getLogger(SurveyActivity::class.java)
+
+    @Inject
+    lateinit var tddCalculator: TddCalculator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +30,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
         val profileList = profileStore?.getProfileList() ?: return
         survey_spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 
-        survey_tdds.text = TddCalculator.stats()
+        survey_tdds.text = tddCalculator.stats()
         survey_tir.text = TirCalculator.stats()
         survey_activity.text = ActivityMonitor.stats()
 

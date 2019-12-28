@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.fragment.app.Fragment
+import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.profile.ns.events.EventNSProfileUpdateGUI
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -21,8 +22,13 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.close.*
 import kotlinx.android.synthetic.main.nsprofile_fragment.*
 import kotlinx.android.synthetic.main.profileviewer_fragment.*
+import javax.inject.Inject
 
-class NSProfileFragment : Fragment() {
+class NSProfileFragment : DaggerFragment() {
+
+    @Inject
+    lateinit var treatmentsPlugin: TreatmentsPlugin
+
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -42,7 +48,7 @@ class NSProfileFragment : Fragment() {
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, MainApp.gs(R.string.nsprofile),
                             MainApp.gs(R.string.activate_profile) + ": " + name + " ?", Runnable {
-                            ProfileFunctions.getInstance().doProfileSwitch(store, name, 0, 100, 0, DateUtil.now())
+                            treatmentsPlugin.doProfileSwitch(store, name, 0, 100, 0, DateUtil.now())
                         })
                     }
                 }

@@ -1,19 +1,21 @@
 package info.nightscout.androidaps.interfaces;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileIntervals;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
-import info.nightscout.androidaps.data.Intervals;
-import info.nightscout.androidaps.data.ProfileIntervals;
 
 /**
  * Created by mike on 14.06.2016.
@@ -62,6 +64,8 @@ public interface TreatmentsInterface {
     ProfileSwitch getProfileSwitchFromHistory(long time);
     ProfileIntervals<ProfileSwitch> getProfileSwitchesFromHistory();
     void addToHistoryProfileSwitch(ProfileSwitch profileSwitch);
+    void doProfileSwitch(@NotNull final ProfileStore profileStore, @NotNull final String profileName, final int duration, final int percentage, final int timeShift, final long date);
+    void doProfileSwitch(final int duration, final int percentage, final int timeShift);
 
     long oldestDataAvailable();
 

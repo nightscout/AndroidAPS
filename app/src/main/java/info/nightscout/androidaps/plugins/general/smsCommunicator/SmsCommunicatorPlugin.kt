@@ -54,6 +54,7 @@ import javax.inject.Singleton
 @Singleton
 class SmsCommunicatorPlugin @Inject constructor(
     val configBuilderPlugin: ConfigBuilderPlugin,
+    val treatmentsPlugin: TreatmentsPlugin,
     val resourceHelper: ResourceHelper,
     val constraintChecker: ConstraintChecker,
     val aapsLogger: AAPSLogger
@@ -467,7 +468,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val finalPercentage = percentage
                     messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction(list[pindex - 1] as String, finalPercentage) {
                         override fun run() {
-                            ProfileFunctions.getInstance().doProfileSwitch(store, list[pindex - 1] as String, 0, finalPercentage, 0, DateUtil.now())
+                            treatmentsPlugin.doProfileSwitch(store, list[pindex - 1] as String, 0, finalPercentage, 0, DateUtil.now())
                             sendSMS(Sms(receivedSms.phoneNumber, R.string.profileswitchcreated))
                         }
                     })

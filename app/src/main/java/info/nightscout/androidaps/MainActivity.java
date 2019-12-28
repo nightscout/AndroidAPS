@@ -37,9 +37,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
-import dagger.android.AndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.activities.HistoryBrowseActivity;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.activities.PreferencesActivity;
@@ -68,10 +65,7 @@ import info.nightscout.androidaps.utils.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class MainActivity extends NoSplashAppCompatActivity implements HasAndroidInjector {
-
-    @Inject
-    DispatchingAndroidInjector<Object> androidInjector;
+public class MainActivity extends NoSplashAppCompatActivity {
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -354,12 +348,4 @@ public class MainActivity extends NoSplashAppCompatActivity implements HasAndroi
         return actionBarDrawerToggle.onOptionsItemSelected(item);
     }
 
-
-    /**
-     * Returns an {@link AndroidInjector}.
-     */
-    @Override
-    public AndroidInjector<Object> androidInjector() {
-        return androidInjector;
-    }
 }

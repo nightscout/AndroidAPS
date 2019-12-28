@@ -136,6 +136,7 @@ public class MainApp extends DaggerApplication {
     @Inject OpenAPSAMAPlugin openAPSAMAPlugin;
     @Inject OpenAPSSMBPlugin openAPSSMBPlugin;
     @Inject StatusLinePlugin statusLinePlugin;
+    @Inject TreatmentsPlugin treatmentsPlugin;
 
     @Override
     public void onCreate() {
@@ -215,7 +216,7 @@ public class MainApp extends DaggerApplication {
             if (Config.APS) pluginsList.add(openAPSSMBPlugin);
             pluginsList.add(NSProfilePlugin.getPlugin());
             if (!Config.NSCLIENT) pluginsList.add(LocalProfilePlugin.INSTANCE);
-            pluginsList.add(TreatmentsPlugin.getPlugin());
+            pluginsList.add(treatmentsPlugin);
             if (!Config.NSCLIENT) pluginsList.add(safetyPlugin);
             if (!Config.NSCLIENT) pluginsList.add(VersionCheckerPlugin.INSTANCE);
             if (Config.APS) pluginsList.add(StorageConstraintPlugin.getPlugin());

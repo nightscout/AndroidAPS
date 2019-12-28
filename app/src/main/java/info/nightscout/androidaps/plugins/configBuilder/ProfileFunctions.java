@@ -182,30 +182,4 @@ public class ProfileFunctions implements ProfileFunction {
         return profileSwitch;
     }
 
-    public void doProfileSwitch(@NotNull final ProfileStore profileStore, @NotNull final String profileName, final int duration, final int percentage, final int timeShift, final long date) {
-        ProfileSwitch profileSwitch = prepareProfileSwitch(profileStore, profileName, duration, percentage, timeShift, date);
-        TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
-        if (percentage == 90 && duration == 10)
-            SP.putBoolean(R.string.key_objectiveuseprofileswitch, true);
-    }
-
-    public void doProfileSwitch(final int duration, final int percentage, final int timeShift) {
-        ProfileSwitch profileSwitch = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(System.currentTimeMillis());
-        if (profileSwitch != null) {
-            profileSwitch = new ProfileSwitch();
-            profileSwitch.date = System.currentTimeMillis();
-            profileSwitch.source = Source.USER;
-            profileSwitch.profileName = getInstance().getProfileName(System.currentTimeMillis(), false, false);
-            profileSwitch.profileJson = getInstance().getProfile().getData().toString();
-            profileSwitch.profilePlugin = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getClass().getName();
-            profileSwitch.durationInMinutes = duration;
-            profileSwitch.isCPP = percentage != 100 || timeShift != 0;
-            profileSwitch.timeshift = timeShift;
-            profileSwitch.percentage = percentage;
-            TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
-        } else {
-            log.error("No profile switch existing");
-        }
-    }
-
 }

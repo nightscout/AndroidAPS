@@ -30,6 +30,9 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject
     lateinit var profileFunction: ProfileFunction
 
+    @Inject
+    lateinit var treatmentsPlugin: TreatmentsPlugin
+
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putDouble("overview_profileswitch_duration", overview_profileswitch_duration.value)
@@ -104,7 +107,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
-                profileFunction.doProfileSwitch(profileStore, profile, duration.toInt(), percent, timeShift, eventTime)
+                treatmentsPlugin.doProfileSwitch(profileStore, profile, duration.toInt(), percent, timeShift, eventTime)
             })
         }
         return true

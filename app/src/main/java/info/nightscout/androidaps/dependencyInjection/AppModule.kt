@@ -17,6 +17,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective5
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionSendSMS
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.commands.CommandSetProfile
 import info.nightscout.androidaps.services.DataService
 import info.nightscout.androidaps.utils.resources.ResourceHelper

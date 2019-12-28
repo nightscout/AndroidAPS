@@ -5,13 +5,26 @@ import android.util.LongSparseArray
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.TDD
-import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import org.slf4j.LoggerFactory
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import javax.inject.Inject
 
-object TddCalculator : TreatmentsPlugin() {
-    private val log = LoggerFactory.getLogger(L.DATATREATMENTS)
+class TddCalculator @Inject constructor(
+    val aapsLogger: AAPSLogger,
+    val resourceHelper: ResourceHelper,
+    val mainApp: MainApp,
+    val configBuilderPlugin: ConfigBuilderPlugin,
+    val profileFunction: ProfileFunction
+) : TreatmentsPlugin(aapsLogger, resourceHelper, mainApp, configBuilderPlugin, profileFunction) {
+
+    init {
+        service = TreatmentService() // plugin is not started
+    }
 
     fun calculate(days: Long): LongSparseArray<TDD> {
         val range = T.days(days + 1).msecs()
@@ -33,7 +46,7 @@ object TddCalculator : TreatmentsPlugin() {
             val midnight = MidnightTime.calc(t)
             val tdd = result[midnight] ?: TDD(midnight, 0.0, 0.0, 0.0)
             val tbr = getTempBasalFromHistory(t)
-            val profile = ProfileFunctions.getInstance().getProfile(t) ?: continue
+            val profile = profileFunction.getProfile(t) ?: continue
             val absoluteRate = tbr?.tempBasalConvertedToAbsolute(t, profile) ?: profile.getBasal(t)
             tdd.basal += absoluteRate / 60.0 * 5.0
             result.put(midnight, tdd)
@@ -42,11 +55,11 @@ object TddCalculator : TreatmentsPlugin() {
             val tdd = result.valueAt(i)
             tdd.total = tdd.bolus + tdd.basal
         }
-        log.debug(result.toString())
+        aapsLogger.debug(LTag.CORE, result.toString())
         return result
     }
 
-    fun averageTDD(tdds: LongSparseArray<TDD>): TDD {
+    private fun averageTDD(tdds: LongSparseArray<TDD>): TDD {
         val totalTdd = TDD()
         for (i in 0 until tdds.size()) {
             val tdd = tdds.valueAt(i)
@@ -71,7 +84,7 @@ object TddCalculator : TreatmentsPlugin() {
         )
     }
 
-    fun toText(tdds: LongSparseArray<TDD>): String {
+    private fun toText(tdds: LongSparseArray<TDD>): String {
         var t = ""
         for (i in 0 until tdds.size()) {
             t += "${tdds.valueAt(i).toText()}<br>"

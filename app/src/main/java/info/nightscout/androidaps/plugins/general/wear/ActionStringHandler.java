@@ -679,8 +679,7 @@ public class ActionStringHandler {
         }
 
         //send profile to pumpe
-        new NewNSTreatmentDialog(); //init
-        ProfileFunctions.getInstance().doProfileSwitch(0, percentage, timeshift);
+        TreatmentsPlugin.getPlugin().doProfileSwitch(0, percentage, timeshift);
     }
 
     private static void generateTempTarget(int duration, double low, double high) {
