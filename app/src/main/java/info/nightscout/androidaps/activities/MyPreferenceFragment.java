@@ -25,7 +25,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
-import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
+import info.nightscout.androidaps.plugins.general.xdripStatusline.StatusLinePlugin;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
@@ -52,21 +52,18 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
 
     @Inject
     OpenAPSAMAPlugin openAPSAMAPlugin;
-
     @Inject
     OpenAPSMAPlugin openAPSMAPlugin;
-
     @Inject
     OpenAPSSMBPlugin openAPSSMBPlugin;
-
     @Inject
     InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
-
     @Inject
     SafetyPlugin safetyPlugin;
-
     @Inject
     SmsCommunicatorPlugin smsCommunicatorPlugin;
+    @Inject
+    StatusLinePlugin statusLinePlugin;
 
     @Override
     public void setArguments(Bundle args) {
@@ -130,13 +127,6 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
                 addPreferencesFromResourceIfEnabled(LocalInsightPlugin.getPlugin(), PluginType.PUMP);
                 addPreferencesFromResourceIfEnabled(ComboPlugin.getPlugin(), PluginType.PUMP);
                 addPreferencesFromResourceIfEnabled(MedtronicPumpPlugin.getPlugin(), PluginType.PUMP);
-
-                if (DanaRPlugin.getPlugin().isEnabled(PluginType.PROFILE)
-                        || DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PROFILE)
-                        || DanaRv2Plugin.getPlugin().isEnabled(PluginType.PROFILE)
-                        || DanaRSPlugin.getPlugin().isEnabled(PluginType.PROFILE)) {
-                    addPreferencesFromResource(R.xml.pref_danarprofile);
-                }
             }
 
             if (!Config.NSCLIENT) {
@@ -154,7 +144,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
             addPreferencesFromResource(R.xml.pref_datachoices);
 
             addPreferencesFromResourceIfEnabled(WearPlugin.getPlugin(), PluginType.GENERAL);
-            addPreferencesFromResourceIfEnabled(StatuslinePlugin.getPlugin(), PluginType.GENERAL);
+            addPreferencesFromResourceIfEnabled(statusLinePlugin, PluginType.GENERAL);
         }
 
         PreferencesActivity.initSummary(getPreferenceScreen());

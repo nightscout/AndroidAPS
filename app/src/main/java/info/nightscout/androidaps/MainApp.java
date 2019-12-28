@@ -60,7 +60,7 @@ import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
-import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
+import info.nightscout.androidaps.plugins.general.xdripStatusline.StatusLinePlugin;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefUltraRapidActingPlugin;
@@ -126,9 +126,7 @@ public class MainApp extends DaggerApplication {
     @Inject
     AAPSLogger aapsLogger;
 
-    @Inject
-    ConfigBuilderPlugin configBuilderPlugin;
-
+    @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
     @Inject InsulinOrefRapidActingPlugin insulinOrefRapidActingPlugin;
     @Inject InsulinOrefUltraRapidActingPlugin insulinOrefUltraRapidActingPlugin;
@@ -137,6 +135,7 @@ public class MainApp extends DaggerApplication {
     @Inject OpenAPSMAPlugin openAPSMAPlugin;
     @Inject OpenAPSAMAPlugin openAPSAMAPlugin;
     @Inject OpenAPSSMBPlugin openAPSSMBPlugin;
+    @Inject StatusLinePlugin statusLinePlugin;
 
     @Override
     public void onCreate() {
@@ -235,7 +234,7 @@ public class MainApp extends DaggerApplication {
             pluginsList.add(FoodPlugin.getPlugin());
 
             pluginsList.add(WearPlugin.initPlugin(this));
-            pluginsList.add(StatuslinePlugin.initPlugin(this));
+            pluginsList.add(statusLinePlugin);
             pluginsList.add(PersistentNotificationPlugin.getPlugin());
             pluginsList.add(NSClientPlugin.getPlugin());
 //            if (engineeringMode) pluginsList.add(TidepoolPlugin.INSTANCE);

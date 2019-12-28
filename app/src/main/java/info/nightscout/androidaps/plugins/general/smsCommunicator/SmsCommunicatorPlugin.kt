@@ -93,7 +93,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         super.onStart()
         disposable.add(toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventPreferenceChange? -> processSettings(event) }) { throwable: Throwable? -> FabricPrivacy.logException(throwable) }
+            .subscribe({ event: EventPreferenceChange? -> processSettings(event) }) { FabricPrivacy.logException(it) }
         )
     }
 

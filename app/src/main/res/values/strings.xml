@@ -1687,5 +1687,7 @@
     <string name="alreadyset">Already set</string>
     <string name="message">Message</string>
     <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
+    <string name="key_xdripstatus_detailediob" translatable="false">xdripstatus_detailediob</string>
+    <string name="key_xdripstatus_showbgi" translatable="false">xdripstatus_showbgi</string>
 
 </resources>
