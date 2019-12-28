@@ -74,8 +74,6 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IA:</string>
     <string name="tempbasals_iobtotal_label_string">IA Totale :</string>
-    <string name="treatments_newtreatment_insulinamount_label">Insuline</string>
-    <string name="treatments_newtreatment_carbsamount_label">Glucides</string>
     <string name="treatments_wizard_bg_label">Gly</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Glucides</string>
@@ -114,7 +112,6 @@
     <string name="overview">Aperçu</string>
     <string name="nsprofile">Profil NS</string>
     <string name="simpleprofile">Profil simple</string>
-    <string name="tempbasal">Basal temporaire</string>
     <string name="treatments">Traitements</string>
     <string name="virtualpump">Pompe virtuelle</string>
     <string name="careportal">Careportal</string>
@@ -146,21 +143,18 @@
     <string name="constraints_violation">Violation des restrictions</string>
     <string name="treatmentdeliveryerror">Erreur injection bolus</string>
     <string name="tempbasaldeliveryerror">Erreur injection basal temporaire</string>
-    <string name="overview_newtempbasal_basalpercent">Valeur de Basal [%%]</string>
-    <string name="overview_newtempbasal_percent_label">%% (100%% = actuel)</string>
+    <string name="overview_newtempbasal_basalpercent">Valeur Basal [%]</string>
     <string name="setbasalquestion">Accepter nouveau basal temporaire :</string>
     <string name="overview_treatment_label">Traitement</string>
     <string name="overview_calculator_label">Calculatrice</string>
     <string name="constraintapllied">Restriction appliquée !</string>
     <string name="confirmation">Confirmation</string>
-    <string name="entertreatmentquestion">Entrez le nouveau traitement :</string>
     <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="carbs">Glucides</string>
     <string name="changeyourinput">Changez vos entrées !</string>
-    <string name="setextendedbolusquestion">Définir un nouveau bolus étendu</string>
     <string name="configbuilder_bgsource">Source des glycémies</string>
     <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AndroidAPS ?</string>
     <string name="xdrip">xDrip</string>
@@ -187,7 +181,7 @@
     <string name="careportal_cgmsensorinsert">Insertion Capteur MGC</string>
     <string name="careportal_cgmsensorstart">Début Capteur MGC</string>
     <string name="careportal_insulincartridgechange">Changement du Réservoir</string>
-    <string name="careportal_profileswitch">Changement profil</string>
+    <string name="careportal_profileswitch">Changement de profil</string>
     <string name="careportal_snackbolus">Bolus Goûter</string>
     <string name="careportal_mealbolus">Bolus Repas</string>
     <string name="careportal_correctionbolus">Bolus de correction</string>
@@ -208,7 +202,7 @@
     <string name="careportal_newnstreatment_percent_label">Pourcentage</string>
     <string name="careportal_newnstreatment_absolute_label">Absolu</string>
     <string name="careportal_newnstreatment_notes_label">Notes</string>
-    <string name="careportal_newnstreatment_eventtime_label">Heure de l\'événement</string>
+    <string name="event_time_label">Heure événement</string>
     <string name="careportal_newnstreatment_profile_label">Profil</string>
     <string name="careportal_newnstreatment_enteredby_title">Entré par</string>
     <string name="careportal_newnstreatment_glucosetype">Source de Glycémie</string>
@@ -233,7 +227,7 @@
     <string name="connecting">Connection en cours</string>
     <string name="connected">Connectée</string>
     <string name="disconnected">Déconnectée</string>
-    <string name="danar_pump_settings">Paramètres pompe DanaR</string>
+    <string name="danar_pump_settings">Paramètres de la pompe Dana</string>
     <string name="end_user_license_agreement">Contrat de Licence pour Utilisateur Final</string>
     <string name="end_user_license_agreement_text">NE DOIT PAS ÊTRE UTILISÉ POUR PRENDRE DES DÉCISIONS MÉDICALES. IL N\'Y A AUCUNE GARANTIE POUR LE PROGRAMME, DANS LA LIMITE PERMISE PAR LA LOI APPLICABLE. SAUF S\'IL EST INDIQUÉ LE CONTRAIRE PAR ÉCRIT. LES TITULAIRES DU DROIT D\'AUTEUR ET / OU D\'AUTRES PARTIES FOURNISSENT LE PROGRAMME «EN L\'ÉTAT» SANS GARANTIE D\'AUCUNE SORTE, EXPLICITE OU IMPLICITE, Y COMPRIS MAIS NON SEULEMENT AUX GARANTIES IMPLICITES DE QUALITÉ MARCHANDE ET D\'ADÉQUATION À UN USAGE PARTICULIER
 L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME SONT DE VOTRE RESPONSABILITÉ. SI LE PROGRAMME EST DÉFECTUEUX, VOUS ASSUMEZ LE COÛT DE TOUS LES SERVICES, RÉPARATIONS OU CORRECTIONS NÉCESSAIRES.</string>
@@ -284,7 +278,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="glucosetype_sensor">Capteur</string>
     <string name="manual">Manuel</string>
     <string name="careportal_temporarytarget">Cible temp.</string>
-    <string name="careportal_temporarytargetcancel">Annulation Cible Temporaire</string>
+    <string name="careportal_temporarytargetcancel">Annuler Cible Temporaire</string>
     <string name="danarprofile">Paramètres du profil DanaR</string>
     <string name="danarprofile_dia">Durée d\'Action [h] </string>
     <string name="danarprofile_dia_summary">Durée d\'Action de l\'Insuline</string>
@@ -423,7 +417,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="eatingsoon">Repas imminent</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Activité</string>
-    <string name="removerecord">Retirer l\'enregistrement :</string>
+    <string name="removerecord">Supprimer l\'enregistrement</string>
     <string name="danar_stats">Dana Stats</string>
     <string name="danar_stats_cumulative_tdd">DTI cumulé</string>
     <string name="danar_stats_expweight">DTI avec Pondération Exponentielle</string>
@@ -584,16 +578,13 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ns_noupload_summary">Toutes les données envoyées à NS sont abandonnées. AAPS est connecté à NS mais aucun changement n’est fait dans NS</string>
     <string name="basal_step">Incrément Basal</string>
     <string name="bolus_step">Incrément Bolus</string>
-    <string name="extendedbolus">Bolus étendu</string>
-    <string name="temptarget">Cible Temporaire</string>
     <string name="overview_extendedbolus_cancel_button">Annuler Bolus étendu</string>
     <string name="careportal_sensorage_label">Age Capteur</string>
     <string name="careportal_canulaage_label">Age Cathéter</string>
     <string name="careportal_insulinage_label">Age Insuline</string>
     <string name="hours">heures</string>
-    <string name="overview_newtempbasal_basaltype_label">Type du Basal</string>
     <string name="invalidprofile">Profil incorrect !!!</string>
-    <string name="profileswitch">Changement Profil</string>
+    <string name="doprofileswitch">Changer de profil</string>
     <string name="careportal_pbage_label">Age batterie pompe</string>
     <string name="careportal_pumpbatterychange">Nouvelle Batterie Pompe</string>
     <string name="ns_alarmoptions">Options d\'alarme</string>
@@ -617,7 +608,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="sensitivityoref1">Sensibilité Oref1</string>
     <string name="sensitivityaaps">Sensibilité AAPS </string>
     <string name="absorptionsettings_title">Paramètres d’absorption</string>
-    <string name="absorption_maxtime_title">Durée maximale d’absorption pour un repas</string>
+    <string name="absorption_maxtime_title">Durée max d’absorption d\'un repas [h]</string>
     <string name="absorption_maxtime_summary">Le temps estimé en heures pour une absorbption totale des glucides d’un repas</string>
     <string name="danar_visualizeextendedaspercentage_title">Afficher le bolus étendu en %%</string>
     <string name="careportal_sensorage_label_short">AgeC</string>
@@ -642,7 +633,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="careportal_carbsandbolus_label">GLUCIDES et BOLUS</string>
     <string name="careportal_cgm_label">MGC et OPENAPS</string>
     <string name="careportal_pump_label">POMPE</string>
-    <string name="overview_newtempbasal_basalabsolute">Valeur Basal [U/h] </string>
     <string name="careportal_newnstreatment_duration_min_label">Durée [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="smb_shortname">SMB</string>
@@ -662,7 +652,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="waitingforpairing">Attente de l\'appairage de la pompe</string>
     <string name="pairingok">Appairage OK</string>
     <string name="pairingtimedout">Temps d\'appairage dépassé</string>
-    <string name="pairing">APPAIRAGE</string>
+    <string name="pairing">Appairage</string>
     <string name="danars_nodeviceavailable">Jusqu\'à présent aucun appareil n\'a été trouvé</string>
     <string name="emptyreservoir">Réservoir vide</string>
     <string name="bloodsugarmeasurementalert">Alerte de mesure de glycémie</string>
@@ -677,11 +667,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="careportal_newnstreatment_percentage_label">Pourcentage</string>
     <string name="careportal_newnstreatment_timeshift_label">Décalage horaire</string>
     <string name="default_temptargets">Cibles Temporaires par défaut</string>
-    <string name="eatingsoon_duration">Durée pour le prochain repas [min]</string>
+    <string name="eatingsoon_duration">durée repas imminent [min]</string>
     <string name="eatingsoon_target">Cible Glyc. pour le prochain repas</string>
     <string name="activity_duration">Durée d\'activité</string>
     <string name="activity_target">Cible Glycémie pour l\'activité</string>
-    <string name="hypo_duration">Durée de période hypo [min]</string>
+    <string name="hypo_duration">durée hypo [min]</string>
     <string name="hypo_target">Cible Glycémie pendant l’hypo</string>
     <string name="danar_history_prime">Amorcer</string>
     <string name="gettingextendedbolusstatus">Obtenir l\'état du bolus étendu</string>
@@ -773,7 +763,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="bolus_frequency_exceeded">Un bolus avec la même quantité d’insuline a été demandé au cours de la dernière minute. Pour prévenir l’administration accidentelle de deux bolus à la fois et pour protéger contre les bugs, ceci (bolus) n\'est pas autorisé.</string>
     <string name="combo_pump_connected_now">Maintenant</string>
     <string name="combo_activity_reading_pump_history">Lecture historique pompe</string>
-    <string name="danar_history">Historique</string>
+    <string name="danar_history">Historique pompe</string>
     <string name="combo_activity_setting_basal_profile">Définir le profil basal</string>
     <string name="combo_pump_cartridge_low_warrning">Niveau réservoir pompe bas</string>
     <string name="combo_pump_battery_low_warrning">Niveau batterie pompe bas</string>
@@ -793,6 +783,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="insightpump_shortname">AC-I</string>
     <string name="ago">passé(e)s</string>
     <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d min</string>
     <string name="enablesmbalways">Activer en permanence les SMB</string>
     <string name="enablesmbalways_summary">Activer toujours SMB de manière autonome pour les bolus. Ceci est possible uniquement avec une source de glycémie ayant un très bon filtrage de données comme le G5</string>
     <string name="enablesmbaftercarbs">Activer SMB après ingestion de glucides</string>
@@ -969,11 +960,11 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="danar_pumpalarm_sound">Son</string>
     <string name="danar_pumpalarm_vibrate">Vibration</string>
     <string name="danar_pumpalarm_both">Les deux</string>
-    <string name="danar_screentimeout">Durée allumage écran [s]</string>
-    <string name="danar_backlight">Durée rétroéclairage [s]</string>
+    <string name="danar_screentimeout">Durée affichage LCD [secondes]</string>
+    <string name="danar_backlight">Rétro-éclairage [secondes]</string>
     <string name="danar_glucoseunits">Unités glycémie</string>
-    <string name="danar_shutdown">Arrêt (heures)</string>
-    <string name="danar_lowreservoir">Réservoir bas (Unités)</string>
+    <string name="danar_shutdown">Éteindre [heures]</string>
+    <string name="danar_lowreservoir">Réservoir faible [Unités]</string>
     <string name="danar_saveuseroptions">Enregistrer les options sur la pompe</string>
     <string name="option_on">Activé</string>
     <string name="option_off">Désactivé</string>
@@ -1219,15 +1210,20 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="longitude_short">Long :</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="name_short">Nom :</string>
-    <string name="locationis">La localisation est %1$s</string>
+    <string name="locationis">%1$s %2$s</string>
+    <string name="location_mode">Quand </string>
+    <string name="location_inside">Quand vous êtes à l\'intérieur de la zone</string>
+    <string name="location_outside">Quand vous êtes à l\'extérieur de la zone</string>
+    <string name="location_going_in">Quand vous entrez dans la zone</string>
+    <string name="location_going_out">Quand vous sortez de la zone</string>
     <string name="lastboluslabel">Lors du dernier Bolus</string>
-    <string name="lastboluscompared">Dernièr Bolus %1$s il y a %2$s min</string>
+    <string name="lastboluscompared">Heure du dernier bolus %1$s il y a %2$s min</string>
     <string name="triggercoblabel">GA</string>
     <string name="cobcompared">GA %1$s %2$.0f</string>
     <string name="taskname">Nom de tâche</string>
     <string name="edit_short">ÉDITER</string>
-    <string name="please_choose_an_action_type">Merci de choisir un type d\'action :</string>
-    <string name="please_choose_a_trigger_type">Merci de choisir un type de déclencheur :</string>
+    <string name="please_choose_an_action_type">Choisir un type d\'action</string>
+    <string name="please_choose_a_trigger_type">Choisir un type de déclencheur</string>
     <string name="triggers">Déclencheurs :</string>
     <string name="remove_label">SUPPRIMER</string>
     <string name="preconditions">Conditions préalables :</string>
@@ -1320,7 +1316,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="medtronic_error_pump_frequency_invalid">Fréquence de pompe non pris en charge.</string>
     <string name="medtronic_error_rileylink_address_invalid">Adresse RileyLink invalide.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Le type de pompe détecté n\'est pas le même que le type configuré.</string>
-    <string name="medtronic_error_pump_basal_profiles_not_enabled">Les profils Basal ne sont pas activés sur la pompe.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Le réglage des profils de basal n\'est pas activé sur la pompe. Activez-le sur la pompe.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Le profil Basal défini sur la pompe est incorrect (doit être STD).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Mauvais type DBT (TBR) réglé sur la pompe (doit être Absolu).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Mauvais paramètre Max Bolus sur la pompe (doit être %1$.2f).</string>
@@ -1371,7 +1367,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="automation_trigger_pump_last_connection_description">Dernière connexion de pompe [minutes]</string>
     <string name="automation_trigger_pump_last_connection_compared">Dernière connexion à la pompe %1$s il y a %2$s min</string>
     <string name="sendsmsactionlabel">Envoyer SMS : %1$s</string>
-    <string name="sendsmsactiondescription">Envoyer SMS à tous les numéros dans les préférences</string>
+    <string name="sendsmsactiondescription">Envoyer SMS à tous les numéros</string>
     <string name="sendsmsactiontext">Envoyer SMS avec du texte</string>
     <string name="insulinFromCob"><![CDATA[GA vs IA : <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Contraintes de Bolus appliquées : %2$.2fU à %3$.2f</font>]]></string>
@@ -1432,7 +1428,20 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="tirformat"><![CDATA[<b>%1$s:</b> Bas: <b>%2$02d%%</b> Médian: <b>%3$02d%%</b> Haut: <b>%4$02d%%</b>]]></string>
     <string name="average">Moyenne</string>
     <string name="tdd">DTI</string>
+    <string name="tir">TIR</string>
     <string name="activitymonitor">Moniteur d\'activité</string>
     <string name="doyouwantresetstats">Voulez-vous réinitialiser les stats d\'activité ?</string>
     <string name="statistics">Statistiques</string>
+    <string name="randombg">Gly Aléatoire</string>
+    <string name="description_source_randombg">Générer des glycémies aléatoires (mode démo uniquement)</string>
+    <string name="randombg_short">Gly</string>
+    <string name="tools">Outils</string>
+    <string name="show_calculation">Afficher le calcul</string>
+    <string name="error">Erreur</string>
+    <string name="timeformat12h">12h</string>
+    <string name="timeformat24h">24h</string>
+    <string name="automation_event">Evénement d\'automatisation</string>
+    <string name="alreadyset">Déjà configuré</string>
+    <string name="message">Message</string>
+    <string name="clearqueueconfirm">Effacer la file d\'attente ? Toutes les données en file d\'attente seront perdues !</string>
 </resources>

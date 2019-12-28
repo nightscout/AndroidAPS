@@ -74,8 +74,6 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB totale:</string>
-    <string name="treatments_newtreatment_insulinamount_label">Insulina</string>
-    <string name="treatments_newtreatment_carbsamount_label">CHO</string>
     <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">CHO</string>
@@ -114,7 +112,6 @@
     <string name="overview">Panoramica</string>
     <string name="nsprofile">Profilo NS</string>
     <string name="simpleprofile">Profilo semplice</string>
-    <string name="tempbasal">Basale temporanea</string>
     <string name="treatments">Trattamenti</string>
     <string name="virtualpump">Micro Virtuale</string>
     <string name="careportal">Portale</string>
@@ -146,21 +143,18 @@
     <string name="constraints_violation">Violazione dei vincoli</string>
     <string name="treatmentdeliveryerror">Errore erogazione bolo</string>
     <string name="tempbasaldeliveryerror">Errore erogazione basale temporanea</string>
-    <string name="overview_newtempbasal_basalpercent">Valore Basale [%%]</string>
-    <string name="overview_newtempbasal_percent_label">%% (100%% = corrente)</string>
+    <string name="overview_newtempbasal_basalpercent">Valore basale [%]</string>
     <string name="setbasalquestion">Accetta nuova basale temporanea:</string>
     <string name="overview_treatment_label">Trattamento</string>
     <string name="overview_calculator_label">Calcolatore</string>
     <string name="constraintapllied">Vincolo applicato!</string>
     <string name="confirmation">Conferma</string>
-    <string name="entertreatmentquestion">Inserisci nuovo trattamento:</string>
     <string name="bolus">Bolo</string>
     <string name="sms_bolus">Bolo:</string>
     <string name="basal">Basale</string>
     <string name="sms_basal">Basale</string>
     <string name="carbs">CHO</string>
     <string name="changeyourinput">Cambia il tuo input!</string>
-    <string name="setextendedbolusquestion">Imposta nuovo bolo esteso:</string>
     <string name="configbuilder_bgsource">Origine BG</string>
     <string name="configbuilder_bgsource_description">Da dove AndroidAPS dovrebbe ottenere i suoi dati?</string>
     <string name="xdrip">xDrip</string>
@@ -208,7 +202,7 @@
     <string name="careportal_newnstreatment_percent_label">Percentuale</string>
     <string name="careportal_newnstreatment_absolute_label">Assoluto</string>
     <string name="careportal_newnstreatment_notes_label">Note</string>
-    <string name="careportal_newnstreatment_eventtime_label">Data evento</string>
+    <string name="event_time_label">Ora evento</string>
     <string name="careportal_newnstreatment_profile_label">Profilo</string>
     <string name="careportal_newnstreatment_enteredby_title">Inserito da</string>
     <string name="careportal_newnstreatment_glucosetype">Tipo glicemia</string>
@@ -233,7 +227,7 @@
     <string name="connecting">Connessione</string>
     <string name="connected">Connesso</string>
     <string name="disconnected">Disconnesso</string>
-    <string name="danar_pump_settings">Impostazioni micro DanaR</string>
+    <string name="danar_pump_settings">Impostazioni micro Dana</string>
     <string name="end_user_license_agreement">Contratto di licenza per l\'utente</string>
     <string name="end_user_license_agreement_text">NON DEVE ESSERE UTILIZZATO PER PRENDERE DECISIONI MEDICHE. NON ESISTE ALCUNA GARANZIA PER IL PROGRAMMA, NELLA MISURA CONSENTITA DALLA LEGGE APPLICABILE. TRANNE QUANDO DIVERSAMENTE INDICATO PER ISCRITTO, I DETENTORI DEL COPYRIGHT E/O ALTRE PARTI FORNISCONO IL PROGRAMMA \"COSÌ COM\'È\" SENZA GARANZIA DI ALCUN TIPO, ESPLICITA O IMPLICITA, INCLUSE, MA NON LIMITATAMENTE A, GARANZIE IMPLICITE DI COMMERCIABILITÀ E IDONEITÀ PER UN SCOPO PARTICOLARE. L\'INTERO RISCHIO RIGUARDO LA QUALITÀ E LE PRESTAZIONI DEL PROGRAMMA È TUO. SE IL PROGRAMMA DOVESSE RISULTARE DIFETTOSO, TI ASSUMI IL COSTO DI TUTTE LE NECESSARIE MANUTENZIONI, RIPARAZIONI O CORREZIONI.</string>
     <string name="end_user_license_agreement_i_understand">COMPRENDO E ACCETTO</string>
@@ -422,7 +416,7 @@
     <string name="eatingsoon">Pasto a breve</string>
     <string name="hypo">Ipoglicemia</string>
     <string name="activity">Attività</string>
-    <string name="removerecord">Rimuovi record:</string>
+    <string name="removerecord">Rimuovi record</string>
     <string name="danar_stats">Statistiche DanaR</string>
     <string name="danar_stats_cumulative_tdd">TDD cumulativo</string>
     <string name="danar_stats_expweight">TDD esponenzialmente ponderato</string>
@@ -583,16 +577,12 @@
     <string name="ns_noupload_summary">Tutti i dati inviati a NS vengono rifiutati. AAPS è connesso a NS, ma non vengono apportate modifiche</string>
     <string name="basal_step">Incremento basale</string>
     <string name="bolus_step">Incremento bolo</string>
-    <string name="extendedbolus">Bolo esteso</string>
-    <string name="temptarget">TempTarget</string>
     <string name="overview_extendedbolus_cancel_button">Cancella bolo esteso</string>
     <string name="careportal_sensorage_label">Età sensore</string>
     <string name="careportal_canulaage_label">Età cannula</string>
     <string name="careportal_insulinage_label">Età insulina</string>
     <string name="hours">ore</string>
-    <string name="overview_newtempbasal_basaltype_label">Tipo basale</string>
     <string name="invalidprofile">Profilo non valido !!!</string>
-    <string name="profileswitch">Cambio profilo</string>
     <string name="doprofileswitch">Cambia profilo</string>
     <string name="careportal_pbage_label">Età batteria micro</string>
     <string name="careportal_pumpbatterychange">Cambio batteria micro</string>
@@ -630,7 +620,7 @@
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
     <string name="keep_screen_on_title">Mantieni lo schermo acceso</string>
     <string name="keep_screen_on_summary">Evita che Android disattivi lo schermo. Consumerà molta energia quando non è collegato alla presa di corrente.</string>
-    <string name="sensitivity_warning">Attivando la funzione Autosense, ricorda di dichiarare tutti i carboidrati assunti. Altrimenti le deviazioni di glicemia dovute ai carboidrati saranno identificate erroneamente come variazione di sensibilità !!</string>
+    <string name="sensitivity_warning">Attivando la funzione Autosense, ricorda di inserire tutti i carboidrati assunti. Altrimenti le deviazioni di glicemia dovute ai carboidrati saranno identificate erroneamente come variazione di sensibilità !!</string>
     <string name="sensitivityweightedaverage">Sensibilità WeightedAverage</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Annulla</string>
@@ -642,7 +632,6 @@
     <string name="careportal_carbsandbolus_label">CHO &amp; BOLO</string>
     <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
     <string name="careportal_pump_label">MICRO</string>
-    <string name="overview_newtempbasal_basalabsolute">Valore basale [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Durata [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="smb_shortname">SMB</string>
@@ -662,7 +651,7 @@
     <string name="waitingforpairing">In attesa di associare il micro</string>
     <string name="pairingok">Associazione OK</string>
     <string name="pairingtimedout">Time out associazione micro</string>
-    <string name="pairing">ASSOCIAZIONE</string>
+    <string name="pairing">Accoppiamento</string>
     <string name="danars_nodeviceavailable">Nessun dispositivo trovato finora</string>
     <string name="emptyreservoir">Serbatoio vuoto</string>
     <string name="bloodsugarmeasurementalert">Avviso misurazione glicemia</string>
@@ -773,7 +762,7 @@
     <string name="bolus_frequency_exceeded">Un bolo con la stessa quantità è stato richiesto negli ultimi due minuti. Questo non è consentito al fine di evitare boli doppi accidentali e a protezione di eventuali \"bug\".</string>
     <string name="combo_pump_connected_now">Adesso</string>
     <string name="combo_activity_reading_pump_history">Lettura storico micro</string>
-    <string name="danar_history">storico micro</string>
+    <string name="danar_history">Storico micro</string>
     <string name="combo_activity_setting_basal_profile">Impostazione profilo basale</string>
     <string name="combo_pump_cartridge_low_warrning">Livello serbatoio basso</string>
     <string name="combo_pump_battery_low_warrning">Livello batteria basso</string>
@@ -793,6 +782,7 @@
     <string name="insightpump_shortname">Sight</string>
     <string name="ago">fa</string>
     <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d min</string>
     <string name="enablesmbalways">Abilita SMB sempre</string>
     <string name="enablesmbalways_summary">Abilita SMB sempre, indipendentemente dai boli. Possibile solo con sorgente glicemia con un buon filtraggio dei dati, come G5</string>
     <string name="enablesmbaftercarbs">Abilita SMB dopo i CHO</string>
@@ -969,11 +959,11 @@
     <string name="danar_pumpalarm_sound">Suono</string>
     <string name="danar_pumpalarm_vibrate">Vibrazione</string>
     <string name="danar_pumpalarm_both">Entrambi</string>
-    <string name="danar_screentimeout">LCD acceso [s]</string>
-    <string name="danar_backlight">Retroilluminazione accesa [s]</string>
+    <string name="danar_screentimeout">LCD attivo [seconds]</string>
+    <string name="danar_backlight">Retroilluminazione attiva [seconds]</string>
     <string name="danar_glucoseunits">Unità glucosio</string>
-    <string name="danar_shutdown">Spegnimento(ore)</string>
-    <string name="danar_lowreservoir">Livello serbatoio basso (Unità)</string>
+    <string name="danar_shutdown">Spegnimento [hours]</string>
+    <string name="danar_lowreservoir">Livello serbatoio basso [Units]</string>
     <string name="danar_saveuseroptions">Salva opzioni nel micro</string>
     <string name="option_on">On</string>
     <string name="option_off">Off</string>
@@ -1219,15 +1209,20 @@
     <string name="longitude_short">Lon:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="name_short">Nome:</string>
-    <string name="locationis">La posizione è %1$s</string>
+    <string name="locationis">%1$s %2$s</string>
+    <string name="location_mode">Quando </string>
+    <string name="location_inside">Quando sei all\'interno dell\'area</string>
+    <string name="location_outside">Quando sei all\'esterno dell\'area</string>
+    <string name="location_going_in">Quando accedi all\'area denominata</string>
+    <string name="location_going_out">Quando lasci l\'area denominata</string>
     <string name="lastboluslabel">Ultimo bolo</string>
     <string name="lastboluscompared">Ora ultimo bolo %1$s %2$s min fa</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="taskname">Nome task</string>
     <string name="edit_short">MODIFICA</string>
-    <string name="please_choose_an_action_type">Scegli un tipo di azione:</string>
-    <string name="please_choose_a_trigger_type">Scegli un tipo di trigger:</string>
+    <string name="please_choose_an_action_type">Scegli un tipo di azione</string>
+    <string name="please_choose_a_trigger_type">Scegli un tipo di trigger</string>
     <string name="triggers">Trigger:</string>
     <string name="remove_label">RIMUOVI</string>
     <string name="preconditions">Presupposti:</string>
@@ -1320,7 +1315,7 @@
     <string name="medtronic_error_pump_frequency_invalid">Frequenza micro non supportata.</string>
     <string name="medtronic_error_rileylink_address_invalid">Indirizzo RileyLink non valido.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Il tipo di micro rilevato non è uguale al tipo configurato.</string>
-    <string name="medtronic_error_pump_basal_profiles_not_enabled">I profili basali non sono abilitati nel microinfusore.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">L\'impostazione di modelli/profili basali non è abilitata sul micro. Abilitala sul micro.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Il profilo basale impostato nel micro non è corretto (deve essere STD).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Tipo TBR errato impostato nel micro (deve essere Assoluto).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Max bolo errato impostato nel micro (deve essere %1$.2f).</string>
@@ -1371,7 +1366,7 @@
     <string name="automation_trigger_pump_last_connection_description">Ultima connessione al micro [minuti fa]</string>
     <string name="automation_trigger_pump_last_connection_compared">Ultima connessione al micro %1$s %2$s min fa</string>
     <string name="sendsmsactionlabel">Invia SMS: %1$s</string>
-    <string name="sendsmsactiondescription">Invia SMS a tutti i numeri nelle preferenze</string>
+    <string name="sendsmsactiondescription">Invia SMS a tutti i numeri</string>
     <string name="sendsmsactiontext">Invia SMS con testo</string>
     <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Vincolo Bolo applicato: %2$.2fU a %3$.2fU</font>]]></string>
@@ -1439,4 +1434,13 @@
     <string name="randombg">BG casuale</string>
     <string name="description_source_randombg">Genera dati glicemia casuali (solo modalità demo)</string>
     <string name="randombg_short">BG</string>
+    <string name="tools">Strumenti</string>
+    <string name="show_calculation">Mostra calcolo</string>
+    <string name="error">Errore</string>
+    <string name="timeformat12h">12h</string>
+    <string name="timeformat24h">24h</string>
+    <string name="automation_event">Evento di automazione</string>
+    <string name="alreadyset">Già impostato</string>
+    <string name="message">Messaggio</string>
+    <string name="clearqueueconfirm">Cancellare la coda? Tutti i dati in coda andranno persi!</string>
 </resources>
