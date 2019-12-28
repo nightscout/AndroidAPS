@@ -30,7 +30,7 @@ public class OmnipodUITask {
     public PumpEnactResult returnData;
     private String errorDescription;
     private Object[] parameters;
-    private PodResponseType responseType;
+    public PodResponseType responseType;
     public Object returnDataObject;
 
 
@@ -51,15 +51,9 @@ public class OmnipodUITask {
             LOG.debug("OmnipodUITask: @@@ In execute. {}", commandType);
 
         switch (commandType) {
-            // TODO add commands this is just sample
-//            case PumpModel: {
-//                returnData = communicationManager.getPumpModel();
-//            }
-//            break;
 
             case PairAndPrimePod:
                 returnData = communicationManager.initPod((PodInitActionType) parameters[0], (PodInitReceiver) parameters[1], null);
-// TODO                returnData = communicationManager.pairAndPrime();
                 break;
 
             case FillCanulaAndSetBasalProfile:
@@ -72,7 +66,6 @@ public class OmnipodUITask {
 
             case ResetPodStatus:
                 returnData = communicationManager.resetPodStatus();
-// TODO                returnData = communicationManager.resetPodState();
                 break;
 
             case SetBasalProfile:
@@ -85,7 +78,6 @@ public class OmnipodUITask {
 
                 if (amount != null)
                     returnData = communicationManager.setBolus(amount, isSmb);
-// TODO                    returnData = communicationManager.bolus(amount);
             }
             break;
 
@@ -96,12 +88,14 @@ public class OmnipodUITask {
                 for(int i = 0; 3 > i; i++) {
                     try {
                         returnDataObject = communicationManager.readPulseLog();
+                        responseType = PodResponseType.Acknowledgment;
                         break;
                     } catch (Exception ex) {
                         if (isLogEnabled()) {
                             LOG.warn("Failed to retrieve pulse log", ex);
                         }
                         returnDataObject = null;
+                        responseType = PodResponseType.Error;
                     }
                 }
                 break;
@@ -136,11 +130,14 @@ public class OmnipodUITask {
 
             default: {
                 LOG.warn("This commandType is not supported (yet) - {}.", commandType);
+                responseType = PodResponseType.Error;
             }
 
         }
 
-        // TODO response
+        if (returnData!=null) {
+            responseType = returnData.success ? PodResponseType.Acknowledgment : PodResponseType.Error;
+        }
 
     }
 

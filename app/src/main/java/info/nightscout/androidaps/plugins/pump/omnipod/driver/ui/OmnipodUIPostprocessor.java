@@ -9,6 +9,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodResponseType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 
 /**
@@ -51,6 +52,14 @@ public class OmnipodUIPostprocessor {
                 }
             } break;
 
+            case CancelTemporaryBasal: {
+                pumpStatus.tempBasalStart = 0;
+                pumpStatus.tempBasalEnd = 0;
+                pumpStatus.tempBasalAmount = null;
+                pumpStatus.tempBasalLength = null;
+            }
+            break;
+
 //            case PairAndPrimePod: {
 //                if (uiTask.returnData.success) {
 //                    omnipodPumpPlugin.setEnableCustomAction(OmnipodCustomActionType.PairAndPrime, false);
@@ -81,6 +90,10 @@ public class OmnipodUIPostprocessor {
                     LOG.trace("Post-processing not implemented for {}.", uiTask.commandType.name());
 
         }
+
+
+
+
 
     }
 
