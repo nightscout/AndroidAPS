@@ -14,10 +14,6 @@ class InsulinOrefUltraRapidActingPlugin @Inject constructor(): InsulinOrefBasePl
         return InsulinInterface.OREF_ULTRA_RAPID_ACTING
     }
 
-    override fun getName(): String {
-        return MainApp.gs(R.string.ultrarapid_oref)
-    }
-
     override fun getFriendlyName(): String {
         return MainApp.gs(R.string.ultrarapid_oref)
     }

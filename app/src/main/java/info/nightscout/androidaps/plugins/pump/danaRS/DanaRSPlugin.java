@@ -101,16 +101,6 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public void onStateChange(PluginType type, State oldState, State newState) {
-        // if pump profile was enabled need to switch to another too
-        if (type == PluginType.PUMP && newState == State.DISABLED && isProfileInterfaceEnabled) {
-            setPluginEnabled(PluginType.PROFILE, false);
-            NSProfilePlugin.getPlugin().setPluginEnabled(PluginType.PROFILE, true);
-            NSProfilePlugin.getPlugin().setFragmentVisible(PluginType.PROFILE, true);
-        }
-    }
-
-    @Override
     public void updatePreferenceSummary(@NotNull Preference pref) {
         super.updatePreferenceSummary(pref);
 

@@ -23,7 +23,7 @@ abstract class InsulinOrefBasePlugin() : PluginBase(PluginDescription()
     .visibleByDefault(false)
 ), InsulinInterface {
 
-    var lastWarned: Long = 0
+    private var lastWarned: Long = 0
     override fun getDia(): Double {
         val dia = userDefinedDia
         return if (dia >= MIN_DIA) {
@@ -42,7 +42,7 @@ abstract class InsulinOrefBasePlugin() : PluginBase(PluginDescription()
         }
     }
 
-    val notificationPattern: String
+    private val notificationPattern: String
         get() = MainApp.gs(R.string.dia_too_short)
 
     open val userDefinedDia: Double

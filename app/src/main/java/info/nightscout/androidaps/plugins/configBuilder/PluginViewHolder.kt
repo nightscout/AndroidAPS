@@ -77,7 +77,7 @@ class PluginViewHolder internal constructor(private val fragment: ConfigBuilderF
         pluginPreferences.visibility = if (plugin.preferencesId == -1 || !plugin.isEnabled(pluginType)) View.INVISIBLE else View.VISIBLE
         pluginVisibility.visibility = plugin.hasFragment().toVisibility()
         pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
-        pluginVisibility.isChecked = plugin.isFragmentVisible
+        pluginVisibility.isChecked = plugin.isFragmentVisible()
     }
 
     private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {

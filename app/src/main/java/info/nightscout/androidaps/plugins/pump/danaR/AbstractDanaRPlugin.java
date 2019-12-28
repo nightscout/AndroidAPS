@@ -68,16 +68,6 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
     }
 
     @Override
-    public void onStateChange(PluginType type, State oldState, State newState) {
-        // if pump profile was enabled need to switch to another too
-        if (type == PluginType.PUMP && newState == State.DISABLED && isProfileInterfaceEnabled) {
-            setPluginEnabled(PluginType.PROFILE, false);
-            NSProfilePlugin.getPlugin().setPluginEnabled(PluginType.PROFILE, true);
-            NSProfilePlugin.getPlugin().setFragmentVisible(PluginType.PROFILE, true);
-        }
-    }
-
-    @Override
     public void switchAllowed(boolean newState, FragmentActivity activity, PluginType type) {
         confirmPumpPluginActivation(newState, activity, type);
     }
