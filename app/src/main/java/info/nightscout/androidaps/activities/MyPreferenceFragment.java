@@ -51,7 +51,19 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
     DispatchingAndroidInjector<Object> androidInjector;
 
     @Inject
+    OpenAPSAMAPlugin openAPSAMAPlugin;
+
+    @Inject
+    OpenAPSMAPlugin openAPSMAPlugin;
+
+    @Inject
+    OpenAPSSMBPlugin openAPSSMBPlugin;
+
+    @Inject
     InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
+
+    @Inject
+    SafetyPlugin safetyPlugin;
 
     @Inject
     SmsCommunicatorPlugin smsCommunicatorPlugin;
@@ -97,12 +109,12 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
 
             addPreferencesFromResourceIfEnabled(SourceDexcomPlugin.INSTANCE, PluginType.BGSOURCE);
             addPreferencesFromResourceIfEnabled(CareportalPlugin.getPlugin(), PluginType.GENERAL);
-            addPreferencesFromResourceIfEnabled(SafetyPlugin.getPlugin(), PluginType.CONSTRAINTS);
+            addPreferencesFromResourceIfEnabled(safetyPlugin, PluginType.CONSTRAINTS);
             if (Config.APS) {
                 addPreferencesFromResourceIfEnabled(LoopPlugin.getPlugin(), PluginType.LOOP);
-                addPreferencesFromResourceIfEnabled(OpenAPSMAPlugin.getPlugin(), PluginType.APS);
-                addPreferencesFromResourceIfEnabled(OpenAPSAMAPlugin.getPlugin(), PluginType.APS);
-                addPreferencesFromResourceIfEnabled(OpenAPSSMBPlugin.getPlugin(), PluginType.APS);
+                addPreferencesFromResourceIfEnabled(openAPSMAPlugin, PluginType.APS);
+                addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, PluginType.APS);
+                addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, PluginType.APS);
             }
 
             addPreferencesFromResourceIfEnabled(SensitivityAAPSPlugin.getPlugin(), PluginType.SENSITIVITY);

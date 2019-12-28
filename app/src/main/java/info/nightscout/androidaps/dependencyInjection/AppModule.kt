@@ -14,6 +14,7 @@ import info.nightscout.androidaps.logging.AAPSLoggerProduction
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
+import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective5
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionSendSMS
 import info.nightscout.androidaps.queue.commands.CommandSetProfile
 import info.nightscout.androidaps.services.DataService
@@ -71,6 +72,9 @@ class AppModule {
 
         @ContributesAndroidInjector
         fun bindActionSendSMS(): ActionSendSMS
+
+        @ContributesAndroidInjector
+        fun bindObjective5(): Objective5
 
         @Binds
         fun bindContext(mainApp: MainApp): Context
