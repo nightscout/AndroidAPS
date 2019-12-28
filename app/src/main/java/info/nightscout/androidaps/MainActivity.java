@@ -34,9 +34,6 @@ import com.google.android.material.tabs.TabLayout;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
@@ -53,7 +50,8 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt;
@@ -71,7 +69,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class MainActivity extends NoSplashAppCompatActivity implements HasAndroidInjector {
-    private static Logger log = LoggerFactory.getLogger(L.CORE);
 
     @Inject
     DispatchingAndroidInjector<Object> androidInjector;
@@ -84,6 +81,9 @@ public class MainActivity extends NoSplashAppCompatActivity implements HasAndroi
 
     @Inject
     SmsCommunicatorPlugin smsCommunicatorPlugin;
+
+    @Inject
+    AAPSLogger aapsLogger;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -327,7 +327,7 @@ public class MainActivity extends NoSplashAppCompatActivity implements HasAndroi
                 ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
                 return true;
             case R.id.nav_exit:
-                log.debug("Exiting");
+                aapsLogger.debug(LTag.CORE, "Exiting");
                 RxBus.INSTANCE.send(new EventAppExit());
                 finish();
                 System.runFinalization();

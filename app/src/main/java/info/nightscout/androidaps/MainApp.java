@@ -33,7 +33,9 @@ import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
@@ -121,12 +123,20 @@ public class MainApp extends DaggerApplication {
     public static boolean devBranch;
     public static boolean engineeringMode;
 
-    @Inject ConfigBuilderPlugin configBuilderPlugin;
+    @Inject
+    AAPSLogger aapsLogger;
 
-    @Inject InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
-    @Inject InsulinOrefRapidActingPlugin insulinOrefRapidActingPlugin;
-    @Inject InsulinOrefUltraRapidActingPlugin insulinOrefUltraRapidActingPlugin;
-    @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
+    @Inject
+    ConfigBuilderPlugin configBuilderPlugin;
+
+    @Inject
+    InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
+    @Inject
+    InsulinOrefRapidActingPlugin insulinOrefRapidActingPlugin;
+    @Inject
+    InsulinOrefUltraRapidActingPlugin insulinOrefUltraRapidActingPlugin;
+    @Inject
+    SmsCommunicatorPlugin smsCommunicatorPlugin;
 
     @Override
     public void onCreate() {
@@ -433,8 +443,8 @@ public class MainApp extends DaggerApplication {
 
     @Override
     public void onTerminate() {
-        if (L.isEnabled(L.CORE))
-            log.debug("onTerminate");
+
+        aapsLogger.debug(LTag.CORE, "onTerminate");
 
         if (timeDateOrTZChangeReceiver != null)
             unregisterReceiver(timeDateOrTZChangeReceiver);

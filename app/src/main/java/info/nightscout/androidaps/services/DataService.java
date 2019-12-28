@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.services;
 
-import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Telephony;
@@ -19,8 +18,10 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.events.EventNsTreatment;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.BundleLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
@@ -44,7 +45,6 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 
 public class DataService extends DaggerIntentService {
-    private Logger log = LoggerFactory.getLogger(L.DATASERVICE);
 
     public DataService() {
         super("DataService");
@@ -54,14 +54,16 @@ public class DataService extends DaggerIntentService {
     SmsCommunicatorPlugin smsCommunicatorPlugin;
 
     @Inject
+    AAPSLogger aapsLogger;
+
+    @Inject
     SP sp;
 
     @Override
     protected void onHandleIntent(final Intent intent) {
-        if (L.isEnabled(L.DATASERVICE)) {
-            log.debug("onHandleIntent " + intent);
-            log.debug("onHandleIntent " + BundleLogger.log(intent.getExtras()));
-        }
+        aapsLogger.debug(LTag.DATASERVICE, "onHandleIntent " + intent);
+        aapsLogger.debug(LTag.DATASERVICE, "onHandleIntent " + BundleLogger.log(intent.getExtras()));
+
 
         boolean acceptNSData = !sp.getBoolean(R.string.key_ns_upload_only, false);
         Bundle bundles = intent.getExtras();
@@ -111,8 +113,7 @@ public class DataService extends DaggerIntentService {
             smsCommunicatorPlugin.handleNewData(intent);
         }
 
-        if (L.isEnabled(L.DATASERVICE))
-            log.debug("onHandleIntent exit " + intent);
+        aapsLogger.debug(LTag.DATASERVICE, "onHandleIntent exit " + intent);
         DataReceiver.completeWakefulIntent(intent);
     }
 
@@ -124,8 +125,7 @@ public class DataService extends DaggerIntentService {
     private void handleNewDataFromNSClient(Intent intent) {
         Bundle bundles = intent.getExtras();
         if (bundles == null) return;
-        if (L.isEnabled(L.DATASERVICE))
-            log.debug("Got intent: " + intent.getAction());
+        aapsLogger.debug(LTag.DATASERVICE, "Got intent: " + intent.getAction());
 
 
         if (intent.getAction().equals(Intents.ACTION_NEW_TREATMENT) || intent.getAction().equals(Intents.ACTION_CHANGED_TREATMENT)) {
@@ -143,7 +143,7 @@ public class DataService extends DaggerIntentService {
                     }
                 }
             } catch (JSONException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error(LTag.DATASERVICE, "Unhandled exception", e);
             }
         }
 
@@ -164,7 +164,7 @@ public class DataService extends DaggerIntentService {
                     }
                 }
             } catch (JSONException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error(LTag.DATASERVICE, "Unhandled exception", e);
             }
         }
 
@@ -185,7 +185,7 @@ public class DataService extends DaggerIntentService {
                     }
                 }
             } catch (Exception e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error(LTag.DATASERVICE, "Unhandled exception", e);
             }
         }
     }
@@ -210,7 +210,7 @@ public class DataService extends DaggerIntentService {
         double carbs = JsonHelper.safeGetDouble(json, "carbs");
         String eventType = JsonHelper.safeGetString(json, "eventType");
         if (eventType == null) {
-            log.debug("Wrong treatment. Ignoring : " + json.toString());
+            aapsLogger.debug(LTag.DATASERVICE, "Wrong treatment. Ignoring : " + json.toString());
             return;
         }
         if (insulin > 0 || carbs > 0) {
@@ -258,8 +258,7 @@ public class DataService extends DaggerIntentService {
         NSMbg nsMbg = new NSMbg(mbgJson);
         CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
         MainApp.getDbHelper().createOrUpdate(careportalEvent);
-        if (L.isEnabled(L.DATASERVICE))
-            log.debug("Adding/Updating new MBG: " + careportalEvent.toString());
+        aapsLogger.debug(LTag.DATASERVICE, "Adding/Updating new MBG: " + careportalEvent.toString());
     }
 
 }

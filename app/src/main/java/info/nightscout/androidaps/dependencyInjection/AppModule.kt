@@ -6,7 +6,11 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.AAPSLoggerDebug
+import info.nightscout.androidaps.logging.AAPSLoggerProduction
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
@@ -44,6 +48,16 @@ class AppModule {
     @Singleton
     fun provideResources(mainApp: MainApp): ResourceHelper {
         return ResourceHelperImplementation(mainApp)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAAPSLogger(): AAPSLogger {
+        return if (BuildConfig.DEBUG) {
+            AAPSLoggerDebug()
+        } else {
+            AAPSLoggerProduction()
+        }
     }
 
     @Module

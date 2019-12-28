@@ -22,7 +22,9 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus.send
 import info.nightscout.androidaps.plugins.bus.RxBus.toObservable
@@ -53,7 +55,8 @@ import javax.inject.Singleton
 class SmsCommunicatorPlugin @Inject constructor(
     val configBuilderPlugin: ConfigBuilderPlugin,
     val resourceHelper: ResourceHelper,
-    val constraintChecker: ConstraintChecker
+    val constraintChecker: ConstraintChecker,
+    val aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(SmsCommunicatorFragment::class.java.name)
@@ -62,8 +65,6 @@ class SmsCommunicatorPlugin @Inject constructor(
     .preferencesId(R.xml.pref_smscommunicator)
     .description(R.string.description_sms_communicator)
 ) {
-
-    private val log = LoggerFactory.getLogger(L.SMS)
     private val disposable = CompositeDisposable()
     var allowedNumbers: MutableList<String> = ArrayList()
     var messageToConfirm: AuthRequest? = null
@@ -149,7 +150,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             for (number in substrings) {
                 val cleaned = number.replace("\\s+".toRegex(), "")
                 allowedNumbers.add(cleaned)
-                log.debug("Found allowed number: $cleaned")
+                aapsLogger.debug(LTag.SMS,"Found allowed number: $cleaned")
             }
         }
     }
@@ -181,11 +182,11 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     fun processSms(receivedSms: Sms) {
         if (!isEnabled(PluginType.GENERAL)) {
-            log.debug("Ignoring SMS. Plugin disabled.")
+            aapsLogger.debug(LTag.SMS,"Ignoring SMS. Plugin disabled.")
             return
         }
         if (!isAllowedNumber(receivedSms.phoneNumber)) {
-            log.debug("Ignoring SMS from: " + receivedSms.phoneNumber + ". Sender not allowed")
+            aapsLogger.debug(LTag.SMS,"Ignoring SMS from: " + receivedSms.phoneNumber + ". Sender not allowed")
             receivedSms.ignored = true
             messages.add(receivedSms)
             send(EventSmsCommunicatorUpdateGui())
@@ -193,7 +194,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
         val pump = configBuilderPlugin.activePump ?: return
         messages.add(receivedSms)
-        log.debug(receivedSms.toString())
+        aapsLogger.debug(LTag.SMS,receivedSms.toString())
         val splitted = receivedSms.text.split(Regex("\\s+")).toTypedArray()
         val remoteCommandsAllowed = SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)
         if (splitted.isNotEmpty() && isCommand(splitted[0].toUpperCase(Locale.getDefault()), receivedSms.phoneNumber)) {
@@ -858,7 +859,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         val smsManager = SmsManager.getDefault()
         sms.text = stripAccents(sms.text)
         try {
-            if (L.isEnabled(L.SMS)) log.debug("Sending SMS to " + sms.phoneNumber + ": " + sms.text)
+            aapsLogger.debug(LTag.SMS,"Sending SMS to " + sms.phoneNumber + ": " + sms.text)
             if (sms.text.toByteArray().size <= 140) smsManager.sendTextMessage(sms.phoneNumber, null, sms.text, null, null)
             else {
                 val parts = smsManager.divideMessage(sms.text)
