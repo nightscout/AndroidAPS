@@ -184,11 +184,15 @@ public class OmnipodUITask {
 
         EventOmnipodDeviceStatusChange statusChange;
         if (isLogEnabled())
-            LOG.debug("OmnipodUITask: @@@ In execute. {}", commandType);
+            LOG.debug("OmnipodUITask: @@@ postProcess. {}", commandType);
+
+        LOG.debug("OmnipodUITask: @@@ postProcess. responseType={}", responseType);
 
         if (responseType == PodResponseType.Data || responseType == PodResponseType.Acknowledgment) {
             postprocessor.postProcessData(this);
         }
+
+        LOG.debug("OmnipodUITask: @@@ postProcess. responseType={}", responseType);
 
         if (responseType == PodResponseType.Invalid) {
             statusChange = new EventOmnipodDeviceStatusChange(PodDeviceState.ErrorWhenCommunicating,
