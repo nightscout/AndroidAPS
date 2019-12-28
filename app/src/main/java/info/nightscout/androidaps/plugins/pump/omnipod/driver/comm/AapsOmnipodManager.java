@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.comm;
 
+import android.content.Intent;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,7 @@ import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -292,8 +294,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus())) {
             // For safety reasons, we treat this as a bolus that has successfully been delivered, in order to prevent insulin overdose
 
-            // FIXME We can't dismiss the alert while the bolus progress dialog is open, so don't use a sound
-            showNotificationWithDialog(getStringResource(R.string.omnipod_bolus_failed_uncertain), Notification.URGENT, null);
+            showErrorDialog(getStringResource(R.string.omnipod_bolus_failed_uncertain), R.raw.boluserror);
         }
 
         // Wait for the bolus to finish
@@ -317,7 +318,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             delegate.cancelBolus(isBolusBeepsEnabled());
             addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
         } catch (PodFaultException ex) {
-            showNotificationWithDialog(createPodFaultErrorMessage(ex.getFaultEvent().getFaultEventType()), Notification.URGENT, null);
+            showErrorDialog(createPodFaultErrorMessage(ex.getFaultEvent().getFaultEventType()), null);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             addFailureToHistory(time, PodHistoryEntryType.CancelBolus, comment);
@@ -590,9 +591,13 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         RxBus.INSTANCE.send(event);
     }
 
-    private void showNotificationWithDialog(String message, int urgency, Integer sound) {
-        // TODO
-        showNotification(message, urgency, sound);
+    private void showErrorDialog(String message, Integer sound) {
+        Intent intent = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+        intent.putExtra("soundid", sound);
+        intent.putExtra("status", message);
+        intent.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        MainApp.instance().startActivity(intent);
     }
 
     private void showNotification(String message, int urgency, Integer sound) {
