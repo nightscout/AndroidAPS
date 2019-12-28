@@ -6,7 +6,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.L
@@ -23,10 +23,14 @@ import kotlinx.android.synthetic.main.openapsama_fragment.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.slf4j.LoggerFactory
+import javax.inject.Inject
 
-class OpenAPSSMBFragment : Fragment() {
+class OpenAPSSMBFragment : DaggerFragment() {
     private val log = LoggerFactory.getLogger(L.APS)
     private var disposable: CompositeDisposable = CompositeDisposable()
+
+    @Inject
+    lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -37,7 +41,7 @@ class OpenAPSSMBFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         openapsma_run.setOnClickListener {
-            OpenAPSSMBPlugin.getPlugin().invoke("OpenAPSSMB button", false)
+            openAPSSMBPlugin.invoke("OpenAPSSMB button", false)
         }
     }
 
@@ -45,21 +49,21 @@ class OpenAPSSMBFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         disposable += RxBus
-                .toObservable(EventOpenAPSUpdateGui::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateGUI()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+            .toObservable(EventOpenAPSUpdateGui::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                updateGUI()
+            }, {
+                FabricPrivacy.logException(it)
+            })
         disposable += RxBus
-                .toObservable(EventOpenAPSUpdateResultGui::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateResultGUI(it.text)
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+            .toObservable(EventOpenAPSUpdateResultGui::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                updateResultGUI(it.text)
+            }, {
+                FabricPrivacy.logException(it)
+            })
 
         updateGUI()
     }
@@ -73,12 +77,11 @@ class OpenAPSSMBFragment : Fragment() {
     @Synchronized
     fun updateGUI() {
         if (openapsma_result == null) return
-        val plugin = OpenAPSSMBPlugin.getPlugin()
-        plugin.lastAPSResult?.let { lastAPSResult ->
+        openAPSSMBPlugin.lastAPSResult?.let { lastAPSResult ->
             openapsma_result.text = JSONFormatter.format(lastAPSResult.json)
             openapsma_request.text = lastAPSResult.toSpanned()
         }
-        plugin.lastDetermineBasalAdapterSMBJS?.let { determineBasalAdapterSMBJS ->
+        openAPSSMBPlugin.lastDetermineBasalAdapterSMBJS?.let { determineBasalAdapterSMBJS ->
             openapsma_glucosestatus.text = JSONFormatter.format(determineBasalAdapterSMBJS.glucoseStatusParam)
             openapsma_currenttemp.text = JSONFormatter.format(determineBasalAdapterSMBJS.currentTempParam)
             try {
@@ -93,14 +96,14 @@ class OpenAPSSMBFragment : Fragment() {
             openapsma_profile.text = JSONFormatter.format(determineBasalAdapterSMBJS.profileParam)
             openapsma_mealdata.text = JSONFormatter.format(determineBasalAdapterSMBJS.mealDataParam)
             openapsma_scriptdebugdata.text = determineBasalAdapterSMBJS.scriptDebug
-            plugin.lastAPSResult?.inputConstraints?.let {
+            openAPSSMBPlugin.lastAPSResult?.inputConstraints?.let {
                 openapsma_constraints.text = it.reasons
             }
         }
-        if (plugin.lastAPSRun != 0L) {
-            openapsma_lastrun.text = DateUtil.dateAndTimeFullString(plugin.lastAPSRun)
+        if (openAPSSMBPlugin.lastAPSRun != 0L) {
+            openapsma_lastrun.text = DateUtil.dateAndTimeFullString(openAPSSMBPlugin.lastAPSRun)
         }
-        plugin.lastAutosensResult?.let {
+        openAPSSMBPlugin.lastAutosensResult?.let {
             openapsma_autosensdata.text = JSONFormatter.format(it.json())
         }
     }

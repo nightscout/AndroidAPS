@@ -4,6 +4,9 @@ import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -35,20 +38,9 @@ import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.Round;
 
-/**
- * Created by mike on 05.08.2016.
- */
+@Singleton
 public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
     private static Logger log = LoggerFactory.getLogger(L.APS);
-
-    private static OpenAPSAMAPlugin openAPSAMAPlugin;
-
-    public static OpenAPSAMAPlugin getPlugin() {
-        if (openAPSAMAPlugin == null) {
-            openAPSAMAPlugin = new OpenAPSAMAPlugin();
-        }
-        return openAPSAMAPlugin;
-    }
 
     // last values
     DetermineBasalAdapterAMAJS lastDetermineBasalAdapterAMAJS = null;
@@ -56,7 +48,8 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
     DetermineBasalResultAMA lastAPSResult = null;
     AutosensResult lastAutosensResult = null;
 
-    private OpenAPSAMAPlugin() {
+    @Inject
+    public OpenAPSAMAPlugin() {
         super(new PluginDescription()
                 .mainType(PluginType.APS)
                 .fragmentClass(OpenAPSAMAFragment.class.getName())

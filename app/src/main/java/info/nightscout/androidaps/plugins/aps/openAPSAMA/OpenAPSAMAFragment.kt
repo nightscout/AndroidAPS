@@ -5,7 +5,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.L
@@ -22,10 +22,14 @@ import kotlinx.android.synthetic.main.openapsama_fragment.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.slf4j.LoggerFactory
+import javax.inject.Inject
 
-class OpenAPSAMAFragment : Fragment() {
+class OpenAPSAMAFragment : DaggerFragment() {
     private val log = LoggerFactory.getLogger(L.APS)
     private var disposable: CompositeDisposable = CompositeDisposable()
+
+    @Inject
+    lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -36,7 +40,7 @@ class OpenAPSAMAFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         openapsma_run.setOnClickListener {
-            OpenAPSAMAPlugin.getPlugin().invoke("OpenAPSAMA button", false)
+            openAPSAMAPlugin.invoke("OpenAPSAMA button", false)
         }
     }
 
@@ -45,21 +49,21 @@ class OpenAPSAMAFragment : Fragment() {
         super.onResume()
 
         disposable += RxBus
-                .toObservable(EventOpenAPSUpdateGui::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateGUI()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+            .toObservable(EventOpenAPSUpdateGui::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                updateGUI()
+            }, {
+                FabricPrivacy.logException(it)
+            })
         disposable += RxBus
-                .toObservable(EventOpenAPSUpdateResultGui::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateResultGUI(it.text)
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+            .toObservable(EventOpenAPSUpdateResultGui::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                updateResultGUI(it.text)
+            }, {
+                FabricPrivacy.logException(it)
+            })
 
         updateGUI()
     }
@@ -73,11 +77,11 @@ class OpenAPSAMAFragment : Fragment() {
     @Synchronized
     private fun updateGUI() {
         if (openapsma_result == null) return
-        OpenAPSAMAPlugin.getPlugin().lastAPSResult?.let { lastAPSResult ->
+        openAPSAMAPlugin.lastAPSResult?.let { lastAPSResult ->
             openapsma_result.text = JSONFormatter.format(lastAPSResult.json)
             openapsma_request.text = lastAPSResult.toSpanned()
         }
-        OpenAPSAMAPlugin.getPlugin().lastDetermineBasalAdapterAMAJS?.let { determineBasalAdapterAMAJS ->
+        openAPSAMAPlugin.lastDetermineBasalAdapterAMAJS?.let { determineBasalAdapterAMAJS ->
             openapsma_glucosestatus.text = JSONFormatter.format(determineBasalAdapterAMAJS.glucoseStatusParam)
             openapsma_currenttemp.text = JSONFormatter.format(determineBasalAdapterAMAJS.currentTempParam)
             try {
@@ -92,10 +96,10 @@ class OpenAPSAMAFragment : Fragment() {
             openapsma_mealdata.text = JSONFormatter.format(determineBasalAdapterAMAJS.mealDataParam)
             openapsma_scriptdebugdata.text = determineBasalAdapterAMAJS.scriptDebug
         }
-        if (OpenAPSAMAPlugin.getPlugin().lastAPSRun != 0L) {
-            openapsma_lastrun.text = DateUtil.dateAndTimeFullString(OpenAPSAMAPlugin.getPlugin().lastAPSRun)
+        if (openAPSAMAPlugin.lastAPSRun != 0L) {
+            openapsma_lastrun.text = DateUtil.dateAndTimeFullString(openAPSAMAPlugin.lastAPSRun)
         }
-        OpenAPSAMAPlugin.getPlugin().lastAutosensResult?.let {
+        openAPSAMAPlugin.lastAutosensResult?.let {
             openapsma_autosensdata.text = JSONFormatter.format(it.json())
         }
     }

@@ -5,6 +5,9 @@ import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -40,18 +43,19 @@ import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.ToastUtils;
 
-/**
- * Created by mike on 05.08.2016.
- */
+@Singleton
 public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(L.APS);
 
     private static OpenAPSSMBPlugin openAPSSMBPlugin;
 
-    public static OpenAPSSMBPlugin getPlugin() {
-        if (openAPSSMBPlugin == null) {
-            openAPSSMBPlugin = new OpenAPSSMBPlugin();
-        }
+    /**
+     * @deprecated Use dagger to get an instance
+     */
+    @Deprecated
+    static public OpenAPSSMBPlugin getPlugin() {
+        if (openAPSSMBPlugin == null)
+            throw new IllegalStateException("Accessing OpenAPSSMBPlugin before first instantiation");
         return openAPSSMBPlugin;
     }
 
@@ -61,7 +65,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
     DetermineBasalResultSMB lastAPSResult = null;
     AutosensResult lastAutosensResult = null;
 
-    private OpenAPSSMBPlugin() {
+    @Inject
+    public OpenAPSSMBPlugin() {
         super(new PluginDescription()
                 .mainType(PluginType.APS)
                 .fragmentClass(OpenAPSSMBFragment.class.getName())
@@ -70,6 +75,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
                 .preferencesId(R.xml.pref_openapssmb)
                 .description(R.string.description_smb)
         );
+        this.openAPSSMBPlugin = this;  // TODO: only while transitioning to Dagger
     }
 
     @Override

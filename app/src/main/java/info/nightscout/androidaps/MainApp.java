@@ -126,7 +126,11 @@ public class MainApp extends DaggerApplication {
     @Inject InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
     @Inject InsulinOrefRapidActingPlugin insulinOrefRapidActingPlugin;
     @Inject InsulinOrefUltraRapidActingPlugin insulinOrefUltraRapidActingPlugin;
+    @Inject SafetyPlugin safetyPlugin;
     @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
+    @Inject OpenAPSMAPlugin openAPSMAPlugin;
+    @Inject OpenAPSAMAPlugin openAPSAMAPlugin;
+    @Inject OpenAPSSMBPlugin openAPSSMBPlugin;
 
     @Override
     public void onCreate() {
@@ -201,13 +205,13 @@ public class MainApp extends DaggerApplication {
             pluginsList.add(VirtualPumpPlugin.getPlugin());
             pluginsList.add(CareportalPlugin.getPlugin());
             if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
-            if (Config.APS) pluginsList.add(OpenAPSMAPlugin.getPlugin());
-            if (Config.APS) pluginsList.add(OpenAPSAMAPlugin.getPlugin());
-            if (Config.APS) pluginsList.add(OpenAPSSMBPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(openAPSMAPlugin);
+            if (Config.APS) pluginsList.add(openAPSAMAPlugin);
+            if (Config.APS) pluginsList.add(openAPSSMBPlugin);
             pluginsList.add(NSProfilePlugin.getPlugin());
             if (!Config.NSCLIENT) pluginsList.add(LocalProfilePlugin.INSTANCE);
             pluginsList.add(TreatmentsPlugin.getPlugin());
-            if (!Config.NSCLIENT) pluginsList.add(SafetyPlugin.getPlugin());
+            if (!Config.NSCLIENT) pluginsList.add(safetyPlugin);
             if (!Config.NSCLIENT) pluginsList.add(VersionCheckerPlugin.INSTANCE);
             if (Config.APS) pluginsList.add(StorageConstraintPlugin.getPlugin());
             if (Config.APS) pluginsList.add(SignatureVerifierPlugin.getPlugin());

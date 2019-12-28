@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.constraints.safety;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -26,19 +29,19 @@ import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
 
-/**
- * Created by mike on 05.08.2016.
- */
+@Singleton
 public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
-    static SafetyPlugin plugin = null;
+    @Inject
+    OpenAPSAMAPlugin openAPSAMAPlugin;
 
-    public static SafetyPlugin getPlugin() {
-        if (plugin == null)
-            plugin = new SafetyPlugin();
-        return plugin;
-    }
+    @Inject
+    OpenAPSMAPlugin openAPSMAPlugin;
 
+    @Inject
+    OpenAPSSMBPlugin openAPSSMBPlugin;
+
+    @Inject
     public SafetyPlugin() {
         super(new PluginDescription()
                 .mainType(PluginType.CONSTRAINTS)
@@ -236,17 +239,17 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     @Override
     public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
         double maxIobPref;
-        if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginType.APS))
+        if (openAPSSMBPlugin.isEnabled(PluginType.APS))
             maxIobPref = SP.getDouble(R.string.key_openapssmb_max_iob, 3d);
         else
             maxIobPref = SP.getDouble(R.string.key_openapsma_max_iob, 1.5d);
         maxIob.setIfSmaller(maxIobPref, String.format(MainApp.gs(R.string.limitingiob), maxIobPref, MainApp.gs(R.string.maxvalueinpreferences)), this);
 
-        if (OpenAPSMAPlugin.getPlugin().isEnabled(PluginType.APS))
+        if (openAPSMAPlugin.isEnabled(PluginType.APS))
             maxIob.setIfSmaller(HardLimits.maxIobAMA(), String.format(MainApp.gs(R.string.limitingiob), HardLimits.maxIobAMA(), MainApp.gs(R.string.hardlimit)), this);
-        if (OpenAPSAMAPlugin.getPlugin().isEnabled(PluginType.APS))
+        if (openAPSAMAPlugin.isEnabled(PluginType.APS))
             maxIob.setIfSmaller(HardLimits.maxIobAMA(), String.format(MainApp.gs(R.string.limitingiob), HardLimits.maxIobAMA(), MainApp.gs(R.string.hardlimit)), this);
-        if (OpenAPSSMBPlugin.getPlugin().isEnabled(PluginType.APS))
+        if (openAPSSMBPlugin.isEnabled(PluginType.APS))
             maxIob.setIfSmaller(HardLimits.maxIobSMB(), String.format(MainApp.gs(R.string.limitingiob), HardLimits.maxIobSMB(), MainApp.gs(R.string.hardlimit)), this);
         return maxIob;
     }
