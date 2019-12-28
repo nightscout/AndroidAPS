@@ -11,6 +11,7 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.AAPSLoggerDebug
 import info.nightscout.androidaps.logging.AAPSLoggerProduction
+import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
@@ -65,16 +66,19 @@ class AppModule {
     interface AppBindings {
 
         @ContributesAndroidInjector
-        fun bindDataService(): DataService
+        fun dataServiceInjector(): DataService
 
         @ContributesAndroidInjector
-        fun bindCommandSetProfile(): CommandSetProfile
+        fun commandSetProfileInjector(): CommandSetProfile
 
         @ContributesAndroidInjector
-        fun bindActionSendSMS(): ActionSendSMS
+        fun actionSendSMSInjector(): ActionSendSMS
 
         @ContributesAndroidInjector
-        fun bindObjective5(): Objective5
+        fun objective5Injector(): Objective5
+
+        @ContributesAndroidInjector
+        fun loggerCallbackInjector(): LoggerCallback
 
         @Binds
         fun bindContext(mainApp: MainApp): Context

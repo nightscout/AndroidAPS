@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.aps.openAPSMA;
 
 import org.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -18,7 +16,8 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui;
@@ -40,7 +39,7 @@ import static info.nightscout.androidaps.utils.HardLimits.verifyHardLimits;
 
 @Singleton
 public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
-    private static Logger log = LoggerFactory.getLogger(L.APS);
+    private final AAPSLogger aapsLogger;
 
     // last values
     DetermineBasalAdapterMAJS lastDetermineBasalAdapterMAJS = null;
@@ -48,7 +47,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
     DetermineBasalResultMA lastAPSResult = null;
 
     @Inject
-    public OpenAPSMAPlugin() {
+    public OpenAPSMAPlugin(AAPSLogger aapsLogger) {
         super(new PluginDescription()
                 .mainType(PluginType.APS)
                 .fragmentClass(OpenAPSMAFragment.class.getName())
@@ -57,6 +56,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
                 .preferencesId(R.xml.pref_openapsma)
                 .description(R.string.description_ma)
         );
+        this.aapsLogger = aapsLogger;
     }
 
     @Override
@@ -83,11 +83,10 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
 
     @Override
     public void invoke(String initiator, boolean tempBasalFallback) {
-        if (L.isEnabled(L.APS))
-            log.debug("invoke from " + initiator + " tempBasalFallback: " + tempBasalFallback);
+        aapsLogger.debug(LTag.APS, "invoke from " + initiator + " tempBasalFallback: " + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterMAJS determineBasalAdapterMAJS;
-        determineBasalAdapterMAJS = new DetermineBasalAdapterMAJS(new ScriptReader(MainApp.instance().getBaseContext()));
+        determineBasalAdapterMAJS = new DetermineBasalAdapterMAJS(new ScriptReader(MainApp.instance().getBaseContext()), aapsLogger);
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         Profile profile = ProfileFunctions.getInstance().getProfile();
@@ -95,29 +94,25 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
 
         if (profile == null) {
             RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.noprofileselected)));
-            if (L.isEnabled(L.APS))
-                log.debug(MainApp.gs(R.string.noprofileselected));
+            aapsLogger.debug(LTag.APS, MainApp.gs(R.string.noprofileselected));
             return;
         }
 
         if (pump == null) {
             RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.nopumpselected)));
-            if (L.isEnabled(L.APS))
-                log.debug(MainApp.gs(R.string.nopumpselected));
+            aapsLogger.debug(LTag.APS, MainApp.gs(R.string.nopumpselected));
             return;
         }
 
         if (!isEnabled(PluginType.APS)) {
             RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_disabled)));
-            if (L.isEnabled(L.APS))
-                log.debug(MainApp.gs(R.string.openapsma_disabled));
+            aapsLogger.debug(LTag.APS, MainApp.gs(R.string.openapsma_disabled));
             return;
         }
 
         if (glucoseStatus == null) {
             RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_noglucosedata)));
-            if (L.isEnabled(L.APS))
-                log.debug(MainApp.gs(R.string.openapsma_noglucosedata));
+            aapsLogger.debug(LTag.APS, MainApp.gs(R.string.openapsma_noglucosedata));
             return;
         }
 
@@ -141,8 +136,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         MealData mealData = TreatmentsPlugin.getPlugin().getMealData();
 
         double maxIob = ConstraintChecker.getInstance().getMaxIOBAllowed().value();
-        if (L.isEnabled(L.APS))
-            Profiler.log(log, "MA data gathering", start);
+        Profiler.log(aapsLogger, LTag.APS, "MA data gathering", start);
 
         minBg = verifyHardLimits(minBg, "minBg", HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]);
         maxBg = verifyHardLimits(maxBg, "maxBg", HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]);
@@ -173,16 +167,14 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
             FabricPrivacy.logException(e);
             return;
         }
-        if (L.isEnabled(L.APS))
-            Profiler.log(log, "MA calculation", start);
+        Profiler.log(aapsLogger, LTag.APS, "MA calculation", start);
 
 
         long now = System.currentTimeMillis();
 
         DetermineBasalResultMA determineBasalResultMA = determineBasalAdapterMAJS.invoke();
         if (determineBasalResultMA == null) {
-            if (L.isEnabled(L.APS))
-                log.error("MA calculation returned null");
+            aapsLogger.error(LTag.APS, "MA calculation returned null");
             lastDetermineBasalAdapterMAJS = null;
             lastAPSResult = null;
             lastAPSRun = 0;
@@ -196,7 +188,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
             try {
                 determineBasalResultMA.json.put("timestamp", DateUtil.toISOString(now));
             } catch (JSONException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error(LTag.APS, "Unhandled exception", e);
             }
 
             lastDetermineBasalAdapterMAJS = determineBasalAdapterMAJS;

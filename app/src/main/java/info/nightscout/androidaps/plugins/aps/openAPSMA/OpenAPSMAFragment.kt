@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class OpenAPSMAFragment : DaggerFragment() {
-    private val log = LoggerFactory.getLogger(L.APS)
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     @Inject

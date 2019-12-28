@@ -9,7 +9,8 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateResultGui
 import info.nightscout.androidaps.plugins.bus.RxBus
@@ -22,15 +23,16 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.openapsama_fragment.*
 import org.json.JSONArray
 import org.json.JSONException
-import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class OpenAPSSMBFragment : DaggerFragment() {
-    private val log = LoggerFactory.getLogger(L.APS)
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     @Inject
     lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
+
+    @Inject
+    lateinit var aapsLogger: AAPSLogger
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -88,7 +90,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
                 val iobArray = JSONArray(determineBasalAdapterSMBJS.iobDataParam)
                 openapsma_iobdata.text = TextUtils.concat(String.format(MainApp.gs(R.string.array_of_elements), iobArray.length()) + "\n", JSONFormatter.format(iobArray.getString(0)))
             } catch (e: JSONException) {
-                log.error("Unhandled exception", e)
+                aapsLogger.error(LTag.APS, "Unhandled exception", e)
                 @SuppressLint("SetTextl18n")
                 openapsma_iobdata.text = "JSONException see log for details"
             }

@@ -11,8 +11,6 @@ import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
 import org.mozilla.javascript.Undefined;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -27,7 +25,8 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
@@ -39,7 +38,7 @@ import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 
 public class DetermineBasalAdapterSMBJS {
-    private static Logger log = LoggerFactory.getLogger(L.APS);
+    private final AAPSLogger aapsLogger;
 
 
     private ScriptReader mScriptReader;
@@ -68,8 +67,9 @@ public class DetermineBasalAdapterSMBJS {
      * Main code
      */
 
-    DetermineBasalAdapterSMBJS(ScriptReader scriptReader) {
+    DetermineBasalAdapterSMBJS(ScriptReader scriptReader, AAPSLogger aapsLogger) {
         mScriptReader = scriptReader;
+        this.aapsLogger = aapsLogger;
     }
 
 
@@ -77,21 +77,20 @@ public class DetermineBasalAdapterSMBJS {
     public DetermineBasalResultSMB invoke() {
 
 
-        if (L.isEnabled(L.APS)) {
-            log.debug(">>> Invoking detemine_basal <<<");
-            log.debug("Glucose status: " + (storedGlucoseStatus = mGlucoseStatus.toString()));
-            log.debug("IOB data:       " + (storedIobData = mIobData.toString()));
-            log.debug("Current temp:   " + (storedCurrentTemp = mCurrentTemp.toString()));
-            log.debug("Profile:        " + (storedProfile = mProfile.toString()));
-            log.debug("Meal data:      " + (storedMeal_data = mMealData.toString()));
-            if (mAutosensData != null)
-                log.debug("Autosens data:  " + (storedAutosens_data = mAutosensData.toString()));
-            else
-                log.debug("Autosens data:  " + (storedAutosens_data = "undefined"));
-            log.debug("Reservoir data: " + "undefined");
-            log.debug("MicroBolusAllowed:  " + (storedMicroBolusAllowed = "" + mMicrobolusAllowed));
-            log.debug("SMBAlwaysAllowed:  " + (storedSMBAlwaysAllowed = "" + mSMBAlwaysAllowed));
-        }
+        aapsLogger.debug(LTag.APS, ">>> Invoking detemine_basal <<<");
+        aapsLogger.debug(LTag.APS, "Glucose status: " + (storedGlucoseStatus = mGlucoseStatus.toString()));
+        aapsLogger.debug(LTag.APS, "IOB data:       " + (storedIobData = mIobData.toString()));
+        aapsLogger.debug(LTag.APS, "Current temp:   " + (storedCurrentTemp = mCurrentTemp.toString()));
+        aapsLogger.debug(LTag.APS, "Profile:        " + (storedProfile = mProfile.toString()));
+        aapsLogger.debug(LTag.APS, "Meal data:      " + (storedMeal_data = mMealData.toString()));
+        if (mAutosensData != null)
+            aapsLogger.debug(LTag.APS, "Autosens data:  " + (storedAutosens_data = mAutosensData.toString()));
+        else
+            aapsLogger.debug(LTag.APS, "Autosens data:  " + (storedAutosens_data = "undefined"));
+        aapsLogger.debug(LTag.APS, "Reservoir data: " + "undefined");
+        aapsLogger.debug(LTag.APS, "MicroBolusAllowed:  " + (storedMicroBolusAllowed = "" + mMicrobolusAllowed));
+        aapsLogger.debug(LTag.APS, "SMBAlwaysAllowed:  " + (storedSMBAlwaysAllowed = "" + mSMBAlwaysAllowed));
+
 
         DetermineBasalResultSMB determineBasalResultSMB = null;
 
@@ -142,22 +141,21 @@ public class DetermineBasalAdapterSMBJS {
 
                 // Parse the jsResult object to a JSON-String
                 String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();
-                if (L.isEnabled(L.APS))
-                    log.debug("Result: " + result);
+                aapsLogger.debug(LTag.APS, "Result: " + result);
                 try {
-                    determineBasalResultSMB = new DetermineBasalResultSMB(new JSONObject(result));
+                    determineBasalResultSMB = new DetermineBasalResultSMB(new JSONObject(result), aapsLogger);
                 } catch (JSONException e) {
-                    log.error("Unhandled exception", e);
+                    aapsLogger.error(LTag.APS, "Unhandled exception", e);
                 }
             } else {
-                log.error("Problem loading JS Functions");
+                aapsLogger.error(LTag.APS, "Problem loading JS Functions");
             }
         } catch (IOException e) {
-            log.error("IOException");
+            aapsLogger.error(LTag.APS, "IOException");
         } catch (RhinoException e) {
-            log.error("RhinoException: (" + e.lineNumber() + "," + e.columnNumber() + ") " + e.toString());
+            aapsLogger.error(LTag.APS, "RhinoException: (" + e.lineNumber() + "," + e.columnNumber() + ") " + e.toString());
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            log.error(e.toString());
+            aapsLogger.error(LTag.APS, e.toString());
         } finally {
             Context.exit();
         }

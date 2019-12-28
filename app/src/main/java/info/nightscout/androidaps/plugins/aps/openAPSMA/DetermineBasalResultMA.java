@@ -3,20 +3,20 @@ package info.nightscout.androidaps.plugins.aps.openAPSMA;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.NativeObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 
 public class DetermineBasalResultMA extends APSResult {
-    private static Logger log = LoggerFactory.getLogger(L.APS);
+    private AAPSLogger aapsLogger;
 
     private double eventualBG;
     private double snoozeBG;
     private String mealAssist;
 
-    DetermineBasalResultMA(NativeObject result, JSONObject j) {
+    DetermineBasalResultMA(NativeObject result, JSONObject j, AAPSLogger aapsLogger) {
+        this(aapsLogger);
         json = j;
         if (result.containsKey("error")) {
             reason = (String) result.get("error");
@@ -49,12 +49,13 @@ public class DetermineBasalResultMA extends APSResult {
         }
     }
 
-    private DetermineBasalResultMA() {
+    private DetermineBasalResultMA(AAPSLogger aapsLogger) {
+        this.aapsLogger = aapsLogger;
     }
 
     @Override
     public DetermineBasalResultMA clone() {
-        DetermineBasalResultMA newResult = new DetermineBasalResultMA();
+        DetermineBasalResultMA newResult = new DetermineBasalResultMA(aapsLogger);
         doClone(newResult);
 
         newResult.eventualBG = eventualBG;
@@ -69,7 +70,7 @@ public class DetermineBasalResultMA extends APSResult {
             JSONObject ret = new JSONObject(this.json.toString());
             return ret;
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error(LTag.APS, "Unhandled exception", e);
         }
         return null;
     }

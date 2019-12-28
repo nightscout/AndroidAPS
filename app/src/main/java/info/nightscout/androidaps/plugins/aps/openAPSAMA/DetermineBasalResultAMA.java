@@ -3,21 +3,20 @@ package info.nightscout.androidaps.plugins.aps.openAPSAMA;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.NativeObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.utils.DateUtil;
 
 public class DetermineBasalResultAMA extends APSResult {
-    private static Logger log = LoggerFactory.getLogger(L.APS);
+    private AAPSLogger aapsLogger;
 
     private double eventualBG;
     private double snoozeBG;
 
-    DetermineBasalResultAMA(NativeObject result, JSONObject j) {
-        this();
+    DetermineBasalResultAMA(NativeObject result, JSONObject j, AAPSLogger aapsLogger) {
+        this(aapsLogger);
         date = DateUtil.now();
         json = j;
         if (result.containsKey("error")) {
@@ -48,13 +47,14 @@ public class DetermineBasalResultAMA extends APSResult {
         bolusRequested = false;
     }
 
-    private DetermineBasalResultAMA() {
+    private DetermineBasalResultAMA(AAPSLogger aapsLogger) {
         hasPredictions = true;
+        this.aapsLogger = aapsLogger;
     }
 
     @Override
     public DetermineBasalResultAMA clone() {
-        DetermineBasalResultAMA newResult = new DetermineBasalResultAMA();
+        DetermineBasalResultAMA newResult = new DetermineBasalResultAMA(aapsLogger);
         doClone(newResult);
 
         newResult.eventualBG = eventualBG;
@@ -68,7 +68,7 @@ public class DetermineBasalResultAMA extends APSResult {
             JSONObject ret = new JSONObject(this.json.toString());
             return ret;
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error(LTag.APS, "Unhandled exception", e);
         }
         return null;
     }

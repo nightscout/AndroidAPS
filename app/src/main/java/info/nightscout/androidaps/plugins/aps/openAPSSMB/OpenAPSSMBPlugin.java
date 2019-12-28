@@ -2,8 +2,6 @@ package info.nightscout.androidaps.plugins.aps.openAPSSMB;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,7 +19,8 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui;
@@ -45,9 +44,9 @@ import info.nightscout.androidaps.utils.ToastUtils;
 
 @Singleton
 public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, ConstraintsInterface {
-    private static Logger log = LoggerFactory.getLogger(L.APS);
 
     private static OpenAPSSMBPlugin openAPSSMBPlugin;
+    private final AAPSLogger aapsLogger;
 
     /**
      * @deprecated Use dagger to get an instance
@@ -66,7 +65,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
     AutosensResult lastAutosensResult = null;
 
     @Inject
-    public OpenAPSSMBPlugin() {
+    public OpenAPSSMBPlugin(AAPSLogger aapsLogger) {
         super(new PluginDescription()
                 .mainType(PluginType.APS)
                 .fragmentClass(OpenAPSSMBFragment.class.getName())
@@ -76,6 +75,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
                 .description(R.string.description_smb)
         );
         this.openAPSSMBPlugin = this;  // TODO: only while transitioning to Dagger
+        this.aapsLogger = aapsLogger;
     }
 
     @Override
@@ -102,11 +102,10 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
 
     @Override
     public void invoke(String initiator, boolean tempBasalFallback) {
-        if (L.isEnabled(L.APS))
-            log.debug("invoke from " + initiator + " tempBasalFallback: " + tempBasalFallback);
+            aapsLogger.debug(LTag.APS, "invoke from " + initiator + " tempBasalFallback: " + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterSMBJS determineBasalAdapterSMBJS;
-        determineBasalAdapterSMBJS = new DetermineBasalAdapterSMBJS(new ScriptReader(MainApp.instance().getBaseContext()));
+        determineBasalAdapterSMBJS = new DetermineBasalAdapterSMBJS(new ScriptReader(MainApp.instance().getBaseContext()), aapsLogger);
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         Profile profile = ProfileFunctions.getInstance().getProfile();
@@ -114,29 +113,25 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
 
         if (profile == null) {
             RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.noprofileselected)));
-            if (L.isEnabled(L.APS))
-                log.debug(MainApp.gs(R.string.noprofileselected));
+                aapsLogger.debug(LTag.APS, MainApp.gs(R.string.noprofileselected));
             return;
         }
 
         if (pump == null) {
             RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.nopumpselected)));
-            if (L.isEnabled(L.APS))
-                log.debug(MainApp.gs(R.string.nopumpselected));
+                aapsLogger.debug(LTag.APS, MainApp.gs(R.string.nopumpselected));
             return;
         }
 
         if (!isEnabled(PluginType.APS)) {
             RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_disabled)));
-            if (L.isEnabled(L.APS))
-                log.debug(MainApp.gs(R.string.openapsma_disabled));
+                aapsLogger.debug(LTag.APS, MainApp.gs(R.string.openapsma_disabled));
             return;
         }
 
         if (glucoseStatus == null) {
             RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_noglucosedata)));
-            if (L.isEnabled(L.APS))
-                log.debug(MainApp.gs(R.string.openapsma_noglucosedata));
+                aapsLogger.debug(LTag.APS, MainApp.gs(R.string.openapsma_noglucosedata));
             return;
         }
 
@@ -156,8 +151,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         long startPart = System.currentTimeMillis();
 
         MealData mealData = TreatmentsPlugin.getPlugin().getMealData();
-        if (L.isEnabled(L.APS))
-            Profiler.log(log, "getMealData()", startPart);
+            Profiler.log(aapsLogger, LTag.APS, "getMealData()", startPart);
 
         Constraint<Double> maxIOBAllowedConstraint = ConstraintChecker.getInstance().getMaxIOBAllowed();
         inputConstraints.copyReasons(maxIOBAllowedConstraint);
@@ -202,8 +196,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         }
 
         IobTotal[] iobArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
-        if (L.isEnabled(L.APS))
-            Profiler.log(log, "calculateIobArrayInDia()", startPart);
+            Profiler.log(aapsLogger, LTag.APS, "calculateIobArrayInDia()", startPart);
 
         startPart = System.currentTimeMillis();
         Constraint<Boolean> smbAllowed = new Constraint<>(!tempBasalFallback);
@@ -218,10 +211,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         ConstraintChecker.getInstance().isUAMEnabled(uam);
         inputConstraints.copyReasons(uam);
 
-        if (L.isEnabled(L.APS))
-            Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
-        if (L.isEnabled(L.APS))
-            Profiler.log(log, "SMB data gathering", start);
+            Profiler.log(aapsLogger, LTag.APS, "detectSensitivityandCarbAbsorption()", startPart);
+            Profiler.log(aapsLogger, LTag.APS, "SMB data gathering", start);
 
         start = System.currentTimeMillis();
         try {
@@ -240,11 +231,9 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         long now = System.currentTimeMillis();
 
         DetermineBasalResultSMB determineBasalResultSMB = determineBasalAdapterSMBJS.invoke();
-        if (L.isEnabled(L.APS))
-            Profiler.log(log, "SMB calculation", start);
+            Profiler.log(aapsLogger, LTag.APS, "SMB calculation", start);
         if (determineBasalResultSMB == null) {
-            if (L.isEnabled(L.APS))
-                log.error("SMB calculation returned null");
+                aapsLogger.error(LTag.APS, "SMB calculation returned null");
             lastDetermineBasalAdapterSMBJS = null;
             lastAPSResult = null;
             lastAPSRun = 0;
@@ -259,7 +248,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             try {
                 determineBasalResultSMB.json.put("timestamp", DateUtil.toISOString(now));
             } catch (JSONException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error(LTag.APS, "Unhandled exception", e);
             }
 
             determineBasalResultSMB.inputConstraints = inputConstraints;
@@ -274,11 +263,11 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
     }
 
     // safety checks
-    private static boolean checkOnlyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
+    private boolean checkOnlyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
         return value.equals(verifyHardLimits(value, valueName, lowLimit, highLimit));
     }
 
-    private static Double verifyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
+    private Double verifyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
         Double newvalue = value;
         if (newvalue < lowLimit || newvalue > highLimit) {
             newvalue = Math.max(newvalue, lowLimit);
@@ -286,7 +275,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             String msg = String.format(MainApp.gs(R.string.valueoutofrange), valueName);
             msg += ".\n";
             msg += String.format(MainApp.gs(R.string.valuelimitedto), value, newvalue);
-            log.error(msg);
+            aapsLogger.error(LTag.APS, msg);
             NSUpload.uploadError(msg);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
         }

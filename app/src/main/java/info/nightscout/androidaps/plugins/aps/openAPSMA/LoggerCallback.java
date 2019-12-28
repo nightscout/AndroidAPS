@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.plugins.aps.openAPSMA;
 
 import org.mozilla.javascript.ScriptableObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.logging.L;
+import javax.inject.Inject;
+
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 
 /**
  * Created by adrian on 15/10/17.
@@ -13,7 +15,8 @@ import info.nightscout.androidaps.logging.L;
 
 public class LoggerCallback extends ScriptableObject {
 
-    private static Logger log = LoggerFactory.getLogger(L.APS);
+    @Inject
+    AAPSLogger aapsLogger;
 
     private static StringBuffer errorBuffer = new StringBuffer();
     private static StringBuffer logBuffer = new StringBuffer();
@@ -23,6 +26,7 @@ public class LoggerCallback extends ScriptableObject {
         //empty constructor needed for Rhino
         errorBuffer = new StringBuffer();
         logBuffer = new StringBuffer();
+        MainApp.instance().androidInjector().inject(this);
     }
 
     @Override
@@ -35,14 +39,12 @@ public class LoggerCallback extends ScriptableObject {
     }
 
     public void jsFunction_log(Object obj1) {
-        if (L.isEnabled(L.APS))
-            log.debug(obj1.toString().trim());
+        aapsLogger.debug(LTag.APS, obj1.toString().trim());
         logBuffer.append(obj1.toString());
     }
 
     public void jsFunction_error(Object obj1) {
-        if (L.isEnabled(L.APS))
-            log.error(obj1.toString().trim());
+        aapsLogger.error(LTag.APS, obj1.toString().trim());
         errorBuffer.append(obj1.toString());
     }
 

@@ -2,21 +2,20 @@ package info.nightscout.androidaps.plugins.aps.openAPSSMB;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.utils.DateUtil;
 
 public class DetermineBasalResultSMB extends APSResult {
-    private static final Logger log = LoggerFactory.getLogger(L.APS);
+    private final AAPSLogger aapsLogger;
 
     private double eventualBG;
     private double snoozeBG;
 
-    DetermineBasalResultSMB(JSONObject result) {
-        this();
+    DetermineBasalResultSMB(JSONObject result, AAPSLogger aapsLogger) {
+        this(aapsLogger);
         date = DateUtil.now();
         json = result;
         try {
@@ -53,21 +52,22 @@ public class DetermineBasalResultSMB extends APSResult {
                 try {
                     deliverAt = DateUtil.fromISODateString(date).getTime();
                 } catch (Exception e) {
-                    log.warn("Error parsing 'deliverAt' date: " + date, e);
+                    aapsLogger.error(LTag.APS, "Error parsing 'deliverAt' date: " + date, e);
                 }
             }
         } catch (JSONException e) {
-            log.error("Error parsing determine-basal result JSON", e);
+            aapsLogger.error(LTag.APS, "Error parsing determine-basal result JSON", e);
         }
     }
 
-    private DetermineBasalResultSMB() {
+    private DetermineBasalResultSMB(AAPSLogger aapsLogger) {
         hasPredictions = true;
+        this.aapsLogger = aapsLogger;
     }
 
     @Override
     public DetermineBasalResultSMB clone() {
-        DetermineBasalResultSMB newResult = new DetermineBasalResultSMB();
+        DetermineBasalResultSMB newResult = new DetermineBasalResultSMB(aapsLogger);
         doClone(newResult);
 
         newResult.eventualBG = eventualBG;
@@ -80,7 +80,7 @@ public class DetermineBasalResultSMB extends APSResult {
         try {
             return new JSONObject(this.json.toString());
         } catch (JSONException e) {
-            log.error("Error converting determine-basal result to JSON", e);
+            aapsLogger.error(LTag.APS, "Error converting determine-basal result to JSON", e);
         }
         return null;
     }

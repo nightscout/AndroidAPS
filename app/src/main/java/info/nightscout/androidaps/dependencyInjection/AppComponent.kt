@@ -5,6 +5,7 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective5
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionSendSMS
 import info.nightscout.androidaps.queue.commands.CommandSetProfile
@@ -29,6 +30,8 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectActionSendSMS(actionSendSMS: ActionSendSMS)
 
     fun injectObjective5(objective5: Objective5)
+
+    fun injectLoggerCallback(loggerCallback: LoggerCallback)
 
     @Component.Builder
     interface Builder {
