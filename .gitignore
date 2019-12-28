@@ -6,7 +6,8 @@
 /captures
 *.apk
 build/
-.idea/
+.idea/*
+!.idea/codeStyles/
 app/src/main/jniLibs
 full/
 debug/
