@@ -361,11 +361,10 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
 
     @Override
-    public List<Treatment> getTreatments5MinBackFromHistory(long time) {
+    public List<Treatment> getCarbTreatments5MinBackFromHistory(long time) {
         List<Treatment> in5minback = new ArrayList<>();
         synchronized (treatments) {
-            for (Integer pos = 0; pos < treatments.size(); pos++) {
-                Treatment t = treatments.get(pos);
+            for (Treatment t : treatments) {
                 if (!t.isValid)
                     continue;
                 if (t.date <= time && t.date > time - 5 * 60 * 1000 && t.carbs > 0)
