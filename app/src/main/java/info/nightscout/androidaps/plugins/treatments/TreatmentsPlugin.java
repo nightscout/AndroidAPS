@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.treatments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -613,6 +614,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     @Override
+    @NonNull
     public Intervals<ExtendedBolus> getExtendedBolusesFromHistory() {
         synchronized (extendedBoluses) {
             return new NonOverlappingIntervals<>(extendedBoluses);
@@ -620,6 +622,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     @Override
+    @NonNull
     public NonOverlappingIntervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
         synchronized (tempBasals) {
             return new NonOverlappingIntervals<>(tempBasals);

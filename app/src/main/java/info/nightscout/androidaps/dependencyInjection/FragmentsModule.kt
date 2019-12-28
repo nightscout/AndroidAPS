@@ -9,40 +9,30 @@ import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAFragment
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBFragment
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorFragment
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
+import info.nightscout.androidaps.plugins.treatments.TreatmentsFragment
 
 @Module
 abstract class FragmentsModule {
 
-    @ContributesAndroidInjector abstract fun contributesPreferencesFragment(): MyPreferenceFragment
-    @ContributesAndroidInjector abstract fun contributesOpenAPSAMAFragment(): OpenAPSAMAFragment
-    @ContributesAndroidInjector abstract fun contributesOpenAPSMAFragment(): OpenAPSMAFragment
-    @ContributesAndroidInjector abstract fun contributesOpenAPSSMBFragment(): OpenAPSSMBFragment
-    @ContributesAndroidInjector abstract fun contributesNSProfileFragment(): NSProfileFragment
-    @ContributesAndroidInjector abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
-    @ContributesAndroidInjector abstract fun contributesCalibrationDialog(): CalibrationDialog
-    @ContributesAndroidInjector abstract fun contributesCarbsDialog(): CarbsDialog
-    @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
-    @ContributesAndroidInjector abstract fun contributesExtendedBolusDialog(): ExtendedBolusDialog
-    @ContributesAndroidInjector abstract fun contributesFillDialog(): FillDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesPreferencesFragment(): MyPreferenceFragment
 
-    @ContributesAndroidInjector
-    abstract fun contributesInsulinDialog(): InsulinDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesOpenAPSAMAFragment(): OpenAPSAMAFragment
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesOpenAPSMAFragment(): OpenAPSMAFragment
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesOpenAPSSMBFragment(): OpenAPSSMBFragment
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesNSProfileFragment(): NSProfileFragment
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesTreatmentsFragment(): TreatmentsFragment
 
-    @ContributesAndroidInjector
-    abstract fun contributesProfileSwitchDialog(): ProfileSwitchDialog
-
-    @ContributesAndroidInjector
-    abstract fun contributesProfileViewerDialog(): ProfileViewerDialog
-
-    @ContributesAndroidInjector
-    abstract fun contributesTempBasalDialog(): TempBasalDialog
-
-    @ContributesAndroidInjector
-    abstract fun contributesTempTargetDialog(): TempTargetDialog
-
-    @ContributesAndroidInjector
-    abstract fun contributesTreatmentDialog(): TreatmentDialog
-
-    @ContributesAndroidInjector
-    abstract fun contributesWizardDialog(): WizardDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesCalibrationDialog(): CalibrationDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesCarbsDialog(): CarbsDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesCareDialog(): CareDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesExtendedBolusDialog(): ExtendedBolusDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesFillDialog(): FillDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesInsulinDialog(): InsulinDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesProfileSwitchDialog(): ProfileSwitchDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesProfileViewerDialog(): ProfileViewerDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesTempBasalDialog(): TempBasalDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesTempTargetDialog(): TempTargetDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesTreatmentDialog(): TreatmentDialog
+    @Suppress("unused") @ContributesAndroidInjector abstract fun contributesWizardDialog(): WizardDialog
 }
