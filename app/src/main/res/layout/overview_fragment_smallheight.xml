@@ -5,340 +5,368 @@
     android:layout_height="match_parent"
     tools:context=".plugins.general.overview.OverviewFragment">
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/overview_notifications"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            </androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="match_parent"
+            android:layout_above="@+id/overview_buttons"
+            android:fillViewport="true">
 
             <LinearLayout
-                android:id="@+id/overview_looplayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="2dp">
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/overview_apsmode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:paddingBottom="3dp"
-                    android:paddingTop="3dp"
-                    android:text="Open Loop"
-
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-
-                <TextView
-                    android:id="@+id/overview_activeprofile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_marginRight="5dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:paddingBottom="3dp"
-                    android:paddingTop="3dp"
-                    android:text="Profile"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                <TextView
-                    android:id="@+id/overview_temptarget"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="TempTarget"
-                    android:paddingBottom="3dp"
-                    android:paddingTop="3dp"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/mdtp_white" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/overview_pumpstatuslayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:paddingTop="2dp">
-
-                <TextView
-                    android:id="@+id/overview_pumpstatus"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/overview_notifications"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:paddingBottom="3dp"
-                    android:paddingTop="3dp"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:text="@string/initializing"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-            </LinearLayout>
+                    android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/overview_bg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|left"
-                    android:gravity="center_vertical"
-                    android:text="00.0"
-                    android:textSize="70dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/overview_arrow"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top|left"
-                    android:layout_marginTop="-15dp"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="-5dp"
-                    android:paddingRight="-5dp"
-                    android:text="→"
-                    android:textSize="70dp"
-                    android:textStyle="bold" />
+                </androidx.recyclerview.widget.RecyclerView>
 
                 <LinearLayout
+                    android:id="@+id/overview_looplayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    android:layout_marginTop="10dp"
-                    android:gravity="top"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:paddingTop="2dp">
 
                     <TextView
-                        android:id="@+id/overview_timeago"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="0.5"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <TextView
-                        android:id="@+id/overview_delta"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="0.5"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <TextView
-                        android:id="@+id/overview_avgdelta"
+                        android:id="@+id/overview_apsmode"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:paddingBottom="3dp"
+                        android:paddingTop="3dp"
+                        android:text="Open Loop"
+
                         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
+                    <TextView
+                        android:id="@+id/overview_activeprofile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:paddingBottom="3dp"
+                        android:paddingTop="3dp"
+                        android:text="Profile"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                    <TextView
+                        android:id="@+id/overview_temptarget"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="TempTarget"
+                        android:paddingBottom="3dp"
+                        android:paddingTop="3dp"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/mdtp_white" />
+
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/overview_pumpstatuslayout"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textStyle="normal|bold" />
+                    android:orientation="horizontal"
+                    android:paddingTop="2dp">
 
-                <TextView
-                    android:layout_width="20dp"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/overview_basebasal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/overview_statuslights"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/overview_canulaage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text=""
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/overview_insulinage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text=""
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/overview_reservoirlevel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text=""
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/overview_sensorage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text=""
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/overview_batterylevel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text=""
-                    android:textSize="14sp" />
-
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/overview_extendedbolus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/mdtp_white" />
-
-            <com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:alignContent="center"
-                app:alignItems="center"
-                app:flexDirection="row"
-                app:flexWrap="wrap"
-                app:justifyContent="space_around">
+                    <TextView
+                        android:id="@+id/overview_pumpstatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:paddingBottom="3dp"
+                        android:paddingTop="3dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/initializing"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:baselineAligned="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="0"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/overview_bg"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginStart="6dp"
+                                android:text="00.0"
+                                android:textSize="42sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/overview_arrow"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginTop="-5dp"
+                                android:layout_marginEnd="4dp"
+                                android:paddingStart="-2dp"
+                                android:paddingEnd="0dp"
+                                android:text="→"
+                                android:textSize="28sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginTop="2dp"
+                            android:layout_marginBottom="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/overview_timeago"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="-2dp"
+                                android:paddingStart="2dp"
+                                android:layout_weight="0.5"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/overview_delta"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="-2dp"
+                                android:paddingStart="2dp"
+                                android:layout_weight="0.5"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/overview_avgdelta"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="0.5"
+                                android:textSize="12sp"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginTop="6dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:layout_marginEnd="1dp"
+                                android:text="@string/iob"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="5dp"
+                                android:layout_height="wrap_content"
+                                android:text=":"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/overview_iob"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="14dp"
+                                android:text=""
+                                android:textSize="16sp"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:layout_marginEnd="1dp"
+                                android:text="@string/cob"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="5dp"
+                                android:layout_height="wrap_content"
+                                android:text=":"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/overview_cob"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:text=""
+                                android:textSize="16sp"
+                                android:textStyle="bold"/>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:layout_marginEnd="1dp"
+                                android:text="@string/basal_short"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="5dp"
+                                android:layout_height="wrap_content"
+                                android:text=":"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/overview_basebasal"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:text="0.50U/h @17:35 1/30min - 0.40U/h"
+                                android:textSize="16sp"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:layout_marginEnd="1dp"
+                                android:text="AS"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:layout_width="5dp"
+                                android:layout_height="wrap_content"
+                                android:text=":"
+                                android:textSize="16sp" />
+
+                            <TextView
+                                android:id="@+id/overview_sensitivity"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="20dp"
+                                android:text=""
+                                android:textSize="16sp"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/overview_statuslights"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/overview_canulaage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/iob"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:text=":" />
-
-                    <TextView
-                        android:id="@+id/overview_iob"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingLeft="5dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
                         android:text=""
                         android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/overview_insulinage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text=""
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/overview_reservoirlevel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text=""
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/overview_sensorage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text=""
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/overview_batterylevel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text=""
+                        android:textSize="14sp" />
+
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
+
+                <TextView
+                    android:id="@+id/overview_extendedbolus"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:text="@string/cob" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:text=":" />
-
-                    <TextView
-                        android:id="@+id/overview_cob"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="5dp"
-                        android:text="" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:text="@string/as" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:text=":" />
-
-                    <TextView
-                        android:id="@+id/overview_sensitivity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="5dp"
-                        android:text="" />
-
-                </LinearLayout>
-
-            </com.google.android.flexbox.FlexboxLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                    android:textAlignment="center"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/mdtp_white" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
@@ -367,23 +395,35 @@
 
                 </RelativeLayout>
 
+
                 <com.jjoe64.graphview.GraphView
                     android:id="@+id/overview_iobgraph"
                     android:layout_width="wrap_content"
-                    android:layout_height="150dp" />
+                    android:layout_height="100dp"
+                    android:visibility="gone" />
 
             </LinearLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/overview_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/overview_accepttemplayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_accepttempbutton"
                     style="?android:attr/buttonStyle"
-                    android:layout_width="fill_parent"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
                     android:layout_marginTop="3dp"
@@ -395,8 +435,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingRight="5dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingRight="5dp">
 
                 <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_treatmentbutton"
@@ -410,7 +450,8 @@
                     android:paddingRight="0dp"
                     android:text="@string/overview_treatment_label"
                     android:textColor="@color/colorTreatmentButton"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
                 <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_insulinbutton"
@@ -439,7 +480,8 @@
                     android:paddingRight="0dp"
                     android:text="@string/overview_carbs_label"
                     android:textColor="@color/colorCarbsButton"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
                 <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_wizardbutton"
@@ -483,7 +525,8 @@
                     android:paddingRight="0dp"
                     android:text="@string/overview_cgm"
                     android:textColor="@color/colorCalibrationButton"
-                    android:textSize="10sp"/>
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
                 <info.nightscout.androidaps.utils.SingleClickButton
                     android:id="@+id/overview_quickwizardbutton"
@@ -503,6 +546,5 @@
             </LinearLayout>
 
         </LinearLayout>
-
-    </ScrollView>
+    </RelativeLayout>
 </FrameLayout>

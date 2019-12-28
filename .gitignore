@@ -14,3 +14,9 @@ debug/
 release/
 app/com.crashlytics.settings.json
 app/session_analytics.tap
+.project
+.settings/org.eclipse.buildship.core.prefs
+app/.classpath
+app/.settings/org.eclipse.buildship.core.prefs
+wear/.classpath
+wear/.settings/org.eclipse.buildship.core.prefs
