@@ -1542,7 +1542,7 @@
     <string name="medtronic_error_rileylink_address_invalid">RileyLink Address invalid.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Pump type detected is not the same as configured type.</string>
 
-    <string name="medtronic_error_pump_basal_profiles_not_enabled">Basal profiles are not enabled on pump.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Basal profiles/patterns setting is not enabled on pump. Enable it on the pump.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Basal profile set on pump is incorrect (must be STD).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Wrong TBR type set on pump (must be Absolute).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Wrong Max Bolus set on Pump (must be %1$.2f).</string>
