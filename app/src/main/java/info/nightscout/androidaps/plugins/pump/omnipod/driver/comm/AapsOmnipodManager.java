@@ -35,7 +35,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunication
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.SetupActionResult;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentHighFlashLogDump;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
@@ -443,8 +443,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return new PumpEnactResult().success(true).enacted(true);
     }
 
-    public PodInfoRecentHighFlashLogDump readPulseLog() {
-        PodInfoResponse response = delegate.getPodInfo(PodInfoType.RECENT_HIGH_FLASH_LOG_DUMP);
+    public PodInfoRecentPulseLog readPulseLog() {
+        PodInfoResponse response = delegate.getPodInfo(PodInfoType.RECENT_PULSE_LOG);
         return response.getPodInfo();
     }
 

@@ -48,7 +48,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentHighFlashLogDump;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
@@ -67,7 +67,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -377,7 +376,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 if (omnipodStatusRequest==OmnipodStatusRequest.GetPodPulseLog) {
                     OmnipodUITask omnipodUITask = omnipodUIComm.executeCommand(omnipodStatusRequest.getCommandType());
 
-                    PodInfoRecentHighFlashLogDump result = (PodInfoRecentHighFlashLogDump)omnipodUITask.returnDataObject;
+                    PodInfoRecentPulseLog result = (PodInfoRecentPulseLog)omnipodUITask.returnDataObject;
 
                     if (result==null) {
                         LOG.warn("Result was null.");

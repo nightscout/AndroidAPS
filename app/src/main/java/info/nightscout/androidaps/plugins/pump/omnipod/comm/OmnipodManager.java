@@ -28,7 +28,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.Inser
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.PrimeService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.CancelDeliveryCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentHighFlashLogDump;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
@@ -408,8 +408,8 @@ public class OmnipodManager {
         // FIXME replace by storing to file
         if (isLoggingEnabled()) {
             try {
-                PodInfoResponse podInfoResponse = communicationService.executeAction(new GetPodInfoAction(podState, PodInfoType.RECENT_HIGH_FLASH_LOG_DUMP));
-                PodInfoRecentHighFlashLogDump pulseLogInfo = podInfoResponse.getPodInfo();
+                PodInfoResponse podInfoResponse = communicationService.executeAction(new GetPodInfoAction(podState, PodInfoType.RECENT_PULSE_LOG));
+                PodInfoRecentPulseLog pulseLogInfo = podInfoResponse.getPodInfo();
                 LOG.info("Retrieved pulse log from the pod: {}", pulseLogInfo.toString());
             } catch (Exception ex) {
                 LOG.warn("Failed to retrieve pulse log from the pod", ex);
