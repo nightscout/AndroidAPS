@@ -119,7 +119,7 @@ public class IobCobOref1Thread extends Thread {
                 // start from oldest to be able sub cob
                 for (int i = bucketed_data.size() - 4; i >= 0; i--) {
                     String progress = i + (MainApp.isDev() ? " (" + from + ")" : "");
-                    RxBus.INSTANCE.send(new EventIobCalculationProgress(progress));
+                    RxBus.Companion.getINSTANCE().send(new EventIobCalculationProgress(progress));
 
                     if (iobCobCalculatorPlugin.stopCalculationTrigger) {
                         iobCobCalculatorPlugin.stopCalculationTrigger = false;
@@ -201,7 +201,7 @@ public class IobCobOref1Thread extends Thread {
                                             log.debug(bucketed_data.toString());
                                             log.debug(IobCobCalculatorPlugin.getPlugin().getBgReadings().toString());
                                             Notification notification = new Notification(Notification.SENDLOGFILES, MainApp.gs(R.string.sendlogfiles), Notification.LOW);
-                                            RxBus.INSTANCE.send(new EventNewNotification(notification));
+                                            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
                                             SP.putBoolean("log_AUTOSENS", true);
                                             break;
                                         }
@@ -227,7 +227,7 @@ public class IobCobOref1Thread extends Thread {
                                 log.debug(bucketed_data.toString());
                                 log.debug(IobCobCalculatorPlugin.getPlugin().getBgReadings().toString());
                                 Notification notification = new Notification(Notification.SENDLOGFILES, MainApp.gs(R.string.sendlogfiles), Notification.LOW);
-                                RxBus.INSTANCE.send(new EventNewNotification(notification));
+                                RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
                                 SP.putBoolean("log_AUTOSENS", true);
                                 break;
                             }
@@ -387,12 +387,12 @@ public class IobCobOref1Thread extends Thread {
             }
             new Thread(() -> {
                 SystemClock.sleep(1000);
-                RxBus.INSTANCE.send(new EventAutosensCalculationFinished(cause));
+                RxBus.Companion.getINSTANCE().send(new EventAutosensCalculationFinished(cause));
             }).start();
         } finally {
             if (mWakeLock != null)
                 mWakeLock.release();
-            RxBus.INSTANCE.send(new EventIobCalculationProgress(""));
+            RxBus.Companion.getINSTANCE().send(new EventIobCalculationProgress(""));
             if (L.isEnabled(L.AUTOSENS)) {
                 log.debug("AUTOSENSDATA thread ended: " + from);
                 log.debug("Midnights: " + MidnightTime.log());

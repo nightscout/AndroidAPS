@@ -32,7 +32,7 @@ public class MsgInitConnStatusTime_k extends MessageBase {
 
         if (bytes.length - 10 < 10) {
             Notification notification = new Notification(Notification.WRONG_DRIVER, MainApp.gs(R.string.pumpdrivercorrected), Notification.NORMAL);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
             DanaRKoreanPlugin.getPlugin().disconnect("Wrong Model");
             log.error("Wrong model selected. Switching to export DanaR");
             DanaRKoreanPlugin.getPlugin().setPluginEnabled(PluginType.PUMP, false);
@@ -49,7 +49,7 @@ public class MsgInitConnStatusTime_k extends MessageBase {
             }
 
             ConfigBuilderPlugin.getPlugin().storeSettings("ChangingKoreanDanaDriver");
-            RxBus.INSTANCE.send(new EventRebuildTabs());
+            RxBus.Companion.getINSTANCE().send(new EventRebuildTabs());
             ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
             return;
         }

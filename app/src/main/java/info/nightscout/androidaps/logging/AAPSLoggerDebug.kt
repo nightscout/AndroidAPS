@@ -20,6 +20,10 @@ class AAPSLoggerDebug : AAPSLogger {
         Log.d(tag.tag, message)
     }
 
+    override fun warn(tag: LTag, message: String) {
+        Log.w(tag.tag, message)
+    }
+
     override fun info(tag: LTag, message: String) {
         Log.i(tag.tag, message)
     }

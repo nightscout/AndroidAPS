@@ -14,32 +14,41 @@ import androidx.core.app.ActivityCompat;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.MainActivity;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventProfileStoreChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
+import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
 import info.nightscout.androidaps.setupwizard.elements.SWItem;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.androidaps.utils.AndroidPermission;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class SetupWizardActivity extends NoSplashAppCompatActivity {
+
+    @Inject LocalProfilePlugin localProfilePlugin;
+    @Inject SWDefinition swDefinition;
+    @Inject RxBusWrapper rxBus;
+    @Inject ResourceHelper resourceHelper;
+    @Inject SP sp;
+
     private CompositeDisposable disposable = new CompositeDisposable();
 
     ScrollView scrollView;
 
-    private SWDefinition swDefinition = new SWDefinition();
-    private List<SWScreen> screens = swDefinition.getScreens();
+    private List<SWScreen> screens;
     private int currentWizardPage = 0;
     public static final String INTENT_MESSAGE = "WIZZARDPAGE";
 
@@ -50,6 +59,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
         setContentView(R.layout.activity_setupwizard);
 
         scrollView = findViewById(R.id.sw_scrollview);
+        screens = swDefinition.getScreens();
 
         Intent intent = getIntent();
         currentWizardPage = intent.getIntExtra(SetupWizardActivity.INTENT_MESSAGE, 0);
@@ -77,27 +87,27 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
     protected void onResume() {
         super.onResume();
         swDefinition.setActivity(this);
-        disposable.add(RxBus.INSTANCE
+        disposable.add(rxBus
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateButtons(), FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(rxBus
                 .toObservable(EventNSClientStatus.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateButtons(), FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(rxBus
                 .toObservable(EventProfileNeedsUpdate.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateButtons(), FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(rxBus
                 .toObservable(EventProfileStoreChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateButtons(), FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(rxBus
                 .toObservable(EventSWUpdate.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
@@ -143,13 +153,13 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
     @Override
     public void onBackPressed() {
         if (currentWizardPage == 0)
-            OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
+            OKDialog.showConfirmation(this, resourceHelper.gs(R.string.exitwizard), this::finish);
         else showPreviousPage(null);
     }
 
     public void exitPressed(View view) {
-        SP.putBoolean(R.string.key_setupwizard_processed, true);
-        OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
+        sp.putBoolean(R.string.key_setupwizard_processed, true);
+        OKDialog.showConfirmation(this, resourceHelper.gs(R.string.exitwizard), this::finish);
     }
 
     public void showNextPage(View view) {
@@ -168,7 +178,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
 
     // Go back to overview
     public void finishSetupWizard(View view) {
-        SP.putBoolean(R.string.key_setupwizard_processed, true);
+        sp.putBoolean(R.string.key_setupwizard_processed, true);
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
@@ -203,7 +213,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
                 switch (requestCode) {
                     case AndroidPermission.CASE_STORAGE:
                         //show dialog after permission is granted
-                        OKDialog.show(this, MainApp.gs(R.string.permission), MainApp.gs(R.string.alert_dialog_storage_permission_text));
+                        OKDialog.show(this, resourceHelper.gs(R.string.permission), resourceHelper.gs(R.string.alert_dialog_storage_permission_text));
                         break;
                     case AndroidPermission.CASE_LOCATION:
                     case AndroidPermission.CASE_SMS:

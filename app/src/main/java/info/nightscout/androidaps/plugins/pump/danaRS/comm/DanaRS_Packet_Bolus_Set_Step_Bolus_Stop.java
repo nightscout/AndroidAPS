@@ -57,7 +57,7 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Stop extends DanaRS_Packet {
         } else {
             bolusingEvent.setStatus(MainApp.gs(R.string.overview_bolusprogress_stoped));
         }
-        RxBus.INSTANCE.send(bolusingEvent);
+        RxBus.Companion.getINSTANCE().send(bolusingEvent);
     }
 
     @Override

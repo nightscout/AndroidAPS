@@ -30,7 +30,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         EventNetworkChange event = grabNetworkStatus(context);
         if (event != null)
-            RxBus.INSTANCE.send(event);
+            RxBus.Companion.getINSTANCE().send(event);
     }
 
     @Nullable

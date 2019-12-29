@@ -40,7 +40,7 @@ public class ActionLoopSuspend extends Action {
     public void doAction(Callback callback) {
         if (!LoopPlugin.getPlugin().isSuspended()) {
             LoopPlugin.getPlugin().suspendLoop(minutes.getMinutes());
-            RxBus.INSTANCE.send(new EventRefreshOverview("ActionLoopSuspend"));
+            RxBus.Companion.getINSTANCE().send(new EventRefreshOverview("ActionLoopSuspend"));
             if (callback != null)
                 callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
         } else {

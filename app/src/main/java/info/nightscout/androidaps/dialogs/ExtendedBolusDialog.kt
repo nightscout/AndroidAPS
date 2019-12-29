@@ -25,15 +25,10 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 class ExtendedBolusDialog : DialogFragmentWithDate() {
-
-    @Inject
-    lateinit var mainApp: MainApp
-
-    @Inject
-    lateinit var resourceHelper: ResourceHelper
-
-    @Inject
-    lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -50,7 +45,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription ?: return
+        val pumpDescription = configBuilderPlugin.activePump?.pumpDescription ?: return
 
         val maxInsulin = constraintChecker.getMaxExtendedBolusAllowed().value()
         val extendedStep = pumpDescription.extendedBolusStep
@@ -75,7 +70,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
-                ConfigBuilderPlugin.getPlugin().commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
+                configBuilderPlugin.commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
                     override fun run() {
                         if (!result.success) {
                             val i = Intent(mainApp, ErrorHelperActivity::class.java)

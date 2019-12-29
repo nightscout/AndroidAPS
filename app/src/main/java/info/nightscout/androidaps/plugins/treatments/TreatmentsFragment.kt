@@ -7,19 +7,23 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventExtendedBolusChange
-import info.nightscout.androidaps.plugins.bus.RxBus.toObservable
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.treatments.fragments.*
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.treatments_fragment.*
 import javax.inject.Inject
 
 class TreatmentsFragment : DaggerFragment() {
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var resourceHelper: ResourceHelper
+
     private val disposable = CompositeDisposable()
 
     @Inject
@@ -66,10 +70,10 @@ class TreatmentsFragment : DaggerFragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        disposable.add(toObservable(EventExtendedBolusChange::class.java)
+        disposable += rxBus
+            .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ updateGui() }) { FabricPrivacy.logException(it) }
-        )
         updateGui()
     }
 
@@ -88,13 +92,13 @@ class TreatmentsFragment : DaggerFragment() {
     }
 
     private fun setBackgroundColorOnSelected(selected: View) {
-        treatments_treatments.setBackgroundColor(MainApp.gc(R.color.defaultbackground))
-        treatments_extendedboluses.setBackgroundColor(MainApp.gc(R.color.defaultbackground))
-        treatments_tempbasals.setBackgroundColor(MainApp.gc(R.color.defaultbackground))
-        treatments_temptargets.setBackgroundColor(MainApp.gc(R.color.defaultbackground))
-        treatments_profileswitches.setBackgroundColor(MainApp.gc(R.color.defaultbackground))
-        treatments_careportal.setBackgroundColor(MainApp.gc(R.color.defaultbackground))
-        selected.setBackgroundColor(MainApp.gc(R.color.tabBgColorSelected))
+        treatments_treatments.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        treatments_extendedboluses.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        treatments_tempbasals.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        treatments_temptargets.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        treatments_profileswitches.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        treatments_careportal.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
+        selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
     }
 
     private fun updateGui() {

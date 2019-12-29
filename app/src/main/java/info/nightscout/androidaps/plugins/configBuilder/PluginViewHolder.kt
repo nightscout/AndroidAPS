@@ -39,7 +39,7 @@ class PluginViewHolder internal constructor(private val fragment: ConfigBuilderF
         pluginVisibility.setOnClickListener {
             plugin.setFragmentVisible(pluginType, pluginVisibility.isChecked)
             ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxVisible")
-            RxBus.send(EventRebuildTabs())
+            RxBus.INSTANCE.send(EventRebuildTabs())
             ConfigBuilderPlugin.getPlugin().logPluginStatus()
         }
 

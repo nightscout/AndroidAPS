@@ -63,7 +63,7 @@ public class SWEditUrl extends SWItem {
                 if (Patterns.WEB_URL.matcher(s).matches())
                     save(s.toString(), updateDelay);
                 else
-                    RxBus.INSTANCE.send(new EventSWLabel(MainApp.gs(R.string.error_url_not_valid)));
+                    RxBus.Companion.getINSTANCE().send(new EventSWLabel(MainApp.gs(R.string.error_url_not_valid)));
             }
 
             @Override

@@ -61,7 +61,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     public TreatmentService() {
         onCreate();
         dbInitialize();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNsTreatment.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -185,11 +185,11 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             public void run() {
                 if (L.isEnabled(L.DATATREATMENTS))
                     log.debug("Firing EventReloadTreatmentData");
-                RxBus.INSTANCE.send(event);
+                RxBus.Companion.getINSTANCE().send(event);
                 if (DatabaseHelper.earliestDataChange != null) {
                     if (L.isEnabled(L.DATATREATMENTS))
                         log.debug("Firing EventNewHistoryData");
-                    RxBus.INSTANCE.send(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
+                    RxBus.Companion.getINSTANCE().send(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
                 }
                 DatabaseHelper.earliestDataChange = null;
                 callback.setPost(null);

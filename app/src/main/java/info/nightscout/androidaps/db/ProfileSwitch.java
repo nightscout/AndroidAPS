@@ -111,7 +111,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
      */
     public String getCustomizedName() {
         String name = profileName;
-        if (LocalProfilePlugin.LOCAL_PROFILE.equals(name)) {
+        if (LocalProfilePlugin.Companion.getLOCAL_PROFILE().equals(name)) {
             name = DecimalFormatter.to2Decimal(getProfileObject().percentageBasalSum()) + "U ";
         }
         if (isCPP) {
@@ -226,7 +226,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     private void createNotificationInvalidProfile(String detail) {
         Notification notification = new Notification(Notification.ZERO_VALUE_IN_PROFILE, String.format(MainApp.gs(R.string.zerovalueinprofile), detail), Notification.LOW, 5);
-        RxBus.INSTANCE.send(new EventNewNotification(notification));
+        RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
     }
 
     public static boolean isEvent5minBack(List<ProfileSwitch> list, long time, boolean zeroDurationOnly) {

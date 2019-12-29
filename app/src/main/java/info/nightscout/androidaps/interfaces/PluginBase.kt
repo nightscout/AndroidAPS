@@ -10,7 +10,7 @@ import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.logging.L.isEnabled
-import info.nightscout.androidaps.plugins.bus.RxBus.send
+import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.EventConfigBuilderUpdateGui
 import info.nightscout.androidaps.utils.OKDialog.showConfirmation
@@ -57,7 +57,7 @@ abstract class PluginBase(pluginDesc: PluginDescription) {
                     SP.putBoolean("allow_hardware_pump", true)
                     if (isEnabled(L.PUMP)) log.debug("First time HW pump allowed!")
                 }, Runnable {
-                    send(EventConfigBuilderUpdateGui())
+                    RxBus.INSTANCE.send(EventConfigBuilderUpdateGui())
                     if (isEnabled(L.PUMP)) log.debug("User does not allow switching to HW pump!")
                 })
             }
@@ -71,9 +71,9 @@ abstract class PluginBase(pluginDesc: PluginDescription) {
         setFragmentVisible(type, enabled)
         ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(this, type)
         ConfigBuilderPlugin.getPlugin().storeSettings("CheckedCheckboxEnabled")
-        send(EventRebuildTabs())
-        send(EventConfigBuilderChange())
-        send(EventConfigBuilderUpdateGui())
+        RxBus.INSTANCE.send(EventRebuildTabs())
+        RxBus.INSTANCE.send(EventConfigBuilderChange())
+        RxBus.INSTANCE.send(EventConfigBuilderUpdateGui())
         ConfigBuilderPlugin.getPlugin().logPluginStatus()
     }
 
@@ -93,8 +93,7 @@ abstract class PluginBase(pluginDesc: PluginDescription) {
     val description: String?
         get() = if (pluginDescription.description == -1) null else MainApp.gs(pluginDescription.description)
 
-    val type: PluginType
-        get() = pluginDescription.mainType
+    fun getType(): PluginType = pluginDescription.mainType
 
     open val preferencesId: Int
         get() = pluginDescription.preferencesId
@@ -164,7 +163,7 @@ abstract class PluginBase(pluginDesc: PluginDescription) {
     }
 
     protected open fun onStart() {
-        if (type == PluginType.PUMP) {
+        if (getType() == PluginType.PUMP) {
             Thread(Runnable {
                 SystemClock.sleep(3000)
                 val commandQueue = ConfigBuilderPlugin.getPlugin().commandQueue

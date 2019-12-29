@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,19 +7,22 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
+import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.*
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.PasswordProtection
+import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.configbuilder_fragment.*
 import java.util.*
+import javax.inject.Inject
 
-class ConfigBuilderFragment : Fragment() {
+class ConfigBuilderFragment : DaggerFragment() {
+    @Inject lateinit var rxBus: RxBusWrapper
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private val pluginViewHolders = ArrayList<PluginViewHolder>()
@@ -49,14 +51,14 @@ class ConfigBuilderFragment : Fragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        disposable.add(RxBus
-                .toObservable(EventConfigBuilderUpdateGui::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    for (pluginViewHolder in pluginViewHolders) pluginViewHolder.update()
-                }, {
-                    FabricPrivacy.logException(it)
-                }))
+        disposable += rxBus
+            .toObservable(EventConfigBuilderUpdateGui::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                for (pluginViewHolder in pluginViewHolders) pluginViewHolder.update()
+            }, {
+                FabricPrivacy.logException(it)
+            })
         updateGUI()
     }
 

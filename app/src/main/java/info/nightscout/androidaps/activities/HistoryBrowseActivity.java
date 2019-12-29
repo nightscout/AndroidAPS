@@ -175,7 +175,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
@@ -187,7 +187,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
                     }
                 }, FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventIobCalculationProgress.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {

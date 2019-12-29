@@ -7,9 +7,8 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.profile.ns.events.EventNSProfileUpdateGUI
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -17,6 +16,8 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.OKDialog
+import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.close.*
@@ -26,8 +27,9 @@ import javax.inject.Inject
 
 class NSProfileFragment : DaggerFragment() {
 
-    @Inject
-    lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var resourceHelper: ResourceHelper
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -46,8 +48,8 @@ class NSProfileFragment : DaggerFragment() {
             NSProfilePlugin.getPlugin().profile?.let { store ->
                 store.getSpecificProfile(name)?.let {
                     activity?.let { activity ->
-                        OKDialog.showConfirmation(activity, MainApp.gs(R.string.nsprofile),
-                            MainApp.gs(R.string.activate_profile) + ": " + name + " ?", Runnable {
+                        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.nsprofile),
+                            resourceHelper.gs(R.string.activate_profile) + ": " + name + " ?", Runnable {
                             treatmentsPlugin.doProfileSwitch(store, name, 0, 100, 0, DateUtil.now())
                         })
                     }
@@ -78,12 +80,12 @@ class NSProfileFragment : DaggerFragment() {
                 NSProfilePlugin.getPlugin().profile?.let { store ->
                     store.getSpecificProfile(name)?.let { profile ->
                         profileview_units.text = profile.units
-                        profileview_dia.text = MainApp.gs(R.string.format_hours, profile.dia)
+                        profileview_dia.text = resourceHelper.gs(R.string.format_hours, profile.dia)
                         profileview_activeprofile.text = name
                         profileview_ic.text = profile.icList
                         profileview_isf.text = profile.isfList
                         profileview_basal.text = profile.basalList
-                        profileview_basaltotal.text = String.format(MainApp.gs(R.string.profile_total), DecimalFormatter.to2Decimal(profile.baseBasalSum()))
+                        profileview_basaltotal.text = String.format(resourceHelper.gs(R.string.profile_total), DecimalFormatter.to2Decimal(profile.baseBasalSum()))
                         profileview_target.text = profile.targetList
                         basal_graph.show(profile)
                         if (profile.isValid("NSProfileFragment")) {
@@ -102,11 +104,10 @@ class NSProfileFragment : DaggerFragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        disposable.add(RxBus
+        disposable += rxBus
             .toObservable(EventNSProfileUpdateGUI::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
-        )
         updateGUI()
     }
 

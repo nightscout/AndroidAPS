@@ -31,16 +31,18 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
     private static Logger log = LoggerFactory.getLogger(L.NOTIFICATION);
 
     private List<Notification> notificationsList;
+    private NotificationStore notificationStore;
 
-    NotificationRecyclerViewAdapter(List<Notification> notificationsList) {
+    NotificationRecyclerViewAdapter(NotificationStore nStore, List<Notification> notificationsList) {
         this.notificationsList = notificationsList;
+        this.notificationStore = nStore;
     }
 
     @NonNull
     @Override
     public NotificationsViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.overview_notification_item, viewGroup, false);
-        return new NotificationsViewHolder(v);
+        return new NotificationsViewHolder(notificationStore, v);
     }
 
     @Override
@@ -76,12 +78,14 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
     }
 
     static class NotificationsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        NotificationStore notificationStore;
         CardView cv;
         TextView text;
         Button dismiss;
 
-        NotificationsViewHolder(View itemView) {
+        NotificationsViewHolder(final NotificationStore notificationStore, View itemView) {
             super(itemView);
+            this.notificationStore = notificationStore;
             cv = itemView.findViewById(R.id.notification_cardview);
             text = itemView.findViewById(R.id.notification_text);
             dismiss = itemView.findViewById(R.id.notification_dismiss);
@@ -91,7 +95,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         @Override
         public void onClick(View v) {
             Notification notification = (Notification) v.getTag();
-            RxBus.INSTANCE.send(new EventDismissNotification(notification.id));
+            RxBus.Companion.getINSTANCE().send(new EventDismissNotification(notification.id));
             if (notification.nsAlarm != null) {
                 NSClientPlugin.getPlugin().handleClearAlarm(notification.nsAlarm, 60 * 60 * 1000L);
             }
@@ -99,11 +103,10 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
             if (L.isEnabled(L.NOTIFICATION))
                 log.debug("Notification text is: " + notification.text);
             if (notification.text.equals(MainApp.gs(R.string.nsalarm_staledata))) {
-                NotificationStore nstore = OverviewPlugin.INSTANCE.getNotificationStore();
                 long msToSnooze = SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L;
                 if (L.isEnabled(L.NOTIFICATION))
                     log.debug("snooze nsalarm_staledatavalue in minutes is " + SP.getInt("nsalarm_staledatavalue", 15) + "\n in ms is: " + msToSnooze + " currentTimeMillis is: " + System.currentTimeMillis());
-                nstore.snoozeTo(System.currentTimeMillis() + (SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L));
+                notificationStore.snoozeTo(System.currentTimeMillis() + (SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L));
             }
             if (notification instanceof NotificationWithAction) {
                 ((NotificationWithAction) notification).action.run();

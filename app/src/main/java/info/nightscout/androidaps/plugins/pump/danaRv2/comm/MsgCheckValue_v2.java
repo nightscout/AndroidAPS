@@ -44,7 +44,7 @@ public class MsgCheckValue_v2 extends MessageBase {
         if (pump.model != DanaRPump.EXPORT_MODEL) {
             pump.lastConnection = 0;
             Notification notification = new Notification(Notification.WRONG_DRIVER, MainApp.gs(R.string.pumpdrivercorrected), Notification.NORMAL);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
             DanaRPlugin.getPlugin().disconnect("Wrong Model");
             log.error("Wrong model selected. Switching to Korean DanaR");
             DanaRKoreanPlugin.getPlugin().setPluginEnabled(PluginType.PUMP, true);
@@ -61,7 +61,7 @@ public class MsgCheckValue_v2 extends MessageBase {
             }
 
             ConfigBuilderPlugin.getPlugin().storeSettings("ChangingDanaRv2Driver");
-            RxBus.INSTANCE.send(new EventRebuildTabs());
+            RxBus.Companion.getINSTANCE().send(new EventRebuildTabs());
             ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
             return;
         }
@@ -69,7 +69,7 @@ public class MsgCheckValue_v2 extends MessageBase {
         if (pump.protocol != 2) {
             pump.lastConnection = 0;
             Notification notification = new Notification(Notification.WRONG_DRIVER, MainApp.gs(R.string.pumpdrivercorrected), Notification.NORMAL);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
             DanaRKoreanPlugin.getPlugin().disconnect("Wrong Model");
             log.error("Wrong model selected. Switching to non APS DanaR");
             (DanaRv2Plugin.getPlugin()).setPluginEnabled(PluginType.PUMP, false);
@@ -84,7 +84,7 @@ public class MsgCheckValue_v2 extends MessageBase {
             }
 
             ConfigBuilderPlugin.getPlugin().storeSettings("ChangingDanaRv2Driver");
-            RxBus.INSTANCE.send(new EventRebuildTabs());
+            RxBus.Companion.getINSTANCE().send(new EventRebuildTabs());
             ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("PumpDriverChange", null); // force new connection
             return;
         }

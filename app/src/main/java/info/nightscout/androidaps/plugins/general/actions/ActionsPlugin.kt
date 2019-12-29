@@ -5,8 +5,11 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object ActionsPlugin : PluginBase(PluginDescription()
+@Singleton
+class ActionsPlugin @Inject constructor(): PluginBase(PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(ActionsFragment::class.qualifiedName)
         .enableByDefault(Config.APS || Config.PUMPCONTROL)

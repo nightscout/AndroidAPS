@@ -38,7 +38,7 @@ class LoopFragment : Fragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        disposable += RxBus
+        disposable += RxBus.INSTANCE
                 .toObservable(EventLoopUpdateGui::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -47,7 +47,7 @@ class LoopFragment : Fragment() {
                     FabricPrivacy.logException(it)
                 })
 
-        disposable += RxBus
+        disposable += RxBus.INSTANCE
                 .toObservable(EventLoopSetLastRunGui::class.java)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({

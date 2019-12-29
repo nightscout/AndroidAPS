@@ -75,8 +75,8 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
             profile = new ProfileStore(new JSONObject(profileString));
             storeNSProfile();
             if (isEnabled(PluginType.PROFILE)) {
-                RxBus.INSTANCE.send(new EventProfileStoreChanged());
-                RxBus.INSTANCE.send(new EventNSProfileUpdateGUI());
+                RxBus.Companion.getINSTANCE().send(new EventProfileStoreChanged());
+                RxBus.Companion.getINSTANCE().send(new EventNSProfileUpdateGUI());
             }
             if (L.isEnabled(L.PROFILE))
                 log.debug("Received profileStore: " + activeProfile + " " + profile);
@@ -108,7 +108,7 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
             if (L.isEnabled(L.PROFILE))
                 log.debug("Stored profile not found");
             // force restart of nsclient to fetch profile
-            RxBus.INSTANCE.send(new EventNSClientRestart());
+            RxBus.Companion.getINSTANCE().send(new EventNSClientRestart());
         }
     }
 

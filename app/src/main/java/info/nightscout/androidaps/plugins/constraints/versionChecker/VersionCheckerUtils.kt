@@ -97,7 +97,7 @@ fun onNewVersionDetected(currentVersion: String, newVersion: String?) {
     if (now > SP.getLong(R.string.key_last_versionchecker_warning, 0) + WARN_EVERY) {
         log.debug("Version ${currentVersion} outdated. Found $newVersion")
         val notification = Notification(Notification.NEWVERSIONDETECTED, String.format(MainApp.gs(R.string.versionavailable), newVersion.toString()), Notification.LOW)
-        RxBus.send(EventNewNotification(notification))
+        RxBus.INSTANCE.send(EventNewNotification(notification))
         SP.putLong(R.string.key_last_versionchecker_warning, now)
     }
 }

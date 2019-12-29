@@ -27,7 +27,7 @@ public class SWEventListener extends SWItem {
     SWEventListener(SWDefinition definition, Class clazz) {
         super(Type.LISTENER);
         this.definition = definition;
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(clazz)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {

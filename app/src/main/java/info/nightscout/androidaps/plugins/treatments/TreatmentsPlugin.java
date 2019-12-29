@@ -129,7 +129,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         this.service = new TreatmentService();
         initializeData(range());
         super.onStart();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventReloadTreatmentData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -137,23 +137,23 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                             initializeTreatmentData(range());
                             initializeExtendedBolusData(range());
                             updateTotalIOBTreatments();
-                            RxBus.INSTANCE.send(event.getNext());
+                            RxBus.Companion.getINSTANCE().send(event.getNext());
                         },
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventReloadProfileSwitchData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> initializeProfileSwitchData(range()),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> initializeTempTargetData(range()),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventReloadTempBasalData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -779,7 +779,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
-        RxBus.INSTANCE.send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
+        RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         MainApp.getDbHelper().createOrUpdate(profileSwitch);
         NSUpload.uploadProfileSwitch(profileSwitch);
     }

@@ -53,12 +53,12 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
-
+/*
     protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
             .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump_driver));
     protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult().success(false)
             .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
-
+*/
     protected PumpDescription pumpDescription = new PumpDescription();
     protected PumpStatus pumpStatus;
     protected ServiceConnection serviceConnection = null;
@@ -74,8 +74,6 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
         pumpDescription.setPumpDescription(pumpType);
 
-        initPumpStatusData();
-
     }
 
 
@@ -85,13 +83,16 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     @Override
     protected void onStart() {
         super.onStart();
+        // TODO: moved from constructor .... test if it works
+        initPumpStatusData();
+
         Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, getServiceClass());
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
         serviceRunning = true;
 
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -426,7 +427,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
                 bolusingEvent.setT(new Treatment());
                 bolusingEvent.getT().isSMB = detailedBolusInfo.isSMB;
                 bolusingEvent.setPercent(100);
-                RxBus.INSTANCE.send(bolusingEvent);
+                RxBus.Companion.getINSTANCE().send(bolusingEvent);
 
                 if (isLoggingEnabled())
                     LOG.debug("deliverTreatment: Carb only treatment.");

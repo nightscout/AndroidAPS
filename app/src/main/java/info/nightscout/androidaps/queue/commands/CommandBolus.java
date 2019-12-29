@@ -33,7 +33,7 @@ public class CommandBolus extends Command {
         PumpEnactResult r = ConfigBuilderPlugin.getPlugin().getActivePump().deliverTreatment(detailedBolusInfo);
 
         BolusProgressDialog.bolusEnded = true;
-        RxBus.INSTANCE.send(new EventDismissBolusProgressIfRunning(r));
+        RxBus.Companion.getINSTANCE().send(new EventDismissBolusProgressIfRunning(r));
         if (L.isEnabled(L.PUMPQUEUE))
             log.debug("Result success: " + r.success + " enacted: " + r.enacted);
 

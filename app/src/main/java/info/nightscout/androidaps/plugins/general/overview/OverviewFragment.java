@@ -45,6 +45,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -95,6 +98,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
+import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
@@ -122,7 +126,9 @@ import io.reactivex.disposables.CompositeDisposable;
 
 import static info.nightscout.androidaps.utils.DateUtil.now;
 
-public class OverviewFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener {
+public class OverviewFragment extends DaggerFragment implements View.OnClickListener, View.OnLongClickListener {
+    @Inject NotificationStore notificationStore;
+
     private static Logger log = LoggerFactory.getLogger(L.OVERVIEW);
 
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -355,85 +361,85 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventRefreshOverview.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(eventOpenAPSUpdateGui -> scheduleUpdateGUI(eventOpenAPSUpdateGui.getFrom()),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventExtendedBolusChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventExtendedBolusChange"),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTempBasalChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventTempBasalChange"),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTreatmentChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventTreatmentChange"),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventTempTargetChange"),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAcceptOpenLoopChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventAcceptOpenLoopChange"),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventCareportalEventChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventCareportalEventChange"),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventInitializationChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventInitializationChanged"),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventAutosensCalculationFinished"),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventProfileNeedsUpdate.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventProfileNeedsUpdate"),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventPreferenceChange"),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNewOpenLoopNotification.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventNewOpenLoopNotification"),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updatePumpStatus(event.getStatus()),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventIobCalculationProgress.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
@@ -1002,7 +1008,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             timeView.setText(DateUtil.timeString(new Date()));
         }
 
-        OverviewPlugin.INSTANCE.getNotificationStore().updateNotifications(notificationsView);
+        notificationStore.updateNotifications(notificationsView);
 
         pumpStatusLayout.setVisibility(View.GONE);
         loopStatusLayout.setVisibility(View.GONE);

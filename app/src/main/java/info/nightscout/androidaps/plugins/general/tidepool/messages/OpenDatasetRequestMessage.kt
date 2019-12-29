@@ -12,7 +12,7 @@ import java.util.*
 class OpenDatasetRequestMessage : BaseMessage() {
 
     @Expose
-    var deviceId: String = TidepoolUploader.PUMPTYPE + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.serialNumber()
+    var deviceId: String = TidepoolUploader.PUMP_TYPE + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.serialNumber()
             ?: InstanceId.instanceId())
     @Expose
     var time = DateUtil.toISOAsUTC(DateUtil.now())
@@ -28,9 +28,9 @@ class OpenDatasetRequestMessage : BaseMessage() {
     @Expose
     var dataSetType = "continuous"
     @Expose
-    var deviceManufacturers = arrayOf(TidepoolUploader.PUMPTYPE)
+    var deviceManufacturers = arrayOf(TidepoolUploader.PUMP_TYPE)
     @Expose
-    var deviceModel = TidepoolUploader.PUMPTYPE
+    var deviceModel = TidepoolUploader.PUMP_TYPE
     @Expose
     var deviceTags = arrayOf("bgm", "cgm", "insulin-pump")
     @Expose

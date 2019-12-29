@@ -1,22 +1,29 @@
 package info.nightscout.androidaps.plugins.insulin
 
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Iob
 import info.nightscout.androidaps.interfaces.InsulinInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.plugins.bus.RxBus.send
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.treatments.Treatment
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import javax.inject.Inject
 
 /**
  * Created by adrian on 13.08.2017.
+ *
+ * parameters are injected from child class
+ *
  */
-abstract class InsulinOrefBasePlugin() : PluginBase(PluginDescription()
+abstract class InsulinOrefBasePlugin (
+    val rxBus: RxBusWrapper,
+    val resourceHelper: ResourceHelper
+) : PluginBase(PluginDescription()
     .mainType(PluginType.INSULIN)
     .fragmentClass(InsulinFragment::class.java.name)
     .shortName(R.string.insulin_shortname)
@@ -38,12 +45,12 @@ abstract class InsulinOrefBasePlugin() : PluginBase(PluginDescription()
         if (System.currentTimeMillis() - lastWarned > 60 * 1000) {
             lastWarned = System.currentTimeMillis()
             val notification = Notification(Notification.SHORT_DIA, String.format(notificationPattern, dia, MIN_DIA), Notification.URGENT)
-            send(EventNewNotification(notification))
+            rxBus.send(EventNewNotification(notification))
         }
     }
 
     private val notificationPattern: String
-        get() = MainApp.gs(R.string.dia_too_short)
+        get() = resourceHelper.gs(R.string.dia_too_short)
 
     open val userDefinedDia: Double
         get() {
@@ -79,7 +86,7 @@ abstract class InsulinOrefBasePlugin() : PluginBase(PluginDescription()
         var comment = commentStandardText()
         val userDia = userDefinedDia
         if (userDia < MIN_DIA) {
-            comment += "\n" + String.format(MainApp.gs(R.string.dia_too_short), userDia, MIN_DIA)
+            comment += "\n" + resourceHelper.gs(R.string.dia_too_short, userDia, MIN_DIA)
         }
         return comment
     }

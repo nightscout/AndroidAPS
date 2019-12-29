@@ -80,6 +80,7 @@ public class LoopPlugin extends PluginBase {
     private static LoopPlugin loopPlugin;
 
     @NonNull
+    @Deprecated
     public static LoopPlugin getPlugin() {
         if (loopPlugin == null) {
             loopPlugin = new LoopPlugin();
@@ -122,7 +123,7 @@ public class LoopPlugin extends PluginBase {
     protected void onStart() {
         createNotificationChannel();
         super.onStart();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -136,7 +137,7 @@ public class LoopPlugin extends PluginBase {
          * the event causing the calculation is not EventNewBg.
          * <p>
          */
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -280,7 +281,7 @@ public class LoopPlugin extends PluginBase {
                 String message = MainApp.gs(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
                 if (L.isEnabled(L.APS))
                     log.debug(message);
-                RxBus.INSTANCE.send(new EventLoopSetLastRunGui(message));
+                RxBus.Companion.getINSTANCE().send(new EventLoopSetLastRunGui(message));
                 return;
             }
             final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
@@ -294,7 +295,7 @@ public class LoopPlugin extends PluginBase {
             if (profile == null || !ProfileFunctions.getInstance().isProfileValid("Loop")) {
                 if (L.isEnabled(L.APS))
                     log.debug(MainApp.gs(R.string.noprofileselected));
-                RxBus.INSTANCE.send(new EventLoopSetLastRunGui(MainApp.gs(R.string.noprofileselected)));
+                RxBus.Companion.getINSTANCE().send(new EventLoopSetLastRunGui(MainApp.gs(R.string.noprofileselected)));
                 return;
             }
 
@@ -309,7 +310,7 @@ public class LoopPlugin extends PluginBase {
 
             // Check if we have any result
             if (result == null) {
-                RxBus.INSTANCE.send(new EventLoopSetLastRunGui(MainApp.gs(R.string.noapsselected)));
+                RxBus.Companion.getINSTANCE().send(new EventLoopSetLastRunGui(MainApp.gs(R.string.noapsselected)));
                 return;
             }
 
@@ -351,14 +352,14 @@ public class LoopPlugin extends PluginBase {
             if (isSuspended()) {
                 if (L.isEnabled(L.APS))
                     log.debug(MainApp.gs(R.string.loopsuspended));
-                RxBus.INSTANCE.send(new EventLoopSetLastRunGui(MainApp.gs(R.string.loopsuspended)));
+                RxBus.Companion.getINSTANCE().send(new EventLoopSetLastRunGui(MainApp.gs(R.string.loopsuspended)));
                 return;
             }
 
             if (pump.isSuspended()) {
                 if (L.isEnabled(L.APS))
                     log.debug(MainApp.gs(R.string.pumpsuspended));
-                RxBus.INSTANCE.send(new EventLoopSetLastRunGui(MainApp.gs(R.string.pumpsuspended)));
+                RxBus.Companion.getINSTANCE().send(new EventLoopSetLastRunGui(MainApp.gs(R.string.pumpsuspended)));
                 return;
             }
 
@@ -374,7 +375,7 @@ public class LoopPlugin extends PluginBase {
                         lastRun.tbrSetByPump = waiting;
                     if (resultAfterConstraints.bolusRequested)
                         lastRun.smbSetByPump = waiting;
-                    RxBus.INSTANCE.send(new EventLoopUpdateGui());
+                    RxBus.Companion.getINSTANCE().send(new EventLoopUpdateGui());
                     FabricPrivacy.getInstance().logCustom("APSRequest");
                     applyTBRRequest(resultAfterConstraints, profile, new Callback() {
                         @Override
@@ -395,11 +396,11 @@ public class LoopPlugin extends PluginBase {
                                                 LoopPlugin.getPlugin().invoke("tempBasalFallback", allowNotification, true);
                                             }).start();
                                         }
-                                        RxBus.INSTANCE.send(new EventLoopUpdateGui());
+                                        RxBus.Companion.getINSTANCE().send(new EventLoopUpdateGui());
                                     }
                                 });
                             }
-                            RxBus.INSTANCE.send(new EventLoopUpdateGui());
+                            RxBus.Companion.getINSTANCE().send(new EventLoopUpdateGui());
                         }
                     });
                 } else {
@@ -440,7 +441,7 @@ public class LoopPlugin extends PluginBase {
                             (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
                     // mId allows you to update the notification later on.
                     mNotificationManager.notify(Constants.notificationID, builder.build());
-                    RxBus.INSTANCE.send(new EventNewOpenLoopNotification());
+                    RxBus.Companion.getINSTANCE().send(new EventNewOpenLoopNotification());
 
                     // Send to Wear
                     ActionStringHandler.handleInitiate("changeRequest");
@@ -453,7 +454,7 @@ public class LoopPlugin extends PluginBase {
                 }
             }
 
-            RxBus.INSTANCE.send(new EventLoopUpdateGui());
+            RxBus.Companion.getINSTANCE().send(new EventLoopUpdateGui());
         } finally {
             if (L.isEnabled(L.APS))
                 log.debug("invoke end");
@@ -473,7 +474,7 @@ public class LoopPlugin extends PluginBase {
                     NSUpload.uploadDeviceStatus();
                     SP.incInt(R.string.key_ObjectivesmanualEnacts);
                 }
-                RxBus.INSTANCE.send(new EventAcceptOpenLoopChange());
+                RxBus.Companion.getINSTANCE().send(new EventAcceptOpenLoopChange());
             }
         });
         FabricPrivacy.getInstance().logCustom("AcceptTemp");
@@ -485,7 +486,7 @@ public class LoopPlugin extends PluginBase {
      */
 
     public void applyTBRRequest(APSResult request, Profile profile, Callback callback) {
-        boolean allowPercentage = VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP);
+        boolean allowPercentage = VirtualPumpPlugin.Companion.getPlugin().isEnabled(PluginType.PUMP);
 
         if (!request.tempBasalRequested) {
             if (callback != null) {

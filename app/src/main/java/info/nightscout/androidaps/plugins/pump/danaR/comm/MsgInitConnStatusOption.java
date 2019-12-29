@@ -46,9 +46,9 @@ public class MsgInitConnStatusOption extends MessageBase {
 
         if (!DanaRPump.getInstance().isPasswordOK()) {
             Notification notification = new Notification(Notification.WRONG_PUMP_PASSWORD, MainApp.gs(R.string.wrongpumppassword), Notification.URGENT);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
         } else {
-            RxBus.INSTANCE.send(new EventDismissNotification(Notification.WRONG_PUMP_PASSWORD));
+            RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.WRONG_PUMP_PASSWORD));
         }
 
         // This is last message of initial sequence

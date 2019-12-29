@@ -7,18 +7,26 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
-import info.nightscout.androidaps.plugins.general.automation.events.*
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationAddAction
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateAction
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
+import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateTrigger
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.automation_dialog_event.*
+import javax.inject.Inject
 
 class EditEventDialog : DialogFragmentWithDate() {
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var automationPlugin: AutomationPlugin
 
     private var actionListAdapter: ActionListAdapter? = null
     private var event: AutomationEvent = AutomationEvent()
@@ -61,49 +69,48 @@ class EditEventDialog : DialogFragmentWithDate() {
 
         showPreconditions()
 
-        disposable.add(RxBus
-                .toObservable(EventAutomationUpdateGui::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    actionListAdapter?.notifyDataSetChanged()
-                    showPreconditions()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
-        )
-        disposable.add(RxBus
-                .toObservable(EventAutomationAddAction::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    event.addAction(it.action)
-                    actionListAdapter?.notifyDataSetChanged()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
-        )
-        disposable.add(RxBus
-                .toObservable(EventAutomationUpdateTrigger::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    event.trigger = it.trigger
-                    automation_triggerDescription.text = event.trigger.friendlyDescription()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
-        )
-        disposable.add(RxBus
-                .toObservable(EventAutomationUpdateAction::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    event.actions[it.position] = it.action
-                    actionListAdapter?.notifyDataSetChanged()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
-        )
+        disposable += rxBus
+            .toObservable(EventAutomationUpdateGui::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                actionListAdapter?.notifyDataSetChanged()
+                showPreconditions()
+            }, {
+                FabricPrivacy.logException(it)
+            }
+            )
+        disposable += rxBus
+            .toObservable(EventAutomationAddAction::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                event.addAction(it.action)
+                actionListAdapter?.notifyDataSetChanged()
+            }, {
+                FabricPrivacy.logException(it)
+            }
+            )
+        disposable += rxBus
+            .toObservable(EventAutomationUpdateTrigger::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                event.trigger = it.trigger
+                automation_triggerDescription.text = event.trigger.friendlyDescription()
+            }, {
+                FabricPrivacy.logException(it)
+            }
+            )
+        disposable += rxBus
+            .toObservable(EventAutomationUpdateAction::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                event.actions[it.position] = it.action
+                actionListAdapter?.notifyDataSetChanged()
+            }, {
+                FabricPrivacy.logException(it)
+            })
     }
 
-    override fun submit() : Boolean{
+    override fun submit(): Boolean {
         // check for title
         val title = automation_inputEventTitle.text.toString()
         if (title.isEmpty()) {
@@ -124,11 +131,11 @@ class EditEventDialog : DialogFragmentWithDate() {
         }
         // store
         if (position == -1)
-            AutomationPlugin.automationEvents.add(event)
+            automationPlugin.automationEvents.add(event)
         else
-            AutomationPlugin.automationEvents[position] = event
+            automationPlugin.automationEvents[position] = event
 
-        RxBus.send(EventAutomationDataChanged())
+        rxBus.send(EventAutomationDataChanged())
         return true
     }
 

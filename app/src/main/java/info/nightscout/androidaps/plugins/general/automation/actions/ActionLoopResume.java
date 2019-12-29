@@ -29,7 +29,7 @@ public class ActionLoopResume extends Action {
             LoopPlugin.getPlugin().suspendTo(0);
             ConfigBuilderPlugin.getPlugin().storeSettings("ActionLoopResume");
             NSUpload.uploadOpenAPSOffline(0);
-            RxBus.INSTANCE.send(new EventRefreshOverview("ActionLoopResume"));
+            RxBus.Companion.getINSTANCE().send(new EventRefreshOverview("ActionLoopResume"));
             if (callback != null)
                 callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
         } else {

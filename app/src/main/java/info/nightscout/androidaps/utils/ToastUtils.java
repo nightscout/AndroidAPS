@@ -28,7 +28,7 @@ public class ToastUtils {
         showToastInUiThread(ctx, string);
         playSound(ctx, soundID);
         Notification notification = new Notification(Notification.TOAST_ALARM, string, Notification.URGENT);
-        RxBus.INSTANCE.send(new EventNewNotification(notification));
+        RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
     }
 
     private static void playSound(final Context ctx, final int soundID) {

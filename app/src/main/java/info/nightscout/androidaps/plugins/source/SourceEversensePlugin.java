@@ -33,6 +33,7 @@ public class SourceEversensePlugin extends PluginBase implements BgSourceInterfa
 
     private static SourceEversensePlugin plugin = null;
 
+    @Deprecated
     public static SourceEversensePlugin getPlugin() {
         if (plugin == null)
             plugin = new SourceEversensePlugin();

@@ -252,7 +252,7 @@ public class CommandQueue {
                 // not when the Bolus command is starting. The command closes the dialog upon completion).
                 showBolusProgressDialog(detailedBolusInfo.insulin, detailedBolusInfo.context);
                 // Notify Wear about upcoming bolus
-                RxBus.INSTANCE.send(new EventBolusRequested(detailedBolusInfo.insulin));
+                RxBus.Companion.getINSTANCE().send(new EventBolusRequested(detailedBolusInfo.insulin));
             }
         }
 
@@ -278,7 +278,7 @@ public class CommandQueue {
 
     public synchronized void cancelAllBoluses() {
         if (!isRunning(Command.CommandType.BOLUS)) {
-            RxBus.INSTANCE.send(new EventDismissBolusProgressIfRunning(new PumpEnactResult().success(true).enacted(false)));
+            RxBus.Companion.getINSTANCE().send(new EventDismissBolusProgressIfRunning(new PumpEnactResult().success(true).enacted(false)));
         }
         removeAll(Command.CommandType.BOLUS);
         removeAll(Command.CommandType.SMB_BOLUS);
@@ -398,7 +398,7 @@ public class CommandQueue {
 
         if (!MainApp.isEngineeringModeOrRelease()) {
             Notification notification = new Notification(Notification.NOT_ENG_MODE_OR_RELEASE, MainApp.gs(R.string.not_eng_mode_or_release), Notification.URGENT);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
             if (callback != null)
                 callback.result(new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.not_eng_mode_or_release))).run();
             return false;
@@ -411,14 +411,14 @@ public class CommandQueue {
         for (Profile.ProfileValue basalValue : basalValues) {
             if (basalValue.value < pump.getPumpDescription().basalMinimumRate) {
                 Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.gs(R.string.basalvaluebelowminimum), Notification.URGENT);
-                RxBus.INSTANCE.send(new EventNewNotification(notification));
+                RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
                 if (callback != null)
                     callback.result(new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.basalvaluebelowminimum))).run();
                 return false;
             }
         }
 
-        RxBus.INSTANCE.send(new EventDismissNotification(Notification.BASAL_VALUE_BELOW_MINIMUM));
+        RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.BASAL_VALUE_BELOW_MINIMUM));
 
         // remove all unfinished
         removeAll(Command.CommandType.BASALPROFILE);

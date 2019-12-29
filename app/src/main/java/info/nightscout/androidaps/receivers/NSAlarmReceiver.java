@@ -41,11 +41,11 @@ public class NSAlarmReceiver extends BroadcastReceiver {
             case Intents.ACTION_URGENT_ALARM:
                 Notification notification = new Notification(nsAlarm);
                 if (notification.isEnabled())
-                    RxBus.INSTANCE.send(new EventNewNotification(notification));
+                    RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
                 break;
             case Intents.ACTION_CLEAR_ALARM:
-                RxBus.INSTANCE.send(new EventDismissNotification(Notification.NSALARM));
-                RxBus.INSTANCE.send(new EventDismissNotification(Notification.NSURGENTALARM));
+                RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.NSALARM));
+                RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.NSURGENTALARM));
                 break;
         }
     }

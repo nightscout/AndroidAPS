@@ -82,7 +82,7 @@ public class NSClientFragment extends Fragment implements View.OnClickListener, 
     @Override
     public synchronized void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNSClientUpdateGUI.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGui(), FabricPrivacy::logException)
@@ -100,7 +100,7 @@ public class NSClientFragment extends Fragment implements View.OnClickListener, 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.nsclientinternal_restart:
-                RxBus.INSTANCE.send(new EventNSClientRestart());
+                RxBus.Companion.getINSTANCE().send(new EventNSClientRestart());
                 FabricPrivacy.getInstance().logCustom("NSClientRestart");
                 break;
             case R.id.nsclientinternal_delivernow:
@@ -118,7 +118,7 @@ public class NSClientFragment extends Fragment implements View.OnClickListener, 
                 });
                 break;
             case R.id.nsclientinternal_showqueue:
-                RxBus.INSTANCE.send(new EventNSClientNewLog("QUEUE", NSClientPlugin.getPlugin().queue().textList()));
+                RxBus.Companion.getINSTANCE().send(new EventNSClientNewLog("QUEUE", NSClientPlugin.getPlugin().queue().textList()));
                 break;
         }
     }

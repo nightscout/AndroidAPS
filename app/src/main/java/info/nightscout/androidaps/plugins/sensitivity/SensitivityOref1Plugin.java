@@ -33,6 +33,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
 
     static SensitivityOref1Plugin plugin = null;
 
+    @Deprecated
     public static SensitivityOref1Plugin getPlugin() {
         if (plugin == null)
             plugin = new SensitivityOref1Plugin();

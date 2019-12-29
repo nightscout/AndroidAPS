@@ -156,22 +156,22 @@ public class NSSettingsStatus {
             try {
                 if (nsClientVersionCode < MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode) {
                     Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.gs(R.string.unsupportedclientver), Notification.URGENT);
-                    RxBus.INSTANCE.send(new EventNewNotification(notification));
+                    RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
                 } else {
-                    RxBus.INSTANCE.send(new EventDismissNotification(Notification.OLD_NSCLIENT));
+                    RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.OLD_NSCLIENT));
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 log.error("Unhandled exception", e);
             }
             if (nightscoutVersionCode < Config.SUPPORTEDNSVERSION) {
                 Notification notification = new Notification(Notification.OLD_NS, MainApp.gs(R.string.unsupportednsversion), Notification.NORMAL);
-                RxBus.INSTANCE.send(new EventNewNotification(notification));
+                RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
             } else {
-                RxBus.INSTANCE.send(new EventDismissNotification(Notification.OLD_NS));
+                RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.OLD_NS));
             }
         } else {
             Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.gs(R.string.unsupportedclientver), Notification.URGENT);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
         }
         if (bundle.containsKey("status")) {
             try {

@@ -35,7 +35,7 @@ public class DummyService extends Service {
         // TODO: I guess this was moved here in order to adhere to the 5 seconds rule to call "startForeground" after a Service was called as Foreground service?
         // As onCreate() is not called every time a service is started, copied to onStartCommand().
         startForeground(PersistentNotificationPlugin.ONGOING_NOTIFICATION_ID, PersistentNotificationPlugin.getPlugin().getLastNotification());
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {

@@ -120,7 +120,7 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
     @Override
     public synchronized void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventCareportalEventChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGUI(), FabricPrivacy::logException)

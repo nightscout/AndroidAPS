@@ -30,6 +30,7 @@ public class SourcePoctechPlugin extends PluginBase implements BgSourceInterface
 
     private static SourcePoctechPlugin plugin = null;
 
+    @Deprecated
     public static SourcePoctechPlugin getPlugin() {
         if (plugin == null)
             plugin = new SourcePoctechPlugin();

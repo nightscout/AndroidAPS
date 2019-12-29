@@ -200,6 +200,6 @@ public class MsgHistoryEvents_v2 extends MessageBase {
         if (datetime > lastEventTimeLoaded)
             lastEventTimeLoaded = datetime;
 
-        RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.processinghistory) + ": " + status));
+        RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(MainApp.gs(R.string.processinghistory) + ": " + status));
     }
 }

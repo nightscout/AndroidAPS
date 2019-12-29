@@ -11,9 +11,7 @@ import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
 import info.nightscout.androidaps.utils.T;
 
 public class Objective5 extends Objective {
-
-    @Inject
-    SafetyPlugin safetyPlugin;
+    @Inject SafetyPlugin safetyPlugin;
 
     public Objective5() {
         super("maxiobzero", R.string.objectives_maxiobzero_objective, R.string.objectives_maxiobzero_gate);

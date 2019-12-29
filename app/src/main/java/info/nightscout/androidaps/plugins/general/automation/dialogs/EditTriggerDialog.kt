@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateTrigger
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import kotlinx.android.synthetic.main.automation_dialog_edit_trigger.*
+import javax.inject.Inject
 
 class EditTriggerDialog : DialogFragmentWithDate() {
+    @Inject lateinit var rxBus: RxBusWrapper
 
     private var trigger: Trigger? = null
 
@@ -33,8 +35,8 @@ class EditTriggerDialog : DialogFragmentWithDate() {
         trigger?.generateDialog(automation_layoutTrigger, fragmentManager)
     }
 
-    override fun submit():Boolean {
-        trigger?.let { trigger -> RxBus.send(EventAutomationUpdateTrigger(trigger)) }
+    override fun submit(): Boolean {
+        trigger?.let { trigger -> rxBus.send(EventAutomationUpdateTrigger(trigger)) }
         return true
     }
 

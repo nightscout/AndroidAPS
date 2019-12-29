@@ -6,13 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.actions.Action
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateAction
 import kotlinx.android.synthetic.main.automation_dialog_action.*
 import org.json.JSONObject
+import javax.inject.Inject
 
 class EditActionDialog : DialogFragmentWithDate() {
+    @Inject lateinit var rxBus: RxBusWrapper
+
     private var action: Action? = null
     private var actionPosition: Int = -1
 
@@ -39,7 +42,7 @@ class EditActionDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         action?.let {
-            RxBus.send(EventAutomationUpdateAction(it, actionPosition))
+            rxBus.send(EventAutomationUpdateAction(it, actionPosition))
         }
         return true
     }

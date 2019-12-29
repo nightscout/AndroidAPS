@@ -34,6 +34,7 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
 
     static SensitivityAAPSPlugin plugin = null;
 
+    @Deprecated
     public static SensitivityAAPSPlugin getPlugin() {
         if (plugin == null)
             plugin = new SensitivityAAPSPlugin();

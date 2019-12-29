@@ -126,7 +126,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         setupTabs();
         setupViews();
 
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventRebuildTabs.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
@@ -140,7 +140,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                     setWakeLock();
                 }, FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::processPreferenceChange, FabricPrivacy::logException)
@@ -322,7 +322,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 return true;
             case R.id.nav_exit:
                 aapsLogger.debug(LTag.CORE, "Exiting");
-                RxBus.INSTANCE.send(new EventAppExit());
+                RxBus.Companion.getINSTANCE().send(new EventAppExit());
                 finish();
                 System.runFinalization();
                 System.exit(0);

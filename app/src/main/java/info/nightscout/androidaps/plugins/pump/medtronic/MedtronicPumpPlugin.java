@@ -372,7 +372,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             refreshAnyStatusThatNeedsToBeRefreshed();
         }
 
-        RxBus.INSTANCE.send(new EventMedtronicPumpValuesChanged());
+        RxBus.Companion.getINSTANCE().send(new EventMedtronicPumpValuesChanged());
     }
 
 
@@ -496,7 +496,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     private void setRefreshButtonEnabled(boolean enabled) {
-        RxBus.INSTANCE.send(new EventRefreshButtonState(enabled));
+        RxBus.Companion.getINSTANCE().send(new EventRefreshButtonState(enabled));
     }
 
 
@@ -712,7 +712,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
 
     protected void triggerUIChange() {
-        RxBus.INSTANCE.send(new EventMedtronicPumpValuesChanged());
+        RxBus.Companion.getINSTANCE().send(new EventMedtronicPumpValuesChanged());
     }
 
     private BolusDeliveryType bolusDeliveryType = BolusDeliveryType.Idle;
@@ -766,7 +766,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
                 if (clock.timeDifference == 0) {
                     Notification notification = new Notification(Notification.INSIGHT_DATE_TIME_UPDATED, MainApp.gs(R.string.pump_time_updated), Notification.INFO, 60);
-                    RxBus.INSTANCE.send(new EventNewNotification(notification));
+                    RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
                 }
             } else {
                 if ((clock.localDeviceTime.getYear() > 2015)) {
@@ -1085,7 +1085,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private void finishAction(String overviewKey) {
 
         if (overviewKey != null)
-            RxBus.INSTANCE.send(new EventRefreshOverview(overviewKey));
+            RxBus.Companion.getINSTANCE().send(new EventRefreshOverview(overviewKey));
 
         triggerUIChange();
 
@@ -1608,7 +1608,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
     private void refreshCustomActionsList() {
-        RxBus.INSTANCE.send(new EventCustomActionsChanged());
+        RxBus.Companion.getINSTANCE().send(new EventCustomActionsChanged());
     }
 
 

@@ -106,7 +106,7 @@ public abstract class AbstractDanaRExecutionService extends Service {
                     if (mSerialIOThread != null) {
                         mSerialIOThread.disconnect("BT disconnection broadcast");
                     }
-                    RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED));
+                    RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED));
                 }
             }
         }
@@ -136,7 +136,7 @@ public abstract class AbstractDanaRExecutionService extends Service {
 
     public void finishHandshaking() {
         mHandshakeInProgress = false;
-        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED, 0));
+        RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED, 0));
     }
 
     public void disconnect(String from) {
@@ -244,7 +244,7 @@ public abstract class AbstractDanaRExecutionService extends Service {
             long timeToWholeMinute = (60000 - time % 60000);
             if (timeToWholeMinute > 59800 || timeToWholeMinute < 3000)
                 break;
-            RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.waitingfortimesynchronization, (int) (timeToWholeMinute / 1000))));
+            RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(MainApp.gs(R.string.waitingfortimesynchronization, (int) (timeToWholeMinute / 1000))));
             SystemClock.sleep(Math.min(timeToWholeMinute, 100));
         }
     }

@@ -196,12 +196,12 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
     @Override
     public synchronized void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTempBasalChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGui(), FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGui(), FabricPrivacy::logException)

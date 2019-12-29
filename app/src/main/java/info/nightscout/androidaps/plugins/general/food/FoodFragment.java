@@ -125,7 +125,7 @@ public class FoodFragment extends Fragment {
     @Override
     public synchronized void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventFoodDatabaseChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGui(), FabricPrivacy::logException)

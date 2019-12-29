@@ -33,7 +33,7 @@ public class NSAddAck extends Event implements Ack {
                     nsClientID = response.getString("NSCLIENT_ID");
                 }
             }
-            RxBus.INSTANCE.send(this);
+            RxBus.Companion.getINSTANCE().send(this);
             return;
         } catch (Exception e) {
             log.error("Unhandled exception", e);
@@ -44,7 +44,7 @@ public class NSAddAck extends Event implements Ack {
             if (response.has("result")) {
                 _id = null;
                 if (response.getString("result").contains("Not")) {
-                    RxBus.INSTANCE.send(new EventNSClientRestart());
+                    RxBus.Companion.getINSTANCE().send(new EventNSClientRestart());
                     return;
                 }
                 if (L.isEnabled(L.NSCLIENT))

@@ -49,9 +49,9 @@ public class MsgInitConnStatusBolus_k extends MessageBase {
 
         if (!pump.isExtendedBolusEnabled) {
             Notification notification = new Notification(Notification.EXTENDED_BOLUS_DISABLED, MainApp.gs(R.string.danar_enableextendedbolus), Notification.URGENT);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
         } else {
-            RxBus.INSTANCE.send(new EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED));
+            RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED));
         }
 
         // This is last message of initial sequence

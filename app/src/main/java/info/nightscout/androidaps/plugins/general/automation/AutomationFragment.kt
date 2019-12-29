@@ -5,12 +5,12 @@ import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
 import info.nightscout.androidaps.plugins.general.automation.dragHelpers.OnStartDragListener
 import info.nightscout.androidaps.plugins.general.automation.dragHelpers.SimpleItemTouchHelperCallback
@@ -22,11 +22,14 @@ import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.automation_fragment.*
+import javax.inject.Inject
 
-class AutomationFragment : Fragment(), OnStartDragListener {
+class AutomationFragment : DaggerFragment(), OnStartDragListener {
+    @Inject lateinit var automationPlugin: AutomationPlugin
+    @Inject lateinit var rxBus: RxBusWrapper
 
     private var disposable: CompositeDisposable = CompositeDisposable()
-    private var eventListAdapter: EventListAdapter? = null
+    private lateinit var eventListAdapter: EventListAdapter
 
     private var itemTouchHelper: ItemTouchHelper? = null
 
@@ -37,11 +40,11 @@ class AutomationFragment : Fragment(), OnStartDragListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        eventListAdapter = EventListAdapter(AutomationPlugin.automationEvents, fragmentManager, activity, this)
+        eventListAdapter = EventListAdapter(automationPlugin.automationEvents, fragmentManager, activity, this)
         automation_eventListView.layoutManager = LinearLayoutManager(context)
         automation_eventListView.adapter = eventListAdapter
 
-        automation_logView.setMovementMethod(ScrollingMovementMethod())
+        automation_logView.movementMethod = ScrollingMovementMethod()
 
         automation_fabAddEvent.setOnClickListener {
             val dialog = EditEventDialog()
@@ -52,7 +55,7 @@ class AutomationFragment : Fragment(), OnStartDragListener {
             fragmentManager?.let { dialog.show(it, "EditEventDialog") }
         }
 
-        val callback: ItemTouchHelper.Callback = SimpleItemTouchHelperCallback(eventListAdapter!!)
+        val callback: ItemTouchHelper.Callback = SimpleItemTouchHelperCallback(eventListAdapter)
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper?.attachToRecyclerView(automation_eventListView)
 
@@ -61,22 +64,22 @@ class AutomationFragment : Fragment(), OnStartDragListener {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        disposable += RxBus
-                .toObservable(EventAutomationUpdateGui::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateGui()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
-        disposable += RxBus
-                .toObservable(EventAutomationDataChanged::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    eventListAdapter?.notifyDataSetChanged()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+        disposable += rxBus
+            .toObservable(EventAutomationUpdateGui::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                updateGui()
+            }, {
+                FabricPrivacy.logException(it)
+            })
+        disposable += rxBus
+            .toObservable(EventAutomationDataChanged::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                eventListAdapter.notifyDataSetChanged()
+            }, {
+                FabricPrivacy.logException(it)
+            })
         updateGui()
     }
 
@@ -88,15 +91,15 @@ class AutomationFragment : Fragment(), OnStartDragListener {
 
     @Synchronized
     private fun updateGui() {
-        eventListAdapter?.notifyDataSetChanged()
+        eventListAdapter.notifyDataSetChanged()
         val sb = StringBuilder()
-        for (l in AutomationPlugin.executionLog.reversed())
+        for (l in automationPlugin.executionLog.reversed())
             sb.append(l).append("<br>")
         automation_logView?.text = HtmlHelper.fromHtml(sb.toString())
     }
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
-        itemTouchHelper?.startDrag(viewHolder);
+        itemTouchHelper?.startDrag(viewHolder)
     }
 
 }

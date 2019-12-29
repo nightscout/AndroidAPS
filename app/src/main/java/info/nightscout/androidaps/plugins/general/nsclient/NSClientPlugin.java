@@ -50,6 +50,7 @@ public class NSClientPlugin extends PluginBase {
 
     static NSClientPlugin nsClientPlugin;
 
+    @Deprecated
     static public NSClientPlugin getPlugin() {
         if (nsClientPlugin == null) {
             nsClientPlugin = new NSClientPlugin();
@@ -110,25 +111,25 @@ public class NSClientPlugin extends PluginBase {
         super.onStart();
 
         nsClientReceiverDelegate.grabReceiversState();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNSClientStatus.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     status = event.getStatus();
-                    RxBus.INSTANCE.send(new EventNSClientUpdateGUI());
+                    RxBus.Companion.getINSTANCE().send(new EventNSClientUpdateGUI());
                 }, FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNetworkChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -137,7 +138,7 @@ public class NSClientPlugin extends PluginBase {
                     }
                 }, FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNSClientNewLog.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -146,7 +147,7 @@ public class NSClientPlugin extends PluginBase {
                         log.debug(event.getAction() + " " + event.getLogText());
                 }, FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventChargingState.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), FabricPrivacy::logException)
@@ -199,7 +200,7 @@ public class NSClientPlugin extends PluginBase {
             synchronized (listLog) {
                 listLog.clear();
             }
-            RxBus.INSTANCE.send(new EventNSClientUpdateGUI());
+            RxBus.Companion.getINSTANCE().send(new EventNSClientUpdateGUI());
         });
     }
 
@@ -212,7 +213,7 @@ public class NSClientPlugin extends PluginBase {
                     listLog.remove(0);
                 }
             }
-            RxBus.INSTANCE.send(new EventNSClientUpdateGUI());
+            RxBus.Companion.getINSTANCE().send(new EventNSClientUpdateGUI());
         });
     }
 
@@ -238,7 +239,7 @@ public class NSClientPlugin extends PluginBase {
     public void pause(boolean newState) {
         SP.putBoolean(R.string.key_nsclientinternal_paused, newState);
         paused = newState;
-        RxBus.INSTANCE.send(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
+        RxBus.Companion.getINSTANCE().send(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
     }
 
     public UploadQueue queue() {

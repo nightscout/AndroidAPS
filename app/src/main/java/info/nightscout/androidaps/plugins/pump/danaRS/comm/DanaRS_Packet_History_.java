@@ -224,7 +224,7 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
 
             MainApp.getDbHelper().createOrUpdate(danaRHistoryRecord);
 
-            RxBus.INSTANCE.send(new EventDanaRSyncStatus(DateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType));
+            RxBus.Companion.getINSTANCE().send(new EventDanaRSyncStatus(DateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType));
 
         }
     }

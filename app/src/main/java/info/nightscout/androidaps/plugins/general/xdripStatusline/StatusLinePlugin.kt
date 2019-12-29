@@ -9,9 +9,8 @@ import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.TreatmentsInterface
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBus.toObservable
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -19,6 +18,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutos
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
@@ -29,9 +29,11 @@ import javax.inject.Singleton
 @Singleton
 class StatusLinePlugin @Inject constructor(
     private val sp: SP,
+    private val rxBus: RxBusWrapper,
     private val profileFunction: ProfileFunction,
     private val resourceHelper: ResourceHelper,
     private val configBuilderPlugin: ConfigBuilderPlugin,
+    private val treatmentsPlugin: TreatmentsPlugin,
     private val mainApp: MainApp) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -56,30 +58,30 @@ class StatusLinePlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        disposable.add(toObservable(EventRefreshOverview::class.java)
+        disposable += rxBus.toObservable(EventRefreshOverview::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ if (lastLoopStatus != LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)) sendStatus() }) { FabricPrivacy.logException(it) })
-        disposable.add(toObservable(EventExtendedBolusChange::class.java)
+            .subscribe({ if (lastLoopStatus != LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)) sendStatus() }) { FabricPrivacy.logException(it) }
+        disposable += rxBus.toObservable(EventExtendedBolusChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) })
-        disposable.add(toObservable(EventTempBasalChange::class.java)
+            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
+        disposable += rxBus.toObservable(EventTempBasalChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) })
-        disposable.add(toObservable(EventTreatmentChange::class.java)
+            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
+        disposable += rxBus.toObservable(EventTreatmentChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) })
-        disposable.add(toObservable(EventConfigBuilderChange::class.java)
+            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
+        disposable += rxBus.toObservable(EventConfigBuilderChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) })
-        disposable.add(toObservable(EventAutosensCalculationFinished::class.java)
+            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
+        disposable += rxBus.toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) })
-        disposable.add(toObservable(EventPreferenceChange::class.java)
+            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
+        disposable += rxBus.toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) })
-        disposable.add(toObservable(EventAppInitialized::class.java)
+            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
+        disposable += rxBus.toObservable(EventAppInitialized::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) })
+            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
     }
 
     override fun onStop() {
@@ -114,16 +116,15 @@ class StatusLinePlugin @Inject constructor(
             lastLoopStatus = true
         }
         //Temp basal
-        val treatmentsInterface: TreatmentsInterface = TreatmentsPlugin.getPlugin()
-        val activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis())
+        val activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())
         if (activeTemp != null) {
             status += activeTemp.toStringShort() + " "
         }
         //IOB
-        treatmentsInterface.updateTotalIOBTreatments()
-        val bolusIob = treatmentsInterface.lastCalculationTreatments.round()
-        treatmentsInterface.updateTotalIOBTempBasals()
-        val basalIob = treatmentsInterface.lastCalculationTempBasals.round()
+        treatmentsPlugin.updateTotalIOBTreatments()
+        val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
+        treatmentsPlugin.updateTotalIOBTempBasals()
+        val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
         status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U"
         if (sp.getBoolean(R.string.key_xdripstatus_detailediob, true)) {
             status += ("("

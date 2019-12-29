@@ -12,14 +12,12 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.AAPSLoggerDebug
 import info.nightscout.androidaps.logging.AAPSLoggerProduction
 import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
-import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective5
+import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionSendSMS
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.commands.CommandSetProfile
-import info.nightscout.androidaps.services.DataService
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -37,14 +35,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideProfileFunction(sp: SP): ProfileFunction {
-        return ProfileFunctionImplementation(sp)
-    }
-
-    @Provides
-    @Singleton
-    fun provideConstraintChecker(mainApp: MainApp): ConstraintChecker {
-        return ConstraintChecker(mainApp)
+    fun provideProfileFunction(sp: SP, configBuilderPlugin: ConfigBuilderPlugin): ProfileFunction {
+        return ProfileFunctionImplementation(sp, configBuilderPlugin)
     }
 
     @Provides
@@ -66,22 +58,16 @@ class AppModule {
     @Module
     interface AppBindings {
 
-        @ContributesAndroidInjector
-        fun dataServiceInjector(): DataService
+        @ContributesAndroidInjector fun commandSetProfileInjector(): CommandSetProfile
+        @ContributesAndroidInjector fun actionSendSMSInjector(): ActionSendSMS
+        @ContributesAndroidInjector fun objective0Injector(): Objective0
+        @ContributesAndroidInjector fun objective1Injector(): Objective1
+        @ContributesAndroidInjector fun objective2Injector(): Objective2
+        @ContributesAndroidInjector fun objective3Injector(): Objective3
+        @ContributesAndroidInjector fun objective5Injector(): Objective5
+        @ContributesAndroidInjector fun objective6Injector(): Objective6
+        @ContributesAndroidInjector fun loggerCallbackInjector(): LoggerCallback
 
-        @ContributesAndroidInjector
-        fun commandSetProfileInjector(): CommandSetProfile
-
-        @ContributesAndroidInjector
-        fun actionSendSMSInjector(): ActionSendSMS
-
-        @ContributesAndroidInjector
-        fun objective5Injector(): Objective5
-
-        @ContributesAndroidInjector
-        fun loggerCallbackInjector(): LoggerCallback
-
-        @Binds
-        fun bindContext(mainApp: MainApp): Context
+        @Binds fun bindContext(mainApp: MainApp): Context
     }
 }

@@ -47,23 +47,23 @@ import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
 public class MyPreferenceFragment extends PreferenceFragment implements HasAndroidInjector {
     private Integer id;
 
-    @Inject
-    DispatchingAndroidInjector<Object> androidInjector;
+    @Inject DispatchingAndroidInjector<Object> androidInjector;
 
-    @Inject
-    OpenAPSAMAPlugin openAPSAMAPlugin;
-    @Inject
-    OpenAPSMAPlugin openAPSMAPlugin;
-    @Inject
-    OpenAPSSMBPlugin openAPSSMBPlugin;
-    @Inject
-    InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
-    @Inject
-    SafetyPlugin safetyPlugin;
-    @Inject
-    SmsCommunicatorPlugin smsCommunicatorPlugin;
-    @Inject
-    StatusLinePlugin statusLinePlugin;
+    @Inject AutomationPlugin automationPlugin;
+    @Inject DanaRPlugin danaRPlugin;
+    @Inject DanaRKoreanPlugin danaRKoreanPlugin;
+    @Inject DanaRv2Plugin danaRv2Plugin;
+    @Inject DanaRSPlugin danaRSPlugin;
+    @Inject CareportalPlugin careportalPlugin;
+    @Inject InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
+    @Inject OpenAPSAMAPlugin openAPSAMAPlugin;
+    @Inject OpenAPSMAPlugin openAPSMAPlugin;
+    @Inject OpenAPSSMBPlugin openAPSSMBPlugin;
+    @Inject SafetyPlugin safetyPlugin;
+    @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
+    @Inject StatusLinePlugin statusLinePlugin;
+    @Inject TidepoolPlugin tidepoolPlugin;
+    @Inject VirtualPumpPlugin virtualPumpPlugin;
 
     @Override
     public void setArguments(Bundle args) {
@@ -105,7 +105,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
             addPreferencesFromResource(R.xml.pref_overview);
 
             addPreferencesFromResourceIfEnabled(SourceDexcomPlugin.INSTANCE, PluginType.BGSOURCE);
-            addPreferencesFromResourceIfEnabled(CareportalPlugin.getPlugin(), PluginType.GENERAL);
+            addPreferencesFromResourceIfEnabled(careportalPlugin, PluginType.GENERAL);
             addPreferencesFromResourceIfEnabled(safetyPlugin, PluginType.CONSTRAINTS);
             if (Config.APS) {
                 addPreferencesFromResourceIfEnabled(LoopPlugin.getPlugin(), PluginType.LOOP);
@@ -120,25 +120,25 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
             addPreferencesFromResourceIfEnabled(SensitivityOref1Plugin.getPlugin(), PluginType.SENSITIVITY);
 
             if (Config.PUMPDRIVERS) {
-                addPreferencesFromResourceIfEnabled(DanaRPlugin.getPlugin(), PluginType.PUMP);
-                addPreferencesFromResourceIfEnabled(DanaRKoreanPlugin.getPlugin(), PluginType.PUMP);
-                addPreferencesFromResourceIfEnabled(DanaRv2Plugin.getPlugin(), PluginType.PUMP);
-                addPreferencesFromResourceIfEnabled(DanaRSPlugin.getPlugin(), PluginType.PUMP);
+                addPreferencesFromResourceIfEnabled(danaRPlugin, PluginType.PUMP);
+                addPreferencesFromResourceIfEnabled(danaRKoreanPlugin, PluginType.PUMP);
+                addPreferencesFromResourceIfEnabled(danaRv2Plugin, PluginType.PUMP);
+                addPreferencesFromResourceIfEnabled(danaRSPlugin, PluginType.PUMP);
                 addPreferencesFromResourceIfEnabled(LocalInsightPlugin.getPlugin(), PluginType.PUMP);
                 addPreferencesFromResourceIfEnabled(ComboPlugin.getPlugin(), PluginType.PUMP);
                 addPreferencesFromResourceIfEnabled(MedtronicPumpPlugin.getPlugin(), PluginType.PUMP);
             }
 
             if (!Config.NSCLIENT) {
-                addPreferencesFromResourceIfEnabled(VirtualPumpPlugin.getPlugin(), PluginType.PUMP);
+                addPreferencesFromResourceIfEnabled(virtualPumpPlugin, PluginType.PUMP);
             }
 
             addPreferencesFromResourceIfEnabled(insulinOrefFreePeakPlugin, PluginType.INSULIN);
 
             addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), PluginType.GENERAL);
-            addPreferencesFromResourceIfEnabled(TidepoolPlugin.INSTANCE, PluginType.GENERAL);
+            addPreferencesFromResourceIfEnabled(tidepoolPlugin, PluginType.GENERAL);
             addPreferencesFromResourceIfEnabled(smsCommunicatorPlugin, PluginType.GENERAL);
-            addPreferencesFromResourceIfEnabled(AutomationPlugin.INSTANCE, PluginType.GENERAL);
+            addPreferencesFromResourceIfEnabled(automationPlugin, PluginType.GENERAL);
 
             addPreferencesFromResource(R.xml.pref_others);
             addPreferencesFromResource(R.xml.pref_datachoices);

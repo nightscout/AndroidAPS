@@ -20,7 +20,7 @@ internal class TidepoolCallback<T>(private val session: Session, val name: Strin
         } else {
             val msg = name + " was not successful: " + response.code() + " " + response.message()
             if (L.isEnabled(L.TIDEPOOL)) log.debug(msg)
-            RxBus.send(EventTidepoolStatus(msg))
+            RxBus.INSTANCE.send(EventTidepoolStatus(msg))
             onFail()
         }
     }
@@ -28,7 +28,7 @@ internal class TidepoolCallback<T>(private val session: Session, val name: Strin
     override fun onFailure(call: Call<T>, t: Throwable) {
         val msg = "$name Failed: $t"
         if (L.isEnabled(L.TIDEPOOL)) log.debug(msg)
-        RxBus.send(EventTidepoolStatus(msg))
+        RxBus.INSTANCE.send(EventTidepoolStatus(msg))
         onFail()
     }
 

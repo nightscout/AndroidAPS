@@ -28,6 +28,7 @@ public class SourceNSClientPlugin extends PluginBase implements BgSourceInterfac
 
     private static SourceNSClientPlugin plugin = null;
 
+    @Deprecated
     public static SourceNSClientPlugin getPlugin() {
         if (plugin == null)
             plugin = new SourceNSClientPlugin();

@@ -6,10 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateResultGui
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.JSONFormatter
@@ -17,14 +16,13 @@ import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.openapsama_fragment.*
-import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class OpenAPSMAFragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    @Inject
-    lateinit var openAPSMAPlugin: OpenAPSMAPlugin
+    @Inject lateinit var openAPSMAPlugin: OpenAPSMAPlugin
+    @Inject lateinit var rxBus: RxBusWrapper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -44,7 +42,7 @@ class OpenAPSMAFragment : DaggerFragment() {
     override fun onResume() {
         super.onResume()
 
-        disposable += RxBus
+        disposable += rxBus
             .toObservable(EventOpenAPSUpdateGui::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -52,7 +50,7 @@ class OpenAPSMAFragment : DaggerFragment() {
             }, {
                 FabricPrivacy.logException(it)
             })
-        disposable += RxBus
+        disposable += rxBus
             .toObservable(EventOpenAPSUpdateResultGui::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({

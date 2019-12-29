@@ -29,6 +29,7 @@ public class StorageConstraintPlugin extends PluginBase implements ConstraintsIn
     private static Logger log = LoggerFactory.getLogger(L.CONSTRAINTS);
     static StorageConstraintPlugin plugin = null;
 
+    @Deprecated
     public static StorageConstraintPlugin getPlugin() {
         if (plugin == null)
             plugin = new StorageConstraintPlugin();
@@ -57,9 +58,9 @@ public class StorageConstraintPlugin extends PluginBase implements ConstraintsIn
         if (diskfree < Constants.MINIMUM_FREE_SPACE) {
             value.set(false, MainApp.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE), this);
             Notification notification = new Notification(Notification.DISKFULL, MainApp.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE), Notification.NORMAL);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
         } else {
-            RxBus.INSTANCE.send(new EventDismissNotification(Notification.DISKFULL));
+            RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.DISKFULL));
         }
 
         return value;

@@ -31,7 +31,7 @@ public class ActionLoopDisable extends Action {
             ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
-                    RxBus.INSTANCE.send(new EventRefreshOverview("ActionLoopDisable"));
+                    RxBus.Companion.getINSTANCE().send(new EventRefreshOverview("ActionLoopDisable"));
                     if (callback != null)
                         callback.result(result).run();
                 }

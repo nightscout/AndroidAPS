@@ -61,14 +61,14 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        RxBus.INSTANCE.send(new EventPreferenceChange(key));
+        RxBus.Companion.getINSTANCE().send(new EventPreferenceChange(key));
         if (key.equals(MainApp.gs(R.string.key_language))) {
-            RxBus.INSTANCE.send(new EventRebuildTabs(true));
+            RxBus.Companion.getINSTANCE().send(new EventRebuildTabs(true));
             //recreate() does not update language so better close settings
             finish();
         }
         if (key.equals(MainApp.gs(R.string.key_short_tabtitles))) {
-            RxBus.INSTANCE.send(new EventRebuildTabs());
+            RxBus.Companion.getINSTANCE().send(new EventRebuildTabs());
         }
         if (key.equals(MainApp.gs(R.string.key_units))) {
             recreate();

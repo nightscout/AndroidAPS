@@ -192,13 +192,13 @@ public class MedtronicUITask {
         }
 
         if (responseType == MedtronicUIResponseType.Invalid) {
-            RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
+            RxBus.Companion.getINSTANCE().send(new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
                     "Unsupported command in MedtronicUITask"));
         } else if (responseType == MedtronicUIResponseType.Error) {
-            RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
+            RxBus.Companion.getINSTANCE().send(new EventMedtronicDeviceStatusChange(PumpDeviceState.ErrorWhenCommunicating,
                     errorDescription));
         } else {
-            RxBus.INSTANCE.send(new EventMedtronicPumpValuesChanged());
+            RxBus.Companion.getINSTANCE().send(new EventMedtronicPumpValuesChanged());
             MedtronicUtil.getPumpStatus().setLastCommunicationToNow();
         }
 

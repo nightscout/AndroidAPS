@@ -7,14 +7,17 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.automation.actions.Action
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationAddAction
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
 import kotlinx.android.synthetic.main.automation_dialog_choose_action.*
+import javax.inject.Inject
 
 class ChooseActionDialog : DialogFragmentWithDate() {
+    @Inject lateinit var automationPlugin: AutomationPlugin
+    @Inject lateinit var rxBus: RxBusWrapper
 
     private var checkedIndex = -1
 
@@ -32,7 +35,7 @@ class ChooseActionDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        for (a in AutomationPlugin.getActionDummyObjects()) {
+        for (a in automationPlugin.getActionDummyObjects()) {
             val radioButton = RadioButton(context)
             radioButton.setText(a.friendlyName())
             radioButton.tag = a.javaClass
@@ -45,8 +48,8 @@ class ChooseActionDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         instantiateAction()?.let {
-            RxBus.send(EventAutomationAddAction(it))
-            RxBus.send(EventAutomationUpdateGui())
+            rxBus.send(EventAutomationAddAction(it))
+            rxBus.send(EventAutomationUpdateGui())
         }
         return true
     }

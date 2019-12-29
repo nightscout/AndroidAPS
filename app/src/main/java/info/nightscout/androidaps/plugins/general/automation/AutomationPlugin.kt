@@ -12,9 +12,10 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
@@ -22,27 +23,37 @@ import info.nightscout.androidaps.plugins.general.automation.triggers.*
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.services.LocationService
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import org.slf4j.LoggerFactory
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object AutomationPlugin : PluginBase(PluginDescription()
-        .mainType(PluginType.GENERAL)
-        .fragmentClass(AutomationFragment::class.qualifiedName)
-        .pluginName(R.string.automation)
-        .shortName(R.string.automation_short)
-        .preferencesId(R.xml.pref_automation)
-        .description(R.string.automation_description)) {
+@Singleton
+class AutomationPlugin @Inject constructor(
+    private val rxBus: RxBusWrapper,
+    private val aapsLogger: AAPSLogger,
+    private val mainApp: MainApp,
+    private val sp :SP
+) : PluginBase(PluginDescription()
+    .mainType(PluginType.GENERAL)
+    .fragmentClass(AutomationFragment::class.qualifiedName)
+    .pluginName(R.string.automation)
+    .shortName(R.string.automation_short)
+    .preferencesId(R.xml.pref_automation)
+    .description(R.string.automation_description)) {
 
-    private val log = LoggerFactory.getLogger(L.AUTOMATION)
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    private const val key_AUTOMATION_EVENTS = "AUTOMATION_EVENTS"
+    private val keyAutomationEvents = "AUTOMATION_EVENTS"
 
     val automationEvents = ArrayList<AutomationEvent>()
     var executionLog: MutableList<String> = ArrayList()
@@ -58,72 +69,70 @@ object AutomationPlugin : PluginBase(PluginDescription()
     }
 
     override fun onStart() {
-        val context = MainApp.instance().applicationContext
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            context.startForegroundService(Intent(context, LocationService::class.java))
+            mainApp.startForegroundService(Intent(mainApp, LocationService::class.java))
         else
-            context.startService(Intent(context, LocationService::class.java))
+            mainApp.startService(Intent(mainApp, LocationService::class.java))
 
         super.onStart()
         loadFromSP()
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
 
-        disposable += RxBus
-                .toObservable(EventPreferenceChange::class.java)
-                .observeOn(Schedulers.io())
-                .subscribe({ e ->
-                    if (e.isChanged(R.string.key_location)) {
-                        context.stopService(Intent(context, LocationService::class.java))
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                            context.startForegroundService(Intent(context, LocationService::class.java))
-                        else
-                            context.startService(Intent(context, LocationService::class.java))
-                    }
-                }, {
-                    FabricPrivacy.logException(it)
-                })
-        disposable += RxBus
-                .toObservable(EventAutomationDataChanged::class.java)
-                .observeOn(Schedulers.io())
-                .subscribe({ storeToSP() }, {
-                    FabricPrivacy.logException(it)
-                })
-        disposable += RxBus
-                .toObservable(EventLocationChange::class.java)
-                .observeOn(Schedulers.io())
-                .subscribe({ e ->
-                    e?.let {
-                        log.debug("Grabbed location: $it.location.latitude $it.location.longitude Provider: $it.location.provider")
-                        processActions()
-                    }
-                }, {
-                    FabricPrivacy.logException(it)
-                })
-        disposable += RxBus
-                .toObservable(EventChargingState::class.java)
-                .observeOn(Schedulers.io())
-                .subscribe({ processActions() }, {
-                    FabricPrivacy.logException(it)
-                })
-        disposable += RxBus
-                .toObservable(EventNetworkChange::class.java)
-                .observeOn(Schedulers.io())
-                .subscribe({ processActions() }, {
-                    FabricPrivacy.logException(it)
-                })
-        disposable += RxBus
-                .toObservable(EventAutosensCalculationFinished::class.java)
-                .observeOn(Schedulers.io())
-                .subscribe({ processActions() }, {
-                    FabricPrivacy.logException(it)
-                })
+        disposable += rxBus
+            .toObservable(EventPreferenceChange::class.java)
+            .observeOn(Schedulers.io())
+            .subscribe({ e ->
+                if (e.isChanged(R.string.key_location)) {
+                    mainApp.stopService(Intent(mainApp, LocationService::class.java))
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                        mainApp.startForegroundService(Intent(mainApp, LocationService::class.java))
+                    else
+                        mainApp.startService(Intent(mainApp, LocationService::class.java))
+                }
+            }, {
+                FabricPrivacy.logException(it)
+            })
+        disposable += rxBus
+            .toObservable(EventAutomationDataChanged::class.java)
+            .observeOn(Schedulers.io())
+            .subscribe({ storeToSP() }, {
+                FabricPrivacy.logException(it)
+            })
+        disposable += rxBus
+            .toObservable(EventLocationChange::class.java)
+            .observeOn(Schedulers.io())
+            .subscribe({ e ->
+                e?.let {
+                    aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: $it.location.latitude $it.location.longitude Provider: $it.location.provider")
+                    processActions()
+                }
+            }, {
+                FabricPrivacy.logException(it)
+            })
+        disposable += rxBus
+            .toObservable(EventChargingState::class.java)
+            .observeOn(Schedulers.io())
+            .subscribe({ processActions() }, {
+                FabricPrivacy.logException(it)
+            })
+        disposable += rxBus
+            .toObservable(EventNetworkChange::class.java)
+            .observeOn(Schedulers.io())
+            .subscribe({ processActions() }, {
+                FabricPrivacy.logException(it)
+            })
+        disposable += rxBus
+            .toObservable(EventAutosensCalculationFinished::class.java)
+            .observeOn(Schedulers.io())
+            .subscribe({ processActions() }, {
+                FabricPrivacy.logException(it)
+            })
     }
 
     override fun onStop() {
         disposable.clear()
         loopHandler.removeCallbacks(refreshLoop)
-        val context = MainApp.instance().applicationContext
-        context.stopService(Intent(context, LocationService::class.java))
+        mainApp.stopService(Intent(mainApp, LocationService::class.java))
         super.onStop()
     }
 
@@ -137,12 +146,12 @@ object AutomationPlugin : PluginBase(PluginDescription()
             e.printStackTrace()
         }
 
-        SP.putString(key_AUTOMATION_EVENTS, array.toString())
+        sp.putString(keyAutomationEvents, array.toString())
     }
 
     private fun loadFromSP() {
         automationEvents.clear()
-        val data = SP.getString(key_AUTOMATION_EVENTS, "")
+        val data = sp.getString(keyAutomationEvents, "")
         if (data != "") {
             try {
                 val array = JSONArray(data)
@@ -162,13 +171,11 @@ object AutomationPlugin : PluginBase(PluginDescription()
         if (!isEnabled(PluginType.GENERAL))
             return
         if (LoopPlugin.getPlugin().isSuspended || !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)) {
-            if (L.isEnabled(L.AUTOMATION))
-                log.debug("Loop deactivated")
+            aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")
             return
         }
 
-        if (L.isEnabled(L.AUTOMATION))
-            log.debug("processActions")
+        aapsLogger.debug(LTag.AUTOMATION, "processActions")
         for (event in automationEvents) {
             if (event.isEnabled && event.trigger.shouldRun() && event.preconditions.shouldRun()) {
                 val actions = event.actions
@@ -186,9 +193,8 @@ object AutomationPlugin : PluginBase(PluginDescription()
                             sb.append(": ")
                             sb.append(result.comment)
                             executionLog.add(sb.toString())
-                            if (L.isEnabled(L.AUTOMATION))
-                                log.debug("Executed: $sb")
-                            RxBus.send(EventAutomationUpdateGui())
+                            aapsLogger.debug(LTag.AUTOMATION, "Executed: $sb")
+                            rxBus.send(EventAutomationUpdateGui())
                         }
                     })
                 }
@@ -200,35 +206,35 @@ object AutomationPlugin : PluginBase(PluginDescription()
 
     fun getActionDummyObjects(): List<Action> {
         return listOf(
-                //ActionLoopDisable(),
-                //ActionLoopEnable(),
-                //ActionLoopResume(),
-                //ActionLoopSuspend(),
-                ActionStartTempTarget(),
-                ActionStopTempTarget(),
-                ActionNotification(),
-                ActionProfileSwitchPercent(),
-                ActionProfileSwitch(),
-                ActionSendSMS()
+            //ActionLoopDisable(),
+            //ActionLoopEnable(),
+            //ActionLoopResume(),
+            //ActionLoopSuspend(),
+            ActionStartTempTarget(),
+            ActionStopTempTarget(),
+            ActionNotification(),
+            ActionProfileSwitchPercent(),
+            ActionProfileSwitch(),
+            ActionSendSMS()
         )
     }
 
     fun getTriggerDummyObjects(): List<Trigger> {
         return listOf(
-                TriggerTime(),
-                TriggerRecurringTime(),
-                TriggerTimeRange(),
-                TriggerBg(),
-                TriggerDelta(),
-                TriggerIob(),
-                TriggerCOB(),
-                TriggerProfilePercent(),
-                TriggerTempTarget(),
-                TriggerWifiSsid(),
-                TriggerLocation(),
-                TriggerAutosensValue(),
-                TriggerBolusAgo(),
-                TriggerPumpLastConnection()
+            TriggerTime(),
+            TriggerRecurringTime(),
+            TriggerTimeRange(),
+            TriggerBg(),
+            TriggerDelta(),
+            TriggerIob(),
+            TriggerCOB(),
+            TriggerProfilePercent(),
+            TriggerTempTarget(),
+            TriggerWifiSsid(),
+            TriggerLocation(),
+            TriggerAutosensValue(),
+            TriggerBolusAgo(),
+            TriggerPumpLastConnection()
         )
     }
 

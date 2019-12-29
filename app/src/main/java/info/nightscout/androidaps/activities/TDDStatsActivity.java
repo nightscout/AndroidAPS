@@ -77,12 +77,12 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> statusView.setText(event.getStatus()), FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventDanaRSyncStatus.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {

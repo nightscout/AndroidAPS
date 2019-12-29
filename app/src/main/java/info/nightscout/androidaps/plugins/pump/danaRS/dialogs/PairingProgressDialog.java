@@ -109,7 +109,7 @@ public class PairingProgressDialog extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventDanaRSPairingSuccess.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> pairingEnded = true, FabricPrivacy::logException)

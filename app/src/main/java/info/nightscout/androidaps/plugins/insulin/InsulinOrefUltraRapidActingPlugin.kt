@@ -3,12 +3,20 @@ package info.nightscout.androidaps.plugins.insulin
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
 /**
  * Created by adrian on 14/08/17.
  */
-class InsulinOrefUltraRapidActingPlugin @Inject constructor(): InsulinOrefBasePlugin() {
+class InsulinOrefUltraRapidActingPlugin @Inject constructor(
+    private val sp: SP,
+    resourceHelper: ResourceHelper,
+    rxBus: RxBusWrapper
+) : InsulinOrefBasePlugin(rxBus, resourceHelper) {
+
 
     override fun getId(): Int {
         return InsulinInterface.OREF_ULTRA_RAPID_ACTING
@@ -23,7 +31,6 @@ class InsulinOrefUltraRapidActingPlugin @Inject constructor(): InsulinOrefBasePl
     }
 
     override val peak = 55
-
 
     init {
         pluginDescription

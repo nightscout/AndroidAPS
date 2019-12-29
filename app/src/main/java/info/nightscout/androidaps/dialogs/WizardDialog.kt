@@ -20,7 +20,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
@@ -42,20 +42,14 @@ import kotlin.math.abs
 class WizardDialog : DaggerDialogFragment() {
     private val log = LoggerFactory.getLogger(WizardDialog::class.java)
 
-    @Inject
-    lateinit var constraintChecker: ConstraintChecker
-
-    @Inject
-    lateinit var mainApp: MainApp
-
-    @Inject
-    lateinit var resourceHelper: ResourceHelper
-
-    @Inject
-    lateinit var profileFunction: ProfileFunction
-
-    @Inject
-    lateinit var sp: SP
+    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var sp: SP
+    @Inject lateinit var rxBus: RxBusWrapper
 
     private var wizard: BolusWizard? = null
 
@@ -108,7 +102,7 @@ class WizardDialog : DaggerDialogFragment() {
             ?: 0.0, 0.0, 500.0, 0.1, DecimalFormat("0.0"), false, ok, textWatcher)
         treatments_wizard_carbs_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carbs_input")
             ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, ok, textWatcher)
-        val bolusStep = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription?.bolusStep
+        val bolusStep = configBuilderPlugin.activePump?.pumpDescription?.bolusStep
             ?: 0.1
         treatments_wizard_correction_input.setParams(savedInstanceState?.getDouble("treatments_wizard_correction_input")
             ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
@@ -165,7 +159,7 @@ class WizardDialog : DaggerDialogFragment() {
             }
         }
         // bus
-        disposable.add(RxBus
+        disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -184,7 +178,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("UNUSED_PARAMETER") state: Boolean) {
         saveCheckedStates()
-        treatments_wizard_ttcheckbox.isEnabled = treatments_wizard_bgcheckbox.isChecked && TreatmentsPlugin.getPlugin().tempTargetFromHistory != null
+        treatments_wizard_ttcheckbox.isEnabled = treatments_wizard_bgcheckbox.isChecked && treatmentsPlugin.tempTargetFromHistory != null
         if (buttonView.id == treatments_wizard_cobcheckbox.id)
             processCobCheckBox()
         calculateInsulin()
@@ -214,7 +208,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun initDialog() {
         val profile = profileFunction.getProfile()
-        val profileStore = ConfigBuilderPlugin.getPlugin().activeProfileInterface.profile
+        val profileStore = configBuilderPlugin.activeProfileInterface.profile
 
         if (profile == null || profileStore == null) {
             ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.noprofile))
@@ -245,13 +239,13 @@ class WizardDialog : DaggerDialogFragment() {
         } else {
             treatments_wizard_bg_input.value = 0.0
         }
-        treatments_wizard_ttcheckbox.isEnabled = TreatmentsPlugin.getPlugin().tempTargetFromHistory != null
+        treatments_wizard_ttcheckbox.isEnabled = treatmentsPlugin.tempTargetFromHistory != null
 
         // IOB calculation
-        TreatmentsPlugin.getPlugin().updateTotalIOBTreatments()
-        val bolusIob = TreatmentsPlugin.getPlugin().lastCalculationTreatments.round()
-        TreatmentsPlugin.getPlugin().updateTotalIOBTempBasals()
-        val basalIob = TreatmentsPlugin.getPlugin().lastCalculationTempBasals.round()
+        treatmentsPlugin.updateTotalIOBTreatments()
+        val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
+        treatmentsPlugin.updateTotalIOBTempBasals()
+        val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
 
         treatments_wizard_bolusiobinsulin.text = StringUtils.formatInsulin(-bolusIob.iob)
         treatments_wizard_basaliobinsulin.text = StringUtils.formatInsulin(-basalIob.basaliob)
@@ -262,7 +256,7 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private fun calculateInsulin() {
-        val profileStore = ConfigBuilderPlugin.getPlugin().activeProfileInterface.profile
+        val profileStore = configBuilderPlugin.activeProfileInterface.profile
         if (treatments_wizard_profile.selectedItem == null || profileStore == null)
             return  // not initialized yet
         var profileName = treatments_wizard_profile.selectedItem.toString()
@@ -287,7 +281,7 @@ class WizardDialog : DaggerDialogFragment() {
         }
 
         bg = if (treatments_wizard_bgcheckbox.isChecked) bg else 0.0
-        val tempTarget = if (treatments_wizard_ttcheckbox.isChecked) TreatmentsPlugin.getPlugin().tempTargetFromHistory else null
+        val tempTarget = if (treatments_wizard_ttcheckbox.isChecked) treatmentsPlugin.tempTargetFromHistory else null
 
         // COB
         var cob = 0.0

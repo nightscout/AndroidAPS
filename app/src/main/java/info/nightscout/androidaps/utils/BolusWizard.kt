@@ -281,7 +281,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
                         val loopPlugin = LoopPlugin.getPlugin()
                         if (loopPlugin.isEnabled(PluginType.LOOP)) {
                             loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000)
-                            RxBus.send(EventRefreshOverview("WizardDialog"))
+                            RxBus.INSTANCE.send(EventRefreshOverview("WizardDialog"))
                         }
 
                         val pump1 = ConfigBuilderPlugin.getPlugin().activePump

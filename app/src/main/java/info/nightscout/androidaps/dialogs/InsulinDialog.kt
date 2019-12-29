@@ -35,18 +35,12 @@ import kotlin.math.abs
 import kotlin.math.max
 
 class InsulinDialog : DialogFragmentWithDate() {
-
-    @Inject
-    lateinit var constraintChecker: ConstraintChecker
-
-    @Inject
-    lateinit var mainApp: MainApp
-
-    @Inject
-    lateinit var resourceHelper: ResourceHelper
-
-    @Inject
-    lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
 
     companion object {
         private const val PLUS1_DEFAULT = 0.5
@@ -95,24 +89,24 @@ class InsulinDialog : DialogFragmentWithDate() {
         overview_insulin_time.setParams(savedInstanceState?.getDouble("overview_insulin_time")
             ?: 0.0, -12 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
         overview_insulin_amount.setParams(savedInstanceState?.getDouble("overview_insulin_amount")
-            ?: 0.0, 0.0, maxInsulin, ConfigBuilderPlugin.getPlugin().activePump!!.pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
+            ?: 0.0, 0.0, maxInsulin, configBuilderPlugin.activePump!!.pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
 
-        overview_insulin_plus05.text = toSignedString(SP.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
+        overview_insulin_plus05.text = toSignedString(sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
         overview_insulin_plus05.setOnClickListener {
             overview_insulin_amount.value = max(0.0, overview_insulin_amount.value
-                + SP.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
+                + sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
             validateInputs()
         }
-        overview_insulin_plus10.text = toSignedString(SP.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
+        overview_insulin_plus10.text = toSignedString(sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
         overview_insulin_plus10.setOnClickListener {
             overview_insulin_amount.value = max(0.0, overview_insulin_amount.value
-                + SP.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
+                + sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
             validateInputs()
         }
-        overview_insulin_plus20.text = toSignedString(SP.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
+        overview_insulin_plus20.text = toSignedString(sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
         overview_insulin_plus20.setOnClickListener {
             overview_insulin_amount.value = Math.max(0.0, overview_insulin_amount.value
-                + SP.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
+                + sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
             validateInputs()
         }
 
@@ -128,7 +122,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription
+        val pumpDescription = configBuilderPlugin.activePump?.pumpDescription
             ?: return false
         val insulin = SafeParse.stringToDouble(overview_insulin_amount.text)
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()
@@ -170,7 +164,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                             .source(Source.USER)
                             .low(Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()))
                             .high(Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()))
-                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
+                        treatmentsPlugin.addToHistoryTempTarget(tempTarget)
                     }
                     if (insulinAfterConstraints > 0) {
                         val detailedBolusInfo = DetailedBolusInfo()
@@ -181,10 +175,10 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.notes = notes
                         if (recordOnlyChecked) {
                             detailedBolusInfo.date = time
-                            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false)
+                            treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false)
                         } else {
                             detailedBolusInfo.date = DateUtil.now()
-                            ConfigBuilderPlugin.getPlugin().commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                            configBuilderPlugin.commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
                                         val i = Intent(mainApp, ErrorHelperActivity::class.java)

@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.dialog.MedtronicHistory
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 
 @Module
+@Suppress("unused")
 abstract class ActivitiesModule {
 
     @ContributesAndroidInjector abstract fun contributesBLEScanActivity(): BLEScanActivity

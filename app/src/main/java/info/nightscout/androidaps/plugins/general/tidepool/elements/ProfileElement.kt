@@ -25,7 +25,7 @@ class ProfileElement private constructor(ps: ProfileSwitch)
     @Expose
     internal var insulinSensitivities: IsfProfile = IsfProfile()
     @Expose
-    internal var deviceId: String = TidepoolUploader.PUMPTYPE + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.serialNumber()
+    internal var deviceId: String = TidepoolUploader.PUMP_TYPE + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.serialNumber()
             ?: InstanceId.instanceId())
     @Expose
     internal var deviceSerialNumber: String = ConfigBuilderPlugin.getPlugin().activePump?.serialNumber()

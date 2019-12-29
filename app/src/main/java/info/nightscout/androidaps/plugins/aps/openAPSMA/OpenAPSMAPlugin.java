@@ -93,25 +93,25 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
         if (profile == null) {
-            RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.noprofileselected)));
+            RxBus.Companion.getINSTANCE().send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.noprofileselected)));
             aapsLogger.debug(LTag.APS, MainApp.gs(R.string.noprofileselected));
             return;
         }
 
         if (pump == null) {
-            RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.nopumpselected)));
+            RxBus.Companion.getINSTANCE().send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.nopumpselected)));
             aapsLogger.debug(LTag.APS, MainApp.gs(R.string.nopumpselected));
             return;
         }
 
         if (!isEnabled(PluginType.APS)) {
-            RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_disabled)));
+            RxBus.Companion.getINSTANCE().send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_disabled)));
             aapsLogger.debug(LTag.APS, MainApp.gs(R.string.openapsma_disabled));
             return;
         }
 
         if (glucoseStatus == null) {
-            RxBus.INSTANCE.send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_noglucosedata)));
+            RxBus.Companion.getINSTANCE().send(new EventOpenAPSUpdateResultGui(MainApp.gs(R.string.openapsma_noglucosedata)));
             aapsLogger.debug(LTag.APS, MainApp.gs(R.string.openapsma_noglucosedata));
             return;
         }
@@ -195,7 +195,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
             lastAPSResult = determineBasalResultMA;
             lastAPSRun = now;
         }
-        RxBus.INSTANCE.send(new EventOpenAPSUpdateGui());
+        RxBus.Companion.getINSTANCE().send(new EventOpenAPSUpdateGui());
     }
 
 

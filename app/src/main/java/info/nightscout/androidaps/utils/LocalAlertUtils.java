@@ -44,13 +44,13 @@ public class LocalAlertUtils {
             Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.gs(R.string.pump_unreachable), Notification.URGENT);
             n.soundId = R.raw.alarm;
             SP.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold());
-            RxBus.INSTANCE.send(new EventNewNotification(n));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(n));
             if (SP.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
                 NSUpload.uploadError(n.text);
             }
         }
         if (!isStatusOutdated && !alarmTimeoutExpired)
-            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PUMP_UNREACHABLE));
+            RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.PUMP_UNREACHABLE));
     }
 
     /*Presnoozes the alarms with 5 minutes if no snooze exists.
@@ -98,7 +98,7 @@ public class LocalAlertUtils {
             Notification n = new Notification(Notification.BG_READINGS_MISSED, MainApp.gs(R.string.missed_bg_readings), Notification.URGENT);
             n.soundId = R.raw.alarm;
             SP.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold());
-            RxBus.INSTANCE.send(new EventNewNotification(n));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(n));
             if (SP.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
                 NSUpload.uploadError(n.text);
             }

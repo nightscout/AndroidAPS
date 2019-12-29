@@ -32,15 +32,10 @@ import javax.inject.Inject
 import kotlin.math.max
 
 class CarbsDialog : DialogFragmentWithDate() {
-
-    @Inject
-    lateinit var mainApp: MainApp
-
-    @Inject
-    lateinit var resourceHelper: ResourceHelper
-
-    @Inject
-    lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
 
     companion object {
         private const val FAV1_DEFAULT = 5
@@ -100,30 +95,30 @@ class CarbsDialog : DialogFragmentWithDate() {
         overview_carbs_carbs.setParams(savedInstanceState?.getDouble("overview_carbs_carbs")
             ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, ok, textWatcher)
 
-        overview_carbs_plus1.text = toSignedString(SP.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT))
+        overview_carbs_plus1.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT))
         overview_carbs_plus1.setOnClickListener {
             overview_carbs_carbs.value = max(0.0, overview_carbs_carbs.value
-                + SP.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT))
+                + sp.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT))
             validateInputs()
         }
 
-        overview_carbs_plus2.text = toSignedString(SP.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT))
+        overview_carbs_plus2.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT))
         overview_carbs_plus2.setOnClickListener {
             overview_carbs_carbs.value = max(0.0, overview_carbs_carbs.value
-                + SP.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT))
+                + sp.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT))
             validateInputs()
         }
 
-        overview_carbs_plus3.text = toSignedString(SP.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT))
+        overview_carbs_plus3.text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT))
         overview_carbs_plus3.setOnClickListener {
             overview_carbs_carbs.value = max(0.0, overview_carbs_carbs.value
-                + SP.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT))
+                + sp.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT))
             validateInputs()
         }
 
         DatabaseHelper.actualBg()?.let { bgReading ->
             if (bgReading.value < 72)
-                overview_carbs_hypo_tt.setChecked(true)
+                overview_carbs_hypo_tt.isChecked = true
         }
         overview_carbs_hypo_tt.setOnClickListener {
             overview_carbs_activity_tt.isChecked = false
@@ -185,33 +180,39 @@ class CarbsDialog : DialogFragmentWithDate() {
         if (carbsAfterConstraints > 0 || activitySelected || eatingSoonSelected || hypoSelected) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
-                    if (activitySelected) {
-                        val tempTarget = TempTarget()
-                            .date(System.currentTimeMillis())
-                            .duration(activityTTDuration)
-                            .reason(resourceHelper.gs(R.string.activity))
-                            .source(Source.USER)
-                            .low(Profile.toMgdl(activityTT, ProfileFunctions.getSystemUnits()))
-                            .high(Profile.toMgdl(activityTT, ProfileFunctions.getSystemUnits()))
-                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
-                    } else if (eatingSoonSelected) {
-                        val tempTarget = TempTarget()
-                            .date(System.currentTimeMillis())
-                            .duration(eatingSoonTTDuration)
-                            .reason(resourceHelper.gs(R.string.eatingsoon))
-                            .source(Source.USER)
-                            .low(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
-                            .high(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
-                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
-                    } else if (hypoSelected) {
-                        val tempTarget = TempTarget()
-                            .date(System.currentTimeMillis())
-                            .duration(hypoTTDuration)
-                            .reason(resourceHelper.gs(R.string.hypo))
-                            .source(Source.USER)
-                            .low(Profile.toMgdl(hypoTT, ProfileFunctions.getSystemUnits()))
-                            .high(Profile.toMgdl(hypoTT, ProfileFunctions.getSystemUnits()))
-                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
+                    when {
+                        activitySelected   -> {
+                            val tempTarget = TempTarget()
+                                .date(System.currentTimeMillis())
+                                .duration(activityTTDuration)
+                                .reason(resourceHelper.gs(R.string.activity))
+                                .source(Source.USER)
+                                .low(Profile.toMgdl(activityTT, ProfileFunctions.getSystemUnits()))
+                                .high(Profile.toMgdl(activityTT, ProfileFunctions.getSystemUnits()))
+                            treatmentsPlugin.addToHistoryTempTarget(tempTarget)
+                        }
+
+                        eatingSoonSelected -> {
+                            val tempTarget = TempTarget()
+                                .date(System.currentTimeMillis())
+                                .duration(eatingSoonTTDuration)
+                                .reason(resourceHelper.gs(R.string.eatingsoon))
+                                .source(Source.USER)
+                                .low(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
+                                .high(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
+                            treatmentsPlugin.addToHistoryTempTarget(tempTarget)
+                        }
+
+                        hypoSelected       -> {
+                            val tempTarget = TempTarget()
+                                .date(System.currentTimeMillis())
+                                .duration(hypoTTDuration)
+                                .reason(resourceHelper.gs(R.string.hypo))
+                                .source(Source.USER)
+                                .low(Profile.toMgdl(hypoTT, ProfileFunctions.getSystemUnits()))
+                                .high(Profile.toMgdl(hypoTT, ProfileFunctions.getSystemUnits()))
+                            treatmentsPlugin.addToHistoryTempTarget(tempTarget)
+                        }
                     }
                     if (carbsAfterConstraints > 0) {
                         if (duration == 0) {

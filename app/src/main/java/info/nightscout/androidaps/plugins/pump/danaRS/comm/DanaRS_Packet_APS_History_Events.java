@@ -224,7 +224,7 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
         if (datetime > lastEventTimeLoaded)
             lastEventTimeLoaded = datetime;
 
-        RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.processinghistory) + ": " + status));
+        RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(MainApp.gs(R.string.processinghistory) + ": " + status));
     }
 
     @Override

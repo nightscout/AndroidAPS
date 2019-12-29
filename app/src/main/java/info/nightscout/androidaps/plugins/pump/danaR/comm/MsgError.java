@@ -48,7 +48,7 @@ public class MsgError extends MessageBase {
             EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
             MsgBolusStop.stopped = true;
             bolusingEvent.setStatus(errorString);
-            RxBus.INSTANCE.send(bolusingEvent);
+            RxBus.Companion.getINSTANCE().send(bolusingEvent);
             failed=true;
         }
         if (L.isEnabled(L.PUMPCOMM))

@@ -8,16 +8,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
@@ -25,6 +27,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -32,7 +35,10 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by mike on 16.10.2017.
  */
 
-public class BGSourceFragment extends Fragment {
+public class BGSourceFragment extends DaggerFragment {
+    @Inject RxBusWrapper rxBus;
+    @Inject ResourceHelper resourceHelper;
+
     private CompositeDisposable disposable = new CompositeDisposable();
     private RecyclerView recyclerView;
 
@@ -64,7 +70,7 @@ public class BGSourceFragment extends Fragment {
     @Override
     public synchronized void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(rxBus
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGUI(), FabricPrivacy::logException)
@@ -113,7 +119,7 @@ public class BGSourceFragment extends Fragment {
             return bgReadings.size();
         }
 
-        class BgReadingsViewHolder extends RecyclerView.ViewHolder  {
+        class BgReadingsViewHolder extends RecyclerView.ViewHolder {
             TextView date;
             TextView value;
             TextView direction;
@@ -131,7 +137,7 @@ public class BGSourceFragment extends Fragment {
                 remove = itemView.findViewById(R.id.bgsource_remove);
                 remove.setOnClickListener(v -> {
                     final BgReading bgReading = (BgReading) v.getTag();
-                    OKDialog.showConfirmation(getContext(), MainApp.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(bgReading.date) + "\n" + bgReading.valueToUnitsToString(ProfileFunctions.getSystemUnits()), () -> {
+                    OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(bgReading.date) + "\n" + bgReading.valueToUnitsToString(ProfileFunctions.getSystemUnits()), () -> {
                         bgReading.isValid = false;
                         MainApp.getDbHelper().update(bgReading);
                         updateGUI();

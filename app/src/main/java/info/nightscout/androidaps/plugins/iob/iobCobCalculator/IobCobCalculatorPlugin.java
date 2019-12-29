@@ -57,6 +57,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     private static IobCobCalculatorPlugin plugin = null;
 
+    @Deprecated
     public static IobCobCalculatorPlugin getPlugin() {
         if (plugin == null)
             plugin = new IobCobCalculatorPlugin();
@@ -89,7 +90,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
     protected void onStart() {
         super.onStart();
         // EventConfigBuilderChange
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventConfigBuilderChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -109,7 +110,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 }, FabricPrivacy::logException)
         );
         // EventNewBasalProfile
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNewBasalProfile.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -135,7 +136,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 }, FabricPrivacy::logException)
         );
         // EventNewBG
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNewBG.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -149,7 +150,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 }, FabricPrivacy::logException)
         );
         // EventPreferenceChange
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -180,7 +181,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 }, FabricPrivacy::logException)
         );
         // EventAppInitialized
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAppInitialized.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -193,7 +194,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 }, FabricPrivacy::logException)
         );
         // EventNewHistoryData
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNewHistoryData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> newHistoryData(event), FabricPrivacy::logException)

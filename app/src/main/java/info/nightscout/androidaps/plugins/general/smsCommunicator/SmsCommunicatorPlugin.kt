@@ -23,11 +23,9 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBus.send
-import info.nightscout.androidaps.plugins.bus.RxBus.toObservable
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
@@ -45,7 +43,6 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.apache.commons.lang3.StringUtils
-import org.slf4j.LoggerFactory
 import java.text.Normalizer
 import java.util.*
 import javax.inject.Inject
@@ -53,11 +50,12 @@ import javax.inject.Singleton
 
 @Singleton
 class SmsCommunicatorPlugin @Inject constructor(
-    val configBuilderPlugin: ConfigBuilderPlugin,
-    val treatmentsPlugin: TreatmentsPlugin,
-    val resourceHelper: ResourceHelper,
-    val constraintChecker: ConstraintChecker,
-    val aapsLogger: AAPSLogger
+    private val configBuilderPlugin: ConfigBuilderPlugin,
+    private val treatmentsPlugin: TreatmentsPlugin,
+    private val resourceHelper: ResourceHelper,
+    private val constraintChecker: ConstraintChecker,
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBusWrapper
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(SmsCommunicatorFragment::class.java.name)
@@ -66,6 +64,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     .preferencesId(R.xml.pref_smscommunicator)
     .description(R.string.description_sms_communicator)
 ) {
+
     private val disposable = CompositeDisposable()
     var allowedNumbers: MutableList<String> = ArrayList()
     var messageToConfirm: AuthRequest? = null
@@ -92,10 +91,10 @@ class SmsCommunicatorPlugin @Inject constructor(
     override fun onStart() {
         processSettings(null)
         super.onStart()
-        disposable.add(toObservable(EventPreferenceChange::class.java)
+        disposable += rxBus
+            .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
             .subscribe({ event: EventPreferenceChange? -> processSettings(event) }) { FabricPrivacy.logException(it) }
-        )
     }
 
     override fun onStop() {
@@ -151,7 +150,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             for (number in substrings) {
                 val cleaned = number.replace("\\s+".toRegex(), "")
                 allowedNumbers.add(cleaned)
-                aapsLogger.debug(LTag.SMS,"Found allowed number: $cleaned")
+                aapsLogger.debug(LTag.SMS, "Found allowed number: $cleaned")
             }
         }
     }
@@ -183,19 +182,19 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     fun processSms(receivedSms: Sms) {
         if (!isEnabled(PluginType.GENERAL)) {
-            aapsLogger.debug(LTag.SMS,"Ignoring SMS. Plugin disabled.")
+            aapsLogger.debug(LTag.SMS, "Ignoring SMS. Plugin disabled.")
             return
         }
         if (!isAllowedNumber(receivedSms.phoneNumber)) {
-            aapsLogger.debug(LTag.SMS,"Ignoring SMS from: " + receivedSms.phoneNumber + ". Sender not allowed")
+            aapsLogger.debug(LTag.SMS, "Ignoring SMS from: " + receivedSms.phoneNumber + ". Sender not allowed")
             receivedSms.ignored = true
             messages.add(receivedSms)
-            send(EventSmsCommunicatorUpdateGui())
+            rxBus.send(EventSmsCommunicatorUpdateGui())
             return
         }
         val pump = configBuilderPlugin.activePump ?: return
         messages.add(receivedSms)
-        aapsLogger.debug(LTag.SMS,receivedSms.toString())
+        aapsLogger.debug(LTag.SMS, receivedSms.toString())
         val splitted = receivedSms.text.split(Regex("\\s+")).toTypedArray()
         val remoteCommandsAllowed = SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)
         if (splitted.isNotEmpty() && isCommand(splitted[0].toUpperCase(Locale.getDefault()), receivedSms.phoneNumber)) {
@@ -260,7 +259,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     } else sendSMS(Sms(receivedSms.phoneNumber, R.string.smscommunicator_unknowncommand))
             }
         }
-        send(EventSmsCommunicatorUpdateGui())
+        rxBus.send(EventSmsCommunicatorUpdateGui())
     }
 
     private fun processBG(receivedSms: Sms) {
@@ -277,10 +276,10 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
         val glucoseStatus = GlucoseStatus.getGlucoseStatusData()
         if (glucoseStatus != null) reply += resourceHelper.gs(R.string.sms_delta) + " " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", "
-        TreatmentsPlugin.getPlugin().updateTotalIOBTreatments()
-        val bolusIob = TreatmentsPlugin.getPlugin().lastCalculationTreatments.round()
-        TreatmentsPlugin.getPlugin().updateTotalIOBTempBasals()
-        val basalIob = TreatmentsPlugin.getPlugin().lastCalculationTempBasals.round()
+        treatmentsPlugin.updateTotalIOBTreatments()
+        val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
+        treatmentsPlugin.updateTotalIOBTempBasals()
+        val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
         val cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "SMS COB")
         reply += (resourceHelper.gs(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
             + resourceHelper.gs(R.string.sms_bolus) + " " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
@@ -298,7 +297,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     loopPlugin.setPluginEnabled(PluginType.LOOP, false)
                     configBuilderPlugin.commandQueue.cancelTempBasal(true, object : Callback() {
                         override fun run() {
-                            send(EventRefreshOverview("SMS_LOOP_STOP"))
+                            rxBus.send(EventRefreshOverview("SMS_LOOP_STOP"))
                             val replyText = resourceHelper.gs(R.string.smscommunicator_loophasbeendisabled) + " " +
                                 resourceHelper.gs(if (result.success) R.string.smscommunicator_tempbasalcanceled else R.string.smscommunicator_tempbasalcancelfailed)
                             sendSMS(Sms(receivedSms.phoneNumber, replyText))
@@ -314,7 +313,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 if (!loopPlugin.isEnabled(PluginType.LOOP)) {
                     loopPlugin.setPluginEnabled(PluginType.LOOP, true)
                     sendSMS(Sms(receivedSms.phoneNumber, R.string.smscommunicator_loophasbeenenabled))
-                    send(EventRefreshOverview("SMS_LOOP_START"))
+                    rxBus.send(EventRefreshOverview("SMS_LOOP_START"))
                 } else
                     sendSMS(Sms(receivedSms.phoneNumber, R.string.smscommunicator_loopisenabled))
                 receivedSms.processed = true
@@ -333,7 +332,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
             "RESUME"          -> {
                 LoopPlugin.getPlugin().suspendTo(0)
-                send(EventRefreshOverview("SMS_LOOP_RESUME"))
+                rxBus.send(EventRefreshOverview("SMS_LOOP_RESUME"))
                 NSUpload.uploadOpenAPSOffline(0.0)
                 sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, R.string.smscommunicator_loopresumed))
             }
@@ -358,7 +357,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     if (result.success) {
                                         LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + anInteger() * 60L * 1000)
                                         NSUpload.uploadOpenAPSOffline(anInteger() * 60.toDouble())
-                                        send(EventRefreshOverview("SMS_LOOP_SUSPENDED"))
+                                        rxBus.send(EventRefreshOverview("SMS_LOOP_SUSPENDED"))
                                         val replyText = resourceHelper.gs(R.string.smscommunicator_loopsuspended) + " " +
                                             resourceHelper.gs(if (result.success) R.string.smscommunicator_tempbasalcanceled else R.string.smscommunicator_tempbasalcancelfailed)
                                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
@@ -380,8 +379,8 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private fun processTREATMENTS(splitted: Array<String>, receivedSms: Sms) {
         if (splitted[1].toUpperCase(Locale.getDefault()) == "REFRESH") {
-            TreatmentsPlugin.getPlugin().service.resetTreatments()
-            send(EventNSClientRestart())
+            treatmentsPlugin.service.resetTreatments()
+            rxBus.send(EventNSClientRestart())
             sendSMS(Sms(receivedSms.phoneNumber, "TREATMENTS REFRESH SENT"))
             receivedSms.processed = true
         } else
@@ -390,7 +389,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private fun processNSCLIENT(splitted: Array<String>, receivedSms: Sms) {
         if (splitted[1].toUpperCase(Locale.getDefault()) == "RESTART") {
-            send(EventNSClientRestart())
+            rxBus.send(EventNSClientRestart())
             sendSMS(Sms(receivedSms.phoneNumber, "NSCLIENT RESTART SENT"))
             receivedSms.processed = true
         } else
@@ -670,7 +669,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                                     .source(Source.USER)
                                                     .low(Profile.toMgdl(eatingSoonTT, currentProfile.units))
                                                     .high(Profile.toMgdl(eatingSoonTT, currentProfile.units))
-                                                TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
+                                                treatmentsPlugin.addToHistoryTempTarget(tempTarget)
                                                 val tt = if (currentProfile.units == Constants.MMOL) {
                                                     DecimalFormatter.to1Decimal(eatingSoonTT)
                                                 } else DecimalFormatter.to0Decimal(eatingSoonTT)
@@ -781,7 +780,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                         .source(Source.USER)
                         .low(Profile.toMgdl(tt, units))
                         .high(Profile.toMgdl(tt, units))
-                    TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
+                    treatmentsPlugin.addToHistoryTempTarget(tempTarget)
                     val ttString = if (units == Constants.MMOL) DecimalFormatter.to1Decimal(tt) else DecimalFormatter.to0Decimal(tt)
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_tt_set), ttString, ttDuration)
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
@@ -799,7 +798,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                         .duration(0)
                         .low(0.0)
                         .high(0.0)
-                    TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
+                    treatmentsPlugin.addToHistoryTempTarget(tempTarget)
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_tt_canceled))
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                 }
@@ -860,7 +859,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         val smsManager = SmsManager.getDefault()
         sms.text = stripAccents(sms.text)
         try {
-            aapsLogger.debug(LTag.SMS,"Sending SMS to " + sms.phoneNumber + ": " + sms.text)
+            aapsLogger.debug(LTag.SMS, "Sending SMS to " + sms.phoneNumber + ": " + sms.text)
             if (sms.text.toByteArray().size <= 140) smsManager.sendTextMessage(sms.phoneNumber, null, sms.text, null, null)
             else {
                 val parts = smsManager.divideMessage(sms.text)
@@ -871,19 +870,19 @@ class SmsCommunicatorPlugin @Inject constructor(
         } catch (e: IllegalArgumentException) {
             return if (e.message == "Invalid message body") {
                 val notification = Notification(Notification.INVALID_MESSAGE_BODY, resourceHelper.gs(R.string.smscommunicator_messagebody), Notification.NORMAL)
-                send(EventNewNotification(notification))
+                rxBus.send(EventNewNotification(notification))
                 false
             } else {
                 val notification = Notification(Notification.INVALID_PHONE_NUMBER, resourceHelper.gs(R.string.smscommunicator_invalidphonennumber), Notification.NORMAL)
-                send(EventNewNotification(notification))
+                rxBus.send(EventNewNotification(notification))
                 false
             }
         } catch (e: SecurityException) {
             val notification = Notification(Notification.MISSING_SMS_PERMISSION, resourceHelper.gs(R.string.smscommunicator_missingsmspermission), Notification.NORMAL)
-            send(EventNewNotification(notification))
+            rxBus.send(EventNewNotification(notification))
             return false
         }
-        send(EventSmsCommunicatorUpdateGui())
+        rxBus.send(EventSmsCommunicatorUpdateGui())
         return true
     }
 

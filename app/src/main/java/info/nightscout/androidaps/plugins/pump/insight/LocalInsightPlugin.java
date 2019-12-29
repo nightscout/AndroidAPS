@@ -150,7 +150,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 alertService = ((InsightAlertService.LocalBinder) binder).getService();
             }
             if (connectionService != null && alertService != null) {
-                RxBus.INSTANCE.send(new EventInitializationChanged());
+                RxBus.Companion.getINSTANCE().send(new EventInitializationChanged());
             }
         }
 
@@ -181,6 +181,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     private boolean statusLoaded;
     private TBROverNotificationBlock tbrOverNotificationBlock;
 
+    @Deprecated
     public static LocalInsightPlugin getPlugin() {
         if (instance == null) instance = new LocalInsightPlugin();
         return instance;
@@ -358,7 +359,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             setDateTimeMessage.setPumpTime(pumpTime);
             connectionService.requestMessage(setDateTimeMessage).await();
             Notification notification = new Notification(Notification.INSIGHT_DATE_TIME_UPDATED, MainApp.gs(R.string.pump_time_updated), Notification.INFO, 60);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
         }
     }
 
@@ -426,8 +427,8 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         }
         lastUpdated = System.currentTimeMillis();
         new Handler(Looper.getMainLooper()).post(() -> {
-            RxBus.INSTANCE.send(new EventLocalInsightUpdateGUI());
-            RxBus.INSTANCE.send(new EventRefreshOverview("LocalInsightPlugin::fetchStatus"));
+            RxBus.Companion.getINSTANCE().send(new EventLocalInsightUpdateGUI());
+            RxBus.Companion.getINSTANCE().send(new EventRefreshOverview("LocalInsightPlugin::fetchStatus"));
         });
     }
 
@@ -444,7 +445,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
         PumpEnactResult result = new PumpEnactResult();
-        RxBus.INSTANCE.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+        RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         List<BasalProfileBlock> profileBlocks = new ArrayList<>();
         for (int i = 0; i < profile.getBasalValues().length; i++) {
             Profile.ProfileValue basalValue = profile.getBasalValues()[i];
@@ -464,9 +465,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             BRProfileBlock profileBlock = new BRProfile1Block();
             profileBlock.setProfileBlocks(profileBlocks);
             ParameterBlockUtil.writeConfigurationBlock(connectionService, profileBlock);
-            RxBus.INSTANCE.send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
             Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
             result.success = true;
             result.enacted = true;
             result.comment = MainApp.gs(R.string.virtualpump_resultok);
@@ -478,17 +479,17 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         } catch (AppLayerErrorException e) {
             log.info("Exception while setting profile: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
             result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
             log.info("Exception while setting profile: " + e.getClass().getCanonicalName());
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
             result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
             log.error("Exception while setting profile", e);
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -561,7 +562,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 bolusingEvent.setT(t);
                 bolusingEvent.setStatus(MainApp.gs(R.string.insight_delivered, 0d, insulin));
                 bolusingEvent.setPercent(0);
-                RxBus.INSTANCE.send(bolusingEvent);
+                RxBus.Companion.getINSTANCE().send(bolusingEvent);
                 int trials = 0;
                 InsightBolusID insightBolusID = new InsightBolusID();
                 insightBolusID.bolusID = bolusID;
@@ -592,14 +593,14 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                         bolusingEvent.setPercent((int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getRemainingAmount())));
                         bolusingEvent.setStatus(MainApp.gs(R.string.insight_delivered, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(), activeBolus.getInitialAmount()));
                         if (percentBefore != bolusingEvent.getPercent())
-                            RxBus.INSTANCE.send(bolusingEvent);
+                            RxBus.Companion.getINSTANCE().send(bolusingEvent);
                     } else {
                         synchronized ($bolusLock) {
                             if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                 if (!bolusCancelled) {
                                     bolusingEvent.setStatus(MainApp.gs(R.string.insight_delivered, insulin, insulin));
                                     bolusingEvent.setPercent(100);
-                                    RxBus.INSTANCE.send(bolusingEvent);
+                                    RxBus.Companion.getINSTANCE().send(bolusingEvent);
                                 }
                                 break;
                             }
@@ -1167,7 +1168,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         } catch (Exception e) {
             log.error("Exception while reading history", e);
         }
-        new Handler(Looper.getMainLooper()).post(() -> RxBus.INSTANCE.send(new EventRefreshOverview("LocalInsightPlugin::readHistory")));
+        new Handler(Looper.getMainLooper()).post(() -> RxBus.Companion.getINSTANCE().send(new EventRefreshOverview("LocalInsightPlugin::readHistory")));
     }
 
     private void processHistoryEvents(String serial, List<HistoryEvent> historyEvents) {
@@ -1589,7 +1590,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     public void onStateChanged(InsightState state) {
         if (state == InsightState.CONNECTED) {
             statusLoaded = false;
-            new Handler(Looper.getMainLooper()).post(() -> RxBus.INSTANCE.send(new EventDismissNotification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE)));
+            new Handler(Looper.getMainLooper()).post(() -> RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE)));
         } else if (state == InsightState.NOT_PAIRED) {
             connectionService.withdrawConnectionRequest(this);
             statusLoaded = false;
@@ -1602,9 +1603,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             activeTBR = null;
             activeBoluses = null;
             tbrOverNotificationBlock = null;
-            new Handler(Looper.getMainLooper()).post(() -> RxBus.INSTANCE.send(new EventRefreshOverview("LocalInsightPlugin::onStateChanged")));
+            new Handler(Looper.getMainLooper()).post(() -> RxBus.Companion.getINSTANCE().send(new EventRefreshOverview("LocalInsightPlugin::onStateChanged")));
         }
-        new Handler(Looper.getMainLooper()).post(() -> RxBus.INSTANCE.send(new EventLocalInsightUpdateGUI()));
+        new Handler(Looper.getMainLooper()).post(() -> RxBus.Companion.getINSTANCE().send(new EventLocalInsightUpdateGUI()));
     }
 
     @Override
@@ -1615,7 +1616,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     @Override
     public void onTimeoutDuringHandshake() {
         Notification notification = new Notification(Notification.INSIGHT_TIMEOUT_DURING_HANDSHAKE, MainApp.gs(R.string.timeout_during_handshake), Notification.URGENT);
-        new Handler(Looper.getMainLooper()).post(() -> RxBus.INSTANCE.send(new EventNewNotification(notification)));
+        new Handler(Looper.getMainLooper()).post(() -> RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification)));
     }
 
     @Override

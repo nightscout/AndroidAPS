@@ -12,6 +12,7 @@ public class FoodPlugin extends PluginBase {
 
     private static FoodPlugin plugin = null;
 
+    @Deprecated
     public static FoodPlugin getPlugin() {
         if (plugin == null)
             plugin = new FoodPlugin();

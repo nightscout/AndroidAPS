@@ -43,16 +43,16 @@ public class MsgInitConnStatusBasic_k extends MessageBase {
 
         if (pump.isEasyModeEnabled) {
             Notification notification = new Notification(Notification.EASYMODE_ENABLED, MainApp.gs(R.string.danar_disableeasymode), Notification.URGENT);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
         } else {
-            RxBus.INSTANCE.send(new EventDismissNotification(Notification.EASYMODE_ENABLED));
+            RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.EASYMODE_ENABLED));
         }
 
         if (!DanaRPump.getInstance().isPasswordOK()) {
             Notification notification = new Notification(Notification.WRONG_PUMP_PASSWORD, MainApp.gs(R.string.wrongpumppassword), Notification.URGENT);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
         } else {
-            RxBus.INSTANCE.send(new EventDismissNotification(Notification.WRONG_PUMP_PASSWORD));
+            RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.WRONG_PUMP_PASSWORD));
         }
     }
 }

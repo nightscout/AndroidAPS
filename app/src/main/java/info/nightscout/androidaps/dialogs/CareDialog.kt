@@ -19,7 +19,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.OKDialog
-import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.dialog_care.*
@@ -31,12 +30,8 @@ import java.util.*
 import javax.inject.Inject
 
 class CareDialog : DialogFragmentWithDate() {
-
-    @Inject
-    lateinit var mainApp: MainApp
-
-    @Inject
-    lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var resourceHelper: ResourceHelper
 
     enum class EventType {
         BGCHECK,
@@ -112,7 +107,7 @@ class CareDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val enteredBy = SP.getString("careportal_enteredby", "")
+        val enteredBy = sp.getString("careportal_enteredby", "")
         val unitResId = if (ProfileFunctions.getSystemUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
 
         val json = JSONObject()

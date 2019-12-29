@@ -110,7 +110,7 @@ public class ImportExportPrefs {
                 SP.putBoolean(R.string.key_setupwizard_processed, true);
                 OKDialog.show(context, MainApp.gs(R.string.setting_imported), MainApp.gs(R.string.restartingapp), () -> {
                     log.debug("Exiting");
-                    RxBus.INSTANCE.send(new EventAppExit());
+                    RxBus.Companion.getINSTANCE().send(new EventAppExit());
                     if (context instanceof Activity) {
                         ((Activity) context).finish();
                     }

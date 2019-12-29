@@ -6,19 +6,21 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.defaultProfile.DefaultProfile
+import info.nightscout.androidaps.dialogs.ProfileViewerDialog
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
-import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.survey_activity.*
-import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class SurveyActivity : NoSplashAppCompatActivity() {
-    private val log = LoggerFactory.getLogger(SurveyActivity::class.java)
-
-    @Inject
-    lateinit var tddCalculator: TddCalculator
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var tddCalculator: TddCalculator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +28,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
         survey_id.text = InstanceId.instanceId()
 
-        val profileStore = ConfigBuilderPlugin.getPlugin().activeProfileInterface?.profile
+        val profileStore = configBuilderPlugin.activeProfileInterface.profile
         val profileList = profileStore?.getProfileList() ?: return
         survey_spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 
@@ -87,13 +89,13 @@ class SurveyActivity : NoSplashAppCompatActivity() {
             auth.signInAnonymously()
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        log.debug("signInAnonymously:success")
+                        aapsLogger.debug(LTag.CORE, "signInAnonymously:success")
                         val user = auth.currentUser // TODO: do we need this, seems unused?
 
                         val database = FirebaseDatabase.getInstance().reference
                         database.child("survey").child(r.id).setValue(r)
                     } else {
-                        log.error("signInAnonymously:failure", task.exception)
+                        aapsLogger.error("signInAnonymously:failure", task.exception!!)
                         ToastUtils.showToastInUiThread(this, "Authentication failed.")
                         //updateUI(null)
                     }

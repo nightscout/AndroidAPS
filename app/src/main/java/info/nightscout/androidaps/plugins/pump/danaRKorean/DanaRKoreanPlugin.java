@@ -6,6 +6,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import androidx.annotation.NonNull;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -17,8 +22,9 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.danaR.AbstractDanaRPlugin;
@@ -29,65 +35,86 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by mike on 05.08.2016.
- */
+@Singleton
 public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     private CompositeDisposable disposable = new CompositeDisposable();
 
+    private final AAPSLogger aapsLogger;
+    private final RxBusWrapper rxBus;
+    private final MainApp mainApp;
+    private final ResourceHelper resourceHelper;
+    private final ConstraintChecker constraintChecker;
+    private final TreatmentsPlugin treatmentsPlugin;
+    private final SP sp;
+
     private static DanaRKoreanPlugin plugin = null;
 
+    @Deprecated
     public static DanaRKoreanPlugin getPlugin() {
         if (plugin == null)
-            plugin = new DanaRKoreanPlugin();
+            throw new IllegalStateException("Accessing DanaRKoreanPlugin before first instantiation");
         return plugin;
     }
 
-    public DanaRKoreanPlugin() {
+    @Inject
+    public DanaRKoreanPlugin(
+            AAPSLogger aapsLogger,
+            RxBusWrapper rxBus,
+            MainApp maiApp,
+            ResourceHelper resourceHelper,
+            ConstraintChecker constraintChecker,
+            TreatmentsPlugin treatmentsPlugin,
+            SP sp
+    ) {
+        super();
+        plugin = this;
+        this.aapsLogger = aapsLogger;
+        this.rxBus = rxBus;
+        this.mainApp = maiApp;
+        this.resourceHelper = resourceHelper;
+        this.constraintChecker = constraintChecker;
+        this.treatmentsPlugin = treatmentsPlugin;
+        this.sp = sp;
         pluginDescription.description(R.string.description_pump_dana_r_korean);
 
-        useExtendedBoluses = SP.getBoolean(R.string.key_danar_useextended, false);
+        useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false);
         pumpDescription.setPumpDescription(PumpType.DanaRKorean);
     }
 
     @Override
     protected void onStart() {
-        Context context = MainApp.instance().getApplicationContext();
-        Intent intent = new Intent(context, DanaRKoreanExecutionService.class);
-        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        disposable.add(RxBus.INSTANCE
+        Intent intent = new Intent(mainApp, DanaRKoreanExecutionService.class);
+        mainApp.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     if (isEnabled(PluginType.PUMP)) {
                         boolean previousValue = useExtendedBoluses;
-                        useExtendedBoluses = SP.getBoolean(R.string.key_danar_useextended, false);
+                        useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false);
 
-                        if (useExtendedBoluses != previousValue && TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
+                        if (useExtendedBoluses != previousValue && treatmentsPlugin.isInHistoryExtendedBoluslInProgress()) {
                             sExecutionService.extendedBolusStop();
                         }
                     }
                 }, FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> {
-                    MainApp.instance().getApplicationContext().unbindService(mConnection);
-                }, FabricPrivacy::logException)
+                .subscribe(event -> mainApp.unbindService(mConnection), FabricPrivacy::logException)
         );
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        Context context = MainApp.instance().getApplicationContext();
-        context.unbindService(mConnection);
-
+        mainApp.unbindService(mConnection);
         disposable.clear();
         super.onStop();
     }
@@ -95,23 +122,22 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
-            if (L.isEnabled(L.PUMP))
-                log.debug("Service is disconnected");
+            aapsLogger.debug(LTag.PUMP, "Service is disconnected");
             sExecutionService = null;
         }
 
         public void onServiceConnected(ComponentName name, IBinder service) {
-            if (L.isEnabled(L.PUMP))
-                log.debug("Service is connected");
+            aapsLogger.debug(LTag.PUMP, "Service is connected");
             DanaRKoreanExecutionService.LocalBinder mLocalBinder = (DanaRKoreanExecutionService.LocalBinder) service;
             sExecutionService = mLocalBinder.getServiceInstance();
         }
     };
 
     // Plugin base interface
+    @NonNull
     @Override
     public String getName() {
-        return MainApp.gs(R.string.danarkoreanpump);
+        return resourceHelper.gs(R.string.danarkoreanpump);
     }
 
     @Override
@@ -143,7 +169,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        detailedBolusInfo.insulin = ConstraintChecker.getInstance().applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             Treatment t = new Treatment();
             t.isSMB = detailedBolusInfo.isSMB;
@@ -155,22 +181,21 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = detailedBolusInfo.carbs;
             if (!result.success)
-                result.comment = String.format(MainApp.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, MsgBolusStart.errorCode);
+                result.comment = resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, MsgBolusStart.errorCode);
             else
-                result.comment = MainApp.gs(R.string.virtualpump_resultok);
-            if (L.isEnabled(L.PUMP))
-                log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
+                result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
+            aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
             detailedBolusInfo.insulin = t.insulin;
             detailedBolusInfo.date = System.currentTimeMillis();
-            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
+            treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false);
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult();
             result.success = false;
             result.bolusDelivered = 0d;
             result.carbsDelivered = 0d;
-            result.comment = MainApp.gs(R.string.danar_invalidinput);
-            log.error("deliverTreatment: Invalid input");
+            result.comment = resourceHelper.gs(R.string.danar_invalidinput);
+            aapsLogger.error("deliverTreatment: Invalid input");
             return result;
         }
     }
@@ -187,7 +212,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
         PumpEnactResult result = new PumpEnactResult();
 
-        absoluteRate = ConstraintChecker.getInstance().applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
+        absoluteRate = constraintChecker.applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
         final boolean doTempOff = getBaseBasalRate() - absoluteRate == 0d;
         final boolean doLowTemp = absoluteRate < getBaseBasalRate();
@@ -195,20 +220,18 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         final boolean doExtendedTemp = absoluteRate > getBaseBasalRate() && useExtendedBoluses;
 
         long now = System.currentTimeMillis();
-        TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin().getRealTempBasalFromHistory(now);
-        ExtendedBolus activeExtended = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(now);
+        TemporaryBasal activeTemp = treatmentsPlugin.getRealTempBasalFromHistory(now);
+        ExtendedBolus activeExtended = treatmentsPlugin.getExtendedBolusFromHistory(now);
 
         if (doTempOff) {
             // If extended in progress
             if (activeExtended != null && useExtendedBoluses) {
-                if (L.isEnabled(L.PUMP))
-                    log.debug("setTempBasalAbsolute: Stopping extended bolus (doTempOff)");
+                aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Stopping extended bolus (doTempOff)");
                 return cancelExtendedBolus();
             }
             // If temp in progress
             if (activeTemp != null) {
-                if (L.isEnabled(L.PUMP))
-                    log.debug("setTempBasalAbsolute: Stopping temp basal (doTempOff)");
+                aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Stopping temp basal (doTempOff)");
                 return cancelRealTempBasal();
             }
             result.success = true;
@@ -216,8 +239,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             result.percent = 100;
             result.isPercent = true;
             result.isTempCancel = true;
-            if (L.isEnabled(L.PUMP))
-                log.debug("setTempBasalAbsolute: doTempOff OK");
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: doTempOff OK");
             return result;
         }
 
@@ -228,24 +250,21 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             if (percentRate > getPumpDescription().maxTempPercent) {
                 percentRate = getPumpDescription().maxTempPercent;
             }
-            if (L.isEnabled(L.PUMP))
-                log.debug("setTempBasalAbsolute: Calculated percent rate: " + percentRate);
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Calculated percent rate: " + percentRate);
 
             // If extended in progress
             if (activeExtended != null && useExtendedBoluses) {
-                if (L.isEnabled(L.PUMP))
-                    log.debug("setTempBasalAbsolute: Stopping extended bolus (doLowTemp || doHighTemp)");
+                aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Stopping extended bolus (doLowTemp || doHighTemp)");
                 result = cancelExtendedBolus();
                 if (!result.success) {
-                    log.error("setTempBasalAbsolute: Failed to stop previous extended bolus (doLowTemp || doHighTemp)");
+                    aapsLogger.error("setTempBasalAbsolute: Failed to stop previous extended bolus (doLowTemp || doHighTemp)");
                     return result;
                 }
             }
             // Check if some temp is already in progress
             if (activeTemp != null) {
                 // Correct basal already set ?
-                if (L.isEnabled(L.PUMP))
-                    log.debug("setTempBasalAbsolute: currently running: " + activeTemp.toString());
+                aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: currently running: " + activeTemp.toString());
                 if (activeTemp.percentRate == percentRate && activeTemp.getPlannedRemainingMinutes() > 4) {
                     if (enforceNew) {
                         cancelTempBasal(true);
@@ -256,43 +275,38 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
                         result.duration = activeTemp.getPlannedRemainingMinutes();
                         result.isPercent = true;
                         result.isTempCancel = false;
-                        if (L.isEnabled(L.PUMP))
-                            log.debug("setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
+                        aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
                         return result;
                     }
                 }
             }
             // Convert duration from minutes to hours
-            if (L.isEnabled(L.PUMP))
-                log.debug("setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");
             return setTempBasalPercent(percentRate, durationInMinutes, profile, false);
         }
         if (doExtendedTemp) {
             // Check if some temp is already in progress
             if (activeTemp != null) {
-                if (L.isEnabled(L.PUMP))
-                    log.debug("setTempBasalAbsolute: Stopping temp basal (doExtendedTemp)");
+                aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Stopping temp basal (doExtendedTemp)");
                 result = cancelRealTempBasal();
                 // Check for proper result
                 if (!result.success) {
-                    log.error("setTempBasalAbsolute: Failed to stop previous temp basal (doExtendedTemp)");
+                    aapsLogger.error("setTempBasalAbsolute: Failed to stop previous temp basal (doExtendedTemp)");
                     return result;
                 }
             }
 
             // Calculate # of halfHours from minutes
-            Integer durationInHalfHours = Math.max(durationInMinutes / 30, 1);
+            int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
             // We keep current basal running so need to sub current basal
             Double extendedRateToSet = absoluteRate - getBaseBasalRate();
-            extendedRateToSet = ConstraintChecker.getInstance().applyBasalConstraints(new Constraint<>(extendedRateToSet), profile).value();
+            extendedRateToSet = constraintChecker.applyBasalConstraints(new Constraint<>(extendedRateToSet), profile).value();
             // needs to be rounded to 0.1
             extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2); // *2 because of halfhours
 
             // What is current rate of extended bolusing in u/h?
-            if (L.isEnabled(L.PUMP)) {
-                log.debug("setTempBasalAbsolute: Extended bolus in progress: " + (activeExtended != null) + " rate: " + pump.extendedBolusAbsoluteRate + "U/h duration remaining: " + pump.extendedBolusRemainingMinutes + "min");
-                log.debug("setTempBasalAbsolute: Rate to set: " + extendedRateToSet + "U/h");
-            }
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Extended bolus in progress: " + (activeExtended != null) + " rate: " + pump.extendedBolusAbsoluteRate + "U/h duration remaining: " + pump.extendedBolusRemainingMinutes + "min");
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Rate to set: " + extendedRateToSet + "U/h");
 
             // Compare with extended rate in progress
             if (activeExtended != null && Math.abs(pump.extendedBolusAbsoluteRate - extendedRateToSet) < getPumpDescription().extendedBolusStep) {
@@ -303,27 +317,24 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
                 result.duration = pump.extendedBolusRemainingMinutes;
                 result.isPercent = false;
                 result.isTempCancel = false;
-                if (L.isEnabled(L.PUMP))
-                    log.debug("setTempBasalAbsolute: Correct extended already set");
+                aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Correct extended already set");
                 return result;
             }
 
             // Now set new extended, no need to to stop previous (if running) because it's replaced
             Double extendedAmount = extendedRateToSet / 2 * durationInHalfHours;
-            if (L.isEnabled(L.PUMP))
-                log.debug("setTempBasalAbsolute: Setting extended: " + extendedAmount + "U  halfhours: " + durationInHalfHours);
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Setting extended: " + extendedAmount + "U  halfhours: " + durationInHalfHours);
             result = setExtendedBolus(extendedAmount, durationInMinutes);
             if (!result.success) {
-                log.error("setTempBasalAbsolute: Failed to set extended bolus");
+                aapsLogger.error("setTempBasalAbsolute: Failed to set extended bolus");
                 return result;
             }
-            if (L.isEnabled(L.PUMP))
-                log.debug("setTempBasalAbsolute: Extended bolus set ok");
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Extended bolus set ok");
             result.absolute = result.absolute + getBaseBasalRate();
             return result;
         }
         // We should never end here
-        log.error("setTempBasalAbsolute: Internal error");
+        aapsLogger.error("setTempBasalAbsolute: Internal error");
         result.success = false;
         result.comment = "Internal error";
         return result;
@@ -331,15 +342,15 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     @Override
     public PumpEnactResult cancelTempBasal(boolean force) {
-        if (TreatmentsPlugin.getPlugin().isInHistoryRealTempBasalInProgress())
+        if (treatmentsPlugin.isInHistoryRealTempBasalInProgress())
             return cancelRealTempBasal();
-        if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
+        if (treatmentsPlugin.isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
             return cancelExtendedBolus();
         }
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.enacted = false;
-        result.comment = MainApp.gs(R.string.virtualpump_resultok);
+        result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
         result.isTempCancel = true;
         return result;
     }
@@ -351,7 +362,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     private PumpEnactResult cancelRealTempBasal() {
         PumpEnactResult result = new PumpEnactResult();
-        TemporaryBasal runningTB = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal runningTB = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis());
         if (runningTB != null) {
             sExecutionService.tempBasalStop();
             result.enacted = true;
@@ -360,15 +371,14 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         if (!DanaRPump.getInstance().isTempBasalInProgress) {
             result.success = true;
             result.isTempCancel = true;
-            result.comment = MainApp.gs(R.string.virtualpump_resultok);
-            if (L.isEnabled(L.PUMP))
-                log.debug("cancelRealTempBasal: OK");
+            result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
+            aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK");
             return result;
         } else {
             result.success = false;
-            result.comment = MainApp.gs(R.string.danar_valuenotsetproperly);
+            result.comment = resourceHelper.gs(R.string.danar_valuenotsetproperly);
             result.isTempCancel = true;
-            log.error("cancelRealTempBasal: Failed to cancel temp basal");
+            aapsLogger.error("cancelRealTempBasal: Failed to cancel temp basal");
             return result;
         }
     }

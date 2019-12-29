@@ -27,6 +27,7 @@ public class SourceXdripPlugin extends PluginBase implements BgSourceInterface {
 
     boolean advancedFiltering;
 
+    @Deprecated
     public static SourceXdripPlugin getPlugin() {
         if (plugin == null)
             plugin = new SourceXdripPlugin();

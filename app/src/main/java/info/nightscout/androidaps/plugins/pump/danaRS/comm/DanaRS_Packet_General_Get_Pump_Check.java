@@ -50,7 +50,7 @@ public class DanaRS_Packet_General_Get_Pump_Check extends DanaRS_Packet {
         }
 
         if (pump.productCode < 2) {
-            RxBus.INSTANCE.send(new EventNewNotification(new Notification(Notification.UNSUPPORTED_FIRMWARE, MainApp.gs(R.string.unsupportedfirmware), Notification.URGENT)));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(new Notification(Notification.UNSUPPORTED_FIRMWARE, MainApp.gs(R.string.unsupportedfirmware), Notification.URGENT)));
         }
     }
 

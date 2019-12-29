@@ -32,6 +32,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
 
     private static SensitivityWeightedAveragePlugin plugin = null;
 
+    @Deprecated
     public static SensitivityWeightedAveragePlugin getPlugin() {
         if (plugin == null)
             plugin = new SensitivityWeightedAveragePlugin();

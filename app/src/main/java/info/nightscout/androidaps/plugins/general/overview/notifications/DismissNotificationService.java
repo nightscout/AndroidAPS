@@ -27,7 +27,7 @@ public class DismissNotificationService extends IntentService {
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        RxBus.INSTANCE.send(new EventDismissNotification(intent.getIntExtra("alertID", -1)));
+        RxBus.Companion.getINSTANCE().send(new EventDismissNotification(intent.getIntExtra("alertID", -1)));
     }
 
     public static PendingIntent deleteIntent(int id) {

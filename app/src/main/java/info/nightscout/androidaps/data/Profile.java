@@ -235,7 +235,7 @@ public class Profile {
                     if (notify && secondsFromMidnight % 3600 != 0) {
                         if (Config.APS) {
                             Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, String.format(MainApp.gs(R.string.basalprofilenotaligned), from), Notification.NORMAL);
-                            RxBus.INSTANCE.send(new EventNewNotification(notification));
+                            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
                         }
                     }
                 }
@@ -267,11 +267,11 @@ public class Profile {
     }
 
     protected void sendBelowMinimumNotification(String from) {
-        RxBus.INSTANCE.send(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.minimalbasalvaluereplaced), from), Notification.NORMAL)));
+        RxBus.Companion.getINSTANCE().send(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.minimalbasalvaluereplaced), from), Notification.NORMAL)));
     }
 
     protected void sendAboveMaximumNotification(String from) {
-        RxBus.INSTANCE.send(new EventNewNotification(new Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.maximumbasalvaluereplaced), from), Notification.NORMAL)));
+        RxBus.Companion.getINSTANCE().send(new EventNewNotification(new Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.maximumbasalvaluereplaced), from), Notification.NORMAL)));
     }
 
     private void validate(LongSparseArray array) {

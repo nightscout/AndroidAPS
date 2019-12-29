@@ -24,6 +24,12 @@ class AAPSLoggerProduction : AAPSLogger {
         }
     }
 
+    override fun warn(tag: LTag, message: String) {
+        if (L.isEnabled(tag.tag)) {
+            LoggerFactory.getLogger(tag.tag).warn(message)
+        }
+    }
+
     override fun info(tag: LTag, message: String) {
         if (L.isEnabled(tag.tag)) {
             LoggerFactory.getLogger(tag.tag).info(message)

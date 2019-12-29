@@ -9,6 +9,7 @@ interface AAPSLogger {
     fun debug(message: String)
     fun debug(enable: Boolean, tag: LTag, message: String)
     fun debug(tag: LTag, message: String)
+    fun warn(tag: LTag, message: String)
     fun info(tag: LTag, message: String)
     fun error(tag: LTag, message: String)
     fun error(message: String)

@@ -124,7 +124,7 @@ public class RileyLinkUtil {
 
             RileyLinkUtil.historyRileyLink.add(new RLHistoryItem(RileyLinkUtil.rileyLinkServiceData.serviceState,
                     RileyLinkUtil.rileyLinkServiceData.errorCode, targetDevice));
-            RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(newState, errorCode));
+            RxBus.Companion.getINSTANCE().send(new EventMedtronicDeviceStatusChange(newState, errorCode));
             return null;
 
         } else {

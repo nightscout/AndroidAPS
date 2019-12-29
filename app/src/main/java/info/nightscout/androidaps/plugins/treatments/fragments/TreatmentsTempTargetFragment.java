@@ -165,7 +165,7 @@ public class TreatmentsTempTargetFragment extends Fragment {
         refreshFromNS.setOnClickListener(v ->
                 OKDialog.showConfirmation(getContext(), MainApp.gs(R.string.refresheventsfromnightscout) + " ?", () -> {
                     MainApp.getDbHelper().resetTempTargets();
-                    RxBus.INSTANCE.send(new EventNSClientRestart());
+                    RxBus.Companion.getINSTANCE().send(new EventNSClientRestart());
                 }));
 
         boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, false);
@@ -178,7 +178,7 @@ public class TreatmentsTempTargetFragment extends Fragment {
     @Override
     public synchronized void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGui(), FabricPrivacy::logException)

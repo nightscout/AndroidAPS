@@ -231,7 +231,7 @@ public class MedtronicUtil extends RileyLinkUtil {
                 notificationType.getNotificationType(), //
                 MainApp.gs(notificationType.getResourceId()), //
                 notificationType.getNotificationUrgency());
-        RxBus.INSTANCE.send(new EventNewNotification(notification));
+        RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
     }
 
 
@@ -240,12 +240,12 @@ public class MedtronicUtil extends RileyLinkUtil {
                 notificationType.getNotificationType(), //
                 MainApp.gs(notificationType.getResourceId(), parameters), //
                 notificationType.getNotificationUrgency());
-        RxBus.INSTANCE.send(new EventNewNotification(notification));
+        RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
     }
 
 
     public static void dismissNotification(MedtronicNotificationType notificationType) {
-        RxBus.INSTANCE.send(new EventDismissNotification(notificationType.getNotificationType()));
+        RxBus.Companion.getINSTANCE().send(new EventDismissNotification(notificationType.getNotificationType()));
     }
 
 
@@ -420,7 +420,7 @@ public class MedtronicUtil extends RileyLinkUtil {
 
         historyRileyLink.add(new RLHistoryItem(pumpDeviceState, RileyLinkTargetDevice.MedtronicPump));
 
-        RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
+        RxBus.Companion.getINSTANCE().send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
     }
 
 
@@ -489,7 +489,7 @@ public class MedtronicUtil extends RileyLinkUtil {
             setCurrentCommand(currentCommand);
         }
 
-        RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
+        RxBus.Companion.getINSTANCE().send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
     }
 
 

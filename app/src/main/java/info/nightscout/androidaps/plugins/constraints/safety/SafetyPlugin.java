@@ -72,7 +72,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         if (!MainApp.isEngineeringModeOrRelease()) {
             if (value.value()) {
                 Notification n = new Notification(Notification.TOAST_ALARM, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL);
-                RxBus.INSTANCE.send(new EventNewNotification(n));
+                RxBus.Companion.getINSTANCE().send(new EventNewNotification(n));
             }
             value.set(false, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch), this);
         }

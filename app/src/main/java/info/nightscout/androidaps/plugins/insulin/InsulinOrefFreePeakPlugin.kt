@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.insulin
 
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.InsulinInterface
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
@@ -13,8 +14,9 @@ import javax.inject.Singleton
 @Singleton
 class InsulinOrefFreePeakPlugin @Inject constructor(
     private val sp: SP,
-    private val resourceHelper: ResourceHelper
-) : InsulinOrefBasePlugin() {
+    resourceHelper: ResourceHelper,
+    rxBus: RxBusWrapper
+) : InsulinOrefBasePlugin(rxBus, resourceHelper) {
 
     override fun getId(): Int {
         return InsulinInterface.OREF_FREE_PEAK

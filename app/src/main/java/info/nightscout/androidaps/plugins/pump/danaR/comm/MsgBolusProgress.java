@@ -47,6 +47,6 @@ public class MsgBolusProgress extends MessageBase {
             log.debug("Bolus remaining: " + progress + " delivered: " + done);
         }
 
-        RxBus.INSTANCE.send(bolusingEvent);
+        RxBus.Companion.getINSTANCE().send(bolusingEvent);
     }
 }

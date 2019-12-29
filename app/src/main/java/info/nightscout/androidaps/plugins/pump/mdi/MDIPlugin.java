@@ -36,6 +36,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
 
     private static MDIPlugin plugin = null;
 
+    @Deprecated
     public static MDIPlugin getPlugin() {
         if (plugin == null)
             plugin = new MDIPlugin();

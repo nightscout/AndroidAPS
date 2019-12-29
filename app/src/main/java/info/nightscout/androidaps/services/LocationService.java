@@ -51,7 +51,7 @@ public class LocationService extends Service {
             if (L.isEnabled(L.LOCATION))
                 log.debug("onLocationChanged: " + location);
             mLastLocation.set(location);
-            RxBus.INSTANCE.send(new EventLocationChange(location));
+            RxBus.Companion.getINSTANCE().send(new EventLocationChange(location));
         }
 
         @Override
@@ -126,7 +126,7 @@ public class LocationService extends Service {
         } catch (IllegalArgumentException ex) {
             log.error("network provider does not exist, " + ex.getMessage());
         }
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {

@@ -56,6 +56,7 @@ public class PersistentNotificationPlugin extends PluginBase {
     private static PersistentNotificationPlugin plugin;
     private Notification notification;
 
+    @Deprecated
     public static PersistentNotificationPlugin getPlugin() {
         if (plugin == null) plugin = new PersistentNotificationPlugin();
         return plugin;
@@ -93,49 +94,49 @@ public class PersistentNotificationPlugin extends PluginBase {
     protected void onStart() {
         super.onStart();
         createNotificationChannel(); // make sure channels exist before triggering updates through the bus
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventRefreshOverview.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> triggerNotificationUpdate(false),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventExtendedBolusChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> triggerNotificationUpdate(false),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTempBasalChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> triggerNotificationUpdate(false),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTreatmentChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> triggerNotificationUpdate(false),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventInitializationChanged.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> triggerNotificationUpdate(false),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNewBasalProfile.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> triggerNotificationUpdate(false),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> triggerNotificationUpdate(false),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> triggerNotificationUpdate(false),

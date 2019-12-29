@@ -28,7 +28,7 @@ public class NSUpdateAck extends Event implements Ack {
                     result = true;
                     log.debug("Internal error: Missing _id returned on dbUpdate ack");
                 }
-                RxBus.INSTANCE.send(this);
+                RxBus.Companion.getINSTANCE().send(this);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }

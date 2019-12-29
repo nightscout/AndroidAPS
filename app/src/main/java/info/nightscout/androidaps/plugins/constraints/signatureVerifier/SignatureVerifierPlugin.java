@@ -54,6 +54,7 @@ public class SignatureVerifierPlugin extends PluginBase implements ConstraintsIn
     private File revokedCertsFile;
     private List<byte[]> revokedCerts;
 
+    @Deprecated
     public static SignatureVerifierPlugin getPlugin() {
         return plugin;
     }
@@ -104,7 +105,7 @@ public class SignatureVerifierPlugin extends PluginBase implements ConstraintsIn
 
     private void showNotification() {
         Notification notification = new Notification(Notification.INVALID_VERSION, MainApp.gs(R.string.running_invalid_version), Notification.URGENT);
-        RxBus.INSTANCE.send(new EventNewNotification(notification));
+        RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
     }
 
     private boolean hasIllegalSignature() {

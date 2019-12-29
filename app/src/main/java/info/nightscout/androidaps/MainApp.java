@@ -59,6 +59,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
 import info.nightscout.androidaps.plugins.general.xdripStatusline.StatusLinePlugin;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
@@ -126,17 +127,30 @@ public class MainApp extends DaggerApplication {
     @Inject
     AAPSLogger aapsLogger;
 
+    @Inject ActionsPlugin actionsPlugin;
+    @Inject AutomationPlugin automationPlugin;
+    @Inject CareportalPlugin careportalPlugin;
     @Inject ConfigBuilderPlugin configBuilderPlugin;
+    @Inject DanaRPlugin danaRPlugin;
+    @Inject DanaRSPlugin danaRSPlugin;
+    @Inject DanaRv2Plugin danaRv2Plugin;
+    @Inject DanaRKoreanPlugin danaRKoreanPlugin;
     @Inject InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
     @Inject InsulinOrefRapidActingPlugin insulinOrefRapidActingPlugin;
     @Inject InsulinOrefUltraRapidActingPlugin insulinOrefUltraRapidActingPlugin;
+    @Inject LocalProfilePlugin localProfilePlugin;
+    @Inject ObjectivesPlugin objectivesPlugin;
     @Inject SafetyPlugin safetyPlugin;
     @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
     @Inject OpenAPSMAPlugin openAPSMAPlugin;
     @Inject OpenAPSAMAPlugin openAPSAMAPlugin;
     @Inject OpenAPSSMBPlugin openAPSSMBPlugin;
+    @Inject OverviewPlugin overviewPlugin;
     @Inject StatusLinePlugin statusLinePlugin;
+    @Inject TidepoolPlugin tidepoolPlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
+    @Inject VirtualPumpPlugin virtualPumpPlugin;
+    @Inject VersionCheckerPlugin versionCheckerPlugin;
 
     @Override
     public void onCreate() {
@@ -190,9 +204,9 @@ public class MainApp extends DaggerApplication {
         if (pluginsList == null) {
             pluginsList = new ArrayList<>();
             // Register all tabs in app here
-            pluginsList.add(OverviewPlugin.INSTANCE);
+            pluginsList.add(overviewPlugin);
             pluginsList.add(IobCobCalculatorPlugin.getPlugin());
-            if (!Config.NSCLIENT) pluginsList.add(ActionsPlugin.INSTANCE);
+            if (!Config.NSCLIENT) pluginsList.add(actionsPlugin);
             pluginsList.add(insulinOrefRapidActingPlugin);
             pluginsList.add(insulinOrefUltraRapidActingPlugin);
             pluginsList.add(insulinOrefFreePeakPlugin);
@@ -200,28 +214,28 @@ public class MainApp extends DaggerApplication {
             pluginsList.add(SensitivityAAPSPlugin.getPlugin());
             pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
             pluginsList.add(SensitivityOref1Plugin.getPlugin());
-            if (Config.PUMPDRIVERS) pluginsList.add(DanaRPlugin.getPlugin());
-            if (Config.PUMPDRIVERS) pluginsList.add(DanaRKoreanPlugin.getPlugin());
-            if (Config.PUMPDRIVERS) pluginsList.add(DanaRv2Plugin.getPlugin());
-            if (Config.PUMPDRIVERS) pluginsList.add(DanaRSPlugin.getPlugin());
+            if (Config.PUMPDRIVERS) pluginsList.add(danaRPlugin);
+            if (Config.PUMPDRIVERS) pluginsList.add(danaRKoreanPlugin);
+            if (Config.PUMPDRIVERS) pluginsList.add(danaRv2Plugin);
+            if (Config.PUMPDRIVERS) pluginsList.add(danaRSPlugin);
             if (Config.PUMPDRIVERS) pluginsList.add(LocalInsightPlugin.getPlugin());
             if (Config.PUMPDRIVERS) pluginsList.add(ComboPlugin.getPlugin());
             if (Config.PUMPDRIVERS) pluginsList.add(MedtronicPumpPlugin.getPlugin());
             if (!Config.NSCLIENT) pluginsList.add(MDIPlugin.getPlugin());
-            pluginsList.add(VirtualPumpPlugin.getPlugin());
-            pluginsList.add(CareportalPlugin.getPlugin());
+            pluginsList.add(virtualPumpPlugin);
+            pluginsList.add(careportalPlugin);
             if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
             if (Config.APS) pluginsList.add(openAPSMAPlugin);
             if (Config.APS) pluginsList.add(openAPSAMAPlugin);
             if (Config.APS) pluginsList.add(openAPSSMBPlugin);
             pluginsList.add(NSProfilePlugin.getPlugin());
-            if (!Config.NSCLIENT) pluginsList.add(LocalProfilePlugin.INSTANCE);
+            if (!Config.NSCLIENT) pluginsList.add(localProfilePlugin);
             pluginsList.add(treatmentsPlugin);
             if (!Config.NSCLIENT) pluginsList.add(safetyPlugin);
-            if (!Config.NSCLIENT) pluginsList.add(VersionCheckerPlugin.INSTANCE);
+            if (!Config.NSCLIENT) pluginsList.add(versionCheckerPlugin);
             if (Config.APS) pluginsList.add(StorageConstraintPlugin.getPlugin());
             if (Config.APS) pluginsList.add(SignatureVerifierPlugin.getPlugin());
-            if (Config.APS) pluginsList.add(ObjectivesPlugin.INSTANCE);
+            if (Config.APS) pluginsList.add(objectivesPlugin);
             pluginsList.add(SourceXdripPlugin.getPlugin());
             pluginsList.add(SourceNSClientPlugin.getPlugin());
             pluginsList.add(SourceMM640gPlugin.getPlugin());
@@ -238,9 +252,9 @@ public class MainApp extends DaggerApplication {
             pluginsList.add(statusLinePlugin);
             pluginsList.add(PersistentNotificationPlugin.getPlugin());
             pluginsList.add(NSClientPlugin.getPlugin());
-//            if (engineeringMode) pluginsList.add(TidepoolPlugin.INSTANCE);
+//            if (engineeringMode) pluginsList.add(tidepoolPlugin);
             pluginsList.add(MaintenancePlugin.initPlugin(this));
-            pluginsList.add(AutomationPlugin.INSTANCE);
+            pluginsList.add(automationPlugin);
 
             pluginsList.add(configBuilderPlugin);
 
@@ -323,22 +337,27 @@ public class MainApp extends DaggerApplication {
 
     }
 
+    @Deprecated
     public static String gs(@StringRes int id) {
         return sResources.getString(id);
     }
 
+    @Deprecated
     public static String gs(@StringRes int id, Object... args) {
         return sResources.getString(id, args);
     }
 
+    @Deprecated
     public static String gq(@PluralsRes int id, int quantity, Object... args) {
         return sResources.getQuantityString(id, quantity, args);
     }
 
+    @Deprecated
     public static int gc(@ColorRes int id) {
         return ContextCompat.getColor(instance(), id);
     }
 
+    @Deprecated
     public static MainApp instance() {
         return sInstance;
     }

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.actions
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,39 +7,41 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
+import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.TDDStatsActivity
+import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
-import info.nightscout.androidaps.dialogs.CareDialog
-import info.nightscout.androidaps.dialogs.ExtendedBolusDialog
-import info.nightscout.androidaps.dialogs.FillDialog
-import info.nightscout.androidaps.dialogs.TempBasalDialog
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
-import info.nightscout.androidaps.activities.ErrorHelperActivity
-import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
-import info.nightscout.androidaps.dialogs.TempTargetDialog
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.SingleClickButton
 import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.toVisibility
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.actions_fragment.*
 import kotlinx.android.synthetic.main.careportal_stats_fragment.*
 import java.util.*
+import javax.inject.Inject
 
-class ActionsFragment : Fragment() {
+class ActionsFragment : DaggerFragment() {
+    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var resourceHelper: ResourceHelper
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -65,16 +66,16 @@ class ActionsFragment : Fragment() {
             fragmentManager?.let { ExtendedBolusDialog().show(it, "Actions") }
         }
         actions_extendedbolus_cancel.setOnClickListener {
-            if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress) {
-                ConfigBuilderPlugin.getPlugin().commandQueue.cancelExtended(object : Callback() {
+            if (treatmentsPlugin.isInHistoryExtendedBoluslInProgress) {
+                configBuilderPlugin.commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(MainApp.instance(), ErrorHelperActivity::class.java)
+                            val i = Intent(mainApp, ErrorHelperActivity::class.java)
                             i.putExtra("soundid", R.raw.boluserror)
                             i.putExtra("status", result.comment)
-                            i.putExtra("title", MainApp.gs(R.string.extendedbolusdeliveryerror))
+                            i.putExtra("title", resourceHelper.gs(R.string.extendedbolusdeliveryerror))
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            MainApp.instance().startActivity(i)
+                            mainApp.startActivity(i)
                         }
                     }
                 })
@@ -84,16 +85,16 @@ class ActionsFragment : Fragment() {
             fragmentManager?.let { TempBasalDialog().show(it, "Actions") }
         }
         actions_canceltempbasal.setOnClickListener {
-            if (TreatmentsPlugin.getPlugin().isTempBasalInProgress) {
-                ConfigBuilderPlugin.getPlugin().commandQueue.cancelTempBasal(true, object : Callback() {
+            if (treatmentsPlugin.isTempBasalInProgress) {
+                configBuilderPlugin.commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(MainApp.instance(), ErrorHelperActivity::class.java)
+                            val i = Intent(mainApp, ErrorHelperActivity::class.java)
                             i.putExtra("soundid", R.raw.boluserror)
                             i.putExtra("status", result.comment)
-                            i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror))
+                            i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            MainApp.instance().startActivity(i)
+                            mainApp.startActivity(i)
                         }
                     }
                 })
@@ -118,30 +119,30 @@ class ActionsFragment : Fragment() {
     @Synchronized
     override fun onResume() {
         super.onResume()
-        disposable += RxBus
-                .toObservable(EventInitializationChanged::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
-        disposable += RxBus
-                .toObservable(EventRefreshOverview::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
-        disposable += RxBus
-                .toObservable(EventExtendedBolusChange::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
-        disposable += RxBus
-                .toObservable(EventTempBasalChange::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
-        disposable += RxBus
-                .toObservable(EventCustomActionsChanged::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
-        disposable += RxBus
-                .toObservable(EventCareportalEventChange::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+        disposable += rxBus
+            .toObservable(EventInitializationChanged::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+        disposable += rxBus
+            .toObservable(EventRefreshOverview::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+        disposable += rxBus
+            .toObservable(EventExtendedBolusChange::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+        disposable += rxBus
+            .toObservable(EventTempBasalChange::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+        disposable += rxBus
+            .toObservable(EventCustomActionsChanged::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+        disposable += rxBus
+            .toObservable(EventCareportalEventChange::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
         updateGui()
     }
 
@@ -154,8 +155,8 @@ class ActionsFragment : Fragment() {
     @Synchronized
     fun updateGui() {
         actions_profileswitch?.visibility =
-                if (ConfigBuilderPlugin.getPlugin().activeProfileInterface?.profile != null) View.VISIBLE
-                else View.GONE
+            if (configBuilderPlugin.activeProfileInterface.profile != null) View.VISIBLE
+            else View.GONE
 
         if (ProfileFunctions.getInstance().getProfile() == null) {
             actions_temptarget?.visibility = View.GONE
@@ -167,7 +168,7 @@ class ActionsFragment : Fragment() {
             return
         }
 
-        val pump = ConfigBuilderPlugin.getPlugin().activePump ?: return
+        val pump = configBuilderPlugin.activePump ?: return
         val basalProfileEnabled = MainApp.isEngineeringModeOrRelease() && pump.pumpDescription.isSetBasalProfileCapable
 
         actions_profileswitch?.visibility = if (!basalProfileEnabled || !pump.isInitialized || pump.isSuspended) View.GONE else View.VISIBLE
@@ -176,11 +177,12 @@ class ActionsFragment : Fragment() {
             actions_extendedbolus?.visibility = View.GONE
             actions_extendedbolus_cancel?.visibility = View.GONE
         } else {
-            val activeExtendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis())
+            val activeExtendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())
             if (activeExtendedBolus != null) {
                 actions_extendedbolus?.visibility = View.GONE
                 actions_extendedbolus_cancel?.visibility = View.VISIBLE
-                actions_extendedbolus_cancel?.text = MainApp.gs(R.string.cancel) + " " + activeExtendedBolus.toString()
+                @Suppress("SetTextI18n")
+                actions_extendedbolus_cancel?.text = resourceHelper.gs(R.string.cancel) + " " + activeExtendedBolus.toString()
             } else {
                 actions_extendedbolus?.visibility = View.VISIBLE
                 actions_extendedbolus_cancel?.visibility = View.GONE
@@ -191,11 +193,12 @@ class ActionsFragment : Fragment() {
             actions_settempbasal?.visibility = View.GONE
             actions_canceltempbasal?.visibility = View.GONE
         } else {
-            val activeTemp = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis())
+            val activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())
             if (activeTemp != null) {
                 actions_settempbasal?.visibility = View.GONE
                 actions_canceltempbasal?.visibility = View.VISIBLE
-                actions_canceltempbasal?.text = MainApp.gs(R.string.cancel) + " " + activeTemp.toStringShort()
+                @Suppress("SetTextI18n")
+                actions_canceltempbasal?.text = resourceHelper.gs(R.string.cancel) + " " + activeTemp.toStringShort()
             } else {
                 actions_settempbasal?.visibility = View.VISIBLE
                 actions_canceltempbasal?.visibility = View.GONE
@@ -203,8 +206,8 @@ class ActionsFragment : Fragment() {
         }
 
         actions_fill?.visibility =
-                if (!pump.pumpDescription.isRefillingCapable || !pump.isInitialized || pump.isSuspended) View.GONE
-                else View.VISIBLE
+            if (!pump.pumpDescription.isRefillingCapable || !pump.isInitialized || pump.isSuspended) View.GONE
+            else View.VISIBLE
 
         actions_temptarget?.visibility = Config.APS.toVisibility()
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
@@ -215,7 +218,7 @@ class ActionsFragment : Fragment() {
     }
 
     private fun checkPumpCustomActions() {
-        val activePump = ConfigBuilderPlugin.getPlugin().activePump ?: return
+        val activePump = configBuilderPlugin.activePump ?: return
         val customActions = activePump.customActions ?: return
         removePumpCustomActions()
 
@@ -223,24 +226,24 @@ class ActionsFragment : Fragment() {
             if (!customAction.isEnabled) continue
 
             val btn = SingleClickButton(context, null, android.R.attr.buttonStyle)
-            btn.text = MainApp.gs(customAction.name)
+            btn.text = resourceHelper.gs(customAction.name)
 
             val layoutParams = LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f)
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 0.5f)
             layoutParams.setMargins(20, 8, 20, 8) // 10,3,10,3
 
             btn.layoutParams = layoutParams
             btn.setOnClickListener { v ->
                 val b = v as SingleClickButton
                 val action = this.pumpCustomActions[b.text.toString()]
-                ConfigBuilderPlugin.getPlugin().activePump!!.executeCustomAction(action!!.customActionType)
+                configBuilderPlugin.activePump!!.executeCustomAction(action!!.customActionType)
             }
             val top = activity?.let { ContextCompat.getDrawable(it, customAction.iconResourceId) }
             btn.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)
 
             action_buttons_layout?.addView(btn)
 
-            this.pumpCustomActions[MainApp.gs(customAction.name)] = customAction
+            this.pumpCustomActions[resourceHelper.gs(customAction.name)] = customAction
             this.pumpCustomButtons.add(btn)
         }
     }

@@ -52,16 +52,16 @@ public class MsgSettingMeal extends MessageBase {
 
         if (pump.basalStep != 0.01d) {
             Notification notification = new Notification(Notification.WRONGBASALSTEP, MainApp.gs(R.string.danar_setbasalstep001), Notification.URGENT);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
         } else {
-            RxBus.INSTANCE.send(new EventDismissNotification(Notification.WRONGBASALSTEP));
+            RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.WRONGBASALSTEP));
         }
 
         if (pump.isConfigUD) {
             Notification notification = new Notification(Notification.UD_MODE_ENABLED, MainApp.gs(R.string.danar_switchtouhmode), Notification.URGENT);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
         } else {
-            RxBus.INSTANCE.send(new EventDismissNotification(Notification.UD_MODE_ENABLED));
+            RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.UD_MODE_ENABLED));
         }
     }
 

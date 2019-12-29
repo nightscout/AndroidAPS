@@ -41,6 +41,7 @@ public class WearPlugin extends PluginBase {
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
+    @Deprecated
     public static WearPlugin getPlugin() {
         return wearPlugin;
     }
@@ -73,43 +74,43 @@ public class WearPlugin extends PluginBase {
         }
         super.onStart();
 
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventOpenAPSUpdateGui.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> sendDataToWatch(true, true, false),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventExtendedBolusChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> sendDataToWatch(true, true, false),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTempBasalChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> sendDataToWatch(true, true, false),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTreatmentChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> sendDataToWatch(true, true, false),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNewBasalProfile.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> sendDataToWatch(false, true, false),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> sendDataToWatch(true, true, true),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -119,7 +120,7 @@ public class WearPlugin extends PluginBase {
                             sendDataToWatch(true, false, false);
                         }, FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventRefreshOverview.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -127,7 +128,7 @@ public class WearPlugin extends PluginBase {
                                 sendDataToWatch(true, false, false);
                         }, FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventBolusRequested.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -138,7 +139,7 @@ public class WearPlugin extends PluginBase {
                             ctx.startService(intent);
                         }, FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventDismissBolusProgressIfRunning.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -155,7 +156,7 @@ public class WearPlugin extends PluginBase {
                             ctx.startService(intent);
                         }, FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventOverviewBolusProgress.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {

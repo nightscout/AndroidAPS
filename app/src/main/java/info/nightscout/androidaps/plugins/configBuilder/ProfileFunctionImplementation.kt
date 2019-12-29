@@ -8,10 +8,14 @@ import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.security.spec.InvalidParameterSpecException
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ProfileFunctionImplementation constructor(private val sp: SP) : ProfileFunction {
+class ProfileFunctionImplementation @Inject constructor(
+    private val sp: SP,
+    private val configBuilderPlugin: ConfigBuilderPlugin
+) : ProfileFunction {
 
     override fun getProfileName(): String =
         getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = false)
@@ -46,7 +50,7 @@ class ProfileFunctionImplementation constructor(private val sp: SP) : ProfileFun
         profileSwitch.source = Source.USER
         profileSwitch.profileName = profileName
         profileSwitch.profileJson = profile.data.toString()
-        profileSwitch.profilePlugin = ConfigBuilderPlugin.getPlugin().activeProfileInterface::class.java.name
+        profileSwitch.profilePlugin = configBuilderPlugin.activeProfileInterface::class.java.name
         profileSwitch.durationInMinutes = duration
         profileSwitch.isCPP = percentage != 100 || timeShift != 0
         profileSwitch.timeshift = timeShift

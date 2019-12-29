@@ -110,7 +110,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
             MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
             pumpStatus.verifyConfiguration(); // force reloading of address
 
-            RxBus.INSTANCE.send(new EventMedtronicPumpConfigurationChanged());
+            RxBus.Companion.getINSTANCE().send(new EventMedtronicPumpConfigurationChanged());
 
             finish();
         });

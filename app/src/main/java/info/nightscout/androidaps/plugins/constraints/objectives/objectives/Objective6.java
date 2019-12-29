@@ -2,14 +2,19 @@ package info.nightscout.androidaps.plugins.constraints.objectives.objectives;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.utils.T;
 
 public class Objective6 extends Objective {
+    @Inject ConstraintChecker constraintChecker;
 
     public Objective6() {
         super("maxiob", R.string.objectives_maxiob_objective, R.string.objectives_maxiob_gate);
+        MainApp.instance().androidInjector().inject(this); // TODO inject or pass itno constructor once AutomationPlugin is prepared for Dagger
     }
 
     @Override
@@ -18,7 +23,7 @@ public class Objective6 extends Objective {
         tasks.add(new Task(R.string.maxiobset) {
             @Override
             public boolean isCompleted() {
-                double maxIOB = ConstraintChecker.getInstance().getMaxIOBAllowed().value();
+                double maxIOB = constraintChecker.getMaxIOBAllowed().value();
                 return maxIOB > 0;
             }
         });

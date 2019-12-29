@@ -200,7 +200,7 @@ public class TreatmentsBolusFragment extends Fragment {
         Button refreshFromNS = view.findViewById(R.id.treatments_reshreshfromnightscout);
         refreshFromNS.setOnClickListener(v -> OKDialog.showConfirmation(getContext(), MainApp.gs(R.string.refresheventsfromnightscout) + "?", () -> {
             TreatmentsPlugin.getPlugin().getService().resetTreatments();
-            RxBus.INSTANCE.send(new EventNSClientRestart());
+            RxBus.Companion.getINSTANCE().send(new EventNSClientRestart());
         }));
 
         deleteFutureTreatments = view.findViewById(R.id.treatments_delete_future_treatments);
@@ -231,12 +231,12 @@ public class TreatmentsBolusFragment extends Fragment {
     @Override
     public synchronized void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTreatmentChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGui(), FabricPrivacy::logException)
         );
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGui(), FabricPrivacy::logException)

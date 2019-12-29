@@ -227,10 +227,10 @@ public class DanaRNSHistorySync {
                         log.error("Unknown record type");
                         break;
                 }
-                RxBus.INSTANCE.send(ev);
+                RxBus.Companion.getINSTANCE().send(ev);
             }
             ev.setMessage(String.format(MainApp.gs(R.string.danar_totaluploaded), uploaded));
-            RxBus.INSTANCE.send(ev);
+            RxBus.Companion.getINSTANCE().send(ev);
 
         } catch (JSONException e) {
             log.error("Unhandled exception", e);

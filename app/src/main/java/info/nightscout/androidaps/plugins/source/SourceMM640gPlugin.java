@@ -26,6 +26,7 @@ public class SourceMM640gPlugin extends PluginBase implements BgSourceInterface 
 
     private static SourceMM640gPlugin plugin = null;
 
+    @Deprecated
     public static SourceMM640gPlugin getPlugin() {
         if (plugin == null)
             plugin = new SourceMM640gPlugin();

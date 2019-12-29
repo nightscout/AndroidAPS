@@ -21,7 +21,6 @@ import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import kotlinx.android.synthetic.main.dialog_temptarget.*
 import kotlinx.android.synthetic.main.okcancel.*
 import java.text.DecimalFormat
@@ -29,18 +28,10 @@ import java.util.*
 import javax.inject.Inject
 
 class TempTargetDialog : DialogFragmentWithDate() {
-
-    @Inject
-    lateinit var constraintChecker: ConstraintChecker
-
-    @Inject
-    lateinit var sp: SP
-
-    @Inject
-    lateinit var resourceHelper: ResourceHelper
-
-    @Inject
-    lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -147,7 +138,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                         .duration(0)
                         .low(0.0).high(0.0)
                         .source(Source.USER)
-                    TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
+                    treatmentsPlugin.addToHistoryTempTarget(tempTarget)
                 } else {
                     val tempTarget = TempTarget()
                         .date(eventTime)
@@ -156,7 +147,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                         .source(Source.USER)
                         .low(Profile.toMgdl(target, profileFunction.getUnits()))
                         .high(Profile.toMgdl(target, profileFunction.getUnits()))
-                    TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
+                    treatmentsPlugin.addToHistoryTempTarget(tempTarget)
                 }
                 if (duration == 10.0) sp.putBoolean(R.string.key_objectiveusetemptarget, true)
             })

@@ -631,7 +631,7 @@ public class ActionStringHandler {
 
             doECarbs(carbs, starttime, duration);
         } else if ("dismissoverviewnotification".equals(act[0])) {
-            RxBus.INSTANCE.send(new EventDismissNotification(SafeParse.stringToInt(act[1])));
+            RxBus.Companion.getINSTANCE().send(new EventDismissNotification(SafeParse.stringToInt(act[1])));
         } else if ("changeRequest".equals(act[0])) {
             LoopPlugin.getPlugin().acceptChangeRequest();
             NotificationManager notificationManager =

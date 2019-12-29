@@ -25,6 +25,7 @@ public class SourceTomatoPlugin extends PluginBase implements BgSourceInterface 
 
     private static SourceTomatoPlugin plugin = null;
 
+    @Deprecated
     public static SourceTomatoPlugin getPlugin() {
         if (plugin == null)
             plugin = new SourceTomatoPlugin();

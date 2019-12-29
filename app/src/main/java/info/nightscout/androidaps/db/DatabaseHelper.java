@@ -224,7 +224,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        VirtualPumpPlugin.getPlugin().setFakingStatus(true);
+        VirtualPumpPlugin.Companion.getPlugin().setFakingStatus(true);
         scheduleBgChange(null); // trigger refresh
         scheduleTemporaryBasalChange();
         scheduleExtendedBolusChange();
@@ -235,7 +235,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 new java.util.TimerTask() {
                     @Override
                     public void run() {
-                        RxBus.INSTANCE.send(new EventRefreshOverview("resetDatabases"));
+                        RxBus.Companion.getINSTANCE().send(new EventRefreshOverview("resetDatabases"));
                     }
                 },
                 3000
@@ -260,7 +260,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
-        VirtualPumpPlugin.getPlugin().setFakingStatus(false);
+        VirtualPumpPlugin.Companion.getPlugin().setFakingStatus(false);
         scheduleTemporaryBasalChange();
     }
 
@@ -404,7 +404,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventNewBg");
-                RxBus.INSTANCE.send(new EventNewBG(bgReading));
+                RxBus.Companion.getINSTANCE().send(new EventNewBG(bgReading));
                 scheduledBgPost = null;
             }
         }
@@ -729,7 +729,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventTempTargetChange");
-                RxBus.INSTANCE.send(new EventTempTargetChange());
+                RxBus.Companion.getINSTANCE().send(new EventTempTargetChange());
                 scheduledTemTargetPost = null;
             }
         }
@@ -1026,10 +1026,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventTempBasalChange");
-                RxBus.INSTANCE.send(new EventReloadTempBasalData());
-                RxBus.INSTANCE.send(new EventTempBasalChange());
+                RxBus.Companion.getINSTANCE().send(new EventReloadTempBasalData());
+                RxBus.Companion.getINSTANCE().send(new EventTempBasalChange());
                 if (earliestDataChange != null)
-                    RxBus.INSTANCE.send(new EventNewHistoryData(earliestDataChange));
+                    RxBus.Companion.getINSTANCE().send(new EventNewHistoryData(earliestDataChange));
                 earliestDataChange = null;
                 scheduledTemBasalsPost = null;
             }
@@ -1071,8 +1071,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         .insulin(trJson.getDouble("originalExtendedAmount"))
                         ._id(trJson.getString("_id"));
                 // if faking found in NS, adapt AAPS to use it too
-                if (!VirtualPumpPlugin.getPlugin().getFakingStatus()) {
-                    VirtualPumpPlugin.getPlugin().setFakingStatus(true);
+                if (!VirtualPumpPlugin.Companion.getPlugin().getFakingStatus()) {
+                    VirtualPumpPlugin.Companion.getPlugin().setFakingStatus(true);
                     updateEarliestDataChange(0);
                     scheduleTemporaryBasalChange();
                 }
@@ -1086,8 +1086,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.insulin = 0;
                 extendedBolus._id = trJson.getString("_id");
                 // if faking found in NS, adapt AAPS to use it too
-                if (!VirtualPumpPlugin.getPlugin().getFakingStatus()) {
-                    VirtualPumpPlugin.getPlugin().setFakingStatus(true);
+                if (!VirtualPumpPlugin.Companion.getPlugin().getFakingStatus()) {
+                    VirtualPumpPlugin.Companion.getPlugin().setFakingStatus(true);
                     updateEarliestDataChange(0);
                     scheduleTemporaryBasalChange();
                 }
@@ -1362,9 +1362,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventExtendedBolusChange");
-                RxBus.INSTANCE.send(new EventReloadTreatmentData(new EventExtendedBolusChange()));
+                RxBus.Companion.getINSTANCE().send(new EventReloadTreatmentData(new EventExtendedBolusChange()));
                 if (earliestDataChange != null)
-                    RxBus.INSTANCE.send(new EventNewHistoryData(earliestDataChange));
+                    RxBus.Companion.getINSTANCE().send(new EventNewHistoryData(earliestDataChange));
                 earliestDataChange = null;
                 scheduledExtendedBolusPost = null;
             }
@@ -1568,7 +1568,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing scheduleCareportalEventChange");
-                RxBus.INSTANCE.send(new EventCareportalEventChange());
+                RxBus.Companion.getINSTANCE().send(new EventCareportalEventChange());
                 scheduledCareportalEventPost = null;
             }
         }
@@ -1741,8 +1741,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             public void run() {
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Firing EventProfileNeedsUpdate");
-                RxBus.INSTANCE.send(new EventReloadProfileSwitchData());
-                RxBus.INSTANCE.send(new EventProfileNeedsUpdate());
+                RxBus.Companion.getINSTANCE().send(new EventReloadProfileSwitchData());
+                RxBus.Companion.getINSTANCE().send(new EventProfileNeedsUpdate());
                 scheduledProfileSwitchEventPost = null;
             }
         }

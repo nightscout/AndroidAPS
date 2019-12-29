@@ -25,13 +25,14 @@ import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.queue.CommandQueue;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by mike on 05.08.2016.
@@ -40,6 +41,8 @@ import info.nightscout.androidaps.utils.SP;
 public class ConfigBuilderPlugin extends PluginBase {
     private static ConfigBuilderPlugin configBuilderPlugin;
     private final AAPSLogger aapsLogger; // TODO move to plugin base
+    private final SP sp; 
+    private final RxBusWrapper rxBus;
 
 
     /**
@@ -63,10 +66,10 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     private CommandQueue commandQueue = new CommandQueue();
 
-    private Lazy<InsulinOrefRapidActingPlugin> insulinOrefRapidActingPlugin;
-
-    //TODO: inject
-    LocalProfilePlugin localProfilePlugin = LocalProfilePlugin.INSTANCE;
+    private final Lazy<MainApp> mainApp;
+    private final Lazy<InsulinOrefRapidActingPlugin> insulinOrefRapidActingPlugin;
+    private final Lazy<LocalProfilePlugin> localProfilePlugin;
+    private final Lazy<VirtualPumpPlugin> virtualPumpPlugin;
 
     /*
      * Written by Adrian:
@@ -77,8 +80,13 @@ public class ConfigBuilderPlugin extends PluginBase {
      * */
     @Inject
     public ConfigBuilderPlugin(
+            Lazy<MainApp> mainApp,
             Lazy<InsulinOrefRapidActingPlugin> insulinOrefRapidActingPlugin,
-            AAPSLogger aapsLogger
+            Lazy<LocalProfilePlugin> localProfilePlugin,
+            Lazy<VirtualPumpPlugin> virtualPumpPlugin,
+            AAPSLogger aapsLogger,
+            SP sp,
+            RxBusWrapper rxBus
     ) {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
@@ -90,28 +98,22 @@ public class ConfigBuilderPlugin extends PluginBase {
                 .shortName(R.string.configbuilder_shortname)
                 .description(R.string.description_config_builder)
         );
+        this.mainApp = mainApp;
         this.insulinOrefRapidActingPlugin = insulinOrefRapidActingPlugin;
+        this.localProfilePlugin = localProfilePlugin;
+        this.virtualPumpPlugin = virtualPumpPlugin;
         this.aapsLogger = aapsLogger;
+        this.sp = sp;
+        this.rxBus =rxBus;
         configBuilderPlugin = this;  // TODO: only while transitioning to Dagger
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
 
     public void initialize() {
         pluginList = MainApp.getPluginsList();
         upgradeSettings();
         loadSettings();
         setAlwaysEnabledPluginsEnabled();
-        RxBus.INSTANCE.send(new EventAppInitialized());
+        RxBus.Companion.getINSTANCE().send(new EventAppInitialized());
     }
 
     private void setAlwaysEnabledPluginsEnabled() {
@@ -146,11 +148,11 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     private void savePref(PluginBase p, PluginType type, boolean storeVisible) {
         String settingEnabled = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Enabled";
-        SP.putBoolean(settingEnabled, p.isEnabled(type));
+        sp.putBoolean(settingEnabled, p.isEnabled(type));
         aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingEnabled + ":" + p.isEnabled(type));
         if (storeVisible) {
             String settingVisible = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Visible";
-            SP.putBoolean(settingVisible, p.isFragmentVisible());
+            sp.putBoolean(settingVisible, p.isFragmentVisible());
             aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingVisible + ":" + p.isFragmentVisible());
         }
     }
@@ -171,16 +173,16 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     private void loadPref(PluginBase p, PluginType type, boolean loadVisible) {
         String settingEnabled = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Enabled";
-        if (SP.contains(settingEnabled))
-            p.setPluginEnabled(type, SP.getBoolean(settingEnabled, false));
+        if (sp.contains(settingEnabled))
+            p.setPluginEnabled(type, sp.getBoolean(settingEnabled, false));
         else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
             p.setPluginEnabled(type, true);
         }
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingEnabled + ":" + p.isEnabled(type));
         if (loadVisible) {
             String settingVisible = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Visible";
-            if (SP.contains(settingVisible))
-                p.setFragmentVisible(type, SP.getBoolean(settingVisible, false) && SP.getBoolean(settingEnabled, false));
+            if (sp.contains(settingVisible))
+                p.setFragmentVisible(type, sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false));
             else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
                 p.setFragmentVisible(type, true);
             }
@@ -190,7 +192,7 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     // Detect settings prior 1.60
     private void upgradeSettings() {
-        if (!SP.contains("ConfigBuilder_1_NSProfilePlugin_Enabled"))
+        if (!sp.contains("ConfigBuilder_1_NSProfilePlugin_Enabled"))
             return;
         aapsLogger.debug(LTag.CONFIGBUILDER, "Upgrading stored settings");
         for (PluginBase p : pluginList) {
@@ -234,12 +236,12 @@ public class ConfigBuilderPlugin extends PluginBase {
                 }
                 String settingEnabled = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Enabled";
                 String settingVisible = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Visible";
-                if (SP.contains(settingEnabled))
-                    p.setPluginEnabled(newType, SP.getBoolean(settingEnabled, false));
-                if (SP.contains(settingVisible))
-                    p.setFragmentVisible(newType, SP.getBoolean(settingVisible, false) && SP.getBoolean(settingEnabled, false));
-                SP.remove(settingEnabled);
-                SP.remove(settingVisible);
+                if (sp.contains(settingEnabled))
+                    p.setPluginEnabled(newType, sp.getBoolean(settingEnabled, false));
+                if (sp.contains(settingVisible))
+                    p.setFragmentVisible(newType, sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false));
+                sp.remove(settingEnabled);
+                sp.remove(settingVisible);
                 if (newType == p.getType()) {
                     savePref(p, newType, true);
                 } else if (p.getType() == PluginType.PUMP && p instanceof ProfileInterface) {
@@ -261,7 +263,7 @@ public class ConfigBuilderPlugin extends PluginBase {
     @NotNull
     public ProfileInterface getActiveProfileInterface() {
         if (activeProfile != null) return activeProfile;
-        else return localProfilePlugin;
+        else return localProfilePlugin.get();
     }
 
     @Nullable
@@ -337,8 +339,8 @@ public class ConfigBuilderPlugin extends PluginBase {
         pluginsInCategory = MainApp.getSpecificPluginsList(PluginType.PUMP);
         activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory, PluginType.PUMP);
         if (activePump == null) {
-            activePump = VirtualPumpPlugin.getPlugin();
-            VirtualPumpPlugin.getPlugin().setPluginEnabled(PluginType.PUMP, true);
+            activePump = virtualPumpPlugin.get();
+            virtualPumpPlugin.get().setPluginEnabled(PluginType.PUMP, true);
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting VirtualPumpPlugin");
         }
         this.setFragmentVisiblities(((PluginBase) activePump).getName(), pluginsInCategory, PluginType.PUMP);
@@ -464,7 +466,7 @@ public class ConfigBuilderPlugin extends PluginBase {
                 }
             } else { // enable first plugin in list
                 if (type == PluginType.PUMP)
-                    VirtualPumpPlugin.getPlugin().setPluginEnabled(type, true);
+                    VirtualPumpPlugin.Companion.getPlugin().setPluginEnabled(type, true);
                 else if (type == PluginType.INSULIN)
                     insulinOrefRapidActingPlugin.get().setPluginEnabled(type, true);
                 else if (type == PluginType.SENSITIVITY)

@@ -41,9 +41,9 @@ public class ActionNotification extends Action {
     @Override
     public void doAction(Callback callback) {
         Notification notification = new Notification(Notification.USERMESSAGE, text.getValue(), Notification.URGENT);
-        RxBus.INSTANCE.send(new EventNewNotification(notification));
+        RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
         NSUpload.uploadError(text.getValue());
-        RxBus.INSTANCE.send(new EventRefreshOverview("ActionNotification"));
+        RxBus.Companion.getINSTANCE().send(new EventRefreshOverview("ActionNotification"));
         if (callback != null)
             callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
 

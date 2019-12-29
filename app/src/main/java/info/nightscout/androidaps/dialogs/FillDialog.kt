@@ -23,7 +23,6 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.OKDialog
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import kotlinx.android.synthetic.main.dialog_fill.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
@@ -32,22 +31,14 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 class FillDialog : DialogFragmentWithDate() {
-
-    @Inject
-    lateinit var constraintChecker: ConstraintChecker
-
-    @Inject
-    lateinit var resourceHelper: ResourceHelper
-
-    @Inject
-    lateinit var sp: SP
-
-    @Inject
-    lateinit var mainApp: MainApp
+    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
-        savedInstanceState.putDouble("fill_insulinamount", fill_insulinamount.value)
+        savedInstanceState.putDouble("fill_insulin_amount", fill_insulinamount.value)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -60,8 +51,8 @@ class FillDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
-        val bolusStep = ConfigBuilderPlugin.getPlugin().activePump!!.pumpDescription.bolusStep
-        fill_insulinamount.setParams(savedInstanceState?.getDouble("fill_insulinamount")
+        val bolusStep = configBuilderPlugin.activePump!!.pumpDescription.bolusStep
+        fill_insulinamount.setParams(savedInstanceState?.getDouble("fill_insulin_amount")
             ?: 0.0, 0.0, maxInsulin, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), true, ok)
         val amount1 = sp.getDouble("fill_button1", 0.3)
         if (amount1 > 0) {
@@ -98,7 +89,7 @@ class FillDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0) {
             actions.add(resourceHelper.gs(R.string.fillwarning))
             actions.add("")
-            actions.add(resourceHelper.gs(R.string.bolus) + ": " + "<font color='" + resourceHelper.gc(R.color.colorInsulinButton) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + MainApp.gs(R.string.insulin_unit_shortname) + "</font>")
+            actions.add(resourceHelper.gs(R.string.bolus) + ": " + "<font color='" + resourceHelper.gc(R.color.colorInsulinButton) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + resourceHelper.gs(R.string.insulin_unit_shortname) + "</font>")
             if (abs(insulinAfterConstraints - insulin) > 0.01)
                 actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarning, resourceHelper.gc(R.color.warning), insulin, insulinAfterConstraints))
         }
@@ -124,7 +115,7 @@ class FillDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.source = Source.USER
                         detailedBolusInfo.isValid = false // do not count it in IOB (for pump history)
                         detailedBolusInfo.notes = notes
-                        ConfigBuilderPlugin.getPlugin().commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                        configBuilderPlugin.commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
                                     val i = Intent(mainApp, ErrorHelperActivity::class.java)

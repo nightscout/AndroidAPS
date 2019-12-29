@@ -8,16 +8,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import androidx.fragment.app.DialogFragment
+import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.services.AlarmSoundService
 import kotlinx.android.synthetic.main.dialog_error.*
-import org.slf4j.LoggerFactory
+import javax.inject.Inject
 
-class ErrorDialog : DialogFragment() {
-    private val log = LoggerFactory.getLogger(ErrorDialog::class.java)
+class ErrorDialog : DaggerDialogFragment() {
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var mainApp: MainApp
 
     var helperActivity: ErrorHelperActivity? = null
     var status: String = ""
@@ -44,11 +47,11 @@ class ErrorDialog : DialogFragment() {
 
         error_title.text = title
         overview_error_ok.setOnClickListener {
-            log.debug("Error dialog ok button pressed")
+            aapsLogger.debug(LTag.UI, "Error dialog ok button pressed")
             dismiss()
         }
         overview_error_mute.setOnClickListener {
-            log.debug("Error dialog mute button pressed")
+            aapsLogger.debug(LTag.UI, "Error dialog mute button pressed")
             stopAlarm()
         }
         startAlarm()
@@ -79,16 +82,16 @@ class ErrorDialog : DialogFragment() {
 
     private fun startAlarm() {
         if (sound != 0) {
-            val alarm = Intent(MainApp.instance().applicationContext, AlarmSoundService::class.java)
+            val alarm = Intent(mainApp, AlarmSoundService::class.java)
             alarm.putExtra("soundid", sound)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                MainApp.instance().startForegroundService(alarm)
+                mainApp.startForegroundService(alarm)
             } else {
-                MainApp.instance().startService(alarm)
+                mainApp.startService(alarm)
             }
         }
     }
 
     private fun stopAlarm() =
-        MainApp.instance().stopService(Intent(MainApp.instance().applicationContext, AlarmSoundService::class.java))
+        mainApp.stopService(Intent(mainApp, AlarmSoundService::class.java))
 }

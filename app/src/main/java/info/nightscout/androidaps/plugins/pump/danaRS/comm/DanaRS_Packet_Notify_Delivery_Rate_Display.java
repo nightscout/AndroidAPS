@@ -46,7 +46,7 @@ public class DanaRS_Packet_Notify_Delivery_Rate_Display extends DanaRS_Packet {
             bolusingEvent.setT(t);
             bolusingEvent.setPercent(Math.min((int) (deliveredInsulin / amount * 100), 100));
             failed = bolusingEvent.getPercent() < 100? true: false;
-            RxBus.INSTANCE.send(bolusingEvent);
+            RxBus.Companion.getINSTANCE().send(bolusingEvent);
         }
 
         if (L.isEnabled(L.PUMPCOMM))

@@ -4,6 +4,8 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -89,6 +91,7 @@ public interface PumpInterface {
 
     boolean canHandleDST();
 
+    @Nullable
     List<CustomAction> getCustomActions();
 
     void executeCustomAction(CustomActionType customActionType);

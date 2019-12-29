@@ -14,7 +14,8 @@ import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.actions.Action
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
 
-class ActionListAdapter(private val fragmentManager: FragmentManager, private val actionList: MutableList<Action>) : RecyclerView.Adapter<ActionListAdapter.ViewHolder>() {
+class ActionListAdapter(private val fragmentManager: FragmentManager, private val actionList: MutableList<Action>)
+    : RecyclerView.Adapter<ActionListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.automation_action_item, parent, false)
@@ -46,7 +47,7 @@ class ActionListAdapter(private val fragmentManager: FragmentManager, private va
             view.findViewById<ImageView>(R.id.automation_iconTrash).setOnClickListener {
                 actionList.remove(action)
                 recyclerView.notifyDataSetChanged()
-                RxBus.send(EventAutomationUpdateGui())
+                RxBus.INSTANCE.send(EventAutomationUpdateGui())
             }
             if (action.icon().isPresent) view.findViewById<ImageView>(R.id.automation_action_image).setImageResource(action.icon().get())
             view.findViewById<TextView>(R.id.automation_viewActionTitle).text = action.shortDescription()

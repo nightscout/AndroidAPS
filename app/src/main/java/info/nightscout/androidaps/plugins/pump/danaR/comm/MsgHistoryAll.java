@@ -144,6 +144,6 @@ public class MsgHistoryAll extends MessageBase {
         }
 
         MainApp.getDbHelper().createOrUpdate(danaRHistoryRecord);
-        RxBus.INSTANCE.send(new EventDanaRSyncStatus(DateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType));
+        RxBus.Companion.getINSTANCE().send(new EventDanaRSyncStatus(DateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType));
     }
 }

@@ -27,6 +27,7 @@ public class DstHelperPlugin extends PluginBase implements ConstraintsInterface 
 
     static DstHelperPlugin plugin = null;
 
+    @Deprecated
     public static DstHelperPlugin getPlugin() {
         if (plugin == null)
             plugin = new DstHelperPlugin();
@@ -90,6 +91,6 @@ public class DstHelperPlugin extends PluginBase implements ConstraintsInterface 
 
     private void warnUser(int id, String warningText) {
         Notification notification = new Notification(id, warningText, Notification.LOW);
-        RxBus.INSTANCE.send(new EventNewNotification(notification));
+        RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
     }
 }

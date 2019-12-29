@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.constraints.objectives.objectives;
 import java.util.Collections;
 import java.util.List;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 
 public class Objective2 extends Objective {
@@ -10,6 +11,7 @@ public class Objective2 extends Objective {
 
     public Objective2() {
         super("exam", R.string.objectives_exam_objective, R.string.objectives_exam_gate);
+        MainApp.instance().androidInjector().inject(this); // TODO inject or pass itno constructor once AutomationPlugin is prepared for Dagger
         for (Task task : tasks) {
             if (!task.isCompleted()) setAccomplishedOn(0);
         }

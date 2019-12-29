@@ -3,16 +3,17 @@ package info.nightscout.androidaps.receivers
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.app.PendingIntent.CanceledException
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.PowerManager
 import android.os.SystemClock
+import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.plugins.bus.RxBus.send
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
@@ -20,14 +21,21 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.LocalAlertUtils
 import info.nightscout.androidaps.utils.T
 import org.slf4j.LoggerFactory
+import javax.inject.Inject
 import kotlin.math.abs
 
-class KeepAliveReceiver : BroadcastReceiver() {
+class KeepAliveReceiver : DaggerBroadcastReceiver() {
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var profileFunction: ProfileFunction
+
     private var lastReadStatus: Long = 0
     private var lastRun: Long = 0
     private var lastIobUpload: Long = 0
 
-    override fun onReceive(context: Context, rIntent: Intent) {
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
         if (L.isEnabled(L.CORE))
             log.debug("KeepAlive received")
         val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
@@ -78,7 +86,7 @@ class KeepAliveReceiver : BroadcastReceiver() {
     }
 
     private fun checkAPS() {
-        val usedAPS = ConfigBuilderPlugin.getPlugin().activeAPS
+        val usedAPS = configBuilderPlugin.activeAPS
         var shouldUploadStatus = false
         if (usedAPS == null) shouldUploadStatus = true
         else if (DateUtil.isOlderThan(usedAPS.lastAPSRun, 5)) shouldUploadStatus = true
@@ -89,28 +97,26 @@ class KeepAliveReceiver : BroadcastReceiver() {
     }
 
     private fun checkPump() {
-        val pump = ConfigBuilderPlugin.getPlugin().activePump
-        val profile = ProfileFunctions.getInstance().getProfile()
-        if (pump != null && profile != null) {
-            val lastConnection = pump.lastDataTime()
-            val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis()
-            val isBasalOutdated = abs(profile.basal - pump.baseBasalRate) > pump.pumpDescription.basalStep
-            if (L.isEnabled(L.CORE))
-                log.debug("Last connection: " + DateUtil.dateAndTimeString(lastConnection))
-            // sometimes keep alive broadcast stops
-            // as as workaround test if readStatus was requested before an alarm is generated
-            if (lastReadStatus != 0L && lastReadStatus > System.currentTimeMillis() - T.mins(5).msecs()) {
-                LocalAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated)
-            }
-            if (!pump.isThisProfileSet(profile) && !ConfigBuilderPlugin.getPlugin().commandQueue.isRunning(Command.CommandType.BASALPROFILE)) {
-                send(EventProfileNeedsUpdate())
-            } else if (isStatusOutdated && !pump.isBusy) {
-                lastReadStatus = System.currentTimeMillis()
-                ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("KeepAlive. Status outdated.", null)
-            } else if (isBasalOutdated && !pump.isBusy) {
-                lastReadStatus = System.currentTimeMillis()
-                ConfigBuilderPlugin.getPlugin().commandQueue.readStatus("KeepAlive. Basal outdated.", null)
-            }
+        val pump = configBuilderPlugin.activePump ?: return
+        val profile = profileFunction.getProfile() ?: return
+        val lastConnection = pump.lastDataTime()
+        val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis()
+        val isBasalOutdated = abs(profile.basal - pump.baseBasalRate) > pump.pumpDescription.basalStep
+        if (L.isEnabled(L.CORE))
+            log.debug("Last connection: " + DateUtil.dateAndTimeString(lastConnection))
+        // sometimes keep alive broadcast stops
+        // as as workaround test if readStatus was requested before an alarm is generated
+        if (lastReadStatus != 0L && lastReadStatus > System.currentTimeMillis() - T.mins(5).msecs()) {
+            LocalAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated)
+        }
+        if (!pump.isThisProfileSet(profile) && !configBuilderPlugin.commandQueue.isRunning(Command.CommandType.BASALPROFILE)) {
+            rxBus.send(EventProfileNeedsUpdate())
+        } else if (isStatusOutdated && !pump.isBusy) {
+            lastReadStatus = System.currentTimeMillis()
+            configBuilderPlugin.commandQueue.readStatus("KeepAlive. Status outdated.", null)
+        } else if (isBasalOutdated && !pump.isBusy) {
+            lastReadStatus = System.currentTimeMillis()
+            configBuilderPlugin.commandQueue.readStatus("KeepAlive. Basal outdated.", null)
         }
         if (lastRun != 0L && System.currentTimeMillis() - lastRun > T.mins(10).msecs()) {
             log.error("KeepAlive fail")

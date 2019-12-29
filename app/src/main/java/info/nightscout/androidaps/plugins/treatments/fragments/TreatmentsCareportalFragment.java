@@ -130,7 +130,7 @@ public class TreatmentsCareportalFragment extends Fragment {
         refreshFromNS.setOnClickListener(v ->
                 OKDialog.showConfirmation(getContext(), MainApp.gs(R.string.careportal), MainApp.gs(R.string.refresheventsfromnightscout) + " ?", () -> {
                     MainApp.getDbHelper().resetCareportalEvents();
-                    RxBus.INSTANCE.send(new EventNSClientRestart());
+                    RxBus.Companion.getINSTANCE().send(new EventNSClientRestart());
                 }));
 
         view.findViewById(R.id.careportal_removeandroidapsstartedevents).setOnClickListener(v ->
@@ -146,7 +146,7 @@ public class TreatmentsCareportalFragment extends Fragment {
     @Override
     public synchronized void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventCareportalEventChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGui(), FabricPrivacy::logException)

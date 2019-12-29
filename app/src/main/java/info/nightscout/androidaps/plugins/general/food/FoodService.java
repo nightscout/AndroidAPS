@@ -53,7 +53,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public FoodService() {
         onCreate();
         dbInitialize();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNsFood.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -166,7 +166,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
             public void run() {
                 if (L.isEnabled(L.DATAFOOD))
                     log.debug("Firing EventFoodChange");
-                RxBus.INSTANCE.send(event);
+                RxBus.Companion.getINSTANCE().send(event);
                 callback.setPost(null);
             }
         }

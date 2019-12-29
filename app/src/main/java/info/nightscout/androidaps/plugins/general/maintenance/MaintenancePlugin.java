@@ -39,6 +39,7 @@ public class MaintenancePlugin extends PluginBase {
 
     private static MaintenancePlugin maintenancePlugin;
 
+    @Deprecated
     public static MaintenancePlugin getPlugin() {
         return maintenancePlugin;
     }

@@ -12,18 +12,21 @@ import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.data.QuickWizard
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.overview_quickwizardlist_activity.*
+import javax.inject.Inject
 
 class QuickWizardListActivity : NoSplashAppCompatActivity() {
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var resourceHelper: ResourceHelper
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -37,7 +40,7 @@ class QuickWizardListActivity : NoSplashAppCompatActivity() {
             holder.from.text = DateUtil.timeString(QuickWizard[position].validFromDate())
             holder.to.text = DateUtil.timeString(QuickWizard[position].validToDate())
             holder.buttonText.text = QuickWizard[position].buttonText()
-            holder.carbs.text = DecimalFormatter.to0Decimal(QuickWizard[position].carbs().toDouble()) + " g"
+            holder.carbs.text = resourceHelper.gs(R.string.format_carbs, QuickWizard[position].carbs())
         }
 
         override fun getItemCount(): Int = QuickWizard.size()
@@ -59,7 +62,7 @@ class QuickWizardListActivity : NoSplashAppCompatActivity() {
                 }
                 removeButton.setOnClickListener {
                     QuickWizard.remove(adapterPosition)
-                    RxBus.send(EventQuickWizardChange())
+                    rxBus.send(EventQuickWizardChange())
                 }
             }
         }
@@ -82,15 +85,15 @@ class QuickWizardListActivity : NoSplashAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        disposable += RxBus
-                .toObservable(EventQuickWizardChange::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    val adapter = RecyclerViewAdapter(supportFragmentManager)
-                    overview_quickwizardactivity_recyclerview?.swapAdapter(adapter, false)
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+        disposable += rxBus
+            .toObservable(EventQuickWizardChange::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                val adapter = RecyclerViewAdapter(supportFragmentManager)
+                overview_quickwizardactivity_recyclerview?.swapAdapter(adapter, false)
+            }, {
+                FabricPrivacy.logException(it)
+            })
     }
 
     override fun onPause() {

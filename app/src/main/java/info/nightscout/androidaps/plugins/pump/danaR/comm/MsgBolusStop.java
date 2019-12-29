@@ -45,6 +45,6 @@ public class MsgBolusStop extends MessageBase {
         } else {
             bolusingEvent.setStatus(MainApp.gs(R.string.overview_bolusprogress_stoped));
         }
-        RxBus.INSTANCE.send(bolusingEvent);
+        RxBus.Companion.getINSTANCE().send(bolusingEvent);
     }
 }

@@ -88,8 +88,8 @@ public class SWPlugin extends SWItem {
             plugin.setFragmentVisible(pType, rb.isChecked() && makeVisible);
             ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(plugin, pType);
             ConfigBuilderPlugin.getPlugin().storeSettings("SetupWizard");
-            RxBus.INSTANCE.send(new EventConfigBuilderChange());
-            RxBus.INSTANCE.send(new EventSWUpdate(false));
+            RxBus.Companion.getINSTANCE().send(new EventConfigBuilderChange());
+            RxBus.Companion.getINSTANCE().send(new EventSWUpdate(false));
         });
         layout.addView(radioGroup);
         super.generateDialog(layout);

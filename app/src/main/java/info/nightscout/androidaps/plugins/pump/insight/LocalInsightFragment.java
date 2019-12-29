@@ -69,7 +69,7 @@ public class LocalInsightFragment extends Fragment implements View.OnClickListen
     @Override
     public synchronized void onResume() {
         super.onResume();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventLocalInsightUpdateGUI.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGUI(), FabricPrivacy::logException)

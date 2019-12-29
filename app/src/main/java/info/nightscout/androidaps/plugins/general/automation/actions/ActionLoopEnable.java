@@ -28,7 +28,7 @@ public class ActionLoopEnable extends Action {
         if (!LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)) {
             LoopPlugin.getPlugin().setPluginEnabled(PluginType.LOOP, true);
             ConfigBuilderPlugin.getPlugin().storeSettings("ActionLoopEnable");
-            RxBus.INSTANCE.send(new EventRefreshOverview("ActionLoopEnable"));
+            RxBus.Companion.getINSTANCE().send(new EventRefreshOverview("ActionLoopEnable"));
             if (callback != null)
                 callback.result(new PumpEnactResult().success(true).comment(R.string.ok)).run();
         } else {

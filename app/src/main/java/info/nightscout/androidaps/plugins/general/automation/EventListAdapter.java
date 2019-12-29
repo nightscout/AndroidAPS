@@ -100,7 +100,7 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder>
         // enabled event
         holder.enabled.setOnClickListener(v -> {
             event.setEnabled((holder.enabled.isChecked()));
-            RxBus.INSTANCE.send(new EventAutomationDataChanged());
+            RxBus.Companion.getINSTANCE().send(new EventAutomationDataChanged());
         });
 
         // edit event
@@ -138,7 +138,7 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder>
     public boolean onItemMove(int fromPosition, int toPosition) {
         Collections.swap(eventList, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
-        RxBus.INSTANCE.send(new EventAutomationDataChanged());
+        RxBus.Companion.getINSTANCE().send(new EventAutomationDataChanged());
         return true;
     }
 
@@ -148,10 +148,10 @@ class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.ViewHolder>
                 () -> {
                     eventList.remove(position);
                     notifyItemRemoved(position);
-                    RxBus.INSTANCE.send(new EventAutomationDataChanged());
-                    RxBus.INSTANCE.send(new EventAutomationUpdateGui());
+                    RxBus.Companion.getINSTANCE().send(new EventAutomationDataChanged());
+                    RxBus.Companion.getINSTANCE().send(new EventAutomationUpdateGui());
                 }, () -> {
-                    RxBus.INSTANCE.send(new EventAutomationUpdateGui());
+                    RxBus.Companion.getINSTANCE().send(new EventAutomationUpdateGui());
                 });
     }
 

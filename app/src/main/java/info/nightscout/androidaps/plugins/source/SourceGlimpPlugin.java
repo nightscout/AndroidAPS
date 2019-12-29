@@ -24,6 +24,7 @@ public class SourceGlimpPlugin extends PluginBase implements BgSourceInterface {
 
     private static SourceGlimpPlugin plugin = null;
 
+    @Deprecated
     public static SourceGlimpPlugin getPlugin() {
         if (plugin == null)
             plugin = new SourceGlimpPlugin();

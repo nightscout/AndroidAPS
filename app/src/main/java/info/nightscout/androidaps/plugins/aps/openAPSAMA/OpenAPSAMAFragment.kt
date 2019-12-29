@@ -12,7 +12,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateResultGui
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.JSONFormatter
@@ -27,11 +27,9 @@ import javax.inject.Inject
 class OpenAPSAMAFragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    @Inject
-    lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
-
-    @Inject
-    lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var rxBus: RxBusWrapper
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -50,7 +48,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
     override fun onResume() {
         super.onResume()
 
-        disposable += RxBus
+        disposable += rxBus
             .toObservable(EventOpenAPSUpdateGui::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -58,7 +56,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
             }, {
                 FabricPrivacy.logException(it)
             })
-        disposable += RxBus
+        disposable += rxBus
             .toObservable(EventOpenAPSUpdateResultGui::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
@@ -90,7 +88,8 @@ class OpenAPSAMAFragment : DaggerFragment() {
                 val iobArray = JSONArray(determineBasalAdapterAMAJS.iobDataParam)
                 openapsma_iobdata.text = TextUtils.concat(String.format(MainApp.gs(R.string.array_of_elements), iobArray.length()) + "\n", JSONFormatter.format(iobArray.getString(0)))
             } catch (e: JSONException) {
-                aapsLogger.error(LTag.APS,"Unhandled exception", e)
+                aapsLogger.error(LTag.APS, "Unhandled exception", e)
+                @Suppress("SetTextI18n")
                 openapsma_iobdata.text = "JSONException see log for details"
             }
 

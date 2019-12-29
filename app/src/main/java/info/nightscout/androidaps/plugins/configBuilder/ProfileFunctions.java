@@ -40,6 +40,7 @@ public class ProfileFunctions implements ProfileFunction {
 
     private static ProfileFunctions profileFunctions = null;
 
+    @Deprecated
     public static ProfileFunctions getInstance() {
         if (profileFunctions == null)
             profileFunctions = new ProfileFunctions();
@@ -51,7 +52,7 @@ public class ProfileFunctions implements ProfileFunction {
     }
 
     private ProfileFunctions() {
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventProfileNeedsUpdate.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -69,7 +70,7 @@ public class ProfileFunctions implements ProfileFunction {
                                 MainApp.instance().startActivity(i);
                             }
                             if (result.enacted)
-                                RxBus.INSTANCE.send(new EventNewBasalProfile());
+                                RxBus.Companion.getINSTANCE().send(new EventNewBasalProfile());
                         }
                     });
                 }, FabricPrivacy::logException)

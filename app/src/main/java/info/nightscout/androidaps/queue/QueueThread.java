@@ -51,7 +51,7 @@ public class QueueThread extends Thread {
     public final void run() {
         if (mWakeLock != null)
             mWakeLock.acquire(T.mins(10).msecs());
-        RxBus.INSTANCE.send(new EventQueueChanged());
+        RxBus.Companion.getINSTANCE().send(new EventQueueChanged());
         long lastCommandTime;
         long connectionStartTime = lastCommandTime = System.currentTimeMillis();
 
@@ -61,15 +61,15 @@ public class QueueThread extends Thread {
                 if (pump == null) {
                     if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("pump == null");
-                    RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.pumpNotInitialized)));
+                    RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(MainApp.gs(R.string.pumpNotInitialized)));
                     SystemClock.sleep(1000);
                     continue;
                 }
                 long secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000;
 
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
-                    RxBus.INSTANCE.send(new EventDismissBolusProgressIfRunning(null));
-                    RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.connectiontimedout)));
+                    RxBus.Companion.getINSTANCE().send(new EventDismissBolusProgressIfRunning(null));
+                    RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(MainApp.gs(R.string.connectiontimedout)));
                     if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("timed out");
                     pump.stopConnecting();
@@ -94,16 +94,16 @@ public class QueueThread extends Thread {
                         SystemClock.sleep(1000);
                         //start over again once after watchdog barked
                         //Notification notification = new Notification(Notification.OLD_NSCLIENT, "Watchdog", Notification.URGENT);
-                        //RxBus.INSTANCE.send(new EventNewNotification(notification));
+                        //RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
                         connectionStartTime = lastCommandTime = System.currentTimeMillis();
                         pump.connect("watchdog");
                     } else {
                         queue.clear();
                         if (L.isEnabled(L.PUMPQUEUE))
                             log.debug("no connection possible");
-                        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
+                        RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
                         pump.disconnect("Queue empty");
-                        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED));
+                        RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED));
                         return;
                     }
                 }
@@ -111,7 +111,7 @@ public class QueueThread extends Thread {
                 if (pump.isHandshakeInProgress()) {
                     if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("handshaking " + secondsElapsed);
-                    RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.HANDSHAKING, (int) secondsElapsed));
+                    RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.HANDSHAKING, (int) secondsElapsed));
                     SystemClock.sleep(100);
                     continue;
                 }
@@ -119,7 +119,7 @@ public class QueueThread extends Thread {
                 if (pump.isConnecting()) {
                     if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("connecting " + secondsElapsed);
-                    RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, (int) secondsElapsed));
+                    RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, (int) secondsElapsed));
                     SystemClock.sleep(1000);
                     continue;
                 }
@@ -127,7 +127,7 @@ public class QueueThread extends Thread {
                 if (!pump.isConnected()) {
                     if (L.isEnabled(L.PUMPQUEUE))
                         log.debug("connect");
-                    RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, (int) secondsElapsed));
+                    RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING, (int) secondsElapsed));
                     pump.connect("Connection needed");
                     SystemClock.sleep(1000);
                     continue;
@@ -145,10 +145,10 @@ public class QueueThread extends Thread {
                         if (queue.performing() != null) {
                             if (L.isEnabled(L.PUMPQUEUE))
                                 log.debug("performing " + queue.performing().status());
-                            RxBus.INSTANCE.send(new EventQueueChanged());
+                            RxBus.Companion.getINSTANCE().send(new EventQueueChanged());
                             queue.performing().execute();
                             queue.resetPerforming();
-                            RxBus.INSTANCE.send(new EventQueueChanged());
+                            RxBus.Companion.getINSTANCE().send(new EventQueueChanged());
                             lastCommandTime = System.currentTimeMillis();
                             SystemClock.sleep(100);
                             continue;
@@ -162,9 +162,9 @@ public class QueueThread extends Thread {
                         waitingForDisconnect = true;
                         if (L.isEnabled(L.PUMPQUEUE))
                             log.debug("queue empty. disconnect");
-                        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
+                        RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
                         pump.disconnect("Queue empty");
-                        RxBus.INSTANCE.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED));
+                        RxBus.Companion.getINSTANCE().send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED));
                         if (L.isEnabled(L.PUMPQUEUE))
                             log.debug("disconnected");
                         return;

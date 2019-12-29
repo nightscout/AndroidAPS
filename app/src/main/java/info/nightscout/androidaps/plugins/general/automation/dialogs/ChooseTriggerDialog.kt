@@ -10,8 +10,10 @@ import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import kotlinx.android.synthetic.main.automation_dialog_choose_trigger.*
+import javax.inject.Inject
 
 class ChooseTriggerDialog : DialogFragmentWithDate() {
+    @Inject lateinit var automationPlugin: AutomationPlugin
 
     private var checkedIndex = -1
     private var clickListener: OnClickListener? = null
@@ -34,7 +36,7 @@ class ChooseTriggerDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        for (t in AutomationPlugin.getTriggerDummyObjects()) {
+        for (t in automationPlugin.getTriggerDummyObjects()) {
             val radioButton = RadioButton(context)
             radioButton.setText(t.friendlyName())
             radioButton.tag = t.javaClass

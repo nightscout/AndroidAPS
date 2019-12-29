@@ -7,8 +7,6 @@ import android.provider.Telephony;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -20,9 +18,8 @@ import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.BundleLogger;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
@@ -45,19 +42,15 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 
 public class DataService extends DaggerIntentService {
+    @Inject AAPSLogger aapsLogger;
+    @Inject SP sp;
+    @Inject RxBusWrapper rxBus;
+    @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
 
     public DataService() {
         super("DataService");
     }
 
-    @Inject
-    SmsCommunicatorPlugin smsCommunicatorPlugin;
-
-    @Inject
-    AAPSLogger aapsLogger;
-
-    @Inject
-    SP sp;
 
     @Override
     protected void onHandleIntent(final Intent intent) {
@@ -94,13 +87,13 @@ public class DataService extends DaggerIntentService {
             NSSettingsStatus.getInstance().handleNewData(intent);
         } else if (Intents.ACTION_NEW_FOOD.equals(action)) {
             EventNsFood evt = new EventNsFood(EventNsFood.Companion.getADD(), bundles);
-            RxBus.INSTANCE.send(evt);
+            rxBus.send(evt);
         } else if (Intents.ACTION_CHANGED_FOOD.equals(action)) {
             EventNsFood evt = new EventNsFood(EventNsFood.Companion.getUPDATE(), bundles);
-            RxBus.INSTANCE.send(evt);
+            rxBus.send(evt);
         } else if (Intents.ACTION_REMOVED_FOOD.equals(action)) {
             EventNsFood evt = new EventNsFood(EventNsFood.Companion.getREMOVE(), bundles);
-            RxBus.INSTANCE.send(evt);
+            rxBus.send(evt);
         } else if (acceptNSData &&
                 (Intents.ACTION_NEW_TREATMENT.equals(action) ||
                         Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
@@ -193,7 +186,7 @@ public class DataService extends DaggerIntentService {
     private void handleRemovedTreatmentFromNS(JSONObject json) {
         // new DB model
         EventNsTreatment evtTreatment = new EventNsTreatment(EventNsTreatment.Companion.getREMOVE(), json);
-        RxBus.INSTANCE.send(evtTreatment);
+        rxBus.send(evtTreatment);
         // old DB model
         String _id = JsonHelper.safeGetString(json, "_id");
         MainApp.getDbHelper().deleteTempTargetById(_id);
@@ -215,7 +208,7 @@ public class DataService extends DaggerIntentService {
         }
         if (insulin > 0 || carbs > 0) {
             EventNsTreatment evtTreatment = new EventNsTreatment(mode, json);
-            RxBus.INSTANCE.send(evtTreatment);
+            rxBus.send(evtTreatment);
         } else if (json.has(DanaRNSHistorySync.DANARSIGNATURE)) {
             // old DB model
             MainApp.getDbHelper().updateDanaRHistoryRecordId(json);
@@ -249,7 +242,7 @@ public class DataService extends DaggerIntentService {
             if (date > now - 15 * 60 * 1000L && !notes.isEmpty()
                     && !enteredBy.equals(sp.getString("careportal_enteredby", "AndroidAPS"))) {
                 Notification announcement = new Notification(Notification.NSANNOUNCEMENT, notes, Notification.ANNOUNCEMENT, 60);
-                RxBus.INSTANCE.send(new EventNewNotification(announcement));
+                rxBus.send(new EventNewNotification(announcement));
             }
         }
     }
