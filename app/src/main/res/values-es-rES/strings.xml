@@ -74,8 +74,6 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB (Insulina Activa):</string>
     <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
-    <string name="treatments_newtreatment_insulinamount_label">Insulina [U]</string>
-    <string name="treatments_newtreatment_carbsamount_label">Carbohidratos [g]</string>
     <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">OT</string>
     <string name="treatments_wizard_carbs_label">Carbohidratos</string>
@@ -114,7 +112,6 @@
     <string name="overview">Inicio</string>
     <string name="nsprofile">Perfil NS</string>
     <string name="simpleprofile">Perfil simple</string>
-    <string name="tempbasal">Basal temporal</string>
     <string name="treatments">Tratamientos</string>
     <string name="virtualpump">Bomba virtual</string>
     <string name="careportal">Portal de Tratamientos</string>
@@ -146,21 +143,18 @@
     <string name="constraints_violation">Violación restricciones</string>
     <string name="treatmentdeliveryerror">Error de administración del bolo</string>
     <string name="tempbasaldeliveryerror">Basal Temporal no emitida</string>
-    <string name="overview_newtempbasal_basalpercent">Dosis basal [%%]</string>
-    <string name="overview_newtempbasal_percent_label">%% (100%% = actual)</string>
+    <string name="overview_newtempbasal_basalpercent">Valor basal [%]</string>
     <string name="setbasalquestion">Aceptar nueva basal temporal:</string>
     <string name="overview_treatment_label">Tratamiento</string>
     <string name="overview_calculator_label">Calculadora</string>
     <string name="constraintapllied">Restricción aplicada!</string>
     <string name="confirmation">Confirmación</string>
-    <string name="entertreatmentquestion">Introduzca nuevo tratamiento:</string>
     <string name="bolus">Bolo</string>
     <string name="sms_bolus">Bolo:</string>
     <string name="basal">Dosis Basal</string>
     <string name="sms_basal">Dosis Basal:</string>
     <string name="carbs">Carbohidratos</string>
     <string name="changeyourinput">¡Cambiar datos!</string>
-    <string name="setextendedbolusquestion">Establecer nuevo bolo extendido:</string>
     <string name="configbuilder_bgsource">Origen BG</string>
     <string name="configbuilder_bgsource_description">¿De donde debe AndroidAPS obtener sus datos?</string>
     <string name="xdrip">xDrip</string>
@@ -208,7 +202,7 @@
     <string name="careportal_newnstreatment_percent_label">Dosis</string>
     <string name="careportal_newnstreatment_absolute_label">Absoluto</string>
     <string name="careportal_newnstreatment_notes_label">Notas</string>
-    <string name="careportal_newnstreatment_eventtime_label">Fecha Hora</string>
+    <string name="event_time_label">Hora del evento</string>
     <string name="careportal_newnstreatment_profile_label">Perfil</string>
     <string name="careportal_newnstreatment_enteredby_title">Introducido por</string>
     <string name="careportal_newnstreatment_glucosetype">Tipo de glucosa</string>
@@ -233,7 +227,7 @@
     <string name="connecting">Conectando</string>
     <string name="connected">Conectado</string>
     <string name="disconnected">Desconectado</string>
-    <string name="danar_pump_settings">Ajustes de la bomba DanaR</string>
+    <string name="danar_pump_settings">Ajustes de la bomba Dana</string>
     <string name="end_user_license_agreement">Acuerdo de licencia de usuario final</string>
     <string name="end_user_license_agreement_text">NO DEBE UTILIZARSE PARA TOMAR DECISIONES MÉDICAS. NO HAY NINGUNA GARANTÍA PARA EL PROGRAMA, EN LA MEDIDA PERMITIDA POR LA LEY APLICABLE. EXCEPTO CUANDO SE INDIQUE LO CONTRARIO POR ESCRITO, LOS TITULARES DE LOS DERECHOS DE AUTOR Y/O OTRAS PARTES PROPORCIONAN EL PROGRAMA \"TAL CUAL\" SIN GARANTÍA DE NINGÚN TIPO, YA SEA EXPRESA O IMPLÍCITA, INCLUIDAS, ENTRE OTRAS, LAS GARANTÍAS IMPLÍCITAS DE COMERCIABILIDAD Y ADECUACIÓN PARA UN PROPÓSITO EN PARTICULAR. TODO EL RIESGO EN CUANTO A LA CALIDAD Y EL RENDIMIENTO DEL PROGRAMA ES SUYA. SI EL PROGRAMA TUVIERA UN ERROR, USTED ASUME EL COSTE DE TODO SERVICIO, REPARACIÓN O CORRECCIÓN NECESARIOS.</string>
     <string name="end_user_license_agreement_i_understand">ENTIENDO Y ACEPTO</string>
@@ -422,7 +416,7 @@
     <string name="eatingsoon">ComidendoPronto</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Actividad</string>
-    <string name="removerecord">Eliminar registro:</string>
+    <string name="removerecord">Eliminar registro</string>
     <string name="danar_stats">Estadísticas de DanaR</string>
     <string name="danar_stats_cumulative_tdd">TDD acumulativa</string>
     <string name="danar_stats_expweight">TDD ampliada exponencialmente</string>
@@ -583,16 +577,12 @@
     <string name="ns_noupload_summary">Todos los datos mandados a NS son borrados. AAPS esta conectado a NS pero no hay cambios en NS</string>
     <string name="basal_step">Nivel base</string>
     <string name="bolus_step">Nivel bolo</string>
-    <string name="extendedbolus">Bolo extendido</string>
-    <string name="temptarget">Objectivo temporal</string>
     <string name="overview_extendedbolus_cancel_button">Cancelar bolo extendido</string>
     <string name="careportal_sensorage_label">Edad sensor</string>
     <string name="careportal_canulaage_label">Edad cánula</string>
     <string name="careportal_insulinage_label">Edad insulina</string>
     <string name="hours">horas</string>
-    <string name="overview_newtempbasal_basaltype_label">Tipo basal</string>
     <string name="invalidprofile">Perfil invalido !!!</string>
-    <string name="profileswitch">Cambio Perfil</string>
     <string name="doprofileswitch">Cambio de perfil</string>
     <string name="careportal_pbage_label">Edad batería bomba</string>
     <string name="careportal_pumpbatterychange">Cambio batería bomba</string>
@@ -642,7 +632,6 @@
     <string name="careportal_carbsandbolus_label">CARBS Y BOLUS</string>
     <string name="careportal_cgm_label">CGM Y OPENAPS</string>
     <string name="careportal_pump_label">BOMBA</string>
-    <string name="overview_newtempbasal_basalabsolute">Dosis basal [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Duración [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="smb_shortname">SMB</string>
@@ -662,7 +651,7 @@
     <string name="waitingforpairing">Esperando para conectar con bomba</string>
     <string name="pairingok">Conexión OK</string>
     <string name="pairingtimedout">Tiempo de Vinculación agotado</string>
-    <string name="pairing">CONECTANDO</string>
+    <string name="pairing">Emparejando</string>
     <string name="danars_nodeviceavailable">Aparato no encontrado</string>
     <string name="emptyreservoir">Deposito vacío</string>
     <string name="bloodsugarmeasurementalert">Alerta de control de BG</string>
@@ -773,7 +762,7 @@
     <string name="bolus_frequency_exceeded">Un bolo de mismo valor ha sido dado durante el pasado minuto. Para evitar bolos dobles y prevenir fallos de programa esto no está permitido.</string>
     <string name="combo_pump_connected_now">Ahora</string>
     <string name="combo_activity_reading_pump_history">Leyendo historia bomba</string>
-    <string name="danar_history">Historial</string>
+    <string name="danar_history">Historial de la bomba</string>
     <string name="combo_activity_setting_basal_profile">Activando perfil base</string>
     <string name="combo_pump_cartridge_low_warrning">Nivel del depósito bajo</string>
     <string name="combo_pump_battery_low_warrning">Batería casi agotada</string>
@@ -793,6 +782,7 @@
     <string name="insightpump_shortname">Sight</string>
     <string name="ago">hace</string>
     <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d min</string>
     <string name="enablesmbalways">Habilitar SMB siempre</string>
     <string name="enablesmbalways_summary">Habilitar SMB siempre de forma independiente a los Bolos. Solo posible con fuente BG con buen filtrado de datos como G5</string>
     <string name="enablesmbaftercarbs">Habilitar SMB después de Carbohidratos</string>
@@ -969,11 +959,11 @@
     <string name="danar_pumpalarm_sound">Sonido</string>
     <string name="danar_pumpalarm_vibrate">Vibrar</string>
     <string name="danar_pumpalarm_both">Ambos</string>
-    <string name="danar_screentimeout">Tiempo LCD encendido [s]</string>
-    <string name="danar_backlight">Tiempo luz fondo encendida [s]</string>
+    <string name="danar_screentimeout">Tiempo de encendido de LCD [seconds]</string>
+    <string name="danar_backlight">Tiempo de luz fondo encendida [seconds]</string>
     <string name="danar_glucoseunits">Unidades de glucosa</string>
-    <string name="danar_shutdown">Apagar (horas)</string>
-    <string name="danar_lowreservoir">Deposito bajo (unidades)</string>
+    <string name="danar_shutdown">Apagar [hours]</string>
+    <string name="danar_lowreservoir">Depósito bajo [Units]</string>
     <string name="danar_saveuseroptions">Guardar las opciones en la bomba</string>
     <string name="option_on">Activado</string>
     <string name="option_off">Desactivado</string>
@@ -1219,15 +1209,20 @@
     <string name="longitude_short">Long:</string>
     <string name="distance_short">Dist. [m]:</string>
     <string name="name_short">Nombre:</string>
-    <string name="locationis">La ubicación es %1$s</string>
+    <string name="locationis">%1$s%2$s</string>
+    <string name="location_mode">Cuando </string>
+    <string name="location_inside">Cuando estés dentro de la zona</string>
+    <string name="location_outside">Cuando estés fuera de la zona</string>
+    <string name="location_going_in">Cuando entres en el area llamada</string>
+    <string name="location_going_out">Cuando dejes el área llamada</string>
     <string name="lastboluslabel">Último bolo</string>
     <string name="lastboluscompared">Hora del último bolo: hace %1$s %2$s min</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="taskname">Nombre de la tarea</string>
     <string name="edit_short">Editar</string>
-    <string name="please_choose_an_action_type">Por favor, elija el tipo de acción:</string>
-    <string name="please_choose_a_trigger_type">Por favor, elija un tipo de activación:</string>
+    <string name="please_choose_an_action_type">Seleccionar un tipo de acción</string>
+    <string name="please_choose_a_trigger_type">Seleccione tipo de activador</string>
     <string name="triggers">Activadores:</string>
     <string name="remove_label">ELIMINAR</string>
     <string name="preconditions">Precondiciones:</string>
@@ -1320,7 +1315,7 @@
     <string name="medtronic_error_pump_frequency_invalid">Frecuencia de la infusora no soportada.</string>
     <string name="medtronic_error_rileylink_address_invalid">Dirección de RileyLink no válida.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">El tipo de infusora detectado no es el mismo que el tipo configurado.</string>
-    <string name="medtronic_error_pump_basal_profiles_not_enabled">Los perfiles basales no están habilitados en la infusora.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Los perfiles de basal/valor de los patrones no están activados en la bomba. Actívalos en la bomba.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">El perfil basal establecido en la infusora es incorrecto (debe ser estándar).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Tipo incorrecto de basal temporal en la infusora (debe ser Absoluto).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Valor máximo incorrecto configurado en la infusora (debe ser %1$.2f).</string>
@@ -1371,7 +1366,7 @@
     <string name="automation_trigger_pump_last_connection_description">Última conexión con la bomba [ minutos atrás]</string>
     <string name="automation_trigger_pump_last_connection_compared">Última conexión con la bomba hace %1$s %2$s min</string>
     <string name="sendsmsactionlabel">Enviar a %1$s</string>
-    <string name="sendsmsactiondescription">Enviar SMS a todos los números en las preferencias</string>
+    <string name="sendsmsactiondescription">Enviar SMS a todos los números</string>
     <string name="sendsmsactiontext">Mandar mensaje SMS</string>
     <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Restricción de bolo aplicada: %2$.2fU a %3$.2fU</font>]]></string>
@@ -1437,5 +1432,15 @@
     <string name="doyouwantresetstats">¿Desea restablecer las estadísticas de actividad?</string>
     <string name="statistics">Estadísticas</string>
     <string name="randombg">BG aleatorio</string>
+    <string name="description_source_randombg">Generar datos aleatorios de BG (solo modo Demo)</string>
     <string name="randombg_short">BG</string>
+    <string name="tools">Herramientas</string>
+    <string name="show_calculation">Mostrar cálculo</string>
+    <string name="error">Error</string>
+    <string name="timeformat12h">12 h</string>
+    <string name="timeformat24h">24 h</string>
+    <string name="automation_event">Automatización de eventos</string>
+    <string name="alreadyset">Set listo</string>
+    <string name="message">Mensaje</string>
+    <string name="clearqueueconfirm">¿Borrar cola? ¡Se perderán todos los datos de la cola!</string>
 </resources>

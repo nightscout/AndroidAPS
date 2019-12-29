@@ -108,6 +108,10 @@ public class TemporaryBasal implements Interval, DbObjectBase {
         this.pumpId = extendedBolus.pumpId;
     }
 
+    public String toDuration() {
+        return "(" + getRealDuration() + "/" + durationInMinutes + "')";
+    }
+
     public TemporaryBasal clone() {
         TemporaryBasal t = new TemporaryBasal();
         t.date = date;

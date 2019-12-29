@@ -20,30 +20,46 @@
     <string name="pref_on">On</string>
     <string name="pref_off">Off</string>
     <string name="pref_vibrate_on_bolus">Vibra durante bolo</string>
+    <string name="pref_units_for_actions">Unità per Azioni</string>
     <string name="pref_show_date">Mostra data</string>
     <string name="pref_show_iob">Mostra IOB</string>
     <string name="pref_show_cob">Mostra COB</string>
     <string name="pref_show_delta">Mostra delta</string>
+    <string name="pref_show_avgdelta">Mostra AvgDelta</string>
     <string name="pref_show_phone_battery">Mostra batteria telefono</string>
+    <string name="pref_show_rig_battery">Mostra Batteria Rig</string>
     <string name="pref_show_basal_rate">Mostra velocità basale</string>
     <string name="pref_show_loop_status">Mostra stato loop</string>
     <string name="pref_show_bg">Mostra BG</string>
     <string name="pref_show_direction_arrow">Mostra frecce direzionali</string>
+    <string name="pref_show_ago">Mostra Indietro</string>
     <string name="pref_dark" comment="Enables dark visual theme">Scuro</string>
     <string name="pref_highlight_basals">Evidenzia basali</string>
+    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Matching divider</string>
+    <string name="pref_chart_timeframe">Timeframe Grafico</string>
     <string name="pref_1_hour">1 ora</string>
     <string name="pref_2_hours">2 ore</string>
     <string name="pref_3_hours">3 ore</string>
     <string name="pref_4_hours">4 ore</string>
     <string name="pref_5_hours">5 ore</string>
+    <string name="pref_input_design">Input Design</string>
+    <string name="pref_default">Default</string>
+    <string name="pref_quick_righty">Quick righty</string>
+    <string name="pref_quick_lefty">Quick lefty</string>
+    <string name="pref_modern_sparse">Modern Sparse</string>
+    <string name="pref_delta_granularity">Delta Granularity (Steampunk)</string>
     <string name="pref_low">Basso</string>
     <string name="pref_medium">Medio</string>
     <string name="pref_high">Alto</string>
     <string name="pref_big_numbers">Numeri grandi</string>
     <string name="pref_ring_history">Storico Ring</string>
+    <string name="pref_light_ring_history">Storico Light Ring</string>
     <string name="pref_animations">Animazioni</string>
     <string name="pref_wizard_in_menu">Wizard in Menu</string>
+    <string name="pref_prime_in_menu">Carica in Menu</string>
     <string name="pref_single_target">Target singolo</string>
+    <string name="pref_wizard_percentage">Percentuale Wizard</string>
+    <string name="pref_complication_tap_action">Complication Tap Action</string>
     <string name="pref_unicode_in_complications">Unicode in Complications</string>
     <string name="pref_version">Versione:</string>
     <string name="menu_tempt">TempT</string>
@@ -53,6 +69,8 @@
     <string name="menu_settings">Impostazioni</string>
     <string name="menu_status">Stato</string>
     <string name="menu_prime_fill">Carica/Riempi</string>
+    <string name="menu_none">Nessuno</string>
+    <string name="menu_default">Default</string>
     <string name="menu_menu">Menu</string>
     <string name="action_duration">durata</string>
     <string name="action_target" comment="In temp target menu, single target value">target</string>
@@ -60,6 +78,7 @@
     <string name="action_high" comment="In temp target menu, higher value from range">alto</string>
     <string name="action_carbs">CHO</string>
     <string name="action_percentage">percentuale</string>
+    <string name="action_start_min">avvio [min]</string>
     <string name="action_duration_h">durata [h]</string>
     <string name="action_insulin">insulina</string>
     <string name="action_preset_1">Preset 1</string>
@@ -67,6 +86,8 @@
     <string name="action_preset_3">Preset 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Quantità libera</string>
     <string name="action_confirm">CONFERMA</string>
+    <string name="action_status_pump">STATO MICRO</string>
+    <string name="action_status_loop">STATO LOOP</string>
     <string name="action_timeshift">timeshift</string>
     <string name="action_tdd_weighted">TDD ponderato</string>
     <string name="action_bolus">bolo</string>

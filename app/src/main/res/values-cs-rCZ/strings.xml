@@ -74,8 +74,6 @@
     <string name="tempbasals_netinsulin_label_string">Inz:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Celkové IOB:</string>
-    <string name="treatments_newtreatment_insulinamount_label">Množství inzulínu</string>
-    <string name="treatments_newtreatment_carbsamount_label">Množství sacharidů</string>
     <string name="treatments_wizard_bg_label">Glykémie</string>
     <string name="treatments_wizard_tt_label">DC</string>
     <string name="treatments_wizard_carbs_label">Sacharidy</string>
@@ -114,7 +112,6 @@
     <string name="overview">Přehled</string>
     <string name="nsprofile">NS profil</string>
     <string name="simpleprofile">Jednoduchý profil</string>
-    <string name="tempbasal">DočasnýBazál</string>
     <string name="treatments">Ošetření</string>
     <string name="virtualpump">Virtuální pumpa</string>
     <string name="careportal">Péče</string>
@@ -146,21 +143,18 @@
     <string name="constraints_violation">Mimo povolený rozsah</string>
     <string name="treatmentdeliveryerror">Chyba podání bolusu</string>
     <string name="tempbasaldeliveryerror">Chyba nastavování dočasného bazálu</string>
-    <string name="overview_newtempbasal_basalpercent">Hodnota bazálu [%%]</string>
-    <string name="overview_newtempbasal_percent_label">%% (100%% = současný)</string>
+    <string name="overview_newtempbasal_basalpercent">Hodnota bazálu [%]</string>
     <string name="setbasalquestion">Spustit nový dočasný bazál:</string>
     <string name="overview_treatment_label">Bolus</string>
     <string name="overview_calculator_label">Kalkulačka</string>
     <string name="constraintapllied">Aplikováno omezení!</string>
     <string name="confirmation">Potvrzení</string>
-    <string name="entertreatmentquestion">Aplikovat bolus:</string>
     <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Bazál</string>
     <string name="sms_basal">Bazál:</string>
     <string name="carbs">Sacharidy</string>
     <string name="changeyourinput">Změňte zadání!</string>
-    <string name="setextendedbolusquestion">Spustit nový prodloužený bolus:</string>
     <string name="configbuilder_bgsource">Zdroj glykémie</string>
     <string name="configbuilder_bgsource_description">Odkud má získávat AndroidAPS glykémie?</string>
     <string name="xdrip">xDrip</string>
@@ -208,7 +202,7 @@
     <string name="careportal_newnstreatment_percent_label">Procenta</string>
     <string name="careportal_newnstreatment_absolute_label">Absolutní</string>
     <string name="careportal_newnstreatment_notes_label">Poznámky</string>
-    <string name="careportal_newnstreatment_eventtime_label">Čas</string>
+    <string name="event_time_label">Čas</string>
     <string name="careportal_newnstreatment_profile_label">Profil</string>
     <string name="careportal_newnstreatment_enteredby_title">Zadal</string>
     <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
@@ -233,7 +227,7 @@
     <string name="connecting">Připojuji</string>
     <string name="connected">Připojeno</string>
     <string name="disconnected">Odpojeno</string>
-    <string name="danar_pump_settings">DanaR nastavení</string>
+    <string name="danar_pump_settings">Nastavení pumpy Dana</string>
     <string name="end_user_license_agreement">Licenční ujednání</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">ROZUMÍM A POTVRZUJI</string>
@@ -422,7 +416,7 @@
     <string name="eatingsoon">Před jídlem</string>
     <string name="hypo">Hypoglykémie</string>
     <string name="activity">Aktivita</string>
-    <string name="removerecord">Odstranit záznam:</string>
+    <string name="removerecord">Odstranit záznam</string>
     <string name="danar_stats">Statistika z pumpy</string>
     <string name="danar_stats_cumulative_tdd">Kumulativní TDD</string>
     <string name="danar_stats_expweight">Exponenciálně vážené TDD</string>
@@ -583,16 +577,13 @@
     <string name="ns_noupload_summary">Všechna data odeslaná do NS jsou zahozena. AAPS je připojen k NS, ale nedělá do něj žádné změny</string>
     <string name="basal_step">Krok bazálu</string>
     <string name="bolus_step">Krok bolusu</string>
-    <string name="extendedbolus">ProdlouženýBolus</string>
-    <string name="temptarget">DočasnýCíl</string>
     <string name="overview_extendedbolus_cancel_button">Zrušit prodloužený bolus</string>
     <string name="careportal_sensorage_label">Stáří senzoru</string>
     <string name="careportal_canulaage_label">Stáří kanyly</string>
     <string name="careportal_insulinage_label">Stáří inzulínu</string>
     <string name="hours">hodin</string>
-    <string name="overview_newtempbasal_basaltype_label">Typ bazálu</string>
     <string name="invalidprofile">Chybný profil !!!</string>
-    <string name="profileswitch">Přepnutí profilu</string>
+    <string name="doprofileswitch">Proveďte přepnutí profilu</string>
     <string name="careportal_pbage_label">Stáří baterie v pumpě</string>
     <string name="careportal_pumpbatterychange">Výměna baterie pumpy</string>
     <string name="ns_alarmoptions">Nastavení alarmů</string>
@@ -641,7 +632,6 @@
     <string name="careportal_carbsandbolus_label">SACHARIDY &amp; BOLUSY</string>
     <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
     <string name="careportal_pump_label">PUMPA</string>
-    <string name="overview_newtempbasal_basalabsolute">Hodnota bazálu [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Trvání [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="smb_shortname">SMB</string>
@@ -661,7 +651,7 @@
     <string name="waitingforpairing">Čekání na spárování na pumpě</string>
     <string name="pairingok">Spárováno</string>
     <string name="pairingtimedout">Vypršel časový limit pro párování</string>
-    <string name="pairing">PÁROVÁNÍ</string>
+    <string name="pairing">Párování</string>
     <string name="danars_nodeviceavailable">Prozatím žádné zařízení nenalezeno</string>
     <string name="emptyreservoir">Prázdný zásobník</string>
     <string name="bloodsugarmeasurementalert">Výstraha měření glykémie</string>
@@ -772,7 +762,7 @@
     <string name="bolus_frequency_exceeded">Bolus stejné velikosti už byl během poslední minuty požadován. Jako preventivní ochrana před zdvojeným bolusem byla operace zakázána.</string>
     <string name="combo_pump_connected_now">Teď</string>
     <string name="combo_activity_reading_pump_history">Načítání historie pumpy</string>
-    <string name="danar_history">Historie</string>
+    <string name="danar_history">Historie pumpy</string>
     <string name="combo_activity_setting_basal_profile">Nastavení bazálního profilu</string>
     <string name="combo_pump_cartridge_low_warrning">V zásobníku je málo inzulínu</string>
     <string name="combo_pump_battery_low_warrning">Slabá baterie v pumpě</string>
@@ -792,6 +782,7 @@
     <string name="insightpump_shortname">Insight</string>
     <string name="ago">zpět</string>
     <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d min</string>
     <string name="enablesmbalways">Vždy povolit SMB</string>
     <string name="enablesmbalways_summary">Povolit SMB nezávisle na bolusech. Možno pouze se zdroji glykémií s dobrým filtrováním dat, jako např. G5</string>
     <string name="enablesmbaftercarbs">Povolit SMB po jídle</string>
@@ -968,11 +959,11 @@
     <string name="danar_pumpalarm_sound">Zvuk</string>
     <string name="danar_pumpalarm_vibrate">Vibrace</string>
     <string name="danar_pumpalarm_both">Oboje</string>
-    <string name="danar_screentimeout">Čas před vypnutím displeje [s]</string>
-    <string name="danar_backlight">Podsvícení [s]</string>
+    <string name="danar_screentimeout">Čas před vypnutím displeje [sekundy]</string>
+    <string name="danar_backlight">Podsvícení [sekundy]</string>
     <string name="danar_glucoseunits">Jednotky</string>
-    <string name="danar_shutdown">Vypnutí [h]</string>
-    <string name="danar_lowreservoir">Nízký stav zásobníku [U]</string>
+    <string name="danar_shutdown">Vypnutí [hodiny]</string>
+    <string name="danar_lowreservoir">Nízký stav zásobníku [Jednotky]</string>
     <string name="danar_saveuseroptions">Uložit do pumpy</string>
     <string name="option_on">ZAP</string>
     <string name="option_off">VYP</string>
@@ -1218,15 +1209,20 @@
     <string name="longitude_short">Zem. délka:</string>
     <string name="distance_short">Vzdálenost [m]:</string>
     <string name="name_short">Jméno:</string>
-    <string name="locationis">Poloha je %1$s</string>
+    <string name="locationis">%1$s %2$s</string>
+    <string name="location_mode">Kdy </string>
+    <string name="location_inside">Když se nacházíte v oblasti</string>
+    <string name="location_outside">Když se nacházíte mimo oblast</string>
+    <string name="location_going_in">Když vstoupíte do oblasti s názvem</string>
+    <string name="location_going_out">Když opustíte oblast s názvem</string>
     <string name="lastboluslabel">Poslední bolus</string>
     <string name="lastboluscompared">Poslední bolus %1$s před %2$s min</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="taskname">Název úkolu</string>
     <string name="edit_short">EDIT</string>
-    <string name="please_choose_an_action_type">Zvolte typ akce prosím:</string>
-    <string name="please_choose_a_trigger_type">Zvolte typ podmínky:</string>
+    <string name="please_choose_an_action_type">Vyberte akci</string>
+    <string name="please_choose_a_trigger_type">Vyberte podmínku</string>
     <string name="triggers">Podmínky:</string>
     <string name="remove_label">ODSTRANIT</string>
     <string name="preconditions">Nutné podmínky:</string>
@@ -1319,7 +1315,7 @@
     <string name="medtronic_error_pump_frequency_invalid">Nepodporovaná frekvence pumpy.</string>
     <string name="medtronic_error_rileylink_address_invalid">Chybná adresa RileyLinku.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Detekovaná pumpa je jiného typu než nakonfigurovaná.</string>
-    <string name="medtronic_error_pump_basal_profiles_not_enabled">Bazální profily nejsou na pumpě povolené.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Nastavení bazálních profilů/vzorů není na pumpě povoleno. Povolte je na pumpě.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Bazální profil na pumpě je chybný (musí být STD).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Chybný typ dočasného bazálu na pumpě (musí být absolutní).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Chybný max. bolus na pumpě (musí být %1$.2f).</string>
@@ -1370,7 +1366,7 @@
     <string name="automation_trigger_pump_last_connection_description">Poslední připojení k pumpě před [minutami]</string>
     <string name="automation_trigger_pump_last_connection_compared">Poslední připojení k pumpě %1$s před %2$s minutami</string>
     <string name="sendsmsactionlabel">Poslat SMS: %1$s</string>
-    <string name="sendsmsactiondescription">Odeslat SMS na všechna čísla v předvolbách</string>
+    <string name="sendsmsactiondescription">Poslat SMS na všechna čísla</string>
     <string name="sendsmsactiontext">Odeslat SMS s textem</string>
     <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Aplikováno omezení bolusu: %2$.2fU na %3$.2fU</font>]]></string>
@@ -1435,4 +1431,16 @@
     <string name="activitymonitor">Monitor aktivity</string>
     <string name="doyouwantresetstats">Chcete resetovat statistiky aktivity?</string>
     <string name="statistics">Statistika</string>
+    <string name="randombg">Náhodná glykémie</string>
+    <string name="description_source_randombg">Generovat náhodná data glykémie (pouze režim Demo)</string>
+    <string name="randombg_short">GLYK</string>
+    <string name="tools">Nástroje</string>
+    <string name="show_calculation">Zobrazit kalkulaci</string>
+    <string name="error">Chyba</string>
+    <string name="timeformat12h">12h</string>
+    <string name="timeformat24h">24h</string>
+    <string name="automation_event">Událost automatizace</string>
+    <string name="alreadyset">Již nastaveno</string>
+    <string name="message">Zpráva</string>
+    <string name="clearqueueconfirm">Vymazat frontu? Všechna data ve frontě budou ztracena!</string>
 </resources>

@@ -7,7 +7,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -184,7 +183,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     boolean smallWidth;
     boolean smallHeight;
 
-    public static boolean shorttextmode = false;
+    public static boolean shorttextmode = true;
 
     private boolean accepted;
 
@@ -1153,7 +1152,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         String basalText = "";
         if (shorttextmode) {
             if (activeTemp != null) {
-                basalText = "T: " + activeTemp.toStringVeryShort();
+                basalText = activeTemp.percentRate + "% " + activeTemp.toDuration() + " " + DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h";
             } else {
                 basalText = DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h";
             }
@@ -1178,7 +1177,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (activeTemp != null) {
             baseBasalView.setTextColor(MainApp.gc(R.color.basal));
         } else {
-            baseBasalView.setTextColor(Color.WHITE);
+            baseBasalView.setTextColor(android.R.attr.textColor);
 
         }
 

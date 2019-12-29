@@ -74,8 +74,6 @@
     <string name="tempbasals_netinsulin_label_string">인슐린:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">IOB 총량:</string>
-    <string name="treatments_newtreatment_insulinamount_label">인슐린 양</string>
-    <string name="treatments_newtreatment_carbsamount_label">탄수화물 양</string>
     <string name="treatments_wizard_bg_label">혈당</string>
     <string name="treatments_wizard_tt_label">임시목표</string>
     <string name="treatments_wizard_carbs_label">탄수화물</string>
@@ -113,7 +111,6 @@
     <string name="overview">개요</string>
     <string name="nsprofile">NS 프로파일</string>
     <string name="simpleprofile">Simple 프로파일</string>
-    <string name="tempbasal">임시Basal</string>
     <string name="treatments">관리</string>
     <string name="virtualpump">가상펌프</string>
     <string name="careportal">케어포털</string>
@@ -145,21 +142,17 @@
     <string name="constraints_violation">제한 위반</string>
     <string name="treatmentdeliveryerror">Bolus 주입 에러</string>
     <string name="tempbasaldeliveryerror">임시Basal 주입 에러</string>
-    <string name="overview_newtempbasal_basalpercent">Basal 값[%%]</string>
-    <string name="overview_newtempbasal_percent_label">%% (100%% = 현재)</string>
     <string name="setbasalquestion">새 임시Basal 적용:</string>
     <string name="overview_treatment_label">관리</string>
     <string name="overview_calculator_label">계산기</string>
     <string name="constraintapllied">제한 적용!</string>
     <string name="confirmation">확인</string>
-    <string name="entertreatmentquestion">새 Treatment 입력:</string>
     <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Basal</string>
     <string name="sms_basal">Basal:</string>
     <string name="carbs">탄수화물</string>
     <string name="changeyourinput">입력값을 변경하세요!</string>
-    <string name="setextendedbolusquestion">새 확장Bolus 설정:</string>
     <string name="configbuilder_bgsource">혈당 소스</string>
     <string name="configbuilder_bgsource_description">AndroidAPS가 어디에서 데이터를 가져옵니까?</string>
     <string name="xdrip">xDrip</string>
@@ -186,7 +179,6 @@
     <string name="careportal_cgmsensorinsert">CGM 센서 삽입</string>
     <string name="careportal_cgmsensorstart">CGM 센서 시작</string>
     <string name="careportal_insulincartridgechange">인슐린 카트리지 교체</string>
-    <string name="careportal_profileswitch">프로파일 변경</string>
     <string name="careportal_snackbolus">간식Bolus</string>
     <string name="careportal_mealbolus">식사Bolus</string>
     <string name="careportal_correctionbolus">교정Bolus</string>
@@ -207,7 +199,6 @@
     <string name="careportal_newnstreatment_percent_label">퍼센트</string>
     <string name="careportal_newnstreatment_absolute_label">절대값</string>
     <string name="careportal_newnstreatment_notes_label">노트</string>
-    <string name="careportal_newnstreatment_eventtime_label">이벤트 시간</string>
     <string name="careportal_newnstreatment_profile_label">프로파일</string>
     <string name="careportal_newnstreatment_enteredby_title">입력자</string>
     <string name="careportal_newnstreatment_glucosetype">혈당 종류</string>
@@ -231,7 +222,6 @@
     <string name="connecting">연결중</string>
     <string name="connected">연결됨</string>
     <string name="disconnected">연결 끊김</string>
-    <string name="danar_pump_settings">다나R 펌프 설정</string>
     <string name="end_user_license_agreement">최종 사용자 라이선스 동의서</string>
     <string name="end_user_license_agreement_text">이 프로그램을 의학적 결정을 내리는 데 사용해서는 안되며, 여기에 대한 어떠한 보증도 없습니다. 이 프로그램의 품질과 성능에 관한 모든 위험은 사용자에게 있습니다.\nMUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="end_user_license_agreement_i_understand">모두 이해하였고 동의합니다.</string>
@@ -268,8 +258,6 @@
     <string name="glucosetype_finger">체혈</string>
     <string name="glucosetype_sensor">센서</string>
     <string name="manual">수동</string>
-    <string name="careportal_temporarytarget">임시목표</string>
-    <string name="careportal_temporarytargetcancel">임시목표 취소</string>
     <string name="danarprofile">DanaR 프로파일 설정</string>
     <string name="danarprofile_dia">인슐린활동시간(DIA) [h]</string>
     <string name="danarprofile_dia_summary">인슐린 활동 기간</string>
@@ -402,7 +390,6 @@
     <string name="eatingsoon">식사직전</string>
     <string name="hypo">저혈당</string>
     <string name="activity">활동</string>
-    <string name="removerecord">기록 삭제:</string>
     <string name="danar_stats">DanaR 통계</string>
     <string name="danar_stats_cumulative_tdd">누적 일총량</string>
     <string name="danar_stats_expweight">지수가중 일총량</string>
@@ -559,16 +546,12 @@
     <string name="ns_noupload_summary">NS로 보낼 모든 데이터가 버려집니다. AAPS는 NS에 연결되어 있지만 NS에는 변화가 없을것입니다.</string>
     <string name="basal_step">Basal 단위</string>
     <string name="bolus_step">Bolus 단위</string>
-    <string name="extendedbolus">확장Bolus</string>
-    <string name="temptarget">임시목표</string>
     <string name="overview_extendedbolus_cancel_button">확장Bolus 취소</string>
     <string name="careportal_sensorage_label">센서 사용기간</string>
     <string name="careportal_canulaage_label">캐뉼라 사용기간</string>
     <string name="careportal_insulinage_label">인슐린 사용기간</string>
     <string name="hours">시간</string>
-    <string name="overview_newtempbasal_basaltype_label">Basal 종류</string>
     <string name="invalidprofile">프로파일이 유효하지 않습니다!!!</string>
-    <string name="profileswitch">프로파일변경</string>
     <string name="careportal_pbage_label">펌프배터리사용기간</string>
     <string name="careportal_pumpbatterychange">펌프 배터리 교체</string>
     <string name="ns_alarmoptions">알람 옵션</string>
@@ -616,7 +599,6 @@
     <string name="careportal_carbsandbolus_label">탄수화물 &amp; Bolus</string>
     <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
     <string name="careportal_pump_label">펌프</string>
-    <string name="overview_newtempbasal_basalabsolute">Basal값 [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">기간 [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="smb_shortname">SMB</string>
@@ -636,7 +618,6 @@
     <string name="waitingforpairing">펌프연동 대기중</string>
     <string name="pairingok">연동완료</string>
     <string name="pairingtimedout">연동시간초과</string>
-    <string name="pairing">연동중</string>
     <string name="danars_nodeviceavailable">현재까지 발견된 기기가 없습니다.</string>
     <string name="emptyreservoir">빈 주사기</string>
     <string name="bloodsugarmeasurementalert">혈당측정알람</string>
@@ -745,7 +726,6 @@
     <string name="bolus_frequency_exceeded">2개의 동일한 양의 Bolus 주입이 요청되었습니다. 이중으로 Bolus가 주입 되는 사고를 막고 버그로부터 보호하기 위하여 이는 금지됩니다.</string>
     <string name="combo_pump_connected_now">현재</string>
     <string name="combo_activity_reading_pump_history">펌프 이력 읽기</string>
-    <string name="danar_history">펌프 이력</string>
     <string name="combo_activity_setting_basal_profile">Basal 프로파일 설정</string>
     <string name="combo_pump_cartridge_low_warrning">펌프 카트리지 레벨이 낮습니다.</string>
     <string name="combo_pump_battery_low_warrning">펌프배터리가 부족합니다.</string>
@@ -941,11 +921,7 @@
     <string name="danar_pumpalarm_sound">소리</string>
     <string name="danar_pumpalarm_vibrate">진동</string>
     <string name="danar_pumpalarm_both">모두</string>
-    <string name="danar_screentimeout">LCD 시간[s]</string>
-    <string name="danar_backlight">화면조명 시간[s]</string>
     <string name="danar_glucoseunits">혈당 단위</string>
-    <string name="danar_shutdown">종료(시간)</string>
-    <string name="danar_lowreservoir">낮은 주사기량(단위)</string>
     <string name="danar_saveuseroptions">펌프로 옵션 저장</string>
     <string name="option_on">켜짐</string>
     <string name="option_off">꺼짐</string>
@@ -1188,15 +1164,12 @@
     <string name="longitude_short">경도</string>
     <string name="distance_short">거리 [m]:</string>
     <string name="name_short">이름:</string>
-    <string name="locationis">위치는 %1$s</string>
     <string name="lastboluslabel">마지막 Bolus 전</string>
     <string name="lastboluscompared">마지막 Bolus 시간 %1$s %2$s 분 전</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
     <string name="taskname">작업명</string>
     <string name="edit_short">편집</string>
-    <string name="please_choose_an_action_type">액션 타입을 선택하세요:</string>
-    <string name="please_choose_a_trigger_type">트리거 타입을 선택하세요:</string>
     <string name="triggers">트리거:</string>
     <string name="remove_label">삭제</string>
     <string name="preconditions">전제 조건:</string>
@@ -1286,7 +1259,6 @@
     <string name="medtronic_error_pump_frequency_invalid">지원되지 않는 펌프 주파수입니다.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink 주소가 유효하지 않습니다.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">감지된 펌프타입이 설정된 타입과 다릅니다.</string>
-    <string name="medtronic_error_pump_basal_profiles_not_enabled">펌프에서 Basal 프로파일이 활성화되지 않았습니다.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">펌프에 설정된 Basal 프로파일이 올바르지 않습니다 (STD 이어야 합니다).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">펌프에 잘못된 TBR 유형이 설정되었습니다 (절대값이어야합니다).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">펌프에 잘못된 최대 Bolus가 설정되었습니다 (%1$.2f 이어야 합니다.).</string>

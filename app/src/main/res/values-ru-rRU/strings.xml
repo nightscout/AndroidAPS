@@ -74,8 +74,6 @@
     <string name="tempbasals_netinsulin_label_string">инс:</string>
     <string name="tempbasals_iob_label_string">IOB: активный инсулин</string>
     <string name="tempbasals_iobtotal_label_string">общий IOB</string>
-    <string name="treatments_newtreatment_insulinamount_label">кол-во инсулина</string>
-    <string name="treatments_newtreatment_carbsamount_label">кол-во углеводов</string>
     <string name="treatments_wizard_bg_label">гликемия</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">углеводы</string>
@@ -114,7 +112,6 @@
     <string name="overview">начало</string>
     <string name="nsprofile">профиль NS</string>
     <string name="simpleprofile">простой профиль</string>
-    <string name="tempbasal">ВремБазал</string>
     <string name="treatments">Терапия</string>
     <string name="virtualpump">виртуальная помпа</string>
     <string name="careportal">Портал лечения / назначений</string>
@@ -146,21 +143,18 @@
     <string name="constraints_violation">ограничение нарушено</string>
     <string name="treatmentdeliveryerror">Ошибка подачи болюса</string>
     <string name="tempbasaldeliveryerror">Ошибка подачи врем базала</string>
-    <string name="overview_newtempbasal_basalpercent">Величина базала [%%]</string>
-    <string name="overview_newtempbasal_percent_label">%% (100%% = текущее)</string>
+    <string name="overview_newtempbasal_basalpercent">Величина базала [%]</string>
     <string name="setbasalquestion">принять новый врем базал:</string>
     <string name="overview_treatment_label">болюс</string>
     <string name="overview_calculator_label">калькулятор</string>
     <string name="constraintapllied">применено ограничение!</string>
     <string name="confirmation">подтверждение</string>
-    <string name="entertreatmentquestion">Ввести новое назначение:</string>
     <string name="bolus">болюс</string>
     <string name="sms_bolus">болюс:</string>
     <string name="basal">базал</string>
     <string name="sms_basal">базал: </string>
     <string name="carbs">углеводы</string>
     <string name="changeyourinput">измените введенные данные</string>
-    <string name="setextendedbolusquestion">Установить новый удлиненный болюс:</string>
     <string name="configbuilder_bgsource">источник СК</string>
     <string name="configbuilder_bgsource_description">Откуда должен получать данные AndroidAPS?</string>
     <string name="xdrip">xdrip</string>
@@ -187,7 +181,7 @@
     <string name="careportal_cgmsensorinsert">Установка сенсора мониторинга глюкозы</string>
     <string name="careportal_cgmsensorstart">старт сенсора</string>
     <string name="careportal_insulincartridgechange">замена картриджа инсулина</string>
-    <string name="careportal_profileswitch">смена профиля</string>
+    <string name="careportal_profileswitch">Смена профиля</string>
     <string name="careportal_snackbolus">болюс на перекус</string>
     <string name="careportal_mealbolus">болюс на еду</string>
     <string name="careportal_correctionbolus">болюс на коррекцию</string>
@@ -208,7 +202,7 @@
     <string name="careportal_newnstreatment_percent_label">процент</string>
     <string name="careportal_newnstreatment_absolute_label">абсолют</string>
     <string name="careportal_newnstreatment_notes_label">заметки</string>
-    <string name="careportal_newnstreatment_eventtime_label">время события</string>
+    <string name="event_time_label">Время события</string>
     <string name="careportal_newnstreatment_profile_label">профиль</string>
     <string name="careportal_newnstreatment_enteredby_title">кем введено</string>
     <string name="careportal_newnstreatment_glucosetype">тип глюкозы</string>
@@ -233,7 +227,7 @@
     <string name="connecting">соединение устанавливается</string>
     <string name="connected">соединение установлено</string>
     <string name="disconnected">Разъединено</string>
-    <string name="danar_pump_settings">настройки помпы DanaR</string>
+    <string name="danar_pump_settings">Настройки помпы DanaR</string>
     <string name="end_user_license_agreement">лицензионное соглашение с пользователем</string>
     <string name="end_user_license_agreement_text">НЕ ДОЛЖНО ИСПОЛЬЗОВАТЬСЯ ДЛЯ ПРИНЯТИЯ МЕДИЦИНСКИХ РЕШЕНИЙ. ПРОГРАММА НЕ ДАЕТ ГАРАНТИЙ В РАМКАХ СУЩЕСТВУЮЩЕГО ЗАКОНОДАТЕЛЬСТВА. ПРЕДОСТАВЛЯЕТСЯ \"КАК ЕСТЬ\" БЕЗ ЯВНЫХ ИЛИ СКРЫТЫХ ГАРАНТИЙ ВКЛЮЧАЯ НО НЕ ОГРАНИЧИВАЯСЬ ВОЗМОЖНОСТЬЮ КОММЕРЧЕСКОГО ИСПОЛЬЗОВАНИ ИЛИ СООТВЕТСТВИЯ КАКИМ-ЛИБО ЦЕЛЯМ. ВСЕ РИСКИ ЛОЖАТСЯ НА ВАС. В СЛУЧАЕ НЕРАБОТОСПОСОБНОСТИ ПРОГРАММЫ ВЫ НЕСЕТЕ ВСЕ РАСХОДЫ СВЯЗАННЫЕ С ОБСЛУЖИВАНИЕМ РЕМОНТОМ ИЛИ КОРРЕКТИРОВКОЙ.  </string>
     <string name="end_user_license_agreement_i_understand">я понимаю и принимаю</string>
@@ -282,8 +276,8 @@
     <string name="glucosetype_finger">палец</string>
     <string name="glucosetype_sensor">сенсор</string>
     <string name="manual">вручную</string>
-    <string name="careportal_temporarytarget">временное целевое значение</string>
-    <string name="careportal_temporarytargetcancel">отмена времнной цели</string>
+    <string name="careportal_temporarytarget">Временные целевые значения</string>
+    <string name="careportal_temporarytargetcancel">Отмена времнной цели</string>
     <string name="danarprofile">настройки профиля DanaR</string>
     <string name="danarprofile_dia">время действия инсулина (ч.):</string>
     <string name="danarprofile_dia_summary">Продолжительность активности инсулина</string>
@@ -422,7 +416,7 @@
     <string name="eatingsoon">Ожидаемый прием пищи</string>
     <string name="hypo">Гипо</string>
     <string name="activity">Нагрузка</string>
-    <string name="removerecord">удалить запись</string>
+    <string name="removerecord">Удалить запись</string>
     <string name="danar_stats">статистика DanaR</string>
     <string name="danar_stats_cumulative_tdd">накопительные TDD</string>
     <string name="danar_stats_expweight">экспоненциально взвешенные TDD</string>
@@ -583,16 +577,13 @@
     <string name="ns_noupload_summary">данные передаваемые в NS не доходят. AAPS соединяется с NS но изменения туда не вносятся</string>
     <string name="basal_step">шаг базала</string>
     <string name="bolus_step">шаг болюса</string>
-    <string name="extendedbolus">Удлиненный болюс</string>
-    <string name="temptarget">ВремЦель</string>
     <string name="overview_extendedbolus_cancel_button">Отмена удлиненного болюса</string>
     <string name="careportal_sensorage_label">сенсор пропаботал</string>
     <string name="careportal_canulaage_label">Катетер помпы проработал</string>
     <string name="careportal_insulinage_label">Инсулин проработал</string>
     <string name="hours">час</string>
-    <string name="overview_newtempbasal_basaltype_label">тип базала</string>
     <string name="invalidprofile">Неверный профиль !!!</string>
-    <string name="profileswitch">смена профиля</string>
+    <string name="doprofileswitch">Переключить профиль</string>
     <string name="careportal_pbage_label">Батарея помпы работает</string>
     <string name="careportal_pumpbatterychange">замена батареи помпы</string>
     <string name="ns_alarmoptions">опции оповещения</string>
@@ -641,7 +632,6 @@
     <string name="careportal_carbsandbolus_label">УГЛЕВОДЫ ; БОЛЮС</string>
     <string name="careportal_cgm_label">МОНИТОРИНГ; OPENAPS</string>
     <string name="careportal_pump_label">ПОМПА</string>
-    <string name="overview_newtempbasal_basalabsolute">значения базала (ед/ч)</string>
     <string name="careportal_newnstreatment_duration_min_label">Длительность (мин)</string>
     <string name="openapssmb">Супер микро болюс OpenAPS</string>
     <string name="smb_shortname">Супер микро болюс SMB</string>
@@ -661,7 +651,7 @@
     <string name="waitingforpairing">Ожидание соединения на помпе</string>
     <string name="pairingok">Соединение OK</string>
     <string name="pairingtimedout">Истекло время ожидания соединения</string>
-    <string name="pairing">Установка соединения</string>
+    <string name="pairing">Сопряжение</string>
     <string name="danars_nodeviceavailable">Устройства пока не найдены</string>
     <string name="emptyreservoir">Резервуар пуст</string>
     <string name="bloodsugarmeasurementalert">Предупреждение при измерении уровня СК</string>
@@ -772,7 +762,7 @@
     <string name="bolus_frequency_exceeded">Болюс с таким же количеством единиц был запрошен за последние две минуты. Для предотвращения случайных двойных болюсов и сбоев операция отменена.</string>
     <string name="combo_pump_connected_now">Сейчас</string>
     <string name="combo_activity_reading_pump_history">Чтение истории помпы</string>
-    <string name="danar_history">история помпы</string>
+    <string name="danar_history">Журнал помпы</string>
     <string name="combo_activity_setting_basal_profile">Установка базального профиля</string>
     <string name="combo_pump_cartridge_low_warrning">Низкий уровень инсулина в картридже помпы</string>
     <string name="combo_pump_battery_low_warrning">Низкий заряд батареи помпы</string>
@@ -792,6 +782,7 @@
     <string name="insightpump_shortname">Поле обзора</string>
     <string name="ago">тому назад</string>
     <string name="format_hours">%1$.2f ч</string>
+    <string name="format_mins">%1$d мин</string>
     <string name="enablesmbalways">Всегда включать супер микро болюс SMB</string>
     <string name="enablesmbalways_summary">Всегда включать супер микро болюс SMB независимо от болюсов. Возможно только для источников СК с хорошей фильтрацией данных вроде G5</string>
     <string name="enablesmbaftercarbs">Активировать супер микро болюс SMB после углеводов</string>
@@ -970,11 +961,11 @@ Context | Edit Context</string>
     <string name="danar_pumpalarm_sound">Звуковой сигнал</string>
     <string name="danar_pumpalarm_vibrate">Вибросигнал</string>
     <string name="danar_pumpalarm_both">Оба</string>
-    <string name="danar_screentimeout">LCD экран на время [s]</string>
-    <string name="danar_backlight">Подсветка на время [s]</string>
+    <string name="danar_screentimeout">Время LCD экрана [seconds]</string>
+    <string name="danar_backlight">Время подсветки [seconds]</string>
     <string name="danar_glucoseunits">Единиц глюкозы</string>
-    <string name="danar_shutdown">(Часов) до выключения помпы</string>
-    <string name="danar_lowreservoir">В резервуаре мало инсулина (ед.)</string>
+    <string name="danar_shutdown">Выключение через [hours]</string>
+    <string name="danar_lowreservoir">В резервуаре мало инсулина [Units]</string>
     <string name="danar_saveuseroptions">Сохранить параметры в помпе</string>
     <string name="option_on">Вкл.</string>
     <string name="option_off">Выкл.</string>
@@ -1220,15 +1211,20 @@ Context | Edit Context</string>
     <string name="longitude_short">Долгота:</string>
     <string name="distance_short">Расст [м]:</string>
     <string name="name_short">Имя:</string>
-    <string name="locationis">Местоположение: %1$s</string>
+    <string name="locationis">%1$s %2$s</string>
+    <string name="location_mode">Когда </string>
+    <string name="location_inside">Когда вы находитесь внутри зоны</string>
+    <string name="location_outside">Когда вы вне зоны</string>
+    <string name="location_going_in">Когда вы входите в названную зону</string>
+    <string name="location_going_out">Когда вы покидаете названную зону</string>
     <string name="lastboluslabel">Предыдущий болюс</string>
     <string name="lastboluscompared">Время болюса %1$s %2$s мин назад</string>
     <string name="triggercoblabel">Активн углеводы</string>
     <string name="cobcompared">Активн углеводы %1$s %2$.0f</string>
     <string name="taskname">Название задачи</string>
     <string name="edit_short">РЕДАКТ</string>
-    <string name="please_choose_an_action_type">Выберите тип действия:</string>
-    <string name="please_choose_a_trigger_type">Выберите тип триггера:</string>
+    <string name="please_choose_an_action_type">Выберите тип действия</string>
+    <string name="please_choose_a_trigger_type">Выберите тип триггера</string>
     <string name="triggers">Триггеры:</string>
     <string name="remove_label">УДАЛИТЬ</string>
     <string name="preconditions">Предусловия:</string>
@@ -1321,7 +1317,7 @@ Context | Edit Context</string>
     <string name="medtronic_error_pump_frequency_invalid">Частота помпы не поддерживается.</string>
     <string name="medtronic_error_rileylink_address_invalid">Недопустимый адрес RileyLink.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Обнаруженный тип помпы не соответствует настроенному.</string>
-    <string name="medtronic_error_pump_basal_profiles_not_enabled">Профили базала не включены на помпе.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Базальные профили/настройки шаблонов не включены в помпе. Включите их на помпе.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Базовый профиль на помпе неверный (должен быть STD).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Неверный тип временной скорости базала TBR на помпе (должен быть Absolute).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">На помпе задан неверный макс болюс (должен быть %1$.2f).</string>
@@ -1372,7 +1368,7 @@ Context | Edit Context</string>
     <string name="automation_trigger_pump_last_connection_description">Последняя связь с помпой [ мин. назад]</string>
     <string name="automation_trigger_pump_last_connection_compared">Последняя связь с помпой %1$s %2$sмин. назад</string>
     <string name="sendsmsactionlabel">Отправить SMS: %1$s</string>
-    <string name="sendsmsactiondescription">Отправьте SMS на все настроенные номера</string>
+    <string name="sendsmsactiondescription">Отправить SMS на все номера</string>
     <string name="sendsmsactiontext">Отправить SMS с текстом</string>
     <string name="insulinFromCob"><![CDATA[Активные углеводы COB в сопоставлении с Активным инсулином IOB: <font color=\'%1$s\'>%2$+.2fед</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Применено ограничение на болюс: %2$.2fед до %3$.2fед</font>]]></string>
@@ -1437,4 +1433,16 @@ Context | Edit Context</string>
     <string name="activitymonitor">Монитор активности</string>
     <string name="doyouwantresetstats">Хотите сбросить статистику активности?</string>
     <string name="statistics">Статистика</string>
+    <string name="randombg">Случайные значения ГК</string>
+    <string name="description_source_randombg">Генерировать случайные данные ГК (только демо-режим)</string>
+    <string name="randombg_short">BG/ГК</string>
+    <string name="tools">Инструментарий</string>
+    <string name="show_calculation">Показать расчет</string>
+    <string name="error">Ошибка</string>
+    <string name="timeformat12h">12 ч</string>
+    <string name="timeformat24h">24 ч</string>
+    <string name="automation_event">Автоматизированное событие</string>
+    <string name="alreadyset">Уже установлено</string>
+    <string name="message">Сообщение</string>
+    <string name="clearqueueconfirm">Очистить очередь? Все данные в очереди будут потеряны!</string>
 </resources>

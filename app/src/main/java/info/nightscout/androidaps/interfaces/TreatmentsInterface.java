@@ -33,7 +33,7 @@ public interface TreatmentsInterface {
     MealData getMealData();
 
     List<Treatment> getTreatmentsFromHistory();
-    List<Treatment> getTreatments5MinBackFromHistory(long time);
+    List<Treatment> getCarbTreatments5MinBackFromHistory(long time);
     List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long timestamp);
     long getLastBolusTime();
 
