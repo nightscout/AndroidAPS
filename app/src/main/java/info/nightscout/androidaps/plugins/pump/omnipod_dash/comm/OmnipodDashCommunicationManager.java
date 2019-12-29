@@ -11,7 +11,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentHighFlashLogDump;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
@@ -118,7 +118,7 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
     }
 
     @Override
-    public PodInfoRecentHighFlashLogDump readPulseLog() {
+    public PodInfoRecentPulseLog readPulseLog() {
         return null;
     }
 

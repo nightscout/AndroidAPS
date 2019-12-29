@@ -116,6 +116,21 @@ public class ByteUtil {
         return rval;
     }
 
+    public static String shortHexStringWithoutSpaces(byte[] byteArray) {
+        String hexString = "";
+        if (byteArray == null) {
+            return hexString;
+        }
+        if (byteArray.length == 0) {
+            return hexString;
+        }
+        for (byte b : byteArray) {
+            hexString = hexString + HEX_DIGITS[(b & 0xF0) >> 4];
+            hexString = hexString + HEX_DIGITS[(b & 0x0F)];
+        }
+        return hexString;
+    }
+
     public static String shortHexString(List<Byte> list) {
 
         byte[] abyte0 = getByteArrayFromList(list);

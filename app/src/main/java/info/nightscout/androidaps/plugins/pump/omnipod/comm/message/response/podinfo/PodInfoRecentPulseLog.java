@@ -9,14 +9,14 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 
-public class PodInfoRecentHighFlashLogDump extends PodInfo {
+public class PodInfoRecentPulseLog extends PodInfo {
     private static final int MINIMUM_MESSAGE_LENGTH = 3;
 
     private final ArrayList<byte[]> dwords;
 
     private final int lastEntryIndex;
 
-    public PodInfoRecentHighFlashLogDump(byte[] encodedData, int bodyLength) {
+    public PodInfoRecentPulseLog(byte[] encodedData, int bodyLength) {
         super(encodedData);
 
         if (encodedData.length < MINIMUM_MESSAGE_LENGTH) {
@@ -36,7 +36,7 @@ public class PodInfoRecentHighFlashLogDump extends PodInfo {
 
     @Override
     public PodInfoType getType() {
-        return PodInfoType.RECENT_HIGH_FLASH_LOG_DUMP;
+        return PodInfoType.RECENT_PULSE_LOG;
     }
 
     public List<byte[]> getDwords() {
@@ -49,14 +49,15 @@ public class PodInfoRecentHighFlashLogDump extends PodInfo {
 
     @Override
     public String toString() {
-        String out = "PodInfoRecentHighFlashLogDump{" +
+        String out = "PodInfoRecentPulseLog{" +
                 "lastEntryIndex=" + lastEntryIndex +
                 ",dwords=[";
+
         List<String> hexDwords = new ArrayList<>();
         for (byte[] dword : dwords) {
-            hexDwords.add(ByteUtil.shortHexString(dword));
+            hexDwords.add(ByteUtil.shortHexStringWithoutSpaces(dword));
         }
-        out += TextUtils.join(",", hexDwords);
+        out += TextUtils.join(", ", hexDwords);
         out += "]}";
         return out;
     }

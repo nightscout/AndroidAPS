@@ -6,8 +6,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.pod
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoFaultAndInitializationTime;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoFaultEvent;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoLowFlashLogDump;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoOlderHighFlashLogDump;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentHighFlashLogDump;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoOlderPulseLog;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoTestValues;
 
 public enum PodInfoType {
@@ -18,8 +18,8 @@ public enum PodInfoType {
     FAULT_AND_INITIALIZATION_TIME((byte) 0x05),
     HARDCODED_TEST_VALUES((byte) 0x06),
     LOW_FLASH_DUMP_LOG((byte) 0x46), // Starting at $4000
-    RECENT_HIGH_FLASH_LOG_DUMP((byte) 0x50),  // Starting at $4200
-    OLDER_HIGH_FLASH_LOG_DUMP((byte) 0x51); // Starting at $4200 but dumps entries before the last 50
+    RECENT_PULSE_LOG((byte) 0x50),  // Starting at $4200
+    OLDER_PULSE_LOG((byte) 0x51); // Starting at $4200 but dumps entries before the last 50
 
     private final byte value;
 
@@ -58,10 +58,10 @@ public enum PodInfoType {
                 return new PodInfoTestValues(encodedData);
             case LOW_FLASH_DUMP_LOG:
                 return new PodInfoLowFlashLogDump(encodedData);
-            case RECENT_HIGH_FLASH_LOG_DUMP:
-                return new PodInfoRecentHighFlashLogDump(encodedData, bodyLength);
-            case OLDER_HIGH_FLASH_LOG_DUMP:
-                return new PodInfoOlderHighFlashLogDump(encodedData);
+            case RECENT_PULSE_LOG:
+                return new PodInfoRecentPulseLog(encodedData, bodyLength);
+            case OLDER_PULSE_LOG:
+                return new PodInfoOlderPulseLog(encodedData);
             default:
                 throw new IllegalArgumentException("Cannot decode " + this.name());
         }

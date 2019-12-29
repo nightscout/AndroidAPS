@@ -1723,11 +1723,11 @@
 
 
     <string name="omnipod_init_pod_wizard_step1_title">Fill the Pod</string>
-    <string name="omnipod_init_pod_wizard_step1_desc">\nFill the new Pod with insulin.\n\nListen for two beeps from the Pod during the filling process. Be sure to completely empty the fill syringe, even after hearing the two beeps.\n\nAfter filling the Pod, please press <b>Next</b>.\n\n<b>Note:</b> do not remove the Pod\'s needle cap at this time.</string>
+    <string name="omnipod_init_pod_wizard_step1_desc">\nFill the new Pod with enough insulin for 3 days.\n\nListen for two beeps from the Pod during the filling process. These indicate that the minimum amount of 85U has been inserted. Be sure to completely empty the fill syringe, even after hearing the two beeps.\n\nAfter filling the Pod, please press <b>Next</b>.\n\n<b>Note:</b> do not remove the Pod\'s needle cap at this time.</string>
     <string name="omnipod_init_pod_wizard_step2_title">Priming</string>
-    <string name="omnipod_init_pod_wizard_step2_action_header">Trying to pair with and prime the new Pod.\n\nWhen all items are checked, you can press <b>Next</b>.\n\n<b>Note:</b> please keep the Pod very close to the RileyLink at this time.</string>
+    <string name="omnipod_init_pod_wizard_step2_action_header">Trying to pair with the new Pod and prime it.\n\nWhen all items are checked, you can press <b>Next</b>.\n\n<b>Note:</b> please keep the Pod very close to the RileyLink at this time.</string>
     <string name="omnipod_init_pod_wizard_step3_title">Attach the Pod</string>
-    <string name="omnipod_init_pod_wizard_step3_desc">\nPrepare the infusion site. Remove the Pod\'s needle cap and adhesive backing and attach the pod to the infusion site.\n\nIf the cannula sticks out, please press <b>Cancel</b> and discard your Pod.\n\nPress <b>Next</b> to insert the cannula and begin basal delivery.</string>
+    <string name="omnipod_init_pod_wizard_step3_desc">\nPrepare the infusion site. Remove the Pod\'s needle cap and adhesive backing and attach the Pod to the infusion site.\n\nIf the cannula sticks out, please press <b>Cancel</b> and discard your Pod.\n\nPress <b>Next</b> to insert the cannula and begin basal delivery.</string>
     <string name="omnipod_init_pod_wizard_step4_title">Inserting cannula</string>
     <string name="omnipod_init_pod_wizard_pod_info_title">Pod Info</string>
     <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nThe Pod is now active.\n\nYour basal schedule has been programmed and the cannula has been inserted.\n\nPlease verify that the cannula has been inserted correctly and replace your Pod if you feel hasn\'t.</string>
@@ -1735,7 +1735,7 @@
     <string name="omnipod_remove_pod_wizard_step1_title">Deactivate Pod</string>
     <string name="omnipod_remove_pod_wizard_step1_desc">\nPress <b>Next</b> to deactivate the Pod.\n\n<b>Note:</b> This will suspend all insulin delivery and deactivate the Pod.</string>
     <string name="omnipod_remove_pod_wizard_step2_title">Deactivating the Pod</string>
-    <string name="omnipod_remove_pod_wizard_step2_action_header">Deactivating the Pod.\n\nWhen all items are checked, you can press <b>Next</b>.\n\n<b>Note:</b> If deactivating continuously fails, please press <b>Cancel</b> and use the <b>Reset Pod</b> option to forcibly reset the pod state.</string>
+    <string name="omnipod_remove_pod_wizard_step2_action_header">Deactivating the Pod.\n\nWhen all items are checked, you can press <b>Next</b>.\n\n<b>Note:</b> If deactivating continuously fails, please press <b>Cancel</b> and use the <b>Reset Pod</b> option to forcibly reset the Pod state.</string>
 
     <string name="omnipod_init_pod_wizard_pod_info_remove_pod_description">Pod deactivated.\n\nPlease remove the Pod from your body and discard it.</string>
 
@@ -1760,9 +1760,9 @@
     <string name="omnipod_alert_shutdown_imminent">Shutdown is imminent</string>
     <string name="omnipod_alert_low_reservoir">Low reservoir</string>
     <string name="omnipod_alert_unknown_alert">Unknown alert</string>
-    <string name="omnipod_error_set_basal_failed_uncertain">Setting basal profile might have failed. Delivery might be suspended! Please refresh pod status.</string>
-    <string name="omnipod_error_set_time_failed_uncertain">Setting time might have failed. Delivery might be suspended! Please refresh pod status.</string>
-    <string name="omnipod_bolus_failed_uncertain">Unable to verify whether the bolus succeeded. Please verify that your pod is bolusing or cancel the bolus.</string>
+    <string name="omnipod_error_set_basal_failed_uncertain">Setting basal profile might have failed. Delivery might be suspended! Please refresh Pod status.</string>
+    <string name="omnipod_error_set_time_failed_uncertain">Setting time might have failed. Delivery might be suspended! Please refresh Pod status.</string>
+    <string name="omnipod_bolus_failed_uncertain">Unable to verify whether the bolus succeeded. Please verify that your Pod is bolusing or cancel the bolus.</string>
     <string name="omnipod_rl_stats">RL Stats</string>
     <string name="omnipod_read_pulse_log_short">Pulse Log</string>
 

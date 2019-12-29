@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.defs;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentHighFlashLogDump;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 
 public interface OmnipodCommunicationManagerInterface {
@@ -74,5 +74,5 @@ public interface OmnipodCommunicationManagerInterface {
     void setPumpStatus(OmnipodPumpStatus pumpStatusLocal);
 
 
-    PodInfoRecentHighFlashLogDump readPulseLog();
+    PodInfoRecentPulseLog readPulseLog();
 }
