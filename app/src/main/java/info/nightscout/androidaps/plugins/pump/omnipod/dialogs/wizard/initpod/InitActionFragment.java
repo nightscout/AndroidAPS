@@ -98,8 +98,8 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
             checkBox1.setText(child.getResourceId());
             checkBox1.setClickable(false);
             checkBox1.setTextAppearance(R.style.WizardPagePodListItem);
-            checkBox1.setHeight(140);
-            checkBox1.setTextSize(16);
+            checkBox1.setHeight(120);
+            checkBox1.setTextSize(15);
             checkBox1.setTextColor(headerView.getTextColors().getDefaultColor());
 
             linearLayout.addView(checkBox1);
