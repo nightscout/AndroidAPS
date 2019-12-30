@@ -13,30 +13,34 @@ import info.nightscout.androidaps.interfaces.BgSourceInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.SP
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
-import org.slf4j.LoggerFactory
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object SourceDexcomPlugin : PluginBase(PluginDescription()
-        .mainType(PluginType.BGSOURCE)
-        .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginName(R.string.dexcom_app_patched)
-        .shortName(R.string.dexcom_short)
-        .preferencesId(R.xml.pref_bgsource)
-        .description(R.string.description_source_dexcom)), BgSourceInterface {
-
-    private val log = LoggerFactory.getLogger(L.BGSOURCE)
+@Singleton
+class DexcomPlugin @Inject constructor(
+    private val aapsLogger: AAPSLogger,
+    private val sp: SP,
+    private val mainApp: MainApp
+) : PluginBase(PluginDescription()
+    .mainType(PluginType.BGSOURCE)
+    .fragmentClass(BGSourceFragment::class.java.name)
+    .pluginName(R.string.dexcom_app_patched)
+    .shortName(R.string.dexcom_short)
+    .preferencesId(R.xml.pref_bgsourcedexcom)
+    .description(R.string.description_source_dexcom)), BgSourceInterface {
 
     private val PACKAGE_NAMES = arrayOf("com.dexcom.cgm.region1.mgdl", "com.dexcom.cgm.region1.mmol",
-            "com.dexcom.cgm.region2.mgdl", "com.dexcom.cgm.region2.mmol",
-            "com.dexcom.g6.region1.mmol", "com.dexcom.g6.region2.mgdl",
-            "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol")
+        "com.dexcom.cgm.region2.mgdl", "com.dexcom.cgm.region2.mmol",
+        "com.dexcom.g6.region1.mmol", "com.dexcom.g6.region2.mgdl",
+        "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol")
 
-    const val PERMISSION = "com.dexcom.cgm.EXTERNAL_PERMISSION"
+    val PERMISSION = "com.dexcom.cgm.EXTERNAL_PERMISSION"
 
     override fun advancedFilteringSupported(): Boolean {
         return true
@@ -44,15 +48,15 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
 
     override fun onStart() {
         super.onStart()
-        if (ContextCompat.checkSelfPermission(MainApp.instance(), PERMISSION) != PackageManager.PERMISSION_GRANTED) {
-            val intent = Intent(MainApp.instance(), RequestDexcomPermissionActivity::class.java)
+        if (ContextCompat.checkSelfPermission(mainApp, PERMISSION) != PackageManager.PERMISSION_GRANTED) {
+            val intent = Intent(mainApp, RequestDexcomPermissionActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            MainApp.instance().startActivity(intent)
+            mainApp.startActivity(intent)
         }
     }
 
     fun findDexcomPackageName(): String? {
-        val packageManager = MainApp.instance().packageManager
+        val packageManager = mainApp.packageManager
         for (packageInfo in packageManager.getInstalledPackages(0)) {
             if (PACKAGE_NAMES.contains(packageInfo.packageName)) return packageInfo.packageName
         }
@@ -72,10 +76,10 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
                     bgReading.date = glucoseValue.getLong("timestamp") * 1000
                     bgReading.raw = 0.0
                     if (MainApp.getDbHelper().createIfNotExists(bgReading, "Dexcom$sensorType")) {
-                        if (SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                        if (sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
                             NSUpload.uploadBg(bgReading, "AndroidAPS-Dexcom$sensorType")
                         }
-                        if (SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
+                        if (sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
                             NSUpload.sendToXdrip(bgReading)
                         }
                     }
@@ -100,7 +104,7 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
                         }
                 }
             }
-            if (SP.getBoolean(R.string.key_dexcom_lognssensorchange, false) && intent.hasExtra("sensorInsertionTime")) {
+            if (sp.getBoolean(R.string.key_dexcom_lognssensorchange, false) && intent.hasExtra("sensorInsertionTime")) {
                 intent.extras?.let {
                     val sensorInsertionTime = it.getLong("sensorInsertionTime") * 1000
                     val now = DateUtil.now()
@@ -115,7 +119,7 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
                 }
             }
         } catch (e: Exception) {
-            log.error("Error while processing intent from Dexcom App", e)
+            aapsLogger.error("Error while processing intent from Dexcom App", e)
         }
     }
 }

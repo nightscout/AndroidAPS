@@ -25,7 +25,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SPImplementation
 import javax.inject.Singleton
 
 @Module(includes = [AppModule.AppBindings::class])
-class AppModule {
+open class AppModule {
 
     @Provides
     @Singleton

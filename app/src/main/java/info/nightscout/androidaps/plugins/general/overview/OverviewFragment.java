@@ -87,7 +87,6 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
@@ -106,8 +105,8 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
-import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
-import info.nightscout.androidaps.plugins.source.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.source.DexcomPlugin;
+import info.nightscout.androidaps.plugins.source.XdripPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.BolusWizard;
@@ -139,6 +138,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
+    @Inject DexcomPlugin dexcomPlugin;
+    @Inject XdripPlugin xdripPlugin;
     @Inject NotificationStore notificationStore;
 
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -818,8 +819,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        boolean xdrip = SourceXdripPlugin.getPlugin().isEnabled(PluginType.BGSOURCE);
-        boolean dexcom = SourceDexcomPlugin.INSTANCE.isEnabled(PluginType.BGSOURCE);
+        boolean xdrip = xdripPlugin.isEnabled(PluginType.BGSOURCE);
+        boolean dexcom = dexcomPlugin.isEnabled(PluginType.BGSOURCE);
 
         FragmentManager manager = getFragmentManager();
         // try to fix  https://fabric.io/nightscout3/android/apps/info.nightscout.androidaps/issues/5aca7a1536c7b23527eb4be7?time=last-seven-days
@@ -843,7 +844,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                     calibrationDialog.show(manager, "CalibrationDialog");
                 } else if (dexcom) {
                     try {
-                        String packageName = SourceDexcomPlugin.INSTANCE.findDexcomPackageName();
+                        String packageName = dexcomPlugin.findDexcomPackageName();
                         if (packageName != null) {
                             Intent i = new Intent("com.dexcom.cgm.activities.MeterEntryActivity");
                             i.setPackage(packageName);
@@ -860,7 +861,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 if (xdrip)
                     openCgmApp("com.eveningoutpost.dexdrip");
                 else if (dexcom) {
-                    String packageName = SourceDexcomPlugin.INSTANCE.findDexcomPackageName();
+                    String packageName = dexcomPlugin.findDexcomPackageName();
                     if (packageName != null) {
                         openCgmApp(packageName);
                     } else {
@@ -1139,8 +1140,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         }
 
         // **** Calibration & CGM buttons ****
-        boolean xDripIsBgSource = SourceXdripPlugin.getPlugin().isEnabled(PluginType.BGSOURCE);
-        boolean dexcomIsSource = SourceDexcomPlugin.INSTANCE.isEnabled(PluginType.BGSOURCE);
+        boolean xDripIsBgSource = xdripPlugin.isEnabled(PluginType.BGSOURCE);
+        boolean dexcomIsSource = dexcomPlugin.isEnabled(PluginType.BGSOURCE);
         boolean bgAvailable = DatabaseHelper.actualBg() != null;
         if (calibrationButton != null) {
             if ((xDripIsBgSource || dexcomIsSource) && bgAvailable && sp.getBoolean(R.string.key_show_calibration_button, true)) {

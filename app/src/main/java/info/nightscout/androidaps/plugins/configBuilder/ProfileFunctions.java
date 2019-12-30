@@ -136,6 +136,7 @@ public class ProfileFunctions implements ProfileFunction {
     }
 
     @NotNull
+    @Deprecated
     public static String getSystemUnits() {
         return SP.getString(R.string.key_units, Constants.MGDL);
     }

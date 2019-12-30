@@ -6,15 +6,15 @@ import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-public class SourceNSClientPluginTest {
+public class XdripPluginTest {
 
     @Test
     public void getPlugin() {
-        Assert.assertNotEquals(null, SourceNSClientPlugin.getPlugin());
+        Assert.assertNotEquals(null, XdripPlugin.getPlugin());
     }
 
     @Test
     public void advancedFilteringSupported() {
-        Assert.assertEquals(false, SourceNSClientPlugin.getPlugin().advancedFilteringSupported());
+        Assert.assertEquals(false, XdripPlugin.getPlugin().advancedFilteringSupported());
     }
 }

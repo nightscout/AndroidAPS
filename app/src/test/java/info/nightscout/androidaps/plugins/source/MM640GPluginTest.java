@@ -6,15 +6,15 @@ import org.junit.runner.RunWith;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
-public class SourceGlimpPluginTest {
+public class MM640GPluginTest {
 
     @Test
     public void getPlugin() {
-        Assert.assertNotEquals(null, SourceGlimpPlugin.getPlugin());
+        Assert.assertNotEquals(null, MM640gPlugin.getPlugin());
     }
 
     @Test
     public void advancedFilteringSupported() {
-        Assert.assertEquals(false, SourceGlimpPlugin.getPlugin().advancedFilteringSupported());
+        Assert.assertEquals(false, MM640gPlugin.getPlugin().advancedFilteringSupported());
     }
 }

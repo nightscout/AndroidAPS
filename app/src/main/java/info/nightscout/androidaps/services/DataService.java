@@ -28,14 +28,14 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRNSHistorySync;
-import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
-import info.nightscout.androidaps.plugins.source.SourceEversensePlugin;
-import info.nightscout.androidaps.plugins.source.SourceGlimpPlugin;
-import info.nightscout.androidaps.plugins.source.SourceMM640gPlugin;
-import info.nightscout.androidaps.plugins.source.SourceNSClientPlugin;
-import info.nightscout.androidaps.plugins.source.SourcePoctechPlugin;
-import info.nightscout.androidaps.plugins.source.SourceTomatoPlugin;
-import info.nightscout.androidaps.plugins.source.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.source.DexcomPlugin;
+import info.nightscout.androidaps.plugins.source.EversensePlugin;
+import info.nightscout.androidaps.plugins.source.GlimpPlugin;
+import info.nightscout.androidaps.plugins.source.MM640gPlugin;
+import info.nightscout.androidaps.plugins.source.NSClientSourcePlugin;
+import info.nightscout.androidaps.plugins.source.PoctechPlugin;
+import info.nightscout.androidaps.plugins.source.TomatoPlugin;
+import info.nightscout.androidaps.plugins.source.XdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -46,6 +46,14 @@ public class DataService extends DaggerIntentService {
     @Inject SP sp;
     @Inject RxBusWrapper rxBus;
     @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
+    @Inject DexcomPlugin dexcomPlugin;
+    @Inject EversensePlugin eversensePlugin;
+    @Inject GlimpPlugin glimpPlugin;
+    @Inject MM640gPlugin mm640GPlugin;
+    @Inject NSClientSourcePlugin nsClientSourcePlugin;
+    @Inject PoctechPlugin poctechPlugin;
+    @Inject TomatoPlugin tomatoPlugin;
+    @Inject XdripPlugin xdripPlugin;
 
     public DataService() {
         super("DataService");
@@ -63,21 +71,21 @@ public class DataService extends DaggerIntentService {
 
         final String action = intent.getAction();
         if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
-            SourceXdripPlugin.getPlugin().handleNewData(intent);
+            xdripPlugin.handleNewData(intent);
         } else if (Intents.NS_EMULATOR.equals(action)) {
-            SourceMM640gPlugin.getPlugin().handleNewData(intent);
+            mm640GPlugin.handleNewData(intent);
         } else if (Intents.GLIMP_BG.equals(action)) {
-            SourceGlimpPlugin.getPlugin().handleNewData(intent);
+            glimpPlugin.handleNewData(intent);
         } else if (Intents.DEXCOM_BG.equals(action)) {
-            SourceDexcomPlugin.INSTANCE.handleNewData(intent);
+            dexcomPlugin.handleNewData(intent);
         } else if (Intents.POCTECH_BG.equals(action)) {
-            SourcePoctechPlugin.getPlugin().handleNewData(intent);
+            poctechPlugin.handleNewData(intent);
         } else if (Intents.TOMATO_BG.equals(action)) {
-            SourceTomatoPlugin.getPlugin().handleNewData(intent);
+            tomatoPlugin.handleNewData(intent);
         } else if (Intents.EVERSENSE_BG.equals(action)) {
-            SourceEversensePlugin.getPlugin().handleNewData(intent);
+            eversensePlugin.handleNewData(intent);
         } else if (Intents.ACTION_NEW_SGV.equals(action)) {
-            SourceNSClientPlugin.getPlugin().handleNewData(intent);
+            nsClientSourcePlugin.handleNewData(intent);
         } else if (Intents.ACTION_NEW_PROFILE.equals(action)) {
             // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
             NSProfilePlugin.getPlugin().handleNewData(intent);

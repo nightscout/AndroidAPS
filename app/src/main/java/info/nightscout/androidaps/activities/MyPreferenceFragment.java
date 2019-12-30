@@ -39,7 +39,11 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
-import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
+import info.nightscout.androidaps.plugins.source.DexcomPlugin;
+import info.nightscout.androidaps.plugins.source.EversensePlugin;
+import info.nightscout.androidaps.plugins.source.GlimpPlugin;
+import info.nightscout.androidaps.plugins.source.PoctechPlugin;
+import info.nightscout.androidaps.plugins.source.TomatoPlugin;
 
 /**
  * Created by adrian on 2019-12-23.
@@ -61,6 +65,11 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
     @Inject OpenAPSMAPlugin openAPSMAPlugin;
     @Inject OpenAPSSMBPlugin openAPSSMBPlugin;
     @Inject SafetyPlugin safetyPlugin;
+    @Inject DexcomPlugin dexcomPlugin;
+    @Inject EversensePlugin eversensePlugin;
+    @Inject GlimpPlugin glimpPlugin;
+    @Inject PoctechPlugin poctechPlugin;
+    @Inject TomatoPlugin tomatoPlugin;
     @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
     @Inject StatusLinePlugin statusLinePlugin;
     @Inject TidepoolPlugin tidepoolPlugin;
@@ -105,7 +114,11 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
 
             addPreferencesFromResource(R.xml.pref_overview);
 
-            addPreferencesFromResourceIfEnabled(SourceDexcomPlugin.INSTANCE, PluginType.BGSOURCE);
+            addPreferencesFromResourceIfEnabled(eversensePlugin, PluginType.BGSOURCE);
+            addPreferencesFromResourceIfEnabled(dexcomPlugin, PluginType.BGSOURCE);
+            addPreferencesFromResourceIfEnabled(tomatoPlugin, PluginType.BGSOURCE);
+            addPreferencesFromResourceIfEnabled(poctechPlugin, PluginType.BGSOURCE);
+            addPreferencesFromResourceIfEnabled(glimpPlugin, PluginType.BGSOURCE);
             addPreferencesFromResourceIfEnabled(careportalPlugin, PluginType.GENERAL);
             addPreferencesFromResourceIfEnabled(safetyPlugin, PluginType.CONSTRAINTS);
             if (Config.APS) {

@@ -20,7 +20,7 @@ import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
-import info.nightscout.androidaps.plugins.source.SourceGlimpPlugin;
+import info.nightscout.androidaps.plugins.source.GlimpPlugin;
 import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.Mockito.when;
@@ -91,7 +91,7 @@ public class SafetyPluginTest {
 
     @Test
     public void bgSourceShouldPreventSMBAlways() {
-        when(ConfigBuilderPlugin.getPlugin().getActiveBgSource()).thenReturn(SourceGlimpPlugin.getPlugin());
+        when(ConfigBuilderPlugin.getPlugin().getActiveBgSource()).thenReturn(GlimpPlugin.getPlugin());
 
         Constraint<Boolean> c = new Constraint<>(true);
         c = safetyPlugin.isAdvancedFilteringEnabled(c);
