@@ -290,6 +290,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             bolusStarted = new Date();
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
+            addFailureToHistory(System.currentTimeMillis(), PodHistoryEntryType.SetBolus, comment);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 

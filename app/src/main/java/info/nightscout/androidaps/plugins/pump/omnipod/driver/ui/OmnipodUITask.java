@@ -153,6 +153,9 @@ public class OmnipodUITask {
         return (Float) parameters[index];
     }
 
+    public Object getObjectFromParameters(int index) {
+        return parameters[index];
+    }
 
     public Double getDoubleFromParameters(int index) {
         return (Double) parameters[index];

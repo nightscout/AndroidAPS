@@ -9,10 +9,14 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import com.tech.freak.wizardpager.model.Page;
+
 import org.joda.time.LocalDateTime;
+import org.mozilla.javascript.tools.jsc.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +27,7 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
@@ -41,6 +46,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
+import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -387,14 +393,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                     } else {
                         LOG.warn("Result was NOT null.");
 
-                        ClipboardManager clipboard = (ClipboardManager) MainApp.instance().getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText("PodInfoRecentPulseLog", result.toString());
-                        clipboard.setPrimaryClip(clip);
-
                         Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                        i.putExtra("soundid", R.raw.boluserror);
+                        i.putExtra("soundid", 0);
                         i.putExtra("status", "Pulse Log (copied to clipboard):\n" + result.toString());
                         i.putExtra("title", MainApp.gs(R.string.combo_warning));
+                        i.putExtra("clipboardContent", result.toString());
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         MainApp.instance().startActivity(i);
 
@@ -655,11 +658,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         PumpEnactResult result = responseTask.getResult();
 
-        setRefreshButtonEnabled(true);
+        //setRefreshButtonEnabled(true);
 
         LOG.info(getLogPrefix() + "stopBolusDelivering - wasSuccess={}", result.success);
 
-        finishAction("Bolus");
+        //finishAction("Bolus");
     }
 
 

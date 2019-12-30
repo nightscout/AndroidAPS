@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
@@ -41,11 +42,13 @@ public class OmnipodUIPostprocessor {
 
                     PumpEnactResult result = uiTask.returnData;
 
+                    DetailedBolusInfo detailedBolusInfo = (DetailedBolusInfo)uiTask.getObjectFromParameters(0);
+
                     if (result.success) {
-                        boolean isSmb = uiTask.getBooleanFromParameters(1);
+                        boolean isSmb = detailedBolusInfo.isSMB;
 
                         if (!isSmb) {
-                            pumpStatus.lastBolusAmount = uiTask.getDoubleFromParameters(0);
+                            pumpStatus.lastBolusAmount = detailedBolusInfo.insulin;
                             pumpStatus.lastBolusTime = new Date();
                         }
                     }

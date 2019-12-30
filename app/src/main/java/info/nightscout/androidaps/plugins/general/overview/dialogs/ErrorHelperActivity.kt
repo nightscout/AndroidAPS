@@ -16,6 +16,7 @@ class ErrorHelperActivity : NoSplashAppCompatActivity() {
         errorDialog.status = intent.getStringExtra("status")
         errorDialog.sound = intent.getIntExtra("soundid", R.raw.error)
         errorDialog.title = intent.getStringExtra("title")
+        errorDialog.clipboardContent = intent.getStringExtra("clipboardContent")
         errorDialog.show(supportFragmentManager, "Error")
 
         if (SP.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {

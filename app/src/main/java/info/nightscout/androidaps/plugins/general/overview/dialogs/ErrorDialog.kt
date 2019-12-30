@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.plugins.general.overview.dialogs
 
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -13,6 +16,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.services.AlarmSoundService
 import kotlinx.android.synthetic.main.overview_error_dialog.*
 import org.slf4j.LoggerFactory
+import java.util.*
 
 class ErrorDialog : DialogFragment() {
     private val log = LoggerFactory.getLogger(ErrorDialog::class.java)
@@ -21,6 +25,7 @@ class ErrorDialog : DialogFragment() {
     var status: String = ""
     var title: String = ""
     var sound: Int = 0
+    var clipboardContent: String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -46,7 +51,16 @@ class ErrorDialog : DialogFragment() {
             log.debug("Error dialog mute button pressed")
             stopAlarm()
         }
+        copyToClipboard()
         startAlarm()
+    }
+
+    private fun copyToClipboard() {
+        if (clipboardContent.length > 0) {
+            val clipboard = MainApp.instance().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText(UUID.randomUUID().toString(), clipboardContent)
+            clipboard.primaryClip = clip
+        }
     }
 
     override fun onSaveInstanceState(bundle: Bundle) {
