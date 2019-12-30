@@ -217,13 +217,16 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         long time = System.currentTimeMillis();
         try {
             delegate.deactivatePod();
-            addSuccessToHistory(time, PodHistoryEntryType.DeactivatePod, null);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, false, comment);
             addFailureToHistory(time, PodHistoryEntryType.DeactivatePod, comment);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
+
+        addSuccessToHistory(time, PodHistoryEntryType.DeactivatePod, null);
+
+        reportImplicitlyCanceledTbr();
 
         podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, true, null);
 
@@ -263,6 +266,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public PumpEnactResult resetPodStatus() {
         delegate.resetPodState();
+
+        reportImplicitlyCanceledTbr();
 
         OmnipodUtil.setPodSessionState(null);
 
