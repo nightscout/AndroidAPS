@@ -78,6 +78,7 @@ public class LoopPlugin extends PluginBase {
     private final ConfigBuilderPlugin configBuilderPlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final VirtualPumpPlugin virtualPumpPlugin;
+    private final ActionStringHandler actionStringHandler;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -111,6 +112,7 @@ public class LoopPlugin extends PluginBase {
         public Date lastOpenModeAccept;
     }
 
+    @Deprecated
     static public LastRun lastRun = null;
 
     @Inject
@@ -124,7 +126,8 @@ public class LoopPlugin extends PluginBase {
             MainApp mainApp,
             ConfigBuilderPlugin configBuilderPlugin,
             TreatmentsPlugin treatmentsPlugin,
-            VirtualPumpPlugin virtualPumpPlugin
+            VirtualPumpPlugin virtualPumpPlugin,
+            ActionStringHandler actionStringHandler
     ) {
         super(new PluginDescription()
                 .mainType(PluginType.LOOP)
@@ -145,6 +148,7 @@ public class LoopPlugin extends PluginBase {
         this.configBuilderPlugin = configBuilderPlugin;
         this.treatmentsPlugin = treatmentsPlugin;
         this.virtualPumpPlugin = virtualPumpPlugin;
+        this.actionStringHandler = actionStringHandler;
 
         loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L);
         isSuperBolus = sp.getBoolean("isSuperBolus", false);
@@ -471,13 +475,13 @@ public class LoopPlugin extends PluginBase {
                     rxBus.send(new EventNewOpenLoopNotification());
 
                     // Send to Wear
-                    ActionStringHandler.handleInitiate("changeRequest");
+                    actionStringHandler.handleInitiate("changeRequest");
                 } else if (allowNotification) {
                     // dismiss notifications
                     NotificationManager notificationManager =
                             (NotificationManager) mainApp.getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.cancel(Constants.notificationID);
-                    ActionStringHandler.handleInitiate("cancelChangeRequest");
+                    actionStringHandler.handleInitiate("cancelChangeRequest");
                 }
             }
 
