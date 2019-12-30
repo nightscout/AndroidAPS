@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
@@ -15,11 +14,13 @@ import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Obje
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.objectives_exam_fragment.*
 import javax.inject.Inject
 
 class ObjectivesExamDialog : DaggerDialogFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var resourceHelper: ResourceHelper
 
     companion object {
         var objective: Objective? = null
@@ -75,7 +76,7 @@ class ObjectivesExamDialog : DaggerDialogFragment() {
                 objectives_exam_hints.addView(h.generate(context))
             }
             // Disabled to
-            objectives_exam_disabledto.text = MainApp.gs(R.string.answerdisabledto, DateUtil.timeString(task.disabledTo))
+            objectives_exam_disabledto.text = resourceHelper.gs(R.string.answerdisabledto, DateUtil.timeString(task.disabledTo))
             objectives_exam_disabledto.visibility = if (task.isEnabledAnswer) View.GONE else View.VISIBLE
             // Buttons
             objectives_exam_verify.isEnabled = !task.answered && task.isEnabledAnswer
