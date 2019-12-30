@@ -482,16 +482,16 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
 
-    public void addSuccessToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
-        addToHistory(requestTime, entryType, data, true);
+    public long addSuccessToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
+        return addToHistory(requestTime, entryType, data, true);
     }
 
-    public void addFailureToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
-        addToHistory(requestTime, entryType, data, false);
+    public long addFailureToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
+        return addToHistory(requestTime, entryType, data, false);
     }
 
 
-    public void addToHistory(long requestTime, PodHistoryEntryType entryType, Object data, boolean success) {
+    public long addToHistory(long requestTime, PodHistoryEntryType entryType, Object data, boolean success) {
 
         PodHistory podHistory = new PodHistory(requestTime, entryType);
 
@@ -507,6 +507,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         podHistory.setPodSerial(pumpStatus.podNumber);
 
         MainApp.getDbHelper().createOrUpdate(podHistory);
+
+        return podHistory.getPumpId();
 
     }
 

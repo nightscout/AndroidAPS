@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
@@ -383,9 +386,13 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                     } else {
                         LOG.warn("Result was NOT null.");
 
+                        ClipboardManager clipboard = (ClipboardManager) MainApp.instance().getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("PodInfoRecentPulseLog", result.toString());
+                        clipboard.setPrimaryClip(clip);
+
                         Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                         i.putExtra("soundid", R.raw.boluserror);
-                        i.putExtra("status", "Pulse Log:\n" + result.toString());
+                        i.putExtra("status", "Pulse Log (copied to clipboard):\n" + result.toString());
                         i.putExtra("title", MainApp.gs(R.string.combo_warning));
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         MainApp.instance().startActivity(i);
