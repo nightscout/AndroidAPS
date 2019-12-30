@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.utils.sharedPreferences
 
 import android.content.SharedPreferences
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -10,7 +10,9 @@ import javax.inject.Singleton
  * Created by mike on 17.02.2017.
  */
 @Singleton
-class SPImplementation @Inject constructor(private val sharedPreferences: SharedPreferences) : SP {
+class SPImplementation @Inject constructor(
+    private val sharedPreferences: SharedPreferences,
+    private val resourceHelper: ResourceHelper) : SP {
 
     override fun getAll(): Map<String, *> = sharedPreferences.all
 
@@ -18,23 +20,23 @@ class SPImplementation @Inject constructor(private val sharedPreferences: Shared
 
     override fun contains(key: String): Boolean = sharedPreferences.contains(key)
 
-    override fun contains(resourceId: Int): Boolean = sharedPreferences.contains(MainApp.gs(resourceId))
+    override fun contains(resourceId: Int): Boolean = sharedPreferences.contains(resourceHelper.gs(resourceId))
 
     override fun remove(resourceID: Int) =
-        sharedPreferences.edit().remove(MainApp.gs(resourceID)).apply()
+        sharedPreferences.edit().remove(resourceHelper.gs(resourceID)).apply()
 
     override fun remove(key: String) =
         sharedPreferences.edit().remove(key).apply()
 
     override fun getString(resourceID: Int, defaultValue: String): String =
-        sharedPreferences.getString(MainApp.gs(resourceID), defaultValue) ?: defaultValue
+        sharedPreferences.getString(resourceHelper.gs(resourceID), defaultValue) ?: defaultValue
 
     override fun getString(key: String, defaultValue: String): String =
         sharedPreferences.getString(key, defaultValue) ?: defaultValue
 
     override fun getBoolean(resourceID: Int, defaultValue: Boolean): Boolean {
         return try {
-            sharedPreferences.getBoolean(MainApp.gs(resourceID), defaultValue)
+            sharedPreferences.getBoolean(resourceHelper.gs(resourceID), defaultValue)
         } catch (e: Exception) {
             defaultValue
         }
@@ -49,16 +51,16 @@ class SPImplementation @Inject constructor(private val sharedPreferences: Shared
     }
 
     override fun getDouble(resourceID: Int, defaultValue: Double): Double =
-        SafeParse.stringToDouble(sharedPreferences.getString(MainApp.gs(resourceID), defaultValue.toString()))
+        SafeParse.stringToDouble(sharedPreferences.getString(resourceHelper.gs(resourceID), defaultValue.toString()))
 
     override fun getDouble(key: String, defaultValue: Double): Double =
         SafeParse.stringToDouble(sharedPreferences.getString(key, defaultValue.toString()))
 
     override fun getInt(resourceID: Int, defaultValue: Int): Int {
         return try {
-            sharedPreferences.getInt(MainApp.gs(resourceID), defaultValue)
+            sharedPreferences.getInt(resourceHelper.gs(resourceID), defaultValue)
         } catch (e: Exception) {
-            SafeParse.stringToInt(sharedPreferences.getString(MainApp.gs(resourceID), defaultValue.toString()))
+            SafeParse.stringToInt(sharedPreferences.getString(resourceHelper.gs(resourceID), defaultValue.toString()))
         }
     }
 
@@ -72,9 +74,9 @@ class SPImplementation @Inject constructor(private val sharedPreferences: Shared
 
     override fun getLong(resourceID: Int, defaultValue: Long): Long {
         return try {
-            sharedPreferences.getLong(MainApp.gs(resourceID), defaultValue)
+            sharedPreferences.getLong(resourceHelper.gs(resourceID), defaultValue)
         } catch (e: Exception) {
-            SafeParse.stringToLong(sharedPreferences.getString(MainApp.gs(resourceID), defaultValue.toString()))
+            SafeParse.stringToLong(sharedPreferences.getString(resourceHelper.gs(resourceID), defaultValue.toString()))
         }
     }
 
@@ -89,30 +91,30 @@ class SPImplementation @Inject constructor(private val sharedPreferences: Shared
     override fun putBoolean(key: String, value: Boolean) = sharedPreferences.edit().putBoolean(key, value).apply()
 
     override fun putBoolean(resourceID: Int, value: Boolean) =
-        sharedPreferences.edit().putBoolean(MainApp.gs(resourceID), value).apply()
+        sharedPreferences.edit().putBoolean(resourceHelper.gs(resourceID), value).apply()
 
     override fun putDouble(key: String, value: Double) =
-        sharedPreferences.edit().putString(key, java.lang.Double.toString(value)).apply()
+        sharedPreferences.edit().putString(key, value.toString()).apply()
 
     override fun putLong(key: String, value: Long) =
         sharedPreferences.edit().putLong(key, value).apply()
 
     override fun putLong(resourceID: Int, value: Long) =
-        sharedPreferences.edit().putLong(MainApp.gs(resourceID), value).apply()
+        sharedPreferences.edit().putLong(resourceHelper.gs(resourceID), value).apply()
 
     override fun putInt(key: String, value: Int) =
         sharedPreferences.edit().putInt(key, value).apply()
 
     override fun putInt(resourceID: Int, value: Int) =
-        sharedPreferences.edit().putInt(MainApp.gs(resourceID), value).apply()
+        sharedPreferences.edit().putInt(resourceHelper.gs(resourceID), value).apply()
 
     override fun incInt(resourceID: Int) {
         val value = getInt(resourceID, 0) + 1
-        sharedPreferences.edit().putInt(MainApp.gs(resourceID), value).apply()
+        sharedPreferences.edit().putInt(resourceHelper.gs(resourceID), value).apply()
     }
 
     override fun putString(resourceID: Int, value: String) =
-        sharedPreferences.edit().putString(MainApp.gs(resourceID), value).apply()
+        sharedPreferences.edit().putString(resourceHelper.gs(resourceID), value).apply()
 
     override fun putString(key: String, value: String) =
         sharedPreferences.edit().putString(key, value).apply()

@@ -29,8 +29,8 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(context: Context): SP {
-        return SPImplementation(PreferenceManager.getDefaultSharedPreferences(context))
+    fun provideSharedPreferences(context: Context, resourceHelper: ResourceHelper): SP {
+        return SPImplementation(PreferenceManager.getDefaultSharedPreferences(context), resourceHelper)
     }
 
     @Provides
