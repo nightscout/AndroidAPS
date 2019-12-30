@@ -3,13 +3,11 @@ package info.nightscout.androidaps.plugins.general.wear.wearintegration;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -26,13 +24,13 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -43,9 +41,11 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
@@ -56,10 +56,21 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
-import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.ToastUtils;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class WatchUpdaterService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    @Inject public AAPSLogger aapsLogger;
+    @Inject public WearPlugin wearPlugin;
+    @Inject public ResourceHelper resourceHelper;
+    @Inject public SP sp;
+    @Inject public ConfigBuilderPlugin configBuilderPlugin;
+    @Inject public ProfileFunction profileFunction;
+    @Inject public LoopPlugin loopPlugin;
+    @Inject public IobCobCalculatorPlugin iobCobCalculatorPlugin;
+    @Inject public TreatmentsPlugin treatmentsPlugin;
+    @Inject public ActionStringHandler actionStringHandler;
 
     public static final String ACTION_RESEND = WatchUpdaterService.class.getName().concat(".Resend");
     public static final String ACTION_OPEN_SETTINGS = WatchUpdaterService.class.getName().concat(".OpenSettings");
@@ -87,10 +98,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     public static final String ACTION_CANCELNOTIFICATION_REQUEST_PATH = "/nightscout_watch_cancelnotificationrequest";
 
 
-    boolean wear_integration = false;
     private static boolean lastLoopStatus;
-
-    private static Logger log = LoggerFactory.getLogger(WatchUpdaterService.class);
 
     private Handler handler;
 
@@ -100,16 +108,12 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     // Wear
     private static final String CAPABILITY_WEAR_APP = "wear_app_sync_bgs";
     private static final String MESSAGE_PATH_WEAR = "/wear_message_path";
-    private String mWearNodeId = null;
-    private String localnode = null;
-    private String logPrefix = ""; // "WR: "
 
 
     @Override
     public void onCreate() {
-        listenForChangeInSettings();
-        setSettings();
-        if (wear_integration) {
+        AndroidInjection.inject(this);
+        if (wearIntegration()) {
             googleApiConnect();
         }
         if (handler == null) {
@@ -119,18 +123,9 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         }
     }
 
-    public void listenForChangeInSettings() {
-        WearPlugin.registerWatchUpdaterService(this);
+    private boolean wearIntegration() {
+        return wearPlugin.isEnabled(PluginType.GENERAL);
     }
-
-    public void setSettings() {
-        wear_integration = WearPlugin.getPlugin().isEnabled(PluginType.GENERAL);
-        // Log.d(TAG, "WR: wear_integration=" + wear_integration);
-        if (wear_integration) {
-            googleApiConnect();
-        }
-    }
-
 
     private void googleApiConnect() {
         if (googleApiClient != null && (googleApiClient.isConnected() || googleApiClient.isConnecting())) {
@@ -140,7 +135,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 .addOnConnectionFailedListener(this).addApi(Wearable.API).build();
         Wearable.MessageApi.addListener(googleApiClient, this);
         if (googleApiClient.isConnected()) {
-            log.debug(logPrefix + "API client is connected");
+            aapsLogger.debug(LTag.WEAR, "API client is connected");
         } else {
             // Log.d("WatchUpdater", logPrefix + "API client is not connected and is trying to connect");
             googleApiClient.connect();
@@ -153,7 +148,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
         // Log.d(TAG, logPrefix + "onStartCommand: " + action);
 
-        if (wear_integration) {
+        if (wearIntegration()) {
             handler.post(() -> {
                 if (googleApiClient.isConnected()) {
                     if (ACTION_RESEND.equals(action)) {
@@ -193,9 +188,9 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
 
     private void updateWearSyncBgsCapability(CapabilityInfo capabilityInfo) {
-        Log.d("WatchUpdaterService", logPrefix + "CabilityInfo: " + capabilityInfo);
+        Log.d("WatchUpdaterService", "CabilityInfo: " + capabilityInfo);
         Set<Node> connectedNodes = capabilityInfo.getNodes();
-        mWearNodeId = pickBestNodeId(connectedNodes);
+        String mWearNodeId = pickBestNodeId(connectedNodes);
     }
 
 
@@ -240,7 +235,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         String id = peer.getId();
         String name = peer.getDisplayName();
         // Log.d(TAG, logPrefix + "onPeerDisconnected peer name & ID: " + name + "|" + id);
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
     }
 
 
@@ -249,7 +243,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
         // Log.d(TAG, logPrefix + "onMessageRecieved: " + event);
 
-        if (wear_integration) {
+        if (wearIntegration()) {
             if (event != null && event.getPath().equals(WEARABLE_RESEND_PATH)) {
                 resendData();
             }
@@ -260,20 +254,20 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
             if (event != null && event.getPath().equals(WEARABLE_INITIATE_ACTIONSTRING_PATH)) {
                 String actionstring = new String(event.getData());
-                log.debug("Wear: " + actionstring);
-                ActionStringHandler.handleInitiate(actionstring);
+                aapsLogger.debug(LTag.WEAR, "Wear: " + actionstring);
+                actionStringHandler.handleInitiate(actionstring);
             }
 
             if (event != null && event.getPath().equals(WEARABLE_CONFIRM_ACTIONSTRING_PATH)) {
                 String actionstring = new String(event.getData());
-                log.debug("Wear Confirm: " + actionstring);
-                ActionStringHandler.handleConfirmation(actionstring);
+                aapsLogger.debug(LTag.WEAR, "Wear Confirm: " + actionstring);
+                actionStringHandler.handleConfirmation(actionstring);
             }
         }
     }
 
     private void cancelBolus() {
-        ConfigBuilderPlugin.getPlugin().getActivePump().stopBolusDelivering();
+        configBuilderPlugin.getActivePump().stopBolusDelivering();
     }
 
     private void sendData() {
@@ -286,11 +280,11 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             if (googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) {
                 googleApiConnect();
             }
-            if (wear_integration) {
+            if (wearIntegration()) {
 
                 final DataMap dataMap = dataMapSingleBG(lastBG, glucoseStatus);
                 if (dataMap == null) {
-                    ToastUtils.showToastInUiThread(this, MainApp.gs(R.string.noprofile));
+                    ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.noprofile));
                     return;
                 }
 
@@ -356,7 +350,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             deltastring += "-";
         }
 
-        boolean detailed = SP.getBoolean("wear_detailed_delta", false);
+        boolean detailed = sp.getBoolean(R.string.key_wear_detailed_delta, false);
         if (units.equals(Constants.MGDL)) {
             if (detailed) {
                 deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMGDL));
@@ -407,7 +401,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         if (!graph_bgs.isEmpty()) {
             DataMap entries = dataMapSingleBG(last_bg, glucoseStatus);
             if (entries == null) {
-                ToastUtils.showToastInUiThread(this, MainApp.gs(R.string.noprofile));
+                ToastUtils.showToastInUiThread(this, resourceHelper.gs(R.string.noprofile));
                 return;
             }
             final ArrayList<DataMap> dataMaps = new ArrayList<>(graph_bgs.size());
@@ -440,7 +434,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         ArrayList<DataMap> predictions = new ArrayList<>();
 
 
-        Profile profile = ProfileFunctions.getInstance().getProfile();
+        Profile profile = profileFunction.getProfile();
 
         if (profile == null) {
             return;
@@ -452,8 +446,8 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         double beginBasalValue = profile.getBasal(beginBasalSegmentTime);
         double endBasalValue = beginBasalValue;
 
-        TemporaryBasal tb1 = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(runningTime);
-        TemporaryBasal tb2 = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(runningTime);
+        TemporaryBasal tb1 = treatmentsPlugin.getTempBasalFromHistory(runningTime);
+        TemporaryBasal tb2 = treatmentsPlugin.getTempBasalFromHistory(runningTime);
         double tb_before = beginBasalValue;
         double tb_amount = beginBasalValue;
         long tb_start = runningTime;
@@ -469,7 +463,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
 
         for (; runningTime < now; runningTime += 5 * 60 * 1000) {
-            Profile profileTB = ProfileFunctions.getInstance().getProfile(runningTime);
+            Profile profileTB = profileFunction.getProfile(runningTime);
             if (profileTB == null)
                 return;
             //basal rate
@@ -484,7 +478,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             }
 
             //temps
-            tb2 = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(runningTime);
+            tb2 = treatmentsPlugin.getTempBasalFromHistory(runningTime);
 
             if (tb1 == null && tb2 == null) {
                 //no temp stays no temp
@@ -517,13 +511,13 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             basals.add(basalMap(beginBasalSegmentTime, runningTime, beginBasalValue));
         }
         if (tb1 != null) {
-            tb2 = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now); //use "now" to express current situation
+            tb2 = treatmentsPlugin.getTempBasalFromHistory(now); //use "now" to express current situation
             if (tb2 == null) {
                 //express the cancelled temp by painting it down one minute early
                 temps.add(tempDatamap(tb_start, tb_before, now - 1 * 60 * 1000, endBasalValue, tb_amount));
             } else {
                 //express currently running temp by painting it a bit into the future
-                Profile profileNow = ProfileFunctions.getInstance().getProfile(now);
+                Profile profileNow = profileFunction.getProfile(now);
                 double currentAmount = tb2.tempBasalConvertedToAbsolute(now, profileNow);
                 if (currentAmount != tb_amount) {
                     temps.add(tempDatamap(tb_start, tb_before, now, tb_amount, tb_amount));
@@ -536,13 +530,13 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             tb2 = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now); //use "now" to express current situation
             if (tb2 != null) {
                 //onset at the end
-                Profile profileTB = ProfileFunctions.getInstance().getProfile(runningTime);
+                Profile profileTB = profileFunction.getProfile(runningTime);
                 double currentAmount = tb2.tempBasalConvertedToAbsolute(runningTime, profileTB);
                 temps.add(tempDatamap(now - 1 * 60 * 1000, endBasalValue, runningTime + 5 * 60 * 1000, currentAmount, currentAmount));
             }
         }
 
-        List<Treatment> treatments = TreatmentsPlugin.getPlugin().getTreatmentsFromHistory();
+        List<Treatment> treatments = treatmentsPlugin.getTreatmentsFromHistory();
         for (Treatment treatment : treatments) {
             if (treatment.date > startTimeWindow) {
                 boluses.add(treatmentMap(treatment.date, treatment.insulin, treatment.carbs, treatment.isSMB, treatment.isValid));
@@ -550,8 +544,8 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
         }
 
-        final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-        if (SP.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.request.hasPredictions && finalLastRun.constraintsProcessed != null) {
+        final LoopPlugin.LastRun finalLastRun = loopPlugin.lastRun;
+        if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.request.hasPredictions && finalLastRun.constraintsProcessed != null) {
             List<BgReading> predArray = finalLastRun.constraintsProcessed.getPredictions();
 
             if (!predArray.isEmpty()) {
@@ -649,7 +643,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             dataMapRequest.getDataMap().putString("message", message);
             dataMapRequest.getDataMap().putString("actionstring", actionstring);
 
-            log.debug("Requesting confirmation from wear: " + actionstring);
+            aapsLogger.debug(LTag.WEAR, "Requesting confirmation from wear: " + actionstring);
 
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             debugData("sendActionConfirmationRequest", putDataRequest);
@@ -669,7 +663,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             dataMapRequest.getDataMap().putString("message", message);
             dataMapRequest.getDataMap().putString("actionstring", actionstring);
 
-            log.debug("Requesting confirmation from wear: " + actionstring);
+            aapsLogger.debug(LTag.WEAR, "Requesting confirmation from wear: " + actionstring);
 
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             debugData("sendChangeConfirmationRequest", putDataRequest);
@@ -687,7 +681,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             dataMapRequest.getDataMap().putString("cancelNotificationRequest", "cancelNotificationRequest");
             dataMapRequest.getDataMap().putString("actionstring", actionstring);
 
-            log.debug("Canceling notification on wear: " + actionstring);
+            aapsLogger.debug(LTag.WEAR, "Canceling notification on wear: " + actionstring);
 
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             debugData("sendCancelNotificationRequest", putDataRequest);
@@ -700,26 +694,25 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     private void sendStatus() {
 
         if (googleApiClient.isConnected()) {
-            Profile profile = ProfileFunctions.getInstance().getProfile();
-            String status = MainApp.gs(R.string.noprofile);
+            Profile profile = profileFunction.getProfile();
+            String status = resourceHelper.gs(R.string.noprofile);
             String iobSum, iobDetail, cobString, currentBasal, bgiString;
             iobSum = iobDetail = cobString = currentBasal = bgiString = "";
             if (profile != null) {
-                TreatmentsInterface treatmentsInterface = TreatmentsPlugin.getPlugin();
-                treatmentsInterface.updateTotalIOBTreatments();
-                IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
-                treatmentsInterface.updateTotalIOBTempBasals();
-                IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
+                treatmentsPlugin.updateTotalIOBTreatments();
+                IobTotal bolusIob = treatmentsPlugin.getLastCalculationTreatments().round();
+                treatmentsPlugin.updateTotalIOBTempBasals();
+                IobTotal basalIob = treatmentsPlugin.getLastCalculationTempBasals().round();
 
                 iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
                 iobDetail = "(" + DecimalFormatter.to2Decimal(bolusIob.iob) + "|" + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
-                cobString = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "WatcherUpdaterService").generateCOBString();
-                currentBasal = generateBasalString(treatmentsInterface);
+                cobString = iobCobCalculatorPlugin.getCobInfo(false, "WatcherUpdaterService").generateCOBString();
+                currentBasal = generateBasalString();
 
                 //bgi
 
 
-                double bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), ProfileFunctions.getSystemUnits());
+                double bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits());
                 bgiString = "" + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to1Decimal(bgi);
 
                 status = generateStatusString(profile, currentBasal, iobSum, iobDetail, bgiString);
@@ -731,11 +724,11 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             String rigBattery = NSDeviceStatus.getInstance().getUploaderStatus().trim();
 
 
-            long openApsStatus = -1;
+            long openApsStatus;
             //OpenAPS status
             if (Config.APS) {
                 //we are AndroidAPS
-                openApsStatus = LoopPlugin.lastRun != null && LoopPlugin.lastRun.lastEnact != null && LoopPlugin.lastRun.lastEnact.getTime() != 0 ? LoopPlugin.lastRun.lastEnact.getTime() : -1;
+                openApsStatus = loopPlugin.lastRun != null && loopPlugin.lastRun.lastEnact != null && loopPlugin.lastRun.lastEnact.getTime() != 0 ? loopPlugin.lastRun.lastEnact.getTime() : -1;
             } else {
                 //NSClient or remote
                 openApsStatus = NSDeviceStatus.getOpenApsTimestamp();
@@ -746,14 +739,14 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             dataMapRequest.getDataMap().putString("externalStatusString", status);
             dataMapRequest.getDataMap().putString("iobSum", iobSum);
             dataMapRequest.getDataMap().putString("iobDetail", iobDetail);
-            dataMapRequest.getDataMap().putBoolean("detailedIob", SP.getBoolean(R.string.key_wear_detailediob, false));
+            dataMapRequest.getDataMap().putBoolean("detailedIob", sp.getBoolean(R.string.key_wear_detailediob, false));
             dataMapRequest.getDataMap().putString("cob", cobString);
             dataMapRequest.getDataMap().putString("currentBasal", currentBasal);
             dataMapRequest.getDataMap().putString("battery", "" + phoneBattery);
             dataMapRequest.getDataMap().putString("rigBattery", rigBattery);
             dataMapRequest.getDataMap().putLong("openApsStatus", openApsStatus);
             dataMapRequest.getDataMap().putString("bgi", bgiString);
-            dataMapRequest.getDataMap().putBoolean("showBgi", SP.getBoolean(R.string.key_wear_showbgi, false));
+            dataMapRequest.getDataMap().putBoolean("showBgi", sp.getBoolean(R.string.key_wear_showbgi, false));
             dataMapRequest.getDataMap().putInt("batteryLevel", (phoneBattery >= 30) ? 1 : 0);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             debugData("sendStatus", putDataRequest);
@@ -766,7 +759,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     private void sendPreferences() {
         if (googleApiClient.isConnected()) {
 
-            boolean wearcontrol = SP.getBoolean("wearcontrol", false);
+            boolean wearcontrol = sp.getBoolean("wearcontrol", false);
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_PREFERENCES_PATH);
             //unique content
@@ -785,7 +778,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         // Log.d(TAG, "WR: " + source + " " + data);
     }
 
-
     private void executeTask(AsyncTask task, DataMap... parameters) {
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, (Object[]) parameters);
         // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -802,21 +794,19 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         String status = "";
 
         if (profile == null) {
-            status = MainApp.gs(R.string.noprofile);
+            status = resourceHelper.gs(R.string.noprofile);
             return status;
         }
 
-        LoopPlugin activeloop = LoopPlugin.getPlugin();
-
-        if (!activeloop.isEnabled(PluginType.LOOP)) {
-            status += MainApp.gs(R.string.disabledloop) + "\n";
+        if (!loopPlugin.isEnabled(PluginType.LOOP)) {
+            status += resourceHelper.gs(R.string.disabledloop) + "\n";
             lastLoopStatus = false;
         } else {
             lastLoopStatus = true;
         }
 
-        String iobString = "";
-        if (SP.getBoolean(R.string.key_wear_detailediob, false)) {
+        String iobString;
+        if (sp.getBoolean(R.string.key_wear_detailediob, false)) {
             iobString = iobSum + " " + iobDetail;
         } else {
             iobString = iobSum + "U";
@@ -825,7 +815,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         status += currentBasal + " " + iobString;
 
         //add BGI if shown, otherwise return
-        if (SP.getBoolean(R.string.key_wear_showbgi, false)) {
+        if (sp.getBoolean(R.string.key_wear_showbgi, false)) {
             status += " " + bgiString;
         }
 
@@ -833,19 +823,19 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     }
 
     @NonNull
-    private String generateBasalString(TreatmentsInterface treatmentsInterface) {
+    private String generateBasalString() {
 
         String basalStringResult;
 
-        Profile profile = ProfileFunctions.getInstance().getProfile();
+        Profile profile = profileFunction.getProfile();
         if (profile == null)
             return "";
 
-        TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
             basalStringResult = activeTemp.toStringShort();
         } else {
-            if (SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false)) {
+            if (sp.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false)) {
                 basalStringResult = "100%";
             } else {
                 basalStringResult = DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h";
@@ -859,7 +849,6 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         if (googleApiClient != null && googleApiClient.isConnected()) {
             googleApiClient.disconnect();
         }
-        WearPlugin.unRegisterWatchUpdaterService();
     }
 
     @Override
@@ -867,7 +856,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
     }
 
     public static boolean shouldReportLoopStatus(boolean enabled) {
