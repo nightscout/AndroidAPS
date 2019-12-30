@@ -200,15 +200,28 @@ public class OmnipodManager {
         }
     }
 
+    // CAUTION: cancels temp basal and then sets new temp basal. An OmnipodException[certainFailure=false] indicates that the pod might have cancelled the previous temp basal, but did not set a new temp basal
     public synchronized void setTemporaryBasal(TempBasalPair tempBasalPair, boolean acknowledgementBeep, boolean completionBeep) {
         assertReadyForDelivery();
 
         logStartingCommandExecution("setTemporaryBasal [tempBasalPair=" + tempBasalPair + ", acknowledgementBeep=" + acknowledgementBeep + ", completionBeep=" + completionBeep + "]");
 
         try {
+            cancelDelivery(EnumSet.of(DeliveryType.TEMP_BASAL), acknowledgementBeep);
+        } catch (Exception ex) {
+            logCommandExecutionFinished("setTemporaryBasal");
+            throw ex;
+        }
+
+        try {
             executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(
                     podState, tempBasalPair.getInsulinRate(), Duration.standardMinutes(tempBasalPair.getDurationMinutes()),
                     acknowledgementBeep, completionBeep)));
+        } catch (OmnipodException ex) {
+            // Treat all exceptions as uncertain failures, because all delivery has been suspended here.
+            // Setting this to an uncertain failure will enable for the user to get an appropriate warning
+            ex.setCertainFailure(false);
+            throw ex;
         } finally {
             logCommandExecutionFinished("setTemporaryBasal");
         }
