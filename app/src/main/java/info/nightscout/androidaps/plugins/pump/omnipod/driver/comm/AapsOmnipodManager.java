@@ -499,12 +499,16 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 LOG.debug("Reporting implicitly cancelled TBR to Treatments plugin");
             }
 
+            long time = System.currentTimeMillis();
+
+            addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasalForce, null);
+
             TemporaryBasal temporaryBasal = new TemporaryBasal() //
-                    .date(System.currentTimeMillis()) //
+                    .date(time) //
                     .duration(0) //
-                    // TODO bs should be Source.PUMP imo, but that doesn't work:
-                    //  it says a TEMPBASAL record already exists
-                    .source(Source.USER);
+                    .pumpId(pumpStatus.tempBasalPumpId)
+                    .source(Source.PUMP);
+
             plugin.addToHistoryTempBasal(temporaryBasal);
         }
     }
