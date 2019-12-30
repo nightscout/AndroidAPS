@@ -627,7 +627,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     private void showErrorDialog(String message, Integer sound) {
         Intent intent = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-        intent.putExtra("soundid", sound);
+        intent.putExtra("soundid", sound == null ? 0 : sound);
         intent.putExtra("status", message);
         intent.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

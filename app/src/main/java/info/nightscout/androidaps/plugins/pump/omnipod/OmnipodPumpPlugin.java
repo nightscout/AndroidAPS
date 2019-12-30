@@ -392,7 +392,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                         clipboard.setPrimaryClip(clip);
 
                         Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                        i.putExtra("soundid", R.raw.boluserror);
+                        i.putExtra("soundid", 0); // No sound
                         i.putExtra("status", "Pulse Log (copied to clipboard):\n" + result.toString());
                         i.putExtra("title", MainApp.gs(R.string.combo_warning));
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
