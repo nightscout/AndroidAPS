@@ -48,7 +48,7 @@ public class InitActionPage extends Page {
     }
 
     public void setActionCompleted(boolean success) {
-        this.actionCompleted = true;
+        this.actionCompleted = success;
         this.actionSuccess = success;
     }
 

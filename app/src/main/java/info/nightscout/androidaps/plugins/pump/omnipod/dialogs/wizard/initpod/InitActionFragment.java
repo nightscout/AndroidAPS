@@ -23,6 +23,7 @@ import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -218,7 +219,7 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
 
             mPage.setActionCompleted(isOk);
 
-            mPage.getData().putString(Page.SIMPLE_DATA_KEY, "ddd");
+            mPage.getData().putString(Page.SIMPLE_DATA_KEY, UUID.randomUUID().toString());
             mPage.notifyDataChanged();
 
         });
@@ -228,7 +229,7 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
 
     public void setCheckBox(PodInitActionType podInitActionType, boolean isSuccess) {
         getActivity().runOnUiThread(() -> {
-            mapCheckBoxes.get(podInitActionType).setChecked(true);
+            mapCheckBoxes.get(podInitActionType).setChecked(isSuccess);
             mapCheckBoxes.get(podInitActionType).setTextColor(isSuccess ? Color.rgb(34, 135, 91) :
                     Color.rgb(168, 36, 15));
         });
