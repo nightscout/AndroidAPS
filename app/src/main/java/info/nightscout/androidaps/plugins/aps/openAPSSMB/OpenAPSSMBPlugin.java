@@ -53,6 +53,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
     private final MainApp mainApp;
     private final ConfigBuilderPlugin configBuilderPlugin;
     private final TreatmentsPlugin treatmentsPlugin;
+    private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
     private static OpenAPSSMBPlugin openAPSSMBPlugin;
 
@@ -81,7 +82,9 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             ProfileFunction profileFunction,
             MainApp mainApp,
             ConfigBuilderPlugin configBuilderPlugin,
-            TreatmentsPlugin treatmentsPlugin
+            TreatmentsPlugin treatmentsPlugin,
+            IobCobCalculatorPlugin iobCobCalculatorPlugin
+
     ) {
         super(new PluginDescription()
                 .mainType(PluginType.APS)
@@ -100,6 +103,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         this.mainApp = mainApp;
         this.configBuilderPlugin = configBuilderPlugin;
         this.treatmentsPlugin = treatmentsPlugin;
+        this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
 
     @Override
@@ -174,7 +178,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         long start = System.currentTimeMillis();
         long startPart = System.currentTimeMillis();
 
-        MealData mealData = treatmentsPlugin.getMealData();
+        MealData mealData = iobCobCalculatorPlugin.getMealData();
         Profiler.log(aapsLogger, LTag.APS, "getMealData()", startPart);
 
         Constraint<Double> maxIOBAllowedConstraint = constraintChecker.getMaxIOBAllowed();
@@ -208,7 +212,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
 
         startPart = System.currentTimeMillis();
         if (constraintChecker.isAutosensModeEnabled().value()) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("OpenAPSPlugin");
+            AutosensData autosensData = iobCobCalculatorPlugin.getLastAutosensDataSynchronized("OpenAPSPlugin");
             if (autosensData == null) {
                 rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openaps_noasdata)));
                 return;
@@ -219,7 +223,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             lastAutosensResult.sensResult = "autosens disabled";
         }
 
-        IobTotal[] iobArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
+        IobTotal[] iobArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
         Profiler.log(aapsLogger, LTag.APS, "calculateIobArrayInDia()", startPart);
 
         startPart = System.currentTimeMillis();

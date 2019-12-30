@@ -35,7 +35,8 @@ class StatusLinePlugin @Inject constructor(
     private val mainApp: MainApp,
     private val configBuilderPlugin: ConfigBuilderPlugin,
     private val treatmentsPlugin: TreatmentsPlugin,
-    private val loopPlugin: LoopPlugin
+    private val loopPlugin: LoopPlugin,
+    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -137,7 +138,7 @@ class StatusLinePlugin @Inject constructor(
         }
         val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.isfMgdl, profileFunction.getUnits())
         status += " " + (if (bgi >= 0) "+" else "") + DecimalFormatter.to2Decimal(bgi)
-        status += " " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "StatusLinePlugin").generateCOBString()
+        status += " " + iobCobCalculatorPlugin.getCobInfo(false, "StatusLinePlugin").generateCOBString()
         return status
     }
 }

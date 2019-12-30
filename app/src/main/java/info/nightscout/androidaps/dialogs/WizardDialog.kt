@@ -20,6 +20,8 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -33,23 +35,23 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.dialog_wizard.*
-import org.slf4j.LoggerFactory
 import java.text.DecimalFormat
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
 
 class WizardDialog : DaggerDialogFragment() {
-    private val log = LoggerFactory.getLogger(WizardDialog::class.java)
 
+    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var sp: SP
+    @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
-    @Inject lateinit var sp: SP
-    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
     private var wizard: BolusWizard? = null
 
@@ -114,7 +116,7 @@ class WizardDialog : DaggerDialogFragment() {
         // ok button
         ok.setOnClickListener {
             if (okClicked) {
-                log.debug("guarding: ok already clicked")
+                aapsLogger.debug(LTag.UI, "guarding: ok already clicked")
             } else {
                 okClicked = true
                 calculateInsulin()
@@ -263,7 +265,7 @@ class WizardDialog : DaggerDialogFragment() {
         val specificProfile: Profile?
         if (profileName == resourceHelper.gs(R.string.active)) {
             specificProfile = profileFunction.getProfile()
-            profileName = profileFunction.getProfileName() ?: return
+            profileName = profileFunction.getProfileName()
         } else
             specificProfile = profileStore.getSpecificProfile(profileName)
 
@@ -286,7 +288,7 @@ class WizardDialog : DaggerDialogFragment() {
         // COB
         var cob = 0.0
         if (treatments_wizard_cobcheckbox.isChecked) {
-            val cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "Wizard COB")
+            val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Wizard COB")
             cobInfo.displayCob?.let { cob = it }
         }
 

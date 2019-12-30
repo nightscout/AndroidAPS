@@ -7,20 +7,24 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.TDD
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
 class TddCalculator @Inject constructor(
     val aapsLogger: AAPSLogger,
+    val rxBus: RxBusWrapper,
     val resourceHelper: ResourceHelper,
     val mainApp: MainApp,
+    val sp: SP,
     val configBuilderPlugin: ConfigBuilderPlugin,
     val profileFunction: ProfileFunction
-) : TreatmentsPlugin(aapsLogger, resourceHelper, mainApp, configBuilderPlugin, profileFunction) {
+) : TreatmentsPlugin(aapsLogger, rxBus, resourceHelper, mainApp, sp, profileFunction, configBuilderPlugin) {
 
     init {
         service = TreatmentService() // plugin is not started

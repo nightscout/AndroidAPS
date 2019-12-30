@@ -60,7 +60,8 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val configBuilderPlugin: ConfigBuilderPlugin,
     private val treatmentsPlugin: TreatmentsPlugin,
-    private val loopPlugin: LoopPlugin
+    private val loopPlugin: LoopPlugin,
+    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(SmsCommunicatorFragment::class.java.name)
@@ -285,7 +286,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
         treatmentsPlugin.updateTotalIOBTempBasals()
         val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
-        val cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "SMS COB")
+        val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "SMS COB")
         reply += (resourceHelper.gs(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
             + resourceHelper.gs(R.string.sms_bolus) + " " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
             + resourceHelper.gs(R.string.sms_basal) + " " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U), "

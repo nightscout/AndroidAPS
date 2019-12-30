@@ -138,6 +138,7 @@ public class MainApp extends DaggerApplication {
     @Inject InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
     @Inject InsulinOrefRapidActingPlugin insulinOrefRapidActingPlugin;
     @Inject InsulinOrefUltraRapidActingPlugin insulinOrefUltraRapidActingPlugin;
+    @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
     @Inject LocalProfilePlugin localProfilePlugin;
     @Inject LoopPlugin loopPlugin;
     @Inject ObjectivesPlugin objectivesPlugin;
@@ -207,7 +208,7 @@ public class MainApp extends DaggerApplication {
             pluginsList = new ArrayList<>();
             // Register all tabs in app here
             pluginsList.add(overviewPlugin);
-            pluginsList.add(IobCobCalculatorPlugin.getPlugin());
+            pluginsList.add(iobCobCalculatorPlugin);
             if (!Config.NSCLIENT) pluginsList.add(actionsPlugin);
             pluginsList.add(insulinOrefRapidActingPlugin);
             pluginsList.add(insulinOrefUltraRapidActingPlugin);

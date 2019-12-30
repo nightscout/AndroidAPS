@@ -48,6 +48,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
     private final MainApp mainApp;
     private final ConfigBuilderPlugin configBuilderPlugin;
     private final TreatmentsPlugin treatmentsPlugin;
+    private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
     // last values
     DetermineBasalAdapterAMAJS lastDetermineBasalAdapterAMAJS = null;
@@ -64,7 +65,8 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
             ProfileFunction profileFunction,
             MainApp mainApp,
             ConfigBuilderPlugin configBuilderPlugin,
-            TreatmentsPlugin treatmentsPlugin
+            TreatmentsPlugin treatmentsPlugin,
+            IobCobCalculatorPlugin iobCobCalculatorPlugin
     ) {
         super(new PluginDescription()
                 .mainType(PluginType.APS)
@@ -82,6 +84,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         this.mainApp = mainApp;
         this.configBuilderPlugin = configBuilderPlugin;
         this.treatmentsPlugin = treatmentsPlugin;
+        this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
 
     @Override
@@ -151,11 +154,11 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
 
         long start = System.currentTimeMillis();
         long startPart = System.currentTimeMillis();
-        IobTotal[] iobArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayInDia(profile);
+        IobTotal[] iobArray = iobCobCalculatorPlugin.calculateIobArrayInDia(profile);
         Profiler.log(aapsLogger, LTag.APS, "calculateIobArrayInDia()", startPart);
 
         startPart = System.currentTimeMillis();
-        MealData mealData = treatmentsPlugin.getMealData();
+        MealData mealData = iobCobCalculatorPlugin.getMealData();
         Profiler.log(aapsLogger, LTag.APS, "getMealData()", startPart);
 
         double maxIob = constraintChecker.getMaxIOBAllowed().value();
@@ -187,7 +190,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
 
         startPart = System.currentTimeMillis();
         if (constraintChecker.isAutosensModeEnabled().value()) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("OpenAPSPlugin");
+            AutosensData autosensData = iobCobCalculatorPlugin.getLastAutosensDataSynchronized("OpenAPSPlugin");
             if (autosensData == null) {
                 rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openaps_noasdata)));
                 return;

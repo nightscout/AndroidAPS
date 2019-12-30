@@ -12,7 +12,7 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
-import info.nightscout.androidaps.activities.HistoryBrowseActivity
+import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.TDDStatsActivity
 import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*

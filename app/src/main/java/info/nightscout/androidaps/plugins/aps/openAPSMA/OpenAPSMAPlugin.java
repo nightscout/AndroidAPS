@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -48,6 +49,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
     private final MainApp mainApp;
     private final ConfigBuilderPlugin configBuilderPlugin;
     private final TreatmentsPlugin treatmentsPlugin;
+    private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
     // last values
     DetermineBasalAdapterMAJS lastDetermineBasalAdapterMAJS = null;
@@ -63,7 +65,8 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
             ProfileFunction profileFunction,
             MainApp mainApp,
             ConfigBuilderPlugin configBuilderPlugin,
-            TreatmentsPlugin treatmentsPlugin
+            TreatmentsPlugin treatmentsPlugin,
+            IobCobCalculatorPlugin iobCobCalculatorPlugin
     ) {
         super(new PluginDescription()
                 .mainType(PluginType.APS)
@@ -81,6 +84,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         this.mainApp = mainApp;
         this.configBuilderPlugin = configBuilderPlugin;
         this.treatmentsPlugin = treatmentsPlugin;
+        this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
 
     @Override
@@ -157,7 +161,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
 
-        MealData mealData = treatmentsPlugin.getMealData();
+        MealData mealData = iobCobCalculatorPlugin.getMealData();
 
         double maxIob = constraintChecker.getMaxIOBAllowed().value();
         Profiler.log(aapsLogger, LTag.APS, "MA data gathering", start);

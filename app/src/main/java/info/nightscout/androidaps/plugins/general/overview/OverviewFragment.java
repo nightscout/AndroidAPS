@@ -138,6 +138,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     @Inject LoopPlugin loopPlugin;
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
+    @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
     @Inject NotificationStore notificationStore;
 
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -1319,7 +1320,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         // cob
         if (cobView != null) { // view must not exists
             String cobText = resourceHelper.gs(R.string.value_unavailable_short);
-            CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "Overview COB");
+            CobInfo cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Overview COB");
             if (cobInfo.displayCob != null) {
                 cobText = DecimalFormatter.to0Decimal(cobInfo.displayCob);
                 if (cobInfo.futureCarbs > 0)
@@ -1371,7 +1372,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
 
         // Sensitivity
         if (sensitivityView != null) {
-            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensData("Overview");
+            AutosensData autosensData = iobCobCalculatorPlugin.getLastAutosensData("Overview");
             if (autosensData != null)
                 sensitivityView.setText(String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100));
             else
@@ -1421,7 +1422,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             //  ------------------ 1st graph
             Profiler.log(aapsLogger, LTag.OVERVIEW, from + " - 1st graph - START", updateGUIStart);
 
-            final GraphData graphData = new GraphData(bgGraph, IobCobCalculatorPlugin.getPlugin());
+            final GraphData graphData = new GraphData(bgGraph, iobCobCalculatorPlugin);
 
             // **** In range Area ****
             graphData.addInRangeArea(fromTime, endTime, lowLine, highLine);
@@ -1457,7 +1458,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             // ------------------ 2nd graph
             Profiler.log(aapsLogger, LTag.OVERVIEW, from + " - 2nd graph - START", updateGUIStart);
 
-            final GraphData secondGraphData = new GraphData(iobGraph, IobCobCalculatorPlugin.getPlugin());
+            final GraphData secondGraphData = new GraphData(iobGraph, iobCobCalculatorPlugin);
 
             boolean useIobForScale = false;
             boolean useCobForScale = false;

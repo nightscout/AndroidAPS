@@ -24,7 +24,6 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
@@ -47,31 +46,28 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.SP;
-import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface {
     private final AAPSLogger aapsLogger;
+    private final RxBusWrapper rxBus;
     private final MainApp mainApp;
+    private final SP sp;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final ConfigBuilderPlugin configBuilderPlugin;
@@ -103,10 +99,12 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Inject
     public TreatmentsPlugin(AAPSLogger aapsLogger,
+                            RxBusWrapper rxBus,
                             ResourceHelper resourceHelper,
                             MainApp mainApp,
-                            ConfigBuilderPlugin configBuilderPlugin,
-                            ProfileFunction profileFunction
+                            SP sp,
+                            ProfileFunction profileFunction,
+                            ConfigBuilderPlugin configBuilderPlugin
     ) {
         super(new PluginDescription()
                 .mainType(PluginType.TREATMENT)
@@ -117,10 +115,12 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 .description(R.string.description_treatments)
         );
         this.aapsLogger = aapsLogger;
+        this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
         this.mainApp = mainApp;
-        this.configBuilderPlugin = configBuilderPlugin;
+        this.sp = sp;
         this.profileFunction = profileFunction;
+        this.configBuilderPlugin = configBuilderPlugin;
         treatmentsPlugin = this;
     }
 
@@ -129,7 +129,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         this.service = new TreatmentService();
         initializeData(range());
         super.onStart();
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventReloadTreatmentData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -137,23 +137,23 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                             initializeTreatmentData(range());
                             initializeExtendedBolusData(range());
                             updateTotalIOBTreatments();
-                            RxBus.Companion.getINSTANCE().send(event.getNext());
+                            rxBus.send(event.getNext());
                         },
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventReloadProfileSwitchData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> initializeProfileSwitchData(range()),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> initializeTempTargetData(range()),
                         FabricPrivacy::logException
                 ));
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventReloadTempBasalData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -265,7 +265,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     // instead of dividing the DIA that only worked on the bilinear curves,
                     // multiply the time the treatment is seen active.
                     long timeSinceTreatment = time - t.date;
-                    long snoozeTime = t.date + (long) (timeSinceTreatment * SP.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0));
+                    long snoozeTime = t.date + (long) (timeSinceTreatment * sp.getDouble(R.string.key_openapsama_bolussnooze_dia_divisor, 2.0));
                     Iob bIOB = t.iobCalc(snoozeTime, dia);
                     total.bolussnooze += bIOB.iobContrib;
                 }
@@ -287,57 +287,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public void updateTotalIOBTreatments() {
         lastTreatmentCalculation = getCalculationToTimeTreatments(System.currentTimeMillis());
-    }
-
-    @Override
-    public MealData getMealData() {
-        MealData result = new MealData();
-
-        Profile profile = profileFunction.getProfile();
-        if (profile == null) return result;
-
-        long now = System.currentTimeMillis();
-        long dia_ago = now - (Double.valueOf(profile.getDia() * T.hours(1).msecs())).longValue();
-
-        double maxAbsorptionHours = Constants.DEFAULT_MAX_ABSORPTION_TIME;
-        if (SensitivityAAPSPlugin.getPlugin().isEnabled(PluginType.SENSITIVITY) || SensitivityWeightedAveragePlugin.getPlugin().isEnabled(PluginType.SENSITIVITY)) {
-            maxAbsorptionHours = SP.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME);
-        } else {
-            maxAbsorptionHours = SP.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME);
-        }
-        long absorptionTime_ago = now - (Double.valueOf(maxAbsorptionHours * T.hours(1).msecs())).longValue();
-
-        synchronized (treatments) {
-            for (Treatment treatment : treatments) {
-                if (!treatment.isValid)
-                    continue;
-                long t = treatment.date;
-
-                if (t > dia_ago && t <= now) {
-                    if (treatment.insulin > 0 && treatment.mealBolus) {
-                        result.boluses += treatment.insulin;
-                    }
-                }
-
-                if (t > absorptionTime_ago && t <= now) {
-                    if (treatment.carbs >= 1) {
-                        result.carbs += treatment.carbs;
-                        if (t > result.lastCarbTime)
-                            result.lastCarbTime = t;
-                    }
-                }
-            }
-        }
-
-        AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("getMealData()");
-        if (autosensData != null) {
-            result.mealCOB = autosensData.cob;
-            result.slopeFromMinDeviation = autosensData.slopeFromMinDeviation;
-            result.slopeFromMaxDeviation = autosensData.slopeFromMaxDeviation;
-            result.usedMinCarbsImpact = autosensData.usedMinCarbsImpact;
-        }
-        result.lastBolusTime = getLastBolusTime();
-        return result;
     }
 
     @Override
@@ -779,7 +728,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
-        RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
+        rxBus.send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         MainApp.getDbHelper().createOrUpdate(profileSwitch);
         NSUpload.uploadProfileSwitch(profileSwitch);
     }
@@ -787,26 +736,26 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public void doProfileSwitch(@NotNull final ProfileStore profileStore, @NotNull final String profileName, final int duration, final int percentage, final int timeShift, final long date) {
         ProfileSwitch profileSwitch = profileFunction.prepareProfileSwitch(profileStore, profileName, duration, percentage, timeShift, date);
-        TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
+        treatmentsPlugin.addToHistoryProfileSwitch(profileSwitch);
         if (percentage == 90 && duration == 10)
-            SP.putBoolean(R.string.key_objectiveuseprofileswitch, true);
+            sp.putBoolean(R.string.key_objectiveuseprofileswitch, true);
     }
 
     @Override
     public void doProfileSwitch(final int duration, final int percentage, final int timeShift) {
-        ProfileSwitch profileSwitch = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(System.currentTimeMillis());
+        ProfileSwitch profileSwitch = treatmentsPlugin.getProfileSwitchFromHistory(System.currentTimeMillis());
         if (profileSwitch != null) {
             profileSwitch = new ProfileSwitch();
             profileSwitch.date = System.currentTimeMillis();
             profileSwitch.source = Source.USER;
             profileSwitch.profileName = profileFunction.getProfileName(System.currentTimeMillis(), false, false);
             profileSwitch.profileJson = profileFunction.getProfile().getData().toString();
-            profileSwitch.profilePlugin = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getClass().getName();
+            profileSwitch.profilePlugin = configBuilderPlugin.getActiveProfileInterface().getClass().getName();
             profileSwitch.durationInMinutes = duration;
             profileSwitch.isCPP = percentage != 100 || timeShift != 0;
             profileSwitch.timeshift = timeShift;
             profileSwitch.percentage = percentage;
-            TreatmentsPlugin.getPlugin().addToHistoryProfileSwitch(profileSwitch);
+            treatmentsPlugin.addToHistoryProfileSwitch(profileSwitch);
         } else {
             aapsLogger.error(LTag.PROFILE, "No profile switch exists");
         }

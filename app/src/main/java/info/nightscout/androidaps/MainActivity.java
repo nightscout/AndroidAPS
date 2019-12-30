@@ -37,7 +37,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
-import info.nightscout.androidaps.activities.HistoryBrowseActivity;
+import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.activities.PreferencesActivity;
 import info.nightscout.androidaps.activities.SingleFragmentActivity;

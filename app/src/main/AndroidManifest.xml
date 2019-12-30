@@ -74,7 +74,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".plugins.pump.danaRS.activities.PairingHelperActivity" />
-        <activity android:name=".activities.HistoryBrowseActivity" />
+        <activity android:name=".historyBrowser.HistoryBrowseActivity" />
         <activity android:name=".activities.SurveyActivity" />
         <activity android:name=".activities.StatsActivity" />
 

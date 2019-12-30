@@ -30,8 +30,6 @@ public interface TreatmentsInterface {
     IobTotal getLastCalculationTempBasals();
     IobTotal getCalculationToTimeTempBasals(long time);
 
-    MealData getMealData();
-
     List<Treatment> getTreatmentsFromHistory();
     List<Treatment> getCarbTreatments5MinBackFromHistory(long time);
     List<Treatment> getTreatmentsFromHistoryAfterTimestamp(long timestamp);

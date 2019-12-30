@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.activities;
+package info.nightscout.androidaps.historyBrowser;
 
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -18,35 +18,44 @@ import androidx.core.content.res.ResourcesCompat;
 import com.jjoe64.graphview.GraphView;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventCustomCalculationFinished;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
-    private static Logger log = LoggerFactory.getLogger(HistoryBrowseActivity.class);
+    @Inject AAPSLogger aapsLogger;
+    @Inject RxBusWrapper rxBus;
+    @Inject SP sp;
+    @Inject ResourceHelper resourceHelper;
+    @Inject ProfileFunction profileFunction;
+    @Inject IobCobStaticCalculatorPlugin iobCobStaticCalculatorPlugin;
+    @Inject ConfigBuilderPlugin configBuilderPlugin;
+
     private CompositeDisposable disposable = new CompositeDisposable();
 
     ImageButton chartButton;
@@ -66,13 +75,8 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
     private int rangeToDisplay = 24; // for graph
     private long start = 0;
 
-    IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
     EventCustomCalculationFinished eventCustomCalculationFinished = new EventCustomCalculationFinished();
-
-    public HistoryBrowseActivity() {
-        iobCobCalculatorPlugin = new IobCobCalculatorPlugin();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -153,9 +157,9 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
             dpd.show(getSupportFragmentManager(), "Datepickerdialog");
         });
 
-        bgGraph.getGridLabelRenderer().setGridColor(MainApp.gc(R.color.graphgrid));
+        bgGraph.getGridLabelRenderer().setGridColor(resourceHelper.gc(R.color.graphgrid));
         bgGraph.getGridLabelRenderer().reloadStyles();
-        iobGraph.getGridLabelRenderer().setGridColor(MainApp.gc(R.color.graphgrid));
+        iobGraph.getGridLabelRenderer().setGridColor(resourceHelper.gc(R.color.graphgrid));
         iobGraph.getGridLabelRenderer().reloadStyles();
         iobGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
         bgGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
@@ -169,25 +173,25 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
     public void onPause() {
         super.onPause();
         disposable.clear();
-        iobCobCalculatorPlugin.stopCalculation("onPause");
+        iobCobStaticCalculatorPlugin.stopCalculation("onPause");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
                     if (event.getCause() == eventCustomCalculationFinished) {
-                        log.debug("EventAutosensCalculationFinished");
+                        aapsLogger.debug(LTag.AUTOSENS, "EventAutosensCalculationFinished");
                         synchronized (HistoryBrowseActivity.this) {
                             updateGUI("EventAutosensCalculationFinished");
                         }
                     }
                 }, FabricPrivacy::logException)
         );
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventIobCalculationProgress.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
@@ -210,19 +214,19 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
 
     private void runCalculation(String from) {
         long end = start + T.hours(rangeToDisplay).msecs();
-        iobCobCalculatorPlugin.stopCalculation(from);
-        iobCobCalculatorPlugin.clearCache();
-        iobCobCalculatorPlugin.runCalculation(from, end, true, false, eventCustomCalculationFinished);
+        iobCobStaticCalculatorPlugin.stopCalculation(from);
+        iobCobStaticCalculatorPlugin.clearCache();
+        iobCobStaticCalculatorPlugin.runCalculation(from, end, true, false, eventCustomCalculationFinished);
     }
 
     void updateGUI(String from) {
-        log.debug("updateGUI from: " + from);
+        aapsLogger.debug(LTag.UI, "updateGUI from: " + from);
 
         if (noProfile == null || buttonDate == null || buttonZoom == null || bgGraph == null || iobGraph == null || seekBar == null)
             return;
 
-        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
-        final Profile profile = ProfileFunctions.getInstance().getProfile();
+        final PumpInterface pump = configBuilderPlugin.getActivePump();
+        final Profile profile = profileFunction.getProfile();
 
         if (profile == null) {
             noProfile.setVisibility(View.VISIBLE);
@@ -239,16 +243,16 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
 
         final boolean showPrediction = false;
 
-        showBasal = SP.getBoolean("hist_showbasals", true);
-        showIob = SP.getBoolean("hist_showiob", true);
-        showCob = SP.getBoolean("hist_showcob", true);
-        showDev = SP.getBoolean("hist_showdeviations", false);
-        showRat = SP.getBoolean("hist_showratios", false);
-        showActPrim = SP.getBoolean("hist_showactivityprimary", false);
-        showActSec = SP.getBoolean("hist_showactivitysecondary", false);
-        showDevslope = SP.getBoolean("hist_showdevslope", false);
+        showBasal = sp.getBoolean("hist_showbasals", true);
+        showIob = sp.getBoolean("hist_showiob", true);
+        showCob = sp.getBoolean("hist_showcob", true);
+        showDev = sp.getBoolean("hist_showdeviations", false);
+        showRat = sp.getBoolean("hist_showratios", false);
+        showActPrim = sp.getBoolean("hist_showactivityprimary", false);
+        showActSec = sp.getBoolean("hist_showactivitysecondary", false);
+        showDevslope = sp.getBoolean("hist_showdevslope", false);
 
-        int hoursToFetch;
+        //int hoursToFetch;
         final long toTime;
         final long fromTime;
         //if (showPrediction) {
@@ -264,13 +268,13 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
         toTime = start + T.hours(rangeToDisplay).msecs();
         //}
 
-        log.debug("Period: " + DateUtil.dateAndTimeString(fromTime) + " - " + DateUtil.dateAndTimeString(toTime));
+        aapsLogger.debug(LTag.UI, "Period: " + DateUtil.dateAndTimeString(fromTime) + " - " + DateUtil.dateAndTimeString(toTime));
 
         final long pointer = System.currentTimeMillis();
 
         //  ------------------ 1st graph
 
-        final GraphData graphData = new GraphData(bgGraph, iobCobCalculatorPlugin);
+        final GraphData graphData = new GraphData(bgGraph, iobCobStaticCalculatorPlugin);
 
         // **** In range Area ****
         graphData.addInRangeArea(fromTime, toTime, lowLine, highLine);
@@ -303,7 +307,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
         // ------------------ 2nd graph
 
         new Thread(() -> {
-            final GraphData secondGraphData = new GraphData(iobGraph, iobCobCalculatorPlugin);
+            final GraphData secondGraphData = new GraphData(iobGraph, iobCobStaticCalculatorPlugin);
 
             boolean useIobForScale = false;
             boolean useCobForScale = false;
@@ -360,7 +364,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
     }
 
     private void setupChartMenu() {
-        chartButton = (ImageButton) findViewById(R.id.overview_chartMenuButton);
+        chartButton = findViewById(R.id.overview_chartMenuButton);
         chartButton.setOnClickListener(v -> {
             MenuItem item, dividerItem;
             CharSequence title;
@@ -369,7 +373,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
             PopupMenu popup = new PopupMenu(v.getContext(), v);
 
 
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.BAS.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_basals));
+            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.BAS.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_basals));
             title = item.getTitle();
             if (titleMaxChars < title.length()) titleMaxChars = title.length();
             s = new SpannableString(title);
@@ -378,7 +382,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
             item.setCheckable(true);
             item.setChecked(showBasal);
 
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.ACTPRIM.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_activity));
+            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.ACTPRIM.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_activity));
             title = item.getTitle();
             if (titleMaxChars < title.length()) titleMaxChars = title.length();
             s = new SpannableString(title);
@@ -390,7 +394,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
             dividerItem = popup.getMenu().add("");
             dividerItem.setEnabled(false);
 
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.IOB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_iob));
+            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.IOB.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_iob));
             title = item.getTitle();
             if (titleMaxChars < title.length()) titleMaxChars = title.length();
             s = new SpannableString(title);
@@ -399,7 +403,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
             item.setCheckable(true);
             item.setChecked(showIob);
 
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.COB.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_cob));
+            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.COB.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_cob));
             title = item.getTitle();
             if (titleMaxChars < title.length()) titleMaxChars = title.length();
             s = new SpannableString(title);
@@ -408,7 +412,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
             item.setCheckable(true);
             item.setChecked(showCob);
 
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.DEV.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_deviations));
+            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.DEV.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_deviations));
             title = item.getTitle();
             if (titleMaxChars < title.length()) titleMaxChars = title.length();
             s = new SpannableString(title);
@@ -417,7 +421,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
             item.setCheckable(true);
             item.setChecked(showDev);
 
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.SEN.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_sensitivity));
+            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.SEN.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_sensitivity));
             title = item.getTitle();
             if (titleMaxChars < title.length()) titleMaxChars = title.length();
             s = new SpannableString(title);
@@ -426,7 +430,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
             item.setCheckable(true);
             item.setChecked(showRat);
 
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.ACTSEC.ordinal(), Menu.NONE, MainApp.gs(R.string.overview_show_activity));
+            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.ACTSEC.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_activity));
             title = item.getTitle();
             if (titleMaxChars < title.length()) titleMaxChars = title.length();
             s = new SpannableString(title);
@@ -453,21 +457,21 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
 
             popup.setOnMenuItemClickListener(item1 -> {
                 if (item1.getItemId() == OverviewFragment.CHARTTYPE.BAS.ordinal()) {
-                    SP.putBoolean("hist_showbasals", !item1.isChecked());
+                    sp.putBoolean("hist_showbasals", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.IOB.ordinal()) {
-                    SP.putBoolean("hist_showiob", !item1.isChecked());
+                    sp.putBoolean("hist_showiob", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.COB.ordinal()) {
-                    SP.putBoolean("hist_showcob", !item1.isChecked());
+                    sp.putBoolean("hist_showcob", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.DEV.ordinal()) {
-                    SP.putBoolean("hist_showdeviations", !item1.isChecked());
+                    sp.putBoolean("hist_showdeviations", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.SEN.ordinal()) {
-                    SP.putBoolean("hist_showratios", !item1.isChecked());
+                    sp.putBoolean("hist_showratios", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.ACTPRIM.ordinal()) {
-                    SP.putBoolean("hist_showactivityprimary", !item1.isChecked());
+                    sp.putBoolean("hist_showactivityprimary", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.ACTSEC.ordinal()) {
-                    SP.putBoolean("hist_showactivitysecondary", !item1.isChecked());
+                    sp.putBoolean("hist_showactivitysecondary", !item1.isChecked());
                 } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.DEVSLOPE.ordinal()) {
-                    SP.putBoolean("hist_showdevslope", !item1.isChecked());
+                    sp.putBoolean("hist_showdevslope", !item1.isChecked());
                 }
                 updateGUI("onGraphCheckboxesCheckedChanged");
                 return true;
