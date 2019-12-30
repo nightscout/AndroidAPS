@@ -362,6 +362,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
+        reportImplicitlyCanceledTbr();
+
         long pumpId = addSuccessToHistory(time, PodHistoryEntryType.SetTemporaryBasal, tempBasalPair);
 
         pumpStatus.tempBasalStart = time;
