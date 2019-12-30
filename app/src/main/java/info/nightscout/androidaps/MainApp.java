@@ -162,6 +162,7 @@ public class MainApp extends DaggerApplication {
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject VirtualPumpPlugin virtualPumpPlugin;
     @Inject VersionCheckerPlugin versionCheckerPlugin;
+    @Inject WearPlugin wearPlugin;
 
     @Override
     public void onCreate() {
@@ -259,7 +260,7 @@ public class MainApp extends DaggerApplication {
             if (!Config.NSCLIENT) pluginsList.add(smsCommunicatorPlugin);
             pluginsList.add(FoodPlugin.getPlugin());
 
-            pluginsList.add(WearPlugin.initPlugin(this));
+            pluginsList.add(wearPlugin);
             pluginsList.add(statusLinePlugin);
             pluginsList.add(PersistentNotificationPlugin.getPlugin());
             pluginsList.add(NSClientPlugin.getPlugin());

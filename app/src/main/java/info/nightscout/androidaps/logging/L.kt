@@ -31,6 +31,7 @@ object L {
     const val UI = "UI"
     const val LOCATION = "LOCATION"
     const val SMS = "SMS"
+    const val WEAR = "WEAR"
 
     init {
         logElements.add(LogElement(APS, defaultValue = true))
@@ -58,6 +59,7 @@ object L {
         logElements.add(LogElement(PUMPQUEUE, true))
         logElements.add(LogElement(SMS, true))
         logElements.add(LogElement(UI, true))
+        logElements.add(LogElement(WEAR, true))
     }
 
     private fun findByName(name: String): LogElement {
@@ -145,5 +147,6 @@ enum class LTag(val tag: String) {
     CONFIGBUILDER("CONFIGBUILDER"),
     UI("UI"),
     LOCATION("LOCATION"),
+    WEAR("WEAR"),
     SMS("SMS"),
 }

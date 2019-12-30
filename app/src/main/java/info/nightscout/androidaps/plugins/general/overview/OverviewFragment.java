@@ -141,6 +141,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     @Inject DexcomPlugin dexcomPlugin;
     @Inject XdripPlugin xdripPlugin;
     @Inject NotificationStore notificationStore;
+    @Inject ActionStringHandler actionStringHandler;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -968,7 +969,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 (NotificationManager) mainApp.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(Constants.notificationID);
 
-        ActionStringHandler.handleInitiate("cancelChangeRequest");
+        actionStringHandler.handleInitiate("cancelChangeRequest");
     }
 
     private void updatePumpStatus(String status) {

@@ -74,6 +74,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
     @Inject StatusLinePlugin statusLinePlugin;
     @Inject TidepoolPlugin tidepoolPlugin;
     @Inject VirtualPumpPlugin virtualPumpPlugin;
+    @Inject WearPlugin wearPlugin;
 
     @Override
     public void setArguments(Bundle args) {
@@ -157,7 +158,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
             addPreferencesFromResource(R.xml.pref_others);
             addPreferencesFromResource(R.xml.pref_datachoices);
 
-            addPreferencesFromResourceIfEnabled(WearPlugin.getPlugin(), PluginType.GENERAL);
+            addPreferencesFromResourceIfEnabled(wearPlugin, PluginType.GENERAL);
             addPreferencesFromResourceIfEnabled(statusLinePlugin, PluginType.GENERAL);
         }
 
