@@ -348,6 +348,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             delegate.setTemporaryBasal(tempBasalPair, beepsEnabled, beepsEnabled);
             time = System.currentTimeMillis();
         } catch (Exception ex) {
+            if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
+                addToHistory(time, PodHistoryEntryType.SetTemporaryBasal, "Uncertain failure", false);
+                return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_temp_basal_failed_uncertain));
+            }
             String comment = handleAndTranslateException(ex);
             addFailureToHistory(time, PodHistoryEntryType.SetTemporaryBasal, comment);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
