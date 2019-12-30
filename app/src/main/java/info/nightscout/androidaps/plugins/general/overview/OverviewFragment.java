@@ -140,6 +140,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
     @Inject NotificationStore notificationStore;
+    @Inject ActionStringHandler actionStringHandler;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -967,7 +968,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 (NotificationManager) mainApp.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(Constants.notificationID);
 
-        ActionStringHandler.handleInitiate("cancelChangeRequest");
+        actionStringHandler.handleInitiate("cancelChangeRequest");
     }
 
     private void updatePumpStatus(String status) {
