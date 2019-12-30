@@ -146,6 +146,7 @@ public class MainApp extends DaggerApplication {
     @Inject OpenAPSAMAPlugin openAPSAMAPlugin;
     @Inject OpenAPSSMBPlugin openAPSSMBPlugin;
     @Inject OverviewPlugin overviewPlugin;
+    @Inject RandomBgPlugin randomBgPlugin;
     @Inject StatusLinePlugin statusLinePlugin;
     @Inject TidepoolPlugin tidepoolPlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
@@ -244,7 +245,7 @@ public class MainApp extends DaggerApplication {
             pluginsList.add(SourcePoctechPlugin.getPlugin());
             pluginsList.add(SourceTomatoPlugin.getPlugin());
             pluginsList.add(SourceEversensePlugin.getPlugin());
-            pluginsList.add(RandomBgPlugin.INSTANCE);
+            pluginsList.add(randomBgPlugin);
             if (!Config.NSCLIENT) pluginsList.add(smsCommunicatorPlugin);
             pluginsList.add(FoodPlugin.getPlugin());
 

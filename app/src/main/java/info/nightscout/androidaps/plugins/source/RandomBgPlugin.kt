@@ -9,29 +9,35 @@ import info.nightscout.androidaps.interfaces.BgSourceInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.isRunningTest
-import org.slf4j.LoggerFactory
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.math.PI
 import kotlin.math.sin
 
-object RandomBgPlugin : PluginBase(PluginDescription()
-        .mainType(PluginType.BGSOURCE)
-        .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginName(R.string.randombg)
-        .shortName(R.string.randombg_short)
-        .description(R.string.description_source_randombg)), BgSourceInterface {
-
-    private val log = LoggerFactory.getLogger(L.BGSOURCE)
+@Singleton
+class RandomBgPlugin @Inject constructor(
+    private val aapsLogger: AAPSLogger,
+    private var virtualPumpPlugin: VirtualPumpPlugin
+) : PluginBase(PluginDescription()
+    .mainType(PluginType.BGSOURCE)
+    .fragmentClass(BGSourceFragment::class.java.name)
+    .pluginName(R.string.randombg)
+    .shortName(R.string.randombg_short)
+    .description(R.string.description_source_randombg)), BgSourceInterface {
 
     private val loopHandler = Handler()
     private lateinit var refreshLoop: Runnable
 
-    const val interval = 5L // minutes
+    companion object {
+        const val interval = 5L // minutes
+    }
 
     init {
         refreshLoop = Runnable {
@@ -55,7 +61,7 @@ object RandomBgPlugin : PluginBase(PluginDescription()
     }
 
     override fun specialEnableCondition(): Boolean {
-        return VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP) && (MainApp.engineeringMode || isRunningTest())
+        return virtualPumpPlugin.isEnabled(PluginType.PUMP) && (MainApp.engineeringMode || isRunningTest())
     }
 
     override fun handleNewData(intent: Intent) {
@@ -72,6 +78,6 @@ object RandomBgPlugin : PluginBase(PluginDescription()
         bgReading.date = DateUtil.now()
         bgReading.raw = bgMgdl
         MainApp.getDbHelper().createIfNotExists(bgReading, "RandomBG")
-        log.debug("Generated BG: $bgReading")
+        aapsLogger.debug(LTag.BGSOURCE, "Generated BG: $bgReading")
     }
 }
