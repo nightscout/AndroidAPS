@@ -105,7 +105,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
@@ -120,9 +120,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:layout_marginStart="6dp"
+                                android:layout_marginStart="2dp"
                                 android:text="00.0"
-                                android:textSize="42sp"
+                                android:textSize="28sp"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -135,7 +135,7 @@
                                 android:paddingStart="-2dp"
                                 android:paddingEnd="0dp"
                                 android:text="→"
-                                android:textSize="28sp"
+                                android:textSize="20sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
@@ -152,7 +152,7 @@
                                 android:id="@+id/overview_timeago"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
+                                android:layout_marginStart="6dp"
                                 android:layout_marginTop="-2dp"
                                 android:paddingStart="2dp"
                                 android:layout_weight="0.5"
@@ -166,7 +166,7 @@
                                 android:layout_marginTop="-2dp"
                                 android:paddingStart="2dp"
                                 android:layout_weight="0.5"
-                                android:textSize="14sp" />
+                                android:textSize="12sp" />
 
                             <TextView
                                 android:id="@+id/overview_avgdelta"
@@ -179,9 +179,9 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
                         android:layout_marginTop="6dp"
                         android:orientation="vertical">
 
@@ -193,24 +193,24 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
+                                android:layout_marginStart="18dp"
                                 android:layout_marginEnd="1dp"
                                 android:text="@string/iob"
-                                android:textSize="16sp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:layout_width="5dp"
                                 android:layout_height="wrap_content"
                                 android:text=":"
-                                android:textSize="16sp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/overview_iob"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="14dp"
+                                android:layout_marginStart="12dp"
                                 android:text=""
-                                android:textSize="16sp"
+                                android:textSize="14sp"
                                 android:textStyle="bold"/>
                         </LinearLayout>
 
@@ -222,7 +222,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
+                                android:layout_marginStart="18dp"
                                 android:layout_marginEnd="1dp"
                                 android:text="@string/cob"
                                 android:textSize="16sp" />
@@ -231,15 +231,15 @@
                                 android:layout_width="5dp"
                                 android:layout_height="wrap_content"
                                 android:text=":"
-                                android:textSize="16sp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/overview_cob"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
+                                android:layout_marginStart="4dp"
                                 android:text=""
-                                android:textSize="16sp"
+                                android:textSize="14sp"
                                 android:textStyle="bold"/>
 
                         </LinearLayout>
@@ -252,24 +252,24 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
+                                android:layout_marginStart="18dp"
                                 android:layout_marginEnd="1dp"
                                 android:text="@string/basal_short"
-                                android:textSize="16sp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:layout_width="5dp"
                                 android:layout_height="wrap_content"
                                 android:text=":"
-                                android:textSize="16sp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/overview_basebasal"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
+                                android:layout_marginStart="6dp"
                                 android:text="0.50U/h @17:35 1/30min - 0.40U/h"
-                                android:textSize="16sp"
+                                android:textSize="14sp"
                                 android:textStyle="bold"/>
                         </LinearLayout>
 
@@ -281,24 +281,24 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
+                                android:layout_marginStart="18dp"
                                 android:layout_marginEnd="1dp"
                                 android:text="AS"
-                                android:textSize="16sp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:layout_width="5dp"
                                 android:layout_height="wrap_content"
                                 android:text=":"
-                                android:textSize="16sp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/overview_sensitivity"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="20dp"
+                                android:layout_marginStart="18dp"
                                 android:text=""
-                                android:textSize="16sp"
+                                android:textSize="14sp"
                                 android:textStyle="bold"/>
                         </LinearLayout>
                     </LinearLayout>
