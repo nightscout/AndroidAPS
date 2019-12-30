@@ -142,6 +142,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     @Inject XdripPlugin xdripPlugin;
     @Inject NotificationStore notificationStore;
     @Inject ActionStringHandler actionStringHandler;
+    @Inject QuickWizard quickWizard;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -937,7 +938,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         final String profileName = profileFunction.getProfileName();
         final PumpInterface pump = configBuilderPlugin.getActivePump();
 
-        final QuickWizardEntry quickWizardEntry = QuickWizard.INSTANCE.getActive();
+        final QuickWizardEntry quickWizardEntry = quickWizard.getActive();
         if (quickWizardEntry != null && actualBg != null && profile != null && pump != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
             final BolusWizard wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true);
@@ -1229,7 +1230,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         }
 
         // QuickWizard button
-        QuickWizardEntry quickWizardEntry = QuickWizard.INSTANCE.getActive();
+        QuickWizardEntry quickWizardEntry = quickWizard.getActive();
         if (quickWizardEntry != null && lastBG != null && pump.isInitialized() && !pump.isSuspended()) {
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";

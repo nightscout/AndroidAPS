@@ -26,8 +26,9 @@ import javax.inject.Inject
 class EditQuickWizardDialog : DaggerDialogFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var quickWizard: QuickWizard
 
-    internal var entry = QuickWizard.newEmptyItem()
+    var position = -1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -39,6 +40,10 @@ class EditQuickWizardDialog : DaggerDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        (arguments ?: savedInstanceState)?.let { bundle ->
+            position = bundle.getInt("position", -1)
+        }
+        val entry = if (position ==-1) quickWizard.newEmptyItem() else quickWizard[position]
         ok.setOnClickListener {
             if (overview_editquickwizard_from_spinner.selectedItem == null) return@setOnClickListener
             if (overview_editquickwizard_to_spinner.selectedItem == null) return@setOnClickListener
@@ -60,7 +65,7 @@ class EditQuickWizardDialog : DaggerDialogFragment() {
                 aapsLogger.error("Unhandled exception", e)
             }
 
-            QuickWizard.addOrUpdate(entry)
+            quickWizard.addOrUpdate(entry)
             rxBus.send(EventQuickWizardChange())
             dismiss()
         }
@@ -107,6 +112,11 @@ class EditQuickWizardDialog : DaggerDialogFragment() {
     override fun onResume() {
         super.onResume()
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("position", position)
     }
 
     private fun processCob() {

@@ -13,7 +13,7 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.CareportalEvent
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.DateUtil
@@ -32,6 +32,7 @@ import javax.inject.Inject
 class CareDialog : DialogFragmentWithDate() {
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var profileFunction: ProfileFunction
 
     enum class EventType {
         BGCHECK,
@@ -86,7 +87,7 @@ class CareDialog : DialogFragmentWithDate() {
         }
 
         val bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData()?.glucose
-            ?: 0.0, ProfileFunctions.getSystemUnits())
+            ?: 0.0, profileFunction.getUnits())
         val bgTextWatcher: TextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -95,7 +96,7 @@ class CareDialog : DialogFragmentWithDate() {
             }
         }
 
-        if (ProfileFunctions.getSystemUnits() == Constants.MMOL) {
+        if (profileFunction.getUnits() == Constants.MMOL) {
             actions_care_bgunits.text = resourceHelper.gs(R.string.mmol)
             actions_care_bg.setParams(savedInstanceState?.getDouble("actions_care_bg")
                 ?: bg, 2.0, 30.0, 0.1, DecimalFormat("0.0"), false, ok, bgTextWatcher)
@@ -108,7 +109,7 @@ class CareDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         val enteredBy = sp.getString("careportal_enteredby", "")
-        val unitResId = if (ProfileFunctions.getSystemUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
+        val unitResId = if (profileFunction.getUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
 
         val json = JSONObject()
         val actions: LinkedList<String> = LinkedList()
@@ -138,7 +139,7 @@ class CareDialog : DialogFragmentWithDate() {
             EventType.SENSOR_INSERT  -> CareportalEvent.SENSORCHANGE
             EventType.BATTERY_CHANGE -> CareportalEvent.PUMPBATTERYCHANGE
         })
-        json.put("units", ProfileFunctions.getSystemUnits())
+        json.put("units", profileFunction.getUnits())
         if (enteredBy.isNotEmpty())
             json.put("enteredBy", enteredBy)
 

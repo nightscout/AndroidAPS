@@ -10,7 +10,7 @@ import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.survey_activity.*
@@ -21,6 +21,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var tddCalculator: TddCalculator
+    @Inject lateinit var profileFunction: ProfileFunction
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +53,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
                 ToastUtils.showToastInUiThread(this, R.string.invalidweight)
                 return@setOnClickListener
             }
-            val profile = DefaultProfile().profile(age, tdd, weight, ProfileFunctions.getSystemUnits())
+            val profile = DefaultProfile().profile(age, tdd, weight, profileFunction.getUnits())
             val args = Bundle()
             args.putLong("time", DateUtil.now())
             args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
@@ -90,7 +91,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         aapsLogger.debug(LTag.CORE, "signInAnonymously:success")
-                        val user = auth.currentUser // TODO: do we need this, seems unused?
+                        //val user = auth.currentUser // TODO: do we need this, seems unused?
 
                         val database = FirebaseDatabase.getInstance().reference
                         database.child("survey").child(r.id).setValue(r)

@@ -14,6 +14,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.OKDialog
@@ -27,18 +28,11 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 class TempBasalDialog : DialogFragmentWithDate() {
-
-    @Inject
-    lateinit var constraintChecker: ConstraintChecker
-
-    @Inject
-    lateinit var mainApp: MainApp
-
-    @Inject
-    lateinit var resourceHelper: ResourceHelper
-
-    @Inject
-    lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
     private var isPercentPump = true
 
@@ -58,7 +52,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription ?: return
+        val pumpDescription = configBuilderPlugin.activePump?.pumpDescription ?: return
         val profile = profileFunction.getProfile() ?: return
 
         val maxTempPercent = pumpDescription.maxTempPercent.toDouble()
@@ -106,7 +100,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
                 actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.constraintapllied) + "</font>")
         }
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, MainApp.gs(R.string.pump_tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.pump_tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                 val callback: Callback = object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -120,9 +114,9 @@ class TempBasalDialog : DialogFragmentWithDate() {
                     }
                 }
                 if (isPercentPump) {
-                    ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
+                    configBuilderPlugin.commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
                 } else {
-                    ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
+                    configBuilderPlugin.commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
                 }
             })
         }

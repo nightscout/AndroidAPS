@@ -19,9 +19,8 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 class ProfileViewerDialog : DaggerDialogFragment() {
-
-    @Inject
-    lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
 
     private var time: Long = 0
 
@@ -64,9 +63,9 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         val date: String?
         when (mode) {
             Mode.RUNNING_PROFILE -> {
-                profile = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(time)?.profileObject
-                profileName = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(time)?.customizedName
-                date = DateUtil.dateAndTimeString(TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(time)?.date
+                profile = treatmentsPlugin.getProfileSwitchFromHistory(time)?.profileObject
+                profileName = treatmentsPlugin.getProfileSwitchFromHistory(time)?.customizedName
+                date = DateUtil.dateAndTimeString(treatmentsPlugin.getProfileSwitchFromHistory(time)?.date
                     ?: 0)
                 profileview_datelayout.visibility = View.VISIBLE
             }

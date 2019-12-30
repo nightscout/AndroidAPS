@@ -1,14 +1,19 @@
 package info.nightscout.androidaps.data
 
-import info.nightscout.androidaps.utils.SP
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONObject
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object QuickWizard {
+@Singleton
+class QuickWizard @Inject constructor(
+    private val sp: SP
+){
     private var storage = JSONArray()
 
     init {
-        setData(JSONArray(SP.getString("QuickWizard", "[]")))
+        setData(JSONArray(sp.getString("QuickWizard", "[]")))
     }
 
     fun getActive(): QuickWizardEntry? {
@@ -24,7 +29,7 @@ object QuickWizard {
     }
 
     fun save() {
-        SP.putString("QuickWizard", storage.toString())
+        sp.putString("QuickWizard", storage.toString())
     }
 
     fun size(): Int = storage.length()

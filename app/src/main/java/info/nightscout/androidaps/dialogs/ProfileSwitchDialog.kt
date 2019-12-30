@@ -23,15 +23,10 @@ import java.util.*
 import javax.inject.Inject
 
 class ProfileSwitchDialog : DialogFragmentWithDate() {
-
-    @Inject
-    lateinit var resourceHelper: ResourceHelper
-
-    @Inject
-    lateinit var profileFunction: ProfileFunction
-
-    @Inject
-    lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -58,7 +53,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         // profile
         context?.let { context ->
-            val profileStore = ConfigBuilderPlugin.getPlugin().activeProfileInterface?.profile
+            val profileStore = configBuilderPlugin.activeProfileInterface.profile
                 ?: return
             val profileList = profileStore.getProfileList()
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
@@ -69,7 +64,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                     overview_profileswitch_profile.setSelection(p)
         } ?: return
 
-        TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(DateUtil.now())?.let { ps ->
+        treatmentsPlugin.getProfileSwitchFromHistory(DateUtil.now())?.let { ps ->
             if (ps.isCPP) {
                 overview_profileswitch_reuselayout.visibility = View.VISIBLE
                 overview_profileswitch_reusebutton.text = resourceHelper.gs(R.string.reuse) + " " + ps.percentage + "% " + ps.timeshift + "h"
@@ -84,7 +79,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val profileStore = ConfigBuilderPlugin.getPlugin().activeProfileInterface?.profile
+        val profileStore = configBuilderPlugin.activeProfileInterface.profile
             ?: return false
 
         val actions: LinkedList<String> = LinkedList()

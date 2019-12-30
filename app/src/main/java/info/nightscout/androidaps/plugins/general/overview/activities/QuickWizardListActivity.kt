@@ -27,6 +27,7 @@ import javax.inject.Inject
 class QuickWizardListActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var quickWizard: QuickWizard
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -37,13 +38,13 @@ class QuickWizardListActivity : NoSplashAppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: QuickWizardEntryViewHolder, position: Int) {
-            holder.from.text = DateUtil.timeString(QuickWizard[position].validFromDate())
-            holder.to.text = DateUtil.timeString(QuickWizard[position].validToDate())
-            holder.buttonText.text = QuickWizard[position].buttonText()
-            holder.carbs.text = resourceHelper.gs(R.string.format_carbs, QuickWizard[position].carbs())
+            holder.from.text = DateUtil.timeString(quickWizard[position].validFromDate())
+            holder.to.text = DateUtil.timeString(quickWizard[position].validToDate())
+            holder.buttonText.text = quickWizard[position].buttonText()
+            holder.carbs.text = resourceHelper.gs(R.string.format_carbs, quickWizard[position].carbs())
         }
 
-        override fun getItemCount(): Int = QuickWizard.size()
+        override fun getItemCount(): Int = quickWizard.size()
 
         private inner class QuickWizardEntryViewHolder internal constructor(itemView: View, internal var fragmentManager: FragmentManager) : RecyclerView.ViewHolder(itemView) {
             val buttonText: TextView = itemView.findViewById(R.id.overview_quickwizard_item_buttonText)
@@ -57,11 +58,13 @@ class QuickWizardListActivity : NoSplashAppCompatActivity() {
                 editButton.setOnClickListener {
                     val manager = fragmentManager
                     val editQuickWizardDialog = EditQuickWizardDialog()
-                    editQuickWizardDialog.entry = QuickWizard[adapterPosition]
+                    val bundle = Bundle()
+                    bundle.putInt("position", adapterPosition)
+                    editQuickWizardDialog.arguments = bundle
                     editQuickWizardDialog.show(manager, "EditQuickWizardDialog")
                 }
                 removeButton.setOnClickListener {
-                    QuickWizard.remove(adapterPosition)
+                    quickWizard.remove(adapterPosition)
                     rxBus.send(EventQuickWizardChange())
                 }
             }

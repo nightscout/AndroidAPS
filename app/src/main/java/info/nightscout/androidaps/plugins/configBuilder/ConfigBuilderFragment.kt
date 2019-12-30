@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.PasswordProtection
 import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.configbuilder_fragment.*
@@ -23,7 +24,8 @@ import javax.inject.Inject
 
 class ConfigBuilderFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
-
+    @Inject lateinit var resourceHelper: ResourceHelper
+    
     private var disposable: CompositeDisposable = CompositeDisposable()
     private val pluginViewHolders = ArrayList<PluginViewHolder>()
 
@@ -86,8 +88,8 @@ class ConfigBuilderFragment : DaggerFragment() {
     private fun createViewsForPlugins(@StringRes title: Int, @StringRes description: Int, pluginType: PluginType, plugins: List<PluginBase>) {
         if (plugins.size == 0) return
         val parent = layoutInflater.inflate(R.layout.configbuilder_single_category, null) as LinearLayout
-        (parent.findViewById<View>(R.id.category_title) as TextView).text = MainApp.gs(title)
-        (parent.findViewById<View>(R.id.category_description) as TextView).text = MainApp.gs(description)
+        (parent.findViewById<View>(R.id.category_title) as TextView).text = resourceHelper.gs(title)
+        (parent.findViewById<View>(R.id.category_description) as TextView).text = resourceHelper.gs(description)
         val pluginContainer = parent.findViewById<LinearLayout>(R.id.category_plugins)
         for (plugin in plugins) {
             val pluginViewHolder = PluginViewHolder(this, pluginType, plugin)

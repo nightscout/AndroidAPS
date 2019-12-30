@@ -17,7 +17,7 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -36,6 +36,7 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var profileFunction: ProfileFunction
 
     companion object {
         private const val FAV1_DEFAULT = 5
@@ -141,7 +142,7 @@ class CarbsDialog : DialogFragmentWithDate() {
     override fun submit(): Boolean {
         val carbs = overview_carbs_carbs.value.toInt()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
-        val units = ProfileFunctions.getSystemUnits()
+        val units = profileFunction.getUnits()
         val activityTTDuration = DefaultValueHelper.determineActivityTTDuration()
         val activityTT = DefaultValueHelper.determineActivityTT()
         val eatingSoonTTDuration = DefaultValueHelper.determineEatingSoonTTDuration()
@@ -187,8 +188,8 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 .duration(activityTTDuration)
                                 .reason(resourceHelper.gs(R.string.activity))
                                 .source(Source.USER)
-                                .low(Profile.toMgdl(activityTT, ProfileFunctions.getSystemUnits()))
-                                .high(Profile.toMgdl(activityTT, ProfileFunctions.getSystemUnits()))
+                                .low(Profile.toMgdl(activityTT, profileFunction.getUnits()))
+                                .high(Profile.toMgdl(activityTT, profileFunction.getUnits()))
                             treatmentsPlugin.addToHistoryTempTarget(tempTarget)
                         }
 
@@ -198,8 +199,8 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 .duration(eatingSoonTTDuration)
                                 .reason(resourceHelper.gs(R.string.eatingsoon))
                                 .source(Source.USER)
-                                .low(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
-                                .high(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
+                                .low(Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()))
+                                .high(Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()))
                             treatmentsPlugin.addToHistoryTempTarget(tempTarget)
                         }
 
@@ -209,8 +210,8 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 .duration(hypoTTDuration)
                                 .reason(resourceHelper.gs(R.string.hypo))
                                 .source(Source.USER)
-                                .low(Profile.toMgdl(hypoTT, ProfileFunctions.getSystemUnits()))
-                                .high(Profile.toMgdl(hypoTT, ProfileFunctions.getSystemUnits()))
+                                .low(Profile.toMgdl(hypoTT, profileFunction.getUnits()))
+                                .high(Profile.toMgdl(hypoTT, profileFunction.getUnits()))
                             treatmentsPlugin.addToHistoryTempTarget(tempTarget)
                         }
                     }

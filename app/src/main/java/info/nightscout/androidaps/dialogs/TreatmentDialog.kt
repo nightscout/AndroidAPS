@@ -33,15 +33,11 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 class TreatmentDialog : DialogFragmentWithDate() {
-
-    @Inject
-    lateinit var constraintChecker: ConstraintChecker
-
-    @Inject
-    lateinit var mainApp: MainApp
-
-    @Inject
-    lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {}
@@ -81,7 +77,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
 
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
-        val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription ?: return
+        val pumpDescription = configBuilderPlugin.activePump?.pumpDescription ?: return
         overview_treatment_carbs.setParams(savedInstanceState?.getDouble("overview_treatment_carbs")
             ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, ok, textWatcher)
         overview_treatment_insulin.setParams(savedInstanceState?.getDouble("overview_treatment_insulin")
@@ -89,7 +85,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val pumpDescription = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription
+        val pumpDescription = configBuilderPlugin.activePump?.pumpDescription
             ?: return false
         val insulin = SafeParse.stringToDouble(overview_treatment_insulin.text)
         val carbs = SafeParse.stringToInt(overview_treatment_carbs.text)
@@ -121,7 +117,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                     detailedBolusInfo.context = context
                     detailedBolusInfo.source = Source.USER
                     if (!(recordOnlyChecked && (detailedBolusInfo.insulin > 0 || pumpDescription.storesCarbInfo))) {
-                        ConfigBuilderPlugin.getPlugin().commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                        configBuilderPlugin.commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
                                     val i = Intent(mainApp, ErrorHelperActivity::class.java)
@@ -134,7 +130,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                             }
                         })
                     } else
-                        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false)
+                        treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false)
                 })
             }
         } else
