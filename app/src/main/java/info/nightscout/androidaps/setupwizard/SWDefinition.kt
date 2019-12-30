@@ -48,7 +48,8 @@ class SWDefinition @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val localProfilePlugin: LocalProfilePlugin,
     private val configBuilderPlugin: ConfigBuilderPlugin,
-    private val objectivesPlugin: ObjectivesPlugin
+    private val objectivesPlugin: ObjectivesPlugin,
+    private val loopPlugin: LoopPlugin
 ) {
 
     var activity: AppCompatActivity? = null
@@ -337,16 +338,16 @@ class SWDefinition @Inject constructor(
         .add(SWButton()
             .text(R.string.enableloop)
             .action {
-                LoopPlugin.getPlugin().setPluginEnabled(PluginType.LOOP, true)
-                LoopPlugin.getPlugin().setFragmentVisible(PluginType.LOOP, true)
-                configBuilderPlugin.processOnEnabledCategoryChanged(LoopPlugin.getPlugin(), PluginType.LOOP)
+                loopPlugin.setPluginEnabled(PluginType.LOOP, true)
+                loopPlugin.setFragmentVisible(PluginType.LOOP, true)
+                configBuilderPlugin.processOnEnabledCategoryChanged(loopPlugin, PluginType.LOOP)
                 configBuilderPlugin.storeSettings("SetupWizard")
                 rxBus.send(EventConfigBuilderChange())
                 rxBus.send(EventSWUpdate(true))
             }
-            .visibility { !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP) })
-        .validator { LoopPlugin.getPlugin().isEnabled(PluginType.LOOP) }
-        .visibility { !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP) && Config.APS }
+            .visibility { !loopPlugin.isEnabled(PluginType.LOOP) })
+        .validator { loopPlugin.isEnabled(PluginType.LOOP) }
+        .visibility { !loopPlugin.isEnabled(PluginType.LOOP) && Config.APS }
     private val screenSensitivity = SWScreen(R.string.configbuilder_sensitivity)
         .skippable(false)
         .add(SWInfotext()

@@ -23,6 +23,7 @@ public class Objective0 extends Objective {
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject VirtualPumpPlugin virtualPumpPlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
+    @Inject LoopPlugin loopPlugin;
 
     public Objective0() {
         super("config", R.string.objectives_0_objective, R.string.objectives_0_gate);
@@ -69,7 +70,7 @@ public class Objective0 extends Objective {
         tasks.add(new Task(R.string.loopenabled) {
             @Override
             public boolean isCompleted() {
-                return LoopPlugin.getPlugin().isEnabled(PluginType.LOOP);
+                return loopPlugin.isEnabled(PluginType.LOOP);
             }
         });
         tasks.add(new Task(R.string.apsselected) {

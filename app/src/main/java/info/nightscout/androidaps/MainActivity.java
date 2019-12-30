@@ -50,7 +50,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
@@ -61,23 +61,24 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.PasswordProtection;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class MainActivity extends NoSplashAppCompatActivity {
 
     private CompositeDisposable disposable = new CompositeDisposable();
-
     private ActionBarDrawerToggle actionBarDrawerToggle;
-
     private MenuItem pluginPreferencesMenuItem;
 
-    @Inject
-    SmsCommunicatorPlugin smsCommunicatorPlugin;
+    @Inject AAPSLogger aapsLogger;
+    @Inject RxBusWrapper rxBus;
+    @Inject SP sp;
+    @Inject ResourceHelper resourceHelper;
+    @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
+    @Inject LoopPlugin loopPlugin;
 
-    @Inject
-    AAPSLogger aapsLogger;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,7 +119,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         });
 
         //Check here if loop plugin is disabled. Else check via constraints
-        if (!LoopPlugin.getPlugin().isEnabled(PluginType.LOOP))
+        if (!loopPlugin.isEnabled(PluginType.LOOP))
             VersionCheckerUtilsKt.triggerCheckVersion();
 
         FabricPrivacy.setUserStats();
@@ -126,7 +127,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         setupTabs();
         setupViews();
 
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventRebuildTabs.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
@@ -140,13 +141,13 @@ public class MainActivity extends NoSplashAppCompatActivity {
                     setWakeLock();
                 }, FabricPrivacy::logException)
         );
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::processPreferenceChange, FabricPrivacy::logException)
         );
 
-        if (!SP.getBoolean(R.string.key_setupwizard_processed, false)) {
+        if (!sp.getBoolean(R.string.key_setupwizard_processed, false)) {
             Intent intent = new Intent(this, SetupWizardActivity.class);
             startActivity(intent);
         }
@@ -179,7 +180,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
     }
 
     private void setWakeLock() {
-        boolean keepScreenOn = SP.getBoolean(R.string.key_keep_screen_on, false);
+        boolean keepScreenOn = sp.getBoolean(R.string.key_keep_screen_on, false);
         if (keepScreenOn)
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         else
@@ -225,7 +226,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         TabLayout compactTabs = findViewById(R.id.tabs_compact);
         compactTabs.setupWithViewPager(viewPager, true);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        if (SP.getBoolean("short_tabtitles", false)) {
+        if (sp.getBoolean("short_tabtitles", false)) {
             normalTabs.setVisibility(View.GONE);
             compactTabs.setVisibility(View.VISIBLE);
             toolbar.setLayoutParams(new LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.compact_height)));
@@ -248,7 +249,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 switch (requestCode) {
                     case AndroidPermission.CASE_STORAGE:
                         //show dialog after permission is granted
-                        OKDialog.show(this, "", MainApp.gs(R.string.alert_dialog_storage_permission_text));
+                        OKDialog.show(this, "", resourceHelper.gs(R.string.alert_dialog_storage_permission_text));
                         break;
                     case AndroidPermission.CASE_LOCATION:
                     case AndroidPermission.CASE_SMS:
@@ -304,25 +305,25 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 return true;
             case R.id.nav_about:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(MainApp.gs(R.string.app_name) + " " + BuildConfig.VERSION);
+                builder.setTitle(resourceHelper.gs(R.string.app_name) + " " + BuildConfig.VERSION);
                 builder.setIcon(MainApp.getIcon());
                 String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
                 message += "Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + "\n";
-                message += MainApp.gs(R.string.configbuilder_nightscoutversion_label) + " " + NSSettingsStatus.getInstance().nightscoutVersionName;
+                message += resourceHelper.gs(R.string.configbuilder_nightscoutversion_label) + " " + NSSettingsStatus.getInstance().nightscoutVersionName;
                 if (MainApp.engineeringMode)
-                    message += "\n" + MainApp.gs(R.string.engineering_mode_enabled);
-                message += MainApp.gs(R.string.about_link_urls);
+                    message += "\n" + resourceHelper.gs(R.string.engineering_mode_enabled);
+                message += resourceHelper.gs(R.string.about_link_urls);
                 final SpannableString messageSpanned = new SpannableString(message);
                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS);
                 builder.setMessage(messageSpanned);
-                builder.setPositiveButton(MainApp.gs(R.string.ok), null);
+                builder.setPositiveButton(resourceHelper.gs(R.string.ok), null);
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
                 ((TextView) alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
                 return true;
             case R.id.nav_exit:
                 aapsLogger.debug(LTag.CORE, "Exiting");
-                RxBus.Companion.getINSTANCE().send(new EventAppExit());
+                rxBus.send(new EventAppExit());
                 finish();
                 System.runFinalization();
                 System.exit(0);

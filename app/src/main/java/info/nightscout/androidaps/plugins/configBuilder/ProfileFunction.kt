@@ -5,7 +5,7 @@ import info.nightscout.androidaps.data.ProfileStore
 import info.nightscout.androidaps.db.ProfileSwitch
 
 interface ProfileFunction {
-    fun getProfileName(): String?
+    fun getProfileName(): String
     fun getProfileName(customized: Boolean): String
     fun getProfileNameWithDuration(): String
     fun getProfileName(time: Long, customized: Boolean, showRemainingTime: Boolean): String

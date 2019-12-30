@@ -32,9 +32,11 @@ class StatusLinePlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val profileFunction: ProfileFunction,
     private val resourceHelper: ResourceHelper,
+    private val mainApp: MainApp,
     private val configBuilderPlugin: ConfigBuilderPlugin,
     private val treatmentsPlugin: TreatmentsPlugin,
-    private val mainApp: MainApp) : PluginBase(
+    private val loopPlugin: LoopPlugin
+) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .pluginName(R.string.xdripstatus)
@@ -60,7 +62,7 @@ class StatusLinePlugin @Inject constructor(
         super.onStart()
         disposable += rxBus.toObservable(EventRefreshOverview::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ if (lastLoopStatus != LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)) sendStatus() }) { FabricPrivacy.logException(it) }
+            .subscribe({ if (lastLoopStatus != loopPlugin.isEnabled(PluginType.LOOP)) sendStatus() }) { FabricPrivacy.logException(it) }
         disposable += rxBus.toObservable(EventExtendedBolusChange::class.java)
             .observeOn(Schedulers.io())
             .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
@@ -108,7 +110,6 @@ class StatusLinePlugin @Inject constructor(
     private fun buildStatusString(profile: Profile): String {
         var status = ""
         if (configBuilderPlugin.activePump == null) return ""
-        val loopPlugin = LoopPlugin.getPlugin()
         if (!loopPlugin.isEnabled(PluginType.LOOP)) {
             status += resourceHelper.gs(R.string.disabledloop) + "\n"
             lastLoopStatus = false

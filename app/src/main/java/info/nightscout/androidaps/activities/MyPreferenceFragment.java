@@ -56,6 +56,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
     @Inject DanaRSPlugin danaRSPlugin;
     @Inject CareportalPlugin careportalPlugin;
     @Inject InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
+    @Inject LoopPlugin loopPlugin;
     @Inject OpenAPSAMAPlugin openAPSAMAPlugin;
     @Inject OpenAPSMAPlugin openAPSMAPlugin;
     @Inject OpenAPSSMBPlugin openAPSSMBPlugin;
@@ -108,7 +109,7 @@ public class MyPreferenceFragment extends PreferenceFragment implements HasAndro
             addPreferencesFromResourceIfEnabled(careportalPlugin, PluginType.GENERAL);
             addPreferencesFromResourceIfEnabled(safetyPlugin, PluginType.CONSTRAINTS);
             if (Config.APS) {
-                addPreferencesFromResourceIfEnabled(LoopPlugin.getPlugin(), PluginType.LOOP);
+                addPreferencesFromResourceIfEnabled(loopPlugin, PluginType.LOOP);
                 addPreferencesFromResourceIfEnabled(openAPSMAPlugin, PluginType.APS);
                 addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, PluginType.APS);
                 addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, PluginType.APS);

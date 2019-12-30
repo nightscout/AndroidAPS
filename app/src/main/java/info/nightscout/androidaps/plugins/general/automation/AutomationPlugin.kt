@@ -42,7 +42,8 @@ class AutomationPlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val aapsLogger: AAPSLogger,
     private val mainApp: MainApp,
-    private val sp :SP
+    private val sp :SP,
+    private val loopPlugin: LoopPlugin
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(AutomationFragment::class.qualifiedName)
@@ -170,7 +171,7 @@ class AutomationPlugin @Inject constructor(
     private fun processActions() {
         if (!isEnabled(PluginType.GENERAL))
             return
-        if (LoopPlugin.getPlugin().isSuspended || !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)) {
+        if (loopPlugin.isSuspended || !loopPlugin.isEnabled(PluginType.LOOP)) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")
             return
         }

@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.activities.MyPreferenceFragment
 import info.nightscout.androidaps.dialogs.*
+import info.nightscout.androidaps.plugins.aps.loop.LoopFragment
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAFragment
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAFragment
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBFragment
@@ -56,6 +57,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesOpenAPSMAFragment(): OpenAPSMAFragment
     @ContributesAndroidInjector abstract fun contributesOpenAPSSMBFragment(): OpenAPSSMBFragment
     @ContributesAndroidInjector abstract fun contributesOverviewFragment(): OverviewFragment
+    @ContributesAndroidInjector abstract fun contributesLoopFragment(): LoopFragment
     @ContributesAndroidInjector abstract fun contributesMedtronicFragment(): MedtronicFragment
     @ContributesAndroidInjector abstract fun contributesNSProfileFragment(): NSProfileFragment
     @ContributesAndroidInjector abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment

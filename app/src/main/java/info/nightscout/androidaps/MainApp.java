@@ -139,6 +139,7 @@ public class MainApp extends DaggerApplication {
     @Inject InsulinOrefRapidActingPlugin insulinOrefRapidActingPlugin;
     @Inject InsulinOrefUltraRapidActingPlugin insulinOrefUltraRapidActingPlugin;
     @Inject LocalProfilePlugin localProfilePlugin;
+    @Inject LoopPlugin loopPlugin;
     @Inject ObjectivesPlugin objectivesPlugin;
     @Inject SafetyPlugin safetyPlugin;
     @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
@@ -225,7 +226,7 @@ public class MainApp extends DaggerApplication {
             if (!Config.NSCLIENT) pluginsList.add(MDIPlugin.getPlugin());
             pluginsList.add(virtualPumpPlugin);
             pluginsList.add(careportalPlugin);
-            if (Config.APS) pluginsList.add(LoopPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(loopPlugin);
             if (Config.APS) pluginsList.add(openAPSMAPlugin);
             if (Config.APS) pluginsList.add(openAPSAMAPlugin);
             if (Config.APS) pluginsList.add(openAPSSMBPlugin);
