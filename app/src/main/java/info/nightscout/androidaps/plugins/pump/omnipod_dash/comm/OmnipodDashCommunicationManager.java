@@ -5,6 +5,7 @@ import android.content.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
@@ -83,6 +84,11 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
     }
 
     public PumpEnactResult resetPodStatus() {
+        return null;
+    }
+
+    @Override
+    public PumpEnactResult setBolus(DetailedBolusInfo detailedBolusInfo) {
         return null;
     }
 

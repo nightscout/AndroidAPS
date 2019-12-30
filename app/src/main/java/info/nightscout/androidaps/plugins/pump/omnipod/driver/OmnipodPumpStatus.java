@@ -41,6 +41,7 @@ public class OmnipodPumpStatus extends PumpStatus {
     public long tempBasalEnd;
     public Double tempBasalAmount = 0.0d;
     public Integer tempBasalLength;
+    public long tempBasalPumpId;
     public PodSessionState podSessionState;
 
     private boolean rileyLinkAddressChanged = false;

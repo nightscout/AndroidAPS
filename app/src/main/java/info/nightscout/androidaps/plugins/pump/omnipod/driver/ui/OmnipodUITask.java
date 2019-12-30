@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
@@ -73,11 +74,10 @@ public class OmnipodUITask {
                 break;
 
             case SetBolus: {
-                Double amount = getDoubleFromParameters(0);
-                boolean isSmb = getBooleanFromParameters(1);
+                DetailedBolusInfo detailedBolusInfo = (DetailedBolusInfo)parameters[0];
 
-                if (amount != null)
-                    returnData = communicationManager.setBolus(amount, isSmb);
+                if (detailedBolusInfo != null)
+                    returnData = communicationManager.setBolus(detailedBolusInfo);
             }
             break;
 

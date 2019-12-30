@@ -20,6 +20,7 @@ public enum PodHistoryEntryType {
 
     SetTemporaryBasal(10, R.string.omnipod_cmd_set_tbr),
     CancelTemporaryBasal(11, R.string.omnipod_cmd_cancel_tbr),
+    CancelTemporaryBasalForce(12, R.string.omnipod_cmd_cancel_tbr_forced),
 
     SetBasalSchedule(20, R.string.omnipod_cmd_set_basal_schedule),
 

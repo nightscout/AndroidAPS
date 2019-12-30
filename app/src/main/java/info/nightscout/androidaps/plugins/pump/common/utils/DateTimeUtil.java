@@ -283,4 +283,21 @@ public class DateTimeUtil {
     }
 
 
+    public static long getTimeInFutureFromMinutes(long startTime, int minutes) {
+        return startTime + getTimeInMs(minutes);
+    }
+
+    public static long getTimeInFutureFromMinutes(int minutes) {
+        return System.currentTimeMillis() + getTimeInMs(minutes);
+    }
+
+
+    public static long getTimeInMs(int minutes) {
+        return getTimeInS(minutes) * 1000L;
+    }
+
+    public static int getTimeInS(int minutes) {
+        return minutes * 60;
+    }
+
 }

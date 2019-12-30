@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.defs;
 
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
@@ -39,9 +40,9 @@ public interface OmnipodCommunicationManagerInterface {
     /**
      * Set Bolus
      *
-     * @param amount amount of bolus in U
+     * @param detailedBolusInfo DetailedBolusInfo instance with amount and all other required data
      */
-    PumpEnactResult setBolus(Double amount, boolean isSmb);
+    PumpEnactResult setBolus(DetailedBolusInfo detailedBolusInfo);
 
     /**
      * Cancel Bolus (if bolus is already stopped, return acknowledgment)

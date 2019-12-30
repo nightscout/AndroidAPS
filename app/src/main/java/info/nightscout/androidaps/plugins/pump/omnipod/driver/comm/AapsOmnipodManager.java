@@ -16,6 +16,7 @@ import java.util.Objects;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
@@ -31,6 +32,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpStatusType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.SetupActionResult;
@@ -270,17 +272,17 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     @Override
-    public PumpEnactResult setBolus(Double units, boolean isSmb) {
+    public PumpEnactResult setBolus(DetailedBolusInfo detailedBolusInfo) {
         OmnipodManager.BolusCommandResult bolusCommandResult;
 
-        boolean beepsEnabled = isSmb ? isSmbBeepsEnabled() : isBolusBeepsEnabled();
+        boolean beepsEnabled = detailedBolusInfo.isSMB ? isSmbBeepsEnabled() : isBolusBeepsEnabled();
 
         Date bolusStarted;
         try {
-            bolusCommandResult = delegate.bolus(units, beepsEnabled, beepsEnabled, isSmb ? null :
+            bolusCommandResult = delegate.bolus(detailedBolusInfo.insulin, beepsEnabled, beepsEnabled, detailedBolusInfo.isSMB ? null :
                     (estimatedUnitsDelivered, percentage) -> {
                         EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
-                        progressUpdateEvent.setStatus(getStringResource(R.string.bolusdelivering, units));
+                        progressUpdateEvent.setStatus(getStringResource(R.string.bolusdelivering, detailedBolusInfo.insulin));
                         progressUpdateEvent.setPercent(percentage);
                         sendEvent(progressUpdateEvent);
                     });
@@ -303,10 +305,19 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
         double unitsDelivered = bolusDeliveryResult.getUnitsDelivered();
 
-        if (pumpStatus != null && !isSmb) {
+        if (pumpStatus != null && !detailedBolusInfo.isSMB) {
             lastBolusTime = pumpStatus.lastBolusTime = bolusStarted;
             lastBolusUnits = pumpStatus.lastBolusAmount = unitsDelivered;
         }
+
+        long pumpId = addSuccessToHistory(bolusStarted.getTime(), PodHistoryEntryType.SetBolus, unitsDelivered);
+
+        detailedBolusInfo.date = bolusStarted.getTime();
+        detailedBolusInfo.insulin = unitsDelivered;
+        detailedBolusInfo.pumpId = pumpId;
+        detailedBolusInfo.source = Source.PUMP;
+
+        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
 
         return new PumpEnactResult().success(true).enacted(true).bolusDelivered(unitsDelivered);
     }
@@ -334,12 +345,29 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         long time = System.currentTimeMillis();
         try {
             delegate.setTemporaryBasal(tempBasalPair, beepsEnabled, beepsEnabled);
-            addSuccessToHistory(time, PodHistoryEntryType.SetTemporaryBasal, tempBasalPair);
+            time = System.currentTimeMillis();
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             addFailureToHistory(time, PodHistoryEntryType.SetTemporaryBasal, comment);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
+
+        long pumpId = addSuccessToHistory(time, PodHistoryEntryType.SetTemporaryBasal, tempBasalPair);
+
+        pumpStatus.tempBasalStart = time;
+        pumpStatus.tempBasalAmount = tempBasalPair.getInsulinRate();
+        pumpStatus.tempBasalLength = tempBasalPair.getDurationMinutes();
+        pumpStatus.tempBasalEnd = DateTimeUtil.getTimeInFutureFromMinutes(time, tempBasalPair.getDurationMinutes());
+        pumpStatus.tempBasalPumpId = pumpId;
+
+        TemporaryBasal tempStart = new TemporaryBasal() //
+                .date(time) //
+                .duration(tempBasalPair.getDurationMinutes()) //
+                .absolute(tempBasalPair.getInsulinRate()) //
+                .pumpId(pumpId)
+                .source(Source.PUMP);
+
+        TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStart);
 
         return new PumpEnactResult().success(true).enacted(true);
     }

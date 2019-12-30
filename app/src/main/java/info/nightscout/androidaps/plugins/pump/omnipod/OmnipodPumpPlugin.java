@@ -51,6 +51,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
+import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
@@ -561,7 +562,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         if (currentProfile != null) {
             int hour = (new GregorianCalendar()).get(Calendar.HOUR_OF_DAY);
-            return currentProfile.getBasalTimeFromMidnight(getTimeInS(hour * 60));
+            return currentProfile.getBasalTimeFromMidnight(DateTimeUtil.getTimeInS(hour * 60));
         } else {
             return 0.0d;
         }
@@ -618,15 +619,13 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         try {
 
             OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.SetBolus,
-                    detailedBolusInfo.insulin, detailedBolusInfo.isSMB);
+                    detailedBolusInfo);
 
             PumpEnactResult result = responseTask.getResult();
 
             setRefreshButtonEnabled(true);
 
             if (result.success) {
-
-                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
 //                if (getPodPumpStatusObject().reservoirRemainingUnits != 0 &&
@@ -637,14 +636,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 incrementStatistics(detailedBolusInfo.isSMB ? OmnipodConst.Statistics.SMBBoluses
                         : OmnipodConst.Statistics.StandardBoluses);
 
-                // calculate time for bolus and set driver to busy for that time
-
-                // TODO fix this
-//                int bolusTime = 1; //omnipodCommunicationManager.get;
-//                long time = System.currentTimeMillis() + (bolusTime * 1000);
-//
-//                this.busyTimestamps.add(time);
-                result.bolusDelivered(detailedBolusInfo.insulin).carbsDelivered(detailedBolusInfo.carbs);
+                result.carbsDelivered(detailedBolusInfo.carbs);
             }
 
             return result;
@@ -666,12 +658,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         setRefreshButtonEnabled(true);
 
         LOG.info(getLogPrefix() + "stopBolusDelivering - wasSuccess={}", result.success);
-
-        if (result.success) {
-            // TODO fix bolus record with cancel
-
-            //TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
-        }
 
         finishAction("Bolus");
     }
@@ -748,19 +734,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             LOG.info(getLogPrefix() + "setTempBasalAbsolute - setTBR. Response: " + result.success);
 
         if (result.success) {
-            pumpStatusLocal.tempBasalStart = System.currentTimeMillis();
-            pumpStatusLocal.tempBasalAmount = absoluteRate;
-            pumpStatusLocal.tempBasalLength = durationInMinutes;
-            pumpStatusLocal.tempBasalEnd = getTimeInFutureFromMinutes(durationInMinutes);
-
-            TemporaryBasal tempStart = new TemporaryBasal() //
-                    .date(System.currentTimeMillis()) //
-                    .duration(durationInMinutes) //
-                    .absolute(absoluteRate) //
-                    .source(Source.USER);
-
-            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStart);
-
             incrementStatistics(OmnipodConst.Statistics.TBRsSet);
         }
 
@@ -791,18 +764,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     }
 
 
-    protected long getTimeInFutureFromMinutes(int minutes) {
-        return System.currentTimeMillis() + getTimeInMs(minutes);
-    }
 
-
-    protected long getTimeInMs(int minutes) {
-        return getTimeInS(minutes) * 1000L;
-    }
-
-    protected int getTimeInS(int minutes) {
-        return minutes * 60;
-    }
 
 
     @Override
