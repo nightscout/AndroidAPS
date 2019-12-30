@@ -705,27 +705,27 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         }
 
         // if TBR is running we will cancel it.
-        if (tbrCurrent != null) {
-            if (isLoggingEnabled())
-                LOG.info(getLogPrefix() + "setTempBasalAbsolute - TBR running - so canceling it.");
-
-            // CANCEL
-            OmnipodUITask responseTask2 = omnipodUIComm.executeCommand(OmnipodCommandType.CancelTemporaryBasal);
-
-            PumpEnactResult result = responseTask2.getResult();
-
-            if (result.success) {
-                if (isLoggingEnabled())
-                    LOG.info(getLogPrefix() + "setTempBasalAbsolute - Current TBR cancelled.");
-            } else {
-                if (isLoggingEnabled())
-                    LOG.error(getLogPrefix() + "setTempBasalAbsolute - Cancel TBR failed.");
-
-                finishAction("TBR");
-
-                return result;
-            }
-        }
+//        if (tbrCurrent != null) {
+//            if (isLoggingEnabled())
+//                LOG.info(getLogPrefix() + "setTempBasalAbsolute - TBR running - so canceling it.");
+//
+//            // CANCEL
+//            OmnipodUITask responseTask2 = omnipodUIComm.executeCommand(OmnipodCommandType.CancelTemporaryBasal);
+//
+//            PumpEnactResult result = responseTask2.getResult();
+//
+//            if (result.success) {
+//                if (isLoggingEnabled())
+//                    LOG.info(getLogPrefix() + "setTempBasalAbsolute - Current TBR cancelled.");
+//            } else {
+//                if (isLoggingEnabled())
+//                    LOG.error(getLogPrefix() + "setTempBasalAbsolute - Cancel TBR failed.");
+//
+//                finishAction("TBR");
+//
+//                return result;
+//            }
+//        }
 
         // now start new TBR
         OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.SetTemporaryBasal,
