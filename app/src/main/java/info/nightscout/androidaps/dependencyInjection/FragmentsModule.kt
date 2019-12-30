@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicFragment
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
 import info.nightscout.androidaps.plugins.treatments.TreatmentsFragment
+import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsBolusFragment
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsProfileSwitchFragment
 
 @Module
@@ -60,6 +61,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsFragment(): TreatmentsFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsProfileSwitchFragment(): TreatmentsProfileSwitchFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsBolusFragment(): TreatmentsBolusFragment
     @ContributesAndroidInjector abstract fun contributesVirtualPumpFragment(): VirtualPumpFragment
 
     @ContributesAndroidInjector abstract fun contributesBolusProgressDialog(): BolusProgressDialog
