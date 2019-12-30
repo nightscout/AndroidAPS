@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.wear
 
 import android.app.NotificationManager
 import android.content.Context
+import dagger.Lazy
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -50,7 +51,7 @@ class ActionStringHandler @Inject constructor(
     private val constraintChecker: ConstraintChecker,
     private val profileFunction: ProfileFunction,
     private val mainApp: MainApp,
-    private val loopPlugin: LoopPlugin,
+    private val loopPlugin: Lazy<LoopPlugin>,
     private val wearPlugin: WearPlugin,
     private val treatmentsPlugin: TreatmentsPlugin,
     private val configBuilderPlugin: ConfigBuilderPlugin,
@@ -390,7 +391,7 @@ class ActionStringHandler @Inject constructor(
         get() {
             var ret = ""
             // decide if enabled/disabled closed/open; what Plugin as APS?
-            if (loopPlugin.isEnabled(loopPlugin.getType())) {
+            if (loopPlugin.get().isEnabled(loopPlugin.get().getType())) {
                 ret += if (constraintChecker.isClosedLoopAllowed().value()) {
                     "CLOSED LOOP\n"
                 } else {
@@ -500,7 +501,7 @@ class ActionStringHandler @Inject constructor(
         } else if ("dismissoverviewnotification" == act[0]) {
             rxBus.send(EventDismissNotification(SafeParse.stringToInt(act[1])))
         } else if ("changeRequest" == act[0]) {
-            loopPlugin.acceptChangeRequest()
+            loopPlugin.get().acceptChangeRequest()
             val notificationManager = mainApp.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.cancel(Constants.notificationID)
         }

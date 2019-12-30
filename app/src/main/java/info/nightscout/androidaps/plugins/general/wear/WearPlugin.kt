@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.wear
 
 import android.content.Intent
+import dagger.Lazy
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.*
@@ -15,8 +16,8 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewB
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.WatchUpdaterService
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -28,7 +29,7 @@ class WearPlugin internal @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
     private val mainApp: MainApp,
-    private val loopPlugin: LoopPlugin
+    private val loopPlugin: Lazy<LoopPlugin>
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(WearFragment::class.java.name)
@@ -77,7 +78,7 @@ class WearPlugin internal @Inject constructor(
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventRefreshOverview? -> if (WatchUpdaterService.shouldReportLoopStatus(loopPlugin.isEnabled(PluginType.LOOP))) sendDataToWatch(true, false, false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ event: EventRefreshOverview? -> if (WatchUpdaterService.shouldReportLoopStatus(loopPlugin.get().isEnabled(PluginType.LOOP))) sendDataToWatch(true, false, false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventBolusRequested::class.java)
             .observeOn(Schedulers.io())
