@@ -7,7 +7,7 @@ import info.nightscout.androidaps.utils.OKDialog
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import info.nightscout.androidaps.utils.stats.TirCalculator
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import kotlinx.android.synthetic.main.stats_activity.*
+import kotlinx.android.synthetic.main.activity_stats.*
 import javax.inject.Inject
 
 class StatsActivity : NoSplashAppCompatActivity() {
@@ -18,7 +18,7 @@ class StatsActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.stats_activity)
+        setContentView(R.layout.activity_stats)
 
         stats_tdds.text = tddCalculator.stats()
         stats_tir.text = tirCalculator.stats()

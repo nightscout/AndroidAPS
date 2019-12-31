@@ -12,27 +12,39 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/activity_title_background"
+            android:orientation="horizontal"
+            android:padding="5dp">
 
             <ImageView
-                android:id="@+id/imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:paddingStart="10dp"
+                android:contentDescription="@string/carbs"
                 app:srcCompat="@mipmap/ic_launcher" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:text="@string/statistics"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-        </LinearLayout>
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/spacer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp" />
 
         <TextView
             android:id="@+id/stats_tdds"
@@ -55,13 +67,13 @@
             android:layout_marginStart="10dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
             android:id="@+id/done_background"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:orientation="horizontal"
             android:background="@android:color/transparent"
-            android:gravity="end|right"
+            android:gravity="end"
             android:layout_gravity="center_vertical"
             android:paddingBottom="8dp">
 
@@ -69,7 +81,6 @@
                 android:id="@+id/stats_reset"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:layout_marginRight="8dp"
                 android:layout_marginEnd="8dp"
                 style="@style/mdtp_ActionButton.Text"
                 android:text="@string/reset" />
@@ -78,10 +89,10 @@
                 android:id="@+id/ok"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
                 android:layout_marginEnd="16dp"
                 style="@style/mdtp_ActionButton.Text"
                 android:text="@string/mdtp_ok" />
+
         </LinearLayout>
 
     </LinearLayout>

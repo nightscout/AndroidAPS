@@ -22,6 +22,7 @@ class LogSettingActivity : NoSplashAppCompatActivity() {
             L.resetToDefaults()
             createViewsForSettings()
         }
+        ok.setOnClickListener { finish() }
     }
 
     private fun createViewsForSettings() {
@@ -34,7 +35,8 @@ class LogSettingActivity : NoSplashAppCompatActivity() {
     }
 
     internal inner class LogViewHolder(element: L.LogElement) {
-        var baseView: LinearLayout = layoutInflater.inflate(R.layout.logsettings_item, null) as LinearLayout
+        @Suppress("InflateParams")
+        var baseView = layoutInflater.inflate(R.layout.logsettings_item, null) as LinearLayout
 
         init {
             (baseView.findViewById<View>(R.id.logsettings_description) as TextView).text = element.name
