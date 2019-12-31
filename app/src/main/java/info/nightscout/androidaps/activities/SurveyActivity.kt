@@ -22,6 +22,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var activityMonitor: ActivityMonitor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
         survey_tdds.text = tddCalculator.stats()
         survey_tir.text = TirCalculator.stats()
-        survey_activity.text = ActivityMonitor.stats()
+        survey_activity.text = activityMonitor.stats()
 
         survey_profile.setOnClickListener {
             val age = SafeParse.stringToDouble(survey_age.text.toString())

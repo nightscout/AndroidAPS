@@ -124,8 +124,8 @@ public class MainApp extends DaggerApplication {
     public static boolean devBranch;
     public static boolean engineeringMode;
 
-    @Inject
-    AAPSLogger aapsLogger;
+    @Inject AAPSLogger aapsLogger;
+    @Inject ActivityMonitor activityMonitor;
 
     @Inject ActionsPlugin actionsPlugin;
     @Inject AutomationPlugin automationPlugin;
@@ -191,7 +191,7 @@ public class MainApp extends DaggerApplication {
             log.error("Error with Fabric init! " + e);
         }
 
-        registerActivityLifecycleCallbacks(ActivityMonitor.INSTANCE);
+        registerActivityLifecycleCallbacks(activityMonitor);
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mFirebaseAnalytics.setAnalyticsCollectionEnabled(!Boolean.getBoolean("disableFirebase") && FabricPrivacy.fabricEnabled());
@@ -479,7 +479,7 @@ public class MainApp extends DaggerApplication {
 
         if (timeDateOrTZChangeReceiver != null)
             unregisterReceiver(timeDateOrTZChangeReceiver);
-        unregisterActivityLifecycleCallbacks(ActivityMonitor.INSTANCE);
+        unregisterActivityLifecycleCallbacks(activityMonitor);
         KeepAliveReceiver.cancelAlarm(this);
         super.onTerminate();
     }

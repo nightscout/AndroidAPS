@@ -13,6 +13,7 @@ import javax.inject.Inject
 class StatsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var activityMonitor: ActivityMonitor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,12 +21,12 @@ class StatsActivity : NoSplashAppCompatActivity() {
 
         stats_tdds.text = tddCalculator.stats()
         stats_tir.text = TirCalculator.stats()
-        stats_activity.text = ActivityMonitor.stats()
+        stats_activity.text = activityMonitor.stats()
 
         ok.setOnClickListener { finish() }
         stats_reset.setOnClickListener {
             OKDialog.showConfirmation(this, resourceHelper.gs(R.string.doyouwantresetstats), Runnable {
-                ActivityMonitor.reset()
+                activityMonitor.reset()
                 recreate()
             })
         }
