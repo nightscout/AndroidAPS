@@ -29,9 +29,13 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.toVisibility
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -250,8 +254,8 @@ class WizardDialog : DaggerDialogFragment() {
         treatmentsPlugin.updateTotalIOBTempBasals()
         val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
 
-        treatments_wizard_bolusiobinsulin.text = StringUtils.formatInsulin(-bolusIob.iob)
-        treatments_wizard_basaliobinsulin.text = StringUtils.formatInsulin(-basalIob.basaliob)
+        treatments_wizard_bolusiobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -bolusIob.iob)
+        treatments_wizard_basaliobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, -basalIob.basaliob)
 
         calculateInsulin()
 
@@ -308,19 +312,19 @@ class WizardDialog : DaggerDialogFragment() {
 
         wizard?.let { wizard ->
             treatments_wizard_bg.text = String.format(resourceHelper.gs(R.string.format_bg_isf), BgReading().value(Profile.toMgdl(bg, profileFunction.getUnits())).valueToUnitsToString(profileFunction.getUnits()), wizard.sens)
-            treatments_wizard_bginsulin.text = StringUtils.formatInsulin(wizard.insulinFromBG)
+            treatments_wizard_bginsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
 
             treatments_wizard_carbs.text = String.format(resourceHelper.gs(R.string.format_carbs_ic), carbs.toDouble(), wizard.ic)
-            treatments_wizard_carbsinsulin.text = StringUtils.formatInsulin(wizard.insulinFromCarbs)
+            treatments_wizard_carbsinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromCarbs)
 
-            treatments_wizard_bolusiobinsulin.text = StringUtils.formatInsulin(wizard.insulinFromBolusIOB)
-            treatments_wizard_basaliobinsulin.text = StringUtils.formatInsulin(wizard.insulinFromBasalsIOB)
+            treatments_wizard_bolusiobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBolusIOB)
+            treatments_wizard_basaliobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromBasalsIOB)
 
-            treatments_wizard_correctioninsulin.text = StringUtils.formatInsulin(wizard.insulinFromCorrection)
+            treatments_wizard_correctioninsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromCorrection)
 
             // Superbolus
             treatments_wizard_sb.text = if (treatments_wizard_sbcheckbox.isChecked) resourceHelper.gs(R.string.twohours) else ""
-            treatments_wizard_sbinsulin.text = StringUtils.formatInsulin(wizard.insulinFromSuperBolus)
+            treatments_wizard_sbinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromSuperBolus)
 
             // Trend
             if (treatments_wizard_bgtrendcheckbox.isChecked && wizard.glucoseStatus != null) {
@@ -330,12 +334,12 @@ class WizardDialog : DaggerDialogFragment() {
             } else {
                 treatments_wizard_bgtrend.text = ""
             }
-            treatments_wizard_bgtrendinsulin.text = StringUtils.formatInsulin(wizard.insulinFromTrend)
+            treatments_wizard_bgtrendinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromTrend)
 
             // COB
             if (treatments_wizard_cobcheckbox.isChecked) {
                 treatments_wizard_cob.text = String.format(resourceHelper.gs(R.string.format_cob_ic), cob, wizard.ic)
-                treatments_wizard_cobinsulin.text = StringUtils.formatInsulin(wizard.insulinFromCOB)
+                treatments_wizard_cobinsulin.text = resourceHelper.gs(R.string.formatinsulinunits, wizard.insulinFromCOB)
             } else {
                 treatments_wizard_cob.text = ""
                 treatments_wizard_cobinsulin.text = ""

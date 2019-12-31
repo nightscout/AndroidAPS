@@ -13,6 +13,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
@@ -33,7 +34,8 @@ class LocalProfilePlugin @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val sp: SP
+    private val sp: SP,
+    private val profileFunction: ProfileFunction
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.PROFILE)
     .fragmentClass(LocalProfileFragment::class.java.name)
@@ -232,7 +234,7 @@ class LocalProfilePlugin @Inject constructor(
         aapsLogger.debug(LTag.PROFILE, "Loading stored settings")
         val p = SingleProfile()
 
-        p.mgdl = sp.getBoolean(LOCAL_PROFILE + "mgdl", ProfileFunctions.getSystemUnits() == Constants.MGDL)
+        p.mgdl = sp.getBoolean(LOCAL_PROFILE + "mgdl", profileFunction.getUnits() == Constants.MGDL)
         p.dia = sp.getDouble(LOCAL_PROFILE + "dia", Constants.defaultDIA)
         try {
             p.ic = JSONArray(sp.getString(LOCAL_PROFILE + "ic", defaultArray))
@@ -351,7 +353,7 @@ class LocalProfilePlugin @Inject constructor(
         }
         val p = SingleProfile()
         p.name = LOCAL_PROFILE + free
-        p.mgdl = ProfileFunctions.getSystemUnits() == Constants.MGDL
+        p.mgdl = profileFunction.getUnits() == Constants.MGDL
         p.dia = Constants.defaultDIA
         p.ic = JSONArray(defaultArray)
         p.isf = JSONArray(defaultArray)

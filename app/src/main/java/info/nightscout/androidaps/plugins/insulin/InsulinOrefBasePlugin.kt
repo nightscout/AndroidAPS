@@ -7,12 +7,11 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import javax.inject.Inject
 
 /**
  * Created by adrian on 13.08.2017.
@@ -20,9 +19,10 @@ import javax.inject.Inject
  * parameters are injected from child class
  *
  */
-abstract class InsulinOrefBasePlugin (
+abstract class InsulinOrefBasePlugin(
     val rxBus: RxBusWrapper,
-    val resourceHelper: ResourceHelper
+    val resourceHelper: ResourceHelper,
+    val profileFunction: ProfileFunction
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.INSULIN)
     .fragmentClass(InsulinFragment::class.java.name)
@@ -54,7 +54,7 @@ abstract class InsulinOrefBasePlugin (
 
     open val userDefinedDia: Double
         get() {
-            val profile = ProfileFunctions.getInstance().getProfile()
+            val profile = profileFunction.getProfile()
             return profile?.dia ?: MIN_DIA
         }
 

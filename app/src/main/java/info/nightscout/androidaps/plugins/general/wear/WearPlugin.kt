@@ -24,7 +24,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class WearPlugin internal @Inject constructor(
+class WearPlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
@@ -45,40 +45,42 @@ class WearPlugin internal @Inject constructor(
         disposable.add(rxBus
             .toObservable(EventOpenAPSUpdateGui::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(true, true, false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(true, true, false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventTempBasalChange? -> sendDataToWatch(true, true, false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventTreatmentChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(true, true, false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventNewBasalProfile::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventNewBasalProfile? -> sendDataToWatch(false, true, false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ sendDataToWatch(status = false, basals = true, bgValue = false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventAutosensCalculationFinished? -> sendDataToWatch(true, true, true) }) { FabricPrivacy.logException(it) })
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = true) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventPreferenceChange? ->
+            .subscribe({
                 // possibly new high or low mark
                 resendDataToWatch()
-                // status may be formated differently
-                sendDataToWatch(true, false, false)
+                // status may be formatted differently
+                sendDataToWatch(status = true, basals = false, bgValue = false)
             }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventRefreshOverview? -> if (WatchUpdaterService.shouldReportLoopStatus(loopPlugin.get().isEnabled(PluginType.LOOP))) sendDataToWatch(true, false, false) }) { FabricPrivacy.logException(it) })
+            .subscribe({
+                if (WatchUpdaterService.shouldReportLoopStatus(loopPlugin.get().isEnabled(PluginType.LOOP)))
+                    sendDataToWatch(status = true, basals = false, bgValue = false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventBolusRequested::class.java)
             .observeOn(Schedulers.io())
@@ -148,10 +150,10 @@ class WearPlugin internal @Inject constructor(
         mainApp.startService(Intent(mainApp, WatchUpdaterService::class.java).setAction(WatchUpdaterService.ACTION_OPEN_SETTINGS))
     }
 
-    fun requestNotificationCancel(actionstring: String?) { //Log.d(TAG, "WR: WearPlugin:requestNotificationCancel");
+    fun requestNotificationCancel(actionString: String?) { //Log.d(TAG, "WR: WearPlugin:requestNotificationCancel");
         val intent = Intent(mainApp, WatchUpdaterService::class.java)
             .setAction(WatchUpdaterService.ACTION_CANCEL_NOTIFICATION)
-        intent.putExtra("actionstring", actionstring)
+        intent.putExtra("actionstring", actionString)
         mainApp.startService(intent)
     }
 

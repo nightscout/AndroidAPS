@@ -319,7 +319,7 @@ class MedtronicFragment : DaggerFragment() {
         SetWarnColor.setColorInverse(medtronic_pumpstate_battery, pumpStatus.batteryRemaining.toDouble(), 25.0, 10.0)
 
         // reservoir
-        medtronic_reservoir.text = MainApp.gs(R.string.reservoirvalue, pumpStatus.reservoirRemainingUnits, pumpStatus.reservoirFullUnits)
+        medtronic_reservoir.text = resourceHelper.gs(R.string.reservoirvalue, pumpStatus.reservoirRemainingUnits, pumpStatus.reservoirFullUnits)
         SetWarnColor.setColorInverse(medtronic_reservoir, pumpStatus.reservoirRemainingUnits, 50.0, 20.0)
 
         medtronic_errors.text = pumpStatus.errorInfo

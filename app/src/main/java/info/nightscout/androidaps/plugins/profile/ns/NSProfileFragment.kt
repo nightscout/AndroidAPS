@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.profile.ns.events.EventNSProfileUpdateGUI
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -30,6 +30,7 @@ class NSProfileFragment : DaggerFragment() {
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var profileFunction: ProfileFunction
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -128,7 +129,7 @@ class NSProfileFragment : DaggerFragment() {
             nsprofile_spinner.adapter = adapter
             // set selected to actual profile
             for (p in profileList.indices) {
-                if (profileList[p] == ProfileFunctions.getInstance().getProfileName())
+                if (profileList[p] == profileFunction.getProfileName())
                     nsprofile_spinner.setSelection(p)
             }
             profileview_noprofile.visibility = View.GONE
