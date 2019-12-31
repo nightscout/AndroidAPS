@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.extensions.toSignedString
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.dialog_insulin.*
 import kotlinx.android.synthetic.main.notes.*
@@ -91,19 +92,19 @@ class InsulinDialog : DialogFragmentWithDate() {
         overview_insulin_amount.setParams(savedInstanceState?.getDouble("overview_insulin_amount")
             ?: 0.0, 0.0, maxInsulin, configBuilderPlugin.activePump!!.pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
 
-        overview_insulin_plus05.text = toSignedString(sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
+        overview_insulin_plus05.text = sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT).toSignedString()
         overview_insulin_plus05.setOnClickListener {
             overview_insulin_amount.value = max(0.0, overview_insulin_amount.value
                 + sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
             validateInputs()
         }
-        overview_insulin_plus10.text = toSignedString(sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
+        overview_insulin_plus10.text = sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT).toSignedString()
         overview_insulin_plus10.setOnClickListener {
             overview_insulin_amount.value = max(0.0, overview_insulin_amount.value
                 + sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
             validateInputs()
         }
-        overview_insulin_plus20.text = toSignedString(sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
+        overview_insulin_plus20.text = sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT).toSignedString()
         overview_insulin_plus20.setOnClickListener {
             overview_insulin_amount.value = Math.max(0.0, overview_insulin_amount.value
                 + sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
@@ -114,11 +115,6 @@ class InsulinDialog : DialogFragmentWithDate() {
         overview_insulin_record_only.setOnCheckedChangeListener { _, isChecked: Boolean ->
             overview_insulin_time_layout.visibility = isChecked.toVisibility()
         }
-    }
-
-    private fun toSignedString(value: Double): String {
-        val formatted = DecimalFormatter.toPumpSupportedBolus(value)
-        return if (value > 0) "+$formatted" else formatted
     }
 
     override fun submit(): Boolean {

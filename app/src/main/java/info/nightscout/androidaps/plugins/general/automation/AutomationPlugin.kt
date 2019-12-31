@@ -27,7 +27,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.extensions.plusAssign
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray

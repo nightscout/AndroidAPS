@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Obje
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers

@@ -89,8 +89,12 @@ object JsonHelper {
     }
 
     @JvmStatic
-    fun safeGetInt(json: JSONObject?, fieldName: String): Int {
-        var result = 0
+    fun safeGetInt(json: JSONObject?, fieldName: String): Int =
+        safeGetInt(json, fieldName, 0)
+
+    @JvmStatic
+    fun safeGetInt(json: JSONObject?, fieldName: String, defaultValue: Int): Int {
+        var result = defaultValue
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getInt(fieldName)

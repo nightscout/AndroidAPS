@@ -20,6 +20,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.plugins.pump.mdi.MDIPlugin;
+import info.nightscout.androidaps.utils.wizard.BolusWizard;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;

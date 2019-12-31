@@ -36,6 +36,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.wizard.BolusWizard
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -181,7 +182,7 @@ class ActionStringHandler @Inject constructor(
             }
             val format = DecimalFormat("0.00")
             val formatInt = DecimalFormat("0")
-            val bolusWizard = BolusWizard(profile, profileName, treatmentsPlugin.tempTargetFromHistory,
+            val bolusWizard = BolusWizard(mainApp).doCalc(profile, profileName, treatmentsPlugin.tempTargetFromHistory,
                 carbsAfterConstraints, cobInfo.displayCob!!, bgReading!!.valueToUnits(profileFunction.getUnits()),
                 0.0, percentage.toDouble(), useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend)
             if (Math.abs(bolusWizard.insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= 0.01) {

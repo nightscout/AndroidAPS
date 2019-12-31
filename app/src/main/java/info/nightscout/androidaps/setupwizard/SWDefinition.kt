@@ -32,7 +32,7 @@ import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.LocaleHelper.update
 import info.nightscout.androidaps.utils.PasswordProtection
-import info.nightscout.androidaps.utils.isRunningTest
+import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*

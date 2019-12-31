@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.wizard.BolusWizard
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.dialog_wizard.*
@@ -294,7 +295,7 @@ class WizardDialog : DaggerDialogFragment() {
 
         val carbTime = SafeParse.stringToInt(treatments_wizard_carb_time_input.text)
 
-        wizard = BolusWizard(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction,
+        wizard = BolusWizard(mainApp).doCalc(specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction,
             sp.getInt(R.string.key_boluswizard_percentage, 100).toDouble(),
             treatments_wizard_bgcheckbox.isChecked,
             treatments_wizard_cobcheckbox.isChecked,

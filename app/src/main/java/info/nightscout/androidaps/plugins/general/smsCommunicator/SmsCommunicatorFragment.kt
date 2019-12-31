@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSm
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.extensions.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.smscommunicator_fragment.*

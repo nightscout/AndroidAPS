@@ -12,7 +12,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventNtpStatus
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable

@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutos
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable

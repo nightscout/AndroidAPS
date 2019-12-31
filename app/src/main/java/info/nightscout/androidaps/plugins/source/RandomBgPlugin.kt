@@ -14,7 +14,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.isRunningTest
+import info.nightscout.androidaps.utils.extensions.isRunningTest
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton

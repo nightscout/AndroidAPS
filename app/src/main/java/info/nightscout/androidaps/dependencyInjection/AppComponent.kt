@@ -9,6 +9,8 @@ import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionSendSMS
 import info.nightscout.androidaps.queue.commands.CommandSetProfile
+import info.nightscout.androidaps.utils.wizard.BolusWizard
+import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import javax.inject.Singleton
 
 @Singleton
@@ -36,6 +38,8 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectObjective6(objective6: Objective6)
 
     fun injectLoggerCallback(loggerCallback: LoggerCallback)
+    fun injectBolusWizard(bolusWizard: BolusWizard)
+    fun injectQuickWizardEntry(quickWizardEntry: QuickWizardEntry)
 
     @Component.Builder
     interface Builder {

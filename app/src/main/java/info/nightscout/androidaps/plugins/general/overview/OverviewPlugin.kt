@@ -13,7 +13,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.SP
-import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.extensions.plusAssign
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

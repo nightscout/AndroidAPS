@@ -14,7 +14,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
@@ -27,7 +26,7 @@ import info.nightscout.androidaps.plugins.source.RandomBgPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.SP
-import info.nightscout.androidaps.utils.isRunningTest
+import info.nightscout.androidaps.utils.extensions.isRunningTest
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Description
 import org.hamcrest.Matcher

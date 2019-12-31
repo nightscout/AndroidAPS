@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.androidaps.utils.extensions
 
 @Synchronized
 fun isRunningTest(): Boolean {

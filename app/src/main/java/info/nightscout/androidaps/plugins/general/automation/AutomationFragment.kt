@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.general.automation.events.EventAutomat
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.extensions.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.automation_fragment.*

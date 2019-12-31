@@ -22,6 +22,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.sharedPreferences.SPImplementation
+import info.nightscout.androidaps.utils.wizard.BolusWizard
+import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import javax.inject.Singleton
 
 @Module(includes = [AppModule.AppBindings::class])
@@ -67,6 +69,8 @@ open class AppModule {
         @ContributesAndroidInjector fun objective5Injector(): Objective5
         @ContributesAndroidInjector fun objective6Injector(): Objective6
         @ContributesAndroidInjector fun loggerCallbackInjector(): LoggerCallback
+        @ContributesAndroidInjector fun loggerBolusWizard(): BolusWizard
+        @ContributesAndroidInjector fun loggerQuickWizardEntry(): QuickWizardEntry
 
         @Binds fun bindContext(mainApp: MainApp): Context
     }

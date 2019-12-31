@@ -10,8 +10,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.QuickWizard
-import info.nightscout.androidaps.data.QuickWizardEntry
+import info.nightscout.androidaps.utils.wizard.QuickWizard
+import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange

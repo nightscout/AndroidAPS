@@ -14,6 +14,8 @@ import info.AAPSMocker;
 import info.SPMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.wizard.QuickWizard;
+import info.nightscout.androidaps.utils.wizard.QuickWizardEntry;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({SP.class, MainApp.class, Profile.class})

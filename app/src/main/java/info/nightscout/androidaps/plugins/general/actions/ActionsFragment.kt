@@ -26,7 +26,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.SingleClickButton
-import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.toVisibility
 import io.reactivex.android.schedulers.AndroidSchedulers
