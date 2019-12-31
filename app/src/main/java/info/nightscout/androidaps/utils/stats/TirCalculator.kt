@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.androidaps.utils.stats
 
 import android.text.Spanned
 import android.util.LongSparseArray
@@ -6,8 +6,18 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.MidnightTime
+import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object TirCalculator {
+@Singleton
+class TirCalculator @Inject constructor(
+    private val resourceHelper: ResourceHelper
+){
     fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
         if (lowMgdl < 39) throw RuntimeException("Low below 39")
         if (lowMgdl > highMgdl) throw RuntimeException("Low > High")
@@ -63,21 +73,21 @@ object TirCalculator {
         val tit30 = calculate(30, lowTitMgdl, highTitMgdl)
         val averageTit30 = averageTIR(tit30)
         return HtmlHelper.fromHtml(
-            "<br><b>" + MainApp.gs(R.string.tir) + ":</b><br>" +
-                toText(tir7) +
-                "<br><b>" + MainApp.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(lowTirMgdl) + "-" + Profile.toCurrentUnitsString(highTirMgdl) + "):</b><br>" +
-                averageTir7.toText(tir7.size()) + "<br>" +
-                averageTir30.toText(tir30.size()) +
-                "<br><b>" + MainApp.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(lowTitMgdl) + "-" + Profile.toCurrentUnitsString(highTitMgdl) + "):</b><br>" +
-                averageTit7.toText(tit7.size()) + "<br>" +
-                averageTit30.toText(tit30.size())
+            "<br><b>" + resourceHelper.gs(R.string.tir) + ":</b><br>" +
+                toText(resourceHelper, tir7) +
+                "<br><b>" + resourceHelper.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(lowTirMgdl) + "-" + Profile.toCurrentUnitsString(highTirMgdl) + "):</b><br>" +
+                averageTir7.toText(resourceHelper, tir7.size()) + "<br>" +
+                averageTir30.toText(resourceHelper, tir30.size()) +
+                "<br><b>" + resourceHelper.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(lowTitMgdl) + "-" + Profile.toCurrentUnitsString(highTitMgdl) + "):</b><br>" +
+                averageTit7.toText(resourceHelper, tit7.size()) + "<br>" +
+                averageTit30.toText(resourceHelper, tit30.size())
         )
     }
 
-    fun toText(tirs: LongSparseArray<TIR>): String {
+    fun toText(resourceHelper: ResourceHelper, tirs: LongSparseArray<TIR>): String {
         var t = ""
         for (i in 0 until tirs.size()) {
-            t += "${tirs.valueAt(i).toText()}<br>"
+            t += "${tirs.valueAt(i).toText(resourceHelper)}<br>"
         }
         return t
     }

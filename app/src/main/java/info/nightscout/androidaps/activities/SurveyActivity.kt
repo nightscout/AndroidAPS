@@ -13,6 +13,8 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.stats.TddCalculator
+import info.nightscout.androidaps.utils.stats.TirCalculator
 import kotlinx.android.synthetic.main.survey_activity.*
 import javax.inject.Inject
 
@@ -21,6 +23,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var tddCalculator: TddCalculator
+    @Inject lateinit var tirCalculator: TirCalculator
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activityMonitor: ActivityMonitor
 
@@ -35,7 +38,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
         survey_spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 
         survey_tdds.text = tddCalculator.stats()
-        survey_tir.text = TirCalculator.stats()
+        survey_tir.text = tirCalculator.stats()
         survey_activity.text = activityMonitor.stats()
 
         survey_profile.setOnClickListener {

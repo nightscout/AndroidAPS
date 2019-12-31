@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.androidaps.utils.stats
 
 import android.text.Spanned
 import android.util.LongSparseArray
@@ -12,6 +12,10 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.MidnightTime
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
@@ -81,9 +85,9 @@ class TddCalculator @Inject constructor(
         val tdds = calculate(7)
         val averageTdd = averageTDD(tdds)
         return HtmlHelper.fromHtml(
-            "<b>" + MainApp.gs(R.string.tdd) + ":</b><br>" +
+            "<b>" + resourceHelper.gs(R.string.tdd) + ":</b><br>" +
                 toText(tdds) +
-                "<b>" + MainApp.gs(R.string.average) + ":</b><br>" +
+                "<b>" + resourceHelper.gs(R.string.average) + ":</b><br>" +
                 averageTdd.toText(tdds.size())
         )
     }
