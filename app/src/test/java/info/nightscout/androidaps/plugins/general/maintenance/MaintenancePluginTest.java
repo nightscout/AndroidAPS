@@ -16,12 +16,12 @@ public class MaintenancePluginTest {
     public void getLogfilesTest() {
         String logDirectory = "src/test/res/logger";
 
-        List<File> logs = sut.getLogfiles(logDirectory, 2);
+        List<File> logs = sut.getLogFiles(logDirectory, 2);
         assertEquals(2, logs.size());
         assertEquals("AndroidAPS.log", logs.get(0).getName());
         assertEquals("AndroidAPS.2018-01-03_01-01-00.1.zip", logs.get(1).getName());
 
-        logs = sut.getLogfiles(logDirectory, 10);
+        logs = sut.getLogFiles(logDirectory, 10);
         assertEquals(4, logs.size());
     }
 
@@ -29,7 +29,7 @@ public class MaintenancePluginTest {
     @Test
     public void zipLogsTest() {
         String logDirectory = "src/test/res/logger";
-        List<File> logs = sut.getLogfiles(logDirectory, 2);
+        List<File> logs = sut.getLogFiles(logDirectory, 2);
 
         String name = "AndroidAPS.log.zip";
 

@@ -12,22 +12,22 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
-import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.TDDStatsActivity
 import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
-import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
+import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.SingleClickButton
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.toVisibility
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -37,11 +37,14 @@ import java.util.*
 import javax.inject.Inject
 
 class ActionsFragment : DaggerFragment() {
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var sp: SP
+    @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var statusLightHandler: StatusLightHandler
+    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -113,7 +116,7 @@ class ActionsFragment : DaggerFragment() {
             fragmentManager?.let { CareDialog().setOptions(CareDialog.EventType.BATTERY_CHANGE, R.string.careportal_pumpbatterychange).show(it, "Actions") }
         }
 
-        SP.putBoolean(R.string.key_objectiveuseactions, true)
+        sp.putBoolean(R.string.key_objectiveuseactions, true)
     }
 
     @Synchronized
@@ -158,7 +161,7 @@ class ActionsFragment : DaggerFragment() {
             if (configBuilderPlugin.activeProfileInterface.profile != null) View.VISIBLE
             else View.GONE
 
-        if (ProfileFunctions.getInstance().getProfile() == null) {
+        if (profileFunction.getProfile() == null) {
             actions_temptarget?.visibility = View.GONE
             actions_extendedbolus?.visibility = View.GONE
             actions_extendedbolus_cancel?.visibility = View.GONE
@@ -211,9 +214,7 @@ class ActionsFragment : DaggerFragment() {
 
         actions_temptarget?.visibility = Config.APS.toVisibility()
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
-        activity?.let { activity ->
-            CareportalFragment.updateAge(activity, careportal_sensorage, careportal_insulinage, careportal_canulaage, careportal_pbage)
-        }
+        statusLightHandler.updateAge(careportal_sensorage, careportal_insulinage, careportal_canulaage, careportal_pbage)
         checkPumpCustomActions()
     }
 

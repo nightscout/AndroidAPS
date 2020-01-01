@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils.resources
 
+import android.annotation.SuppressLint
 import androidx.annotation.ColorRes
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
@@ -20,4 +21,8 @@ class ResourceHelperImplementation @Inject constructor(private val mainApp: Main
         mainApp.resources.getQuantityString(id, quantity, *args)
 
     override fun gc(@ColorRes id: Int): Int = ContextCompat.getColor(mainApp, id)
+
+    @SuppressLint("ResourceType")
+    override fun gcs(@ColorRes id: Int): String =
+        gs(id).replace("#ff", "#")
 }

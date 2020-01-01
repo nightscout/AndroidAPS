@@ -50,7 +50,6 @@ public class NSClientPlugin extends PluginBase {
 
     static NSClientPlugin nsClientPlugin;
 
-    @Deprecated
     static public NSClientPlugin getPlugin() {
         if (nsClientPlugin == null) {
             nsClientPlugin = new NSClientPlugin();
@@ -266,8 +265,8 @@ public class NSClientPlugin extends PluginBase {
         }
 
         AlarmAck ack = new AlarmAck();
-        ack.level = originalAlarm.getLevel();
-        ack.group = originalAlarm.getGroup();
+        ack.level = originalAlarm.level();
+        ack.group = originalAlarm.group();
         ack.silenceTime = silenceTimeInMsec;
 
         if (nsClientService != null)

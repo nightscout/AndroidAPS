@@ -927,7 +927,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 ruffyScripter.confirmAlert(activeAlert.warningCode);
             } else if (activeAlert.errorCode != null) {
                 Notification notification = new Notification();
-                notification.date = new Date();
+                notification.date = DateUtil.now();
                 notification.id = Notification.COMBO_PUMP_ALARM;
                 notification.level = Notification.URGENT;
                 notification.text = MainApp.gs(R.string.combo_is_in_error_state, activeAlert.errorCode, activeAlert.message);
@@ -1030,7 +1030,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             throw new IllegalArgumentException(activeAlert.toString());
         }
         Notification notification = new Notification();
-        notification.date = new Date();
+        notification.date = DateUtil.now();
         notification.id = Notification.COMBO_PUMP_ALARM;
         notification.level = Notification.NORMAL;
         if (activeAlert.warningCode == PumpWarningCodes.CARTRIDGE_LOW) {

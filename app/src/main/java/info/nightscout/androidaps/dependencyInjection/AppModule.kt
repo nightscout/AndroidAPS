@@ -8,6 +8,7 @@ import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.AAPSLoggerDebug
 import info.nightscout.androidaps.logging.AAPSLoggerProduction
@@ -17,6 +18,8 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionSendSMS
+import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
+import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.commands.CommandSetProfile
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
@@ -68,6 +71,12 @@ open class AppModule {
         @ContributesAndroidInjector fun objective3Injector(): Objective3
         @ContributesAndroidInjector fun objective5Injector(): Objective5
         @ContributesAndroidInjector fun objective6Injector(): Objective6
+
+        @ContributesAndroidInjector fun bgReadingInjector(): BgReading
+        @ContributesAndroidInjector fun treatmentInjector(): Treatment
+
+        @ContributesAndroidInjector fun notificationWithActionInjector(): NotificationWithAction
+
         @ContributesAndroidInjector fun loggerCallbackInjector(): LoggerCallback
         @ContributesAndroidInjector fun loggerBolusWizard(): BolusWizard
         @ContributesAndroidInjector fun loggerQuickWizardEntry(): QuickWizardEntry

@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview
 
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -12,7 +10,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -33,20 +30,7 @@ class OverviewPlugin @Inject constructor(
     .preferencesId(R.xml.pref_overview)
     .description(R.string.description_overview)) {
 
-    init {
-        INSTANCE = this
-    }
-
-    companion object {
-        @JvmStatic
-        @Deprecated("Get via Dagger. Will be removed once fully transitioned to Dagger")
-        lateinit var INSTANCE: OverviewPlugin //TODO: remove as soon as Dagger is fully set up
-    }
-
     private var disposable: CompositeDisposable = CompositeDisposable()
-
-    var bgTargetLow = 80.0
-    var bgTargetHigh = 180.0
 
     override fun onStart() {
         super.onStart()
@@ -74,19 +58,5 @@ class OverviewPlugin @Inject constructor(
     override fun onStop() {
         disposable.clear()
         super.onStop()
-    }
-
-    fun determineHighLine(): Double {
-        var highLineSetting = SP.getDouble(R.string.key_high_mark, bgTargetHigh)
-        if (highLineSetting < 1) highLineSetting = Constants.HIGHMARK
-        highLineSetting = Profile.toCurrentUnits(highLineSetting)
-        return highLineSetting
-    }
-
-    fun determineLowLine(): Double {
-        var lowLineSetting = SP.getDouble(R.string.key_low_mark, bgTargetLow)
-        if (lowLineSetting < 1) lowLineSetting = Constants.LOWMARK
-        lowLineSetting = Profile.toCurrentUnits(lowLineSetting)
-        return lowLineSetting
     }
 }

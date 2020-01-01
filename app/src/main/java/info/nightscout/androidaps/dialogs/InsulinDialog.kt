@@ -39,6 +39,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
@@ -135,8 +136,8 @@ class InsulinDialog : DialogFragmentWithDate() {
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
                 actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarning, resourceHelper.gc(R.color.warning), insulin, insulinAfterConstraints))
         }
-        val eatingSoonTTDuration = DefaultValueHelper.determineEatingSoonTTDuration()
-        val eatingSoonTT = DefaultValueHelper.determineEatingSoonTT()
+        val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
+        val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
         if (eatingSoonChecked)
             actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + "<font color='" + resourceHelper.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + eatingSoonTTDuration + " " + resourceHelper.gs(R.string.unit_minute_short) + ")</font>")
 

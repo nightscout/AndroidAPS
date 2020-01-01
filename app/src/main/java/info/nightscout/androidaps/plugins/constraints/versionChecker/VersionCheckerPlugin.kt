@@ -10,8 +10,8 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,6 +20,7 @@ import kotlin.math.roundToInt
 @Singleton
 class VersionCheckerPlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
+    private val sp: SP,
     private val resourceHelper: ResourceHelper
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
@@ -52,19 +53,19 @@ class VersionCheckerPlugin @Inject constructor(
     private fun checkWarning() {
         val now = System.currentTimeMillis()
 
-        if (!SP.contains(R.string.key_last_versionchecker_plugin_warning)) {
-            SP.putLong(R.string.key_last_versionchecker_plugin_warning, now)
+        if (!sp.contains(R.string.key_last_versionchecker_plugin_warning)) {
+            sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
             return
         }
 
 
         if (isOldVersion(gracePeriod.warning.daysToMillis()) && shouldWarnAgain(now)) {
             // store last notification time
-            SP.putLong(R.string.key_last_versionchecker_plugin_warning, now)
+            sp.putLong(R.string.key_last_versionchecker_plugin_warning, now)
 
             //notify
             val message = resourceHelper.gs(R.string.new_version_warning,
-                ((now - SP.getLong(R.string.key_last_time_this_version_detected, now)) / 1L.daysToMillis().toDouble()).roundToInt(),
+                ((now - sp.getLong(R.string.key_last_time_this_version_detected, now)) / 1L.daysToMillis().toDouble()).roundToInt(),
                 gracePeriod.old,
                 gracePeriod.veryOld
             )
@@ -74,7 +75,7 @@ class VersionCheckerPlugin @Inject constructor(
     }
 
     private fun shouldWarnAgain(now: Long) =
-        now > SP.getLong(R.string.key_last_versionchecker_plugin_warning, 0) + WARN_EVERY
+        now > sp.getLong(R.string.key_last_versionchecker_plugin_warning, 0) + WARN_EVERY
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
         if (isOldVersion(gracePeriod.old.daysToMillis()))
@@ -84,7 +85,7 @@ class VersionCheckerPlugin @Inject constructor(
 
     private fun isOldVersion(gracePeriod: Long): Boolean {
         val now = System.currentTimeMillis()
-        return now > SP.getLong(R.string.key_last_time_this_version_detected, 0) + gracePeriod
+        return now > sp.getLong(R.string.key_last_time_this_version_detected, 0) + gracePeriod
     }
 }
 

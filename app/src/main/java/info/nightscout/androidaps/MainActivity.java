@@ -78,6 +78,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
     @Inject ResourceHelper resourceHelper;
     @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
     @Inject LoopPlugin loopPlugin;
+    @Inject NSSettingsStatus nsSettingsStatus;
 
 
     @Override
@@ -309,7 +310,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 builder.setIcon(MainApp.getIcon());
                 String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
                 message += "Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + "\n";
-                message += resourceHelper.gs(R.string.configbuilder_nightscoutversion_label) + " " + NSSettingsStatus.getInstance().nightscoutVersionName;
+                message += resourceHelper.gs(R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.getNightscoutVersionName();
                 if (MainApp.engineeringMode)
                     message += "\n" + resourceHelper.gs(R.string.engineering_mode_enabled);
                 message += resourceHelper.gs(R.string.about_link_urls);

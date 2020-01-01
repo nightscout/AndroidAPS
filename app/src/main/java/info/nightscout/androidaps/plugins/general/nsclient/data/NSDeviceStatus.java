@@ -1,28 +1,27 @@
 package info.nightscout.androidaps.plugins.general.nsclient.data;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import info.nightscout.androidaps.MainApp;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.logging.BundleLogger;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by mike on 25.06.2017.
@@ -78,58 +77,50 @@ import info.nightscout.androidaps.utils.SP;
     "NSCLIENT_ID": 1498406118857
 }
  */
+@Singleton
 public class NSDeviceStatus {
-    private Logger log = LoggerFactory.getLogger(L.NSCLIENT);
-
-    private static NSDeviceStatus instance = null;
-
-    public static NSDeviceStatus getInstance() {
-        if (instance == null)
-            instance = new NSDeviceStatus();
-        return instance;
-    }
+    private final AAPSLogger aapsLogger;
+    private final SP sp;
+    private final ResourceHelper resourceHelper;
+    private final NSSettingsStatus nsSettingsStatus;
 
     private JSONObject data = null;
 
-    public NSDeviceStatus() {
+    @Inject
+    public NSDeviceStatus(
+            AAPSLogger aapsLogger,
+            SP sp,
+            ResourceHelper resourceHelper,
+            NSSettingsStatus nsSettingsStatus
+    ) {
+        this.aapsLogger = aapsLogger;
+        this.sp = sp;
+        this.resourceHelper = resourceHelper;
+        this.nsSettingsStatus = nsSettingsStatus;
     }
 
-    public void handleNewData(Intent intent) {
-        Bundle bundle = intent.getExtras();
-        if (bundle == null) return;
+    public void handleNewData(JSONArray devicestatuses) {
 
-        if (L.isEnabled(L.NSCLIENT))
-            log.debug("Got NS devicestatus: " + BundleLogger.log(bundle));
+        aapsLogger.debug(LTag.NSCLIENT, "Got NS devicestatus: $devicestatuses}");
 
-        try {
-            if (bundle.containsKey("devicestatus")) {
-                JSONObject devicestatusJson = new JSONObject(bundle.getString("devicestatus"));
-                setData(devicestatusJson);
-                if (devicestatusJson.has("pump")) {
-                    // Objectives 0
-                    SP.putBoolean(R.string.key_ObjectivespumpStatusIsAvailableInNS, true);
-                }
-            }
-            if (bundle.containsKey("devicestatuses")) {
-                String devicestatusesstring = bundle.getString("devicestatuses");
-                JSONArray jsonArray = new JSONArray(devicestatusesstring);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject devicestatusJson = jsonArray.getJSONObject(i);
+        for (int i = 0; i < devicestatuses.length(); i++) {
+            try {
+                JSONObject devicestatusJson = devicestatuses.getJSONObject(i);
+                if (devicestatusJson != null) {
                     setData(devicestatusJson);
                     if (devicestatusJson.has("pump")) {
                         // Objectives 0
-                        SP.putBoolean(R.string.key_ObjectivespumpStatusIsAvailableInNS, true);
+                        sp.putBoolean(R.string.key_ObjectivespumpStatusIsAvailableInNS, true);
                     }
                 }
+            } catch (JSONException ignored) {
             }
-        } catch (Exception e) {
-            log.error("Unhandled exception", e);
         }
     }
 
     public NSDeviceStatus setData(JSONObject obj) {
         this.data = obj;
-        updatePumpData(obj);
+        updatePumpData();
         updateOpenApsData(obj);
         updateUploaderData(obj);
         return this;
@@ -145,7 +136,7 @@ public class NSDeviceStatus {
                 }
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return "";
     }
@@ -161,7 +152,7 @@ public class NSDeviceStatus {
 
     // ***** PUMP DATA ******
 
-    static DeviceStatusPumpData deviceStatusPumpData = null;
+    private DeviceStatusPumpData deviceStatusPumpData = null;
 
     public Spanned getExtendedPumpStatus() {
         if (deviceStatusPumpData != null && deviceStatusPumpData.extended != null)
@@ -173,8 +164,8 @@ public class NSDeviceStatus {
         //String[] ALL_STATUS_FIELDS = {"reservoir", "battery", "clock", "status", "device"};
 
         StringBuilder string = new StringBuilder();
-        string.append("<span style=\"color:" + MainApp.gs(R.color.defaulttext).replace("#ff", "#") + "\">");
-        string.append(MainApp.gs(R.string.pump));
+        string.append("<span style=\"color:" + resourceHelper.gcs(R.color.defaulttext) + "\">");
+        string.append(resourceHelper.gs(R.string.pump));
         string.append(": </span>");
 
         if (deviceStatusPumpData == null)
@@ -183,21 +174,21 @@ public class NSDeviceStatus {
         // test warning level
         int level = Levels.INFO;
         long now = System.currentTimeMillis();
-        if (deviceStatusPumpData.clock + NSSettingsStatus.getInstance().extendedPumpSettings("urgentClock") * 60 * 1000L < now)
+        if (deviceStatusPumpData.clock + nsSettingsStatus.extendedPumpSettings("urgentClock") * 60 * 1000L < now)
             level = Levels.URGENT;
-        else if (deviceStatusPumpData.reservoir < NSSettingsStatus.getInstance().extendedPumpSettings("urgentRes"))
+        else if (deviceStatusPumpData.reservoir < nsSettingsStatus.extendedPumpSettings("urgentRes"))
             level = Levels.URGENT;
-        else if (deviceStatusPumpData.isPercent && deviceStatusPumpData.percent < NSSettingsStatus.getInstance().extendedPumpSettings("urgentBattP"))
+        else if (deviceStatusPumpData.isPercent && deviceStatusPumpData.percent < nsSettingsStatus.extendedPumpSettings("urgentBattP"))
             level = Levels.URGENT;
-        else if (!deviceStatusPumpData.isPercent && deviceStatusPumpData.voltage < NSSettingsStatus.getInstance().extendedPumpSettings("urgentBattV"))
+        else if (!deviceStatusPumpData.isPercent && deviceStatusPumpData.voltage < nsSettingsStatus.extendedPumpSettings("urgentBattV"))
             level = Levels.URGENT;
-        else if (deviceStatusPumpData.clock + NSSettingsStatus.getInstance().extendedPumpSettings("warnClock") * 60 * 1000L < now)
+        else if (deviceStatusPumpData.clock + nsSettingsStatus.extendedPumpSettings("warnClock") * 60 * 1000L < now)
             level = Levels.WARN;
-        else if (deviceStatusPumpData.reservoir < NSSettingsStatus.getInstance().extendedPumpSettings("warnRes"))
+        else if (deviceStatusPumpData.reservoir < nsSettingsStatus.extendedPumpSettings("warnRes"))
             level = Levels.WARN;
-        else if (deviceStatusPumpData.isPercent && deviceStatusPumpData.percent < NSSettingsStatus.getInstance().extendedPumpSettings("warnBattP"))
+        else if (deviceStatusPumpData.isPercent && deviceStatusPumpData.percent < nsSettingsStatus.extendedPumpSettings("warnBattP"))
             level = Levels.WARN;
-        else if (!deviceStatusPumpData.isPercent && deviceStatusPumpData.voltage < NSSettingsStatus.getInstance().extendedPumpSettings("warnBattV"))
+        else if (!deviceStatusPumpData.isPercent && deviceStatusPumpData.voltage < nsSettingsStatus.extendedPumpSettings("warnBattV"))
             level = Levels.WARN;
 
         string.append("<span style=\"color:");
@@ -205,7 +196,7 @@ public class NSDeviceStatus {
         if (level == Levels.WARN) string.append("yellow\">");
         if (level == Levels.URGENT) string.append("red\">");
 
-        String fields = NSSettingsStatus.getInstance().pumpExtentendedSettingsFields();
+        String fields = nsSettingsStatus.pumpExtendedSettingsFields();
 
         if (fields.contains("reservoir")) {
             string.append((int) deviceStatusPumpData.reservoir).append("U ");
@@ -248,7 +239,7 @@ public class NSDeviceStatus {
         Spanned extended = null;
     }
 
-    public void updatePumpData(JSONObject object) {
+    private void updatePumpData() {
         try {
             JSONObject pump = data != null && data.has("pump") ? data.getJSONObject("pump") : new JSONObject();
 
@@ -284,7 +275,7 @@ public class NSDeviceStatus {
                 deviceStatusPumpData.extended = Html.fromHtml(exteneded.toString());
             }
         } catch (Exception e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -301,7 +292,7 @@ public class NSDeviceStatus {
         public JSONObject enacted = null;
     }
 
-    public void updateOpenApsData(JSONObject object) {
+    private void updateOpenApsData(JSONObject object) {
         try {
             JSONObject openaps = object.has("openaps") ? object.getJSONObject("openaps") : new JSONObject();
             JSONObject suggested = openaps.has("suggested") ? openaps.getJSONObject("suggested") : new JSONObject();
@@ -325,22 +316,22 @@ public class NSDeviceStatus {
                 deviceStatusOpenAPSData.clockEnacted = clock;
             }
         } catch (Exception e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
     public Spanned getOpenApsStatus() {
         StringBuilder string = new StringBuilder();
-        string.append("<span style=\"color:" + MainApp.gs(R.color.defaulttext).replace("#ff", "#") + "\">");
-        string.append(MainApp.gs(R.string.openaps_short));
+        string.append("<span style=\"color:" + resourceHelper.gcs(R.color.defaulttext) + "\">");
+        string.append(resourceHelper.gs(R.string.openaps_short));
         string.append(": </span>");
 
         // test warning level
         int level = Levels.INFO;
         long now = System.currentTimeMillis();
-        if (deviceStatusOpenAPSData.clockSuggested != 0 && deviceStatusOpenAPSData.clockSuggested + SP.getInt(R.string.key_nsalarm_urgent_staledatavalue, 16) * 60 * 1000L < now)
+        if (deviceStatusOpenAPSData.clockSuggested != 0 && deviceStatusOpenAPSData.clockSuggested + sp.getInt(R.string.key_nsalarm_urgent_staledatavalue, 16) * 60 * 1000L < now)
             level = Levels.URGENT;
-        else if (deviceStatusOpenAPSData.clockSuggested != 0 && deviceStatusOpenAPSData.clockSuggested + SP.getInt(R.string.key_nsalarm_staledatavalue, 16) * 60 * 1000L < now)
+        else if (deviceStatusOpenAPSData.clockSuggested != 0 && deviceStatusOpenAPSData.clockSuggested + sp.getInt(R.string.key_nsalarm_staledatavalue, 16) * 60 * 1000L < now)
             level = Levels.WARN;
 
         string.append("<span style=\"color:");
@@ -375,21 +366,21 @@ public class NSDeviceStatus {
                 string.append("<b>").append(DateUtil.minAgo(deviceStatusOpenAPSData.clockSuggested)).append("</b> ").append(deviceStatusOpenAPSData.suggested.getString("reason")).append("<br>");
             return Html.fromHtml(string.toString());
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return Html.fromHtml("");
     }
 
     // ********* Uploader data ***********
 
-    public static HashMap<String, Uploader> uploaders = new HashMap<>();
+    private static HashMap<String, Uploader> uploaders = new HashMap<>();
 
     static class Uploader {
         long clock = 0L;
         int battery = 0;
     }
 
-    public void updateUploaderData(JSONObject object) {
+    private void updateUploaderData(JSONObject object) {
         try {
 
             long clock = 0L;
@@ -407,7 +398,7 @@ public class NSDeviceStatus {
             }
             Uploader uploader = uploaders.get(device);
             // check if this is new data
-            if (clock != 0 && battery != null && (uploader != null && clock > uploader.clock || uploader == null)) {
+            if (clock != 0 && battery != null && (uploader == null || clock > uploader.clock)) {
                 if (uploader == null)
                     uploader = new Uploader();
                 uploader.battery = battery;
@@ -415,7 +406,7 @@ public class NSDeviceStatus {
                 uploaders.put(device, uploader);
             }
         } catch (Exception e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -434,8 +425,8 @@ public class NSDeviceStatus {
 
     public Spanned getUploaderStatusSpanned() {
         StringBuilder string = new StringBuilder();
-        string.append("<span style=\"color:" + MainApp.gs(R.color.defaulttext).replace("#ff", "#") + "\">");
-        string.append(MainApp.gs(R.string.uploader_short));
+        string.append("<span style=\"color:" + resourceHelper.gcs(R.color.defaulttext) + "\">");
+        string.append(resourceHelper.gs(R.string.uploader_short));
         string.append(": </span>");
 
         Iterator iter = uploaders.entrySet().iterator();

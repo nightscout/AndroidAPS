@@ -5,9 +5,12 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
 import info.nightscout.androidaps.plugins.general.automation.actions.ActionSendSMS
+import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
+import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.commands.CommandSetProfile
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
@@ -36,6 +39,11 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectObjective3(objective3: Objective3)
     fun injectObjective5(objective5: Objective5)
     fun injectObjective6(objective6: Objective6)
+
+    fun injectTreatment(treatment: Treatment)
+    fun injectBgReading(bgReading: BgReading)
+
+    fun injectNotification(notificationWithAction: NotificationWithAction)
 
     fun injectLoggerCallback(loggerCallback: LoggerCallback)
     fun injectBolusWizard(bolusWizard: BolusWizard)

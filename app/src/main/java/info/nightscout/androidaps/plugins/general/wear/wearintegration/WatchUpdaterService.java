@@ -56,6 +56,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.ToastUtils;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -65,8 +66,10 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public WearPlugin wearPlugin;
     @Inject public ResourceHelper resourceHelper;
     @Inject public SP sp;
-    @Inject public ConfigBuilderPlugin configBuilderPlugin;
     @Inject public ProfileFunction profileFunction;
+    @Inject public DefaultValueHelper defaultValueHelper;
+    @Inject public NSDeviceStatus nsDeviceStatus;
+    @Inject public ConfigBuilderPlugin configBuilderPlugin;
     @Inject public LoopPlugin loopPlugin;
     @Inject public IobCobCalculatorPlugin iobCobCalculatorPlugin;
     @Inject public TreatmentsPlugin treatmentsPlugin;
@@ -295,25 +298,10 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
 
     private DataMap dataMapSingleBG(BgReading lastBG, GlucoseStatus glucoseStatus) {
-        String units = ProfileFunctions.getSystemUnits();
+        String units = profileFunction.getUnits();
 
-        Double lowLine = OverviewPlugin.INSTANCE.determineLowLine();
-        Double highLine = OverviewPlugin.INSTANCE.determineHighLine();
-
-        // convert to mg/dl
-        if (!units.equals(Constants.MGDL)) {
-            lowLine *= Constants.MMOLL_TO_MGDL;
-            highLine *= Constants.MMOLL_TO_MGDL;
-
-        }
-
-        if (lowLine < 1) {
-            lowLine = OverviewPlugin.INSTANCE.getBgTargetLow();
-        }
-
-        if (highLine < 1) {
-            highLine = OverviewPlugin.INSTANCE.getBgTargetHigh();
-        }
+        double lowLine = defaultValueHelper.determineLowLine();
+        double highLine = defaultValueHelper.determineHighLine();
 
         long sgvLevel = 0L;
         if (lastBG.value > highLine) {
@@ -447,7 +435,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         double endBasalValue = beginBasalValue;
 
         TemporaryBasal tb1 = treatmentsPlugin.getTempBasalFromHistory(runningTime);
-        TemporaryBasal tb2 = treatmentsPlugin.getTempBasalFromHistory(runningTime);
+        TemporaryBasal tb2 = treatmentsPlugin.getTempBasalFromHistory(runningTime); //TODO for Adrian ... what's the meaning?
         double tb_before = beginBasalValue;
         double tb_amount = beginBasalValue;
         long tb_start = runningTime;
@@ -721,7 +709,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
             //batteries
             int phoneBattery = getBatteryLevel(getApplicationContext());
-            String rigBattery = NSDeviceStatus.getInstance().getUploaderStatus().trim();
+            String rigBattery = nsDeviceStatus.getUploaderStatus().trim();
 
 
             long openApsStatus;

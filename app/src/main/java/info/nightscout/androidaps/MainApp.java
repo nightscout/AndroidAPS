@@ -93,7 +93,6 @@ import info.nightscout.androidaps.plugins.source.XdripPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
-import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.ActivityMonitor;
@@ -118,7 +117,6 @@ public class MainApp extends DaggerApplication {
     static ArrayList<PluginBase> pluginsList = null;
 
     static DataReceiver dataReceiver = new DataReceiver();
-    static NSAlarmReceiver alarmReceiver = new NSAlarmReceiver();
     TimeDateOrTZChangeReceiver timeDateOrTZChangeReceiver;
 
     public static boolean devBranch;
@@ -152,6 +150,7 @@ public class MainApp extends DaggerApplication {
     @Inject DexcomPlugin dexcomPlugin;
     @Inject EversensePlugin eversensePlugin;
     @Inject GlimpPlugin glimpPlugin;
+    @Inject MaintenancePlugin maintenancePlugin;
     @Inject MM640gPlugin mM640GPlugin;
     @Inject NSClientSourcePlugin nSClientSourcePlugin;
     @Inject PoctechPlugin poctechPlugin;
@@ -266,7 +265,7 @@ public class MainApp extends DaggerApplication {
             pluginsList.add(PersistentNotificationPlugin.getPlugin());
             pluginsList.add(NSClientPlugin.getPlugin());
 //            if (engineeringMode) pluginsList.add(tidepoolPlugin);
-            pluginsList.add(MaintenancePlugin.initPlugin(this));
+            pluginsList.add(maintenancePlugin);
             pluginsList.add(automationPlugin);
 
             pluginsList.add(configBuilderPlugin);
@@ -329,21 +328,10 @@ public class MainApp extends DaggerApplication {
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_TREATMENT));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_CHANGED_TREATMENT));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_REMOVED_TREATMENT));
-        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_FOOD));
-        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_CHANGED_FOOD));
-        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_REMOVED_FOOD));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_SGV));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_PROFILE));
-        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_STATUS));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_MBG));
-        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_DEVICESTATUS));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_CAL));
-
-        //register alarms
-        lbm.registerReceiver(alarmReceiver, new IntentFilter(Intents.ACTION_ALARM));
-        lbm.registerReceiver(alarmReceiver, new IntentFilter(Intents.ACTION_ANNOUNCEMENT));
-        lbm.registerReceiver(alarmReceiver, new IntentFilter(Intents.ACTION_CLEAR_ALARM));
-        lbm.registerReceiver(alarmReceiver, new IntentFilter(Intents.ACTION_URGENT_ALARM));
 
         this.timeDateOrTZChangeReceiver = new TimeDateOrTZChangeReceiver();
         this.timeDateOrTZChangeReceiver.registerBroadcasts(this);

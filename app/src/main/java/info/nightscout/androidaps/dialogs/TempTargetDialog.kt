@@ -31,6 +31,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
@@ -81,18 +82,18 @@ class TempTargetDialog : DialogFragmentWithDate() {
                     val defaultTarget: Double
                     when (reasonList[position]) {
                         resourceHelper.gs(R.string.eatingsoon) -> {
-                            defaultDuration = DefaultValueHelper.determineEatingSoonTTDuration().toDouble()
-                            defaultTarget = DefaultValueHelper.determineEatingSoonTT()
+                            defaultDuration = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
+                            defaultTarget = defaultValueHelper.determineEatingSoonTT()
                         }
 
                         resourceHelper.gs(R.string.activity)   -> {
-                            defaultDuration = DefaultValueHelper.determineActivityTTDuration().toDouble()
-                            defaultTarget = DefaultValueHelper.determineActivityTT()
+                            defaultDuration = defaultValueHelper.determineActivityTTDuration().toDouble()
+                            defaultTarget = defaultValueHelper.determineActivityTT()
                         }
 
                         resourceHelper.gs(R.string.hypo)       -> {
-                            defaultDuration = DefaultValueHelper.determineHypoTTDuration().toDouble()
-                            defaultTarget = DefaultValueHelper.determineHypoTT()
+                            defaultDuration = defaultValueHelper.determineHypoTTDuration().toDouble()
+                            defaultTarget = defaultValueHelper.determineHypoTT()
                         }
 
                         resourceHelper.gs(R.string.cancel)     -> {

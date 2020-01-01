@@ -1,9 +1,31 @@
 package info.nightscout.androidaps.utils
 
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
 object JsonHelper {
+
+    @JvmStatic
+    fun createJSONObject(s : String?) : JSONObject? {
+        var result : JSONObject? = null
+        try {
+            result = JSONObject(s)
+        } catch (ignored: JSONException) {
+        }
+        return result
+    }
+
+    @JvmStatic
+    fun createJSONArray(s : String?) : JSONArray? {
+        var result : JSONArray? = null
+        try {
+            result = JSONArray(s)
+        } catch (ignored: JSONException) {
+        }
+        return result
+    }
+
     @JvmStatic
     fun safeGetObject(json: JSONObject?, fieldName: String, defaultValue: Any): Any {
         var result = defaultValue
@@ -67,6 +89,18 @@ object JsonHelper {
     @JvmStatic
     fun safeGetDouble(json: JSONObject?, fieldName: String): Double {
         var result = 0.0
+        if (json != null && json.has(fieldName)) {
+            try {
+                result = json.getDouble(fieldName)
+            } catch (ignored: JSONException) {
+            }
+        }
+        return result
+    }
+
+    @JvmStatic
+    fun safeGetDoubleAllowNull(json: JSONObject?, fieldName: String): Double? {
+        var result: Double? = null
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getDouble(fieldName)

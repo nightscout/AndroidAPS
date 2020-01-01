@@ -9,14 +9,22 @@ import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.media.RingtoneManager
 import android.os.Build
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.services.AlarmSoundService
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -30,6 +38,7 @@ import javax.inject.Singleton
 class NotificationStore @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
+    private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
     private val mainApp: MainApp
 ) {
@@ -94,25 +103,11 @@ class NotificationStore @Inject constructor(
         var i = 0
         while (i < store.size) {
             val n = store[i]
-            if (n.validTo.time != 0L && n.validTo.time < System.currentTimeMillis()) {
+            if (n.validTo != 0L && n.validTo < System.currentTimeMillis()) {
                 store.removeAt(i)
                 i--
             }
             i++
-        }
-    }
-
-    fun snoozeTo(timeToSnooze: Long) {
-        aapsLogger.debug(LTag.NOTIFICATION, "Snoozing alarm until: $timeToSnooze")
-        sp.putLong("snoozedTo", timeToSnooze)
-    }
-
-    private fun unSnooze() {
-        if (Notification.isAlarmForStaleData()) {
-            val notification = Notification(Notification.NSALARM, resourceHelper.gs(R.string.nsalarm_staledata), Notification.URGENT)
-            sp.putLong("snoozedTo", System.currentTimeMillis())
-            add(notification)
-            aapsLogger.debug(LTag.NOTIFICATION, "Snoozed to current time and added back notification!")
         }
     }
 
@@ -154,7 +149,7 @@ class NotificationStore @Inject constructor(
         removeExpired()
         unSnooze()
         if (store.size > 0) {
-            val adapter = NotificationRecyclerViewAdapter(this, cloneStore())
+            val adapter = NotificationRecyclerViewAdapter(cloneStore())
             notificationsView.adapter = adapter
             notificationsView.visibility = View.VISIBLE
         } else {
@@ -169,4 +164,53 @@ class NotificationStore @Inject constructor(
         return clone
     }
 
+    private fun unSnooze() {
+        if (sp.getBoolean(R.string.key_nsalarm_staledata, false)) {
+            val notification = Notification(Notification.NSALARM, resourceHelper.gs(R.string.nsalarm_staledata), Notification.URGENT)
+            sp.putLong(R.string.key_snoozedTo, System.currentTimeMillis())
+            add(notification)
+            aapsLogger.debug(LTag.NOTIFICATION, "Snoozed to current time and added back notification!")
+        }
+    }
+
+    inner class NotificationRecyclerViewAdapter internal constructor(private val notificationsList: List<Notification>) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationsViewHolder>() {
+        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): NotificationsViewHolder {
+            val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.overview_notification_item, viewGroup, false)
+            return NotificationsViewHolder(v)
+        }
+
+        override fun onBindViewHolder(holder: NotificationsViewHolder, position: Int) {
+            val notification = notificationsList[position]
+            holder.dismiss.tag = notification
+            if (notification.buttonText != 0) holder.dismiss.setText(notification.buttonText)
+            else holder.dismiss.setText(R.string.snooze)
+            @Suppress("SetTextI18n")
+            holder.text.text = DateUtil.timeString(notification.date) + " " + notification.text
+            when (notification.level) {
+                Notification.URGENT       -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationUrgent))
+                Notification.NORMAL       -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationNormal))
+                Notification.LOW          -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationLow))
+                Notification.INFO         -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationInfo))
+                Notification.ANNOUNCEMENT -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationAnnouncement))
+            }
+        }
+
+        override fun getItemCount(): Int {
+            return notificationsList.size
+        }
+
+        inner class NotificationsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+            var cv: CardView = itemView.findViewById(R.id.notification_cardview)
+            var text: TextView = itemView.findViewById(R.id.notification_text)
+            var dismiss: Button = itemView.findViewById(R.id.notification_dismiss)
+
+            init {
+                dismiss.setOnClickListener {
+                    val notification = it.tag as Notification
+                    rxBus.send(EventDismissNotification(notification.id))
+                    notification.action?.run()
+                }
+            }
+        }
+    }
 }

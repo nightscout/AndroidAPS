@@ -35,6 +35,7 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var profileFunction: ProfileFunction
 
@@ -143,12 +144,12 @@ class CarbsDialog : DialogFragmentWithDate() {
         val carbs = overview_carbs_carbs.value.toInt()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
         val units = profileFunction.getUnits()
-        val activityTTDuration = DefaultValueHelper.determineActivityTTDuration()
-        val activityTT = DefaultValueHelper.determineActivityTT()
-        val eatingSoonTTDuration = DefaultValueHelper.determineEatingSoonTTDuration()
-        val eatingSoonTT = DefaultValueHelper.determineEatingSoonTT()
-        val hypoTTDuration = DefaultValueHelper.determineHypoTTDuration()
-        val hypoTT = DefaultValueHelper.determineHypoTT()
+        val activityTTDuration = defaultValueHelper.determineActivityTTDuration()
+        val activityTT = defaultValueHelper.determineActivityTT()
+        val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
+        val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
+        val hypoTTDuration = defaultValueHelper.determineHypoTTDuration()
+        val hypoTT = defaultValueHelper.determineHypoTT()
         val actions: LinkedList<String?> = LinkedList()
         val unitLabel = if (units == Constants.MMOL) resourceHelper.gs(R.string.mmol) else resourceHelper.gs(R.string.mgdl)
 

@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.general.food;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
@@ -27,7 +26,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ICallback;
 import info.nightscout.androidaps.events.Event;
@@ -58,27 +56,11 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     int mode = event.getMode();
-                    Bundle payload = event.getPayload();
-
-                    try {
-                        if (payload.containsKey("food")) {
-                            JSONObject json = new JSONObject(payload.getString("food"));
-                            if (mode == EventNsFood.Companion.getADD() || mode == EventNsFood.Companion.getUPDATE())
-                                this.createFoodFromJsonIfNotExists(json);
-                            else
-                                this.deleteNS(json);
-                        }
-
-                        if (payload.containsKey("foods")) {
-                            JSONArray array = new JSONArray(payload.getString("foods"));
-                            if (mode == EventNsFood.Companion.getADD() || mode == EventNsFood.Companion.getUPDATE())
-                                this.createFoodFromJsonIfNotExists(array);
-                            else
-                                this.deleteNS(array);
-                        }
-                    } catch (JSONException e) {
-                        log.error("Unhandled Exception", e);
-                    }
+                    JSONArray array = event.getFoods();
+                    if (mode == EventNsFood.Companion.getADD() || mode == EventNsFood.Companion.getUPDATE())
+                        this.createFoodFromJsonIfNotExists(array);
+                    else
+                        this.deleteNS(array);
                 }, FabricPrivacy::logException)
         );
     }

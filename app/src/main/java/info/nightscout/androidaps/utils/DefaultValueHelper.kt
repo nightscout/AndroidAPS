@@ -3,16 +3,24 @@ package info.nightscout.androidaps.utils
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.utils.sharedPreferences.SP
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object DefaultValueHelper {
+@Singleton
+class DefaultValueHelper @Inject constructor(
+    private val sp: SP,
+    private val profileFunction: ProfileFunction
+) {
+
     /**
      * returns the corresponding EatingSoon TempTarget based on the given units (MMOL / MGDL)
      *
      * @param units
      * @return
      */
-    fun getDefaultEatingSoonTT(units: String): Double {
+    private fun getDefaultEatingSoonTT(units: String): Double {
         return if (Constants.MMOL == units) Constants.defaultEatingSoonTTmmol else Constants.defaultEatingSoonTTmgdl
     }
 
@@ -22,7 +30,7 @@ object DefaultValueHelper {
      * @param units
      * @return
      */
-    fun getDefaultActivityTT(units: String): Double {
+    private fun getDefaultActivityTT(units: String): Double {
         return if (Constants.MMOL == units) Constants.defaultActivityTTmmol else Constants.defaultActivityTTmgdl
     }
 
@@ -32,7 +40,7 @@ object DefaultValueHelper {
      * @param units
      * @return
      */
-    fun getDefaultHypoTT(units: String): Double {
+    private fun getDefaultHypoTT(units: String): Double {
         return if (Constants.MMOL == units) Constants.defaultHypoTTmmol else Constants.defaultHypoTTmgdl
     }
 
@@ -41,17 +49,15 @@ object DefaultValueHelper {
      *
      * @return
      */
-    @JvmStatic
     fun determineEatingSoonTT(): Double {
-        val units = ProfileFunctions.getSystemUnits()
-        var value = SP.getDouble(R.string.key_eatingsoon_target, getDefaultEatingSoonTT(units))
+        val units = profileFunction.getUnits()
+        var value = sp.getDouble(R.string.key_eatingsoon_target, getDefaultEatingSoonTT(units))
         value = Profile.toCurrentUnits(value)
         return if (value > 0) value else getDefaultEatingSoonTT(units)
     }
 
-    @JvmStatic
     fun determineEatingSoonTTDuration(): Int {
-        val value = SP.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
+        val value = sp.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
         return if (value > 0) value else Constants.defaultEatingSoonTTDuration
     }
 
@@ -60,17 +66,15 @@ object DefaultValueHelper {
      *
      * @return
      */
-    @JvmStatic
     fun determineActivityTT(): Double {
-        val units = ProfileFunctions.getSystemUnits()
-        var value = SP.getDouble(R.string.key_activity_target, getDefaultActivityTT(units))
+        val units = profileFunction.getUnits()
+        var value = sp.getDouble(R.string.key_activity_target, getDefaultActivityTT(units))
         value = Profile.toCurrentUnits(value)
         return if (value > 0) value else getDefaultActivityTT(units)
     }
 
-    @JvmStatic
     fun determineActivityTTDuration(): Int {
-        val value = SP.getInt(R.string.key_activity_duration, Constants.defaultActivityTTDuration)
+        val value = sp.getInt(R.string.key_activity_duration, Constants.defaultActivityTTDuration)
         return if (value > 0) value else Constants.defaultActivityTTDuration
     }
 
@@ -79,17 +83,32 @@ object DefaultValueHelper {
      *
      * @return
      */
-    @JvmStatic
     fun determineHypoTT(): Double {
-        val units = ProfileFunctions.getSystemUnits()
-        var value = SP.getDouble(R.string.key_hypo_target, getDefaultHypoTT(units))
+        val units = profileFunction.getUnits()
+        var value = sp.getDouble(R.string.key_hypo_target, getDefaultHypoTT(units))
         value = Profile.toCurrentUnits(value)
         return if (value > 0) value else getDefaultHypoTT(units)
     }
 
-    @JvmStatic
     fun determineHypoTTDuration(): Int {
-        val value = SP.getInt(R.string.key_hypo_duration, Constants.defaultHypoTTDuration)
+        val value = sp.getInt(R.string.key_hypo_duration, Constants.defaultHypoTTDuration)
         return if (value > 0) value else Constants.defaultHypoTTDuration
+    }
+
+    var bgTargetLow = 80.0
+    var bgTargetHigh = 180.0
+
+    fun determineHighLine(): Double {
+        var highLineSetting = sp.getDouble(R.string.key_high_mark, bgTargetHigh)
+        if (highLineSetting < 1) highLineSetting = Constants.HIGHMARK
+        highLineSetting = Profile.toCurrentUnits(highLineSetting)
+        return highLineSetting
+    }
+
+    fun determineLowLine(): Double {
+        var lowLineSetting = sp.getDouble(R.string.key_low_mark, bgTargetLow)
+        if (lowLineSetting < 1) lowLineSetting = Constants.LOWMARK
+        lowLineSetting = Profile.toCurrentUnits(lowLineSetting)
+        return lowLineSetting
     }
 }

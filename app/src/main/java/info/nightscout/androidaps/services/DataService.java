@@ -14,15 +14,12 @@ import dagger.android.DaggerIntentService;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
-import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.BundleLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
-import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
@@ -89,19 +86,6 @@ public class DataService extends DaggerIntentService {
         } else if (Intents.ACTION_NEW_PROFILE.equals(action)) {
             // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
             NSProfilePlugin.getPlugin().handleNewData(intent);
-        } else if (Intents.ACTION_NEW_DEVICESTATUS.equals(action)) {
-            NSDeviceStatus.getInstance().handleNewData(intent);
-        } else if (Intents.ACTION_NEW_STATUS.equals(action)) {
-            NSSettingsStatus.getInstance().handleNewData(intent);
-        } else if (Intents.ACTION_NEW_FOOD.equals(action)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.Companion.getADD(), bundles);
-            rxBus.send(evt);
-        } else if (Intents.ACTION_CHANGED_FOOD.equals(action)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.Companion.getUPDATE(), bundles);
-            rxBus.send(evt);
-        } else if (Intents.ACTION_REMOVED_FOOD.equals(action)) {
-            EventNsFood evt = new EventNsFood(EventNsFood.Companion.getREMOVE(), bundles);
-            rxBus.send(evt);
         } else if (acceptNSData &&
                 (Intents.ACTION_NEW_TREATMENT.equals(action) ||
                         Intents.ACTION_CHANGED_TREATMENT.equals(action) ||

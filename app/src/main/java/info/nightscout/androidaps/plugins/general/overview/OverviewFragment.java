@@ -51,8 +51,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.utils.wizard.QuickWizard;
-import info.nightscout.androidaps.utils.wizard.QuickWizardEntry;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -92,7 +90,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity;
@@ -109,7 +106,6 @@ import info.nightscout.androidaps.plugins.source.DexcomPlugin;
 import info.nightscout.androidaps.plugins.source.XdripPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.androidaps.utils.wizard.BolusWizard;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
@@ -121,6 +117,9 @@ import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.ToastUtils;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import info.nightscout.androidaps.utils.wizard.BolusWizard;
+import info.nightscout.androidaps.utils.wizard.QuickWizard;
+import info.nightscout.androidaps.utils.wizard.QuickWizardEntry;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
@@ -132,8 +131,11 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     @Inject RxBusWrapper rxBus;
     @Inject MainApp mainApp;
     @Inject ResourceHelper resourceHelper;
+    @Inject DefaultValueHelper defaultValueHelper;
     @Inject ProfileFunction profileFunction;
     @Inject ConstraintChecker constraintChecker;
+    @Inject StatusLightHandler statusLightHandler;
+    @Inject NSDeviceStatus nsDeviceStatus;
     @Inject LoopPlugin loopPlugin;
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
@@ -773,30 +775,30 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             if (manager != null)
                 pvd.show(manager, "ProfileViewDialog");
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.eatingsoon))) {
-            double target = Profile.toMgdl(DefaultValueHelper.determineEatingSoonTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(defaultValueHelper.determineEatingSoonTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(System.currentTimeMillis())
-                    .duration(DefaultValueHelper.determineEatingSoonTTDuration())
+                    .duration(defaultValueHelper.determineEatingSoonTTDuration())
                     .reason(resourceHelper.gs(R.string.eatingsoon))
                     .source(Source.USER)
                     .low(target)
                     .high(target);
             treatmentsPlugin.addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.activity))) {
-            double target = Profile.toMgdl(DefaultValueHelper.determineActivityTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(defaultValueHelper.determineActivityTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
-                    .duration(DefaultValueHelper.determineActivityTTDuration())
+                    .duration(defaultValueHelper.determineActivityTTDuration())
                     .reason(resourceHelper.gs(R.string.activity))
                     .source(Source.USER)
                     .low(target)
                     .high(target);
             treatmentsPlugin.addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.hypo))) {
-            double target = Profile.toMgdl(DefaultValueHelper.determineHypoTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(defaultValueHelper.determineHypoTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
-                    .duration(DefaultValueHelper.determineHypoTTDuration())
+                    .duration(defaultValueHelper.determineHypoTTDuration())
                     .reason(resourceHelper.gs(R.string.hypo))
                     .source(Source.USER)
                     .low(target)
@@ -1028,7 +1030,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         }
         loopStatusLayout.setVisibility(View.VISIBLE);
 
-        CareportalFragment.updateAge(getActivity(), sage, iage, cage, pbage);
+        statusLightHandler.updateAge(sage, iage, cage, pbage);
         BgReading actualBG = DatabaseHelper.actualBg();
         BgReading lastBG = DatabaseHelper.lastBg();
 
@@ -1039,8 +1041,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         final String profileName = profileFunction.getProfileName();
 
         final String units = ProfileFunctions.getSystemUnits();
-        final double lowLine = OverviewPlugin.INSTANCE.determineLowLine();
-        final double highLine = OverviewPlugin.INSTANCE.determineHighLine();
+        final double lowLine = defaultValueHelper.determineLowLine();
+        final double highLine = defaultValueHelper.determineHighLine();
 
         //Start with updating the BG as it is unaffected by loop.
         // **** BG value ****
@@ -1334,12 +1336,11 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
 
         if (statuslightsLayout != null)
             if (sp.getBoolean(R.string.key_show_statuslights, false)) {
-                StatuslightHandler handler = new StatuslightHandler();
                 if (sp.getBoolean(R.string.key_show_statuslights_extended, false)) {
-                    handler.extendedStatuslight(cageView, iageView, reservoirView, sageView, batteryView);
+                    statusLightHandler.extendedStatusLight(cageView, iageView, reservoirView, sageView, batteryView);
                     statuslightsLayout.setVisibility(View.VISIBLE);
                 } else {
-                    handler.statuslight(cageView, iageView, reservoirView, sageView, batteryView);
+                    statusLightHandler.statusLight(cageView, iageView, reservoirView, sageView, batteryView);
                     statuslightsLayout.setVisibility(View.VISIBLE);
                 }
             } else {
@@ -1357,20 +1358,20 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
 
         // pump status from ns
         if (pumpDeviceStatusView != null) {
-            pumpDeviceStatusView.setText(NSDeviceStatus.getInstance().getPumpStatus());
-            pumpDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), resourceHelper.gs(R.string.pump), NSDeviceStatus.getInstance().getExtendedPumpStatus()));
+            pumpDeviceStatusView.setText(nsDeviceStatus.getPumpStatus());
+            pumpDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), resourceHelper.gs(R.string.pump), nsDeviceStatus.getExtendedPumpStatus()));
         }
 
         // OpenAPS status from ns
         if (openapsDeviceStatusView != null) {
-            openapsDeviceStatusView.setText(NSDeviceStatus.getInstance().getOpenApsStatus());
-            openapsDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), resourceHelper.gs(R.string.openaps), NSDeviceStatus.getInstance().getExtendedOpenApsStatus()));
+            openapsDeviceStatusView.setText(nsDeviceStatus.getOpenApsStatus());
+            openapsDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), resourceHelper.gs(R.string.openaps), nsDeviceStatus.getExtendedOpenApsStatus()));
         }
 
         // Uploader status from ns
         if (uploaderDeviceStatusView != null) {
-            uploaderDeviceStatusView.setText(NSDeviceStatus.getInstance().getUploaderStatusSpanned());
-            uploaderDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), resourceHelper.gs(R.string.uploader), NSDeviceStatus.getInstance().getExtendedUploaderStatus()));
+            uploaderDeviceStatusView.setText(nsDeviceStatus.getUploaderStatusSpanned());
+            uploaderDeviceStatusView.setOnClickListener(v -> OKDialog.show(getActivity(), resourceHelper.gs(R.string.uploader), nsDeviceStatus.getExtendedUploaderStatus()));
         }
 
         // Sensitivity

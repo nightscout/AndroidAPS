@@ -273,7 +273,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         val actualBG = DatabaseHelper.actualBg()
         val lastBG = DatabaseHelper.lastBg()
         var reply = ""
-        val units = ProfileFunctions.getSystemUnits()
+        val units = profileFunction.getUnits()
         if (actualBG != null) {
             reply = resourceHelper.gs(R.string.sms_actualbg) + " " + actualBG.valueToUnitsToString(units) + ", "
         } else if (lastBG != null) {
@@ -746,7 +746,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    val units = ProfileFunctions.getSystemUnits()
+                    val units = profileFunction.getUnits()
                     var keyDuration = 0
                     var defaultTargetDuration = 0
                     var keyTarget = 0

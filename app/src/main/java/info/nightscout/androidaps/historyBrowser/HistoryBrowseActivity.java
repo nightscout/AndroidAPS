@@ -35,11 +35,11 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment;
-import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -53,6 +53,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
     @Inject ProfileFunction profileFunction;
+    @Inject DefaultValueHelper defaultValueHelper;
     @Inject IobCobStaticCalculatorPlugin iobCobStaticCalculatorPlugin;
     @Inject ConfigBuilderPlugin configBuilderPlugin;
 
@@ -235,8 +236,8 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
             noProfile.setVisibility(View.GONE);
         }
 
-        final double lowLine = OverviewPlugin.INSTANCE.determineLowLine();
-        final double highLine = OverviewPlugin.INSTANCE.determineHighLine();
+        final double lowLine = defaultValueHelper.determineLowLine();
+        final double highLine = defaultValueHelper.determineHighLine();
 
         buttonDate.setText(DateUtil.dateAndTimeString(start));
         buttonZoom.setText(String.valueOf(rangeToDisplay));

@@ -194,9 +194,7 @@
     <string name="enableloop">Enable loop</string>
 
     <string name="openloop_newsuggestion">New suggestion available</string>
-    <string name="unsupportedclientver">Unsupported version of NSClient</string>
     <string name="unsupportednsversion">Unsupported version of Nightscout</string>
-    <string name="nsclientnotinstalled">NSClient not installed. Record lost!</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="bolusconstraintapplied">Bolus constraint applied</string>
@@ -1690,5 +1688,6 @@
     <string name="key_xdripstatus_detailediob" translatable="false">xdripstatus_detailediob</string>
     <string name="key_xdripstatus_showbgi" translatable="false">xdripstatus_showbgi</string>
     <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
+    <string name="key_snoozedTo" translatable="false">snoozedTo</string>
 
 </resources>
