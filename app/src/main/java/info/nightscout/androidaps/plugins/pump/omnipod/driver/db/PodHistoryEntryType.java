@@ -37,7 +37,7 @@ public enum PodHistoryEntryType {
     SuspendDelivery(60, R.string.omnipod_cmd_suspend_delivery),
     ResumeDelivery(61, R.string.omnipod_cmd_resume_delivery),
 
-    UnknownEntryType(99, R.string.omnipod_cmd_umknown_entry)
+    UnknownEntryType(99, R.string.omnipod_cmd_unknown_entry)
     ;
 
     private int code;
