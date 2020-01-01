@@ -51,6 +51,7 @@
     <string name="pref_low">Basso</string>
     <string name="pref_medium">Medio</string>
     <string name="pref_high">Alto</string>
+    <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Numeri grandi</string>
     <string name="pref_ring_history">Storico Ring</string>
     <string name="pref_light_ring_history">Storico Light Ring</string>

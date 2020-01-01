@@ -51,6 +51,7 @@
     <string name="pref_low">Низкий</string>
     <string name="pref_medium">Средний</string>
     <string name="pref_high">Высокий</string>
+    <string name="pref_auto">Авто</string>
     <string name="pref_big_numbers">Цифры крупно</string>
     <string name="pref_ring_history">Показывать историю в кольце</string>
     <string name="pref_light_ring_history">Показывать историю в кольце менее подробно</string>

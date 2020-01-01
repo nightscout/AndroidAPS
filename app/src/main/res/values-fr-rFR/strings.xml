@@ -1002,7 +1002,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="openaps_noasdata">Pas de données d\'Autosens disponibles</string>
     <string name="nav_logsettings">Paramètres journal</string>
     <string name="resettodefaults">Réinitialiser les valeurs par défaut</string>
-    <string name="nsmalfunction">Dysfonctionnement du NSClient. Considérerez une réinitialisation de NS et de NSClient.</string>
+    <string name="nsmalfunction">Dysfonctionnement NSClient. Faites une réinitialisation de NS et de NSClient.</string>
     <string name="as">AS</string>
     <string name="versionavailable">Version %1$s disponible</string>
     <string name="time_offset">Décalage horaire</string>
@@ -1197,13 +1197,13 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="startprofileforever">Début du profil %1$d%%</string>
     <string name="exists">existe</string>
     <string name="notexists">n\'existe pas</string>
-    <string name="temptargetcompared">Temp cible %1$s</string>
+    <string name="temptargetcompared">Cible Temp. %1$s</string>
     <string name="wifissidcompared">SSID WiFi %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
-    <string name="deltalabel">Différence de glycémies</string>
-    <string name="deltalabel_u">Différence Glycémie [%1$s]</string>
+    <string name="deltalabel">Delta de glycémies</string>
+    <string name="deltalabel_u">Delta Glyc. [%1$s]</string>
     <string name="currentlocation">Localisation actuelle</string>
     <string name="location">Localisation</string>
     <string name="latitude_short">Lat :</string>
@@ -1364,8 +1364,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="profilename">Remplacer le profil par</string>
     <string name="changengetoprofilename">Remplacer le profil par %1$s</string>
     <string name="automation_trigger_pump_last_connection_label">Dernière connexion à la pompe</string>
-    <string name="automation_trigger_pump_last_connection_description">Dernière connexion de pompe [minutes]</string>
-    <string name="automation_trigger_pump_last_connection_compared">Dernière connexion à la pompe %1$s il y a %2$s min</string>
+    <string name="automation_trigger_pump_last_connection_description">Dernière connexion [min]</string>
+    <string name="automation_trigger_pump_last_connection_compared">Dernière connexion pompe %1$s il y a %2$s min</string>
     <string name="sendsmsactionlabel">Envoyer SMS : %1$s</string>
     <string name="sendsmsactiondescription">Envoyer SMS à tous les numéros</string>
     <string name="sendsmsactiontext">Envoyer SMS avec du texte</string>
