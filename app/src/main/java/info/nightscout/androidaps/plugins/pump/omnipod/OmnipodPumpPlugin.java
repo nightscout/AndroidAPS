@@ -1,22 +1,15 @@
 package info.nightscout.androidaps.plugins.pump.omnipod;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 
-import com.tech.freak.wizardpager.model.Page;
-
 import org.joda.time.LocalDateTime;
-import org.mozilla.javascript.tools.jsc.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +20,6 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
@@ -46,7 +38,6 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
-import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -192,18 +183,23 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     if ((event.isChanged(R.string.key_omnipod_beep_basal_enabled)) ||
-                        (event.isChanged(R.string.key_omnipod_beep_bolus_enabled)) ||
-                        (event.isChanged(R.string.key_omnipod_beep_tbr_enabled)) ||
-                        (event.isChanged(R.string.key_omnipod_pod_debugging_options_enabled)) ||
-                        (event.isChanged(R.string.key_omnipod_beep_smb_enabled)))
+                            (event.isChanged(R.string.key_omnipod_beep_bolus_enabled)) ||
+                            (event.isChanged(R.string.key_omnipod_beep_tbr_enabled)) ||
+                            (event.isChanged(R.string.key_omnipod_pod_debugging_options_enabled)) ||
+                            (event.isChanged(R.string.key_omnipod_beep_smb_enabled)))
                         refreshConfiguration();
                 }, FabricPrivacy::logException)
         );
         refreshConfiguration();
     }
 
+//    @Override
+//    protected void onResume() {
+//
+//    }
+
     private void refreshConfiguration() {
-        if (pumpStatusLocal!=null) {
+        if (pumpStatusLocal != null) {
             pumpStatusLocal.refreshConfiguration();
         }
     }
@@ -369,7 +365,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @Override
     public boolean isSuspended() {
         return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
-                (OmnipodUtil.getPodSessionState()!=null && OmnipodUtil.getPodSessionState().isSuspended());
+                (OmnipodUtil.getPodSessionState() != null && OmnipodUtil.getPodSessionState().isSuspended());
     }
 
     @Override
@@ -383,12 +379,12 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             List<OmnipodStatusRequest> removeList = new ArrayList<>();
 
             for (OmnipodStatusRequest omnipodStatusRequest : omnipodStatusRequestList) {
-                if (omnipodStatusRequest==OmnipodStatusRequest.GetPodPulseLog) {
+                if (omnipodStatusRequest == OmnipodStatusRequest.GetPodPulseLog) {
                     OmnipodUITask omnipodUITask = omnipodUIComm.executeCommand(omnipodStatusRequest.getCommandType());
 
-                    PodInfoRecentPulseLog result = (PodInfoRecentPulseLog)omnipodUITask.returnDataObject;
+                    PodInfoRecentPulseLog result = (PodInfoRecentPulseLog) omnipodUITask.returnDataObject;
 
-                    if (result==null) {
+                    if (result == null) {
                         LOG.warn("Result was null.");
                     } else {
                         LOG.warn("Result was NOT null.");
@@ -483,7 +479,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         PodSessionState podSessionState = null;
 
-        if (OmnipodUtil.getPodSessionState()!=null) {
+        if (OmnipodUtil.getPodSessionState() != null) {
             podSessionState = OmnipodUtil.getPodSessionState();
         } else {
             String podState = SP.getString(OmnipodConst.Prefs.PodState, null);
@@ -494,7 +490,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             }
         }
 
-        if (podSessionState!=null) {
+        if (podSessionState != null) {
             LOG.debug("PodSessionState (saved): " + podSessionState);
 
             // TODO handle if session state too old
@@ -765,9 +761,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         setRefreshButtonEnabled(true);
     }
-
-
-
 
 
     @Override

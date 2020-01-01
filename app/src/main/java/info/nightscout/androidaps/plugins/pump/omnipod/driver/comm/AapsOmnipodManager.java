@@ -168,7 +168,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         if (PodInitActionType.PairAndPrimeWizardStep.equals(podInitActionType)) {
             try {
                 Disposable disposable = delegate.pairAndPrime().subscribe(res -> //
-                        handleSetupActionResult(podInitActionType, podInitReceiver, res, time));
+                        handleSetupActionResult(podInitActionType, podInitReceiver, res, time, null));
                 return new PumpEnactResult().success(true).enacted(true);
             } catch (Exception ex) {
                 String comment = handleAndTranslateException(ex);
@@ -185,7 +185,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                     throw new CommandInitializationException("Basal profile mapping failed", ex);
                 }
                 Disposable disposable = delegate.insertCannula(basalSchedule).subscribe(res -> //
-                        handleSetupActionResult(podInitActionType, podInitReceiver, res, time));
+                        handleSetupActionResult(podInitActionType, podInitReceiver, res, time, profile));
                 return new PumpEnactResult().success(true).enacted(true);
             } catch (Exception ex) {
                 String comment = handleAndTranslateException(ex);
@@ -316,7 +316,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             lastBolusUnits = pumpStatus.lastBolusAmount = unitsDelivered;
         }
 
-        long pumpId = addSuccessToHistory(bolusStarted.getTime(), PodHistoryEntryType.SetBolus, unitsDelivered);
+        long pumpId = addSuccessToHistory(bolusStarted.getTime(), PodHistoryEntryType.SetBolus, unitsDelivered + ";" + detailedBolusInfo.carbs);
 
         detailedBolusInfo.date = bolusStarted.getTime();
         detailedBolusInfo.insulin = unitsDelivered;
@@ -556,7 +556,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     }
 
-    private void handleSetupActionResult(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, SetupActionResult res, long time) {
+    private void handleSetupActionResult(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, SetupActionResult res, long time, Profile profile) {
         String comment = null;
         switch (res.getResultType()) {
             case FAILURE:
@@ -573,8 +573,11 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 break;
         }
 
-        addToHistory(time, podInitActionType == PodInitActionType.PairAndPrimeWizardStep ?
-                PodHistoryEntryType.PairAndPrime : PodHistoryEntryType.FillCannulaSetBasalProfile, comment, res.getResultType().isSuccess());
+        if (podInitActionType == PodInitActionType.PairAndPrimeWizardStep) {
+            addToHistory(time, PodHistoryEntryType.PairAndPrime, comment, res.getResultType().isSuccess());
+        } else {
+            addToHistory(time, PodHistoryEntryType.FillCannulaSetBasalProfile, res.getResultType().isSuccess() ? profile : comment, res.getResultType().isSuccess());
+        }
 
         podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), comment);
     }

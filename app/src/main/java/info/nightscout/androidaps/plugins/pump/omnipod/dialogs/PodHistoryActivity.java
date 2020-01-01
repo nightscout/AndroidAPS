@@ -18,18 +18,21 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashActivity;
-import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryGroup;
+import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistory;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 public class PodHistoryActivity extends NoSplashActivity {
 
@@ -71,12 +74,11 @@ public class PodHistoryActivity extends NoSplashActivity {
         this.filteredHistoryList.clear();
 
 
-
         //LOG.debug("Items on full list: {}", list.size());
 
         this.filteredHistoryList.addAll(fullHistoryList);
 
-        // TODO
+        // TODO grouping
 
 //        if (group == PumpHistoryEntryGroup.All) {
 //            this.filteredHistoryList.addAll(list);
@@ -220,6 +222,8 @@ public class PodHistoryActivity extends NoSplashActivity {
 
             this.historyList = historyList;
 
+            Collections.sort(this.historyList);
+
             // this.notifyDataSetChanged();
         }
 
@@ -239,8 +243,71 @@ public class PodHistoryActivity extends NoSplashActivity {
             if (record != null) {
                 holder.timeView.setText(record.getDateTimeString());
                 holder.typeView.setText(record.getPodDbEntryType().getResourceId());
-                holder.valueView.setText(""); // TODO
+                //holder.valueView.setText(""); // TODO
+                setValue(record, holder.valueView);
             }
+        }
+
+
+        private void setValue(PodHistory historyEntry, TextView valueView) {
+            if (historyEntry.isSuccess()) {
+                switch (historyEntry.getPodDbEntryType()) {
+
+                    case FillCannulaSetBasalProfile: {
+                        if (historyEntry.getData() != null) {
+                            Profile profile = OmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), Profile.class);
+                            valueView.setText(ProfileUtil.getProfileDisplayable(profile, PumpType.Insulet_Omnipod));
+                        }
+                    }
+                    break;
+
+                    case SetTemporaryBasal: {
+                        TempBasalPair tempBasalPair = OmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), TempBasalPair.class);
+                        valueView.setText(MainApp.gs(R.string.omnipod_cmd_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
+                    }
+                    break;
+
+                    case SetBasalSchedule: {
+                        Profile profile = OmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), Profile.class);
+                        valueView.setText(ProfileUtil.getProfileDisplayable(profile, PumpType.Insulet_Omnipod));
+                    }
+                    break;
+                    case GetPodStatus:
+                        break;
+                    case GetPodInfo:
+                        break;
+                    case SetTime:
+                        break;
+
+                    case SetBolus: {
+                        if (historyEntry.getData().contains(";")) {
+                            valueView.setText(MainApp.gs(R.string.omnipod_cmd_bolus_value, Double.valueOf(historyEntry.getData())));
+                        } else {
+                            String[] splitVal = historyEntry.getData().split(";");
+                            valueView.setText(MainApp.gs(R.string.omnipod_cmd_bolus_value_with_carbs, Double.valueOf(splitVal[0]), Double.valueOf(splitVal[1])));
+                        }
+                    }
+                    break;
+
+                    case PairAndPrime:
+                    case CancelTemporaryBasal:
+                    case CancelTemporaryBasalForce:
+                    case ConfigureAlerts:
+                    case CancelBolus:
+                    case DeactivatePod:
+                    case ResetPodState:
+                    case AcknowledgeAlerts:
+                    case SuspendDelivery:
+                    case ResumeDelivery:
+                    case UnknownEntryType:
+                    default:
+                        break;
+
+                }
+            } else {
+                valueView.setText(historyEntry.getData());
+            }
+
         }
 
 
