@@ -204,6 +204,8 @@
 
         <include layout="@layout/notes" />
 
+        <include layout="@layout/datetime" />
+
         <include layout="@layout/okcancel" />
 
     </LinearLayout>

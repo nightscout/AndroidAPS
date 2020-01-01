@@ -155,7 +155,7 @@ class CarbsDialog : DialogFragmentWithDate() {
             actions.add(MainApp.gs(R.string.temptargetshort) + ": " + "<font color='" + MainApp.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + hypoTTDuration + " " + MainApp.gs(R.string.unit_minute_short) + ")</font>")
 
         val timeOffset = overview_carbs_time.value.toInt()
-        val time = DateUtil.now() + timeOffset * 1000 * 60
+        val time = eventTime + timeOffset * 1000 * 60
         if (timeOffset != 0)
             actions.add(MainApp.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(time))
         val duration = overview_carbs_duration.value.toInt()
@@ -170,12 +170,15 @@ class CarbsDialog : DialogFragmentWithDate() {
         if (notes.isNotEmpty())
             actions.add(MainApp.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
 
+        if (eventTimeChanged)
+            actions.add(MainApp.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(eventTime))
+
         if (carbsAfterConstraints > 0 || activitySelected || eatingSoonSelected || hypoSelected) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, MainApp.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                     if (activitySelected) {
                         val tempTarget = TempTarget()
-                            .date(System.currentTimeMillis())
+                            .date(eventTime)
                             .duration(activityTTDuration)
                             .reason(MainApp.gs(R.string.activity))
                             .source(Source.USER)
@@ -184,7 +187,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
                     } else if (eatingSoonSelected) {
                         val tempTarget = TempTarget()
-                            .date(System.currentTimeMillis())
+                            .date(eventTime)
                             .duration(eatingSoonTTDuration)
                             .reason(MainApp.gs(R.string.eatingsoon))
                             .source(Source.USER)
@@ -193,7 +196,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
                     } else if (hypoSelected) {
                         val tempTarget = TempTarget()
-                            .date(System.currentTimeMillis())
+                            .date(eventTime)
                             .duration(hypoTTDuration)
                             .reason(MainApp.gs(R.string.hypo))
                             .source(Source.USER)
@@ -206,7 +209,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                             CarbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes)
                         } else {
                             CarbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
-                            NSUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, MainApp.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
+                            NSUpload.uploadEvent(CareportalEvent.NOTE, time - 2000, MainApp.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
                     }
                 }, null)
