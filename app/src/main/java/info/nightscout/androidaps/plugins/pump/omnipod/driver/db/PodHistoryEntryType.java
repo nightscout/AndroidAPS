@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.db;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.StringRes;
 
 import java.util.HashMap;
@@ -37,8 +36,7 @@ public enum PodHistoryEntryType {
     SuspendDelivery(60, R.string.omnipod_cmd_suspend_delivery),
     ResumeDelivery(61, R.string.omnipod_cmd_resume_delivery),
 
-    UnknownEntryType(99, R.string.omnipod_cmd_umknown_entry)
-    ;
+    UnknownEntryType(99, R.string.omnipod_cmd_unknown_entry);
 
     private int code;
     private static Map<Integer, PodHistoryEntryType> instanceMap;

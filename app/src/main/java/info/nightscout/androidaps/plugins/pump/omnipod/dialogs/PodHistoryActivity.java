@@ -243,7 +243,6 @@ public class PodHistoryActivity extends NoSplashActivity {
             if (record != null) {
                 holder.timeView.setText(record.getDateTimeString());
                 holder.typeView.setText(record.getPodDbEntryType().getResourceId());
-                //holder.valueView.setText(""); // TODO
                 setValue(record, holder.valueView);
             }
         }
@@ -255,8 +254,7 @@ public class PodHistoryActivity extends NoSplashActivity {
 
                     case FillCannulaSetBasalProfile: {
                         if (historyEntry.getData() != null) {
-                            Profile profile = OmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), Profile.class);
-                            valueView.setText(ProfileUtil.getProfileDisplayable(profile, PumpType.Insulet_Omnipod));
+                            setProfileValue(historyEntry.getData(), valueView);
                         }
                     }
                     break;
@@ -268,8 +266,7 @@ public class PodHistoryActivity extends NoSplashActivity {
                     break;
 
                     case SetBasalSchedule: {
-                        Profile profile = OmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), Profile.class);
-                        valueView.setText(ProfileUtil.getProfileDisplayable(profile, PumpType.Insulet_Omnipod));
+                        setProfileValue(historyEntry.getData(), valueView);
                     }
                     break;
                     case GetPodStatus:
@@ -301,6 +298,7 @@ public class PodHistoryActivity extends NoSplashActivity {
                     case ResumeDelivery:
                     case UnknownEntryType:
                     default:
+                        valueView.setText("");
                         break;
 
                 }
@@ -308,6 +306,12 @@ public class PodHistoryActivity extends NoSplashActivity {
                 valueView.setText(historyEntry.getData());
             }
 
+        }
+
+        private void setProfileValue(String data, TextView valueView) {
+            LOG.debug("Profile json:\n" + data);
+            Profile profile = OmnipodUtil.getGsonInstance().fromJson(data, Profile.class);
+            valueView.setText(ProfileUtil.getProfileDisplayable(profile, PumpType.Insulet_Omnipod));
         }
 
 
