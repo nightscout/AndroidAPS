@@ -137,6 +137,6 @@ public class PodHistory implements DbObjectBase, Comparable<PodHistory> {
 
     @Override
     public int compareTo(PodHistory otherOne) {
-        return (int) (this.date - otherOne.date);
+        return (int) (otherOne.date - this.date);
     }
 }
