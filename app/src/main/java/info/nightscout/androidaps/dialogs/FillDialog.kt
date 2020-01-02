@@ -26,6 +26,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.dialog_fill.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
+import org.json.JSONException
+import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
@@ -102,6 +104,8 @@ class FillDialog : DialogFragmentWithDate() {
         val notes = notes.text.toString()
         if (notes.isNotEmpty())
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
+        eventTime -= eventTime % 1000
+
         if (eventTimeChanged)
             actions.add(resourceHelper.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(eventTime))
 
@@ -128,8 +132,21 @@ class FillDialog : DialogFragmentWithDate() {
                             }
                         })
                     }
-                    if (siteChange) NSUpload.uploadEvent(CareportalEvent.SITECHANGE, eventTime, notes)
-                    if (insulinChange) NSUpload.uploadEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
+                    val careportalEvent = CareportalEvent()
+                    careportalEvent.date = eventTime
+                    careportalEvent.source = Source.USER
+                    if (siteChange) {
+                        careportalEvent.json = generateJson(CareportalEvent.SITECHANGE, eventTime, notes).toString()
+                        careportalEvent.eventType = CareportalEvent.SITECHANGE
+                        NSUpload.uploadEvent(CareportalEvent.SITECHANGE, eventTime, notes)
+                    }
+                    if (insulinChange) {
+                        // add a second for case of both checked
+                        careportalEvent.json = generateJson(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes).toString()
+                        careportalEvent.eventType = CareportalEvent.INSULINCHANGE
+                        NSUpload.uploadEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
+                    }
+                    MainApp.getDbHelper().createOrUpdate(careportalEvent)
                 }, null)
             }
         } else {
@@ -140,4 +157,18 @@ class FillDialog : DialogFragmentWithDate() {
         dismiss()
         return true
     }
+
+    fun generateJson(careportalEvent: String, time: Long, notes: String): JSONObject {
+        val data = JSONObject()
+        try {
+            data.put("eventType", careportalEvent)
+            data.put("created_at", DateUtil.toISOString(time))
+            data.put("mills", time)
+            data.put("enteredBy", sp.getString("careportal_enteredby", resourceHelper.gs(R.string.app_name)))
+            if (notes.isNotEmpty()) data.put("notes", notes)
+        } catch (ignored: JSONException) {
+        }
+        return data
+    }
+
 }

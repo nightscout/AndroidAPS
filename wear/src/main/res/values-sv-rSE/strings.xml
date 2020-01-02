@@ -51,6 +51,7 @@
     <string name="pref_low">Låg</string>
     <string name="pref_medium">Mellan</string>
     <string name="pref_high">Hög</string>
+    <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Stora siffror</string>
     <string name="pref_ring_history">Ringhistorik</string>
     <string name="pref_light_ring_history">Ljus ringhistorik</string>

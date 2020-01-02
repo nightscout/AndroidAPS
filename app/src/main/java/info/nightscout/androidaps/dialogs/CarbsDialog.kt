@@ -164,7 +164,8 @@ class CarbsDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.temptargetshort) + ": " + "<font color='" + resourceHelper.gc(R.color.tempTargetConfirmation) + "'>" + DecimalFormatter.to1Decimal(hypoTT) + " " + unitLabel + " (" + hypoTTDuration + " " + resourceHelper.gs(R.string.unit_minute_short) + ")</font>")
 
         val timeOffset = overview_carbs_time.value.toInt()
-        val time = DateUtil.now() + timeOffset * 1000 * 60
+        eventTime -= eventTime % 1000
+        val time = eventTime + timeOffset * 1000 * 60
         if (timeOffset != 0)
             actions.add(resourceHelper.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(time))
         val duration = overview_carbs_duration.value.toInt()
@@ -178,6 +179,9 @@ class CarbsDialog : DialogFragmentWithDate() {
         val notes = notes.text.toString()
         if (notes.isNotEmpty())
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
+
+        if (eventTimeChanged)
+            actions.add(resourceHelper.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(eventTime))
 
         if (carbsAfterConstraints > 0 || activitySelected || eatingSoonSelected || hypoSelected) {
             activity?.let { activity ->
