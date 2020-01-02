@@ -320,7 +320,7 @@ public class OmnipodManager {
                             }
                         }
 
-                        if (activeBolusData != null) {
+                        if (hasActiveBolus()) {
                             activeBolusData.bolusCompletionSubject.onSuccess(new BolusDeliveryResult(units));
                             activeBolusData = null;
                         }
@@ -460,6 +460,13 @@ public class OmnipodManager {
         return podState != null && podState.getSetupProgress() == SetupProgress.COMPLETED;
     }
 
+    public boolean hasActiveBolus() {
+        synchronized (bolusDataMutex) {
+            return activeBolusData != null;
+        }
+    }
+
+    // FIXME this is dirty, we should not expose the original pod state
     public PodSessionState getPodState() {
         return this.podState;
     }

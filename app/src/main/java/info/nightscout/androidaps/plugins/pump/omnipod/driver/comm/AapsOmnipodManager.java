@@ -331,18 +331,23 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     @Override
     public PumpEnactResult cancelBolus() {
         long time = System.currentTimeMillis();
-        try {
-            delegate.cancelBolus(isBolusBeepsEnabled());
-            addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
-        } catch (PodFaultException ex) {
-            showErrorDialog(createPodFaultErrorMessage(ex.getFaultEvent().getFaultEventType()), null);
-        } catch (Exception ex) {
-            String comment = handleAndTranslateException(ex);
-            addFailureToHistory(time, PodHistoryEntryType.CancelBolus, comment);
-            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+        String comment = null;
+        while (delegate.hasActiveBolus()) {
+            try {
+                delegate.cancelBolus(isBolusBeepsEnabled());
+                addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
+                return new PumpEnactResult().success(true).enacted(true);
+            } catch (PodFaultException ex) {
+                showErrorDialog(createPodFaultErrorMessage(ex.getFaultEvent().getFaultEventType()), null);
+                addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
+                return new PumpEnactResult().success(true).enacted(true);
+            } catch (Exception ex) {
+                comment = handleAndTranslateException(ex);
+            }
         }
 
-        return new PumpEnactResult().success(true).enacted(true);
+        addFailureToHistory(time, PodHistoryEntryType.CancelBolus, comment);
+        return new PumpEnactResult().success(false).enacted(false).comment(comment);
     }
 
     @Override
@@ -353,7 +358,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             delegate.setTemporaryBasal(tempBasalPair, beepsEnabled, beepsEnabled);
             time = System.currentTimeMillis();
         } catch (Exception ex) {
-            if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
+            if (ex instanceof PodFaultException) {
+                showErrorDialog(createPodFaultErrorMessage(((PodFaultException) ex).getFaultEvent().getFaultEventType()), R.raw.urgentalarm);
+            } else if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
                 addToHistory(time, PodHistoryEntryType.SetTemporaryBasal, "Uncertain failure", false);
                 return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_temp_basal_failed_uncertain));
             }
