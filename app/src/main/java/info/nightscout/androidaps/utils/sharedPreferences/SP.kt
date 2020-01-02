@@ -15,6 +15,7 @@ interface SP {
     fun remove(@StringRes resourceID: Int)
     fun remove(key: String)
     fun getString(@StringRes resourceID: Int, defaultValue: String): String
+    fun getStringOrNull(@StringRes resourceID: Int, defaultValue: String?): String?
     fun getString(key: String, defaultValue: String): String
     fun getBoolean(@StringRes resourceID: Int, defaultValue: Boolean): Boolean
     fun getBoolean(key: String, defaultValue: Boolean): Boolean

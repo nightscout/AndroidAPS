@@ -9,11 +9,10 @@ import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.T
 import java.util.*
 
-class OpenDatasetRequestMessage : BaseMessage() {
+class OpenDatasetRequestMessage (val serialNumber : String): BaseMessage() {
 
     @Expose
-    var deviceId: String = TidepoolUploader.PUMP_TYPE + ":" + (ConfigBuilderPlugin.getPlugin().activePump?.serialNumber()
-            ?: InstanceId.instanceId())
+    var deviceId: String = TidepoolUploader.PUMP_TYPE + ":" + serialNumber
     @Expose
     var time = DateUtil.toISOAsUTC(DateUtil.now())
     @Expose

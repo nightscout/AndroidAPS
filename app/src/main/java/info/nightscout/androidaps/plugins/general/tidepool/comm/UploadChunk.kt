@@ -2,15 +2,21 @@ package info.nightscout.androidaps.plugins.general.tidepool.comm
 
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.data.Intervals
+import info.nightscout.androidaps.db.ProfileSwitch
+import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.tidepool.elements.*
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.utils.GsonInstance
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.slf4j.LoggerFactory
@@ -24,7 +30,9 @@ class UploadChunk @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val aapsLogger: AAPSLogger,
-    private val treatmentsPlugin: TreatmentsPlugin
+    private val profileFunction: ProfileFunction,
+    private val treatmentsPlugin: TreatmentsPlugin,
+    private val configBuilderPlugin: ConfigBuilderPlugin
 ) {
 
     private val MAX_UPLOAD_SIZE = T.days(7).msecs() // don't change this
@@ -134,20 +142,34 @@ class UploadChunk @Inject constructor(
         return selection
     }
 
+    private fun fromTemporaryBasals(tbrList: Intervals<TemporaryBasal>, start: Long, end: Long): List<BasalElement> {
+        val results = LinkedList<BasalElement>()
+        for (tbr in tbrList.list) {
+            if (tbr.date >= start && tbr.date <= end && tbr.durationInMinutes != 0)
+                results.add(BasalElement(tbr, profileFunction))
+        }
+        return results
+    }
     private fun getBasals(start: Long, end: Long): List<BasalElement> {
         val tbrs = treatmentsPlugin.temporaryBasalsFromHistory
         tbrs.merge()
-        val selection = BasalElement.fromTemporaryBasals(tbrs, start, end) // TODO do not upload running TBR
+        val selection = fromTemporaryBasals(tbrs, start, end) // TODO do not upload running TBR
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} TBRs selected for upload"))
         return selection
+    }
+
+    fun newInstanceOrNull(ps: ProfileSwitch): ProfileElement? = try {
+        ProfileElement(ps, configBuilderPlugin.activePump?.serialNumber() ?: InstanceId.instanceId())
+    } catch (e: Throwable) {
+        null
     }
 
     private fun getProfiles(start: Long, end: Long): List<ProfileElement> {
         val pss = MainApp.getDbHelper().getProfileSwitchEventsFromTime(start, end, true)
         val selection = LinkedList<ProfileElement>()
         for (ps in pss) {
-            ProfileElement.newInstanceOrNull(ps)?.let { selection.add(it) }
+            newInstanceOrNull(ps)?.let { selection.add(it) }
         }
         if (selection.size > 0)
             rxBus.send(EventTidepoolStatus("${selection.size} ProfileSwitches selected for upload"))

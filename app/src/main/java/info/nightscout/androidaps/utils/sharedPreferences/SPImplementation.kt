@@ -31,6 +31,9 @@ class SPImplementation @Inject constructor(
     override fun getString(resourceID: Int, defaultValue: String): String =
         sharedPreferences.getString(resourceHelper.gs(resourceID), defaultValue) ?: defaultValue
 
+    override fun getStringOrNull(resourceID: Int, defaultValue: String?): String? =
+        sharedPreferences.getString(resourceHelper.gs(resourceID), defaultValue) ?: defaultValue
+
     override fun getString(key: String, defaultValue: String): String =
         sharedPreferences.getString(key, defaultValue) ?: defaultValue
 
