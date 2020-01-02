@@ -133,6 +133,7 @@ public class MainApp extends DaggerApplication {
     @Inject DanaRSPlugin danaRSPlugin;
     @Inject DanaRv2Plugin danaRv2Plugin;
     @Inject DanaRKoreanPlugin danaRKoreanPlugin;
+    @Inject DstHelperPlugin dstHelperPlugin;
     @Inject InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
     @Inject InsulinOrefRapidActingPlugin insulinOrefRapidActingPlugin;
     @Inject InsulinOrefUltraRapidActingPlugin insulinOrefUltraRapidActingPlugin;
@@ -267,11 +268,9 @@ public class MainApp extends DaggerApplication {
 //            if (engineeringMode) pluginsList.add(tidepoolPlugin);
             pluginsList.add(maintenancePlugin);
             pluginsList.add(automationPlugin);
+            pluginsList.add(dstHelperPlugin);
 
             pluginsList.add(configBuilderPlugin);
-
-            pluginsList.add(DstHelperPlugin.getPlugin());
-
 
             configBuilderPlugin.initialize();
         }

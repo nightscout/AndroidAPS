@@ -72,7 +72,7 @@ class NotificationWithAction constructor(
         }
     }
 
-    fun action(buttonText: Int, action: Runnable?) {
+    fun action(buttonText: Int, action: Runnable) {
         this.buttonText = buttonText
         this.action = action
     }

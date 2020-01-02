@@ -1689,5 +1689,7 @@
     <string name="key_xdripstatus_showbgi" translatable="false">xdripstatus_showbgi</string>
     <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
     <string name="key_snoozedTo" translatable="false">snoozedTo</string>
+    <string name="key_snooze_dst_in24h" translatable="false">snooze_dst_in24h</string>
+    <string name="key_snooze_loopdisabled" translatable="false">snooze_loopdisabled</string>
 
 </resources>
