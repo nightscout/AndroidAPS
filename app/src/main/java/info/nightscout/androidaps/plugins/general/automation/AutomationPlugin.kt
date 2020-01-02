@@ -207,16 +207,16 @@ class AutomationPlugin @Inject constructor(
 
     fun getActionDummyObjects(): List<Action> {
         return listOf(
-            //ActionLoopDisable(),
-            //ActionLoopEnable(),
-            //ActionLoopResume(),
-            //ActionLoopSuspend(),
-            ActionStartTempTarget(),
-            ActionStopTempTarget(),
-            ActionNotification(),
-            ActionProfileSwitchPercent(),
-            ActionProfileSwitch(),
-            ActionSendSMS()
+            //ActionLoopDisable(mainApp),
+            //ActionLoopEnable(mainApp),
+            //ActionLoopResume(mainApp),
+            //ActionLoopSuspend(mainApp),
+            ActionStartTempTarget(mainApp),
+            ActionStopTempTarget(mainApp),
+            ActionNotification(mainApp),
+            ActionProfileSwitchPercent(mainApp),
+            ActionProfileSwitch(mainApp),
+            ActionSendSMS(mainApp)
         )
     }
 

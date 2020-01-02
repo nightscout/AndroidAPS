@@ -8,7 +8,7 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionSendSMS
+import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.commands.CommandSetProfile
@@ -31,14 +31,25 @@ interface AppComponent : AndroidInjector<MainApp> {
 
     fun injectCommandSetProfile(commandSetProfile: CommandSetProfile)
 
-    fun injectActionSendSMS(actionSendSMS: ActionSendSMS)
-
     fun injectObjective0(objective0: Objective0)
     fun injectObjective1(objective1: Objective1)
     fun injectObjective2(objective2: Objective2)
     fun injectObjective3(objective3: Objective3)
     fun injectObjective5(objective5: Objective5)
     fun injectObjective6(objective6: Objective6)
+
+    fun injectAction(action: Action)
+    fun injectActionDummy(action: ActionDummy)
+    fun injectActionLoopDisable(action: ActionLoopDisable)
+    fun injectActionLoopEnable(action: ActionLoopEnable)
+    fun injectActionLoopResume(action: ActionLoopResume)
+    fun injectAction(action: ActionLoopSuspend)
+    fun injectActionLoopSuspend(action: ActionNotification)
+    fun injectActionProfileSwitch(action: ActionProfileSwitch)
+    fun injectAction(action: ActionProfileSwitchPercent)
+    fun injectActionProfileSwitchPercent(action: ActionSendSMS)
+    fun injectActionStartTempTarget(action: ActionStartTempTarget)
+    fun injectActionStopTempTarget(action: ActionStopTempTarget)
 
     fun injectTreatment(treatment: Treatment)
     fun injectBgReading(bgReading: BgReading)

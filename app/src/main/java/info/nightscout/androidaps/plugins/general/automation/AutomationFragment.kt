@@ -1,30 +1,48 @@
 package info.nightscout.androidaps.plugins.general.automation
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.annotation.DrawableRes
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
+import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
+import info.nightscout.androidaps.plugins.general.automation.dragHelpers.ItemTouchHelperAdapter
+import info.nightscout.androidaps.plugins.general.automation.dragHelpers.ItemTouchHelperViewHolder
 import info.nightscout.androidaps.plugins.general.automation.dragHelpers.OnStartDragListener
 import info.nightscout.androidaps.plugins.general.automation.dragHelpers.SimpleItemTouchHelperCallback
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
+import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.OKDialog.showConfirmation
 import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.automation_fragment.*
+import java.util.*
 import javax.inject.Inject
 
 class AutomationFragment : DaggerFragment(), OnStartDragListener {
+    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var rxBus: RxBusWrapper
 
@@ -40,7 +58,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        eventListAdapter = EventListAdapter(automationPlugin.automationEvents, fragmentManager, activity, this)
+        eventListAdapter = EventListAdapter()
         automation_eventListView.layoutManager = LinearLayoutManager(context)
         automation_eventListView.adapter = eventListAdapter
 
@@ -102,4 +120,100 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         itemTouchHelper?.startDrag(viewHolder)
     }
 
+    inner class EventListAdapter : RecyclerView.Adapter<EventListAdapter.ViewHolder>(), ItemTouchHelperAdapter {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val v = LayoutInflater.from(parent.context).inflate(R.layout.automation_event_item, parent, false)
+            return ViewHolder(v, parent.context)
+        }
+
+        private fun addImage(@DrawableRes res: Int, context: Context, layout: LinearLayout) {
+            val iv = ImageView(context)
+            iv.setImageResource(res)
+            iv.layoutParams = LinearLayout.LayoutParams(MainApp.dpToPx(24), MainApp.dpToPx(24))
+            layout.addView(iv)
+        }
+
+        @SuppressLint("ClickableViewAccessibility")
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val event = automationPlugin.automationEvents[position]
+            holder.eventTitle.text = event.title
+            holder.enabled.isChecked = event.isEnabled
+            holder.iconLayout.removeAllViews()
+            // trigger icons
+            val triggerIcons = HashSet<Int>()
+            TriggerConnector.fillIconSet(event.trigger as TriggerConnector, triggerIcons)
+            for (res in triggerIcons) {
+                addImage(res, holder.context, holder.iconLayout)
+            }
+            // arrow icon
+            val iv = ImageView(holder.context)
+            iv.setImageResource(R.drawable.ic_arrow_forward_white_24dp)
+            iv.layoutParams = LinearLayout.LayoutParams(MainApp.dpToPx(24), MainApp.dpToPx(24))
+            iv.setPadding(MainApp.dpToPx(4), 0, MainApp.dpToPx(4), 0)
+            holder.iconLayout.addView(iv)
+            // action icons
+            val actionIcons = HashSet<Int>()
+            for (action in event.actions) {
+                actionIcons.add(action.icon())
+            }
+            for (res in actionIcons) {
+                addImage(res, holder.context, holder.iconLayout)
+            }
+            // enabled event
+            holder.enabled.setOnClickListener {
+                event.isEnabled = holder.enabled.isChecked
+                rxBus.send(EventAutomationDataChanged())
+            }
+            // edit event
+            holder.rootLayout.setOnClickListener {
+                val dialog = EditEventDialog()
+                val args = Bundle()
+                args.putString("event", event.toJSON())
+                args.putInt("position", position)
+                dialog.arguments = args
+                fragmentManager?.let { dialog.show(it, "EditEventDialog") }
+            }
+            // Start a drag whenever the handle view it touched
+            holder.iconSort.setOnTouchListener { v: View, motionEvent: MotionEvent ->
+                if (motionEvent.action == MotionEvent.ACTION_DOWN) {
+                    this@AutomationFragment.onStartDrag(holder)
+                    return@setOnTouchListener true
+                }
+                v.onTouchEvent(motionEvent)
+            }
+        }
+
+        override fun getItemCount(): Int = automationPlugin.automationEvents.size
+
+        override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
+            Collections.swap(automationPlugin.automationEvents, fromPosition, toPosition)
+            notifyItemMoved(fromPosition, toPosition)
+            rxBus.send(EventAutomationDataChanged())
+            return true
+        }
+
+        override fun onItemDismiss(position: Int) {
+            activity?.let { activity ->
+                showConfirmation(activity, resourceHelper.gs(R.string.removerecord) + " " + automationPlugin.automationEvents[position].title,
+                    Runnable {
+                        automationPlugin.automationEvents.removeAt(position)
+                        notifyItemRemoved(position)
+                        rxBus.send(EventAutomationDataChanged())
+                        rxBus.send(EventAutomationUpdateGui())
+                    }, Runnable { rxBus.send(EventAutomationUpdateGui()) })
+            }
+        }
+
+        inner class ViewHolder(view: View, val context: Context) : RecyclerView.ViewHolder(view), ItemTouchHelperViewHolder {
+            val rootLayout: RelativeLayout = view.findViewById(R.id.rootLayout)
+            val iconLayout: LinearLayout = view.findViewById(R.id.iconLayout)
+            val eventTitle: TextView = view.findViewById(R.id.viewEventTitle)
+            val iconSort: ImageView = view.findViewById(R.id.iconSort)
+            val enabled: CheckBox = view.findViewById(R.id.automation_enabled)
+
+            override fun onItemSelected() = itemView.setBackgroundColor(Color.LTGRAY)
+
+            override fun onItemClear() = itemView.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+        }
+    }
 }

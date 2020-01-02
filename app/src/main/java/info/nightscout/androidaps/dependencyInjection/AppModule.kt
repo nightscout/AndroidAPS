@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
-import info.nightscout.androidaps.plugins.general.automation.actions.ActionSendSMS
+import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.commands.CommandSetProfile
@@ -64,13 +64,25 @@ open class AppModule {
     interface AppBindings {
 
         @ContributesAndroidInjector fun commandSetProfileInjector(): CommandSetProfile
-        @ContributesAndroidInjector fun actionSendSMSInjector(): ActionSendSMS
         @ContributesAndroidInjector fun objective0Injector(): Objective0
         @ContributesAndroidInjector fun objective1Injector(): Objective1
         @ContributesAndroidInjector fun objective2Injector(): Objective2
         @ContributesAndroidInjector fun objective3Injector(): Objective3
         @ContributesAndroidInjector fun objective5Injector(): Objective5
         @ContributesAndroidInjector fun objective6Injector(): Objective6
+
+        @ContributesAndroidInjector fun actionInjector(): Action
+        @ContributesAndroidInjector fun actionLoopDisableInjector(): ActionLoopDisable
+        @ContributesAndroidInjector fun actionLoopEnableInjector(): ActionLoopEnable
+        @ContributesAndroidInjector fun ActionLoopResumeInjector(): ActionLoopResume
+        @ContributesAndroidInjector fun actionLoopSuspendInjector(): ActionLoopSuspend
+        @ContributesAndroidInjector fun actionNotificationInjector(): ActionNotification
+        @ContributesAndroidInjector fun actionProfileSwitchInjector(): ActionProfileSwitch
+        @ContributesAndroidInjector fun actionProfileSwitchPercentInjector(): ActionProfileSwitchPercent
+        @ContributesAndroidInjector fun actionSendSMSInjector(): ActionSendSMS
+        @ContributesAndroidInjector fun actionStartTempTargetInjector(): ActionStartTempTarget
+        @ContributesAndroidInjector fun actionStopTempTargetInjector(): ActionStopTempTarget
+        @ContributesAndroidInjector fun actionDummyInjector(): ActionDummy
 
         @ContributesAndroidInjector fun bgReadingInjector(): BgReading
         @ContributesAndroidInjector fun treatmentInjector(): Treatment

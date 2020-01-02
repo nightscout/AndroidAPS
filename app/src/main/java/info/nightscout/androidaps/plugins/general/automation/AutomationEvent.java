@@ -7,7 +7,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.general.automation.actions.Action;
+import info.nightscout.androidaps.plugins.general.automation.actions.ActionDummy;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
 import org.slf4j.Logger;
@@ -48,8 +50,8 @@ public class AutomationEvent {
     public TriggerConnector getPreconditions() {
         TriggerConnector trigger = new TriggerConnector(TriggerConnector.Type.AND);
         for (Action action : actions) {
-            if (action.precondition != null)
-                trigger.add(action.precondition);
+            if (action.getPrecondition() != null)
+                trigger.add(action.getPrecondition());
         }
         return trigger;
     }
@@ -91,7 +93,7 @@ public class AutomationEvent {
             JSONArray array = d.getJSONArray("actions");
             actions.clear();
             for (int i = 0; i < array.length(); i++) {
-                actions.add(Action.instantiate(new JSONObject(array.getString(i))));
+                actions.add(new ActionDummy(MainApp.instance()).instantiate(new JSONObject(array.getString(i))));
             }
         } catch (JSONException e) {
             log.error("Unhandled exception", e);

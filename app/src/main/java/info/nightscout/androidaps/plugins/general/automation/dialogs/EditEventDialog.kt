@@ -4,12 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
+import info.nightscout.androidaps.plugins.general.automation.actions.Action
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationAddAction
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateAction
@@ -61,7 +66,7 @@ class EditEventDialog : DialogFragmentWithDate() {
         }
 
         // setup action list view
-        fragmentManager?.let { actionListAdapter = ActionListAdapter(it, event.actions) }
+        fragmentManager?.let { actionListAdapter = ActionListAdapter() }
         automation_actionListView.layoutManager = LinearLayoutManager(context)
         automation_actionListView.adapter = actionListAdapter
 
@@ -159,6 +164,46 @@ class EditEventDialog : DialogFragmentWithDate() {
         } else {
             automation_forcedTriggerDescription.visibility = View.GONE
             automation_forcedTriggerDescriptionLabel.visibility = View.GONE
+        }
+    }
+
+    inner class ActionListAdapter : RecyclerView.Adapter<ActionListAdapter.ViewHolder>() {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val v = LayoutInflater.from(parent.context).inflate(R.layout.automation_action_item, parent, false)
+            return ViewHolder(v)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val action = event.actions[position]
+            holder.bind(action, this, position)
+        }
+
+        override fun getItemCount(): Int = event.actions.size
+
+        inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+
+            fun bind(action: Action, recyclerView: RecyclerView.Adapter<ViewHolder>, position: Int) {
+                view.findViewById<LinearLayout>(R.id.automation_layoutText).setOnClickListener {
+                    if (action.hasDialog()) {
+                        val args = Bundle()
+                        args.putInt("actionPosition", position)
+                        args.putString("action", action.toJSON())
+                        val dialog = EditActionDialog()
+                        dialog.arguments = args
+                        fragmentManager?.let {
+                            dialog.show(it, "EditActionDialog")
+                        }
+                    }
+                }
+                view.findViewById<ImageView>(R.id.automation_iconTrash).setOnClickListener {
+                    event.actions.remove(action)
+                    recyclerView.notifyDataSetChanged()
+                    rxBus.send(EventAutomationUpdateGui())
+                }
+                view.findViewById<ImageView>(R.id.automation_action_image).setImageResource(action.icon())
+                view.findViewById<TextView>(R.id.automation_viewActionTitle).text = action.shortDescription()
+            }
         }
     }
 }
