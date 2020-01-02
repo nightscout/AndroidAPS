@@ -13,6 +13,8 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,7 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashActivity;
@@ -310,8 +313,16 @@ public class PodHistoryActivity extends NoSplashActivity {
 
         private void setProfileValue(String data, TextView valueView) {
             LOG.debug("Profile json:\n" + data);
-            Profile profile = OmnipodUtil.getGsonInstance().fromJson(data, Profile.class);
-            valueView.setText(ProfileUtil.getProfileDisplayable(profile, PumpType.Insulet_Omnipod));
+            Profile profile = null;
+            try {
+                profile = new Profile(new JSONObject(data), Constants.MGDL);
+                valueView.setText(ProfileUtil.getProfileDisplayable(profile, PumpType.Insulet_Omnipod));
+            } catch (JSONException e) {
+                LOG.error("Problem parsing Profile json. Ex: {}, Data:\n{}", e.getMessage(), data);
+                valueView.setText("");
+            }
+            //Profile profile = OmnipodUtil.getGsonInstance().fromJson(data, Profile.class);
+
         }
 
 
