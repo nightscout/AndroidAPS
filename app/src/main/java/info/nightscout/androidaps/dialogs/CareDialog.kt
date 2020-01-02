@@ -13,6 +13,7 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.CareportalEvent
+import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
@@ -24,6 +25,7 @@ import info.nightscout.androidaps.utils.Translator
 import kotlinx.android.synthetic.main.dialog_care.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
+import org.json.JSONException
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.util.*
@@ -126,10 +128,13 @@ class CareDialog : DialogFragmentWithDate() {
             actions.add(MainApp.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
             json.put("notes", notes)
         }
+        eventTime -= eventTime % 1000
+
         if (eventTimeChanged)
             actions.add(MainApp.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(eventTime))
 
         json.put("created_at", DateUtil.toISOString(eventTime))
+        json.put("mills", eventTime)
         json.put("eventType", when (options) {
             EventType.BGCHECK        -> CareportalEvent.BGCHECK
             EventType.SENSOR_INSERT  -> CareportalEvent.SENSORCHANGE
@@ -141,7 +146,16 @@ class CareDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, MainApp.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
-                MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(json)
+                val careportalEvent = CareportalEvent()
+                careportalEvent.date = eventTime
+                careportalEvent.source = Source.USER
+                careportalEvent.eventType = when (options) {
+                    EventType.BGCHECK        -> CareportalEvent.BGCHECK
+                    EventType.SENSOR_INSERT  -> CareportalEvent.SENSORCHANGE
+                    EventType.BATTERY_CHANGE -> CareportalEvent.PUMPBATTERYCHANGE
+                }
+                careportalEvent.json = json.toString()
+                MainApp.getDbHelper().createOrUpdate(careportalEvent)
                 NSUpload.uploadCareportalEntryToNS(json)
             }, null)
         }
