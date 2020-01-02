@@ -134,6 +134,7 @@ public class MainApp extends DaggerApplication {
     @Inject DanaRv2Plugin danaRv2Plugin;
     @Inject DanaRKoreanPlugin danaRKoreanPlugin;
     @Inject DstHelperPlugin dstHelperPlugin;
+    @Inject FoodPlugin foodPlugin;
     @Inject InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
     @Inject InsulinOrefRapidActingPlugin insulinOrefRapidActingPlugin;
     @Inject InsulinOrefUltraRapidActingPlugin insulinOrefUltraRapidActingPlugin;
@@ -260,7 +261,7 @@ public class MainApp extends DaggerApplication {
             pluginsList.add(eversensePlugin);
             pluginsList.add(randomBgPlugin);
             if (!Config.NSCLIENT) pluginsList.add(smsCommunicatorPlugin);
-            pluginsList.add(FoodPlugin.getPlugin());
+            pluginsList.add(foodPlugin);
 
             pluginsList.add(wearPlugin);
             pluginsList.add(statusLinePlugin);

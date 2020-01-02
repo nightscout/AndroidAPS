@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsFragment
 import info.nightscout.androidaps.dialogs.WizardInfoDialog
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
 import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog
+import info.nightscout.androidaps.plugins.general.food.FoodFragment
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenanceFragment
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsBolusFragment
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsCareportalFragment
@@ -50,6 +51,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesCareportalFragment(): CareportalFragment
     @ContributesAndroidInjector abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
     @ContributesAndroidInjector abstract fun contributesDanaRFragment(): DanaRFragment
+    @ContributesAndroidInjector abstract fun contributesFoodFragment(): FoodFragment
     @ContributesAndroidInjector abstract fun contributesLocalProfileFragment(): LocalProfileFragment
     @ContributesAndroidInjector abstract fun contributesObjectivesFragment(): ObjectivesFragment
     @ContributesAndroidInjector abstract fun contributesOpenAPSAMAFragment(): OpenAPSAMAFragment

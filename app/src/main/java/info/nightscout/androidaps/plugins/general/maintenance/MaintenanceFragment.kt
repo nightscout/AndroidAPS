@@ -22,6 +22,7 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var foodPlugin: FoodPlugin
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.maintenance_fragment, container, false)
@@ -37,7 +38,7 @@ class MaintenanceFragment : DaggerFragment() {
                     MainApp.getDbHelper().resetDatabases()
                     // should be handled by Plugin-Interface and
                     // additional service interface and plugin registry
-                    FoodPlugin.getPlugin().service.resetFood()
+                    foodPlugin.service.resetFood()
                     treatmentsPlugin.service.resetTreatments()
                 })
             }
