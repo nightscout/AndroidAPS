@@ -75,35 +75,35 @@ class PersistentNotificationPlugin @Inject constructor() : PluginBase(PluginDesc
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventRefreshOverview? -> triggerNotificationUpdate(false) }) { throwable: Throwable? -> FabricPrivacy.logException(throwable) })
+            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventExtendedBolusChange? -> triggerNotificationUpdate(false) }) { throwable: Throwable? -> FabricPrivacy.logException(throwable) })
+            .subscribe({ event: EventExtendedBolusChange? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventTempBasalChange? -> triggerNotificationUpdate(false) }) { throwable: Throwable? -> FabricPrivacy.logException(throwable) })
+            .subscribe({ event: EventTempBasalChange? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventTreatmentChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventTreatmentChange? -> triggerNotificationUpdate(false) }) { throwable: Throwable? -> FabricPrivacy.logException(throwable) })
+            .subscribe({ event: EventTreatmentChange? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventInitializationChanged::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventInitializationChanged? -> triggerNotificationUpdate(false) }) { throwable: Throwable? -> FabricPrivacy.logException(throwable) })
+            .subscribe({ event: EventInitializationChanged? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventNewBasalProfile::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventNewBasalProfile? -> triggerNotificationUpdate(false) }) { throwable: Throwable? -> FabricPrivacy.logException(throwable) })
+            .subscribe({ event: EventNewBasalProfile? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventAutosensCalculationFinished? -> triggerNotificationUpdate(false) }) { throwable: Throwable? -> FabricPrivacy.logException(throwable) })
+            .subscribe({ event: EventAutosensCalculationFinished? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventPreferenceChange? -> triggerNotificationUpdate(false) }) { throwable: Throwable? -> FabricPrivacy.logException(throwable) })
+            .subscribe({ event: EventPreferenceChange? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         triggerNotificationUpdate(true)
     }
 

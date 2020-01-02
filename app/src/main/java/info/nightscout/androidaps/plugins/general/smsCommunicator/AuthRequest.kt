@@ -4,9 +4,10 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.slf4j.LoggerFactory
 
-class AuthRequest internal constructor(val plugin: SmsCommunicatorPlugin, var requester: Sms, requestText: String, var confirmCode: String, val action: SmsAction) {
+class AuthRequest internal constructor(val plugin: SmsCommunicatorPlugin, val resourceHelper: ResourceHelper, var requester: Sms, requestText: String, var confirmCode: String, val action: SmsAction) {
     private val log = LoggerFactory.getLogger(L.SMS)
 
     private val date = DateUtil.now()
@@ -24,7 +25,7 @@ class AuthRequest internal constructor(val plugin: SmsCommunicatorPlugin, var re
         if (confirmCode != codeReceived) {
             processed = true
             if (L.isEnabled(L.SMS)) log.debug("Wrong code")
-            plugin.sendSMS(Sms(requester.phoneNumber, R.string.sms_wrongcode))
+            plugin.sendSMS(Sms(requester.phoneNumber, resourceHelper.gs(R.string.sms_wrongcode)))
             return
         }
         if (DateUtil.now() - date < Constants.SMS_CONFIRM_TIMEOUT) {
