@@ -237,7 +237,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
 
         View view;
 
-        if (MainApp.sResources.getBoolean(R.bool.isTablet) && (Config.NSCLIENT)) {
+        if (resourceHelper.gb(R.bool.isTablet) && (Config.NSCLIENT)) {
             view = inflater.inflate(R.layout.overview_fragment_nsclient_tablet, container, false);
         } else if (Config.NSCLIENT) {
             view = inflater.inflate(R.layout.overview_fragment_nsclient, container, false);
@@ -1310,7 +1310,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                         + resourceHelper.gs(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U\n";
                 OKDialog.show(getActivity(), resourceHelper.gs(R.string.iob), iobtext1);
             });
-        } else if (MainApp.sResources.getBoolean(R.bool.isTablet)) {
+        } else if (resourceHelper.gb(R.bool.isTablet)) {
             String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                     + resourceHelper.gs(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
                     + resourceHelper.gs(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";

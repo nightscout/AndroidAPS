@@ -260,7 +260,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
 
     @Override
     public float getSize() {
-        boolean isTablet = MainApp.sResources.getBoolean(R.bool.isTablet);
+        boolean isTablet = MainApp.resources().getBoolean(R.bool.isTablet);
         return isTablet ? 12 : 10;
     }
 

@@ -307,7 +307,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
             case R.id.nav_about:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle(resourceHelper.gs(R.string.app_name) + " " + BuildConfig.VERSION);
-                builder.setIcon(MainApp.getIcon());
+                builder.setIcon(resourceHelper.getIcon());
                 String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
                 message += "Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + "\n";
                 message += resourceHelper.gs(R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.getNightscoutVersionName();

@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.media.RingtoneManager
 import android.os.Build
@@ -31,9 +30,6 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * Created by mike on 03.12.2016.
- */
 @Singleton
 class NotificationStore @Inject constructor(
     private val aapsLogger: AAPSLogger,
@@ -113,8 +109,8 @@ class NotificationStore @Inject constructor(
 
     private fun raiseSystemNotification(n: Notification) {
         val mgr = mainApp.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val largeIcon = BitmapFactory.decodeResource(mainApp.resources, MainApp.getIcon())
-        val smallIcon = MainApp.getNotificationIcon()
+        val largeIcon = resourceHelper.decodeResource(resourceHelper.getIcon())
+        val smallIcon = resourceHelper.getNotificationIcon()
         val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
         val notificationBuilder = NotificationCompat.Builder(mainApp, CHANNEL_ID)
             .setSmallIcon(smallIcon)

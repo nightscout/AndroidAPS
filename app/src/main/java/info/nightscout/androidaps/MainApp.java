@@ -108,7 +108,7 @@ public class MainApp extends DaggerApplication {
     static Logger log = LoggerFactory.getLogger(L.CORE);
 
     static MainApp sInstance;
-    public static Resources sResources;
+    private static Resources sResources;
 
     static FirebaseAnalytics mFirebaseAnalytics;
 
@@ -147,6 +147,7 @@ public class MainApp extends DaggerApplication {
     @Inject OpenAPSAMAPlugin openAPSAMAPlugin;
     @Inject OpenAPSSMBPlugin openAPSSMBPlugin;
     @Inject OverviewPlugin overviewPlugin;
+    @Inject PersistentNotificationPlugin persistentNotificationPlugin;
     @Inject RandomBgPlugin randomBgPlugin;
     @Inject DexcomPlugin dexcomPlugin;
     @Inject EversensePlugin eversensePlugin;
@@ -263,7 +264,7 @@ public class MainApp extends DaggerApplication {
 
             pluginsList.add(wearPlugin);
             pluginsList.add(statusLinePlugin);
-            pluginsList.add(PersistentNotificationPlugin.getPlugin());
+            pluginsList.add(persistentNotificationPlugin);
             pluginsList.add(NSClientPlugin.getPlugin());
 //            if (engineeringMode) pluginsList.add(tidepoolPlugin);
             pluginsList.add(maintenancePlugin);
@@ -358,6 +359,11 @@ public class MainApp extends DaggerApplication {
     }
 
     @Deprecated
+    public static Resources resources() {
+        return sResources;
+    }
+
+    @Deprecated
     public static MainApp instance() {
         return sInstance;
     }
@@ -442,24 +448,6 @@ public class MainApp extends DaggerApplication {
         return devBranch;
     }
 
-    public static int getIcon() {
-        if (Config.NSCLIENT)
-            return R.mipmap.ic_yellowowl;
-        else if (Config.PUMPCONTROL)
-            return R.mipmap.ic_pumpcontrol;
-        else
-            return R.mipmap.ic_launcher;
-    }
-
-    public static int getNotificationIcon() {
-        if (Config.NSCLIENT)
-            return R.drawable.ic_notif_nsclient;
-        else if (Config.PUMPCONTROL)
-            return R.drawable.ic_notif_pumpcontrol;
-        else
-            return R.drawable.ic_notif_aaps;
-    }
-
     @Override
     public void onTerminate() {
 
@@ -472,6 +460,7 @@ public class MainApp extends DaggerApplication {
         super.onTerminate();
     }
 
+    @Deprecated
     public static int dpToPx(int dp) {
         float scale = sResources.getDisplayMetrics().density;
         return (int) (dp * scale + 0.5f);

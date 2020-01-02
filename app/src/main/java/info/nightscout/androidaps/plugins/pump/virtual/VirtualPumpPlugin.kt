@@ -117,7 +117,7 @@ class VirtualPumpPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(R.string.key_virtualpump_type)) refreshConfiguration() }) { throwable: Throwable? -> FabricPrivacy.logException(throwable) }
+            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(R.string.key_virtualpump_type)) refreshConfiguration() }) { FabricPrivacy.logException(it) }
         refreshConfiguration()
     }
 

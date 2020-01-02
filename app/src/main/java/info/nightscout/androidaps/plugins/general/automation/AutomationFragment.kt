@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
@@ -129,7 +128,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         private fun addImage(@DrawableRes res: Int, context: Context, layout: LinearLayout) {
             val iv = ImageView(context)
             iv.setImageResource(res)
-            iv.layoutParams = LinearLayout.LayoutParams(MainApp.dpToPx(24), MainApp.dpToPx(24))
+            iv.layoutParams = LinearLayout.LayoutParams(resourceHelper.dpToPx(24), resourceHelper.dpToPx(24))
             layout.addView(iv)
         }
 
@@ -148,8 +147,8 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             // arrow icon
             val iv = ImageView(holder.context)
             iv.setImageResource(R.drawable.ic_arrow_forward_white_24dp)
-            iv.layoutParams = LinearLayout.LayoutParams(MainApp.dpToPx(24), MainApp.dpToPx(24))
-            iv.setPadding(MainApp.dpToPx(4), 0, MainApp.dpToPx(4), 0)
+            iv.layoutParams = LinearLayout.LayoutParams(resourceHelper.dpToPx(24), resourceHelper.dpToPx(24))
+            iv.setPadding(resourceHelper.dpToPx(4), 0, resourceHelper.dpToPx(4), 0)
             holder.iconLayout.addView(iv)
             // action icons
             val actionIcons = HashSet<Int>()

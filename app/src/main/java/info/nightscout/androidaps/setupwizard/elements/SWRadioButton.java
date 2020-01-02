@@ -32,11 +32,11 @@ public class SWRadioButton extends SWItem {
     }
 
     public String[] labels() {
-        return MainApp.sResources.getStringArray(labelsArray);
+        return MainApp.resources().getStringArray(labelsArray);
     }
 
     public String[] values() {
-        return MainApp.sResources.getStringArray(valuesArray);
+        return MainApp.resources().getStringArray(valuesArray);
     }
 
     @Override

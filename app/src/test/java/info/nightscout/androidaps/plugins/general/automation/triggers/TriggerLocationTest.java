@@ -142,34 +142,6 @@ public class TriggerLocationTest {
     }
 
     @Test
-    public void setLatitudeTest() {
-        TriggerLocation t = new TriggerLocation();
-        t.setLatitude(212);
-        Assert.assertEquals(t.latitude.getValue(), 212, 0d);
-    }
-
-    @Test
-    public void setLongitudeTest() {
-        TriggerLocation t = new TriggerLocation();
-        t.setLongitude(213);
-        Assert.assertEquals(t.longitude.getValue(), 213, 0d);
-    }
-
-    @Test
-    public void setdistanceTest() {
-        TriggerLocation t = new TriggerLocation();
-        t.setdistance(2);
-        Assert.assertEquals(t.distance.getValue(), 2, 0d);
-    }
-
-    @Test
-    public void setModeTest() {
-        TriggerLocation t = new TriggerLocation();
-        t.setMode(InputLocationMode.Mode.INSIDE);
-        Assert.assertEquals(t.modeSelected.getValue(), InputLocationMode.Mode.INSIDE);
-    }
-
-    @Test
     public void lastRunTest() {
         TriggerLocation t = new TriggerLocation();
         t.lastRun(now);

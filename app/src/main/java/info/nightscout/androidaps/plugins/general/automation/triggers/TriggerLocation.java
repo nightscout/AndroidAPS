@@ -156,28 +156,8 @@ public class TriggerLocation extends Trigger {
     }
 
 
-    TriggerLocation setLatitude(double value) {
-        latitude.setValue(value);
-        return this;
-    }
-
-    TriggerLocation setLongitude(double value) {
-        longitude.setValue(value);
-        return this;
-    }
-
-    TriggerLocation setdistance(double value) {
-        distance.setValue(value);
-        return this;
-    }
-
     TriggerLocation lastRun(long lastRun) {
         this.lastRun = lastRun;
-        return this;
-    }
-
-    TriggerLocation setMode(InputLocationMode.Mode value) {
-        modeSelected.setValue(value);
         return this;
     }
 
@@ -202,6 +182,7 @@ public class TriggerLocation extends Trigger {
             return OUTSIDE;
     }
 
+    // for mocking only TODO remove
     static Location getCurrentLocation(){
         return LocationService.getLastLocation();
     }
