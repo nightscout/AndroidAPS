@@ -246,7 +246,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 throw new CommandInitializationException("Basal profile mapping failed", ex);
             }
             delegate.setBasalSchedule(basalSchedule, isBasalBeepsEnabled());
-            addSuccessToHistory(time, PodHistoryEntryType.SetBasalSchedule, profile);
+            addSuccessToHistory(time, PodHistoryEntryType.SetBasalSchedule, profile.getBasalValues());
         } catch (Exception ex) {
             if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
                 addToHistory(time, PodHistoryEntryType.SetBasalSchedule, "Uncertain failure", false);
@@ -583,7 +583,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         if (podInitActionType == PodInitActionType.PairAndPrimeWizardStep) {
             addToHistory(time, PodHistoryEntryType.PairAndPrime, comment, res.getResultType().isSuccess());
         } else {
-            addToHistory(time, PodHistoryEntryType.FillCannulaSetBasalProfile, res.getResultType().isSuccess() ? profile : comment, res.getResultType().isSuccess());
+            addToHistory(time, PodHistoryEntryType.FillCannulaSetBasalProfile, res.getResultType().isSuccess() ? profile.getBasalValues() : comment, res.getResultType().isSuccess());
         }
 
         podInitReceiver.returnInitTaskStatus(podInitActionType, res.getResultType().isSuccess(), comment);

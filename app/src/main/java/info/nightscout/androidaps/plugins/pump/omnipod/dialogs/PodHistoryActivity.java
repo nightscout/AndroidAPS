@@ -13,8 +13,6 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +22,6 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashActivity;
@@ -255,23 +252,20 @@ public class PodHistoryActivity extends NoSplashActivity {
             if (historyEntry.isSuccess()) {
                 switch (historyEntry.getPodDbEntryType()) {
 
-                    case FillCannulaSetBasalProfile: {
-                        if (historyEntry.getData() != null) {
-                            setProfileValue(historyEntry.getData(), valueView);
-                        }
-                    }
-                    break;
-
                     case SetTemporaryBasal: {
                         TempBasalPair tempBasalPair = OmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), TempBasalPair.class);
                         valueView.setText(MainApp.gs(R.string.omnipod_cmd_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
                     }
                     break;
 
+                    case FillCannulaSetBasalProfile:
                     case SetBasalSchedule: {
-                        setProfileValue(historyEntry.getData(), valueView);
+                        if (historyEntry.getData() != null) {
+                            setProfileValue(historyEntry.getData(), valueView);
+                        }
                     }
                     break;
+
                     case GetPodStatus:
                         break;
                     case GetPodInfo:
@@ -281,10 +275,10 @@ public class PodHistoryActivity extends NoSplashActivity {
 
                     case SetBolus: {
                         if (historyEntry.getData().contains(";")) {
-                            valueView.setText(MainApp.gs(R.string.omnipod_cmd_bolus_value, Double.valueOf(historyEntry.getData())));
-                        } else {
                             String[] splitVal = historyEntry.getData().split(";");
                             valueView.setText(MainApp.gs(R.string.omnipod_cmd_bolus_value_with_carbs, Double.valueOf(splitVal[0]), Double.valueOf(splitVal[1])));
+                        } else {
+                            valueView.setText(MainApp.gs(R.string.omnipod_cmd_bolus_value, Double.valueOf(historyEntry.getData())));
                         }
                     }
                     break;
@@ -313,11 +307,13 @@ public class PodHistoryActivity extends NoSplashActivity {
 
         private void setProfileValue(String data, TextView valueView) {
             LOG.debug("Profile json:\n" + data);
-            Profile profile = null;
+
             try {
-                profile = new Profile(new JSONObject(data), Constants.MGDL);
-                valueView.setText(ProfileUtil.getProfileDisplayable(profile, PumpType.Insulet_Omnipod));
-            } catch (JSONException e) {
+                Profile.ProfileValue[] profileValuesArray = OmnipodUtil.getGsonInstance().fromJson(data, Profile.ProfileValue[].class);
+
+                //profile = new Profile(new JSONObject(data), Constants.MGDL);
+                valueView.setText(ProfileUtil.getBasalProfilesDisplayable(profileValuesArray, PumpType.Insulet_Omnipod));
+            } catch (Exception e) {
                 LOG.error("Problem parsing Profile json. Ex: {}, Data:\n{}", e.getMessage(), data);
                 valueView.setText("");
             }
