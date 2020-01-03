@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class ChooseActionDialog : DialogFragmentWithDate() {
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var mainApp : MainApp
 
     private var checkedIndex = -1
 
@@ -38,7 +40,7 @@ class ChooseActionDialog : DialogFragmentWithDate() {
         for (a in automationPlugin.getActionDummyObjects()) {
             val radioButton = RadioButton(context)
             radioButton.setText(a.friendlyName())
-            radioButton.tag = a.javaClass
+            radioButton.tag = a.javaClass.name
             automation_radioGroup.addView(radioButton)
         }
 
@@ -61,15 +63,16 @@ class ChooseActionDialog : DialogFragmentWithDate() {
 
     private fun instantiateAction(): Action? {
         return getActionClass()?.let {
-            it.newInstance() as Action
+            val clazz = Class.forName(it).kotlin
+            clazz.constructors.first().call(mainApp) as Action
         }
     }
 
-    private fun getActionClass(): Class<*>? {
+    private fun getActionClass(): String? {
         val radioButtonID = automation_radioGroup.checkedRadioButtonId
         val radioButton = automation_radioGroup.findViewById<RadioButton>(radioButtonID)
         return radioButton?.let {
-            it.tag as Class<*>
+            it.tag as String
         }
     }
 
