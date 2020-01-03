@@ -55,6 +55,7 @@ import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin;
 import info.nightscout.androidaps.plugins.constraints.storage.StorageConstraintPlugin;
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerPlugin;
+import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils;
 import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
@@ -109,9 +110,6 @@ import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import io.fabric.sdk.android.Fabric;
 
-import static info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt.triggerCheckVersion;
-
-
 public class MainApp extends DaggerApplication {
     static Logger log = LoggerFactory.getLogger(L.CORE);
 
@@ -138,6 +136,7 @@ public class MainApp extends DaggerApplication {
     @Inject ActivityMonitor activityMonitor;
     @Inject FabricPrivacy fabricPrivacy;
     @Inject ResourceHelper resourceHelper;
+    @Inject VersionCheckerUtils versionCheckersUtils;
 
     @Inject ActionsPlugin actionsPlugin;
     @Inject AutomationPlugin automationPlugin;
@@ -230,7 +229,7 @@ public class MainApp extends DaggerApplication {
         registerLocalBroadcastReceiver();
 
         //trigger here to see the new version on app start after an update
-        triggerCheckVersion();
+        versionCheckersUtils.triggerCheckVersion();
 
         if (pluginsList == null) {
             pluginsList = new ArrayList<>();

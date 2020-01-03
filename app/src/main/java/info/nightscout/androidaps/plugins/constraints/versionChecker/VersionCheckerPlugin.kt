@@ -10,6 +10,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.utils.extensions.daysToMillis
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.concurrent.TimeUnit
@@ -21,13 +22,19 @@ import kotlin.math.roundToInt
 class VersionCheckerPlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val sp: SP,
-    private val resourceHelper: ResourceHelper
+    private val resourceHelper: ResourceHelper,
+    private val versionCheckerUtils: VersionCheckerUtils
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .neverVisible(true)
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.versionChecker)), ConstraintsInterface {
+
+    enum class GracePeriod(val warning: Long, val old: Long, val veryOld: Long) {
+        RELEASE(30, 60, 90),
+        RC(1, 7, 14)
+    }
 
     private val gracePeriod: GracePeriod
         get() = if ((BuildConfig.VERSION_NAME.contains("RC", ignoreCase = true))) {
@@ -43,7 +50,7 @@ class VersionCheckerPlugin @Inject constructor(
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         checkWarning()
-        triggerCheckVersion()
+        versionCheckerUtils.triggerCheckVersion()
         return if (isOldVersion(gracePeriod.veryOld.daysToMillis()))
             value.set(false, resourceHelper.gs(R.string.very_old_version), this)
         else
@@ -88,10 +95,3 @@ class VersionCheckerPlugin @Inject constructor(
         return now > sp.getLong(R.string.key_last_time_this_version_detected, 0) + gracePeriod
     }
 }
-
-enum class GracePeriod(val warning: Long, val old: Long, val veryOld: Long) {
-    RELEASE(30, 60, 90),
-    RC(1, 7, 14)
-}
-
-private fun Long.daysToMillis() = TimeUnit.DAYS.toMillis(this)

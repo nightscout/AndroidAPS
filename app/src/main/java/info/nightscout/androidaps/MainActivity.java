@@ -51,7 +51,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt;
+import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity;
@@ -76,6 +76,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
     @Inject RxBusWrapper rxBus;
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
+    @Inject VersionCheckerUtils versionCheckerUtils;
     @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
     @Inject LoopPlugin loopPlugin;
     @Inject NSSettingsStatus nsSettingsStatus;
@@ -121,7 +122,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
 
         //Check here if loop plugin is disabled. Else check via constraints
         if (!loopPlugin.isEnabled(PluginType.LOOP))
-            VersionCheckerUtilsKt.triggerCheckVersion();
+            versionCheckerUtils.triggerCheckVersion();
 
         FabricPrivacy.getInstance().setUserStats();
 

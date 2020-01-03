@@ -93,6 +93,8 @@ class SignatureVerifierPlugin @Inject constructor(
         try {
             synchronized(lock) {
                 if (revokedCerts == null) return false
+                // TODO Change after raising min API to 28
+                @Suppress("DEPRECATION", "PackageManagerGetSignatures")
                 val signatures = mainApp.packageManager.getPackageInfo(mainApp.packageName, PackageManager.GET_SIGNATURES).signatures
                 if (signatures != null) {
                     for (signature in signatures) {
@@ -117,6 +119,8 @@ class SignatureVerifierPlugin @Inject constructor(
     fun shortHashes(): List<String> {
         val hashes: MutableList<String> = ArrayList()
         try {
+            // TODO Change after raising min API to 28
+            @Suppress("DEPRECATION", "PackageManagerGetSignatures")
             val signatures = mainApp.packageManager.getPackageInfo(mainApp.packageName, PackageManager.GET_SIGNATURES).signatures
             if (signatures != null) {
                 for (signature in signatures) {
