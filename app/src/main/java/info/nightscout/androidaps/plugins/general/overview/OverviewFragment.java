@@ -204,7 +204,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     boolean smallWidth;
     boolean smallHeight;
 
-    public static boolean shorttextmode = true;
+    public static boolean shorttextmode = false;
 
     private boolean accepted;
 
@@ -1165,12 +1165,12 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         String basalText = "";
         if (shorttextmode) {
             if (activeTemp != null) {
-                basalText = activeTemp.percentRate + "% " + activeTemp.toDuration() + " " + DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h";
+                basalText = "T: " + activeTemp.toStringVeryShort();
             } else {
-                basalText = DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h";
+                basalText = MainApp.gs(R.string.pump_basebasalrate,profile.getBasal());
             }
             baseBasalView.setOnClickListener(v -> {
-                String fullText = resourceHelper.gs(R.string.pump_basebasalrate_label) + ": " + DecimalFormatter.to2Decimal(profile.getBasal()) + "U/h\n";
+                String fullText = resourceHelper.gs(R.string.pump_basebasalrate_label) + ": " + resourceHelper.gs(R.string.pump_basebasalrate,profile.getBasal()) + "\n";
                 if (activeTemp != null) {
                     fullText += resourceHelper.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
                 }
@@ -1179,22 +1179,18 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
 
         } else {
             if (activeTemp != null) {
-                basalText = activeTemp.toStringFull() + " ";
-            }
-            if (Config.NSCLIENT)
-                basalText += "(" + DecimalFormatter.to2Decimal(profile.getBasal()) + " U/h)";
-            else if (pump.getPumpDescription().isTempBasalCapable) {
-                basalText += "(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + "U/h)";
+                basalText = activeTemp.toStringFull();
+            } else {
+                basalText = resourceHelper.gs(R.string.pump_basebasalrate,profile.getBasal());
             }
         }
+        baseBasalView.setText(basalText);
         if (activeTemp != null) {
             baseBasalView.setTextColor(resourceHelper.gc(R.color.basal));
         } else {
-            baseBasalView.setTextColor(android.R.attr.textColor);
-
+           baseBasalView.setTextColor(MainApp.gc(R.color.defaulttextcolor));
         }
 
-        baseBasalView.setText(basalText);
 
         final ExtendedBolus extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis());
         String extendedBolusText = "";
