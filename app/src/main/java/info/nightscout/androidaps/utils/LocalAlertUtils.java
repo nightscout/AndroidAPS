@@ -34,12 +34,12 @@ public class LocalAlertUtils {
         return T.mins(SP.getInt(MainApp.gs(R.string.key_pump_unreachable_threshold), 30)).msecs();
     }
 
-    public static void checkPumpUnreachableAlarm(long lastConnection, boolean isStatusOutdated) {
+    public static void checkPumpUnreachableAlarm(long lastConnection, boolean isStatusOutdated, boolean isDisconnected) {
         boolean alarmTimeoutExpired = lastConnection + pumpUnreachableThreshold() < System.currentTimeMillis();
         boolean nextAlarmOccurrenceReached = SP.getLong("nextPumpDisconnectedAlarm", 0L) < System.currentTimeMillis();
 
         if (Config.APS && SP.getBoolean(MainApp.gs(R.string.key_enable_pump_unreachable_alert), true)
-                && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !LoopPlugin.getPlugin().isDisconnected()) {
+                && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !isDisconnected) {
             log.debug("Generating pump unreachable alarm. lastConnection: " + DateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated);
             Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.gs(R.string.pump_unreachable), Notification.URGENT);
             n.soundId = R.raw.alarm;

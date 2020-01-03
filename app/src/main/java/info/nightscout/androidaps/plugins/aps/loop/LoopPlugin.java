@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.SystemClock;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import java.util.Date;
@@ -19,6 +18,7 @@ import java.util.Date;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.Lazy;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -78,24 +78,13 @@ public class LoopPlugin extends PluginBase {
     private final ConfigBuilderPlugin configBuilderPlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final VirtualPumpPlugin virtualPumpPlugin;
-    private final ActionStringHandler actionStringHandler;
+    private final Lazy<ActionStringHandler> actionStringHandler;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final String CHANNEL_ID = "AndroidAPS-Openloop";
 
     private long lastBgTriggeredRun = 0;
-
-    private static LoopPlugin loopPlugin;
-
-    @NonNull
-    @Deprecated
-    public static LoopPlugin getPlugin() {
-        if (loopPlugin == null) {
-            throw new IllegalStateException("Accessing LoopPlugin before first instantiation");
-        }
-        return loopPlugin;
-    }
 
     private long loopSuspendedTill; // end of manual loop suspend
     private boolean isSuperBolus;
@@ -112,8 +101,7 @@ public class LoopPlugin extends PluginBase {
         public Date lastOpenModeAccept;
     }
 
-    @Deprecated
-    static public LastRun lastRun = null;
+    public LastRun lastRun = null;
 
     @Inject
     public LoopPlugin(
@@ -127,7 +115,7 @@ public class LoopPlugin extends PluginBase {
             ConfigBuilderPlugin configBuilderPlugin,
             TreatmentsPlugin treatmentsPlugin,
             VirtualPumpPlugin virtualPumpPlugin,
-            ActionStringHandler actionStringHandler
+            Lazy<ActionStringHandler> actionStringHandler // TODO Adrian use RxBus instead of Lazy
     ) {
         super(new PluginDescription()
                 .mainType(PluginType.LOOP)
@@ -137,7 +125,6 @@ public class LoopPlugin extends PluginBase {
                 .preferencesId(R.xml.pref_loop)
                 .description(R.string.description_loop)
         );
-        this.loopPlugin = this; //TODO remove
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.sp = sp;
@@ -475,13 +462,13 @@ public class LoopPlugin extends PluginBase {
                     rxBus.send(new EventNewOpenLoopNotification());
 
                     // Send to Wear
-                    actionStringHandler.handleInitiate("changeRequest");
+                    actionStringHandler.get().handleInitiate("changeRequest");
                 } else if (allowNotification) {
                     // dismiss notifications
                     NotificationManager notificationManager =
                             (NotificationManager) mainApp.getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.cancel(Constants.notificationID);
-                    actionStringHandler.handleInitiate("cancelChangeRequest");
+                    actionStringHandler.get().handleInitiate("cancelChangeRequest");
                 }
             }
 

@@ -477,10 +477,9 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     private void setupChartMenu(View view) {
         chartButton = (ImageButton) view.findViewById(R.id.overview_chartMenuButton);
         chartButton.setOnClickListener(v -> {
-            final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
             boolean predictionsAvailable;
             if (Config.APS)
-                predictionsAvailable = finalLastRun != null && finalLastRun.request.hasPredictions;
+                predictionsAvailable = loopPlugin.lastRun != null && loopPlugin.lastRun.request.hasPredictions;
             else if (Config.NSCLIENT)
                 predictionsAvailable = true;
             else
@@ -923,9 +922,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
 
         if (loopPlugin.isEnabled(PluginType.LOOP) && profile != null) {
             loopPlugin.invoke("Accept temp button", false);
-            final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-            if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.isChangeRequested()) {
-                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.pump_tempbasal_label), finalLastRun.constraintsProcessed.toSpanned(), () -> {
+            if (loopPlugin.lastRun != null && loopPlugin.lastRun.lastAPSRun != null && loopPlugin.lastRun.constraintsProcessed.isChangeRequested()) {
+                OKDialog.showConfirmation(context, resourceHelper.gs(R.string.pump_tempbasal_label), loopPlugin.lastRun.constraintsProcessed.toSpanned(), () -> {
                     hideTempRecommendation();
                     clearNotification();
                     loopPlugin.acceptChangeRequest();
@@ -1078,7 +1076,6 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         Constraint<Boolean> closedLoopEnabled = constraintChecker.isClosedLoopAllowed();
 
         // open loop mode
-        final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
         if (Config.APS && pump.getPumpDescription().isTempBasalCapable) {
             apsModeView.setVisibility(View.VISIBLE);
             apsModeView.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault));
@@ -1131,13 +1128,13 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         // **** Temp button ****
         if (acceptTempLayout != null) {
             boolean showAcceptButton = !closedLoopEnabled.value(); // Open mode needed
-            showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
-            showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
-            showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.isChangeRequested(); // change is requested
+            showAcceptButton = showAcceptButton && loopPlugin.lastRun != null && loopPlugin.lastRun.lastAPSRun != null; // aps result must exist
+            showAcceptButton = showAcceptButton && (loopPlugin.lastRun.lastOpenModeAccept == null || loopPlugin.lastRun.lastOpenModeAccept.getTime() < loopPlugin.lastRun.lastAPSRun.getTime()); // never accepted or before last result
+            showAcceptButton = showAcceptButton && loopPlugin.lastRun.constraintsProcessed.isChangeRequested(); // change is requested
 
             if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && loopPlugin.isEnabled(PluginType.LOOP)) {
                 acceptTempLayout.setVisibility(View.VISIBLE);
-                acceptTempButton.setText(resourceHelper.gs(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
+                acceptTempButton.setText(resourceHelper.gs(R.string.setbasalquestion) + "\n" + loopPlugin.lastRun.constraintsProcessed);
             } else {
                 acceptTempLayout.setVisibility(View.GONE);
             }
@@ -1349,7 +1346,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
 
         boolean predictionsAvailable;
         if (Config.APS)
-            predictionsAvailable = finalLastRun != null && finalLastRun.request.hasPredictions;
+            predictionsAvailable = loopPlugin.lastRun != null && loopPlugin.lastRun.request.hasPredictions;
         else if (Config.NSCLIENT)
             predictionsAvailable = true;
         else
@@ -1403,7 +1400,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
 
             if (finalPredictionsAvailable && sp.getBoolean("showprediction", false)) {
                 if (Config.APS)
-                    apsResult = finalLastRun.constraintsProcessed;
+                    apsResult = loopPlugin.lastRun.constraintsProcessed;
                 else
                     apsResult = NSDeviceStatus.getAPSResult();
                 int predHours = (int) (Math.ceil(apsResult.getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
@@ -1454,7 +1451,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             }
 
             // add target line
-            graphData.addTargetLine(fromTime, toTime, profile);
+            graphData.addTargetLine(fromTime, toTime, profile, loopPlugin.lastRun);
 
             // **** NOW line ****
             graphData.addNowLine(now);

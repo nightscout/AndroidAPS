@@ -21,6 +21,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -47,9 +50,15 @@ import info.nightscout.androidaps.utils.SP;
 /**
  * Created by mike on 26.05.2017.
  */
-
+@Singleton
 public class NSUpload {
     private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
+
+    private static LoopPlugin loopPlugin; // Ugly but temporary
+    @Inject
+    public NSUpload(LoopPlugin loopPlugin) {
+        this.loopPlugin = loopPlugin;
+    }
 
     public static void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
         try {
@@ -169,7 +178,8 @@ public class NSUpload {
 
         DeviceStatus deviceStatus = new DeviceStatus();
         try {
-            LoopPlugin.LastRun lastRun = LoopPlugin.lastRun;
+            if (loopPlugin == null) return; // TODO ugly - not initialized yet
+            LoopPlugin.LastRun lastRun = loopPlugin.lastRun;
             if (lastRun != null && lastRun.lastAPSRun.getTime() > System.currentTimeMillis() - 300 * 1000L) {
                 // do not send if result is older than 1 min
                 APSResult apsResult = lastRun.request;

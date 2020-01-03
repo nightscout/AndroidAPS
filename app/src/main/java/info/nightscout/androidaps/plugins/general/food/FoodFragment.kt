@@ -27,6 +27,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.food_fragment.*
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 class FoodFragment : DaggerFragment() {
 
@@ -47,7 +48,7 @@ class FoodFragment : DaggerFragment() {
 
         food_recyclerview.setHasFixedSize(true)
         food_recyclerview.setLayoutManager(LinearLayoutManager(view.context))
-        food_recyclerview.adapter = RecyclerViewAdapter(foodPlugin.service.foodData)
+        food_recyclerview.adapter = RecyclerViewAdapter(foodPlugin.service?.foodData ?: ArrayList())
 
         food_clearfilter.setOnClickListener {
             food_filter.setText("")
@@ -105,7 +106,7 @@ class FoodFragment : DaggerFragment() {
     }
 
     private fun loadData() {
-        unfiltered = foodPlugin.service.foodData
+        unfiltered = foodPlugin.service?.foodData ?: ArrayList()
     }
 
     private fun fillCategories() {
@@ -200,7 +201,7 @@ class FoodFragment : DaggerFragment() {
                             if (food._id != null && food._id != "") {
                                 NSUpload.removeFoodFromNS(food._id)
                             }
-                            foodPlugin.service.delete(food)
+                            foodPlugin.service?.delete(food)
                         }, null)
                     }
                 }

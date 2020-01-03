@@ -38,7 +38,7 @@ class MaintenanceFragment : DaggerFragment() {
                     MainApp.getDbHelper().resetDatabases()
                     // should be handled by Plugin-Interface and
                     // additional service interface and plugin registry
-                    foodPlugin.service.resetFood()
+                    foodPlugin.service?.resetFood()
                     treatmentsPlugin.service.resetTreatments()
                 })
             }

@@ -78,7 +78,7 @@ class LoopFragment : DaggerFragment() {
     @Synchronized
     fun updateGUI() {
         if (loop_request == null) return
-        LoopPlugin.lastRun?.let {
+        loopPlugin.lastRun?.let {
             loop_request.text = it.request?.toSpanned() ?: ""
             loop_constraintsprocessed.text = it.constraintsProcessed?.toSpanned() ?: ""
             loop_source.text = it.source ?: ""

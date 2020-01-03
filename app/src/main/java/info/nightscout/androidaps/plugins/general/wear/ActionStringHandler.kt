@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.general.wear
 
 import android.app.NotificationManager
 import android.content.Context
-import dagger.Lazy
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -33,7 +32,11 @@ import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.androidaps.utils.HardLimits
+import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.wizard.BolusWizard
@@ -52,7 +55,7 @@ class ActionStringHandler @Inject constructor(
     private val constraintChecker: ConstraintChecker,
     private val profileFunction: ProfileFunction,
     private val mainApp: MainApp,
-    private val loopPlugin: Lazy<LoopPlugin>,
+    private val loopPlugin: LoopPlugin,
     private val wearPlugin: WearPlugin,
     private val treatmentsPlugin: TreatmentsPlugin,
     private val configBuilderPlugin: ConfigBuilderPlugin,
@@ -67,6 +70,8 @@ class ActionStringHandler @Inject constructor(
     private var lastSentTimestamp: Long = 0
     private var lastConfirmActionString: String? = null
     private var lastBolusWizard: BolusWizard? = null
+
+    // TODO Adrian use RxBus instead of Lazy + cross dependency
     @Synchronized
     fun handleInitiate(actionString: String) {
         if (!sp.getBoolean("wearcontrol", false)) return
@@ -284,7 +289,7 @@ class ActionStringHandler @Inject constructor(
         } else if ("changeRequest" == act[0]) { ////////////////////////////////////////////// CHANGE REQUEST
             rTitle = resourceHelper.gs(R.string.openloop_newsuggestion)
             rAction = "changeRequest"
-            val finalLastRun = LoopPlugin.lastRun
+            val finalLastRun = loopPlugin.lastRun
             rMessage += finalLastRun.constraintsProcessed
             wearPlugin.requestChangeConfirmation(rTitle, rMessage, rAction)
             lastSentTimestamp = System.currentTimeMillis()
@@ -392,7 +397,7 @@ class ActionStringHandler @Inject constructor(
         get() {
             var ret = ""
             // decide if enabled/disabled closed/open; what Plugin as APS?
-            if (loopPlugin.get().isEnabled(loopPlugin.get().getType())) {
+            if (loopPlugin.isEnabled(loopPlugin.getType())) {
                 ret += if (constraintChecker.isClosedLoopAllowed().value()) {
                     "CLOSED LOOP\n"
                 } else {
@@ -400,9 +405,9 @@ class ActionStringHandler @Inject constructor(
                 }
                 val aps = configBuilderPlugin.activeAPS
                 ret += "APS: " + if (aps == null) "NO APS SELECTED!" else (aps as PluginBase).name
-                if (LoopPlugin.lastRun != null) {
-                    if (LoopPlugin.lastRun.lastAPSRun != null) ret += "\nLast Run: " + DateUtil.timeString(LoopPlugin.lastRun.lastAPSRun)
-                    if (LoopPlugin.lastRun.lastEnact != null) ret += "\nLast Enact: " + DateUtil.timeString(LoopPlugin.lastRun.lastEnact)
+                if (loopPlugin.lastRun != null) {
+                    if (loopPlugin.lastRun.lastAPSRun != null) ret += "\nLast Run: " + DateUtil.timeString(loopPlugin.lastRun.lastAPSRun)
+                    if (loopPlugin.lastRun.lastEnact != null) ret += "\nLast Enact: " + DateUtil.timeString(loopPlugin.lastRun.lastEnact)
                 }
             } else {
                 ret += "LOOP DISABLED\n"
@@ -452,7 +457,7 @@ class ActionStringHandler @Inject constructor(
             return ret
         }
 
-    @Synchronized 
+    @Synchronized
     fun handleConfirmation(actionString: String) {
         if (!sp.getBoolean("wearcontrol", false)) return
         //Guard from old or duplicate confirmations
@@ -502,7 +507,7 @@ class ActionStringHandler @Inject constructor(
         } else if ("dismissoverviewnotification" == act[0]) {
             rxBus.send(EventDismissNotification(SafeParse.stringToInt(act[1])))
         } else if ("changeRequest" == act[0]) {
-            loopPlugin.get().acceptChangeRequest()
+            loopPlugin.acceptChangeRequest()
             val notificationManager = mainApp.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.cancel(Constants.notificationID)
         }

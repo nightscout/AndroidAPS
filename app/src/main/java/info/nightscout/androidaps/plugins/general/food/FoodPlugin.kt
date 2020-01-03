@@ -16,5 +16,10 @@ class FoodPlugin @Inject constructor() : PluginBase(PluginDescription()
     .description(R.string.description_food)
 ) {
 
-    val service: FoodService = FoodService()
+    var service: FoodService? = null
+
+    override fun onStart() {
+        super.onStart()
+        service = FoodService()
+    }
 }

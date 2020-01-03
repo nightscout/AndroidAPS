@@ -243,7 +243,7 @@ public class GraphData {
         addSeries(absoluteBasalsLineSeries);
     }
 
-    public void addTargetLine(long fromTime, long toTime, Profile profile) {
+    public void addTargetLine(long fromTime, long toTime, Profile profile, LoopPlugin.LastRun lastRun) {
         LineGraphSeries<DataPoint> targetsSeries;
 
         Scale targetsScale = new Scale();
@@ -252,8 +252,8 @@ public class GraphData {
         List<DataPoint> targetsSeriesArray = new ArrayList<>();
         double lastTarget = -1;
 
-        if (LoopPlugin.lastRun != null && LoopPlugin.lastRun.constraintsProcessed != null) {
-            APSResult apsResult = LoopPlugin.lastRun.constraintsProcessed;
+        if (lastRun != null && lastRun.constraintsProcessed != null) {
+            APSResult apsResult = lastRun.constraintsProcessed;
             long latestPredictionsTime = apsResult.getLatestPredictionsTime();
             if (latestPredictionsTime > toTime) {
                 toTime = latestPredictionsTime;
