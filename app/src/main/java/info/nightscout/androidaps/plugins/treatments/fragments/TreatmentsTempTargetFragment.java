@@ -181,7 +181,7 @@ public class TreatmentsTempTargetFragment extends Fragment {
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+                .subscribe(event -> updateGui(), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         updateGui();
     }

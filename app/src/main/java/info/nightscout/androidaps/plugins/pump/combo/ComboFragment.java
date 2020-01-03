@@ -72,12 +72,12 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventComboPumpUpdateGUI.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+                .subscribe(event -> updateGui(), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventQueueChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+                .subscribe(event -> updateGui(), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         updateGui();
     }

@@ -104,7 +104,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 .subscribe(event -> {
                     if (mSerialIOThread != null)
                         mSerialIOThread.disconnect("EventPreferenceChange");
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAppExit.class)
@@ -117,7 +117,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                         mSerialIOThread.disconnect("Application exit");
                     MainApp.instance().getApplicationContext().unregisterReceiver(receiver);
                     stopSelf();
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 

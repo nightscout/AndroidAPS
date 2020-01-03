@@ -21,8 +21,9 @@ import javax.inject.Inject
 class OpenAPSMAFragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    @Inject lateinit var openAPSMAPlugin: OpenAPSMAPlugin
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var openAPSMAPlugin: OpenAPSMAPlugin
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -47,17 +48,13 @@ class OpenAPSMAFragment : DaggerFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 updateGUI()
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventOpenAPSUpdateResultGui::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 updateResultGUI(it.text)
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
         updateGUI()
     }
 

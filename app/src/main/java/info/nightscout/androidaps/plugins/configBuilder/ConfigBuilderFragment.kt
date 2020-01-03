@@ -33,6 +33,7 @@ class ConfigBuilderFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private val pluginViewHolders = ArrayList<PluginViewHolder>()
@@ -66,9 +67,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 for (pluginViewHolder in pluginViewHolders) pluginViewHolder.update()
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
         updateGUI()
     }
 

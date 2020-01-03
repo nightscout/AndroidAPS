@@ -49,6 +49,7 @@ import javax.inject.Inject
 class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
@@ -118,26 +119,26 @@ class MedtronicFragment : DaggerFragment() {
         disposable += rxBus
             .toObservable(EventRefreshButtonState::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ medtronic_refresh.isEnabled = it.newState }, { FabricPrivacy.logException(it) })
+            .subscribe({ medtronic_refresh.isEnabled = it.newState }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventMedtronicDeviceStatusChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 aapsLogger.debug(LTag.PUMP, "onStatusEvent(EventMedtronicDeviceStatusChange): $it")
                 setDeviceStatus()
-            }, { FabricPrivacy.logException(it) })
+            }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventMedtronicPumpValuesChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventMedtronicPumpConfigurationChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
@@ -145,15 +146,15 @@ class MedtronicFragment : DaggerFragment() {
                 aapsLogger.debug(LTag.PUMP, "EventMedtronicPumpConfigurationChanged triggered")
                 MedtronicUtil.getPumpStatus().verifyConfiguration()
                 updateGUI()
-            }, { FabricPrivacy.logException(it) })
+            }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventQueueChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
 
         updateGUI()
     }

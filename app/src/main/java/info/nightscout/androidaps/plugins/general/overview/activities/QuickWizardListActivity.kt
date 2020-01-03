@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.utils.wizard.QuickWizard
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
@@ -19,6 +18,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.wizard.QuickWizard
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.overview_quickwizardlist_activity.*
@@ -27,6 +27,7 @@ import javax.inject.Inject
 class QuickWizardListActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var quickWizard: QuickWizard
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -94,9 +95,7 @@ class QuickWizardListActivity : NoSplashAppCompatActivity() {
             .subscribe({
                 val adapter = RecyclerViewAdapter(supportFragmentManager)
                 overview_quickwizardactivity_recyclerview?.swapAdapter(adapter, false)
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
     }
 
     override fun onPause() {

@@ -248,7 +248,6 @@ class SWDefinition @Inject constructor(
         .add(SWPlugin()
             .option(PluginType.PROFILE, R.string.configbuilder_profile_description)
             .label(R.string.configbuilder_profile))
-        .validator { configBuilderPlugin.activeProfileInterface != null }
     private val screenNsProfile = SWScreen(R.string.nsprofile)
         .skippable(false)
         .add(SWInfotext()

@@ -90,22 +90,22 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
         disposable.add(rxBus
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateButtons(), FabricPrivacy::logException)
+                .subscribe(event -> updateButtons(), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventNSClientStatus.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateButtons(), FabricPrivacy::logException)
+                .subscribe(event -> updateButtons(), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventProfileNeedsUpdate.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateButtons(), FabricPrivacy::logException)
+                .subscribe(event -> updateButtons(), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventProfileStoreChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateButtons(), FabricPrivacy::logException)
+                .subscribe(event -> updateButtons(), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventSWUpdate.class)
@@ -113,7 +113,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
                 .subscribe(event -> {
                     if (event.getRedraw()) generateLayout();
                     updateButtons();
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 

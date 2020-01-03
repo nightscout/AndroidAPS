@@ -23,6 +23,7 @@ class NtpProgressDialog : DaggerDialogFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
 
     private val disposable = CompositeDisposable()
 
@@ -73,7 +74,7 @@ class NtpProgressDialog : DaggerDialogFragment() {
                 }
                 state = event.status
                 percent = event.percent
-            }) { FabricPrivacy.logException(it) }
+            }) { fabricPrivacy.logException(it) }
     }
 
     override fun onPause() {

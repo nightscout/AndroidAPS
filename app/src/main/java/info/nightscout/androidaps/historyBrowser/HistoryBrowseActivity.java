@@ -190,7 +190,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
                             updateGUI("EventAutosensCalculationFinished");
                         }
                     }
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventIobCalculationProgress.class)
@@ -198,7 +198,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
                 .subscribe(event -> {
                     if (iobCalculationProgressView != null)
                         iobCalculationProgressView.setText(event.getProgress());
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         // set start of current day
         Calendar calendar = Calendar.getInstance();

@@ -44,6 +44,7 @@ class TidepoolPlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val mainApp: MainApp,
     private val resourceHelper: ResourceHelper,
+    private val fabricPrivacy: FabricPrivacy,
     private val tidepoolUploader: TidepoolUploader,
     private val uploadChunk: UploadChunk,
     private val sp: SP
@@ -66,9 +67,7 @@ class TidepoolPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventTidepoolDoUpload::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ doUpload() }, {
-                FabricPrivacy.logException(it)
-            })
+            .subscribe({ doUpload() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventTidepoolResetData::class.java)
             .observeOn(Schedulers.io())
@@ -81,13 +80,13 @@ class TidepoolPlugin @Inject constructor(
                     tidepoolUploader.doLogin()
                 }
             }, {
-                FabricPrivacy.logException(it)
+                fabricPrivacy.logException(it)
             })
         disposable += rxBus
             .toObservable(EventTidepoolStatus::class.java)
             .observeOn(Schedulers.io())
             .subscribe({ event -> addToLog(event) }, {
-                FabricPrivacy.logException(it)
+                fabricPrivacy.logException(it)
             })
         disposable += rxBus
             .toObservable(EventNewBG::class.java)
@@ -103,7 +102,7 @@ class TidepoolPlugin @Inject constructor(
                     && RateLimit.rateLimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
                     doUpload()
             }, {
-                FabricPrivacy.logException(it)
+                fabricPrivacy.logException(it)
             })
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
@@ -115,13 +114,13 @@ class TidepoolPlugin @Inject constructor(
                 )
                     tidepoolUploader.resetInstance()
             }, {
-                FabricPrivacy.logException(it)
+                fabricPrivacy.logException(it)
             })
         disposable += rxBus
             .toObservable(EventNetworkChange::class.java)
             .observeOn(Schedulers.io())
             .subscribe({}, {
-                FabricPrivacy.logException(it)
+                fabricPrivacy.logException(it)
             }) // TODO start upload on wifi connect
 
     }

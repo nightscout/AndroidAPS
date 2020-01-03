@@ -33,6 +33,7 @@ class StatusLinePlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val resourceHelper: ResourceHelper,
     private val mainApp: MainApp,
+    private val fabricPrivacy: FabricPrivacy,
     private val configBuilderPlugin: ConfigBuilderPlugin,
     private val treatmentsPlugin: TreatmentsPlugin,
     private val loopPlugin: LoopPlugin,
@@ -63,28 +64,28 @@ class StatusLinePlugin @Inject constructor(
         super.onStart()
         disposable += rxBus.toObservable(EventRefreshOverview::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ if (lastLoopStatus != loopPlugin.isEnabled(PluginType.LOOP)) sendStatus() }) { FabricPrivacy.logException(it) }
+            .subscribe({ if (lastLoopStatus != loopPlugin.isEnabled(PluginType.LOOP)) sendStatus() }) { fabricPrivacy.logException(it) }
         disposable += rxBus.toObservable(EventExtendedBolusChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
+            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
         disposable += rxBus.toObservable(EventTempBasalChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
+            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
         disposable += rxBus.toObservable(EventTreatmentChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
+            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
         disposable += rxBus.toObservable(EventConfigBuilderChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
+            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
         disposable += rxBus.toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
+            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
         disposable += rxBus.toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
+            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
         disposable += rxBus.toObservable(EventAppInitialized::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendStatus() }) { FabricPrivacy.logException(it) }
+            .subscribe({ sendStatus() }) { fabricPrivacy.logException(it) }
     }
 
     override fun onStop() {

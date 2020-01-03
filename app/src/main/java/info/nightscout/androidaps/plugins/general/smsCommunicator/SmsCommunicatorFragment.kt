@@ -20,8 +20,9 @@ import javax.inject.Inject
 import kotlin.math.max
 
 class SmsCommunicatorFragment : DaggerFragment() {
-    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
+    @Inject lateinit var fabricPrivacy : FabricPrivacy
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
 
     private val disposable = CompositeDisposable()
 
@@ -36,7 +37,7 @@ class SmsCommunicatorFragment : DaggerFragment() {
         disposable += rxBus
             .toObservable(EventSmsCommunicatorUpdateGui::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }) { FabricPrivacy.logException(it) }
+            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
         updateGui()
     }
 

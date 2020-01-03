@@ -30,6 +30,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
 
     private val disposable = CompositeDisposable()
 
@@ -98,12 +99,12 @@ class BolusProgressDialog : DaggerDialogFragment() {
         disposable.add(rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ overview_bolusprogress_status.text = it.getStatus() }) { FabricPrivacy.logException(it) }
+            .subscribe({ overview_bolusprogress_status.text = it.getStatus() }) { fabricPrivacy.logException(it) }
         )
         disposable.add(rxBus
             .toObservable(EventDismissBolusProgressIfRunning::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ if (running) dismiss() }) { FabricPrivacy.logException(it) }
+            .subscribe({ if (running) dismiss() }) { fabricPrivacy.logException(it) }
         )
         disposable.add(rxBus
             .toObservable(EventOverviewBolusProgress::class.java)
@@ -117,7 +118,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
                     scheduleDismiss()
                 }
                 state = it.status
-            }) { FabricPrivacy.logException(it) }
+            }) { fabricPrivacy.logException(it) }
         )
     }
 

@@ -58,6 +58,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val profileFunction: ProfileFunction,
+    private val fabricPrivacy: FabricPrivacy,
     private val configBuilderPlugin: ConfigBuilderPlugin,
     private val treatmentsPlugin: TreatmentsPlugin,
     private val loopPlugin: LoopPlugin,
@@ -100,7 +101,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventPreferenceChange? -> processSettings(event) }) { FabricPrivacy.logException(it) }
+            .subscribe({ event: EventPreferenceChange? -> processSettings(event) }) { fabricPrivacy.logException(it) }
     }
 
     override fun onStop() {

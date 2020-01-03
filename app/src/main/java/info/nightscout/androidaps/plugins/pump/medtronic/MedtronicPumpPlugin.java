@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.medtronic;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
 
@@ -25,9 +24,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -44,7 +43,6 @@ import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
-import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
@@ -100,8 +98,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     // variables for handling statuses and history
     private boolean firstRun = true;
     private boolean isRefresh = false;
-    private boolean isBasalProfileInvalid = false;
-    private boolean basalProfileChanged = false;
     private Map<MedtronicStatusRefreshType, Long> statusRefreshMap = new HashMap<>();
     private boolean isInitialized = false;
     private MedtronicHistoryData medtronicHistoryData;
@@ -110,7 +106,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     public static boolean isBusy = false;
     private List<Long> busyTimestamps = new ArrayList<>();
-    private boolean sentIdToFirebase = false;
     private boolean hasTimeDateOrTimeZoneChanged = false;
 
 
@@ -575,14 +570,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         if (!isRefresh) {
             pumpState = PumpDriverState.Initialized;
-        }
-
-        if (!sentIdToFirebase) {
-            Bundle params = new Bundle();
-            params.putString("version", BuildConfig.VERSION);
-            MainApp.getFirebaseAnalytics().logEvent("MedtronicPumpInit", params);
-
-            sentIdToFirebase = true;
         }
 
         isInitialized = true;

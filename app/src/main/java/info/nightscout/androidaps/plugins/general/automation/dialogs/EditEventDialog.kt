@@ -31,6 +31,7 @@ import javax.inject.Inject
 
 class EditEventDialog : DialogFragmentWithDate() {
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var automationPlugin: AutomationPlugin
 
     private var actionListAdapter: ActionListAdapter? = null
@@ -80,9 +81,7 @@ class EditEventDialog : DialogFragmentWithDate() {
             .subscribe({
                 actionListAdapter?.notifyDataSetChanged()
                 showPreconditions()
-            }, {
-                FabricPrivacy.logException(it)
-            }
+            }, { fabricPrivacy.logException(it) }
             )
         disposable += rxBus
             .toObservable(EventAutomationAddAction::class.java)
@@ -90,9 +89,7 @@ class EditEventDialog : DialogFragmentWithDate() {
             .subscribe({
                 event.addAction(it.action)
                 actionListAdapter?.notifyDataSetChanged()
-            }, {
-                FabricPrivacy.logException(it)
-            }
+            }, { fabricPrivacy.logException(it) }
             )
         disposable += rxBus
             .toObservable(EventAutomationUpdateTrigger::class.java)
@@ -100,9 +97,7 @@ class EditEventDialog : DialogFragmentWithDate() {
             .subscribe({
                 event.trigger = it.trigger
                 automation_triggerDescription.text = event.trigger.friendlyDescription()
-            }, {
-                FabricPrivacy.logException(it)
-            }
+            }, { fabricPrivacy.logException(it) }
             )
         disposable += rxBus
             .toObservable(EventAutomationUpdateAction::class.java)
@@ -110,9 +105,7 @@ class EditEventDialog : DialogFragmentWithDate() {
             .subscribe({
                 event.actions[it.position] = it.action
                 actionListAdapter?.notifyDataSetChanged()
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
     }
 
     override fun submit(): Boolean {

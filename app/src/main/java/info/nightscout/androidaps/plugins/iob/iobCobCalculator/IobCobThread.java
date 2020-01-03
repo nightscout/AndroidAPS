@@ -221,7 +221,7 @@ public class IobCobThread extends Thread {
                                 }
                             } catch (Exception e) {
                                 log.error("Unhandled exception", e);
-                                FabricPrivacy.logException(e);
+                                FabricPrivacy.getInstance().logException(e);
                                 log.debug(autosensDataTable.toString());
                                 log.debug(bucketed_data.toString());
                                 log.debug(IobCobCalculatorPlugin.getPlugin().getBgReadings().toString());

@@ -149,7 +149,7 @@ public class LoopPlugin extends PluginBase {
         disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> invoke("EventTempTargetChange", true), FabricPrivacy::logException)
+                .subscribe(event -> invoke("EventTempTargetChange", true), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         /**
          * This method is triggered once autosens calculation has completed, so the LoopPlugin
@@ -173,7 +173,7 @@ public class LoopPlugin extends PluginBase {
 
                     lastBgTriggeredRun = bgReading.date;
                     invoke("AutosenseCalculation for " + bgReading, true);
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 

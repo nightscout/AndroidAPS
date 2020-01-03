@@ -25,6 +25,7 @@ class LoopFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var loopPlugin: LoopPlugin
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -51,9 +52,7 @@ class LoopFragment : DaggerFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 updateGUI()
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
 
         disposable += rxBus
             .toObservable(EventLoopSetLastRunGui::class.java)
@@ -61,9 +60,7 @@ class LoopFragment : DaggerFragment() {
             .subscribe({
                 clearGUI()
                 loop_lastrun.text = it.text
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
 
         updateGUI()
         sp.putBoolean(R.string.key_objectiveuseloop, true)

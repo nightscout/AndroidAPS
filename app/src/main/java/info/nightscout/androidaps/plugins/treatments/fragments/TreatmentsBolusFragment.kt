@@ -39,6 +39,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var profileFunction: ProfileFunction
 
@@ -84,12 +85,12 @@ class TreatmentsBolusFragment : DaggerFragment() {
         disposable.add(rxBus
             .toObservable(EventTreatmentChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }) { FabricPrivacy.logException(it) }
+            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
         )
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }) { FabricPrivacy.logException(it) }
+            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
         )
         updateGui()
     }

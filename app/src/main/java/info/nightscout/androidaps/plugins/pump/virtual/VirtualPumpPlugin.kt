@@ -47,6 +47,7 @@ import javax.inject.Singleton
 class VirtualPumpPlugin @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
+    private var fabricPrivacy: FabricPrivacy,
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
@@ -117,7 +118,7 @@ class VirtualPumpPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(resourceHelper, R.string.key_virtualpump_type)) refreshConfiguration() }) { FabricPrivacy.logException(it) }
+            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(resourceHelper, R.string.key_virtualpump_type)) refreshConfiguration() }) { fabricPrivacy.logException(it) }
         refreshConfiguration()
     }
 

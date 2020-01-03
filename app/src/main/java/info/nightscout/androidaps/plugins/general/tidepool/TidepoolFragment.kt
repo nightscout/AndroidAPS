@@ -25,6 +25,7 @@ class TidepoolFragment : DaggerFragment() {
     @Inject lateinit var tidepoolPlugin: TidepoolPlugin
     @Inject lateinit var tidepoolUploader: TidepoolUploader
     @Inject lateinit var sp: SP
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -52,9 +53,7 @@ class TidepoolFragment : DaggerFragment() {
                 tidepool_status?.text = tidepoolUploader.connectionStatus.name
                 tidepool_log?.text = tidepoolPlugin.textLog
                 tidepool_logscrollview?.fullScroll(ScrollView.FOCUS_DOWN)
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
     }
 
     @Synchronized

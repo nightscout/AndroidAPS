@@ -94,7 +94,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> mainApp.unbindService(mConnection), FabricPrivacy::logException)
+                .subscribe(event -> mainApp.unbindService(mConnection), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         super.onStart();
     }

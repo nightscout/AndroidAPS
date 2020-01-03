@@ -151,7 +151,7 @@ public class NSClientService extends DaggerService {
                         destroy();
                         initialize();
                     }
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
@@ -165,7 +165,7 @@ public class NSClientService extends DaggerService {
                         destroy();
                         initialize();
                     }
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
@@ -175,7 +175,7 @@ public class NSClientService extends DaggerService {
                         log.debug("EventAppExit received");
                     destroy();
                     stopSelf();
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventNSClientRestart.class)
@@ -183,22 +183,22 @@ public class NSClientService extends DaggerService {
                 .subscribe(event -> {
                     latestDateInReceivedData = 0;
                     restart();
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(NSAuthAck.class)
                 .observeOn(Schedulers.io())
-                .subscribe(this::processAuthAck, FabricPrivacy::logException)
+                .subscribe(this::processAuthAck, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(NSUpdateAck.class)
                 .observeOn(Schedulers.io())
-                .subscribe(this::processUpdateAck, FabricPrivacy::logException)
+                .subscribe(this::processUpdateAck, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(NSAddAck.class)
                 .observeOn(Schedulers.io())
-                .subscribe(this::processAddAck, FabricPrivacy::logException)
+                .subscribe(this::processAddAck, exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 

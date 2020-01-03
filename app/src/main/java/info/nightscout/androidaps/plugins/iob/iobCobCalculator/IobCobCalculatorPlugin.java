@@ -128,7 +128,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                         autosensDataTable = new LongSparseArray<>();
                     }
                     runCalculation("onEventConfigBuilderChange", System.currentTimeMillis(), false, true, event);
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         // EventNewBasalProfile
         disposable.add(rxBus
@@ -146,7 +146,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                         basalDataTable = new LongSparseArray<>();
                     }
                     runCalculation("onNewProfile", System.currentTimeMillis(), false, true, event);
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         // EventNewBG
         disposable.add(rxBus
@@ -155,7 +155,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 .subscribe(event -> {
                     stopCalculation("onEventNewBG");
                     runCalculation("onEventNewBG", System.currentTimeMillis(), true, true, event);
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         // EventPreferenceChange
         disposable.add(rxBus
@@ -180,19 +180,19 @@ public class IobCobCalculatorPlugin extends PluginBase {
                         }
                         runCalculation("onEventPreferenceChange", System.currentTimeMillis(), false, true, event);
                     }
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         // EventAppInitialized
         disposable.add(rxBus
                 .toObservable(EventAppInitialized.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, event), FabricPrivacy::logException)
+                .subscribe(event -> runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, event), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         // EventNewHistoryData
         disposable.add(rxBus
                 .toObservable(EventNewHistoryData.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> newHistoryData(event), FabricPrivacy::logException)
+                .subscribe(event -> newHistoryData(event), exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 

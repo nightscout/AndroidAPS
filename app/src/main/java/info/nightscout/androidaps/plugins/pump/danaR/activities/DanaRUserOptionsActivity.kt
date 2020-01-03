@@ -33,6 +33,7 @@ import kotlin.math.min
 class DanaRUserOptionsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
@@ -54,7 +55,7 @@ class DanaRUserOptionsActivity : NoSplashAppCompatActivity() {
         disposable += rxBus
             .toObservable(EventInitializationChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ setData() }) { FabricPrivacy.logException(it) }
+            .subscribe({ setData() }) { fabricPrivacy.logException(it) }
     }
 
     @Synchronized

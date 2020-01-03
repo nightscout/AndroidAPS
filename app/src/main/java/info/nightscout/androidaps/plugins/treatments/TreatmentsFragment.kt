@@ -23,6 +23,7 @@ import javax.inject.Inject
 class TreatmentsFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
 
     private val disposable = CompositeDisposable()
 
@@ -73,7 +74,7 @@ class TreatmentsFragment : DaggerFragment() {
         disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }) { FabricPrivacy.logException(it) }
+            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
         updateGui()
     }
 

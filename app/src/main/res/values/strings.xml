@@ -1691,5 +1691,6 @@
     <string name="key_snoozedTo" translatable="false">snoozedTo</string>
     <string name="key_snooze_dst_in24h" translatable="false">snooze_dst_in24h</string>
     <string name="key_snooze_loopdisabled" translatable="false">snooze_loopdisabled</string>
+    <string name="key_enable_fabric">enable_fabric</string>
 
 </resources>

@@ -29,6 +29,7 @@ import javax.inject.Inject
 
 class BGSourceFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
 
@@ -55,7 +56,7 @@ class BGSourceFragment : DaggerFragment() {
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }) { FabricPrivacy.logException(it) }
+            .subscribe({ updateGUI() }) { fabricPrivacy.logException(it) }
         )
     }
 

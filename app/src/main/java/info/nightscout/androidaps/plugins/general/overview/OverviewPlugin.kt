@@ -19,7 +19,8 @@ import javax.inject.Singleton
 @Singleton
 class OverviewPlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
-    private val notificationStore: NotificationStore
+    private val notificationStore: NotificationStore,
+    private val fabricPrivacy: FabricPrivacy
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(OverviewFragment::class.qualifiedName)
@@ -41,18 +42,14 @@ class OverviewPlugin @Inject constructor(
             .subscribe({ n ->
                 if (notificationStore.add(n.notification))
                     rxBus.send(EventRefreshOverview("EventNewNotification"))
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventDismissNotification::class.java)
             .observeOn(Schedulers.io())
             .subscribe({ n ->
                 if (notificationStore.remove(n.id))
                     rxBus.send(EventRefreshOverview("EventDismissNotification"))
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
     }
 
     override fun onStop() {

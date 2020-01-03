@@ -28,10 +28,11 @@ import javax.inject.Inject
 class OpenAPSSMBFragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -54,17 +55,13 @@ class OpenAPSSMBFragment : DaggerFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 updateGUI()
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventOpenAPSUpdateResultGui::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 updateResultGUI(it.text)
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
 
         updateGUI()
     }

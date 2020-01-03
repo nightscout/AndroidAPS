@@ -97,7 +97,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     MainApp.instance().getApplicationContext().unbindService(serviceConnection);
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         onStartCustomActions();
     }

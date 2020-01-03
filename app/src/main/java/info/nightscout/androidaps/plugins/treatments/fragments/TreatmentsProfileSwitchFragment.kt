@@ -42,6 +42,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -72,7 +73,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
         disposable.add(rxBus
             .toObservable(EventProfileNeedsUpdate::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }) { FabricPrivacy.logException(it) }
+            .subscribe({ updateGUI() }) { fabricPrivacy.logException(it) }
         )
         updateGUI()
     }

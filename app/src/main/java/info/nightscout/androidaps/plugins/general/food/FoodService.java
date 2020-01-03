@@ -61,7 +61,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
                         this.createFoodFromJsonIfNotExists(array);
                     else
                         this.deleteNS(array);
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 

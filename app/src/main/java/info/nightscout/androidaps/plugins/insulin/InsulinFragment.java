@@ -37,7 +37,7 @@ public class InsulinFragment extends Fragment {
 
             return view;
         } catch (Exception e) {
-            FabricPrivacy.logException(e);
+            FabricPrivacy.getInstance().logException(e);
         }
 
         return null;

@@ -99,12 +99,12 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                             sExecutionService.extendedBolusStop();
                         }
                     }
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> mainApp.unbindService(mConnection), FabricPrivacy::logException)
+                .subscribe(event -> mainApp.unbindService(mConnection), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         super.onStart();
     }

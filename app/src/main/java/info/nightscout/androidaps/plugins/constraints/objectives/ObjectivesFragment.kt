@@ -28,7 +28,11 @@ import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObj
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.OKDialog
+import info.nightscout.androidaps.utils.SntpClient
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -42,6 +46,7 @@ class ObjectivesFragment : DaggerFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var objectivesPlugin: ObjectivesPlugin
 
     private val objectivesAdapter = ObjectivesAdapter()
@@ -83,9 +88,7 @@ class ObjectivesFragment : DaggerFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 objectives_recyclerview.adapter?.notifyDataSetChanged()
-            }, {
-                FabricPrivacy.logException(it)
-            }
+            }, { fabricPrivacy.logException(it) }
             )
     }
 

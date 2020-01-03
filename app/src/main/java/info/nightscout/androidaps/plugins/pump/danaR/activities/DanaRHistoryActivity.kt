@@ -43,6 +43,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
@@ -61,14 +62,14 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ danar_history_status.text = it.getStatus() }) { FabricPrivacy.logException(it) }
+            .subscribe({ danar_history_status.text = it.getStatus() }) { fabricPrivacy.logException(it) }
         disposable += rxBus
             .toObservable(EventDanaRSyncStatus::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 aapsLogger.debug(LTag.PUMP, "EventDanaRSyncStatus: " + it.message)
                 danar_history_status.text = it.message
-            }) { FabricPrivacy.logException(it) }
+            }) { fabricPrivacy.logException(it) }
     }
 
     override fun onPause() {

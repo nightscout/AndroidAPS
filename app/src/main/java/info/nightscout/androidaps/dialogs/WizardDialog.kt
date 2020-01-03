@@ -52,6 +52,7 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
@@ -171,9 +172,7 @@ class WizardDialog : DaggerDialogFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 activity?.runOnUiThread { calculateInsulin() }
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
         )
 
     }

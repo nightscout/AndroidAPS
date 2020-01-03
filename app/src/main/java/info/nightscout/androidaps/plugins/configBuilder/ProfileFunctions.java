@@ -73,7 +73,7 @@ public class ProfileFunctions implements ProfileFunction {
                                 RxBus.Companion.getINSTANCE().send(new EventNewBasalProfile());
                         }
                     });
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 

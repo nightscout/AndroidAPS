@@ -80,7 +80,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> statusView.setText(event.getStatus()), FabricPrivacy::logException)
+                .subscribe(event -> statusView.setText(event.getStatus()), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventDanaRSyncStatus.class)
@@ -88,7 +88,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
                 .subscribe(event -> {
                     log.debug("EventDanaRSyncStatus: " + event.getMessage());
                     statusView.setText(event.getMessage());
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 

@@ -25,10 +25,10 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.services.LocationService
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
@@ -44,7 +44,8 @@ class AutomationPlugin @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val resourceHelper: ResourceHelper,
     private val mainApp: MainApp,
-    private val sp :SP,
+    private val sp: SP,
+    private val fabricPrivacy: FabricPrivacy,
     private val loopPlugin: LoopPlugin
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
@@ -92,15 +93,11 @@ class AutomationPlugin @Inject constructor(
                     else
                         mainApp.startService(Intent(mainApp, LocationService::class.java))
                 }
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventAutomationDataChanged::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ storeToSP() }, {
-                FabricPrivacy.logException(it)
-            })
+            .subscribe({ storeToSP() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventLocationChange::class.java)
             .observeOn(Schedulers.io())
@@ -109,27 +106,19 @@ class AutomationPlugin @Inject constructor(
                     aapsLogger.debug(LTag.AUTOMATION, "Grabbed location: $it.location.latitude $it.location.longitude Provider: $it.location.provider")
                     processActions()
                 }
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventChargingState::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ processActions() }, {
-                FabricPrivacy.logException(it)
-            })
+            .subscribe({ processActions() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventNetworkChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ processActions() }, {
-                FabricPrivacy.logException(it)
-            })
+            .subscribe({ processActions() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ processActions() }, {
-                FabricPrivacy.logException(it)
-            })
+            .subscribe({ processActions() }, { fabricPrivacy.logException(it) })
     }
 
     override fun onStop() {

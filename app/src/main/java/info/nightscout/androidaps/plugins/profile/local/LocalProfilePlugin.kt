@@ -39,6 +39,7 @@ class LocalProfilePlugin @Inject constructor(
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.PROFILE)
     .fragmentClass(LocalProfileFragment::class.java.name)
+    .enableByDefault(true)
     .pluginName(R.string.localprofile)
     .shortName(R.string.localprofile_shortname)
     .description(R.string.description_profile_local)), ProfileInterface {

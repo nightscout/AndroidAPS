@@ -1,5 +1,10 @@
 package info.nightscout.androidaps;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.SystemClock;
@@ -7,6 +12,8 @@ import android.os.SystemClock;
 import androidx.annotation.ColorRes;
 import androidx.annotation.PluralsRes;
 import androidx.annotation.StringRes;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -99,6 +106,7 @@ import info.nightscout.androidaps.utils.ActivityMonitor;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import io.fabric.sdk.android.Fabric;
 
 import static info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtilsKt.triggerCheckVersion;
@@ -110,7 +118,7 @@ public class MainApp extends DaggerApplication {
     static MainApp sInstance;
     private static Resources sResources;
 
-    static FirebaseAnalytics mFirebaseAnalytics;
+    static FirebaseAnalytics firebaseAnalytics;
 
     static DatabaseHelper sDatabaseHelper = null;
 
@@ -122,8 +130,14 @@ public class MainApp extends DaggerApplication {
     public static boolean devBranch;
     public static boolean engineeringMode;
 
+    private String CHANNEL_ID = "AndroidAPS-Ongoing";
+    private int ONGOING_NOTIFICATION_ID = 4711;
+    private Notification notification;
+
     @Inject AAPSLogger aapsLogger;
     @Inject ActivityMonitor activityMonitor;
+    @Inject FabricPrivacy fabricPrivacy;
+    @Inject ResourceHelper resourceHelper;
 
     @Inject ActionsPlugin actionsPlugin;
     @Inject AutomationPlugin automationPlugin;
@@ -150,6 +164,7 @@ public class MainApp extends DaggerApplication {
     @Inject OverviewPlugin overviewPlugin;
     @Inject PersistentNotificationPlugin persistentNotificationPlugin;
     @Inject RandomBgPlugin randomBgPlugin;
+    @Inject SignatureVerifierPlugin signatureVerifierPlugin;
     @Inject DexcomPlugin dexcomPlugin;
     @Inject EversensePlugin eversensePlugin;
     @Inject GlimpPlugin glimpPlugin;
@@ -174,6 +189,7 @@ public class MainApp extends DaggerApplication {
         sInstance = this;
         sResources = getResources();
         LocaleHelper.INSTANCE.update(this);
+        generateEmptyNotification();
         sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
 
 /* TODO: put back
@@ -187,7 +203,7 @@ public class MainApp extends DaggerApplication {
 */
 
         try {
-            if (FabricPrivacy.fabricEnabled()) {
+            if (fabricPrivacy.fabricEnabled()) {
                 Fabric.with(this, new Crashlytics());
             }
         } catch (Exception e) {
@@ -196,8 +212,8 @@ public class MainApp extends DaggerApplication {
 
         registerActivityLifecycleCallbacks(activityMonitor);
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
-        mFirebaseAnalytics.setAnalyticsCollectionEnabled(!Boolean.getBoolean("disableFirebase") && FabricPrivacy.fabricEnabled());
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        firebaseAnalytics.setAnalyticsCollectionEnabled(!Boolean.getBoolean("disableFirebase") && fabricPrivacy.fabricEnabled());
 
         JodaTimeAndroid.init(this);
 
@@ -249,7 +265,7 @@ public class MainApp extends DaggerApplication {
             if (!Config.NSCLIENT) pluginsList.add(safetyPlugin);
             if (!Config.NSCLIENT) pluginsList.add(versionCheckerPlugin);
             if (Config.APS) pluginsList.add(StorageConstraintPlugin.getPlugin());
-            if (Config.APS) pluginsList.add(SignatureVerifierPlugin.getPlugin());
+            if (Config.APS) pluginsList.add(signatureVerifierPlugin);
             if (Config.APS) pluginsList.add(objectivesPlugin);
             pluginsList.add(xdripPlugin);
             pluginsList.add(nSClientSourcePlugin);
@@ -373,8 +389,8 @@ public class MainApp extends DaggerApplication {
         return sDatabaseHelper;
     }
 
-    public static FirebaseAnalytics getFirebaseAnalytics() {
-        return mFirebaseAnalytics;
+    public FirebaseAnalytics getFirebaseAnalytics() {
+        return firebaseAnalytics;
     }
 
     public static ArrayList<PluginBase> getPluginsList() {
@@ -447,6 +463,42 @@ public class MainApp extends DaggerApplication {
 
     public static boolean isDev() {
         return devBranch;
+    }
+
+    // global Notification has been moved to MainApp because PersistentNotificationPlugin is initialized too late
+    private void generateEmptyNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
+        builder.setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setCategory(NotificationCompat.CATEGORY_STATUS)
+                .setSmallIcon(resourceHelper.getNotificationIcon())
+                .setLargeIcon(resourceHelper.decodeResource(resourceHelper.getIcon()));
+        builder.setContentTitle(resourceHelper.gs(R.string.loading));
+        Intent resultIntent = new Intent(this, MainApp.class);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notification = builder.build();
+        mNotificationManager.notify(ONGOING_NOTIFICATION_ID, notification);
+    }
+
+    public int notificationId() {
+        return ONGOING_NOTIFICATION_ID;
+    }
+
+    public String channelId() {
+        return CHANNEL_ID;
+    }
+
+    public void setNotification(Notification notification) {
+        this.notification = notification;
+    }
+
+    public Notification getNotification() {
+        return  notification;
     }
 
     @Override

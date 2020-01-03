@@ -30,6 +30,7 @@ class NSProfileFragment : DaggerFragment() {
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var profileFunction: ProfileFunction
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -108,7 +109,7 @@ class NSProfileFragment : DaggerFragment() {
         disposable += rxBus
             .toObservable(EventNSProfileUpdateGUI::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
         updateGUI()
     }
 

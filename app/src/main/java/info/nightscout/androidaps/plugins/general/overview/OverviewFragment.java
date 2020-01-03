@@ -380,79 +380,79 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 .toObservable(EventRefreshOverview.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(eventOpenAPSUpdateGui -> scheduleUpdateGUI(eventOpenAPSUpdateGui.getFrom()),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventExtendedBolusChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventExtendedBolusChange"),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventTempBasalChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventTempBasalChange"),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventTreatmentChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventTreatmentChange"),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventTempTargetChange"),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventAcceptOpenLoopChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventAcceptOpenLoopChange"),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventCareportalEventChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventCareportalEventChange"),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventInitializationChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventInitializationChanged"),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventAutosensCalculationFinished"),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventProfileNeedsUpdate.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventProfileNeedsUpdate"),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventPreferenceChange"),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventNewOpenLoopNotification.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> scheduleUpdateGUI("EventNewOpenLoopNotification"),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updatePumpStatus(event.getStatus()),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventIobCalculationProgress.class)
@@ -461,7 +461,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                             if (iobCalculationProgressView != null)
                                 iobCalculationProgressView.setText(event.getProgress());
                         },
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         sRefreshLoop = () -> {
             scheduleUpdateGUI("refreshLoop");

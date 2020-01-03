@@ -33,6 +33,7 @@ class FoodFragment : DaggerFragment() {
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var foodPlugin: FoodPlugin
 
     private val disposable = CompositeDisposable()
@@ -95,7 +96,7 @@ class FoodFragment : DaggerFragment() {
         disposable.add(rxBus
             .toObservable(EventFoodDatabaseChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }) { FabricPrivacy.logException(it) }
+            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
         )
         updateGui()
     }

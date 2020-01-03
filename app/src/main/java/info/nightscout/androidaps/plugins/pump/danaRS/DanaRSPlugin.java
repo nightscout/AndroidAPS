@@ -145,12 +145,12 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> mainApp.unbindService(mConnection), FabricPrivacy::logException)
+                .subscribe(event -> mainApp.unbindService(mConnection), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventDanaRSDeviceChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> loadAddress(), FabricPrivacy::logException)
+                .subscribe(event -> loadAddress(), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         loadAddress(); // load device name
         super.onStart();

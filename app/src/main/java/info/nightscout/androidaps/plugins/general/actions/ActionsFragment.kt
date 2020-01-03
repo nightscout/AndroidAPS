@@ -43,6 +43,7 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var statusLightHandler: StatusLightHandler
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
 
@@ -125,27 +126,27 @@ class ActionsFragment : DaggerFragment() {
         disposable += rxBus
             .toObservable(EventInitializationChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGui() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGui() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGui() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGui() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventCustomActionsChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGui() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventCareportalEventChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGui() }, { fabricPrivacy.logException(it) })
         updateGui()
     }
 

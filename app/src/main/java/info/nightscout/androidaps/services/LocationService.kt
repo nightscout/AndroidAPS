@@ -10,17 +10,15 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.IBinder
 import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.tasks.OnSuccessListener
 import dagger.android.DaggerService
+import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventLocationChange
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.persistentNotification.PersistentNotificationPlugin
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -32,7 +30,8 @@ class LocationService : DaggerService() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
-    @Inject lateinit var persistentNotificationPlugin: PersistentNotificationPlugin
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var mainApp: MainApp
 
     private val disposable = CompositeDisposable()
     private var locationManager: LocationManager? = null
@@ -77,13 +76,13 @@ class LocationService : DaggerService() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        startForeground(persistentNotificationPlugin.ONGOING_NOTIFICATION_ID, persistentNotificationPlugin.getLastNotification())
+        startForeground(mainApp.notificationId(), mainApp.getNotification())
         return Service.START_STICKY
     }
 
     override fun onCreate() {
         super.onCreate()
-        startForeground(persistentNotificationPlugin.ONGOING_NOTIFICATION_ID, persistentNotificationPlugin.getLastNotification())
+        startForeground(mainApp.notificationId(), mainApp.getNotification())
 
         // Get last location once until we get regular update
         LocationServices.getFusedLocationProviderClient(this).lastLocation.addOnSuccessListener {
@@ -122,7 +121,7 @@ class LocationService : DaggerService() {
             .subscribe({
                 aapsLogger.debug(LTag.LOCATION, "EventAppExit received")
                 stopSelf()
-            }) { FabricPrivacy.logException(it) }
+            }) { fabricPrivacy.logException(it) }
         )
     }
 

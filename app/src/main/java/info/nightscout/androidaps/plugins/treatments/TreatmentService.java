@@ -73,7 +73,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     } else { // EventNsTreatment.REMOVE
                         this.deleteNS(payload);
                     }
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 

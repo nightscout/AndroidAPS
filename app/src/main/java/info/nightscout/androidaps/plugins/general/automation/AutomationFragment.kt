@@ -42,8 +42,9 @@ import javax.inject.Inject
 
 class AutomationFragment : DaggerFragment(), OnStartDragListener {
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var automationPlugin: AutomationPlugin
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private lateinit var eventListAdapter: EventListAdapter
@@ -86,17 +87,13 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 updateGui()
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventAutomationDataChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 eventListAdapter.notifyDataSetChanged()
-            }, {
-                FabricPrivacy.logException(it)
-            })
+            }, { fabricPrivacy.logException(it) })
         updateGui()
     }
 

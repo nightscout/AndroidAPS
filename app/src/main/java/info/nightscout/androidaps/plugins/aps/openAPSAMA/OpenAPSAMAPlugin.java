@@ -211,7 +211,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
                     isTempTarget
             );
         } catch (JSONException e) {
-            FabricPrivacy.logException(e);
+            FabricPrivacy.getInstance().logException(e);
             return;
         }
 

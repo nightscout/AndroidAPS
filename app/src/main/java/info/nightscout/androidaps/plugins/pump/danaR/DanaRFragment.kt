@@ -39,6 +39,7 @@ import javax.inject.Inject
 class DanaRFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
@@ -100,19 +101,19 @@ class DanaRFragment : DaggerFragment() {
         disposable += rxBus
             .toObservable(EventDanaRNewStatus::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventQueueChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
@@ -134,7 +135,7 @@ class DanaRFragment : DaggerFragment() {
                 } else {
                     dana_pumpstatuslayout?.visibility = View.GONE
                 }
-            }, { FabricPrivacy.logException(it) })
+            }, { fabricPrivacy.logException(it) })
         updateGUI()
     }
 

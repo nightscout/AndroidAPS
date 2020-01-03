@@ -85,7 +85,7 @@ public class NSClientFragment extends Fragment implements View.OnClickListener, 
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNSClientUpdateGUI.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+                .subscribe(event -> updateGui(), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         updateGui();
     }

@@ -252,7 +252,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
                     advancedFiltering.value()
             );
         } catch (JSONException e) {
-            FabricPrivacy.logException(e);
+            FabricPrivacy.getInstance().logException(e);
             return;
         }
 

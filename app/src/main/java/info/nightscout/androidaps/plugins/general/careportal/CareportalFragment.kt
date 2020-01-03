@@ -4,9 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventCareportalEventChange
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -27,6 +25,7 @@ class CareportalFragment : DaggerFragment(), View.OnClickListener {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var statusLightHandler: StatusLightHandler
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
     private val disposable = CompositeDisposable()
@@ -60,11 +59,11 @@ class CareportalFragment : DaggerFragment(), View.OnClickListener {
 
         val profileStore = configBuilderPlugin.activeProfileInterface.profile
         if (profileStore == null) {
-            profileview_noprofile.setVisibility(View.VISIBLE)
-            careportal_buttons.setVisibility(View.GONE)
+            profileview_noprofile.visibility = View.VISIBLE
+            careportal_buttons.visibility = View.GONE
         } else {
-            profileview_noprofile.setVisibility(View.GONE)
-            careportal_buttons.setVisibility(View.VISIBLE)
+            profileview_noprofile.visibility = View.GONE
+            careportal_buttons.visibility = View.VISIBLE
         }
     }
 
@@ -73,7 +72,7 @@ class CareportalFragment : DaggerFragment(), View.OnClickListener {
         disposable.add(rxBus
             .toObservable(EventCareportalEventChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGUI() }) { FabricPrivacy.logException(it) }
+            .subscribe({ updateGUI() }) { fabricPrivacy.logException(it) }
         )
         updateGUI()
     }
@@ -133,7 +132,7 @@ class CareportalFragment : DaggerFragment(), View.OnClickListener {
         }
     }
 
-    protected fun updateGUI() {
+    private fun updateGUI() {
         statusLightHandler.updateAge(careportal_sensorage, careportal_insulinage, careportal_canulaage, careportal_pbage)
     }
 }

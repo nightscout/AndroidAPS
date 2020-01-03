@@ -36,6 +36,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -82,7 +83,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         disposable.add(rxBus
             .toObservable(EventCareportalEventChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }) { FabricPrivacy.logException(it) }
+            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
         )
         updateGui()
     }

@@ -110,7 +110,7 @@ public class DanaRSService extends Service {
                 .subscribe(event -> {
                     if (L.isEnabled(L.PUMP)) log.debug("EventAppExit received");
                     stopSelf();
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 

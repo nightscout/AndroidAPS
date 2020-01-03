@@ -24,6 +24,7 @@ import javax.inject.Inject
 class VirtualPumpFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
 
@@ -49,15 +50,15 @@ class VirtualPumpFragment : DaggerFragment() {
         disposable += rxBus
             .toObservable(EventVirtualPumpUpdateGui::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGui() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGui() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ updateGui() }, { FabricPrivacy.logException(it) })
+            .subscribe({ updateGui() }, { fabricPrivacy.logException(it) })
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
         updateGui()
     }

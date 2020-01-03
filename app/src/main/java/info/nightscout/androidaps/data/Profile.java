@@ -70,7 +70,7 @@ public class Profile {
             if (units != null)
                 this.units = units;
             else {
-                FabricPrivacy.log("Profile failover failed too");
+                FabricPrivacy.getInstance().log("Profile failover failed too");
                 this.units = Constants.MGDL;
             }
         }
@@ -182,7 +182,7 @@ public class Profile {
             } catch (Exception e) {
                 log.error("Unhandled exception", e);
                 log.error(json.toString());
-                FabricPrivacy.logException(e);
+                FabricPrivacy.getInstance().logException(e);
             }
         }
 

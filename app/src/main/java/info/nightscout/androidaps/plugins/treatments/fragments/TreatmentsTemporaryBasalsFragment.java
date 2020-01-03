@@ -199,12 +199,12 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventTempBasalChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+                .subscribe(event -> updateGui(), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateGui(), FabricPrivacy::logException)
+                .subscribe(event -> updateGui(), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         updateGui();
     }

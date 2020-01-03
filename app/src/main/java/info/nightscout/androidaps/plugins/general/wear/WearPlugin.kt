@@ -29,6 +29,7 @@ class WearPlugin @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
     private val mainApp: MainApp,
+    private val fabricPrivacy: FabricPrivacy,
     private val loopPlugin: Lazy<LoopPlugin>
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
@@ -45,27 +46,27 @@ class WearPlugin @Inject constructor(
         disposable.add(rxBus
             .toObservable(EventOpenAPSUpdateGui::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventTreatmentChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = false) }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventNewBasalProfile::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(status = false, basals = true, bgValue = false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ sendDataToWatch(status = false, basals = true, bgValue = false) }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = true) }) { FabricPrivacy.logException(it) })
+            .subscribe({ sendDataToWatch(status = true, basals = true, bgValue = true) }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
@@ -74,13 +75,13 @@ class WearPlugin @Inject constructor(
                 resendDataToWatch()
                 // status may be formatted differently
                 sendDataToWatch(status = true, basals = false, bgValue = false)
-            }) { FabricPrivacy.logException(it) })
+            }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(Schedulers.io())
             .subscribe({
                 if (WatchUpdaterService.shouldReportLoopStatus(loopPlugin.get().isEnabled(PluginType.LOOP)))
-                    sendDataToWatch(status = true, basals = false, bgValue = false) }) { FabricPrivacy.logException(it) })
+                    sendDataToWatch(status = true, basals = false, bgValue = false) }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventBolusRequested::class.java)
             .observeOn(Schedulers.io())
@@ -90,7 +91,7 @@ class WearPlugin @Inject constructor(
                 intent.putExtra("progresspercent", 0)
                 intent.putExtra("progressstatus", status)
                 mainApp.startService(intent)
-            }) { FabricPrivacy.logException(it) })
+            }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventDismissBolusProgressIfRunning::class.java)
             .observeOn(Schedulers.io())
@@ -105,7 +106,7 @@ class WearPlugin @Inject constructor(
                 intent.putExtra("progresspercent", 100)
                 intent.putExtra("progressstatus", status)
                 mainApp.startService(intent)
-            }) { FabricPrivacy.logException(it) })
+            }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventOverviewBolusProgress::class.java)
             .observeOn(Schedulers.io())
@@ -116,7 +117,7 @@ class WearPlugin @Inject constructor(
                     intent.putExtra("progressstatus", event.status)
                     mainApp.startService(intent)
                 }
-            }) { FabricPrivacy.logException(it) })
+            }) { fabricPrivacy.logException(it) })
     }
 
     override fun onStop() {

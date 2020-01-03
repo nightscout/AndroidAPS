@@ -139,19 +139,19 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                             updateTotalIOBTreatments();
                             rxBus.send(event.getNext());
                         },
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventReloadProfileSwitchData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> initializeProfileSwitchData(range()),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> initializeTempTargetData(range()),
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventReloadTempBasalData.class)
@@ -161,7 +161,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                             initializeTempBasalData(range());
                             updateTotalIOBTempBasals();
                         },
-                        FabricPrivacy::logException
+                        exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
     }
 

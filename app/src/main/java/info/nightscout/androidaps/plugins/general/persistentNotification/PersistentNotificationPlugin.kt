@@ -50,6 +50,7 @@ class PersistentNotificationPlugin @Inject constructor() : PluginBase(PluginDesc
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
@@ -64,53 +65,49 @@ class PersistentNotificationPlugin @Inject constructor() : PluginBase(PluginDesc
     // End Android auto
 
     private val disposable = CompositeDisposable()
-    private var notification: Notification? = null
 
-    val CHANNEL_ID = "AndroidAPS-Ongoing"
-    val ONGOING_NOTIFICATION_ID = 4711
-
-    override fun onStart() {
+     override fun onStart() {
         super.onStart()
         createNotificationChannel() // make sure channels exist before triggering updates through the bus
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventTreatmentChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventInitializationChanged::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventNewBasalProfile::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
-        triggerNotificationUpdate(true)
+            .subscribe({ triggerNotificationUpdate() }) { fabricPrivacy.logException(it) })
+        triggerNotificationUpdate()
     }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val mNotificationManager = mainApp.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val channel = NotificationChannel(CHANNEL_ID, CHANNEL_ID as CharSequence, NotificationManager.IMPORTANCE_HIGH)
+            val channel = NotificationChannel(mainApp.channelId(), mainApp.channelId() as CharSequence, NotificationManager.IMPORTANCE_HIGH)
             mNotificationManager.createNotificationChannel(channel)
         }
     }
@@ -121,23 +118,21 @@ class PersistentNotificationPlugin @Inject constructor() : PluginBase(PluginDesc
         super.onStop()
     }
 
-    private fun triggerNotificationUpdate(boot: Boolean) {
-        updateNotification(boot)
+    private fun triggerNotificationUpdate() {
+        updateNotification()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             mainApp.startForegroundService(Intent(mainApp, DummyService::class.java))
         else
             mainApp.startService(Intent(mainApp, DummyService::class.java))
     }
 
-    private fun updateNotification(boot: Boolean) {
+    private fun updateNotification() {
         val pump = configBuilderPlugin.activePump ?: return
         var line1: String?
         var line2: String? = null
         var line3: String? = null
         var unreadConversationBuilder: NotificationCompat.CarExtender.UnreadConversation.Builder? = null
-        if (boot) {
-            line1 = resourceHelper.gs(R.string.loading)
-        } else if (profileFunction.isProfileValid("Notification")) {
+        if (profileFunction.isProfileValid("Notification")) {
             var line1_aa: String
             val units = profileFunction.getUnits()
             val lastBG = DatabaseHelper.lastBg()
@@ -179,20 +174,20 @@ class PersistentNotificationPlugin @Inject constructor() : PluginBase(PluginDesc
             val msgReadIntent = Intent()
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 .setAction(READ_ACTION)
-                .putExtra(CONVERSATION_ID, ONGOING_NOTIFICATION_ID)
+                .putExtra(CONVERSATION_ID, mainApp.notificationId())
                 .setPackage(PACKAGE)
             val msgReadPendingIntent = PendingIntent.getBroadcast(mainApp,
-                ONGOING_NOTIFICATION_ID,
+                mainApp.notificationId(),
                 msgReadIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT)
             val msgReplyIntent = Intent()
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 .setAction(REPLY_ACTION)
-                .putExtra(CONVERSATION_ID, ONGOING_NOTIFICATION_ID)
+                .putExtra(CONVERSATION_ID, mainApp.notificationId())
                 .setPackage(PACKAGE)
             val msgReplyPendingIntent = PendingIntent.getBroadcast(
                 mainApp,
-                ONGOING_NOTIFICATION_ID,
+                mainApp.notificationId(),
                 msgReplyIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT)
             // Build a RemoteInput for receiving voice input from devices
@@ -208,7 +203,7 @@ class PersistentNotificationPlugin @Inject constructor() : PluginBase(PluginDesc
         } else {
             line1 = resourceHelper.gs(R.string.noprofileset)
         }
-        val builder = NotificationCompat.Builder(mainApp, CHANNEL_ID)
+        val builder = NotificationCompat.Builder(mainApp, mainApp.channelId())
         builder.setOngoing(true)
         builder.setOnlyAlertOnce(true)
         builder.setCategory(NotificationCompat.CATEGORY_STATUS)
@@ -234,13 +229,7 @@ class PersistentNotificationPlugin @Inject constructor() : PluginBase(PluginDesc
         builder.setContentIntent(resultPendingIntent)
         val mNotificationManager = mainApp.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = builder.build()
-        mNotificationManager.notify(ONGOING_NOTIFICATION_ID, notification)
-        this.notification = notification
-    }
-
-    fun getLastNotification(): Notification {
-        if (notification == null)
-            updateNotification(true)
-        return notification!!
+        mNotificationManager.notify(mainApp.notificationId(), notification)
+        mainApp.notification = notification
     }
 }

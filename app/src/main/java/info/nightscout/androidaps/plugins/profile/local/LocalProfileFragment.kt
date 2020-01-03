@@ -30,6 +30,7 @@ class LocalProfileFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -207,7 +208,7 @@ class LocalProfileFragment : DaggerFragment() {
         disposable += rxBus
             .toObservable(EventLocalProfileChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ build() }, { FabricPrivacy.logException(it) }
+            .subscribe({ build() }, { fabricPrivacy.logException(it) }
             )
         build()
     }

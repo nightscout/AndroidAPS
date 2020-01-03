@@ -123,7 +123,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         if (!loopPlugin.isEnabled(PluginType.LOOP))
             VersionCheckerUtilsKt.triggerCheckVersion();
 
-        FabricPrivacy.setUserStats();
+        FabricPrivacy.getInstance().setUserStats();
 
         setupTabs();
         setupViews();
@@ -140,12 +140,12 @@ public class MainActivity extends NoSplashAppCompatActivity {
                         setupViews();
                     }
                     setWakeLock();
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::processPreferenceChange, FabricPrivacy::logException)
+                .subscribe(this::processPreferenceChange, exception -> FabricPrivacy.getInstance().logException(exception))
         );
 
         if (!sp.getBoolean(R.string.key_setupwizard_processed, false)) {

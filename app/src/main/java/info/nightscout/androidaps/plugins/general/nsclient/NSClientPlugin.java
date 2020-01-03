@@ -116,17 +116,17 @@ public class NSClientPlugin extends PluginBase {
                 .subscribe(event -> {
                     status = event.getStatus();
                     RxBus.Companion.getINSTANCE().send(new EventNSClientUpdateGUI());
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNetworkChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), FabricPrivacy::logException)
+                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), FabricPrivacy::logException)
+                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventAppExit.class)
@@ -135,7 +135,7 @@ public class NSClientPlugin extends PluginBase {
                     if (nsClientService != null) {
                         MainApp.instance().getApplicationContext().unbindService(mConnection);
                     }
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNSClientNewLog.class)
@@ -144,12 +144,12 @@ public class NSClientPlugin extends PluginBase {
                     addToLog(event);
                     if (L.isEnabled(L.NSCLIENT))
                         log.debug(event.getAction() + " " + event.getLogText());
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventChargingState.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), FabricPrivacy::logException)
+                .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 

@@ -192,7 +192,7 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         try {
             determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, configBuilderPlugin.getActivePump().getBaseBasalRate(), iobTotal, glucoseStatus, mealData);
         } catch (JSONException e) {
-            FabricPrivacy.logException(e);
+            FabricPrivacy.getInstance().logException(e);
             return;
         }
         Profiler.log(aapsLogger, LTag.APS, "MA calculation", start);
