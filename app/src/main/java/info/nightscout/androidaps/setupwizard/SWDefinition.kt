@@ -180,7 +180,7 @@ class SWDefinition @Inject constructor(
             .label(R.string.nsclientinternal_secret_dialogtitle)
             .comment(R.string.nsclientinternal_secret_dialogmessage))
         .add(SWBreak())
-        .add(SWEventListener(this, EventNSClientStatus::class.java)
+        .add(SWEventListener(resourceHelper, rxBus, EventNSClientStatus::class.java)
             .label(R.string.status)
             .initialStatus(NSClientPlugin.getPlugin().status)
         )
@@ -294,7 +294,7 @@ class SWDefinition @Inject constructor(
             .text(R.string.readstatus)
             .action { configBuilderPlugin.commandQueue.readStatus("Clicked connect to pump", null) }
             .visibility { configBuilderPlugin.activePump != null })
-        .add(SWEventListener(this, EventPumpStatusChanged::class.java))
+        .add(SWEventListener(resourceHelper, rxBus, EventPumpStatusChanged::class.java))
         .validator { configBuilderPlugin.activePump != null && configBuilderPlugin.activePump!!.isInitialized }
     private val screenAps = SWScreen(R.string.configbuilder_aps)
         .skippable(false)

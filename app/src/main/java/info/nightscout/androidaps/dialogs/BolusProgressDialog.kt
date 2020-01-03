@@ -99,7 +99,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
         disposable.add(rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ overview_bolusprogress_status.text = it.getStatus() }) { fabricPrivacy.logException(it) }
+            .subscribe({ overview_bolusprogress_status.text = it.getStatus(resourceHelper) }) { fabricPrivacy.logException(it) }
         )
         disposable.add(rxBus
             .toObservable(EventDismissBolusProgressIfRunning::class.java)

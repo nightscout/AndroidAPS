@@ -518,4 +518,9 @@ public class MainApp extends DaggerApplication {
         return (int) (dp * scale + 0.5f);
     }
 
+    @Deprecated
+    public ResourceHelper getResourceHelper() {
+        return resourceHelper;
+    }
+
 }

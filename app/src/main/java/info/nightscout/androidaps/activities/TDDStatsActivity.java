@@ -31,6 +31,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -51,10 +53,13 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class TDDStatsActivity extends NoSplashAppCompatActivity {
+    @Inject ResourceHelper resourceHelper;
+
     private static Logger log = LoggerFactory.getLogger(TDDStatsActivity.class);
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -80,7 +85,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> statusView.setText(event.getStatus()), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> statusView.setText(event.getStatus(resourceHelper)), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventDanaRSyncStatus.class)

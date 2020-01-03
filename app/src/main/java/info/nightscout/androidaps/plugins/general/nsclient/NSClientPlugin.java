@@ -114,7 +114,7 @@ public class NSClientPlugin extends PluginBase {
                 .toObservable(EventNSClientStatus.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    status = event.getStatus();
+                    status = event.getStatus(MainApp.instance().getResourceHelper());
                     RxBus.Companion.getINSTANCE().send(new EventNSClientUpdateGUI());
                 }, exception -> FabricPrivacy.getInstance().logException(exception))
         );

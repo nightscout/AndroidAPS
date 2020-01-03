@@ -119,18 +119,18 @@ class DanaRFragment : DaggerFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 when {
-                    it.sStatus == EventPumpStatusChanged.Status.CONNECTING   ->
+                    it.status == EventPumpStatusChanged.Status.CONNECTING   ->
                         @Suppress("SetTextI18n")
-                        danar_btconnection?.text = "{fa-bluetooth-b spin} ${it.sSecondsElapsed}s"
-                    it.sStatus == EventPumpStatusChanged.Status.CONNECTED    ->
+                        danar_btconnection?.text = "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
+                    it.status == EventPumpStatusChanged.Status.CONNECTED    ->
                         @Suppress("SetTextI18n")
                         danar_btconnection?.text = "{fa-bluetooth}"
-                    it.sStatus == EventPumpStatusChanged.Status.DISCONNECTED ->
+                    it.status == EventPumpStatusChanged.Status.DISCONNECTED ->
                         @Suppress("SetTextI18n")
                         danar_btconnection?.text = "{fa-bluetooth-b}"
                 }
-                if (it.getStatus() != "") {
-                    dana_pumpstatus?.text = it.getStatus()
+                if (it.getStatus(resourceHelper) != "") {
+                    dana_pumpstatus?.text = it.getStatus(resourceHelper)
                     dana_pumpstatuslayout?.visibility = View.VISIBLE
                 } else {
                     dana_pumpstatuslayout?.visibility = View.GONE

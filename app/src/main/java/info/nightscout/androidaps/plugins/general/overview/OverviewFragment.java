@@ -451,7 +451,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         disposable.add(rxBus
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updatePumpStatus(event.getStatus()),
+                .subscribe(event -> updatePumpStatus(event.getStatus(resourceHelper)),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
