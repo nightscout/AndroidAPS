@@ -367,7 +367,7 @@ public class LoopPlugin extends PluginBase {
             lastRun.tbrSetByPump = null;
             lastRun.smbSetByPump = null;
 
-            NSUpload.uploadDeviceStatus();
+            NSUpload.uploadDeviceStatus(this);
 
             if (isSuspended()) {
                 aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.loopsuspended));
@@ -480,7 +480,7 @@ public class LoopPlugin extends PluginBase {
 
     public void acceptChangeRequest() {
         Profile profile = profileFunction.getProfile();
-
+        final LoopPlugin lp = this;
         applyTBRRequest(lastRun.constraintsProcessed, profile, new Callback() {
             @Override
             public void run() {
@@ -488,7 +488,7 @@ public class LoopPlugin extends PluginBase {
                     lastRun.tbrSetByPump = result;
                     lastRun.lastEnact = new Date();
                     lastRun.lastOpenModeAccept = new Date();
-                    NSUpload.uploadDeviceStatus();
+                    NSUpload.uploadDeviceStatus(lp);
                     sp.incInt(R.string.key_ObjectivesmanualEnacts);
                 }
                 rxBus.send(new EventAcceptOpenLoopChange());

@@ -98,6 +98,8 @@ abstract class PluginBase(pluginDesc: PluginDescription) {
     open val preferencesId: Int
         get() = pluginDescription.preferencesId
 
+    fun isEnabled() = isEnabled(pluginDescription.mainType)
+
     fun isEnabled(type: PluginType): Boolean {
         if (pluginDescription.alwaysEnabled && type == pluginDescription.mainType) return true
         if (pluginDescription.mainType == PluginType.CONSTRAINTS && type == PluginType.CONSTRAINTS) return true

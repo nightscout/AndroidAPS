@@ -219,7 +219,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
 
             RxBus.Companion.getINSTANCE().send(new EventDanaRNewStatus());
             RxBus.Companion.getINSTANCE().send(new EventInitializationChanged());
-            NSUpload.uploadDeviceStatus();
+            //NSUpload.uploadDeviceStatus();
             if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
                 if (L.isEnabled(L.PUMP))
                     log.debug("Approaching daily limit: " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits);

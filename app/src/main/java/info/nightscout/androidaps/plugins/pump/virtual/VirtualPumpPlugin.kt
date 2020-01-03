@@ -166,7 +166,7 @@ class VirtualPumpPlugin @Inject constructor(
 
     override fun finishHandshaking() {}
     override fun connect(reason: String) {
-        if (!Config.NSCLIENT) NSUpload.uploadDeviceStatus()
+        //if (!Config.NSCLIENT) NSUpload.uploadDeviceStatus()
         lastDataTime = System.currentTimeMillis()
     }
 

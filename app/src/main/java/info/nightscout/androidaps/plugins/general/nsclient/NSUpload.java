@@ -50,15 +50,8 @@ import info.nightscout.androidaps.utils.SP;
 /**
  * Created by mike on 26.05.2017.
  */
-@Singleton
 public class NSUpload {
     private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
-
-    private static LoopPlugin loopPlugin; // Ugly but temporary
-    @Inject
-    public NSUpload(LoopPlugin loopPlugin) {
-        this.loopPlugin = loopPlugin;
-    }
 
     public static void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
         try {
@@ -167,7 +160,7 @@ public class NSUpload {
         }
     }
 
-    public static void uploadDeviceStatus() {
+    public static void uploadDeviceStatus(LoopPlugin loopPlugin) {
         Profile profile = ProfileFunctions.getInstance().getProfile();
         String profileName = ProfileFunctions.getInstance().getProfileName();
 
@@ -178,7 +171,6 @@ public class NSUpload {
 
         DeviceStatus deviceStatus = new DeviceStatus();
         try {
-            if (loopPlugin == null) return; // TODO ugly - not initialized yet
             LoopPlugin.LastRun lastRun = loopPlugin.lastRun;
             if (lastRun != null && lastRun.lastAPSRun.getTime() > System.currentTimeMillis() - 300 * 1000L) {
                 // do not send if result is older than 1 min
