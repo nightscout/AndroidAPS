@@ -188,7 +188,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
             Double[] deviations = new Double[deviationsArray.size()];
             deviations = (Double[]) deviationsArray.toArray(deviations);
 
-            double sens = profile.getIsf();
+            double sens = profile.getIsfMgdl();
 
             if (L.isEnabled(L.AUTOSENS))
                 log.debug(senstime + "Records: " + index + "   " + pastSensitivity);
