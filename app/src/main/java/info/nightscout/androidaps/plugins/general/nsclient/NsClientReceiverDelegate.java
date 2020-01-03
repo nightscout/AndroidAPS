@@ -34,14 +34,14 @@ class NsClientReceiverDelegate {
     }
 
     void onStatusEvent(EventPreferenceChange ev) {
-        if (ev.isChanged(R.string.key_ns_wifionly) ||
-                ev.isChanged(R.string.key_ns_wifi_ssids) ||
-                ev.isChanged(R.string.key_ns_allowroaming)
+        if (ev.isChanged(MainApp.resources(), R.string.key_ns_wifionly) ||
+                ev.isChanged(MainApp.resources(), R.string.key_ns_wifi_ssids) ||
+                ev.isChanged(MainApp.resources(), R.string.key_ns_allowroaming)
         ) {
             EventNetworkChange event = NetworkChangeReceiver.grabNetworkStatus(MainApp.instance().getApplicationContext());
             if (event != null)
                 RxBus.Companion.getINSTANCE().send(event);
-        } else if (ev.isChanged(R.string.key_ns_chargingonly)) {
+        } else if (ev.isChanged(MainApp.resources(), R.string.key_ns_chargingonly)) {
             EventChargingState event = ChargingStateReceiver.grabChargingState(MainApp.instance().getApplicationContext());
             if (event != null)
                 RxBus.Companion.getINSTANCE().send(event);
@@ -70,7 +70,7 @@ class NsClientReceiverDelegate {
         boolean newAllowedState = allowedChargingState && allowedNetworkState;
         if (newAllowedState != allowed) {
             allowed = newAllowedState;
-            RxBus.Companion.getINSTANCE().send(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
+            RxBus.Companion.getINSTANCE().send(new EventPreferenceChange(MainApp.gs(R.string.key_nsclientinternal_paused)));
         }
     }
 

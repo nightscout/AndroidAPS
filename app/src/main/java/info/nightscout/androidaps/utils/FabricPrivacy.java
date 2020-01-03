@@ -9,9 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Locale;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
@@ -125,7 +127,7 @@ public class FabricPrivacy {
                 .replace(".net/", ":");
 
         MainApp.getFirebaseAnalytics().setUserProperty("Mode", BuildConfig.APPLICATION_ID + "-" + closedLoopEnabled);
-        MainApp.getFirebaseAnalytics().setUserProperty("Language", LocaleHelper.INSTANCE.currentLanguage());
+        MainApp.getFirebaseAnalytics().setUserProperty("Language", SP.getString(R.string.key_language, Locale.getDefault().getLanguage()));
         MainApp.getFirebaseAnalytics().setUserProperty("Version", BuildConfig.VERSION);
         MainApp.getFirebaseAnalytics().setUserProperty("HEAD", BuildConfig.HEAD);
         MainApp.getFirebaseAnalytics().setUserProperty("Remote", remote);

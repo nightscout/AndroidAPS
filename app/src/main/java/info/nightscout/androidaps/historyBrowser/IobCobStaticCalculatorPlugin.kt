@@ -6,6 +6,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
@@ -13,10 +14,11 @@ class IobCobStaticCalculatorPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rxBus: RxBusWrapper,
     sp: SP,
+    resourceHelper: ResourceHelper,
     profileFunction: ProfileFunction,
     configBuilderPlugin: ConfigBuilderPlugin,
     treatmentsPlugin: TreatmentsPlugin
-) : IobCobCalculatorPlugin(aapsLogger, rxBus, sp, profileFunction, configBuilderPlugin, treatmentsPlugin) {
+) : IobCobCalculatorPlugin(aapsLogger, rxBus, sp, resourceHelper, profileFunction, configBuilderPlugin, treatmentsPlugin) {
     override fun onStart() { // do not attach to rxbus
     }
 }

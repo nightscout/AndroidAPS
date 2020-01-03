@@ -238,7 +238,7 @@ public class NSClientPlugin extends PluginBase {
     public void pause(boolean newState) {
         SP.putBoolean(R.string.key_nsclientinternal_paused, newState);
         paused = newState;
-        RxBus.Companion.getINSTANCE().send(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
+        RxBus.Companion.getINSTANCE().send(new EventPreferenceChange(MainApp.resources(), R.string.key_nsclientinternal_paused));
     }
 
     public UploadQueue queue() {

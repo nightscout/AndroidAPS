@@ -79,31 +79,31 @@ class PersistentNotificationPlugin @Inject constructor() : PluginBase(PluginDesc
         disposable.add(rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventExtendedBolusChange? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventTempBasalChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventTempBasalChange? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventTreatmentChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventTreatmentChange? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventInitializationChanged::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventInitializationChanged? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventNewBasalProfile::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventNewBasalProfile? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventAutosensCalculationFinished? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event: EventPreferenceChange? -> triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
+            .subscribe({ triggerNotificationUpdate(false) }) { FabricPrivacy.logException(it) })
         triggerNotificationUpdate(true)
     }
 

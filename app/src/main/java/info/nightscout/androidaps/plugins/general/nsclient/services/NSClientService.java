@@ -157,9 +157,9 @@ public class NSClientService extends DaggerService {
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    if (event.isChanged(R.string.key_nsclientinternal_url) ||
-                            event.isChanged(R.string.key_nsclientinternal_api_secret) ||
-                            event.isChanged(R.string.key_nsclientinternal_paused)
+                    if (event.isChanged(resourceHelper, R.string.key_nsclientinternal_url) ||
+                            event.isChanged(resourceHelper, R.string.key_nsclientinternal_api_secret) ||
+                            event.isChanged(resourceHelper, R.string.key_nsclientinternal_paused)
                     ) {
                         latestDateInReceivedData = 0;
                         destroy();

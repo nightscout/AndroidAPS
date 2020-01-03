@@ -149,7 +149,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processSettings(ev: EventPreferenceChange?) {
-        if (ev == null || ev.isChanged(R.string.key_smscommunicator_allowednumbers)) {
+        if (ev == null || ev.isChanged(resourceHelper, R.string.key_smscommunicator_allowednumbers)) {
             val settings = sp.getString(R.string.key_smscommunicator_allowednumbers, "")
             allowedNumbers.clear()
             val substrings = settings.split(";").toTypedArray()

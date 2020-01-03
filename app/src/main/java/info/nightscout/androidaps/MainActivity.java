@@ -101,7 +101,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         actionBarDrawerToggle.syncState();
 
         // initialize screen wake lock
-        processPreferenceChange(new EventPreferenceChange(R.string.key_keep_screen_on));
+        processPreferenceChange(new EventPreferenceChange(resourceHelper.gs(R.string.key_keep_screen_on)));
 
         final ViewPager viewPager = findViewById(R.id.pager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -189,7 +189,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
     }
 
     public void processPreferenceChange(final EventPreferenceChange ev) {
-        if (ev.isChanged(R.string.key_keep_screen_on))
+        if (ev.isChanged(resourceHelper, R.string.key_keep_screen_on))
             setWakeLock();
     }
 

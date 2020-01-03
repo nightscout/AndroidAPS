@@ -46,6 +46,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -57,6 +58,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
     private final SP sp;
+    private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final ConfigBuilderPlugin configBuilderPlugin;
     private final TreatmentsPlugin treatmentsPlugin;
@@ -89,6 +91,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             SP sp,
+            ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
             ConfigBuilderPlugin configBuilderPlugin,
             TreatmentsPlugin treatmentsPlugin
@@ -104,6 +107,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.sp = sp;
+        this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
         this.configBuilderPlugin = configBuilderPlugin;
         this.treatmentsPlugin = treatmentsPlugin;
@@ -158,14 +162,14 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    if (event.isChanged(R.string.key_openapsama_autosens_period) ||
-                            event.isChanged(R.string.key_age) ||
-                            event.isChanged(R.string.key_absorption_maxtime) ||
-                            event.isChanged(R.string.key_openapsama_min_5m_carbimpact) ||
-                            event.isChanged(R.string.key_absorption_cutoff) ||
-                            event.isChanged(R.string.key_openapsama_autosens_max) ||
-                            event.isChanged(R.string.key_openapsama_autosens_min) ||
-                            event.isChanged(R.string.key_insulin_oref_peak)
+                    if (event.isChanged(resourceHelper, R.string.key_openapsama_autosens_period) ||
+                            event.isChanged(resourceHelper, R.string.key_age) ||
+                            event.isChanged(resourceHelper, R.string.key_absorption_maxtime) ||
+                            event.isChanged(resourceHelper, R.string.key_openapsama_min_5m_carbimpact) ||
+                            event.isChanged(resourceHelper, R.string.key_absorption_cutoff) ||
+                            event.isChanged(resourceHelper, R.string.key_openapsama_autosens_max) ||
+                            event.isChanged(resourceHelper, R.string.key_openapsama_autosens_min) ||
+                            event.isChanged(resourceHelper, R.string.key_insulin_oref_peak)
                     ) {
                         stopCalculation("onEventPreferenceChange");
                         synchronized (dataLock) {
@@ -182,17 +186,13 @@ public class IobCobCalculatorPlugin extends PluginBase {
         disposable.add(rxBus
                 .toObservable(EventAppInitialized.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> {
-                    runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, event);
-                }, FabricPrivacy::logException)
+                .subscribe(event -> runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, event), FabricPrivacy::logException)
         );
         // EventNewHistoryData
         disposable.add(rxBus
                 .toObservable(EventNewHistoryData.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> {
-                    newHistoryData(event);
-                }, FabricPrivacy::logException)
+                .subscribe(event -> newHistoryData(event), FabricPrivacy::logException)
         );
     }
 

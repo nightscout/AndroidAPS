@@ -109,9 +109,9 @@ class TidepoolPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
             .subscribe({ event ->
-                if (event.isChanged(R.string.key_tidepool_dev_servers)
-                    || event.isChanged(R.string.key_tidepool_username)
-                    || event.isChanged(R.string.key_tidepool_password)
+                if (event.isChanged(resourceHelper, R.string.key_tidepool_dev_servers)
+                    || event.isChanged(resourceHelper, R.string.key_tidepool_username)
+                    || event.isChanged(resourceHelper, R.string.key_tidepool_password)
                 )
                     tidepoolUploader.resetInstance()
             }, {

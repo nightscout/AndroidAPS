@@ -28,6 +28,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONArray
@@ -41,6 +42,7 @@ import javax.inject.Singleton
 class AutomationPlugin @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val aapsLogger: AAPSLogger,
+    private val resourceHelper: ResourceHelper,
     private val mainApp: MainApp,
     private val sp :SP,
     private val loopPlugin: LoopPlugin
@@ -83,7 +85,7 @@ class AutomationPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
             .subscribe({ e ->
-                if (e.isChanged(R.string.key_location)) {
+                if (e.isChanged(resourceHelper, R.string.key_location)) {
                     mainApp.stopService(Intent(mainApp, LocationService::class.java))
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                         mainApp.startForegroundService(Intent(mainApp, LocationService::class.java))
