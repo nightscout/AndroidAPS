@@ -5,13 +5,13 @@ import android.net.ConnectivityManager
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.net.URL
 import java.util.concurrent.TimeUnit
@@ -21,6 +21,7 @@ import javax.inject.Singleton
 @Singleton
 class VersionCheckerUtils @Inject constructor() {
 
+    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
@@ -31,8 +32,6 @@ class VersionCheckerUtils @Inject constructor() {
         val connMgr = mainApp.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return connMgr.activeNetworkInfo?.isConnected ?: false
     }
-
-    private val log = LoggerFactory.getLogger(L.CORE)
 
     fun triggerCheckVersion() {
 
@@ -53,13 +52,14 @@ class VersionCheckerUtils @Inject constructor() {
                 val version: String? = findVersion(URL("https://raw.githubusercontent.com/MilosKozak/AndroidAPS/master/app/build.gradle").readText())
                 compareWithCurrentVersion(version, BuildConfig.VERSION_NAME)
             } catch (e: IOException) {
-                log.debug("Github master version check error: $e")
+                aapsLogger.error(LTag.CORE, "Github master version check error: $e")
             }
         }.start()
     } else
-        log.debug("Github master version no checked. No connectivity")
+        aapsLogger.debug(LTag.CORE, "Github master version no checked. No connectivity")
 
-    fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
+    @Suppress("SameParameterValue")
+    private fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
 
         val newVersionElements = newVersion.toNumberList()
         val currentVersionElements = currentVersion.toNumberList()
@@ -91,22 +91,22 @@ class VersionCheckerUtils @Inject constructor() {
     }
 
     private fun onOlderVersionDetected() {
-        log.debug("Version newer than master. Are you developer?")
+        aapsLogger.debug(LTag.CORE, "Version newer than master. Are you developer?")
         sp.putLong(R.string.key_last_time_this_version_detected, System.currentTimeMillis())
     }
 
-    fun onSameVersionDetected() {
+    private fun onSameVersionDetected() {
         sp.putLong(R.string.key_last_time_this_version_detected, System.currentTimeMillis())
     }
 
-    fun onVersionNotDetectable() {
-        log.debug("fetch failed")
+    private fun onVersionNotDetectable() {
+        aapsLogger.debug(LTag.CORE, "fetch failed")
     }
 
-    fun onNewVersionDetected(currentVersion: String, newVersion: String?) {
+    private fun onNewVersionDetected(currentVersion: String, newVersion: String?) {
         val now = System.currentTimeMillis()
         if (now > sp.getLong(R.string.key_last_versionchecker_warning, 0) + WARN_EVERY) {
-            log.debug("Version ${currentVersion} outdated. Found $newVersion")
+            aapsLogger.debug(LTag.CORE, "Version $currentVersion outdated. Found $newVersion")
             val notification = Notification(Notification.NEWVERSIONDETECTED, resourceHelper.gs(R.string.versionavailable, newVersion.toString()), Notification.LOW)
             rxBus.send(EventNewNotification(notification))
             sp.putLong(R.string.key_last_versionchecker_warning, now)
@@ -122,18 +122,20 @@ class VersionCheckerUtils @Inject constructor() {
         }
     }.joinToString(separator = "")
 
-    fun String.numericVersionPart(): String =
+    private fun String.numericVersionPart(): String =
         "(((\\d+)\\.)+(\\d+))(\\D(.*))?".toRegex().matchEntire(this)?.groupValues?.getOrNull(1)
             ?: ""
 
-    fun String?.toNumberList() =
+    private fun String?.toNumberList() =
         this?.numericVersionPart().takeIf { !it.isNullOrBlank() }?.split(".")?.map { it.toInt() }
 
-    fun findVersion(file: String?): String? {
+    private fun findVersion(file: String?): String? {
         val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
         return file?.lines()?.filter { regex.matches(it) }?.mapNotNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }?.firstOrNull()
     }
 
-    val CHECK_EVERY = TimeUnit.DAYS.toMillis(1)
-    val WARN_EVERY = TimeUnit.DAYS.toMillis(1)
+    companion object {
+        private val CHECK_EVERY = TimeUnit.DAYS.toMillis(1)
+        private val WARN_EVERY = TimeUnit.DAYS.toMillis(1)
+    }
 }
