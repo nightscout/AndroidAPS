@@ -74,7 +74,7 @@ public class OmnipodUITask {
                 break;
 
             case SetBolus: {
-                DetailedBolusInfo detailedBolusInfo = (DetailedBolusInfo)parameters[0];
+                DetailedBolusInfo detailedBolusInfo = (DetailedBolusInfo) parameters[0];
 
                 if (detailedBolusInfo != null)
                     returnData = communicationManager.setBolus(detailedBolusInfo);
@@ -85,7 +85,7 @@ public class OmnipodUITask {
                 // This command is very error prone, so retry a few times if it fails
                 // Can take some time, but that's ok since this is a very specific feature for experts
                 // And will not be used by normal users
-                for(int i = 0; 3 > i; i++) {
+                for (int i = 0; 3 > i; i++) {
                     try {
                         returnDataObject = communicationManager.readPulseLog();
                         responseType = PodResponseType.Acknowledgment;
@@ -135,7 +135,7 @@ public class OmnipodUITask {
 
         }
 
-        if (returnData!=null) {
+        if (returnData != null) {
             responseType = returnData.success ? PodResponseType.Acknowledgment : PodResponseType.Error;
         }
 
@@ -197,10 +197,12 @@ public class OmnipodUITask {
         if (responseType == PodResponseType.Invalid) {
             statusChange = new EventOmnipodDeviceStatusChange(PodDeviceState.ErrorWhenCommunicating,
                     "Unsupported command in OmnipodUITask");
+            OmnipodUtil.getPumpStatus().setLastFailedCommunicationToNow();
             RxBus.INSTANCE.send(statusChange);
         } else if (responseType == PodResponseType.Error) {
             statusChange = new EventOmnipodDeviceStatusChange(PodDeviceState.ErrorWhenCommunicating,
                     errorDescription);
+            OmnipodUtil.getPumpStatus().setLastFailedCommunicationToNow();
             RxBus.INSTANCE.send(statusChange);
         } else {
             OmnipodUtil.getPumpStatus().setLastCommunicationToNow();
