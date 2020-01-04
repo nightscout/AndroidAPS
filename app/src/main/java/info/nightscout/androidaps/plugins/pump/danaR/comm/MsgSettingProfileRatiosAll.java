@@ -51,7 +51,5 @@ public class MsgSettingProfileRatiosAll extends MessageBase {
             log.debug("Current pump night CIR: " + pump.nightCIR);
             log.debug("Current pump night CF: " + pump.nightCF);
         }
-
-        pump.createConvertedProfile();
     }
 }

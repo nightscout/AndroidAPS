@@ -61,7 +61,7 @@ public class DanaRPump {
     public static final int PRIMECANNULA = 15;
 
     public long lastConnection = 0;
-    public long lastSettingsRead =0;
+    public long lastSettingsRead = 0;
 
     // Info
     public String serialNumber = "";
@@ -181,12 +181,10 @@ public class DanaRPump {
 //        Evening / 17:00–21:59
 //        Night / 22:00–5:59
 
-        double dia = SP.getDouble(R.string.key_danarprofile_dia, Constants.defaultDIA);
-
         try {
             json.put("defaultProfile", PROFILE_PREFIX + (activeProfile + 1));
             json.put("store", store);
-            profile.put("dia", dia);
+            profile.put("dia", Constants.defaultDIA);
 
             JSONArray carbratios = new JSONArray();
             carbratios.put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", nightCIR));
@@ -232,16 +230,12 @@ public class DanaRPump {
         return new ProfileStore(json);
     }
 
-    public String createConvertedProfileName() {
-        return PROFILE_PREFIX + (activeProfile + 1);
-    }
-
     public double[] buildDanaRProfileRecord(Profile nsProfile) {
         double[] record = new double[24];
         for (Integer hour = 0; hour < 24; hour++) {
             //Some values get truncated to the next lower one.
             // -> round them to two decimals and make sure we are a small delta larger (that will get truncated)
-            double value = Math.round(100d * nsProfile.getBasalTimeFromMidnight((Integer) (hour * 60 * 60)))/100d + 0.00001;
+            double value = Math.round(100d * nsProfile.getBasalTimeFromMidnight((Integer) (hour * 60 * 60))) / 100d + 0.00001;
             if (L.isEnabled(L.PUMP))
                 log.debug("NS basal value for " + hour + ":00 is " + value);
             record[hour] = value;

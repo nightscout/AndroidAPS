@@ -550,7 +550,6 @@
     <string name="key_danar_password" translatable="false">danar_password</string>
     <string name="key_danar_useextended" translatable="false">danar_useextended</string>
     <string name="key_danar_visualizeextendedaspercentage" translatable="false">danar_visualizeextendedaspercentage"</string>
-    <string name="key_danarprofile_dia" translatable="false">danarprofile_dia</string>
     <string name="clearlog">Clear log</string>
     <string name="key_nsclientinternal_autoscroll" translatable="false">nsclientinternal_autoscroll</string>
     <string name="key_nsclientinternal_paused" translatable="false">nsclientinternal_paused</string>

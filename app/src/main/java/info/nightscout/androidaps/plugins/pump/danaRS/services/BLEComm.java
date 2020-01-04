@@ -52,12 +52,11 @@ public class BLEComm {
 
     private final byte PACKET_START_BYTE = (byte) 0xA5;
     private final byte PACKET_END_BYTE = (byte) 0x5A;
-    private static BLEComm instance = null;
+    private Context context = null;
 
-    public static BLEComm getInstance(DanaRSService service) {
-        if (instance == null)
-            instance = new BLEComm(service);
-        return instance;
+    public BLEComm (Context context) {
+        this.context = context;
+        initialize();
     }
 
     private ScheduledFuture<?> scheduledDisconnection = null;
@@ -75,13 +74,6 @@ public class BLEComm {
 
     private BluetoothGattCharacteristic UART_Read;
     private BluetoothGattCharacteristic UART_Write;
-
-    private DanaRSService service;
-
-    private BLEComm(DanaRSService service) {
-        this.service = service;
-        initialize();
-    }
 
     private boolean initialize() {
         if (L.isEnabled(L.PUMPBTCOMM))
@@ -145,7 +137,7 @@ public class BLEComm {
         if (L.isEnabled(L.PUMPBTCOMM))
             log.debug("Trying to create a new connection from: " + from);
         mBluetoothDeviceName = device.getName();
-        mBluetoothGatt = device.connectGatt(service.getApplicationContext(), false, mGattCallback);
+        mBluetoothGatt = device.connectGatt(context, false, mGattCallback);
         setCharacteristicNotification(getUARTReadBTGattChar(), true);
         return true;
     }

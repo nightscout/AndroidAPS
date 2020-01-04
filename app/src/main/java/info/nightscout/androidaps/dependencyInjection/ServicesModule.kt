@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService
 import info.nightscout.androidaps.plugins.general.persistentNotification.DummyService
+import info.nightscout.androidaps.plugins.pump.danaRS.services.DanaRSService
 import info.nightscout.androidaps.services.AlarmSoundService
 import info.nightscout.androidaps.services.DataService
 import info.nightscout.androidaps.services.LocationService
@@ -17,4 +18,5 @@ abstract class ServicesModule {
     @ContributesAndroidInjector abstract fun contributesDummyService(): DummyService
     @ContributesAndroidInjector abstract fun contributesLocationService(): LocationService
     @ContributesAndroidInjector abstract fun contributesNSClientService(): NSClientService
+    @ContributesAndroidInjector abstract fun contributesDanaRSService(): DanaRSService
 }
