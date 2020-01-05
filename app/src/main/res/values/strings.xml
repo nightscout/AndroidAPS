@@ -1734,7 +1734,7 @@
     <string name="omnipod_init_pod_wizard_step3_title">Attach the Pod</string>
     <string name="omnipod_init_pod_wizard_step3_desc">\nPrepare the infusion site. Remove the Pod\'s needle cap and adhesive backing and attach the Pod to the infusion site.\n\nIf the cannula sticks out, please press <b>Cancel</b> and discard your Pod.\n\nPress <b>Next</b> to insert the cannula and begin basal delivery.</string>
     <string name="omnipod_init_pod_wizard_step4_title">Inserting cannula</string>
-    <string name="omnipod_init_pod_wizard_step4_action_header">Trying to fill cannula and set initial basal schedule.\n\nWhen all items are checked, you can press <b>Next</b>.\n\n<b>Note:</b> please keep the Pod very close to the RileyLink at this time.</string>
+    <string name="omnipod_init_pod_wizard_step4_action_header">Trying to set initial basal schedule and insert the cannula.\n\nWhen all items are checked, you can press <b>Next</b>.</string>
 
     <string name="omnipod_init_pod_wizard_pod_info_title">Pod Info</string>
     <string name="omnipod_init_pod_wizard_pod_info_init_pod_description">\nThe Pod is now active.\n\nYour basal schedule has been programmed and the cannula has been inserted.\n\nPlease verify that the cannula has been inserted correctly and replace your Pod if you feel hasn\'t.</string>
