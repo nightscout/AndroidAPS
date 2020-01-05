@@ -45,17 +45,21 @@ abstract class Trigger(val mainApp: MainApp) {
     abstract fun icon(): Optional<Int?>
     abstract fun duplicate(): Trigger
 
+
+    companion object {
+        @JvmStatic
+        fun scanForActivity(cont: Context?): AppCompatActivity? {
+            if (cont == null) return null
+            else if (cont is AppCompatActivity) return cont
+            else if (cont is ContextWrapper) return scanForActivity(cont.baseContext)
+            return null
+        }
+    }
+
     open fun generateDialog(root: LinearLayout) {
         val title = TextView(root.context)
         title.setText(friendlyName())
         root.addView(title)
-    }
-
-    fun scanForActivity(cont: Context?): AppCompatActivity? {
-        if (cont == null) return null
-        else if (cont is AppCompatActivity) return cont
-        else if (cont is ContextWrapper) return scanForActivity(cont.baseContext)
-        return null
     }
 
     fun instantiate(obj: JSONObject): Trigger? {

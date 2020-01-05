@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
-import androidx.fragment.app.FragmentManager
 import com.google.common.base.Optional
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -132,19 +131,15 @@ class TriggerConnector(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun duplicate(): Trigger = TriggerConnector(mainApp, connectorType)
 
-    private var adapter: TriggerListAdapter? = null
-
-    fun rebuildView(fragmentManager: FragmentManager) = adapter?.rebuild(fragmentManager)
-
     override fun generateDialog(root: LinearLayout) {
         val padding = resourceHelper.dpToPx(5)
         root.setPadding(padding, padding, padding, padding)
         root.setBackgroundResource(R.drawable.border_automation_unit)
-        val triggerListLayout = LinearLayout(root.context)
-        triggerListLayout.orientation = LinearLayout.VERTICAL
-        triggerListLayout.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        root.addView(triggerListLayout)
-        adapter = TriggerListAdapter(mainApp, resourceHelper, root.context, triggerListLayout, this)
+        val listLayout = LinearLayout(root.context)
+        listLayout.orientation = LinearLayout.VERTICAL
+        listLayout.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        root.addView(listLayout)
+        TriggerListAdapter(mainApp, resourceHelper, listLayout, this)
     }
 
     fun simplify(): TriggerConnector { // simplify children

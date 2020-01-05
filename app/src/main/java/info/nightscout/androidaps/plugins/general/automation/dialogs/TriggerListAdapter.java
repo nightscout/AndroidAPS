@@ -20,51 +20,53 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 public class TriggerListAdapter {
     private final LinearLayout mRootLayout;
     private final Context mContext;
-    private final TriggerConnector mRootConnector;
+    private final TriggerConnector rootTrigger;
     private final MainApp mainApp;
     private final ResourceHelper resourceHelper;
 
-    public TriggerListAdapter(MainApp mainApp, ResourceHelper resourceHelper, Context context, LinearLayout rootLayout, TriggerConnector rootTrigger) {
+    public TriggerListAdapter(MainApp mainApp, ResourceHelper resourceHelper, LinearLayout rootLayout, TriggerConnector rootTrigger) {
         mRootLayout = rootLayout;
         this.mainApp = mainApp;
         this.resourceHelper = resourceHelper;
-        mContext = context;
-        mRootConnector = rootTrigger;
-        build(rootTrigger.scanForActivity(context).getSupportFragmentManager());
-    }
-
-    public Context getContext() {
-        return mContext;
+        mContext = rootLayout.getContext();
+        this.rootTrigger = rootTrigger;
+        build(rootLayout.getContext());
     }
 
     private void destroy() {
         mRootLayout.removeAllViews();
     }
 
-    private void build(FragmentManager fragmentManager) {
-        for (int i = 0; i < mRootConnector.size(); ++i) {
-            final Trigger trigger = mRootConnector.get(i);
+    private void rebuild(Context context) {
+        destroy();
+        build(context);
+    }
+
+    private void build(Context context) {
+        FragmentManager fragmentManager = Trigger.scanForActivity(context).getSupportFragmentManager();
+        for (int i = 0; i < rootTrigger.size(); ++i) {
+            final Trigger trigger = rootTrigger.get(i);
 
             // spinner
             if (i > 0) {
-                createSpinner(trigger, fragmentManager);
+                createSpinner(trigger, context);
             }
 
             // trigger layout
             trigger.generateDialog(mRootLayout);
 
             // buttons
-            createButtons(fragmentManager, trigger);
+            createButtons(mRootLayout, trigger, context);
         }
 
-        if (mRootConnector.size() == 0) {
+        if (rootTrigger.size() == 0) {
             Button buttonAdd = new Button(mContext);
             buttonAdd.setText(resourceHelper.gs(R.string.addnew));
             buttonAdd.setOnClickListener(v -> {
                 ChooseTriggerDialog dialog = new ChooseTriggerDialog();
                 dialog.setOnClickListener(newTriggerObject -> {
-                    mRootConnector.add(newTriggerObject);
-                    rebuild(fragmentManager);
+                    rootTrigger.add(newTriggerObject);
+                    rebuild(context);
                 });
                 dialog.show(fragmentManager, "ChooseTriggerDialog");
             });
@@ -80,7 +82,7 @@ public class TriggerListAdapter {
         return spinner;
     }
 
-    private void createSpinner(Trigger trigger, FragmentManager fragmentManager) {
+    private void createSpinner(Trigger trigger, Context context) {
         final TriggerConnector connector = trigger.getConnector();
         final int initialPosition = connector.getConnectorType().ordinal();
         Spinner spinner = createSpinner();
@@ -97,7 +99,7 @@ public class TriggerListAdapter {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != initialPosition) {
                     // connector type changed
-                    changeConnector(fragmentManager, trigger, connector, TriggerConnector.Type.values()[position]);
+                    changeConnector(context, trigger, connector, TriggerConnector.Type.values()[position]);
                 }
             }
 
@@ -108,7 +110,8 @@ public class TriggerListAdapter {
         mRootLayout.addView(spinner);
     }
 
-    private void createButtons(FragmentManager fragmentManager, Trigger trigger) {
+    private void createButtons(LinearLayout rootLayout, Trigger trigger, Context context) {
+        FragmentManager fragmentManager = Trigger.scanForActivity(context).getSupportFragmentManager();
         // do not create buttons for TriggerConnector
         if (trigger instanceof TriggerConnector) {
             return;
@@ -118,7 +121,6 @@ public class TriggerListAdapter {
         LinearLayout buttonLayout = new LinearLayout(mContext);
         buttonLayout.setOrientation(LinearLayout.HORIZONTAL);
         buttonLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        mRootLayout.addView(buttonLayout);
 
         // Button [-]
         Button buttonRemove = new Button(mContext);
@@ -126,7 +128,8 @@ public class TriggerListAdapter {
         buttonRemove.setOnClickListener(v -> {
             final TriggerConnector connector = trigger.getConnector();
             connector.remove(trigger);
-            connector.simplify().rebuildView(fragmentManager);
+            connector.simplify();
+            rebuild(context);
         });
         buttonLayout.addView(buttonRemove);
 
@@ -139,7 +142,8 @@ public class TriggerListAdapter {
             dialog.setOnClickListener(newTriggerObject -> {
                 TriggerConnector connector = trigger.getConnector();
                 connector.add(connector.pos(trigger) + 1, newTriggerObject);
-                connector.simplify().rebuildView(fragmentManager);
+                connector.simplify();
+                rebuild(context);
             });
         });
         buttonLayout.addView(buttonAdd);
@@ -150,17 +154,14 @@ public class TriggerListAdapter {
         buttonCopy.setOnClickListener(v -> {
             TriggerConnector connector = trigger.getConnector();
             connector.add(connector.pos(trigger) + 1, trigger.duplicate());
-            connector.simplify().rebuildView(fragmentManager);
+            connector.simplify();
+            rebuild(context);
         });
         buttonLayout.addView(buttonCopy);
+        rootLayout.addView(buttonLayout);
     }
 
-    public void rebuild(FragmentManager fragmentManager) {
-        destroy();
-        build(fragmentManager);
-    }
-
-    public void changeConnector(final FragmentManager fragmentManager, final Trigger trigger, final TriggerConnector connector, final TriggerConnector.Type newConnectorType) {
+    public void changeConnector(final Context context, final Trigger trigger, final TriggerConnector connector, final TriggerConnector.Type newConnectorType) {
         if (connector.size() > 2) {
             // split connector
             int pos = connector.pos(trigger) - 1;
@@ -178,6 +179,7 @@ public class TriggerListAdapter {
         } else {
             connector.setType(newConnectorType);
         }
-        connector.simplify().rebuildView(fragmentManager);
+        connector.simplify();
+        rebuild(context);
     }
 }
