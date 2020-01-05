@@ -11,13 +11,11 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashActivity
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.pump.medtronic.dialog.MedtronicHistoryActivity
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.FullInitPodWizardModel
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.ShortInitPodWizardModel
+import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.FullInitPodWizardModel
+import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.RemovePodWizardModel
+import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.ShortInitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitPodRefreshAction
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.RemovePodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
@@ -89,7 +87,7 @@ class PodManagementActivity : NoSplashActivity() {
         wizardPagerContext.pagerSettings = pagerSettings
         val podSessionState = OmnipodUtil.getPodSessionState()
         val isFullInit = podSessionState == null || podSessionState.setupProgress.isBefore(SetupProgress.PRIMING_FINISHED)
-        if(isFullInit) {
+        if (isFullInit) {
             wizardPagerContext.wizardModel = FullInitPodWizardModel(applicationContext)
         } else {
             wizardPagerContext.wizardModel = ShortInitPodWizardModel(applicationContext)

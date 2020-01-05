@@ -5,6 +5,8 @@ import android.view.View;
 
 import com.tech.freak.wizardpager.model.Page;
 
+import java.util.UUID;
+
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitActionFragment;
@@ -50,7 +52,7 @@ public class RemoveActionFragment extends InitActionFragment implements PodInitR
 
         mPage.setActionCompleted(isOk);
 
-        mPage.getData().putString(Page.SIMPLE_DATA_KEY, "ddd");
+        mPage.getData().putString(Page.SIMPLE_DATA_KEY, UUID.randomUUID().toString());
         mPage.notifyDataChanged();
     }
 
@@ -65,7 +67,6 @@ public class RemoveActionFragment extends InitActionFragment implements PodInitR
             setCheckBox(podInitActionType, isSuccess);
         }
     }
-
 
 
 }

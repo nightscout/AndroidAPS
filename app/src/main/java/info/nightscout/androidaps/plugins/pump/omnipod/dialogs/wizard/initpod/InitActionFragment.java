@@ -16,7 +16,6 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.atech.android.library.wizardpager.util.WizardPagesUtil;
-
 import com.tech.freak.wizardpager.model.Page;
 import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
 
@@ -27,8 +26,6 @@ import java.util.UUID;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 
@@ -108,7 +105,9 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
             mapCheckBoxes.put(child, checkBox1);
         }
 
-        if (podInitActionType==PodInitActionType.DeactivatePodWizardStep) {
+        if (podInitActionType == PodInitActionType.FillCannulaSetBasalProfileWizardStep) {
+            headerView.setText(R.string.omnipod_init_pod_wizard_step4_action_header);
+        } else if (podInitActionType == PodInitActionType.DeactivatePodWizardStep) {
             headerView.setText(R.string.omnipod_remove_pod_wizard_step2_action_header);
         }
 

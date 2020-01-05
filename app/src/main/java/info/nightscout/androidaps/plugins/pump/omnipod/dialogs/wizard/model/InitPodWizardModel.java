@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod;
+package info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model;
 
 import android.content.Context;
 

@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod;
+package info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model;
 
 import android.content.Context;
 
 import androidx.fragment.app.Fragment;
 
 import com.atech.android.library.wizardpager.model.DisplayTextPage;
-
 import com.tech.freak.wizardpager.model.AbstractWizardModel;
 import com.tech.freak.wizardpager.model.PageList;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.PodInfoFragment;
+import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.RemovePodActionPage;
 
 /**
  * Created by andy on 12/11/2019
