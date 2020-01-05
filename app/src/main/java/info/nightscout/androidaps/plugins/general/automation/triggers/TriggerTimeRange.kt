@@ -76,7 +76,7 @@ class TriggerTimeRange(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.time_range))
+            .add(StaticLabel(mainApp, R.string.time_range, this))
             .add(range)
             .build(root)
     }

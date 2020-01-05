@@ -73,7 +73,7 @@ class TriggerCOB(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.triggercoblabel))
+            .add(StaticLabel(mainApp, R.string.triggercoblabel, this))
             .add(comparator)
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.triggercoblabel) + ": ", "", cob))
             .build(root)

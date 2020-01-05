@@ -44,7 +44,7 @@ class TriggerWifiSsid(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun toJSON(): String {
         val data = JSONObject()
-            .put("ssid", ssid)
+            .put("ssid", ssid.value)
             .put("comparator", comparator.value.toString())
         return JSONObject()
             .put("type", this::class.java.name)
@@ -70,7 +70,7 @@ class TriggerWifiSsid(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.ns_wifi_ssids))
+            .add(StaticLabel(mainApp, R.string.ns_wifi_ssids, this))
             .add(comparator)
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.ns_wifi_ssids) + ": ", "", ssid))
             .build(root)

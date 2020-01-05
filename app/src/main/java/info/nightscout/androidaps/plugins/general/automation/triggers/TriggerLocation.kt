@@ -92,7 +92,7 @@ class TriggerLocation(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.location))
+            .add(StaticLabel(mainApp, R.string.location, this))
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.name_short), "", name))
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.latitude_short), "", latitude))
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.longitude_short), "", longitude))

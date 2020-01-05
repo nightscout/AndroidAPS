@@ -73,7 +73,7 @@ class TriggerBolusAgo(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.lastboluslabel))
+            .add(StaticLabel(mainApp, R.string.lastboluslabel, this))
             .add(comparator)
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.lastboluslabel) + ": ", "", minutesAgo))
             .build(root)

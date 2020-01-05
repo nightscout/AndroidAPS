@@ -62,7 +62,7 @@ class TriggerTempTarget(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.careportal_temporarytarget))
+            .add(StaticLabel(mainApp, R.string.careportal_temporarytarget, this))
             .add(comparator)
             .build(root)
     }

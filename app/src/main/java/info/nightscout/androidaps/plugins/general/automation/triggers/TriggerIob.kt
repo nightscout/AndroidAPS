@@ -64,7 +64,7 @@ class TriggerIob(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.iob))
+            .add(StaticLabel(mainApp, R.string.iob, this))
             .add(comparator)
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.iob_u), "", insulin))
             .build(root)

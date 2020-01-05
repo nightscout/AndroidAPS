@@ -94,7 +94,7 @@ class TriggerRecurringTime(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.recurringTime))
+            .add(StaticLabel(mainApp, R.string.recurringTime, this))
             .add(days)
             .add(time)
             .build(root)

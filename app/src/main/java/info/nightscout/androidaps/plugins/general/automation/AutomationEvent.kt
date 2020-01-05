@@ -30,7 +30,7 @@ class AutomationEvent(private val mainApp: MainApp) {
     fun getPreconditions(): TriggerConnector {
         val trigger = TriggerConnector(mainApp, TriggerConnector.Type.AND)
         for (action in actions) {
-            action.precondition?.let { trigger.add(it) }
+            action.precondition?.let { trigger.list.add(it) }
         }
         return trigger
     }

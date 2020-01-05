@@ -98,7 +98,7 @@ class TriggerDelta(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.deltalabel))
+            .add(StaticLabel(mainApp, R.string.deltalabel, this))
             .add(comparator)
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.deltalabel_u, units) + ": ", "", delta))
             .build(root)

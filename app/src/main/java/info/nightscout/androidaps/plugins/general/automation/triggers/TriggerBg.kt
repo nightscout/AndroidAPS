@@ -20,12 +20,12 @@ class TriggerBg(mainApp: MainApp) : Trigger(mainApp) {
     private var bg = InputBg(mainApp)
     var comparator = Comparator(mainApp)
 
-    constructor(mainApp: MainApp, value : Double, units : String, compare: Comparator.Compare) : this(mainApp){
+    constructor(mainApp: MainApp, value: Double, units: String, compare: Comparator.Compare) : this(mainApp) {
         bg = InputBg(mainApp, value, units)
         comparator = Comparator(mainApp, compare)
     }
 
-    constructor(mainApp: MainApp, triggerBg: TriggerBg) : this(mainApp){
+    constructor(mainApp: MainApp, triggerBg: TriggerBg) : this(mainApp) {
         bg = InputBg(mainApp, triggerBg.bg.value, triggerBg.bg.units)
         comparator = Comparator(mainApp, triggerBg.comparator.value)
     }
@@ -82,7 +82,7 @@ class TriggerBg(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.glucose))
+            .add(StaticLabel(mainApp, R.string.glucose, this))
             .add(comparator)
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.glucose_u, bg.units), "", bg))
             .build(root)

@@ -74,7 +74,7 @@ class TriggerAutosensValue(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.autosenslabel))
+            .add(StaticLabel(mainApp, R.string.autosenslabel, this))
             .add(comparator)
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.autosenslabel) + ": ", "", autosens))
             .build(root)

@@ -2,14 +2,22 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import android.content.Context
 import android.content.ContextWrapper
+import android.view.Gravity
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.common.base.Optional
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTriggerDialog
+import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerChanged
+import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerClone
+import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerRemove
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.services.LocationService
@@ -22,15 +30,14 @@ import kotlin.reflect.full.primaryConstructor
 
 abstract class Trigger(val mainApp: MainApp) {
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var sp : SP
+    @Inject lateinit var sp: SP
     @Inject lateinit var locationService: LocationService
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
-
-    var connector: TriggerConnector? = null
 
     init {
         mainApp.androidInjector().inject(this)
@@ -45,14 +52,15 @@ abstract class Trigger(val mainApp: MainApp) {
     abstract fun icon(): Optional<Int?>
     abstract fun duplicate(): Trigger
 
-
     companion object {
         @JvmStatic
         fun scanForActivity(cont: Context?): AppCompatActivity? {
-            if (cont == null) return null
-            else if (cont is AppCompatActivity) return cont
-            else if (cont is ContextWrapper) return scanForActivity(cont.baseContext)
-            return null
+            when (cont) {
+                null                 -> return null
+                is AppCompatActivity -> return cont
+                is ContextWrapper    -> return scanForActivity(cont.baseContext)
+                else                 -> return null
+            }
         }
     }
 
@@ -79,5 +87,65 @@ abstract class Trigger(val mainApp: MainApp) {
             aapsLogger.error("Unhandled exception", e)
         }
         return null
+    }
+
+    fun createAddButton(context: Context, trigger: TriggerConnector): ImageButton {
+        // Button [+]
+        val buttonAdd = ImageButton(context)
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        params.gravity = Gravity.CENTER
+        buttonAdd.layoutParams = params
+        buttonAdd.setImageResource(R.drawable.add)
+        buttonAdd.contentDescription = resourceHelper.gs(R.string.add_short)
+        buttonAdd.setOnClickListener {
+            scanForActivity(context)?.supportFragmentManager?.let {
+                val dialog = ChooseTriggerDialog()
+                dialog.show(it, "ChooseTriggerDialog")
+                dialog.setOnClickListener(object : ChooseTriggerDialog.OnClickListener {
+                    override fun onClick(newTriggerObject: Trigger) {
+                        trigger.list.add(newTriggerObject)
+                        rxBus.send(EventTriggerChanged())
+                    }
+                })
+            }
+        }
+        return buttonAdd
+    }
+
+    fun createDeleteButton(context: Context, trigger: Trigger): ImageButton {
+        // Button [-]
+        val buttonRemove = ImageButton(context)
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        params.gravity = Gravity.CENTER
+        buttonRemove.layoutParams = params
+        buttonRemove.setImageResource(R.drawable.remove)
+        buttonRemove.contentDescription = resourceHelper.gs(R.string.delete_short)
+        buttonRemove.setOnClickListener {
+            rxBus.send(EventTriggerRemove(trigger))
+        }
+        return buttonRemove
+    }
+
+    fun createCloneButton(context: Context, trigger: Trigger): ImageButton {
+        // Button [*]
+        val buttonClone = ImageButton(context)
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        params.gravity = Gravity.CENTER
+        buttonClone.layoutParams = params
+        buttonClone.setImageResource(R.drawable.clone)
+        buttonClone.contentDescription = resourceHelper.gs(R.string.copy_short)
+        buttonClone.setOnClickListener {
+            rxBus.send(EventTriggerClone(trigger))
+        }
+        return buttonClone
     }
 }

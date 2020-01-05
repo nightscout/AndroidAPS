@@ -60,7 +60,7 @@ class TriggerTime(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.time))
+            .add(StaticLabel(mainApp, R.string.time, this))
             .add(time)
             .build(root)
     }

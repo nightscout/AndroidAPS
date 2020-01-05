@@ -73,7 +73,7 @@ class TriggerProfilePercent(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.profilepercentage))
+            .add(StaticLabel(mainApp, R.string.profilepercentage, this))
             .add(comparator)
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.percent_u), "", pct))
             .build(root)

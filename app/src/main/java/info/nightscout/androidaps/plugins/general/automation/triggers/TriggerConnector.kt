@@ -1,13 +1,17 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers
 
+import android.content.Context
+import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.LinearLayout
+import android.widget.Spinner
 import androidx.annotation.StringRes
 import com.google.common.base.Optional
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.general.automation.dialogs.TriggerListAdapter
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONArray
@@ -16,7 +20,9 @@ import java.util.*
 
 class TriggerConnector(mainApp: MainApp) : Trigger(mainApp) {
     var list: MutableList<Trigger> = ArrayList()
-    var connectorType: Type = Type.AND
+    private var connectorType: Type = Type.AND
+    // TODO move to TriggerConnector
+    //var connector: TriggerConnector = TriggerConnector(mainApp, TriggerConnector.Type.AND)
 
     enum class Type {
         AND, OR, XOR;
@@ -35,12 +41,14 @@ class TriggerConnector(mainApp: MainApp) : Trigger(mainApp) {
                 AND -> R.string.and
             }
 
-        fun labels(resourceHelper: ResourceHelper): List<String> {
-            val list: MutableList<String> = ArrayList()
-            for (t in values()) {
-                list.add(resourceHelper.gs(t.stringRes))
+        companion object {
+            fun labels(resourceHelper: ResourceHelper): List<String> {
+                val list: MutableList<String> = ArrayList()
+                for (t in values()) {
+                    list.add(resourceHelper.gs(t.stringRes))
+                }
+                return list
             }
-            return list
         }
     }
 
@@ -52,24 +60,7 @@ class TriggerConnector(mainApp: MainApp) : Trigger(mainApp) {
         connectorType = type
     }
 
-    @Synchronized
-    fun add(t: Trigger) {
-        list.add(t)
-        t.connector = this
-    }
-
-    @Synchronized
-    fun add(pos: Int, t: Trigger) {
-        list.add(pos, t)
-        t.connector = this
-    }
-
-    @Synchronized
-    fun remove(t: Trigger): Boolean = list.remove(t)
-
     fun size(): Int = list.size
-
-    operator fun get(i: Int): Trigger = list[i]
 
     fun pos(trigger: Trigger): Int {
         for (i in list.indices) {
@@ -109,7 +100,7 @@ class TriggerConnector(mainApp: MainApp) : Trigger(mainApp) {
         list.clear()
         for (i in 0 until array.length()) {
             instantiate(JSONObject(array.getString(i)))?.let {
-                add(it)
+                list.add(it)
             }
         }
         return this
@@ -135,42 +126,48 @@ class TriggerConnector(mainApp: MainApp) : Trigger(mainApp) {
         val padding = resourceHelper.dpToPx(5)
         root.setPadding(padding, padding, padding, padding)
         root.setBackgroundResource(R.drawable.border_automation_unit)
+        // Header with spinner
+        val headerLayout = LinearLayout(root.context)
+        headerLayout.orientation = LinearLayout.HORIZONTAL
+        headerLayout.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        headerLayout.addView(createSpinner(root.context))
+        headerLayout.addView(createAddButton(root.context, this))
+        headerLayout.addView(createDeleteButton(root.context, this))
+        root.addView(headerLayout)
+        // Child triggers
         val listLayout = LinearLayout(root.context)
         listLayout.orientation = LinearLayout.VERTICAL
-        listLayout.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        listLayout.setBackgroundColor(resourceHelper.gc(R.color.mdtp_line_dark))
+        //listLayout.setPadding(resourceHelper.dpToPx(5), resourceHelper.dpToPx(5), resourceHelper.dpToPx(5), 0)
+        val params = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        params.setMargins(resourceHelper.dpToPx(15), 0, resourceHelper.dpToPx(5), resourceHelper.dpToPx(4))
+        listLayout.layoutParams = params
+        for (t in list) t.generateDialog(listLayout)
         root.addView(listLayout)
-        TriggerListAdapter(mainApp, resourceHelper, listLayout, this)
     }
 
-    fun simplify(): TriggerConnector { // simplify children
-        for (i in 0 until size()) {
-            if (get(i) is TriggerConnector) {
-                val t = get(i) as TriggerConnector
-                t.simplify()
+    private fun createSpinner(context: Context): Spinner {
+        val initialPosition = connectorType.ordinal
+        val spinner = Spinner(context)
+        val spinnerArrayAdapter = ArrayAdapter(context, R.layout.spinner_centered, Type.labels(resourceHelper))
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner.adapter = spinnerArrayAdapter
+        spinner.setSelection(initialPosition)
+        spinner.setBackgroundColor(resourceHelper.gc(R.color.black_overlay))
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        params.setMargins(0, resourceHelper.dpToPx(8), 0, resourceHelper.dpToPx(8))
+        params.weight = 1.0f
+        spinner.layoutParams = params
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                setType(Type.values()[position])
             }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        // drop connector with only 1 element
-        if (size() == 1 && get(0) is TriggerConnector) {
-            val c = get(0) as TriggerConnector
-            remove(c)
-            connectorType = c.connectorType
-            for (t in c.list) add(t)
-            c.list.clear()
-            return simplify()
-        }
-        // merge connectors
-        connector?.let { connector ->
-            if (connector.connectorType == connectorType || size() == 1) {
-                val pos = connector.pos(this)
-                connector.remove(this)
-                // move triggers of child connector into parent connector
-                for (i in size() - 1 downTo 0) {
-                    connector.add(pos, get(i))
-                }
-                list.clear()
-                return connector.simplify()
-            }
-        }
-        return this
+        return spinner
     }
 }

@@ -73,7 +73,7 @@ class TriggerPumpLastConnection(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.automation_trigger_pump_last_connection_label))
+            .add(StaticLabel(mainApp, R.string.automation_trigger_pump_last_connection_label, this))
             .add(comparator)
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.automation_trigger_pump_last_connection_description) + ": ", "", minutesAgo))
             .build(root)

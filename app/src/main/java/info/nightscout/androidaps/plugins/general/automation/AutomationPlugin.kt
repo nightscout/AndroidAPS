@@ -213,6 +213,7 @@ class AutomationPlugin @Inject constructor(
 
     fun getTriggerDummyObjects(): List<Trigger> {
         return listOf(
+            TriggerConnector(mainApp),
             TriggerTime(mainApp),
             TriggerRecurringTime(mainApp),
             TriggerTimeRange(mainApp),
