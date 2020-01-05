@@ -11,7 +11,6 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AcknowledgeAlertsAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AssignAddressAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.BolusAction;
@@ -201,10 +200,10 @@ public class OmnipodManager {
     }
 
     // CAUTION: cancels temp basal and then sets new temp basal. An OmnipodException[certainFailure=false] indicates that the pod might have cancelled the previous temp basal, but did not set a new temp basal
-    public synchronized void setTemporaryBasal(TempBasalPair tempBasalPair, boolean acknowledgementBeep, boolean completionBeep) {
+    public synchronized void setTemporaryBasal(double rate, Duration duration, boolean acknowledgementBeep, boolean completionBeep) {
         assertReadyForDelivery();
 
-        logStartingCommandExecution("setTemporaryBasal [tempBasalPair=" + tempBasalPair + ", acknowledgementBeep=" + acknowledgementBeep + ", completionBeep=" + completionBeep + "]");
+        logStartingCommandExecution("setTemporaryBasal [rate=" + rate + ", duration=" + duration + ", acknowledgementBeep=" + acknowledgementBeep + ", completionBeep=" + completionBeep + "]");
 
         try {
             cancelDelivery(EnumSet.of(DeliveryType.TEMP_BASAL), acknowledgementBeep);
@@ -215,7 +214,7 @@ public class OmnipodManager {
 
         try {
             executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(
-                    podState, tempBasalPair.getInsulinRate(), Duration.standardMinutes(tempBasalPair.getDurationMinutes()),
+                    podState, rate, duration,
                     acknowledgementBeep, completionBeep)));
         } catch (OmnipodException ex) {
             // Treat all exceptions as uncertain failures, because all delivery has been suspended here.

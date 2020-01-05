@@ -94,13 +94,13 @@ public enum PumpType {
     Insulet_Omnipod("Insulet Omnipod", ManufacturerType.Insulet, "Omnipod (Eros)", 0.05d, null, //
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
-            new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, // cannot exceed max basal rate 30u/hr
+            new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, //
             0.05d, 0.05d, null, PumpCapability.VirtualPumpCapabilities),
 
     Insulet_Omnipod_Dash("Insulet Omnipod Dash", ManufacturerType.Insulet, "Omnipod Dash", 0.05d, null, //
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
-            new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, // cannot exceed max basal rate 30u/hr
+            new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, // 
             0.05d, 0.05d, null, PumpCapability.VirtualPumpCapabilities), // TODO just copied OmniPod for now
 
     // Medtronic

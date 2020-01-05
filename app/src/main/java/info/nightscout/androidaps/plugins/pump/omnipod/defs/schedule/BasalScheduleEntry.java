@@ -9,7 +9,7 @@ public class BasalScheduleEntry {
     private final Duration startTime;
 
     public BasalScheduleEntry(double rate, Duration startTime) {
-        if (startTime.isLongerThan(Duration.standardHours(24).minus(Duration.standardSeconds(1))) || startTime.isShorterThan(Duration.ZERO)) {
+        if (startTime.isLongerThan(Duration.standardHours(24).minus(Duration.standardSeconds(1))) || startTime.isShorterThan(Duration.ZERO) || startTime.getStandardSeconds() % 1800 != 0) {
             throw new IllegalArgumentException("Invalid start time");
         } else if (rate < 0D) {
             throw new IllegalArgumentException("Rate should be >= 0");
