@@ -108,10 +108,11 @@ open class AppModule {
         @ContributesAndroidInjector fun actionDummyInjector(): ActionDummy
 
         @ContributesAndroidInjector fun elementInjector(): Element
-        @ContributesAndroidInjector fun comparatorInjector(): Comparator
-        @ContributesAndroidInjector fun comparatorExistsInjector(): ComparatorExists
         @ContributesAndroidInjector fun inputBgInjector(): InputBg
         @ContributesAndroidInjector fun inputButtonInjector(): InputButton
+        @ContributesAndroidInjector fun comparatorInjector(): Comparator
+        @ContributesAndroidInjector fun comparatorExistsInjector(): ComparatorExists
+        @ContributesAndroidInjector fun inputTimeInjector(): InputDateTime
         @ContributesAndroidInjector fun inputDeltaInjector(): InputDelta
         @ContributesAndroidInjector fun inputDoubleInjector(): InputDouble
         @ContributesAndroidInjector fun inputDurationInjector(): InputDuration
@@ -121,6 +122,7 @@ open class AppModule {
         @ContributesAndroidInjector fun inputProfileNameInjector(): InputProfileName
         @ContributesAndroidInjector fun inputStringInjector(): InputString
         @ContributesAndroidInjector fun inputTempTargetInjector(): InputTempTarget
+        @ContributesAndroidInjector fun inputTimeRangeInjector(): InputTimeRange
         @ContributesAndroidInjector fun labelWithElementInjector(): LabelWithElement
         @ContributesAndroidInjector fun staticLabelInjector(): StaticLabel
 

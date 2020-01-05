@@ -4,7 +4,6 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
-import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
@@ -76,10 +75,11 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectActionStopTempTarget(action: ActionStopTempTarget)
 
     fun injectElement(element: Element)
-    fun injectElement(comparator: Comparator)
-    fun injectElement(comparatorExists: ComparatorExists)
     fun injectElement(inputBg: InputBg)
     fun injectElement(inputButton: InputButton)
+    fun injectElement(comparator: Comparator)
+    fun injectElement(comparatorExists: ComparatorExists)
+    fun injectElement(inputDateTime: InputDateTime)
     fun injectElement(inputDelta: InputDelta)
     fun injectElement(inputDouble: InputDouble)
     fun injectElement(inputDuration: InputDuration)
@@ -89,6 +89,7 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectElement(inputProfileName: InputProfileName)
     fun injectElement(inputString: InputString)
     fun injectElement(inputTempTarget: InputTempTarget)
+    fun injectElement(inputTimeRange: InputTimeRange)
     fun injectElement(labelWithElement: LabelWithElement)
     fun injectElement(staticLabel: StaticLabel)
 
