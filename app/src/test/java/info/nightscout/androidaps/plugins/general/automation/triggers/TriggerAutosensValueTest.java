@@ -81,13 +81,6 @@ public class TriggerAutosensValueTest {
         Assert.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.getComparator().getValue());
     }
 
-    @Test
-    public void executeTest() {
-        TriggerAutosensValue t = new TriggerAutosensValue().setValue(213).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER);
-        t.executed(1);
-        Assert.assertEquals(1l, t.getLastRun());
-    }
-
     String ASJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"lastRun\":0,\"value\":410},\"type\":\"info.nightscout.androidaps.plugins.general.automation.triggers.TriggerAutosensValue\"}";
 
     @Test

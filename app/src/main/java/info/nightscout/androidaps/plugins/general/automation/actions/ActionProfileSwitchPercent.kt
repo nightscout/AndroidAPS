@@ -16,29 +16,29 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class ActionProfileSwitchPercent(mainApp: MainApp) : Action(mainApp) {
-    var pct = InputPercent()
-    var duration = InputDuration(0, InputDuration.TimeUnit.MINUTES)
+    var pct = InputPercent(mainApp)
+    var duration = InputDuration(mainApp, 0, InputDuration.TimeUnit.MINUTES)
 
     override fun friendlyName(): Int = R.string.profilepercentage
     override fun shortDescription(): String =
-        if (duration.minutes == 0) resourceHelper.gs(R.string.startprofileforever, pct.value.toInt())
-        else resourceHelper.gs(R.string.startprofile, pct.value.toInt(), duration.minutes)
+        if (duration.value == 0) resourceHelper.gs(R.string.startprofileforever, pct.value.toInt())
+        else resourceHelper.gs(R.string.startprofile, pct.value.toInt(), duration.value)
 
     @DrawableRes override fun icon(): Int = R.drawable.icon_actions_profileswitch
 
     init {
-        precondition = TriggerProfilePercent().comparator(Comparator.Compare.IS_EQUAL).setValue(100.0)
+        precondition = TriggerProfilePercent(mainApp, 100.0, Comparator.Compare.IS_EQUAL)
     }
 
     override fun doAction(callback: Callback) {
-        treatmentsPlugin.doProfileSwitch(duration.value.toInt(), pct.value.toInt(), 0)
+        treatmentsPlugin.doProfileSwitch(duration.value, pct.value.toInt(), 0)
         callback.result(PumpEnactResult().success(true).comment(R.string.ok))?.run()
     }
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(resourceHelper.gs(R.string.percent_u), "", pct))
-            .add(LabelWithElement(resourceHelper.gs(R.string.careportal_newnstreatment_duration_min_label), "", duration))
+            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.percent_u), "", pct))
+            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.careportal_newnstreatment_duration_min_label), "", duration))
             .build(root)
     }
 
@@ -47,7 +47,7 @@ class ActionProfileSwitchPercent(mainApp: MainApp) : Action(mainApp) {
     override fun toJSON(): String {
         val data = JSONObject()
             .put("percentage", pct.value)
-            .put("durationInMinutes", duration.minutes)
+            .put("durationInMinutes", duration.value)
         return JSONObject()
             .put("type", this.javaClass.name)
             .put("data", data)
@@ -57,7 +57,7 @@ class ActionProfileSwitchPercent(mainApp: MainApp) : Action(mainApp) {
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
         pct.value = JsonHelper.safeGetDouble(o, "percentage")
-        duration.minutes = JsonHelper.safeGetInt(o, "durationInMinutes")
+        duration.value = JsonHelper.safeGetInt(o, "durationInMinutes")
         return this
     }
 }

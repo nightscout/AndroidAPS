@@ -17,17 +17,16 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuil
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTempTarget
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetDouble
-import info.nightscout.androidaps.utils.JsonHelper.safeGetInt
-import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import org.json.JSONObject
 
 class ActionStartTempTarget(mainApp: MainApp) : Action(mainApp) {
-    var value = InputTempTarget()
-    var duration = InputDuration(0, InputDuration.TimeUnit.MINUTES)
+    var value = InputTempTarget(mainApp)
+    var duration = InputDuration(mainApp, 0, InputDuration.TimeUnit.MINUTES)
 
     init {
-        precondition = TriggerTempTarget().comparator(ComparatorExists.Compare.NOT_EXISTS)
+        precondition = TriggerTempTarget(mainApp, ComparatorExists.Compare.NOT_EXISTS)
     }
 
     override fun friendlyName(): Int = R.string.starttemptarget
@@ -42,8 +41,8 @@ class ActionStartTempTarget(mainApp: MainApp) : Action(mainApp) {
     override fun generateDialog(root: LinearLayout) {
         val unitResId = if (value.units == Constants.MGDL) R.string.mgdl else R.string.mmol
         LayoutBuilder()
-            .add(LabelWithElement(resourceHelper.gs(R.string.careportal_temporarytarget) + "\n[" + resourceHelper.gs(unitResId) + "]", "", value))
-            .add(LabelWithElement(resourceHelper.gs(R.string.careportal_newnstreatment_duration_min_label), "", duration))
+            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.careportal_temporarytarget) + "\n[" + resourceHelper.gs(unitResId) + "]", "", value))
+            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.careportal_newnstreatment_duration_min_label), "", duration))
             .build(root)
     }
 
@@ -55,7 +54,7 @@ class ActionStartTempTarget(mainApp: MainApp) : Action(mainApp) {
         val data = JSONObject()
             .put("value", value.value)
             .put("units", value.units)
-            .put("durationInMinutes", duration.minutes)
+            .put("durationInMinutes", duration.getMinutes())
         return JSONObject()
             .put("type", this.javaClass.name)
             .put("data", data)
@@ -64,16 +63,16 @@ class ActionStartTempTarget(mainApp: MainApp) : Action(mainApp) {
 
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
-        value.units = safeGetString(o, "units")
+        value.units = JsonHelper.safeGetString(o, "units", Constants.MGDL)
         value.value = safeGetDouble(o, "value")
-        duration.minutes = safeGetInt(o, "durationInMinutes")
+        duration.setMinutes(JsonHelper.safeGetInt(o, "durationInMinutes"))
         return this
     }
 
     fun tt(): TempTarget =
         TempTarget()
             .date(DateUtil.now())
-            .duration(duration.minutes)
+            .duration(duration.getMinutes())
             .reason("Automation")
             .source(Source.USER)
             .low(Profile.toMgdl(value.value, value.units))

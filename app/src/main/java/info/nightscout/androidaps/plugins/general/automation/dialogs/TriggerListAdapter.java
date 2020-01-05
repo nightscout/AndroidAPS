@@ -15,27 +15,26 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger;
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class TriggerListAdapter {
     private final LinearLayout mRootLayout;
-    private final FragmentManager mFragmentManager;
     private final Context mContext;
     private final TriggerConnector mRootConnector;
+    private final MainApp mainApp;
+    private final ResourceHelper resourceHelper;
 
-    public TriggerListAdapter(FragmentManager fragmentManager, Context context, LinearLayout rootLayout, TriggerConnector rootTrigger) {
+    public TriggerListAdapter(MainApp mainApp, ResourceHelper resourceHelper, Context context, LinearLayout rootLayout, TriggerConnector rootTrigger) {
         mRootLayout = rootLayout;
-        mFragmentManager = fragmentManager;
+        this.mainApp = mainApp;
+        this.resourceHelper = resourceHelper;
         mContext = context;
         mRootConnector = rootTrigger;
-        build(fragmentManager);
+        build(rootTrigger.scanForActivity(context).getSupportFragmentManager());
     }
 
     public Context getContext() {
         return mContext;
-    }
-
-    private FragmentManager getFM() {
-        return mFragmentManager;
     }
 
     private void destroy() {
@@ -48,11 +47,11 @@ public class TriggerListAdapter {
 
             // spinner
             if (i > 0) {
-                createSpinner(trigger);
+                createSpinner(trigger, fragmentManager);
             }
 
             // trigger layout
-            trigger.generateDialog(mRootLayout, fragmentManager);
+            trigger.generateDialog(mRootLayout);
 
             // buttons
             createButtons(fragmentManager, trigger);
@@ -60,7 +59,7 @@ public class TriggerListAdapter {
 
         if (mRootConnector.size() == 0) {
             Button buttonAdd = new Button(mContext);
-            buttonAdd.setText(MainApp.gs(R.string.addnew));
+            buttonAdd.setText(resourceHelper.gs(R.string.addnew));
             buttonAdd.setOnClickListener(v -> {
                 ChooseTriggerDialog dialog = new ChooseTriggerDialog();
                 dialog.setOnClickListener(newTriggerObject -> {
@@ -75,30 +74,30 @@ public class TriggerListAdapter {
 
     private Spinner createSpinner() {
         Spinner spinner = new Spinner(mContext);
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_centered, TriggerConnector.Type.labels());
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(mContext, R.layout.spinner_centered, TriggerConnector.Type.AND.labels(resourceHelper));
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerArrayAdapter);
         return spinner;
     }
 
-    private void createSpinner(Trigger trigger) {
+    private void createSpinner(Trigger trigger, FragmentManager fragmentManager) {
         final TriggerConnector connector = trigger.getConnector();
         final int initialPosition = connector.getConnectorType().ordinal();
         Spinner spinner = createSpinner();
         spinner.setSelection(initialPosition);
-        spinner.setBackgroundColor(MainApp.gc(R.color.black_overlay));
+        spinner.setBackgroundColor(resourceHelper.gc(R.color.black_overlay));
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        params.setMargins(0, MainApp.dpToPx(8), 0, MainApp.dpToPx(8));
+        params.setMargins(0, resourceHelper.dpToPx(8), 0, resourceHelper.dpToPx(8));
         spinner.setLayoutParams(params);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != initialPosition) {
                     // connector type changed
-                    changeConnector(getFM(), trigger, connector, TriggerConnector.Type.values()[position]);
+                    changeConnector(fragmentManager, trigger, connector, TriggerConnector.Type.values()[position]);
                 }
             }
 
@@ -123,35 +122,35 @@ public class TriggerListAdapter {
 
         // Button [-]
         Button buttonRemove = new Button(mContext);
-        buttonRemove.setText(MainApp.gs(R.string.delete_short));
+        buttonRemove.setText(resourceHelper.gs(R.string.delete_short));
         buttonRemove.setOnClickListener(v -> {
             final TriggerConnector connector = trigger.getConnector();
             connector.remove(trigger);
-            connector.simplify().rebuildView(getFM());
+            connector.simplify().rebuildView(fragmentManager);
         });
         buttonLayout.addView(buttonRemove);
 
         // Button [+]
         Button buttonAdd = new Button(mContext);
-        buttonAdd.setText(MainApp.gs(R.string.add_short));
+        buttonAdd.setText(resourceHelper.gs(R.string.add_short));
         buttonAdd.setOnClickListener(v -> {
             ChooseTriggerDialog dialog = new ChooseTriggerDialog();
             dialog.show(fragmentManager, "ChooseTriggerDialog");
             dialog.setOnClickListener(newTriggerObject -> {
                 TriggerConnector connector = trigger.getConnector();
                 connector.add(connector.pos(trigger) + 1, newTriggerObject);
-                connector.simplify().rebuildView(getFM());
+                connector.simplify().rebuildView(fragmentManager);
             });
         });
         buttonLayout.addView(buttonAdd);
 
         // Button [*]
         Button buttonCopy = new Button(mContext);
-        buttonCopy.setText(MainApp.gs(R.string.copy_short));
+        buttonCopy.setText(resourceHelper.gs(R.string.copy_short));
         buttonCopy.setOnClickListener(v -> {
             TriggerConnector connector = trigger.getConnector();
             connector.add(connector.pos(trigger) + 1, trigger.duplicate());
-            connector.simplify().rebuildView(getFM());
+            connector.simplify().rebuildView(fragmentManager);
         });
         buttonLayout.addView(buttonCopy);
     }
@@ -161,12 +160,12 @@ public class TriggerListAdapter {
         build(fragmentManager);
     }
 
-    public static void changeConnector(final FragmentManager fragmentManager, final Trigger trigger, final TriggerConnector connector, final TriggerConnector.Type newConnectorType) {
+    public void changeConnector(final FragmentManager fragmentManager, final Trigger trigger, final TriggerConnector connector, final TriggerConnector.Type newConnectorType) {
         if (connector.size() > 2) {
             // split connector
             int pos = connector.pos(trigger) - 1;
 
-            TriggerConnector newConnector = new TriggerConnector(newConnectorType);
+            TriggerConnector newConnector = new TriggerConnector(mainApp, newConnectorType);
 
             // move trigger from pos and pos+1 into new connector
             for (int i = 0; i < 2; ++i) {
@@ -177,10 +176,8 @@ public class TriggerListAdapter {
 
             connector.add(pos, newConnector);
         } else {
-            connector.changeConnectorType(newConnectorType);
+            connector.setType(newConnectorType);
         }
-
         connector.simplify().rebuildView(fragmentManager);
     }
-
 }

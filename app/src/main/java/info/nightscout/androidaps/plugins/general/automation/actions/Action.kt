@@ -17,6 +17,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
+import kotlin.reflect.full.primaryConstructor
 
 abstract class Action(val mainApp: MainApp) {
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -61,7 +62,7 @@ abstract class Action(val mainApp: MainApp) {
             val type = obj.getString("type")
             val data = obj.optJSONObject("data")
             val clazz = Class.forName(type).kotlin
-            return (clazz.constructors.first().call(mainApp) as Action).fromJSON(data?.toString()
+            return (clazz.primaryConstructor?.call(mainApp) as Action).fromJSON(data?.toString()
                 ?: "")
             //return (clazz.newInstance() as Action).fromJSON(data?.toString() ?: "")
         } catch (e: ClassNotFoundException) {

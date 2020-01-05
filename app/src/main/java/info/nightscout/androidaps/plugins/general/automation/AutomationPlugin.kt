@@ -149,7 +149,7 @@ class AutomationPlugin @Inject constructor(
                 val array = JSONArray(data)
                 for (i in 0 until array.length()) {
                     val o = array.getJSONObject(i)
-                    val event = AutomationEvent().fromJSON(o.toString())
+                    val event = AutomationEvent(mainApp).fromJSON(o.toString())
                     automationEvents.add(event)
                 }
             } catch (e: JSONException) {
@@ -169,7 +169,7 @@ class AutomationPlugin @Inject constructor(
 
         aapsLogger.debug(LTag.AUTOMATION, "processActions")
         for (event in automationEvents) {
-            if (event.isEnabled && event.trigger.shouldRun() && event.preconditions.shouldRun()) {
+            if (event.isEnabled && event.shouldRun() && event.trigger.shouldRun() && event.getPreconditions().shouldRun()) {
                 val actions = event.actions
                 for (action in actions) {
                     action.doAction(object : Callback() {
@@ -190,7 +190,7 @@ class AutomationPlugin @Inject constructor(
                         }
                     })
                 }
-                event.trigger.executed(DateUtil.now())
+                event.lastRun = DateUtil.now()
             }
         }
         storeToSP() // save last run time
@@ -213,20 +213,20 @@ class AutomationPlugin @Inject constructor(
 
     fun getTriggerDummyObjects(): List<Trigger> {
         return listOf(
-            TriggerTime(),
-            TriggerRecurringTime(),
-            TriggerTimeRange(),
-            TriggerBg(),
-            TriggerDelta(),
-            TriggerIob(),
-            TriggerCOB(),
-            TriggerProfilePercent(),
-            TriggerTempTarget(),
-            TriggerWifiSsid(),
-            TriggerLocation(),
-            TriggerAutosensValue(),
-            TriggerBolusAgo(),
-            TriggerPumpLastConnection()
+            TriggerTime(mainApp),
+            TriggerRecurringTime(mainApp),
+            TriggerTimeRange(mainApp),
+            TriggerBg(mainApp),
+            TriggerDelta(mainApp),
+            TriggerIob(mainApp),
+            TriggerCOB(mainApp),
+            TriggerProfilePercent(mainApp),
+            TriggerTempTarget(mainApp),
+            TriggerWifiSsid(mainApp),
+            TriggerLocation(mainApp),
+            TriggerAutosensValue(mainApp),
+            TriggerBolusAgo(mainApp),
+            TriggerPumpLastConnection(mainApp)
         )
     }
 

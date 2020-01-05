@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -31,21 +32,23 @@ import javax.inject.Inject
 
 class EditEventDialog : DialogFragmentWithDate() {
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var mainApp: MainApp
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var automationPlugin: AutomationPlugin
 
     private var actionListAdapter: ActionListAdapter? = null
-    private var event: AutomationEvent = AutomationEvent()
+    private lateinit var event: AutomationEvent
     private var position: Int = -1
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        event = AutomationEvent(mainApp)
         // load data from bundle
         (savedInstanceState ?: arguments)?.let { bundle ->
             position = bundle.getInt("position", -1)
-            bundle.getString("event")?.let { event = AutomationEvent().fromJSON(it) }
+            bundle.getString("event")?.let { event = AutomationEvent(mainApp).fromJSON(it) }
         }
 
         onCreateViewGeneral()
@@ -149,7 +152,7 @@ class EditEventDialog : DialogFragmentWithDate() {
     }
 
     private fun showPreconditions() {
-        val forcedTriggers = event.preconditions
+        val forcedTriggers = event.getPreconditions()
         if (forcedTriggers.size() > 0) {
             automation_forcedTriggerDescription.visibility = View.VISIBLE
             automation_forcedTriggerDescriptionLabel.visibility = View.VISIBLE

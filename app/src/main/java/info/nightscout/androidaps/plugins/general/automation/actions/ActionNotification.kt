@@ -17,7 +17,7 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class ActionNotification(mainApp: MainApp) : Action(mainApp) {
-    var text = InputString()
+    var text = InputString(mainApp)
 
     override fun friendlyName(): Int = R.string.notification
     override fun shortDescription(): String = resourceHelper.gs(R.string.notification_message, text.value)
@@ -41,7 +41,7 @@ class ActionNotification(mainApp: MainApp) : Action(mainApp) {
 
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
-        text.value = JsonHelper.safeGetString(o, "text")
+        text.value = JsonHelper.safeGetString(o, "text", "")
         return this
     }
 
@@ -49,7 +49,7 @@ class ActionNotification(mainApp: MainApp) : Action(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(resourceHelper.gs(R.string.message_short), "", text))
+            .add(LabelWithElement(mainApp,resourceHelper.gs(R.string.message_short), "", text))
             .build(root)
     }
 }

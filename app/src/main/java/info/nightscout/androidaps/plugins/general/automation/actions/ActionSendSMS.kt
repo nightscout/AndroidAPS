@@ -8,11 +8,11 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputStrin
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.JsonHelper.safeGetString
+import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class ActionSendSMS(mainApp: MainApp) : Action(mainApp) {
-    var text = InputString()
+    var text = InputString(mainApp)
 
     override fun friendlyName(): Int = R.string.sendsmsactiondescription
     override fun shortDescription(): String = resourceHelper.gs(R.string.sendsmsactionlabel, text.value)
@@ -33,7 +33,7 @@ class ActionSendSMS(mainApp: MainApp) : Action(mainApp) {
 
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
-        text.value = safeGetString(o, "text")
+        text.value = JsonHelper.safeGetString(o, "text", "")
         return this
     }
 
@@ -41,7 +41,7 @@ class ActionSendSMS(mainApp: MainApp) : Action(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(resourceHelper.gs(R.string.sendsmsactiontext), "", text))
+            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.sendsmsactiontext), "", text))
             .build(root)
     }
 }

@@ -26,7 +26,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class LocationService : DaggerService() {
+class LocationService @Inject constructor(): DaggerService() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
@@ -40,13 +40,10 @@ class LocationService : DaggerService() {
     private val LOCATION_INTERVAL_ACTIVE = T.mins(5).msecs()
     private val LOCATION_INTERVAL_PASSIVE = T.mins(1).msecs() // this doesn't cost more power
 
+    var lastLocation: Location? = null
+
     companion object {
         private const val LOCATION_DISTANCE = 10f
-        private var lastLocation: Location? = null
-
-        @JvmStatic
-        @Deprecated("replace by injection")
-        fun getLastLocation(): Location? = lastLocation
     }
 
     inner class LocationListener internal constructor(val provider: String) : android.location.LocationListener {

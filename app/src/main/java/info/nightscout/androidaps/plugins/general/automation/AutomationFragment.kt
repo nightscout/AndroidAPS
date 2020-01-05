@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
+import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.dialogs.EditEventDialog
@@ -45,6 +46,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var automationPlugin: AutomationPlugin
+    @Inject lateinit var mainApp : MainApp
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private lateinit var eventListAdapter: EventListAdapter
@@ -67,7 +69,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         automation_fabAddEvent.setOnClickListener {
             val dialog = EditEventDialog()
             val args = Bundle()
-            args.putString("event", AutomationEvent().toJSON())
+            args.putString("event", AutomationEvent(mainApp).toJSON())
             args.putInt("position", -1) // New event
             dialog.arguments = args
             fragmentManager?.let { dialog.show(it, "EditEventDialog") }
@@ -116,6 +118,19 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
         itemTouchHelper?.startDrag(viewHolder)
     }
 
+    fun fillIconSet(connector: TriggerConnector, set: HashSet<Int>) {
+        for (t in connector.list) {
+            if (t is TriggerConnector) {
+                fillIconSet(t, set)
+            } else {
+                val icon = t.icon()
+                if (icon.isPresent) {
+                    set.add(icon.get()!!)
+                }
+            }
+        }
+    }
+
     inner class EventListAdapter : RecyclerView.Adapter<EventListAdapter.ViewHolder>(), ItemTouchHelperAdapter {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val v = LayoutInflater.from(parent.context).inflate(R.layout.automation_event_item, parent, false)
@@ -137,7 +152,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             holder.iconLayout.removeAllViews()
             // trigger icons
             val triggerIcons = HashSet<Int>()
-            TriggerConnector.fillIconSet(event.trigger as TriggerConnector, triggerIcons)
+            fillIconSet(event.trigger as TriggerConnector, triggerIcons)
             for (res in triggerIcons) {
                 addImage(res, holder.context, holder.iconLayout)
             }

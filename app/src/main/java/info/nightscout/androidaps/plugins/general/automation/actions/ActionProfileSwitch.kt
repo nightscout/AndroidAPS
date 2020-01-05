@@ -15,7 +15,7 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class ActionProfileSwitch(mainApp: MainApp) : Action(mainApp) {
-    var inputProfileName: InputProfileName = InputProfileName("")
+    var inputProfileName: InputProfileName = InputProfileName(mainApp, "")
 
     override fun friendlyName(): Int = R.string.profilename
     override fun shortDescription(): String = resourceHelper.gs(R.string.changengetoprofilename, inputProfileName.value)
@@ -51,7 +51,7 @@ class ActionProfileSwitch(mainApp: MainApp) : Action(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(resourceHelper.gs(R.string.profilename), "", inputProfileName))
+            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.profilename), "", inputProfileName))
             .build(root)
     }
 
@@ -67,7 +67,7 @@ class ActionProfileSwitch(mainApp: MainApp) : Action(mainApp) {
 
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
-        inputProfileName.value = JsonHelper.safeGetString(o, "profileToSwitchTo")
+        inputProfileName.value = JsonHelper.safeGetString(o, "profileToSwitchTo", "")
         return this
     }
 }

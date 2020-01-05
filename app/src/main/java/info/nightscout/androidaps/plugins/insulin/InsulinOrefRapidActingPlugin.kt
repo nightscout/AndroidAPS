@@ -8,10 +8,12 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Created by adrian on 14/08/17.
  */
+@Singleton
 class InsulinOrefRapidActingPlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     rxBus: RxBusWrapper,

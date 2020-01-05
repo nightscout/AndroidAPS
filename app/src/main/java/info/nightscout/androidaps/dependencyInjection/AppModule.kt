@@ -17,7 +17,10 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
+import info.nightscout.androidaps.plugins.general.automation.AutomationEvent
 import info.nightscout.androidaps.plugins.general.automation.actions.*
+import info.nightscout.androidaps.plugins.general.automation.elements.*
+import info.nightscout.androidaps.plugins.general.automation.triggers.*
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.commands.CommandSetProfile
@@ -71,10 +74,30 @@ open class AppModule {
         @ContributesAndroidInjector fun objective5Injector(): Objective5
         @ContributesAndroidInjector fun objective6Injector(): Objective6
 
+        @ContributesAndroidInjector fun automationEventInjector(): AutomationEvent
+
+        @ContributesAndroidInjector fun triggerInjector(): Trigger
+        @ContributesAndroidInjector fun triggerAutosensValueInjector(): TriggerAutosensValue
+        @ContributesAndroidInjector fun triggerBgInjector(): TriggerBg
+        @ContributesAndroidInjector fun triggerBolusAgoInjector(): TriggerBolusAgo
+        @ContributesAndroidInjector fun triggerCOBInjector(): TriggerCOB
+        @ContributesAndroidInjector fun triggerConnectorInjector(): TriggerConnector
+        @ContributesAndroidInjector fun triggerDeltaInjector(): TriggerDelta
+        @ContributesAndroidInjector fun triggerDummyInjector(): TriggerDummy
+        @ContributesAndroidInjector fun triggerIobInjector(): TriggerIob
+        @ContributesAndroidInjector fun triggerLocationInjector(): TriggerLocation
+        @ContributesAndroidInjector fun triggerProfilePercentInjector(): TriggerProfilePercent
+        @ContributesAndroidInjector fun triggerPumpLastConnectonInjector(): TriggerPumpLastConnection
+        @ContributesAndroidInjector fun triggerRecurringTimeInjector(): TriggerRecurringTime
+        @ContributesAndroidInjector fun triggerTempTargetInjector(): TriggerTempTarget
+        @ContributesAndroidInjector fun triggerTime(): TriggerTime
+        @ContributesAndroidInjector fun triggerTimeRangeInjector(): TriggerTimeRange
+        @ContributesAndroidInjector fun triggerWifiSsidInjector(): TriggerWifiSsid
+
         @ContributesAndroidInjector fun actionInjector(): Action
         @ContributesAndroidInjector fun actionLoopDisableInjector(): ActionLoopDisable
         @ContributesAndroidInjector fun actionLoopEnableInjector(): ActionLoopEnable
-        @ContributesAndroidInjector fun ActionLoopResumeInjector(): ActionLoopResume
+        @ContributesAndroidInjector fun actionLoopResumeInjector(): ActionLoopResume
         @ContributesAndroidInjector fun actionLoopSuspendInjector(): ActionLoopSuspend
         @ContributesAndroidInjector fun actionNotificationInjector(): ActionNotification
         @ContributesAndroidInjector fun actionProfileSwitchInjector(): ActionProfileSwitch
@@ -83,6 +106,23 @@ open class AppModule {
         @ContributesAndroidInjector fun actionStartTempTargetInjector(): ActionStartTempTarget
         @ContributesAndroidInjector fun actionStopTempTargetInjector(): ActionStopTempTarget
         @ContributesAndroidInjector fun actionDummyInjector(): ActionDummy
+
+        @ContributesAndroidInjector fun elementInjector(): Element
+        @ContributesAndroidInjector fun comparatorInjector(): Comparator
+        @ContributesAndroidInjector fun comparatorExistsInjector(): ComparatorExists
+        @ContributesAndroidInjector fun inputBgInjector(): InputBg
+        @ContributesAndroidInjector fun inputButtonInjector(): InputButton
+        @ContributesAndroidInjector fun inputDeltaInjector(): InputDelta
+        @ContributesAndroidInjector fun inputDoubleInjector(): InputDouble
+        @ContributesAndroidInjector fun inputDurationInjector(): InputDuration
+        @ContributesAndroidInjector fun inputInsulinInjector(): InputInsulin
+        @ContributesAndroidInjector fun inputLocationModeInjector(): InputLocationMode
+        @ContributesAndroidInjector fun inputPercentInjector(): InputPercent
+        @ContributesAndroidInjector fun inputProfileNameInjector(): InputProfileName
+        @ContributesAndroidInjector fun inputStringInjector(): InputString
+        @ContributesAndroidInjector fun inputTempTargetInjector(): InputTempTarget
+        @ContributesAndroidInjector fun labelWithElementInjector(): LabelWithElement
+        @ContributesAndroidInjector fun staticLabelInjector(): StaticLabel
 
         @ContributesAndroidInjector fun bgReadingInjector(): BgReading
         @ContributesAndroidInjector fun treatmentInjector(): Treatment

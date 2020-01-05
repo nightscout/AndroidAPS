@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.general.automation.events.EventAutomat
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
 import kotlinx.android.synthetic.main.automation_dialog_choose_action.*
 import javax.inject.Inject
+import kotlin.reflect.full.primaryConstructor
 
 class ChooseActionDialog : DialogFragmentWithDate() {
     @Inject lateinit var automationPlugin: AutomationPlugin
@@ -64,7 +65,7 @@ class ChooseActionDialog : DialogFragmentWithDate() {
     private fun instantiateAction(): Action? {
         return getActionClass()?.let {
             val clazz = Class.forName(it).kotlin
-            clazz.constructors.first().call(mainApp) as Action
+            clazz.primaryConstructor?.call(mainApp) as Action
         }
     }
 

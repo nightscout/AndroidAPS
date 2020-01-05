@@ -5,15 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import kotlinx.android.synthetic.main.automation_dialog_choose_trigger.*
 import javax.inject.Inject
+import kotlin.reflect.full.primaryConstructor
 
 class ChooseTriggerDialog : DialogFragmentWithDate() {
     @Inject lateinit var automationPlugin: AutomationPlugin
+    @Inject lateinit var mainApp : MainApp
 
     private var checkedIndex = -1
     private var clickListener: OnClickListener? = null
@@ -39,7 +42,7 @@ class ChooseTriggerDialog : DialogFragmentWithDate() {
         for (t in automationPlugin.getTriggerDummyObjects()) {
             val radioButton = RadioButton(context)
             radioButton.setText(t.friendlyName())
-            radioButton.tag = t.javaClass
+            radioButton.tag = t.javaClass.name
             automation_chooseTriggerRadioGroup.addView(radioButton)
         }
 
@@ -65,15 +68,16 @@ class ChooseTriggerDialog : DialogFragmentWithDate() {
 
     private fun instantiateTrigger(): Trigger? {
         return getTriggerClass()?.let {
-            it.newInstance() as Trigger
+            val clazz = Class.forName(it).kotlin
+            clazz.primaryConstructor?.call(mainApp) as Trigger
         }
     }
 
-    private fun getTriggerClass(): Class<*>? {
+    private fun getTriggerClass(): String? {
         val radioButtonID = automation_chooseTriggerRadioGroup.checkedRadioButtonId
         val radioButton = automation_chooseTriggerRadioGroup.findViewById<RadioButton>(radioButtonID)
         return radioButton?.let {
-            it.tag as Class<*>
+            it.tag as String
         }
     }
 
