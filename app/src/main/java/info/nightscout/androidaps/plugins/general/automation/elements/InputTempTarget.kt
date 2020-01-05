@@ -21,10 +21,10 @@ class InputTempTarget(mainApp: MainApp) : Element(mainApp) {
     }
 
     override fun addToLayout(root: LinearLayout) {
-        var minValue = 0.0
-        var maxValue = 0.0
-        var step = 0.0
-        var decimalFormat: DecimalFormat? = null
+        var minValue: Double
+        var maxValue: Double
+        var step: Double
+        var decimalFormat: DecimalFormat?
         if (units == Constants.MMOL) { // mmol
             minValue = Constants.MIN_TT_MMOL
             maxValue = Constants.MAX_TT_MMOL

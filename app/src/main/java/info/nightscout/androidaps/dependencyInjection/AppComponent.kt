@@ -90,6 +90,8 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectElement(inputString: InputString)
     fun injectElement(inputTempTarget: InputTempTarget)
     fun injectElement(inputTimeRange: InputTimeRange)
+    fun injectElement(inputTime: InputTime)
+    fun injectElement(inputWeekDay: InputWeekDay)
     fun injectElement(labelWithElement: LabelWithElement)
     fun injectElement(staticLabel: StaticLabel)
 

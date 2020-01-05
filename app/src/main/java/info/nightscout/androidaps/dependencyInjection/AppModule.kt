@@ -112,7 +112,7 @@ open class AppModule {
         @ContributesAndroidInjector fun inputButtonInjector(): InputButton
         @ContributesAndroidInjector fun comparatorInjector(): Comparator
         @ContributesAndroidInjector fun comparatorExistsInjector(): ComparatorExists
-        @ContributesAndroidInjector fun inputTimeInjector(): InputDateTime
+        @ContributesAndroidInjector fun inputDateTimeInjector(): InputDateTime
         @ContributesAndroidInjector fun inputDeltaInjector(): InputDelta
         @ContributesAndroidInjector fun inputDoubleInjector(): InputDouble
         @ContributesAndroidInjector fun inputDurationInjector(): InputDuration
@@ -123,6 +123,8 @@ open class AppModule {
         @ContributesAndroidInjector fun inputStringInjector(): InputString
         @ContributesAndroidInjector fun inputTempTargetInjector(): InputTempTarget
         @ContributesAndroidInjector fun inputTimeRangeInjector(): InputTimeRange
+        @ContributesAndroidInjector fun inputTimeInjector(): InputTime
+        @ContributesAndroidInjector fun inputWeekDayInjector(): InputWeekDay
         @ContributesAndroidInjector fun labelWithElementInjector(): LabelWithElement
         @ContributesAndroidInjector fun staticLabelInjector(): StaticLabel
 
