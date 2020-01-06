@@ -1703,8 +1703,8 @@
     <string name="omnipod_cmd_set_bolus">Set Bolus</string>
     <string name="omnipod_cmd_cancel_bolus">Cancel Bolus</string>
     <string name="omnipod_cmd_set_tbr">Set Temporary Basal</string>
-    <string name="omnipod_cmd_cancel_tbr">Cancel Temporary Basal</string>
-    <string name="omnipod_cmd_cancel_tbr_forced">Cancel Temporary Basal (Forced)</string>
+    <string name="omnipod_cmd_cancel_tbr">Cancel Temporary Basal (Internally by driver)</string>
+    <string name="omnipod_cmd_cancel_tbr_forced">Cancel Temporary Basal (Forced by user)</string>
     <string name="omnipod_cmd_set_basal_schedule">Set Basal Schedule</string>
     <string name="omnipod_cmd_get_pod_status">Get Pod Status</string>
     <string name="omnipod_cmd_get_pod_info">Get Pod Info</string>

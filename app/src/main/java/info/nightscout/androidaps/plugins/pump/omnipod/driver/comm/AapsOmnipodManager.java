@@ -397,10 +397,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         long time = System.currentTimeMillis();
         try {
             delegate.cancelTemporaryBasal(isTempBasalBeepsEnabled());
-            addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasal, null);
+            addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasalForce, null);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
-            addFailureToHistory(time, PodHistoryEntryType.CancelTemporaryBasal, comment);
+            addFailureToHistory(time, PodHistoryEntryType.CancelTemporaryBasalForce, comment);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
@@ -521,7 +521,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
             long time = System.currentTimeMillis();
 
-            addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasalForce, null);
+            addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasal, null);
 
             TemporaryBasal temporaryBasal = new TemporaryBasal() //
                     .date(time) //
