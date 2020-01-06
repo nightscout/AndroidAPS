@@ -80,7 +80,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         this.constraintChecker = constraintChecker;
         this.treatmentsPlugin = treatmentsPlugin;
         this.sp = sp;
-        pluginDescription.description(R.string.description_pump_dana_r_korean);
+        getPluginDescription().description(R.string.description_pump_dana_r_korean);
 
         useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false);
         pumpDescription.setPumpDescription(PumpType.DanaRKorean);

@@ -82,7 +82,7 @@ public class NSClientPlugin extends PluginBase {
         );
 
         if (Config.NSCLIENT) {
-            pluginDescription.alwaysEnabled(true).visibleByDefault(true);
+            getPluginDescription().alwaysEnabled(true).visibleByDefault(true);
         }
         paused = SP.getBoolean(R.string.key_nsclientinternal_paused, false);
         autoscroll = SP.getBoolean(R.string.key_nsclientinternal_autoscroll, true);

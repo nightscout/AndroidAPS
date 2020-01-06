@@ -20,7 +20,8 @@ import org.slf4j.LoggerFactory
 /**
  * Created by mike on 09.06.2016.
  */
-abstract class PluginBase(pluginDesc: PluginDescription) {
+abstract class PluginBase(public val pluginDescription: PluginDescription) {
+
     companion object {
         private val log = LoggerFactory.getLogger(L.CORE)
     }
@@ -29,16 +30,10 @@ abstract class PluginBase(pluginDesc: PluginDescription) {
         NOT_INITIALIZED, ENABLED, DISABLED
     }
 
-    lateinit var pluginDescription: PluginDescription // TODO: workaround to have pluginDescription accessible in child classes
-
     private var state = State.NOT_INITIALIZED
     private var fragmentVisible = false
     // Specific plugin with more Interfaces
     protected var isProfileInterfaceEnabled = false
-
-    init {
-        pluginDescription = pluginDesc
-    }
 
     // Default always calls invoke
     // Plugins that have special constraints if they get switched to may override this method

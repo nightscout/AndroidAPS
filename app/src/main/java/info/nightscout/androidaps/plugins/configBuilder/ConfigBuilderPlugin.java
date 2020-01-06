@@ -66,7 +66,6 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     private CommandQueue commandQueue = new CommandQueue();
 
-    private final Lazy<MainApp> mainApp;
     private final Lazy<InsulinOrefRapidActingPlugin> insulinOrefRapidActingPlugin;
     private final Lazy<LocalProfilePlugin> localProfilePlugin;
     private final Lazy<VirtualPumpPlugin> virtualPumpPlugin;
@@ -80,7 +79,6 @@ public class ConfigBuilderPlugin extends PluginBase {
      * */
     @Inject
     public ConfigBuilderPlugin(
-            Lazy<MainApp> mainApp,
             Lazy<InsulinOrefRapidActingPlugin> insulinOrefRapidActingPlugin,
             Lazy<LocalProfilePlugin> localProfilePlugin,
             Lazy<VirtualPumpPlugin> virtualPumpPlugin,
@@ -98,7 +96,6 @@ public class ConfigBuilderPlugin extends PluginBase {
                 .shortName(R.string.configbuilder_shortname)
                 .description(R.string.description_config_builder)
         );
-        this.mainApp = mainApp;
         this.insulinOrefRapidActingPlugin = insulinOrefRapidActingPlugin;
         this.localProfilePlugin = localProfilePlugin;
         this.virtualPumpPlugin = virtualPumpPlugin;
@@ -118,7 +115,7 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     private void setAlwaysEnabledPluginsEnabled() {
         for (PluginBase plugin : pluginList) {
-            if (plugin.pluginDescription.alwaysEnabled)
+            if (plugin.getPluginDescription().alwaysEnabled)
                 plugin.setPluginEnabled(plugin.getType(), true);
         }
         storeSettings("setAlwaysEnabledPluginsEnabled");
@@ -132,9 +129,9 @@ public class ConfigBuilderPlugin extends PluginBase {
 
             for (PluginBase p : pluginList) {
                 PluginType type = p.getType();
-                if (p.pluginDescription.alwaysEnabled && p.pluginDescription.alwaysVisible)
+                if (p.getPluginDescription().alwaysEnabled && p.getPluginDescription().alwaysVisible)
                     continue;
-                if (p.pluginDescription.alwaysEnabled && p.pluginDescription.neverVisible)
+                if (p.getPluginDescription().alwaysEnabled && p.getPluginDescription().neverVisible)
                     continue;
                 savePref(p, type, true);
                 if (type == PluginType.PUMP) {
@@ -175,7 +172,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         String settingEnabled = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Enabled";
         if (sp.contains(settingEnabled))
             p.setPluginEnabled(type, sp.getBoolean(settingEnabled, false));
-        else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
+        else if (p.getType() == type && (p.getPluginDescription().enableByDefault || p.getPluginDescription().alwaysEnabled)) {
             p.setPluginEnabled(type, true);
         }
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingEnabled + ":" + p.isEnabled(type));
@@ -183,7 +180,7 @@ public class ConfigBuilderPlugin extends PluginBase {
             String settingVisible = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Visible";
             if (sp.contains(settingVisible))
                 p.setFragmentVisible(type, sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false));
-            else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
+            else if (p.getType() == type && p.getPluginDescription().visibleByDefault) {
                 p.setFragmentVisible(type, true);
             }
             aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingVisible + ":" + p.isFragmentVisible());

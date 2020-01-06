@@ -80,7 +80,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         this.constraintChecker = constraintChecker;
         this.treatmentsPlugin = treatmentsPlugin;
         this.sp = sp;
-        pluginDescription.description(R.string.description_pump_dana_r_v2);
+        getPluginDescription().description(R.string.description_pump_dana_r_v2);
 
         useExtendedBoluses = false;
         pumpDescription.setPumpDescription(PumpType.DanaRv2);
