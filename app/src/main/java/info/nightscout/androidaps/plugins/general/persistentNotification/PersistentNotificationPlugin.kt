@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.persistentNotification
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -20,6 +19,7 @@ import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
@@ -36,24 +36,26 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PersistentNotificationPlugin @Inject constructor() : PluginBase(PluginDescription()
+class PersistentNotificationPlugin @Inject constructor(
+    var mainApp: MainApp,
+    var resourceHelper: ResourceHelper,
+    var profileFunction: ProfileFunction,
+    var fabricPrivacy: FabricPrivacy,
+    var configBuilderPlugin: ConfigBuilderPlugin,
+    var treatmentsPlugin: TreatmentsPlugin,
+    var iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    rxBus: RxBusWrapper,
+    aapsLogger: AAPSLogger
+) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .neverVisible(true)
     .pluginName(R.string.ongoingnotificaction)
     .enableByDefault(true)
     .alwaysEnabled(true)
     .showInList(false)
-    .description(R.string.description_persistent_notification)
+    .description(R.string.description_persistent_notification),
+    rxBus, aapsLogger
 ) {
-
-    @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var mainApp: MainApp
-    @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
     // For Android Auto
     // Intents are not declared in manifest and not consumed, this is intentionally because actually we can't do anything with
@@ -66,7 +68,7 @@ class PersistentNotificationPlugin @Inject constructor() : PluginBase(PluginDesc
 
     private val disposable = CompositeDisposable()
 
-     override fun onStart() {
+    override fun onStart() {
         super.onStart()
         createNotificationChannel() // make sure channels exist before triggering updates through the bus
         disposable.add(rxBus

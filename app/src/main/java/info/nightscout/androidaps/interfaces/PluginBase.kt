@@ -8,9 +8,11 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventRebuildTabs
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.logging.L.isEnabled
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.EventConfigBuilderUpdateGui
 import info.nightscout.androidaps.utils.OKDialog.showConfirmation
@@ -20,7 +22,7 @@ import org.slf4j.LoggerFactory
 /**
  * Created by mike on 09.06.2016.
  */
-abstract class PluginBase(public val pluginDescription: PluginDescription) {
+abstract class PluginBase(val pluginDescription: PluginDescription, val rxBus: RxBusWrapper, val aapsLogger: AAPSLogger ) {
 
     companion object {
         private val log = LoggerFactory.getLogger(L.CORE)

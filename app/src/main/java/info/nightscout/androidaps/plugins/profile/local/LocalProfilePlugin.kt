@@ -14,7 +14,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
@@ -31,8 +30,8 @@ import kotlin.collections.ArrayList
 
 @Singleton
 class LocalProfilePlugin @Inject constructor(
-    private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
+    aapsLogger: AAPSLogger,
+    rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction
@@ -42,7 +41,7 @@ class LocalProfilePlugin @Inject constructor(
     .enableByDefault(true)
     .pluginName(R.string.localprofile)
     .shortName(R.string.localprofile_shortname)
-    .description(R.string.description_profile_local)), ProfileInterface {
+    .description(R.string.description_profile_local), rxBus, aapsLogger), ProfileInterface {
 
     var rawProfile: ProfileStore? = null
 

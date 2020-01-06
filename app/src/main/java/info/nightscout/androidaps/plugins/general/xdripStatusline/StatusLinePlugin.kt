@@ -9,6 +9,7 @@ import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
@@ -29,7 +30,6 @@ import javax.inject.Singleton
 @Singleton
 class StatusLinePlugin @Inject constructor(
     private val sp: SP,
-    private val rxBus: RxBusWrapper,
     private val profileFunction: ProfileFunction,
     private val resourceHelper: ResourceHelper,
     private val mainApp: MainApp,
@@ -37,7 +37,8 @@ class StatusLinePlugin @Inject constructor(
     private val configBuilderPlugin: ConfigBuilderPlugin,
     private val treatmentsPlugin: TreatmentsPlugin,
     private val loopPlugin: LoopPlugin,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -45,7 +46,7 @@ class StatusLinePlugin @Inject constructor(
         .shortName(R.string.xdripstatus_shortname)
         .neverVisible(true)
         .preferencesId(R.xml.pref_xdripstatus)
-        .description(R.string.description_xdrip_status_line)) {
+        .description(R.string.description_xdrip_status_line), rxBus, aapsLogger) {
 
     private val disposable = CompositeDisposable()
     private var lastLoopStatus = false

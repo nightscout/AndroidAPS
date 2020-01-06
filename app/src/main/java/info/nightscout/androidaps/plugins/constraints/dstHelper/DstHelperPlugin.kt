@@ -23,21 +23,22 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DstHelperPlugin @Inject constructor(): PluginBase(PluginDescription()
+class DstHelperPlugin @Inject constructor(
+    aapsLogger: AAPSLogger,
+    rxBus: RxBusWrapper,
+    var resourceHelper: ResourceHelper,
+    var mainApp: MainApp,
+    var sp: SP,
+    var configBuilderPlugin: ConfigBuilderPlugin,
+    var loopPlugin: LoopPlugin
+    ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .neverVisible(true)
     .alwaysEnabled(true)
     .showInList(false)
-    .pluginName(R.string.dst_plugin_name)
+    .pluginName(R.string.dst_plugin_name),
+    rxBus, aapsLogger
 ), ConstraintsInterface {
-
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var mainApp: MainApp
-    @Inject lateinit var sp : SP
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
-    @Inject lateinit var loopPlugin: LoopPlugin
 
     private val DISABLE_TIMEFRAME_HOURS = -3
     private val WARN_PRIOR_TIMEFRAME_HOURS = 12

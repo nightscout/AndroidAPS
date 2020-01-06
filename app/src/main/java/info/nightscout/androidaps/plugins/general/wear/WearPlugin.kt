@@ -8,6 +8,7 @@ import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -25,19 +26,21 @@ import javax.inject.Singleton
 
 @Singleton
 class WearPlugin @Inject constructor(
-    private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
     private val mainApp: MainApp,
     private val fabricPrivacy: FabricPrivacy,
-    private val loopPlugin: Lazy<LoopPlugin>
+    private val loopPlugin: Lazy<LoopPlugin>,
+    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(WearFragment::class.java.name)
     .pluginName(R.string.wear)
     .shortName(R.string.wear_shortname)
     .preferencesId(R.xml.pref_wear)
-    .description(R.string.description_wear)
+    .description(R.string.description_wear),
+    rxBus, aapsLogger
 ) {
 
     private val disposable = CompositeDisposable()

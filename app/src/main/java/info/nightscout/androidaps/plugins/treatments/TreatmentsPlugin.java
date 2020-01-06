@@ -64,8 +64,7 @@ import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface {
-    private final AAPSLogger aapsLogger;
-    private final RxBusWrapper rxBus;
+
     private final MainApp mainApp;
     private final SP sp;
     private final ResourceHelper resourceHelper;
@@ -112,10 +111,10 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 .pluginName(R.string.treatments)
                 .shortName(R.string.treatments_shortname)
                 .alwaysEnabled(true)
-                .description(R.string.description_treatments)
+                .description(R.string.description_treatments),
+                rxBus,
+                aapsLogger
         );
-        this.aapsLogger = aapsLogger;
-        this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
         this.mainApp = mainApp;
         this.sp = sp;
@@ -129,35 +128,35 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         this.service = new TreatmentService();
         initializeData(range());
         super.onStart();
-        disposable.add(rxBus
+        disposable.add(getRxBus()
                 .toObservable(EventReloadTreatmentData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                            aapsLogger.debug(LTag.DATATREATMENTS, "EventReloadTreatmentData");
+                            getAapsLogger().debug(LTag.DATATREATMENTS, "EventReloadTreatmentData");
                             initializeTreatmentData(range());
                             initializeExtendedBolusData(range());
                             updateTotalIOBTreatments();
-                            rxBus.send(event.getNext());
+                            getRxBus().send(event.getNext());
                         },
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
-        disposable.add(rxBus
+        disposable.add(getRxBus()
                 .toObservable(EventReloadProfileSwitchData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> initializeProfileSwitchData(range()),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
-        disposable.add(rxBus
+        disposable.add(getRxBus()
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> initializeTempTargetData(range()),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
-        disposable.add(rxBus
+        disposable.add(getRxBus()
                 .toObservable(EventReloadTempBasalData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                            aapsLogger.debug(LTag.DATATREATMENTS, "EventReloadTempBasalData");
+                            getAapsLogger().debug(LTag.DATATREATMENTS, "EventReloadTempBasalData");
                             initializeTempBasalData(range());
                             updateTotalIOBTempBasals();
                         },
@@ -191,7 +190,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     private void initializeTreatmentData(long range) {
-        aapsLogger.debug(LTag.DATATREATMENTS, "initializeTreatmentData");
+        getAapsLogger().debug(LTag.DATATREATMENTS, "initializeTreatmentData");
         synchronized (treatments) {
             treatments.clear();
             treatments.addAll(getService().getTreatmentDataFromTime(DateUtil.now() - range, false));
@@ -199,7 +198,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     private void initializeTempBasalData(long range) {
-        aapsLogger.debug(LTag.DATATREATMENTS, "initializeTempBasalData");
+        getAapsLogger().debug(LTag.DATATREATMENTS, "initializeTempBasalData");
         synchronized (tempBasals) {
             tempBasals.reset().add(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(DateUtil.now() - range, false));
         }
@@ -207,7 +206,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     private void initializeExtendedBolusData(long range) {
-        aapsLogger.debug(LTag.DATATREATMENTS, "initializeExtendedBolusData");
+        getAapsLogger().debug(LTag.DATATREATMENTS, "initializeExtendedBolusData");
         synchronized (extendedBoluses) {
             extendedBoluses.reset().add(MainApp.getDbHelper().getExtendedBolusDataFromTime(DateUtil.now() - range, false));
         }
@@ -215,14 +214,14 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     }
 
     private void initializeTempTargetData(long range) {
-        aapsLogger.debug(LTag.DATATREATMENTS, "initializeTempTargetData");
+        getAapsLogger().debug(LTag.DATATREATMENTS, "initializeTempTargetData");
         synchronized (tempTargets) {
             tempTargets.reset().add(MainApp.getDbHelper().getTemptargetsDataFromTime(DateUtil.now() - range, false));
         }
     }
 
     private void initializeProfileSwitchData(long range) {
-        aapsLogger.debug(LTag.DATATREATMENTS, "initializeProfileSwitchData");
+        getAapsLogger().debug(LTag.DATATREATMENTS, "initializeProfileSwitchData");
         synchronized (profiles) {
             profiles.reset().add(MainApp.getDbHelper().getProfileSwitchData(DateUtil.now() - range, false));
         }
@@ -310,13 +309,13 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
         long time = System.currentTimeMillis();
         synchronized (treatments) {
-            aapsLogger.debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: AllTreatmentsInDb: " + MedtronicUtil.getGsonInstanceCore().toJson(treatments));
+            getAapsLogger().debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: AllTreatmentsInDb: " + MedtronicUtil.getGsonInstanceCore().toJson(treatments));
 
             for (Treatment t : treatments) {
                 if (t.date <= time && t.date >= fromTimestamp)
                     in5minback.add(t);
             }
-            aapsLogger.debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: FilteredTreatments: AfterTime={}, Items={} " + fromTimestamp + " " + MedtronicUtil.getGsonInstanceCore().toJson(in5minback));
+            getAapsLogger().debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: FilteredTreatments: AfterTime={}, Items={} " + fromTimestamp + " " + MedtronicUtil.getGsonInstanceCore().toJson(in5minback));
             return in5minback;
         }
     }
@@ -348,7 +347,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     last = t.date;
             }
         }
-        aapsLogger.debug(LTag.DATATREATMENTS, "Last bolus time: " + DateUtil.dateAndTimeString(last));
+        getAapsLogger().debug(LTag.DATATREATMENTS, "Last bolus time: " + DateUtil.dateAndTimeString(last));
         return last;
     }
 
@@ -363,7 +362,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     last = t.date;
             }
         }
-        aapsLogger.debug(LTag.DATATREATMENTS, "Last manual bolus time: " + DateUtil.dateAndTimeString(last));
+        getAapsLogger().debug(LTag.DATATREATMENTS, "Last manual bolus time: " + DateUtil.dateAndTimeString(last));
         return last;
     }
 
@@ -597,7 +596,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo, boolean allowUpdate) {
         boolean medtronicPump = MedtronicUtil.isMedtronicPump();
 
-        aapsLogger.debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: addToHistoryTreatment::isMedtronicPump={} " + medtronicPump);
+        getAapsLogger().debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: addToHistoryTreatment::isMedtronicPump={} " + medtronicPump);
 
         Treatment treatment = new Treatment();
         treatment.date = detailedBolusInfo.date;
@@ -612,7 +611,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         treatment.boluscalc = detailedBolusInfo.boluscalc != null ? detailedBolusInfo.boluscalc.toString() : null;
         TreatmentService.UpdateReturn creatOrUpdateResult;
 
-        aapsLogger.debug(medtronicPump && MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: addToHistoryTreatment::treatment={} " + treatment);
+        getAapsLogger().debug(medtronicPump && MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: addToHistoryTreatment::treatment={} " + treatment);
 
         if (!medtronicPump)
             creatOrUpdateResult = getService().createOrUpdate(treatment);
@@ -629,7 +628,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             carbsTreatment.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60 * 1000L + 1000L; // add 1 sec to make them different records
             carbsTreatment.carbs = detailedBolusInfo.carbs;
 
-            aapsLogger.debug(medtronicPump && MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: carbTime!=0, creating second treatment. CarbsTreatment={}" + carbsTreatment);
+            getAapsLogger().debug(medtronicPump && MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: carbTime!=0, creating second treatment. CarbsTreatment={}" + carbsTreatment);
 
             if (!medtronicPump)
                 getService().createOrUpdate(carbsTreatment);
@@ -641,7 +640,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             NSUpload.uploadTreatmentRecord(detailedBolusInfo);
 
         if (!allowUpdate && !creatOrUpdateResult.success) {
-            aapsLogger.error("Treatment could not be added to DB", new Exception());
+            getAapsLogger().error("Treatment could not be added to DB", new Exception());
 
             String status = String.format(resourceHelper.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs, DateUtil.dateAndTimeString(treatment.date));
 
@@ -728,7 +727,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
-        rxBus.send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
+        getRxBus().send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         MainApp.getDbHelper().createOrUpdate(profileSwitch);
         NSUpload.uploadProfileSwitch(profileSwitch);
     }
@@ -757,7 +756,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             profileSwitch.percentage = percentage;
             treatmentsPlugin.addToHistoryProfileSwitch(profileSwitch);
         } else {
-            aapsLogger.error(LTag.PROFILE, "No profile switch exists");
+            getAapsLogger().error(LTag.PROFILE, "No profile switch exists");
         }
     }
 

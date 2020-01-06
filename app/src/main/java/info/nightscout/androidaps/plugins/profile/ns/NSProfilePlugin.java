@@ -19,8 +19,10 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.logging.AAPSLoggerProduction;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.profile.ns.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.utils.SP;
@@ -50,7 +52,8 @@ public class NSProfilePlugin extends PluginBase implements ProfileInterface {
                 .alwaysEnabled(Config.NSCLIENT)
                 .alwaysVisible(Config.NSCLIENT)
                 .showInList(!Config.NSCLIENT)
-                .description(R.string.description_profile_nightscout)
+                .description(R.string.description_profile_nightscout),
+                new RxBusWrapper(), new AAPSLoggerProduction() // TODO: dagger
         );
         loadNSProfile();
     }

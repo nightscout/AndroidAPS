@@ -6,6 +6,7 @@ import info.nightscout.androidaps.interfaces.InsulinInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -20,14 +21,15 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
  *
  */
 abstract class InsulinOrefBasePlugin(
-    val rxBus: RxBusWrapper,
     val resourceHelper: ResourceHelper,
-    val profileFunction: ProfileFunction
+    val profileFunction: ProfileFunction,
+    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.INSULIN)
     .fragmentClass(InsulinFragment::class.java.name)
     .shortName(R.string.insulin_shortname)
-    .visibleByDefault(false)
+    .visibleByDefault(false),
+    rxBus, aapsLogger
 ), InsulinInterface {
 
     private var lastWarned: Long = 0

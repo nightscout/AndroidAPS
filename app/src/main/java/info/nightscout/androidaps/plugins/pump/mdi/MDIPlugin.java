@@ -18,7 +18,10 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.AAPSLoggerProduction;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
@@ -45,11 +48,14 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
 
     private PumpDescription pumpDescription = new PumpDescription();
 
+    //TODO dagger
+
     private MDIPlugin() {
         super(new PluginDescription()
-                .mainType(PluginType.PUMP)
-                .pluginName(R.string.mdi)
-                .description(R.string.description_pump_mdi)
+                        .mainType(PluginType.PUMP)
+                        .pluginName(R.string.mdi)
+                        .description(R.string.description_pump_mdi),
+                new RxBusWrapper(), new AAPSLoggerProduction() // TODO: dagger
         );
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.5d;

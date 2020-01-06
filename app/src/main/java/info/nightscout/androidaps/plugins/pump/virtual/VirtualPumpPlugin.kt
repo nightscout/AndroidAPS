@@ -45,8 +45,8 @@ import javax.inject.Singleton
 
 @Singleton
 class VirtualPumpPlugin @Inject constructor(
-    private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
+    aapsLogger: AAPSLogger,
+    rxBus: RxBusWrapper,
     private var fabricPrivacy: FabricPrivacy,
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
@@ -59,7 +59,8 @@ class VirtualPumpPlugin @Inject constructor(
     .shortName(R.string.virtualpump_shortname)
     .preferencesId(R.xml.pref_virtualpump)
     .neverVisible(Config.NSCLIENT)
-    .description(R.string.description_pump_virtual)
+    .description(R.string.description_pump_virtual),
+    rxBus, aapsLogger
 ), PumpInterface {
 
 

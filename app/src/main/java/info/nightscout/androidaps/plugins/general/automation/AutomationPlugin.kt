@@ -40,20 +40,20 @@ import javax.inject.Singleton
 
 @Singleton
 class AutomationPlugin @Inject constructor(
-    private val rxBus: RxBusWrapper,
-    private val aapsLogger: AAPSLogger,
     private val resourceHelper: ResourceHelper,
     private val mainApp: MainApp,
     private val sp: SP,
     private val fabricPrivacy: FabricPrivacy,
-    private val loopPlugin: LoopPlugin
+    private val loopPlugin: LoopPlugin,
+    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(AutomationFragment::class.qualifiedName)
     .pluginName(R.string.automation)
     .shortName(R.string.automation_short)
     .preferencesId(R.xml.pref_automation)
-    .description(R.string.automation_description)) {
+    .description(R.string.automation_description), rxBus, aapsLogger
+) {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 

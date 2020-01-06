@@ -30,8 +30,10 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.AAPSLoggerProduction;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog;
@@ -71,6 +73,8 @@ public class NSClientPlugin extends PluginBase {
 
     private NsClientReceiverDelegate nsClientReceiverDelegate;
 
+    // TODO: dagger
+
     private NSClientPlugin() {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
@@ -78,7 +82,8 @@ public class NSClientPlugin extends PluginBase {
                 .pluginName(R.string.nsclientinternal)
                 .shortName(R.string.nsclientinternal_shortname)
                 .preferencesId(R.xml.pref_nsclientinternal)
-                .description(R.string.description_ns_client)
+                .description(R.string.description_ns_client),
+                new RxBusWrapper(), new AAPSLoggerProduction() // TODO: dagger
         );
 
         if (Config.NSCLIENT) {

@@ -40,8 +40,8 @@ import javax.inject.Singleton
 
 @Singleton
 class TidepoolPlugin @Inject constructor(
-    private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
+    aapsLogger: AAPSLogger,
+    rxBus: RxBusWrapper,
     private val mainApp: MainApp,
     private val resourceHelper: ResourceHelper,
     private val fabricPrivacy: FabricPrivacy,
@@ -54,7 +54,8 @@ class TidepoolPlugin @Inject constructor(
     .shortName(R.string.tidepool_shortname)
     .fragmentClass(TidepoolFragment::class.qualifiedName)
     .preferencesId(R.xml.pref_tidepool)
-    .description(R.string.description_tidepool)
+    .description(R.string.description_tidepool),
+    rxBus, aapsLogger
 ) {
 
     private var disposable: CompositeDisposable = CompositeDisposable()

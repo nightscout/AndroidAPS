@@ -40,9 +40,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class ConfigBuilderPlugin extends PluginBase {
     private static ConfigBuilderPlugin configBuilderPlugin;
-    private final AAPSLogger aapsLogger; // TODO move to plugin base
-    private final SP sp; 
-    private final RxBusWrapper rxBus;
+    private final SP sp;
 
 
     /**
@@ -82,26 +80,24 @@ public class ConfigBuilderPlugin extends PluginBase {
             Lazy<InsulinOrefRapidActingPlugin> insulinOrefRapidActingPlugin,
             Lazy<LocalProfilePlugin> localProfilePlugin,
             Lazy<VirtualPumpPlugin> virtualPumpPlugin,
-            AAPSLogger aapsLogger,
             SP sp,
-            RxBusWrapper rxBus
-    ) {
+            RxBusWrapper rxBus,
+            AAPSLogger aapsLogger) {
         super(new PluginDescription()
-                .mainType(PluginType.GENERAL)
-                .fragmentClass(ConfigBuilderFragment.class.getName())
-                .showInList(true)
-                .alwaysEnabled(true)
-                .alwaysVisible(false)
-                .pluginName(R.string.configbuilder)
-                .shortName(R.string.configbuilder_shortname)
-                .description(R.string.description_config_builder)
+                        .mainType(PluginType.GENERAL)
+                        .fragmentClass(ConfigBuilderFragment.class.getName())
+                        .showInList(true)
+                        .alwaysEnabled(true)
+                        .alwaysVisible(false)
+                        .pluginName(R.string.configbuilder)
+                        .shortName(R.string.configbuilder_shortname)
+                        .description(R.string.description_config_builder),
+                rxBus, aapsLogger
         );
         this.insulinOrefRapidActingPlugin = insulinOrefRapidActingPlugin;
         this.localProfilePlugin = localProfilePlugin;
         this.virtualPumpPlugin = virtualPumpPlugin;
-        this.aapsLogger = aapsLogger;
         this.sp = sp;
-        this.rxBus =rxBus;
         configBuilderPlugin = this;  // TODO: only while transitioning to Dagger
     }
 
@@ -123,7 +119,7 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     public void storeSettings(String from) {
         if (pluginList != null) {
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Storing settings from: " + from);
+            getAapsLogger().debug(LTag.CONFIGBUILDER, "Storing settings from: " + from);
 
             verifySelectionInCategories();
 
@@ -146,16 +142,16 @@ public class ConfigBuilderPlugin extends PluginBase {
     private void savePref(PluginBase p, PluginType type, boolean storeVisible) {
         String settingEnabled = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Enabled";
         sp.putBoolean(settingEnabled, p.isEnabled(type));
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingEnabled + ":" + p.isEnabled(type));
+        getAapsLogger().debug(LTag.CONFIGBUILDER, "Storing: " + settingEnabled + ":" + p.isEnabled(type));
         if (storeVisible) {
             String settingVisible = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Visible";
             sp.putBoolean(settingVisible, p.isFragmentVisible());
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Storing: " + settingVisible + ":" + p.isFragmentVisible());
+            getAapsLogger().debug(LTag.CONFIGBUILDER, "Storing: " + settingVisible + ":" + p.isFragmentVisible());
         }
     }
 
     private void loadSettings() {
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Loading stored settings");
+        getAapsLogger().debug(LTag.CONFIGBUILDER, "Loading stored settings");
         for (PluginBase p : pluginList) {
             PluginType type = p.getType();
             loadPref(p, type, true);
@@ -175,7 +171,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         else if (p.getType() == type && (p.getPluginDescription().enableByDefault || p.getPluginDescription().alwaysEnabled)) {
             p.setPluginEnabled(type, true);
         }
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingEnabled + ":" + p.isEnabled(type));
+        getAapsLogger().debug(LTag.CONFIGBUILDER, "Loaded: " + settingEnabled + ":" + p.isEnabled(type));
         if (loadVisible) {
             String settingVisible = "ConfigBuilder_" + type.name() + "_" + p.getClass().getSimpleName() + "_Visible";
             if (sp.contains(settingVisible))
@@ -183,7 +179,7 @@ public class ConfigBuilderPlugin extends PluginBase {
             else if (p.getType() == type && p.getPluginDescription().visibleByDefault) {
                 p.setFragmentVisible(type, true);
             }
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingVisible + ":" + p.isFragmentVisible());
+            getAapsLogger().debug(LTag.CONFIGBUILDER, "Loaded: " + settingVisible + ":" + p.isFragmentVisible());
         }
     }
 
@@ -191,9 +187,9 @@ public class ConfigBuilderPlugin extends PluginBase {
     private void upgradeSettings() {
         if (!sp.contains("ConfigBuilder_1_NSProfilePlugin_Enabled"))
             return;
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Upgrading stored settings");
+        getAapsLogger().debug(LTag.CONFIGBUILDER, "Upgrading stored settings");
         for (PluginBase p : pluginList) {
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Processing " + p.getName());
+            getAapsLogger().debug(LTag.CONFIGBUILDER, "Processing " + p.getName());
             for (int type = 1; type < 11; type++) {
                 PluginType newType;
                 switch (type) {
@@ -285,7 +281,7 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     public void logPluginStatus() {
         for (PluginBase p : pluginList) {
-            aapsLogger.debug(LTag.CONFIGBUILDER, p.getName() + ":" +
+            getAapsLogger().debug(LTag.CONFIGBUILDER, p.getName() + ":" +
                     (p.isEnabled(PluginType.GENERAL) ? " GENERAL" : "") +
                     (p.isEnabled(PluginType.TREATMENT) ? " TREATMENT" : "") +
                     (p.isEnabled(PluginType.SENSITIVITY) ? " SENSITIVITY" : "") +
@@ -312,7 +308,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         if (activeInsulin == null) {
             activeInsulin = insulinOrefRapidActingPlugin.get();
             insulinOrefRapidActingPlugin.get().setPluginEnabled(PluginType.INSULIN, true);
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting InsulinOrefRapidActingPlugin");
+            getAapsLogger().debug(LTag.CONFIGBUILDER, "Defaulting InsulinOrefRapidActingPlugin");
         }
         this.setFragmentVisiblities(((PluginBase) activeInsulin).getName(), pluginsInCategory, PluginType.INSULIN);
 
@@ -322,7 +318,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         if (activeSensitivity == null) {
             activeSensitivity = SensitivityOref0Plugin.getPlugin();
             SensitivityOref0Plugin.getPlugin().setPluginEnabled(PluginType.SENSITIVITY, true);
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SensitivityOref0Plugin");
+            getAapsLogger().debug(LTag.CONFIGBUILDER, "Defaulting SensitivityOref0Plugin");
         }
         this.setFragmentVisiblities(((PluginBase) activeSensitivity).getName(), pluginsInCategory, PluginType.SENSITIVITY);
 
@@ -338,7 +334,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         if (activePump == null) {
             activePump = virtualPumpPlugin.get();
             virtualPumpPlugin.get().setPluginEnabled(PluginType.PUMP, true);
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting VirtualPumpPlugin");
+            getAapsLogger().debug(LTag.CONFIGBUILDER, "Defaulting VirtualPumpPlugin");
         }
         this.setFragmentVisiblities(((PluginBase) activePump).getName(), pluginsInCategory, PluginType.PUMP);
 
@@ -396,7 +392,7 @@ public class ConfigBuilderPlugin extends PluginBase {
 
     private void setFragmentVisiblities(String activePluginName, ArrayList<PluginBase> pluginsInCategory,
                                         PluginType pluginType) {
-        aapsLogger.debug(LTag.CONFIGBUILDER, "Selected interface: " + activePluginName);
+        getAapsLogger().debug(LTag.CONFIGBUILDER, "Selected interface: " + activePluginName);
         for (PluginBase p : pluginsInCategory) {
             if (!p.getName().equals(activePluginName)) {
                 p.setFragmentVisible(pluginType, false);

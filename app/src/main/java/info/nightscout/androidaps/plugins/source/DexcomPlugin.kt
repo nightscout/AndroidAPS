@@ -14,26 +14,29 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DexcomPlugin @Inject constructor(
-    private val aapsLogger: AAPSLogger,
     private val sp: SP,
-    private val mainApp: MainApp
+    private val mainApp: MainApp,
+    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginName(R.string.dexcom_app_patched)
     .shortName(R.string.dexcom_short)
     .preferencesId(R.xml.pref_bgsourcedexcom)
-    .description(R.string.description_source_dexcom)), BgSourceInterface {
+    .description(R.string.description_source_dexcom),
+    rxBus,
+    aapsLogger), BgSourceInterface {
 
     private val PACKAGE_NAMES = arrayOf("com.dexcom.cgm.region1.mgdl", "com.dexcom.cgm.region1.mmol",
         "com.dexcom.cgm.region2.mgdl", "com.dexcom.cgm.region2.mmol",

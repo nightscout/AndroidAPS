@@ -42,8 +42,10 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.AAPSLoggerProduction;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
@@ -195,7 +197,10 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 .description(R.string.description_pump_insight_local)
                 .fragmentClass(LocalInsightFragment.class.getName())
                 .preferencesId(MainApp.instance().getPackageName().equals("info.nightscout.androidaps")
-                        ? R.xml.pref_insight_local_full : R.xml.pref_insight_local_pumpcontrol));
+                        ? R.xml.pref_insight_local_full : R.xml.pref_insight_local_pumpcontrol),
+                new RxBusWrapper(), new AAPSLoggerProduction() // TODO: dagger
+
+        );
 
         pumpDescription = new PumpDescription();
         pumpDescription.setPumpDescription(PumpType.AccuChekInsightBluetooth);

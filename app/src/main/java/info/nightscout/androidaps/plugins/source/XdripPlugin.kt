@@ -11,18 +11,21 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.BundleLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.services.Intents
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class XdripPlugin @Inject constructor(
-    private val aapsLogger: AAPSLogger
+    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginName(R.string.xdrip)
-    .description(R.string.description_source_xdrip)
+    .description(R.string.description_source_xdrip),
+    rxBus,
+    aapsLogger
 ), BgSourceInterface {
 
     var advancedFiltering = false

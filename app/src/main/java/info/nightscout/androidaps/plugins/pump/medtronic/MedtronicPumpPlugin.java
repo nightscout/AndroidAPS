@@ -37,8 +37,10 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.AAPSLoggerProduction;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
@@ -117,7 +119,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         .pluginName(R.string.medtronic_name) //
                         .shortName(R.string.medtronic_name_short) //
                         .preferencesId(R.xml.pref_medtronic).description(R.string.description_pump_medtronic), //
-                PumpType.Medtronic_522_722 // we default to most basic model, correct model from config is loaded later
+                PumpType.Medtronic_522_722, // we default to most basic model, correct model from config is loaded later
+                new RxBusWrapper(), new AAPSLoggerProduction() // TODO: dagger
         );
 
         displayConnectionMessages = false;

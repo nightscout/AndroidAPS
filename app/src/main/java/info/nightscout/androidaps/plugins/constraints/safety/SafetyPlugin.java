@@ -15,10 +15,12 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -32,6 +34,8 @@ import info.nightscout.androidaps.utils.SP;
 @Singleton
 public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
+    //TODO: dagger
+
     @Inject
     OpenAPSAMAPlugin openAPSAMAPlugin;
 
@@ -42,14 +46,14 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     OpenAPSSMBPlugin openAPSSMBPlugin;
 
     @Inject
-    public SafetyPlugin() {
+    public SafetyPlugin(RxBusWrapper rxBusWrapper, AAPSLogger aapsLogger) {
         super(new PluginDescription()
                 .mainType(PluginType.CONSTRAINTS)
                 .neverVisible(true)
                 .alwaysEnabled(true)
                 .showInList(false)
                 .pluginName(R.string.safety)
-                .preferencesId(R.xml.pref_safety)
+                .preferencesId(R.xml.pref_safety), rxBusWrapper, aapsLogger
         );
     }
 

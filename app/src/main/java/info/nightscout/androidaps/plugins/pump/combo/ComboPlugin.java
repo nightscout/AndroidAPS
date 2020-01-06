@@ -37,8 +37,10 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.AAPSLoggerProduction;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
@@ -130,13 +132,16 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     private static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
             .success(false).enacted(false).comment(MainApp.gs(R.string.combo_pump_unsupported_operation));
 
+    // TODO: dagger
+
     private ComboPlugin() {
         super(new PluginDescription()
                 .mainType(PluginType.PUMP)
                 .fragmentClass(ComboFragment.class.getName())
                 .pluginName(R.string.combopump)
                 .shortName(R.string.combopump_shortname)
-                .description(R.string.description_pump_combo)
+                .description(R.string.description_pump_combo),
+                new RxBusWrapper(), new AAPSLoggerProduction() // TODO: dagger
         );
         ruffyScripter = new RuffyScripter(MainApp.instance().getApplicationContext());
         pumpDescription.setPumpDescription(PumpType.AccuChekCombo);

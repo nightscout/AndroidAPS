@@ -11,6 +11,7 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -23,11 +24,11 @@ import javax.inject.Singleton
 
 @Singleton
 class MaintenancePlugin @Inject constructor(
-    private val aapsLogger: AAPSLogger,
     private val mainApp: MainApp,
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
-    private val nsSettingsStatus: NSSettingsStatus
+    private val nsSettingsStatus: NSSettingsStatus,
+    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(MaintenanceFragment::class.java.name)
@@ -36,7 +37,8 @@ class MaintenancePlugin @Inject constructor(
     .pluginName(R.string.maintenance)
     .shortName(R.string.maintenance_shortname)
     .preferencesId(R.xml.pref_maintenance)
-    .description(R.string.description_maintenance)
+    .description(R.string.description_maintenance),
+    rxBus, aapsLogger
 ) {
 
     fun sendLogs() {
