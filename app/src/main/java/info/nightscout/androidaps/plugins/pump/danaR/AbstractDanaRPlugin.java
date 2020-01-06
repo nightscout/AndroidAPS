@@ -25,8 +25,10 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
@@ -56,14 +58,15 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
 
     public PumpDescription pumpDescription = new PumpDescription();
 
-    protected AbstractDanaRPlugin() {
+    protected AbstractDanaRPlugin(RxBusWrapper rxBus, AAPSLogger aapsLogger) {
         super(new PluginDescription()
                 .mainType(PluginType.PUMP)
                 .fragmentClass(DanaRFragment.class.getName())
                 .pluginName(R.string.danarspump)
                 .shortName(R.string.danarpump_shortname)
                 .preferencesId(R.xml.pref_danars)
-                .description(R.string.description_pump_dana_r)
+                .description(R.string.description_pump_dana_r),
+                rxBus, aapsLogger
         );
     }
 

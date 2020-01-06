@@ -10,6 +10,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
@@ -17,7 +18,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TomatoPlugin @Inject constructor(
-    private val aapsLogger: AAPSLogger,
+    rxBus: RxBusWrapper, aapsLogger: AAPSLogger,
     private val sp: SP
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
@@ -25,7 +26,9 @@ class TomatoPlugin @Inject constructor(
     .pluginName(R.string.tomato)
     .preferencesId(R.xml.pref_bgsource)
     .shortName(R.string.tomato_short)
-    .description(R.string.description_source_tomato)
+    .description(R.string.description_source_tomato),
+    rxBus,
+    aapsLogger
 ), BgSourceInterface {
 
     override fun advancedFilteringSupported(): Boolean {

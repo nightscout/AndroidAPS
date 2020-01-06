@@ -10,6 +10,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSgv
 import info.nightscout.androidaps.utils.JsonHelper.safeGetLong
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
@@ -21,13 +22,15 @@ import javax.inject.Singleton
 
 @Singleton
 class NSClientSourcePlugin @Inject constructor(
-    private val aapsLogger: AAPSLogger,
+    rxBus: RxBusWrapper, aapsLogger: AAPSLogger,
     private val sp: SP
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginName(R.string.nsclientbg)
-    .description(R.string.description_source_ns_client)
+    .description(R.string.description_source_ns_client),
+    rxBus,
+    aapsLogger
 ), BgSourceInterface {
 
     private var lastBGTimeStamp: Long = 0

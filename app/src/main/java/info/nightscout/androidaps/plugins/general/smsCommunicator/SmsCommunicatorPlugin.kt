@@ -55,8 +55,8 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val sp: SP,
     private val resourceHelper: ResourceHelper,
     private val constraintChecker: ConstraintChecker,
-    private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
+    aapsLogger: AAPSLogger,
+    rxBus: RxBusWrapper,
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,
     private val configBuilderPlugin: ConfigBuilderPlugin,
@@ -69,7 +69,8 @@ class SmsCommunicatorPlugin @Inject constructor(
     .pluginName(R.string.smscommunicator)
     .shortName(R.string.smscommunicator_shortname)
     .preferencesId(R.xml.pref_smscommunicator)
-    .description(R.string.description_sms_communicator)
+    .description(R.string.description_sms_communicator),
+    rxBus, aapsLogger
 ) {
 
     private val disposable = CompositeDisposable()

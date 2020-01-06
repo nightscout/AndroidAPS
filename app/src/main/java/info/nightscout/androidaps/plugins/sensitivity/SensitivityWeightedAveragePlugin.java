@@ -15,7 +15,9 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.AAPSLoggerProduction;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
@@ -39,13 +41,16 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
         return plugin;
     }
 
+    // TODO: dagger
+
     public SensitivityWeightedAveragePlugin() {
         super(new PluginDescription()
                 .mainType(PluginType.SENSITIVITY)
                 .pluginName(R.string.sensitivityweightedaverage)
                 .shortName(R.string.sensitivity_shortname)
                 .preferencesId(R.xml.pref_absorption_aaps)
-                .description(R.string.description_sensitivity_weighted_average)
+                .description(R.string.description_sensitivity_weighted_average),
+                new RxBusWrapper(), new AAPSLoggerProduction() // TODO: dagger
         );
     }
 

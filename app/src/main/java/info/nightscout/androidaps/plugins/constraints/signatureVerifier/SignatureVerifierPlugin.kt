@@ -8,6 +8,7 @@ import info.nightscout.androidaps.interfaces.ConstraintsInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -34,15 +35,17 @@ import javax.inject.Singleton
 @Singleton
 class SignatureVerifierPlugin @Inject constructor(
     private val sp: SP,
-    private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val mainApp: MainApp
+    private val mainApp: MainApp,
+    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .neverVisible(true)
     .alwaysEnabled(true)
     .showInList(false)
-    .pluginName(R.string.signature_verifier)), ConstraintsInterface {
+    .pluginName(R.string.signature_verifier),
+    rxBus, aapsLogger
+), ConstraintsInterface {
 
     private val REVOKED_CERTS_URL = "https://raw.githubusercontent.com/MilosKozak/AndroidAPS/master/app/src/main/assets/revoked_certs.txt"
     private val UPDATE_INTERVAL = TimeUnit.DAYS.toMillis(1)

@@ -69,7 +69,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             TreatmentsPlugin treatmentsPlugin,
             SP sp
     ) {
-        super();
+        super(rxBus, aapsLogger);
         plugin = this;
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;

@@ -28,8 +28,10 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
@@ -68,9 +70,9 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     protected boolean displayConnectionMessages = false;
 
 
-    protected PumpPluginAbstract(PluginDescription pluginDescription, PumpType pumpType) {
+    protected PumpPluginAbstract(PluginDescription pluginDescription, PumpType pumpType, RxBusWrapper rxBusWrapper, AAPSLogger aapsLogger) {
 
-        super(pluginDescription);
+        super(pluginDescription, rxBusWrapper, aapsLogger);
 
         pumpDescription.setPumpDescription(pumpType);
 

@@ -10,6 +10,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import org.json.JSONArray
 import org.json.JSONException
 import javax.inject.Inject
@@ -17,12 +18,14 @@ import javax.inject.Singleton
 
 @Singleton
 class MM640gPlugin @Inject constructor(
-    private val aapsLogger: AAPSLogger
+    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginName(R.string.MM640g)
-    .description(R.string.description_source_mm640g)
+    .description(R.string.description_source_mm640g),
+    rxBus,
+    aapsLogger
 ), BgSourceInterface {
 
     override fun advancedFilteringSupported(): Boolean {

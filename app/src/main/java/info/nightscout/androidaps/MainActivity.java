@@ -202,7 +202,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         menu.clear();
         for (PluginBase p : MainApp.getPluginsList()) {
             pageAdapter.registerNewFragment(p);
-            if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.pluginDescription.getType()) && !p.pluginDescription.neverVisible) {
+            if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.getPluginDescription().getType()) && !p.getPluginDescription().neverVisible) {
                 MenuItem menuItem = menu.add(p.getName());
                 menuItem.setCheckable(true);
                 menuItem.setOnMenuItemClickListener(item -> {

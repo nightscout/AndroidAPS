@@ -11,6 +11,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -21,14 +22,16 @@ import javax.inject.Singleton
 
 @Singleton
 class PoctechPlugin @Inject constructor(
-    private val aapsLogger: AAPSLogger,
+    rxBus: RxBusWrapper, aapsLogger: AAPSLogger,
     private val sp: SP
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginName(R.string.poctech)
     .preferencesId(R.xml.pref_bgsource)
-    .description(R.string.description_source_poctech)
+    .description(R.string.description_source_poctech),
+    rxBus,
+    aapsLogger
 ), BgSourceInterface {
 
     override fun advancedFilteringSupported(): Boolean {

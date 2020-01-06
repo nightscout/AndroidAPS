@@ -20,10 +20,9 @@ class TriggerLocation(mainApp: MainApp) : Trigger(mainApp) {
 
     var lastMode = InputLocationMode.Mode.INSIDE
     private val buttonAction = Runnable {
-        val location = locationService.lastLocation
-        if (location != null) {
-            latitude.value = location.latitude
-            longitude.value = location.longitude
+        locationDataContainer.lastLocation?.let {
+            latitude.value = it.latitude
+            longitude.value = it.longitude
             aapsLogger.debug(LTag.AUTOMATION, String.format("Grabbed location: %f %f", latitude.value, longitude.value))
         }
     }
@@ -39,7 +38,7 @@ class TriggerLocation(mainApp: MainApp) : Trigger(mainApp) {
     }
 
     @Synchronized override fun shouldRun(): Boolean {
-        val location: Location = locationService.lastLocation ?: return false
+        val location: Location = locationDataContainer.lastLocation ?: return false
         val a = Location("Trigger")
         a.latitude = latitude.value
         a.longitude = longitude.value
@@ -98,7 +97,7 @@ class TriggerLocation(mainApp: MainApp) : Trigger(mainApp) {
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.longitude_short), "", longitude))
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.distance_short), "", distance))
             .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.location_mode), "", modeSelected))
-            .add(InputButton(mainApp, resourceHelper.gs(R.string.currentlocation), buttonAction), locationService.lastLocation != null)
+            .add(InputButton(mainApp, resourceHelper.gs(R.string.currentlocation), buttonAction), locationDataContainer.lastLocation != null)
             .build(root)
     }
 

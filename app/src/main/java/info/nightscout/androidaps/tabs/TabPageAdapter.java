@@ -37,7 +37,7 @@ public class TabPageAdapter extends FragmentPagerAdapter {
     @Nullable
     public Fragment getItem(int position) {
         //Fragment fragment = (Fragment) visibleFragmentList.get(position);
-        return Fragment.instantiate(context, visibleFragmentList.get(position).pluginDescription.getFragmentClass());
+        return Fragment.instantiate(context, visibleFragmentList.get(position).getPluginDescription().getFragmentClass());
     }
 
     public PluginBase getPluginAt(int position) {

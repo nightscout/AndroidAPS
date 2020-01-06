@@ -16,8 +16,10 @@ import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.AAPSLoggerProduction;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -36,13 +38,16 @@ public class StorageConstraintPlugin extends PluginBase implements ConstraintsIn
         return plugin;
     }
 
+    // TODO: dagger
+
     public StorageConstraintPlugin() {
         super(new PluginDescription()
-                .mainType(PluginType.CONSTRAINTS)
-                .neverVisible(true)
-                .alwaysEnabled(true)
-                .showInList(false)
-                .pluginName(R.string.storage)
+                        .mainType(PluginType.CONSTRAINTS)
+                        .neverVisible(true)
+                        .alwaysEnabled(true)
+                        .showInList(false)
+                        .pluginName(R.string.storage),
+                new RxBusWrapper(), new AAPSLoggerProduction() // TODO: dagger
         );
     }
 

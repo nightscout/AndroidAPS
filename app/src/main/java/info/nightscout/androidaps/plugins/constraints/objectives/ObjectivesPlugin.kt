@@ -11,6 +11,8 @@ import info.nightscout.androidaps.interfaces.ConstraintsInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
 import info.nightscout.androidaps.utils.DateUtil
@@ -25,7 +27,9 @@ import javax.inject.Singleton
 class ObjectivesPlugin @Inject constructor(
     private val sp: SP,
     private val resourceHelper: ResourceHelper,
-    private val configBuilderPlugin: ConfigBuilderPlugin
+    private val configBuilderPlugin: ConfigBuilderPlugin,
+    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .fragmentClass(ObjectivesFragment::class.qualifiedName)
@@ -33,7 +37,9 @@ class ObjectivesPlugin @Inject constructor(
     .showInList(Config.APS)
     .pluginName(R.string.objectives)
     .shortName(R.string.objectives_shortname)
-    .description(R.string.description_objectives)), ConstraintsInterface {
+    .description(R.string.description_objectives),
+    rxBus, aapsLogger
+), ConstraintsInterface {
 
     var objectives: MutableList<Objective> = ArrayList()
 

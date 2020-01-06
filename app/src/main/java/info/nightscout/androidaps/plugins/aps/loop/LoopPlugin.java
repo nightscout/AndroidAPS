@@ -68,8 +68,6 @@ import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class LoopPlugin extends PluginBase {
-    private final AAPSLogger aapsLogger;
-    private final RxBusWrapper rxBus;
     private final SP sp;
     private final ConstraintChecker constraintChecker;
     private final ResourceHelper resourceHelper;
@@ -106,7 +104,7 @@ public class LoopPlugin extends PluginBase {
     @Inject
     public LoopPlugin(
             AAPSLogger aapsLogger,
-            RxBusWrapper rxBus,
+            RxBusWrapper rxBusWrapper,
             SP sp,
             ConstraintChecker constraintChecker,
             ResourceHelper resourceHelper,
@@ -123,10 +121,9 @@ public class LoopPlugin extends PluginBase {
                 .pluginName(R.string.loop)
                 .shortName(R.string.loop_shortname)
                 .preferencesId(R.xml.pref_loop)
-                .description(R.string.description_loop)
+                .description(R.string.description_loop),
+                rxBusWrapper, aapsLogger
         );
-        this.aapsLogger = aapsLogger;
-        this.rxBus = rxBus;
         this.sp = sp;
         this.constraintChecker = constraintChecker;
         this.resourceHelper = resourceHelper;
@@ -146,7 +143,7 @@ public class LoopPlugin extends PluginBase {
     protected void onStart() {
         createNotificationChannel();
         super.onStart();
-        disposable.add(rxBus
+        disposable.add(getRxBus()
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> invoke("EventTempTargetChange", true), exception -> FabricPrivacy.getInstance().logException(exception))
@@ -158,7 +155,7 @@ public class LoopPlugin extends PluginBase {
          * the event causing the calculation is not EventNewBg.
          * <p>
          */
-        disposable.add(rxBus
+        disposable.add(getRxBus()
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -294,13 +291,13 @@ public class LoopPlugin extends PluginBase {
 
     public synchronized void invoke(String initiator, boolean allowNotification, boolean tempBasalFallback) {
         try {
-            aapsLogger.debug(LTag.APS, "invoke from " + initiator);
+            getAapsLogger().debug(LTag.APS, "invoke from " + initiator);
             Constraint<Boolean> loopEnabled = constraintChecker.isLoopInvocationAllowed();
 
             if (!loopEnabled.value()) {
                 String message = resourceHelper.gs(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
-                aapsLogger.debug(LTag.APS, message);
-                rxBus.send(new EventLoopSetLastRunGui(message));
+                getAapsLogger().debug(LTag.APS, message);
+                getRxBus().send(new EventLoopSetLastRunGui(message));
                 return;
             }
             final PumpInterface pump = configBuilderPlugin.getActivePump();
@@ -315,8 +312,8 @@ public class LoopPlugin extends PluginBase {
 
             if (profile == null || !profileFunction.isProfileValid("Loop")) {
                 if (L.isEnabled(L.APS))
-                    aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.noprofileselected));
-                rxBus.send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.noprofileselected)));
+                    getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.noprofileselected));
+                getRxBus().send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.noprofileselected)));
                 return;
             }
 
@@ -331,7 +328,7 @@ public class LoopPlugin extends PluginBase {
 
             // Check if we have any result
             if (result == null) {
-                rxBus.send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.noapsselected)));
+                getRxBus().send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.noapsselected)));
                 return;
             }
 
@@ -355,7 +352,7 @@ public class LoopPlugin extends PluginBase {
             // safety check for multiple SMBs
             long lastBolusTime = treatmentsPlugin.getLastBolusTime();
             if (lastBolusTime != 0 && lastBolusTime + T.mins(3).msecs() > System.currentTimeMillis()) {
-                aapsLogger.debug(LTag.APS, "SMB requsted but still in 3 min interval");
+                getAapsLogger().debug(LTag.APS, "SMB requsted but still in 3 min interval");
                 resultAfterConstraints.smb = 0;
             }
 
@@ -370,14 +367,14 @@ public class LoopPlugin extends PluginBase {
             NSUpload.uploadDeviceStatus(this);
 
             if (isSuspended()) {
-                aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.loopsuspended));
-                rxBus.send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.loopsuspended)));
+                getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.loopsuspended));
+                getRxBus().send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.loopsuspended)));
                 return;
             }
 
             if (pump.isSuspended()) {
-                aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.pumpsuspended));
-                rxBus.send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.pumpsuspended)));
+                getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.pumpsuspended));
+                getRxBus().send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.pumpsuspended)));
                 return;
             }
 
@@ -393,7 +390,7 @@ public class LoopPlugin extends PluginBase {
                         lastRun.tbrSetByPump = waiting;
                     if (resultAfterConstraints.bolusRequested)
                         lastRun.smbSetByPump = waiting;
-                    rxBus.send(new EventLoopUpdateGui());
+                    getRxBus().send(new EventLoopUpdateGui());
                     FabricPrivacy.getInstance().logCustom("APSRequest");
                     applyTBRRequest(resultAfterConstraints, profile, new Callback() {
                         @Override
@@ -414,11 +411,11 @@ public class LoopPlugin extends PluginBase {
                                                 invoke("tempBasalFallback", allowNotification, true);
                                             }).start();
                                         }
-                                        rxBus.send(new EventLoopUpdateGui());
+                                        getRxBus().send(new EventLoopUpdateGui());
                                     }
                                 });
                             }
-                            rxBus.send(new EventLoopUpdateGui());
+                            getRxBus().send(new EventLoopUpdateGui());
                         }
                     });
                 } else {
@@ -459,7 +456,7 @@ public class LoopPlugin extends PluginBase {
                             (NotificationManager) mainApp.getSystemService(Context.NOTIFICATION_SERVICE);
                     // mId allows you to update the notification later on.
                     mNotificationManager.notify(Constants.notificationID, builder.build());
-                    rxBus.send(new EventNewOpenLoopNotification());
+                    getRxBus().send(new EventNewOpenLoopNotification());
 
                     // Send to Wear
                     actionStringHandler.get().handleInitiate("changeRequest");
@@ -472,9 +469,9 @@ public class LoopPlugin extends PluginBase {
                 }
             }
 
-            rxBus.send(new EventLoopUpdateGui());
+            getRxBus().send(new EventLoopUpdateGui());
         } finally {
-            aapsLogger.debug(LTag.APS, "invoke end");
+            getAapsLogger().debug(LTag.APS, "invoke end");
         }
     }
 
@@ -491,7 +488,7 @@ public class LoopPlugin extends PluginBase {
                     NSUpload.uploadDeviceStatus(lp);
                     sp.incInt(R.string.key_ObjectivesmanualEnacts);
                 }
-                rxBus.send(new EventAcceptOpenLoopChange());
+                getRxBus().send(new EventAcceptOpenLoopChange());
             }
         });
         FabricPrivacy.getInstance().logCustom("AcceptTemp");
@@ -520,7 +517,7 @@ public class LoopPlugin extends PluginBase {
         }
 
         if (!pump.isInitialized()) {
-            aapsLogger.debug(LTag.APS, "applyAPSRequest: " + resourceHelper.gs(R.string.pumpNotInitialized));
+            getAapsLogger().debug(LTag.APS, "applyAPSRequest: " + resourceHelper.gs(R.string.pumpNotInitialized));
             if (callback != null) {
                 callback.result(new PumpEnactResult().comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
             }
@@ -528,24 +525,24 @@ public class LoopPlugin extends PluginBase {
         }
 
         if (pump.isSuspended()) {
-            aapsLogger.debug(LTag.APS, "applyAPSRequest: " + resourceHelper.gs(R.string.pumpsuspended));
+            getAapsLogger().debug(LTag.APS, "applyAPSRequest: " + resourceHelper.gs(R.string.pumpsuspended));
             if (callback != null) {
                 callback.result(new PumpEnactResult().comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
             }
             return;
         }
 
-        aapsLogger.debug(LTag.APS, "applyAPSRequest: " + request.toString());
+        getAapsLogger().debug(LTag.APS, "applyAPSRequest: " + request.toString());
 
         long now = System.currentTimeMillis();
         TemporaryBasal activeTemp = treatmentsPlugin.getTempBasalFromHistory(now);
         if (request.usePercent && allowPercentage) {
             if (request.percent == 100 && request.duration == 0) {
                 if (activeTemp != null) {
-                    aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()");
+                    getAapsLogger().debug(LTag.APS, "applyAPSRequest: cancelTempBasal()");
                     configBuilderPlugin.getCommandQueue().cancelTempBasal(false, callback);
                 } else {
-                    aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly");
+                    getAapsLogger().debug(LTag.APS, "applyAPSRequest: Basal set correctly");
                     if (callback != null) {
                         callback.result(new PumpEnactResult().percent(request.percent).duration(0)
                                 .enacted(false).success(true).comment(resourceHelper.gs(R.string.basal_set_correctly))).run();
@@ -555,23 +552,23 @@ public class LoopPlugin extends PluginBase {
                     && activeTemp.getPlannedRemainingMinutes() > 5
                     && request.duration - activeTemp.getPlannedRemainingMinutes() < 30
                     && request.percent == activeTemp.percentRate) {
-                aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly");
+                getAapsLogger().debug(LTag.APS, "applyAPSRequest: Temp basal set correctly");
                 if (callback != null) {
                     callback.result(new PumpEnactResult().percent(request.percent)
                             .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
                             .comment(resourceHelper.gs(R.string.let_temp_basal_run))).run();
                 }
             } else {
-                aapsLogger.debug(LTag.APS, "applyAPSRequest: tempBasalPercent()");
+                getAapsLogger().debug(LTag.APS, "applyAPSRequest: tempBasalPercent()");
                 configBuilderPlugin.getCommandQueue().tempBasalPercent(request.percent, request.duration, false, profile, callback);
             }
         } else {
             if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
                 if (activeTemp != null) {
-                    aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()");
+                    getAapsLogger().debug(LTag.APS, "applyAPSRequest: cancelTempBasal()");
                     configBuilderPlugin.getCommandQueue().cancelTempBasal(false, callback);
                 } else {
-                    aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly");
+                    getAapsLogger().debug(LTag.APS, "applyAPSRequest: Basal set correctly");
                     if (callback != null) {
                         callback.result(new PumpEnactResult().absolute(request.rate).duration(0)
                                 .enacted(false).success(true).comment(resourceHelper.gs(R.string.basal_set_correctly))).run();
@@ -581,14 +578,14 @@ public class LoopPlugin extends PluginBase {
                     && activeTemp.getPlannedRemainingMinutes() > 5
                     && request.duration - activeTemp.getPlannedRemainingMinutes() < 30
                     && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
-                aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly");
+                getAapsLogger().debug(LTag.APS, "applyAPSRequest: Temp basal set correctly");
                 if (callback != null) {
                     callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
                             .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
                             .comment(resourceHelper.gs(R.string.let_temp_basal_run))).run();
                 }
             } else {
-                aapsLogger.debug(LTag.APS, "applyAPSRequest: setTempBasalAbsolute()");
+                getAapsLogger().debug(LTag.APS, "applyAPSRequest: setTempBasalAbsolute()");
                 configBuilderPlugin.getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
             }
         }
@@ -608,7 +605,7 @@ public class LoopPlugin extends PluginBase {
 
         long lastBolusTime = treatmentsPlugin.getLastBolusTime();
         if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
-            aapsLogger.debug(LTag.APS, "SMB requested but still in 3 min interval");
+            getAapsLogger().debug(LTag.APS, "SMB requested but still in 3 min interval");
             if (callback != null) {
                 callback.result(new PumpEnactResult()
                         .comment(resourceHelper.gs(R.string.smb_frequency_exceeded))
@@ -618,7 +615,7 @@ public class LoopPlugin extends PluginBase {
         }
 
         if (!pump.isInitialized()) {
-            aapsLogger.debug(LTag.APS, "applySMBRequest: " + resourceHelper.gs(R.string.pumpNotInitialized));
+            getAapsLogger().debug(LTag.APS, "applySMBRequest: " + resourceHelper.gs(R.string.pumpNotInitialized));
             if (callback != null) {
                 callback.result(new PumpEnactResult().comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
             }
@@ -626,14 +623,14 @@ public class LoopPlugin extends PluginBase {
         }
 
         if (pump.isSuspended()) {
-            aapsLogger.debug(LTag.APS, "applySMBRequest: " + resourceHelper.gs(R.string.pumpsuspended));
+            getAapsLogger().debug(LTag.APS, "applySMBRequest: " + resourceHelper.gs(R.string.pumpsuspended));
             if (callback != null) {
                 callback.result(new PumpEnactResult().comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
             }
             return;
         }
 
-        aapsLogger.debug(LTag.APS, "applySMBRequest: " + request.toString());
+        getAapsLogger().debug(LTag.APS, "applySMBRequest: " + request.toString());
 
         // deliver SMB
         DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
@@ -643,7 +640,7 @@ public class LoopPlugin extends PluginBase {
         detailedBolusInfo.isSMB = true;
         detailedBolusInfo.source = Source.USER;
         detailedBolusInfo.deliverAt = request.deliverAt;
-        aapsLogger.debug(LTag.APS, "applyAPSRequest: bolus()");
+        getAapsLogger().debug(LTag.APS, "applyAPSRequest: bolus()");
         configBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, callback);
     }
 

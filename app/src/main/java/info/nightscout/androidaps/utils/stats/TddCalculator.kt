@@ -21,8 +21,8 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
 class TddCalculator @Inject constructor(
-    val aapsLogger: AAPSLogger,
-    val rxBus: RxBusWrapper,
+    aapsLogger: AAPSLogger,
+    rxBus: RxBusWrapper,
     val resourceHelper: ResourceHelper,
     val mainApp: MainApp,
     val sp: SP,
