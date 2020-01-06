@@ -179,6 +179,7 @@ public class MainApp extends DaggerApplication {
     @Inject VirtualPumpPlugin virtualPumpPlugin;
     @Inject VersionCheckerPlugin versionCheckerPlugin;
     @Inject WearPlugin wearPlugin;
+    @Inject KeepAliveReceiver.KeepAliveManager keepAliveManager;
 
     @Override
     public void onCreate() {
@@ -302,7 +303,7 @@ public class MainApp extends DaggerApplication {
             }).start();
         }
 
-        new Thread(() -> KeepAliveReceiver.setAlarm(this)).start();
+        new Thread(() -> keepAliveManager.setAlarm(this)).start();
         doMigrations();
     }
 
@@ -508,7 +509,7 @@ public class MainApp extends DaggerApplication {
         if (timeDateOrTZChangeReceiver != null)
             unregisterReceiver(timeDateOrTZChangeReceiver);
         unregisterActivityLifecycleCallbacks(activityMonitor);
-        KeepAliveReceiver.cancelAlarm(this);
+        keepAliveManager.cancelAlarm(this);
         super.onTerminate();
     }
 
