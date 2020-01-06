@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.general.automation.events.EventTrigger
 import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerRemove
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.services.LastLocationDataContainer
 import info.nightscout.androidaps.services.LocationService
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -34,7 +35,7 @@ abstract class Trigger(val mainApp: MainApp) {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var sp: SP
-    @Inject lateinit var locationService: LocationService
+    @Inject lateinit var locationDataContainer: LastLocationDataContainer
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin

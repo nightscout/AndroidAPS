@@ -26,12 +26,14 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class LocationService @Inject constructor(): DaggerService() {
+class LocationService : DaggerService() {
+
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var lastLocationDataContainer: LastLocationDataContainer
 
     private val disposable = CompositeDisposable()
     private var locationManager: LocationManager? = null
@@ -39,8 +41,6 @@ class LocationService @Inject constructor(): DaggerService() {
 
     private val LOCATION_INTERVAL_ACTIVE = T.mins(5).msecs()
     private val LOCATION_INTERVAL_PASSIVE = T.mins(1).msecs() // this doesn't cost more power
-
-    var lastLocation: Location? = null
 
     companion object {
         private const val LOCATION_DISTANCE = 10f
@@ -54,7 +54,7 @@ class LocationService @Inject constructor(): DaggerService() {
 
         override fun onLocationChanged(location: Location) {
             aapsLogger.debug(LTag.LOCATION, "onLocationChanged: $location")
-            lastLocation = location
+            lastLocationDataContainer.lastLocation = location
             rxBus.send(EventLocationChange(location))
         }
 
@@ -73,17 +73,17 @@ class LocationService @Inject constructor(): DaggerService() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        startForeground(mainApp.notificationId(), mainApp.getNotification())
+        startForeground(mainApp.notificationId(), mainApp.notification)
         return Service.START_STICKY
     }
 
     override fun onCreate() {
         super.onCreate()
-        startForeground(mainApp.notificationId(), mainApp.getNotification())
+        startForeground(mainApp.notificationId(), mainApp.notification)
 
         // Get last location once until we get regular update
         LocationServices.getFusedLocationProviderClient(this).lastLocation.addOnSuccessListener {
-            lastLocation = it
+            lastLocationDataContainer.lastLocation = it
         }
 
         initializeLocationManager()

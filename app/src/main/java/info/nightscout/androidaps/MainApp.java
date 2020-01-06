@@ -128,9 +128,9 @@ public class MainApp extends DaggerApplication {
     public static boolean devBranch;
     public static boolean engineeringMode;
 
-    private String CHANNEL_ID = "AndroidAPS-Ongoing";
-    private int ONGOING_NOTIFICATION_ID = 4711;
-    private Notification notification;
+    private String CHANNEL_ID = "AndroidAPS-Ongoing"; // TODO: move to OngoingNotificationProvider (and dagger)
+    private int ONGOING_NOTIFICATION_ID = 4711; // TODO: move to OngoingNotificationProvider (and dagger)
+    private Notification notification; // TODO: move to OngoingNotificationProvider (and dagger)
 
     @Inject AAPSLogger aapsLogger;
     @Inject ActivityMonitor activityMonitor;
