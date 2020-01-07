@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.common.base.Optional
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
@@ -37,7 +38,7 @@ abstract class Trigger(val mainApp: MainApp) {
     @Inject lateinit var sp: SP
     @Inject lateinit var locationDataContainer: LastLocationDataContainer
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var activePluginProvider: ActivePluginProvider
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
     init {

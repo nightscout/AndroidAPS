@@ -9,6 +9,8 @@ import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.AAPSLoggerDebug
 import info.nightscout.androidaps.logging.AAPSLoggerProduction
@@ -138,5 +140,10 @@ open class AppModule {
         @ContributesAndroidInjector fun loggerQuickWizardEntry(): QuickWizardEntry
 
         @Binds fun bindContext(mainApp: MainApp): Context
+
+        @Binds fun bindActivePluginProvider(configBuilderPlugin: ConfigBuilderPlugin) : ActivePluginProvider
+        @Binds fun bindCommandQueueProvider(configBuilderPlugin: ConfigBuilderPlugin) : CommandQueueProvider
+
+
     }
 }

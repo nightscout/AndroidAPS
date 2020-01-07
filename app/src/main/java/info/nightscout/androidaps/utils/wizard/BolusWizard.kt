@@ -13,15 +13,11 @@ import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.interfaces.PumpInterface
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
@@ -50,7 +46,8 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var constraintChecker: ConstraintChecker
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var activePluginProvider: ActivePluginProvider
+    @Inject lateinit var commandQueueProvider: CommandQueueProvider
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
@@ -222,7 +219,7 @@ class BolusWizard @Inject constructor(
             calculatedTotalInsulin = 0.0
         }
 
-        val bolusStep = configBuilderPlugin.activePump?.pumpDescription?.bolusStep
+        val bolusStep = activePluginProvider.activePump?.pumpDescription?.bolusStep
             ?: 0.1
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep)
 
@@ -304,7 +301,7 @@ class BolusWizard @Inject constructor(
 
     fun confirmAndExecute(context: Context) {
         val profile = profileFunction.getProfile() ?: return
-        val pump = configBuilderPlugin.activePump ?: return
+        val pump = activePluginProvider.activePump ?: return
 
         if (calculatedTotalInsulin > 0.0 || carbs > 0.0) {
             if (accepted) {
@@ -324,7 +321,7 @@ class BolusWizard @Inject constructor(
                         }
 
                         if (pump.pumpDescription?.tempBasalStyle == PumpDescription.ABSOLUTE) {
-                            configBuilderPlugin.commandQueue.tempBasalAbsolute(0.0, 120, true, profile, object : Callback() {
+                            commandQueueProvider.commandQueue.tempBasalAbsolute(0.0, 120, true, profile, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
                                         val i = Intent(mainApp, ErrorHelperActivity::class.java)
@@ -338,7 +335,7 @@ class BolusWizard @Inject constructor(
                             })
                         } else {
 
-                            configBuilderPlugin.commandQueue.tempBasalPercent(0, 120, true, profile, object : Callback() {
+                            commandQueueProvider.commandQueue.tempBasalPercent(0, 120, true, profile, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
                                         val i = Intent(mainApp, ErrorHelperActivity::class.java)
@@ -364,7 +361,7 @@ class BolusWizard @Inject constructor(
                     detailedBolusInfo.source = Source.USER
                     detailedBolusInfo.notes = notes
                     if (detailedBolusInfo.insulin > 0 || pump.pumpDescription?.storesCarbInfo == true) {
-                        configBuilderPlugin.commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                        commandQueueProvider.commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
                                     val i = Intent(mainApp, ErrorHelperActivity::class.java)
