@@ -80,7 +80,7 @@ public class Notification {
     public static final int INVALID_VERSION = 55;
     public static final int OMNIPOD_PUMP_ALARM = 56;
     public static final int TIME_OR_TIMEZONE_CHANGE = 57;
-
+    public static final int OMNIPOD_POD_NOT_ATTACHED = 58;
 
     public int id;
     public Date date;

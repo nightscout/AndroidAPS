@@ -39,6 +39,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
@@ -102,6 +103,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private int timeChangeRetries = 0;
 
     private Profile currentProfile;
+
+    private long nextPodCheck = 0L;
 
 
     private OmnipodPumpPlugin() {
@@ -264,9 +267,25 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                     }
                 }
 
+                doPodCheck();
+
             } while (serviceRunning);
 
         }).start();
+    }
+
+    private void doPodCheck() {
+
+        if (System.currentTimeMillis() > this.nextPodCheck) {
+            if (!getPodPumpStatusObject().podAvailable) {
+                Notification notification = new Notification(Notification.OMNIPOD_POD_NOT_ATTACHED, MainApp.gs(R.string.omnipod_error_pod_not_attached), Notification.NORMAL);
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
+            } else {
+                RxBus.INSTANCE.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
+            }
+
+            this.nextPodCheck = DateTimeUtil.getTimeInFutureFromMinutes(15);
+        }
     }
 
 
