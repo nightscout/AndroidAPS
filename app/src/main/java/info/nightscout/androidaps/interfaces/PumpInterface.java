@@ -99,4 +99,9 @@ public interface PumpInterface {
      */
     void timeDateOrTimeZoneChanged();
 
+    /* Only used for pump types where hasFixedUnreachableAlert=true */
+    default boolean isFixedUnreachableAlertTimeoutExceeded() {
+        return false;
+    }
+
 }

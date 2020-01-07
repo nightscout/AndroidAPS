@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewB
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpStatusType;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
@@ -284,7 +285,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
         Date bolusStarted;
         try {
-            bolusCommandResult = delegate.bolus(detailedBolusInfo.insulin, beepsEnabled, beepsEnabled, detailedBolusInfo.isSMB ? null :
+            bolusCommandResult = delegate.bolus(PumpType.Insulet_Omnipod.determineCorrectBolusSize(detailedBolusInfo.insulin), beepsEnabled, beepsEnabled, detailedBolusInfo.isSMB ? null :
                     (estimatedUnitsDelivered, percentage) -> {
                         EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
                         progressUpdateEvent.setStatus(getStringResource(R.string.bolusdelivering, detailedBolusInfo.insulin));
@@ -355,7 +356,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         boolean beepsEnabled = isTempBasalBeepsEnabled();
         long time = System.currentTimeMillis();
         try {
-            delegate.setTemporaryBasal(tempBasalPair, beepsEnabled, beepsEnabled);
+            delegate.setTemporaryBasal(PumpType.Insulet_Omnipod.determineCorrectBasalSize(tempBasalPair.getInsulinRate()), Duration.standardMinutes(tempBasalPair.getDurationMinutes()), beepsEnabled, beepsEnabled);
             time = System.currentTimeMillis();
         } catch (Exception ex) {
             if (ex instanceof PodFaultException) {
@@ -396,10 +397,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         long time = System.currentTimeMillis();
         try {
             delegate.cancelTemporaryBasal(isTempBasalBeepsEnabled());
-            addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasal, null);
+            addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasalForce, null);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
-            addFailureToHistory(time, PodHistoryEntryType.CancelTemporaryBasal, comment);
+            addFailureToHistory(time, PodHistoryEntryType.CancelTemporaryBasalForce, comment);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
@@ -520,7 +521,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
             long time = System.currentTimeMillis();
 
-            addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasalForce, null);
+            addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasal, null);
 
             TemporaryBasal temporaryBasal = new TemporaryBasal() //
                     .date(time) //
@@ -723,7 +724,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         }
         List<BasalScheduleEntry> entries = new ArrayList<>();
         for (Profile.ProfileValue basalValue : basalValues) {
-            entries.add(new BasalScheduleEntry(basalValue.value, Duration.standardSeconds(basalValue.timeAsSeconds)));
+            entries.add(new BasalScheduleEntry(PumpType.Insulet_Omnipod.determineCorrectBasalSize(basalValue.value),
+                    Duration.standardSeconds(basalValue.timeAsSeconds)));
         }
 
         return new BasalSchedule(entries);
