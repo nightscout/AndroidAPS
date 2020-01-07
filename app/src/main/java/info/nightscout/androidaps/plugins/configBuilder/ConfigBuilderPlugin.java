@@ -14,7 +14,9 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -38,7 +40,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * Created by mike on 05.08.2016.
  */
 @Singleton
-public class ConfigBuilderPlugin extends PluginBase {
+public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvider, CommandQueueProvider {
     private static ConfigBuilderPlugin configBuilderPlugin;
     private final SP sp;
 
@@ -244,37 +246,37 @@ public class ConfigBuilderPlugin extends PluginBase {
         }
     }
 
-    public CommandQueue getCommandQueue() {
+    @Override public CommandQueue getCommandQueue() {
         return commandQueue;
     }
 
-    @Nullable
+    @Override @Nullable
     public BgSourceInterface getActiveBgSource() {
         return activeBgSource;
     }
 
-    @NotNull
+    @Override @NotNull
     public ProfileInterface getActiveProfileInterface() {
         if (activeProfile != null) return activeProfile;
         else return localProfilePlugin.get();
     }
 
-    @Nullable
+    @Override @Nullable
     public InsulinInterface getActiveInsulin() {
         return activeInsulin;
     }
 
-    @Nullable
+    @Override @Nullable
     public APSInterface getActiveAPS() {
         return activeAPS;
     }
 
-    @Nullable
+    @Override @Nullable
     public PumpInterface getActivePump() {
         return activePump;
     }
 
-    @Nullable
+    @Override @Nullable
     public SensitivityInterface getActiveSensitivity() {
         return activeSensitivity;
     }

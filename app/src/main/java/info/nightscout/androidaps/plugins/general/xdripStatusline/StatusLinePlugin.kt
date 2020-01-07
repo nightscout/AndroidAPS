@@ -6,13 +6,13 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
@@ -34,7 +34,7 @@ class StatusLinePlugin @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val mainApp: MainApp,
     private val fabricPrivacy: FabricPrivacy,
-    private val configBuilderPlugin: ConfigBuilderPlugin,
+    private val activePluginProvider: ActivePluginProvider,
     private val treatmentsPlugin: TreatmentsPlugin,
     private val loopPlugin: LoopPlugin,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
@@ -112,7 +112,7 @@ class StatusLinePlugin @Inject constructor(
 
     private fun buildStatusString(profile: Profile): String {
         var status = ""
-        if (configBuilderPlugin.activePump == null) return ""
+        if (activePluginProvider.activePump == null) return ""
         if (!loopPlugin.isEnabled(PluginType.LOOP)) {
             status += resourceHelper.gs(R.string.disabledloop) + "\n"
             lastLoopStatus = false

@@ -16,6 +16,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.events.*
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
@@ -41,7 +42,7 @@ class PersistentNotificationPlugin @Inject constructor(
     var resourceHelper: ResourceHelper,
     var profileFunction: ProfileFunction,
     var fabricPrivacy: FabricPrivacy,
-    var configBuilderPlugin: ConfigBuilderPlugin,
+    var activePlugins: ActivePluginProvider,
     var treatmentsPlugin: TreatmentsPlugin,
     var iobCobCalculatorPlugin: IobCobCalculatorPlugin,
     rxBus: RxBusWrapper,
@@ -129,7 +130,7 @@ class PersistentNotificationPlugin @Inject constructor(
     }
 
     private fun updateNotification() {
-        val pump = configBuilderPlugin.activePump ?: return
+        val pump = activePlugins.activePump ?: return
         var line1: String?
         var line2: String? = null
         var line3: String? = null

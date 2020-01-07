@@ -18,15 +18,11 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.events.EventRefreshOverview
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
@@ -59,7 +55,8 @@ class SmsCommunicatorPlugin @Inject constructor(
     rxBus: RxBusWrapper,
     private val profileFunction: ProfileFunction,
     private val fabricPrivacy: FabricPrivacy,
-    private val configBuilderPlugin: ConfigBuilderPlugin,
+    private val activePluginProvider: ActivePluginProvider,
+    private val commandQueueProvider: CommandQueueProvider,
     private val treatmentsPlugin: TreatmentsPlugin,
     private val loopPlugin: LoopPlugin,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin
@@ -200,7 +197,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             rxBus.send(EventSmsCommunicatorUpdateGui())
             return
         }
-        val pump = configBuilderPlugin.activePump ?: return
+        val pump = activePluginProvider.activePump ?: return
         messages.add(receivedSms)
         aapsLogger.debug(LTag.SMS, receivedSms.toString())
         val splitted = receivedSms.text.split(Regex("\\s+")).toTypedArray()
@@ -302,7 +299,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             "DISABLE", "STOP" -> {
                 if (loopPlugin.isEnabled(PluginType.LOOP)) {
                     loopPlugin.setPluginEnabled(PluginType.LOOP, false)
-                    configBuilderPlugin.commandQueue.cancelTempBasal(true, object : Callback() {
+                    commandQueueProvider.commandQueue.cancelTempBasal(true, object : Callback() {
                         override fun run() {
                             rxBus.send(EventRefreshOverview("SMS_LOOP_STOP"))
                             val replyText = resourceHelper.gs(R.string.smscommunicator_loophasbeendisabled) + " " +
@@ -356,7 +353,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     receivedSms.processed = true
                     messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction(duration) {
                         override fun run() {
-                            configBuilderPlugin.commandQueue.cancelTempBasal(true, object : Callback() {
+                            commandQueueProvider.commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
                                     if (result.success) {
                                         loopPlugin.suspendTo(System.currentTimeMillis() + anInteger() * 60L * 1000)
@@ -367,7 +364,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     } else {
                                         var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalcancelfailed)
-                                        replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                        replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                         sendSMS(Sms(receivedSms.phoneNumber, replyText))
                                     }
                                 }
@@ -414,9 +411,9 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processPUMP(receivedSms: Sms) {
-        configBuilderPlugin.commandQueue.readStatus("SMS", object : Callback() {
+        commandQueueProvider.commandQueue.readStatus("SMS", object : Callback() {
             override fun run() {
-                val pump = configBuilderPlugin.activePump
+                val pump = activePluginProvider.activePump
                 if (result.success) {
                     if (pump != null) {
                         val reply = pump.shortStatus(true)
@@ -432,7 +429,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun processPROFILE(splitted: Array<String>, receivedSms: Sms) { // load profiles
-        val anInterface = configBuilderPlugin.activeProfileInterface
+        val anInterface = activePluginProvider.activeProfileInterface
         val store = anInterface.profile
         if (store == null) {
             sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.notconfigured)))
@@ -488,15 +485,15 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    configBuilderPlugin.commandQueue.cancelTempBasal(true, object : Callback() {
+                    commandQueueProvider.commandQueue.cancelTempBasal(true, object : Callback() {
                         override fun run() {
                             if (result.success) {
                                 var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalcanceled)
-                                replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                 sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                             } else {
                                 var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalcancelfailed)
-                                replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                 sendSMS(Sms(receivedSms.phoneNumber, replyText))
                             }
                         }
@@ -518,16 +515,16 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction(tempBasalPct, duration) {
                     override fun run() {
-                        configBuilderPlugin.commandQueue.tempBasalPercent(anInteger(), secondInteger(), true, profile, object : Callback() {
+                        commandQueueProvider.commandQueue.tempBasalPercent(anInteger(), secondInteger(), true, profile, object : Callback() {
                             override fun run() {
                                 if (result.success) {
                                     var replyText: String
                                     replyText = if (result.isPercent) String.format(resourceHelper.gs(R.string.smscommunicator_tempbasalset_percent), result.percent, result.duration) else String.format(resourceHelper.gs(R.string.smscommunicator_tempbasalset), result.absolute, result.duration)
-                                    replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                    replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalfailed)
-                                    replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                    replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                     sendSMS(Sms(receivedSms.phoneNumber, replyText))
                                 }
                             }
@@ -550,16 +547,16 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction(tempBasal, duration) {
                     override fun run() {
-                        configBuilderPlugin.commandQueue.tempBasalAbsolute(aDouble(), secondInteger(), true, profile, object : Callback() {
+                        commandQueueProvider.commandQueue.tempBasalAbsolute(aDouble(), secondInteger(), true, profile, object : Callback() {
                             override fun run() {
                                 if (result.success) {
                                     var replyText = if (result.isPercent) String.format(resourceHelper.gs(R.string.smscommunicator_tempbasalset_percent), result.percent, result.duration)
                                     else String.format(resourceHelper.gs(R.string.smscommunicator_tempbasalset), result.absolute, result.duration)
-                                    replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                    replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_tempbasalfailed)
-                                    replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                    replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                     sendSMS(Sms(receivedSms.phoneNumber, replyText))
                                 }
                             }
@@ -577,15 +574,15 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    configBuilderPlugin.commandQueue.cancelExtended(object : Callback() {
+                    commandQueueProvider.commandQueue.cancelExtended(object : Callback() {
                         override fun run() {
                             if (result.success) {
                                 var replyText = resourceHelper.gs(R.string.smscommunicator_extendedcanceled)
-                                replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                 sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                             } else {
                                 var replyText = resourceHelper.gs(R.string.smscommunicator_extendedcancelfailed)
-                                replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                 sendSMS(Sms(receivedSms.phoneNumber, replyText))
                             }
                         }
@@ -605,15 +602,15 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction(extended, duration) {
                     override fun run() {
-                        configBuilderPlugin.commandQueue.extendedBolus(aDouble(), secondInteger(), object : Callback() {
+                        commandQueueProvider.commandQueue.extendedBolus(aDouble(), secondInteger(), object : Callback() {
                             override fun run() {
                                 if (result.success) {
                                     var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_extendedset), aDouble, duration)
-                                    replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                    replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_extendedfailed)
-                                    replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                    replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                     sendSMS(Sms(receivedSms.phoneNumber, replyText))
                                 }
                             }
@@ -642,18 +639,18 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.insulin = aDouble()
                     detailedBolusInfo.source = Source.USER
-                    configBuilderPlugin.commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                    commandQueueProvider.commandQueue.bolus(detailedBolusInfo, object : Callback() {
                         override fun run() {
                             val resultSuccess = result.success
                             val resultBolusDelivered = result.bolusDelivered
-                            configBuilderPlugin.commandQueue.readStatus("SMS", object : Callback() {
+                            commandQueueProvider.commandQueue.readStatus("SMS", object : Callback() {
                                 override fun run() {
                                     if (resultSuccess) {
                                         var replyText = if (isMeal)
                                             String.format(resourceHelper.gs(R.string.smscommunicator_mealbolusdelivered), resultBolusDelivered)
                                         else
                                             String.format(resourceHelper.gs(R.string.smscommunicator_bolusdelivered), resultBolusDelivered)
-                                        replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                        replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                         lastRemoteBolusTime = DateUtil.now()
                                         if (isMeal) {
                                             profileFunction.getProfile()?.let { currentProfile ->
@@ -683,7 +680,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     } else {
                                         var replyText = resourceHelper.gs(R.string.smscommunicator_bolusfailed)
-                                        replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                        replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                         sendSMS(Sms(receivedSms.phoneNumber, replyText))
                                     }
                                 }
@@ -718,15 +715,15 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.carbs = anInteger().toDouble()
                     detailedBolusInfo.date = secondLong()
-                    configBuilderPlugin.commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                    commandQueueProvider.commandQueue.bolus(detailedBolusInfo, object : Callback() {
                         override fun run() {
                             if (result.success) {
                                 var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
-                                replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                 sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                             } else {
                                 var replyText = resourceHelper.gs(R.string.smscommunicator_carbsfailed)
-                                replyText += "\n" + configBuilderPlugin.activePump?.shortStatus(true)
+                                replyText += "\n" + activePluginProvider.activePump?.shortStatus(true)
                                 sendSMS(Sms(receivedSms.phoneNumber, replyText))
                             }
                         }

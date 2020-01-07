@@ -11,11 +11,12 @@ import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.commands.Command
@@ -29,7 +30,8 @@ import kotlin.math.abs
 class KeepAliveReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var activePluginProvider: ActivePluginProvider
+    @Inject lateinit var commandQueueProvider: CommandQueueProvider
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var loopPlugin: LoopPlugin
 
@@ -88,7 +90,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     // if there is no BG available, we have to upload anyway to have correct
     // IOB displayed in NS
     private fun checkAPS() {
-        val usedAPS = configBuilderPlugin.activeAPS
+        val usedAPS = activePluginProvider.activeAPS
         var shouldUploadStatus = false
         if (Config.NSCLIENT) return
         if (Config.PUMPCONTROL) shouldUploadStatus = true
@@ -102,7 +104,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     }
 
     private fun checkPump() {
-        val pump = configBuilderPlugin.activePump ?: return
+        val pump = activePluginProvider.activePump ?: return
         val profile = profileFunction.getProfile() ?: return
         val lastConnection = pump.lastDataTime()
         val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis()
@@ -113,14 +115,14 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         if (lastReadStatus != 0L && lastReadStatus > System.currentTimeMillis() - T.mins(5).msecs()) {
             LocalAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated, loopPlugin.isDisconnected)
         }
-        if (!pump.isThisProfileSet(profile) && !configBuilderPlugin.commandQueue.isRunning(Command.CommandType.BASALPROFILE)) {
+        if (!pump.isThisProfileSet(profile) && !commandQueueProvider.commandQueue.isRunning(Command.CommandType.BASALPROFILE)) {
             rxBus.send(EventProfileNeedsUpdate())
         } else if (isStatusOutdated && !pump.isBusy) {
             lastReadStatus = System.currentTimeMillis()
-            configBuilderPlugin.commandQueue.readStatus("KeepAlive. Status outdated.", null)
+            commandQueueProvider.commandQueue.readStatus("KeepAlive. Status outdated.", null)
         } else if (isBasalOutdated && !pump.isBusy) {
             lastReadStatus = System.currentTimeMillis()
-            configBuilderPlugin.commandQueue.readStatus("KeepAlive. Basal outdated.", null)
+            commandQueueProvider.commandQueue.readStatus("KeepAlive. Basal outdated.", null)
         }
         if (lastRun != 0L && System.currentTimeMillis() - lastRun > T.mins(10).msecs()) {
             aapsLogger.error(LTag.CORE, "KeepAlive fail")
