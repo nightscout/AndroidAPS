@@ -35,22 +35,50 @@ public class LocalAlertUtils {
     }
 
     public static void checkPumpUnreachableAlarm(long lastConnection, boolean isStatusOutdated) {
+        PumpInterface activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
+        if(activePump != null && activePump.getPumpDescription().hasFixedUnreachableAlert) {
+            checkPumpUnreachableAlarmStatic(activePump);
+        } else {
+            checkPumpUnreachableAlarmConfigured(lastConnection, isStatusOutdated);
+        }
+    }
+
+    private static void checkPumpUnreachableAlarmStatic(PumpInterface pump) {
+        if(pump == null) {
+            return;
+        }
+
+        if(pump.isFixedUnreachableAlertTimeoutExceeded()) {
+            log.debug("Generating static pump unreachable alarm.");
+
+            showUnreachableNotification(T.mins(30).msecs());
+        } else {
+            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PUMP_UNREACHABLE));
+        }
+    }
+
+    private static void checkPumpUnreachableAlarmConfigured(long lastConnection, boolean isStatusOutdated) {
         boolean alarmTimeoutExpired = lastConnection + pumpUnreachableThreshold() < System.currentTimeMillis();
         boolean nextAlarmOccurrenceReached = SP.getLong("nextPumpDisconnectedAlarm", 0L) < System.currentTimeMillis();
 
         if (Config.APS && SP.getBoolean(MainApp.gs(R.string.key_enable_pump_unreachable_alert), true)
                 && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !LoopPlugin.getPlugin().isDisconnected()) {
-            log.debug("Generating pump unreachable alarm. lastConnection: " + DateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated);
-            Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.gs(R.string.pump_unreachable), Notification.URGENT);
-            n.soundId = R.raw.alarm;
-            SP.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold());
-            RxBus.INSTANCE.send(new EventNewNotification(n));
-            if (SP.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
-                NSUpload.uploadError(n.text);
-            }
+            log.debug("Generating configured pump unreachable alarm. lastConnection: " + DateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated);
+
+            showUnreachableNotification(pumpUnreachableThreshold());
         }
         if (!isStatusOutdated && !alarmTimeoutExpired)
             RxBus.INSTANCE.send(new EventDismissNotification(Notification.PUMP_UNREACHABLE));
+    }
+
+    private static void showUnreachableNotification(long nextAlarmTimeoutMillis) {
+        Notification n = new Notification(Notification.PUMP_UNREACHABLE, MainApp.gs(R.string.pump_unreachable), Notification.URGENT);
+        n.soundId = R.raw.alarm;
+        SP.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + nextAlarmTimeoutMillis);
+        RxBus.INSTANCE.send(new EventNewNotification(n));
+        if (SP.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
+            NSUpload.uploadError(n.text);
+        }
     }
 
     /*Presnoozes the alarms with 5 minutes if no snooze exists.
