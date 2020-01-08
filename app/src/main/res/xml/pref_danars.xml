@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory android:title="@string/danarspump">
 
@@ -28,7 +28,9 @@
             android:key="@string/key_danars_bolusspeed"
             android:title="@string/bolusspeed" />
 
-        <PreferenceScreen android:title="@string/advancedsettings_title">
+        <androidx.preference.PreferenceScreen
+            android:key="absorption_danars_advanced"
+            android:title="@string/advancedsettings_title">
 
             <PreferenceCategory android:title="@string/bluetooth">
 
@@ -40,8 +42,8 @@
 
             </PreferenceCategory>
 
-        </PreferenceScreen>
+        </androidx.preference.PreferenceScreen>
 
     </PreferenceCategory>
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

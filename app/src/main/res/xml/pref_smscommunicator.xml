@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
         android:key="smscommunicator"
@@ -9,7 +9,7 @@
             android:key="@string/key_smscommunicator_allowednumbers"
             android:summary="@string/smscommunicator_allowednumbers_summary"
             android:title="@string/smscommunicator_allowednumbers" />
-        <com.andreabaccega.widget.ValidatingEditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:key="@string/key_smscommunicator_remotebolusmindistance"
             android:defaultValue="15"
             android:summary="@string/smscommunicator_remotebolusmindistance_summary"
@@ -26,4 +26,4 @@
 
     </PreferenceCategory>
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

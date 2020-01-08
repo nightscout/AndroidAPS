@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
         android:key="openapssmb"
@@ -97,7 +97,9 @@
             android:enabled="false"
             />
 
-        <PreferenceScreen android:title="@string/advancedsettings_title">
+        <androidx.preference.PreferenceScreen
+            android:key="absorption_smb_advanced"
+            android:title="@string/advancedsettings_title">
 
             <Preference android:summary="@string/openapsama_link_to_preferncejson_doc_txt">
                 <intent
@@ -111,7 +113,7 @@
                 android:summary="@string/always_use_shortavg_summary"
                 android:title="@string/always_use_shortavg" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="3"
                 android:dialogMessage="@string/openapsama_max_daily_safety_multiplier_summary"
                 android:digits="0123456789.,"
@@ -124,7 +126,7 @@
                 validate:minNumber="1"
                 validate:testType="numericRange" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="4"
                 android:dialogMessage="@string/openapsama_current_basal_safety_multiplier_summary"
                 android:digits="0123456789.,"
@@ -138,8 +140,8 @@
                 validate:floatminNumber="1"
                 validate:testType="floatNumericRange" />
 
-        </PreferenceScreen>
+        </androidx.preference.PreferenceScreen>
 
     </PreferenceCategory>
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

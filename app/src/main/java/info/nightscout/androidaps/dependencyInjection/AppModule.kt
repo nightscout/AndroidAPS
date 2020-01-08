@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.dependencyInjection
 
 import android.content.Context
-import android.preference.PreferenceManager
+import androidx.preference.PreferenceManager
 import dagger.Binds
 import dagger.Module
 import dagger.Provides

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
         android:title="@string/danar_pump_settings">
@@ -25,7 +25,9 @@
             android:key="@string/key_danar_visualizeextendedaspercentage"
             android:title="@string/danar_visualizeextendedaspercentage_title" />
 
-        <PreferenceScreen android:title="@string/advancedsettings_title">
+        <androidx.preference.PreferenceScreen
+            android:key="absorption_danarkorean_advanced"
+            android:title="@string/advancedsettings_title">
 
             <PreferenceCategory android:title="@string/bluetooth">
 
@@ -37,8 +39,8 @@
 
             </PreferenceCategory>
 
-        </PreferenceScreen>
+        </androidx.preference.PreferenceScreen>
 
     </PreferenceCategory>
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

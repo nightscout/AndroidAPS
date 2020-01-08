@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.preference.Preference;
+import androidx.preference.Preference;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;

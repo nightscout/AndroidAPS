@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.interfaces
 
 import android.os.SystemClock
-import android.preference.Preference
-import android.preference.PreferenceFragment
 import androidx.fragment.app.FragmentActivity
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventConfigBuilderChange
@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory
 /**
  * Created by mike on 09.06.2016.
  */
-abstract class PluginBase(val pluginDescription: PluginDescription, val rxBus: RxBusWrapper, val aapsLogger: AAPSLogger ) {
+abstract class PluginBase(val pluginDescription: PluginDescription, val rxBus: RxBusWrapper, val aapsLogger: AAPSLogger) {
 
     companion object {
         private val log = LoggerFactory.getLogger(L.CORE)
@@ -173,6 +173,6 @@ abstract class PluginBase(val pluginDescription: PluginDescription, val rxBus: R
 
     protected open fun onStop() {}
     protected open fun onStateChange(type: PluginType?, oldState: State?, newState: State?) {}
-    open fun preprocessPreferences(preferenceFragment: PreferenceFragment) {}
+    open fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {}
     open fun updatePreferenceSummary(pref: Preference) {}
 }

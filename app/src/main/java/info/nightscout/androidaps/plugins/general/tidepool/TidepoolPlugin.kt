@@ -1,7 +1,8 @@
 package info.nightscout.androidaps.plugins.general.tidepool
 
-import android.preference.PreferenceFragment
 import android.text.Spanned
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -131,12 +132,14 @@ class TidepoolPlugin @Inject constructor(
         super.onStop()
     }
 
-    override fun preprocessPreferences(preferenceFragment: PreferenceFragment) {
+    override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
 
-        val tidepoolTestLogin = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_tidepool_test_login))
+        val tidepoolTestLogin :  Preference? = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_tidepool_test_login))
         tidepoolTestLogin?.setOnPreferenceClickListener {
-            tidepoolUploader.testLogin(preferenceFragment.getActivity())
+            preferenceFragment.context?.let {
+                tidepoolUploader.testLogin(it)
+            }
             false
         }
     }

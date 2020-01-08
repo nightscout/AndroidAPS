@@ -7,10 +7,11 @@ import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
 import android.text.Html;
 import android.text.Spanned;
+
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -77,12 +78,12 @@ public class NSClientPlugin extends PluginBase {
 
     private NSClientPlugin() {
         super(new PluginDescription()
-                .mainType(PluginType.GENERAL)
-                .fragmentClass(NSClientFragment.class.getName())
-                .pluginName(R.string.nsclientinternal)
-                .shortName(R.string.nsclientinternal_shortname)
-                .preferencesId(R.xml.pref_nsclientinternal)
-                .description(R.string.description_ns_client),
+                        .mainType(PluginType.GENERAL)
+                        .fragmentClass(NSClientFragment.class.getName())
+                        .pluginName(R.string.nsclientinternal)
+                        .shortName(R.string.nsclientinternal_shortname)
+                        .preferencesId(R.xml.pref_nsclientinternal)
+                        .description(R.string.description_ns_client),
                 new RxBusWrapper(), new AAPSLoggerProduction() // TODO: dagger
         );
 
@@ -166,7 +167,7 @@ public class NSClientPlugin extends PluginBase {
     }
 
     @Override
-    public void preprocessPreferences(@NotNull PreferenceFragment preferenceFragment) {
+    public void preprocessPreferences(@NotNull PreferenceFragmentCompat preferenceFragment) {
         super.preprocessPreferences(preferenceFragment);
 
         if (Config.NSCLIENT) {

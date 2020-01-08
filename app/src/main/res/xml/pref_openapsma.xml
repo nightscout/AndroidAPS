@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
         android:key="openaps"
@@ -19,7 +19,9 @@
             android:numeric="decimal"
             android:title="@string/openapsma_maxiob_title" />
 
-        <PreferenceScreen android:title="@string/advancedsettings_title">
+        <androidx.preference.PreferenceScreen
+            android:key="absorption_ma_advanced"
+            android:title="@string/advancedsettings_title">
 
             <Preference android:summary="@string/openapsama_link_to_preferncejson_doc_txt">
                 <intent
@@ -33,7 +35,7 @@
                 android:summary="@string/always_use_shortavg_summary"
                 android:title="@string/always_use_shortavg" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="2"
                 android:dialogMessage="@string/openapsama_bolussnooze_dia_divisor_summary"
                 android:digits="0123456789.,"
@@ -46,8 +48,8 @@
                 validate:maxNumber="10"
                 validate:minNumber="1"
                 validate:testType="floatNumericRange" />
-        </PreferenceScreen>
+        </androidx.preference.PreferenceScreen>
 
     </PreferenceCategory>
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

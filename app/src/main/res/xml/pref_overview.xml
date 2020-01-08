@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:title="@string/overview">
@@ -10,7 +10,9 @@
             android:title="@string/keep_screen_on_title"
             android:summary="@string/keep_screen_on_summary"/>
 
-        <PreferenceScreen android:title="@string/overview_buttons_selection">
+        <androidx.preference.PreferenceScreen
+            android:key="@string/overview_buttons_selection"
+            android:title="@string/overview_buttons_selection">
 
             <SwitchPreference
                 android:defaultValue="false"
@@ -27,7 +29,7 @@
                 android:key="@string/key_show_insulin_button"
                 android:title="@string/configbuilder_insulin" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="0.5"
                 android:dependency="@string/key_show_insulin_button"
                 android:dialogMessage="@string/insulin_increment_button_message"
@@ -41,7 +43,7 @@
                 validate:floatminNumber="-5.0"
                 validate:testType="floatNumericRange" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="1.0"
                 android:dependency="@string/key_show_insulin_button"
                 android:dialogMessage="@string/insulin_increment_button_message"
@@ -55,7 +57,7 @@
                 validate:floatminNumber="-5.0"
                 validate:testType="floatNumericRange" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="2.0"
                 android:dependency="@string/key_show_insulin_button"
                 android:dialogMessage="@string/insulin_increment_button_message"
@@ -74,7 +76,7 @@
                 android:key="@string/key_show_carbs_button"
                 android:title="@string/carbs" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="5"
                 android:dependency="@string/key_show_carbs_button"
                 android:dialogMessage="@string/carb_increment_button_message"
@@ -88,7 +90,7 @@
                 validate:minNumber="-50"
                 validate:testType="numericRange" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="10"
                 android:dependency="@string/key_show_carbs_button"
                 android:dialogMessage="@string/carb_increment_button_message"
@@ -102,7 +104,7 @@
                 validate:minNumber="-50"
                 validate:testType="numericRange" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="20"
                 android:dependency="@string/key_show_carbs_button"
                 android:dialogMessage="@string/carb_increment_button_message"
@@ -128,7 +130,7 @@
                 android:summary="@string/show_calibration_button_summary"
                 android:title="@string/overview_calibration" />
 
-        </PreferenceScreen>
+        </androidx.preference.PreferenceScreen>
 
         <Preference
             android:key="quickwizard"
@@ -141,9 +143,11 @@
             android:key="@string/key_show_notes_entry_dialogs"
             android:title="@string/overview_show_notes_field_in_dialogs_title" />
 
-        <PreferenceScreen android:title="@string/advancedsettings_title" android:key="@string/key_advancedsettings">
+        <androidx.preference.PreferenceScreen
+            android:key="absorption_overview_advanced"
+            android:title="@string/advancedsettings_title">
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="100"
                 android:dialogMessage="@string/deliverpartofboluswizard"
                 android:inputType="number"
@@ -174,7 +178,7 @@
                 android:summary="@string/show_statuslights_extended_summary"
                 android:title="@string/show_statuslights_extended" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="80"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -187,7 +191,7 @@
                 validate:minNumber="0"
                 validate:testType="numericRange" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="10"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -200,7 +204,7 @@
                 validate:minNumber="0"
                 validate:testType="numericRange" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="25"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -213,7 +217,7 @@
                 validate:minNumber="0"
                 validate:testType="numericRange" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="5"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -226,8 +230,8 @@
                 validate:minNumber="0"
                 validate:testType="numericRange" />
 
-        </PreferenceScreen>
+        </androidx.preference.PreferenceScreen>
 
     </PreferenceCategory>
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

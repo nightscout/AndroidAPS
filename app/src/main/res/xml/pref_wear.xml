@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:key="wearplugin"
         android:title="@string/wear_settings">
 
-        <PreferenceScreen
+        <androidx.preference.PreferenceScreen
+            android:key="@string/wear_settings"
             android:title="@string/wear_settings">
 
             <SwitchPreference
@@ -91,6 +92,6 @@
                     android:summary="@string/wear_notifysmb_summary"
                     android:title="@string/wear_notifysmb_title" />
             </PreferenceCategory>
-        </PreferenceScreen>
+        </androidx.preference.PreferenceScreen>
     </PreferenceCategory>
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

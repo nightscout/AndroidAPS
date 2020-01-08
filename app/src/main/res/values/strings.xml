@@ -501,10 +501,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Default value: 3.0 (AMA) or 8.0 (SMB). This is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Attention!\nNormally you do not have to change these values below. Please CLICK HERE and READ the text and make sure you UNDERSTAND it before change any of these values.</string>
     <string name="openapsama_link_to_preferncejson_doc" translatable="false">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
-    <string name="error_only_numeric_digits_allowed">Only numeric digits are allowed.</string>
-    <string name="error_only_numeric_digits_range_allowed">Only numeric digits within the range %1$s - %2$s are allowed.</string>
-    <string name="error_field_must_not_be_empty">The field must not be empty</string>
-    <string name="error_phone_not_valid">Phone number not valid</string>
     <string name="smscommunicator_invalidphonennumber">Invalid SMS phone number</string>
     <string name="overview_calibration">Calibration</string>
     <string name="send_calibration">Send calibration %1$.1f to xDrip?</string>

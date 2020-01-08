@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
@@ -13,7 +13,7 @@
             android:entries="@array/aps_modeArray"
             android:entryValues="@array/aps_modeValues"/>
 
-        <com.andreabaccega.widget.ValidatingEditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="20"
             android:dialogMessage="@string/loop_openmode_min_change_summary"
             android:digits="0123456789"
@@ -28,4 +28,4 @@
             validate:testType="numericRange" />
 
     </PreferenceCategory>
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>
