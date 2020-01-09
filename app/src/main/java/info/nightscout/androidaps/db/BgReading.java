@@ -28,7 +28,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)
 public class BgReading implements DataPointWithLabelInterface {
-    @Inject AAPSLogger aapsLogger; // TODO isn't it slow use dependency injection in such heave used object?
+    @Inject AAPSLogger aapsLogger;
     @Inject DefaultValueHelper defaultValueHelper;
     @Inject ProfileFunction profileFunction;
     @Inject ResourceHelper resourceHelper;

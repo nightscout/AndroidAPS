@@ -53,18 +53,6 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
-    private static OpenAPSSMBPlugin openAPSSMBPlugin;
-
-    /**
-     * @deprecated Use dagger to get an instance
-     */
-    @Deprecated
-    static public OpenAPSSMBPlugin getPlugin() {
-        if (openAPSSMBPlugin == null)
-            throw new IllegalStateException("Accessing OpenAPSSMBPlugin before first instantiation");
-        return openAPSSMBPlugin;
-    }
-
     // last values
     DetermineBasalAdapterSMBJS lastDetermineBasalAdapterSMBJS = null;
     long lastAPSRun = 0;
@@ -92,7 +80,6 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
                         .description(R.string.description_smb),
                 rxBusWrapper, aapsLogger
         );
-        this.openAPSSMBPlugin = this;  // TODO: only while transitioning to Dagger
 
         this.constraintChecker = constraintChecker;
         this.resourceHelper = resourceHelper;
