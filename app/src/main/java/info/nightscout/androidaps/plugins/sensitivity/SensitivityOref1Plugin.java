@@ -82,10 +82,11 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         //[0] = 8 hour
         //[1] = 24 hour
         //Deviationshour has DeviationsArray
-        List<ArrayList> deviationshour = Arrays.asList(new ArrayList(),new ArrayList());
+        List<ArrayList> deviationsHour = Arrays.asList(new ArrayList(),new ArrayList());
         List<String> pastSensitivityArray = Arrays.asList("","");
         List<String> sensResultArray = Arrays.asList("","");
         List<Double> ratioArray = Arrays.asList(0d,0d);
+        List<Double> deviationCatagory = Arrays.asList(96d,288d);
         List<String> ratioLimitArray = Arrays.asList("","");
         List<Double> hoursDetection = Arrays.asList(8d,24d);
 
@@ -106,8 +107,8 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
             int hoursegment = 0;
             //hoursegment = 0 = 8 hour
             //hoursegment = 1 = 24 hour
-            while (hoursegment < deviationshour.size()){
-                ArrayList deviationsArray = deviationshour.get(hoursegment);
+            while (hoursegment < deviationsHour.size()){
+                ArrayList deviationsArray = deviationsHour.get(hoursegment);
                 String pastSensitivity = pastSensitivityArray.get(hoursegment);
 
                 // reset deviations after site change
@@ -148,34 +149,36 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
                 }
 
                 //Update the data back to the parent
-                deviationshour.set(hoursegment,deviationsArray);
+                deviationsHour.set(hoursegment,deviationsArray);
                 pastSensitivityArray.set(hoursegment,pastSensitivity);
                 hoursegment++;
               }
               index++;
         }
 
-        // when we have less than 8h worth of deviation data, add up to 90m of zero deviations
+        // when we have less than 8h/24 worth of deviation data, add up to 90m of zero deviations
         // this dampens any large sensitivity changes detected based on too little data, without ignoring them completely
-        // only apply for 8 hours of devations
-        ArrayList dev8h = deviationshour.get(0);
 
-        if (L.isEnabled(L.AUTOSENS))
-            log.debug("Using most recent " + dev8h.size() + " deviations");
-        if (dev8h.size() < 96) {
-            int pad = (int) Math.round((1 - (double) dev8h.size() / 96) * 18);
+        for (int i = 0; i < deviationsHour.size(); i++) {
+            ArrayList deviations = deviationsHour.get(i);
             if (L.isEnabled(L.AUTOSENS))
-                log.debug("Adding " + pad + " more zero deviations");
-            for (int d = 0; d < pad; d++) { ;
-                dev8h.add(0d);
+                log.debug("Using most recent " + deviations.size() + " deviations");
+            if (deviations.size() < deviationCatagory.get(i)) {
+                int pad = (int) Math.round((1 - (double) deviations.size() / deviationCatagory.get(i)) * 18);
+                if (L.isEnabled(L.AUTOSENS))
+                    log.debug("Adding " + pad + " more zero deviations");
+                for (int d = 0; d < pad; d++) { ;
+                    deviations.add(0d);
+                }
             }
+            //Update the data back to the parent
+            deviationsHour.set(i,deviations);
+
         }
-        //Update the data back to the parent
-        deviationshour.set(0,dev8h);
 
         int hourused = 0;
-        while (hourused < deviationshour.size()){
-            ArrayList deviationsArray = deviationshour.get(hourused);
+        while (hourused < deviationsHour.size()){
+            ArrayList deviationsArray = deviationsHour.get(hourused);
             String pastSensitivity = pastSensitivityArray.get(hourused);
             String sensResult = "(8 hours) ";
             String senstime = sensResult;
@@ -230,7 +233,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         }
         String message = hoursDetection.get(key)+" of sensitivity used";
         AutosensResult output = fillResult(ratioArray.get(key), current.cob, pastSensitivityArray.get(key), ratioLimitArray.get(key),
-                sensResultArray.get(key)+comparison, deviationshour.get(key).size());
+                sensResultArray.get(key)+comparison, deviationsHour.get(key).size());
 
         if (L.isEnabled(L.AUTOSENS))
             log.debug(message+" Sensitivity to: {} ratio: {} mealCOB: {}",
