@@ -86,7 +86,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         List<String> pastSensitivityArray = Arrays.asList("","");
         List<String> sensResultArray = Arrays.asList("","");
         List<Double> ratioArray = Arrays.asList(0d,0d);
-        List<Double> deviationCatagory = Arrays.asList(96d,288d);
+        List<Double> deviationCategory = Arrays.asList(96d,288d);
         List<String> ratioLimitArray = Arrays.asList("","");
         List<Double> hoursDetection = Arrays.asList(8d,24d);
 
@@ -133,11 +133,11 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
                     if (autosensData.time > toTime - hoursDetection.get(hoursegment) * 60 * 60 * 1000L)
                         deviationsArray.add(deviation);
 
-                if (hoursegment == 0) {
-                    for (int i = 0; i < autosensData.extraDeviation.size(); i++)
-                        deviationsArray.add(autosensData.extraDeviation.get(i));
-                }
-                if (deviationsArray.size() > hoursDetection.get(hoursegment) * 60 / 5){
+
+                for (int i = 0; i < autosensData.extraDeviation.size(); i++)
+                    deviationsArray.add(autosensData.extraDeviation.get(i));
+
+                if (deviationsArray.size() > deviationCategory.get(hoursegment)){
                     deviationsArray.remove(0);
                 }
 
@@ -163,8 +163,8 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
             ArrayList deviations = deviationsHour.get(i);
             if (L.isEnabled(L.AUTOSENS))
                 log.debug("Using most recent " + deviations.size() + " deviations");
-            if (deviations.size() < deviationCatagory.get(i)) {
-                int pad = (int) Math.round((1 - (double) deviations.size() / deviationCatagory.get(i)) * 18);
+            if (deviations.size() < deviationCategory.get(i)) {
+                int pad = (int) Math.round((1 - (double) deviations.size() / deviationCategory.get(i)) * 18);
                 if (L.isEnabled(L.AUTOSENS))
                     log.debug("Adding " + pad + " more zero deviations");
                 for (int d = 0; d < pad; d++) { ;
