@@ -143,7 +143,7 @@ class NotificationStore @Inject constructor(
     @Synchronized
     fun updateNotifications(notificationsView: RecyclerView) {
         removeExpired()
-        unSnooze()
+//        unSnooze()
         if (store.size > 0) {
             val adapter = NotificationRecyclerViewAdapter(cloneStore())
             notificationsView.adapter = adapter
@@ -159,7 +159,7 @@ class NotificationStore @Inject constructor(
         clone.addAll(store)
         return clone
     }
-
+/*
     private fun unSnooze() {
         if (sp.getBoolean(R.string.key_nsalarm_staledata, false)) {
             val notification = Notification(Notification.NSALARM, resourceHelper.gs(R.string.nsalarm_staledata), Notification.URGENT)
@@ -168,7 +168,7 @@ class NotificationStore @Inject constructor(
             aapsLogger.debug(LTag.NOTIFICATION, "Snoozed to current time and added back notification!")
         }
     }
-
+*/
     inner class NotificationRecyclerViewAdapter internal constructor(private val notificationsList: List<Notification>) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationsViewHolder>() {
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): NotificationsViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.overview_notification_item, viewGroup, false)
