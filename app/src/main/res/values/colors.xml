@@ -33,6 +33,7 @@
 
     <color name="defaultbackground">#424242</color>
     <color name="defaulttext">#BBBBBB</color>
+    <color name="defaulttextcolor">#B3FFFFFF</color>
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="tempTargetConfirmation">#77dd77</color>
