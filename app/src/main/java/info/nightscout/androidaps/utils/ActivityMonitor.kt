@@ -61,8 +61,9 @@ class ActivityMonitor @Inject constructor(
         var result = ""
         for ((key, value) in keys)
             if (key.startsWith("Monitor") && key.endsWith("total")) {
+                val v = if (value is Long) value else SafeParse.stringToLong(value as String)
                 val activity = key.split("_")[1].replace("Activity", "")
-                val duration = DateUtil.niceTimeScalar(value as Long)
+                val duration = DateUtil.niceTimeScalar(v as Long)
                 val start = sp.getLong(key.replace("total", "start"), 0)
                 val days = T.msecs(DateUtil.now() - start).days()
                 result += "<b><span style=\"color:yellow\">$activity:</span></b> <b>$duration</b> in <b>$days</b> days<br>"
