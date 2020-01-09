@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:validate="http://schemas.android.com/apk/res-auto">
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:key="absorption"
-        android:title="@string/absorptionsettings_title">
+        android:title="@string/absorptionsettings_title"
+        app:initialExpandedChildrenCount="0">
 
-        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+    <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="8.0"
             android:dialogMessage="@string/openapsama_min_5m_carbimpact_summary"
             android:inputType="numberDecimal"

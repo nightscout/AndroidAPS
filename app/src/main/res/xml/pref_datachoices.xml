@@ -1,23 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <PreferenceCategory
-        android:title="@string/data_choices">
+        android:title="@string/data_choices"
+        app:initialExpandedChildrenCount="0">
 
-        <androidx.preference.PreferenceScreen
-            android:key="absorption_datachoices_advanced"
-            android:title="@string/advancedsettings_title">
-
-            <PreferenceCategory android:title="@string/data_choices">
-
-                <SwitchPreference
-                    android:defaultValue="true"
-                    android:key="@string/key_enable_fabric"
-                    android:summary="@string/allow_automated_crash_reporting"
-                    android:title="@string/fabric_upload" />
-
-            </PreferenceCategory>
-
-        </androidx.preference.PreferenceScreen>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_enable_fabric"
+            android:summary="@string/allow_automated_crash_reporting"
+            android:title="@string/fabric_upload" />
 
     </PreferenceCategory>
 

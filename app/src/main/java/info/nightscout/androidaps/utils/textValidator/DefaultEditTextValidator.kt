@@ -21,6 +21,7 @@ class DefaultEditTextValidator : EditTextValidator {
     protected var customFormat: String? = null
     protected var emptyErrorStringActual: String? = null
     protected var emptyErrorStringDef: String? = null
+    protected var minLength = 0
     protected var minNumber = 0
     protected var maxNumber = 0
     protected var floatminNumber = 0f
@@ -43,6 +44,8 @@ class DefaultEditTextValidator : EditTextValidator {
         customRegexp = typedArray.getString(R.styleable.FormEditText_customRegexp)
         emptyErrorStringDef = typedArray.getString(R.styleable.FormEditText_emptyErrorString)
         customFormat = typedArray.getString(R.styleable.FormEditText_customFormat)
+        if (testType == EditTextValidator.TEST_MIN_LENGTH)
+            minLength = typedArray.getInt(R.styleable.FormEditText_minLength, 0)
         if (testType == EditTextValidator.TEST_NUMERIC_RANGE) {
             minNumber = typedArray.getInt(R.styleable.FormEditText_minNumber, Int.MIN_VALUE)
             maxNumber = typedArray.getInt(R.styleable.FormEditText_maxNumber, Int.MAX_VALUE)
@@ -113,11 +116,14 @@ class DefaultEditTextValidator : EditTextValidator {
             EditTextValidator.TEST_CREDITCARD          -> toAdd = CreditCardValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_creditcard_number_not_valid) else testErrorString)
             EditTextValidator.TEST_EMAIL               -> toAdd = EmailValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_email_address_not_valid) else testErrorString)
             EditTextValidator.TEST_PHONE               -> toAdd = PhoneValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_phone_not_valid) else testErrorString)
+            EditTextValidator.TEST_MULTI_PHONE         -> toAdd = MultiPhoneValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_phone_not_valid) else testErrorString)
             EditTextValidator.TEST_DOMAINNAME          -> toAdd = DomainValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_domain_not_valid) else testErrorString)
             EditTextValidator.TEST_IPADDRESS           -> toAdd = IpAddressValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_ip_not_valid) else testErrorString)
             EditTextValidator.TEST_WEBURL              -> toAdd = WebUrlValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_url_not_valid) else testErrorString)
+            EditTextValidator.TEST_HTTPS_URL           -> toAdd = HttpsUrlValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_url_not_valid) else testErrorString)
             EditTextValidator.TEST_PERSONNAME          -> toAdd = PersonNameValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_notvalid_personname) else testErrorString)
             EditTextValidator.TEST_PERSONFULLNAME      -> toAdd = PersonFullNameValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_notvalid_personfullname) else testErrorString)
+            EditTextValidator.TEST_MIN_LENGTH          -> toAdd = MinDigitLengthValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_not_a_minimum_length) else testErrorString, minLength)
 
             EditTextValidator.TEST_CUSTOM              -> {
                 // must specify the fully qualified class name & an error message
@@ -213,13 +219,15 @@ class DefaultEditTextValidator : EditTextValidator {
     }
 
     override fun showUIError() {
-        if (mValidator!!.hasErrorMessage()) {
-            try {
-                val parent = editTextView.parent as TextInputLayout
-                parent.isErrorEnabled = true
-                parent.error = mValidator!!.errorMessage
-            } catch (e: Throwable) {
-                editTextView.error = mValidator!!.errorMessage
+        mValidator?.let { mValidator ->
+            if (mValidator.hasErrorMessage()) {
+                try {
+                    val parent = editTextView.parent as TextInputLayout
+                    parent.isErrorEnabled = true
+                    parent.error = mValidator.errorMessage
+                } catch (e: Throwable) {
+                    editTextView.error = mValidator.errorMessage
+                }
             }
         }
     }

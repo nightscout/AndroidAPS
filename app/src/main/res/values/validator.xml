@@ -14,4 +14,10 @@
     <string name="error_notvalid_personname">Not a valid first or last name.</string>
     <string name="error_notvalid_personfullname">Not a valid full name.</string>
     <string name="error_date_not_valid">Format not valid</string>
+    <string name="error_mustbe4digitnumber">Must be 4 digit number</string>
+    <string name="error_mustbe6digitnumber">Must be 6 digit number</string>
+    <string name="error_not_a_minimum_length">Not a minimum length</string>
+
+    <string name="fourdigitnumber" translatable="false">^\\d{4}</string>
+
 </resources>

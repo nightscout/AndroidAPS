@@ -20,6 +20,9 @@
             <enum name="date" value="14" />
             <enum name="numericRange" value="15" />
             <enum name="floatNumericRange" value="16" />
+            <enum name="httpsUrl" value="17" />
+            <enum name="minLength" value="18" />
+            <enum name="multiPhone" value="19" />
         </attr>
         <attr name="testErrorString" format="string" />
         <attr name="emptyErrorString" format="string" />
@@ -27,6 +30,7 @@
         <attr name="customFormat" format="string" />
         <attr name="emptyAllowed" format="boolean" />
         <attr name="classType" format="string" />
+        <attr name="minLength" format="integer" />
         <attr name="minNumber" format="integer" />
         <attr name="maxNumber" format="integer" />
         <attr name="floatminNumber" format="float" />

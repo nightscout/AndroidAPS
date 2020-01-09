@@ -8,4 +8,4 @@ import android.util.Patterns
  *
  * @author Andrea Baccega <me></me>@andreabaccega.com>
  */
-class WebUrlValidator(_customErrorMessage: String?) : PatternValidator(_customErrorMessage, Patterns.WEB_URL) 
+open class WebUrlValidator(_customErrorMessage: String?) : PatternValidator(_customErrorMessage, Patterns.WEB_URL)

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="@string/nsclientinternal_title">
+    <PreferenceCategory
+        android:title="@string/nsclientinternal_title"
+        app:initialExpandedChildrenCount="0">
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="https://{YOUR-SITE}.azurewebsites.net/"
@@ -11,19 +14,23 @@
             android:key="@string/key_nsclientinternal_url"
             android:selectAllOnFocus="true"
             android:title="@string/nsclientinternal_url_title"
-            validate:testType="webUrl" />
+            validate:testType="httpsUrl" />
 
-        <EditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:dialogMessage="@string/nsclientinternal_secret_dialogmessage"
             android:dialogTitle="@string/nsclientinternal_secret_dialogtitle"
             android:inputType="textPassword"
             android:key="@string/key_nsclientinternal_api_secret"
-            android:title="@string/nsclientinternal_secret_title" />
+            android:title="@string/nsclientinternal_secret_title"
+            validate:minLength="12"
+            validate:testType="minLength"/>
 
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_ns_logappstartedevent"
-            android:title="@string/ns_logappstartedevent" />
+            android:title="@string/ns_logappstartedevent"
+            android:summary="@string/ns_logappstartedevent"
+            />
 
         <SwitchPreference
             android:defaultValue="false"
@@ -98,8 +105,8 @@
 
             <SwitchPreference
                 android:defaultValue="false"
-                android:key="@string/key_ns_wifionly"
                 android:disableDependentsState="true"
+                android:key="@string/key_ns_wifionly"
                 android:title="@string/ns_wifionly" />
 
             <EditTextPreference
@@ -121,15 +128,15 @@
 
         </androidx.preference.PreferenceScreen>
 
-       <androidx.preference.PreferenceScreen
-           android:key="absorption_nsclient_advanced"
-           android:title="@string/advancedsettings_title">
+        <androidx.preference.PreferenceScreen
+            android:key="absorption_nsclient_advanced"
+            android:title="@string/advancedsettings_title">
 
             <SwitchPreference
                 android:defaultValue="true"
                 android:key="@string/key_ns_autobackfill"
-                android:title="@string/ns_autobackfill_title"
-                android:summary="@string/ns_autobackfill_summary" />
+                android:summary="@string/ns_autobackfill_summary"
+                android:title="@string/ns_autobackfill_title" />
 
             <SwitchPreference
                 android:defaultValue="true"

@@ -24,4 +24,8 @@ open class PatternValidator(_customErrorMessage: String?, val pattern: Pattern) 
     override fun isValid(editText: EditText): Boolean {
         return pattern.matcher(editText.text).matches()
     }
+
+    fun isValid(text: String): Boolean {
+        return pattern.matcher(text).matches()
+    }
 }

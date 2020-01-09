@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
+        app:initialExpandedChildrenCount="0"
         android:title="@string/configbuilder_general">
 
         <ListPreference
-            android:title="@string/unitsnosemicolon"
             android:defaultValue="mg/dl"
             android:entries="@array/unitsArray"
             android:entryValues="@array/unitsValues"
-            android:key="@string/key_units" />
+            android:key="@string/key_units"
+            android:title="@string/unitsnosemicolon" />
 
         <ListPreference
-            android:title="@string/language"
             android:defaultValue="en"
             android:entries="@array/languagesArray"
             android:entryValues="@array/languagesValues"
-            android:key="@string/key_language" />
+            android:key="@string/key_language"
+            android:title="@string/language" />
+
+        <EditTextPreference
+            android:title="@string/settings_password"
+            android:key="settings_password"
+            android:inputType="textPassword"/>
 
     </PreferenceCategory>
 

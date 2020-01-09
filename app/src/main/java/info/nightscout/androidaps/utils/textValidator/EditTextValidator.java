@@ -87,4 +87,10 @@ public interface EditTextValidator {
 
     int TEST_FLOAT_NUMERIC_RANGE = 16;
 
+    int TEST_HTTPS_URL = 17;
+
+    int TEST_MIN_LENGTH = 18;
+
+    int TEST_MULTI_PHONE = 19;
+
 }

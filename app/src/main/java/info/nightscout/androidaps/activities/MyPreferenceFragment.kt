@@ -25,6 +25,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin
+import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin
@@ -84,6 +85,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var tidepoolPlugin: TidepoolPlugin
     @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Inject lateinit var wearPlugin: WearPlugin
+    @Inject lateinit var maintenancePlugin: MaintenancePlugin
 
     @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
@@ -104,6 +106,10 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         outState.putInt("id", pluginId)
     }
 
+    private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?, enabled: Boolean) {
+        if (enabled) addPreferencesFromResourceIfEnabled(p, rootKey)
+    }
+
     private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?) {
         if (p!!.isEnabled() && p.preferencesId != -1)
             addPreferencesFromResource(p.preferencesId, rootKey)
@@ -117,59 +123,49 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        if (savedInstanceState != null && savedInstanceState.containsKey("id")) {
-            pluginId = savedInstanceState.getInt("id")
-        }
-        if (arguments != null && arguments!!.containsKey("id")) {
-            pluginId = arguments!!.getInt("id")
+        (savedInstanceState ?: arguments)?.let { bundle ->
+            if (bundle.containsKey("id")) {
+                pluginId = bundle.getInt("id")
+            }
         }
         if (pluginId != -1) {
             addPreferencesFromResource(pluginId, rootKey)
         } else {
-            if (!Config.NSCLIENT) {
-                addPreferencesFromResource(R.xml.pref_password, rootKey)
-            }
             addPreferencesFromResource(R.xml.pref_general, rootKey)
-            addPreferencesFromResource(R.xml.pref_age, rootKey)
             addPreferencesFromResource(R.xml.pref_overview, rootKey)
+            addPreferencesFromResourceIfEnabled(safetyPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(eversensePlugin, rootKey)
             addPreferencesFromResourceIfEnabled(dexcomPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(tomatoPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(poctechPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(glimpPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(careportalPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(safetyPlugin, rootKey)
-            if (Config.APS) {
-                addPreferencesFromResourceIfEnabled(loopPlugin, rootKey)
-                addPreferencesFromResourceIfEnabled(openAPSMAPlugin, rootKey)
-                addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, rootKey)
-                addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, rootKey)
-            }
+            addPreferencesFromResourceIfEnabled(loopPlugin, rootKey, Config.APS)
+            addPreferencesFromResourceIfEnabled(openAPSMAPlugin, rootKey, Config.APS)
+            addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, rootKey, Config.APS)
+            addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, rootKey, Config.APS)
             addPreferencesFromResourceIfEnabled(SensitivityAAPSPlugin.getPlugin(), rootKey)
             addPreferencesFromResourceIfEnabled(SensitivityWeightedAveragePlugin.getPlugin(), rootKey)
             addPreferencesFromResourceIfEnabled(SensitivityOref0Plugin.getPlugin(), rootKey)
             addPreferencesFromResourceIfEnabled(SensitivityOref1Plugin.getPlugin(), rootKey)
-            if (Config.PUMPDRIVERS) {
-                addPreferencesFromResourceIfEnabled(danaRPlugin, rootKey)
-                addPreferencesFromResourceIfEnabled(danaRKoreanPlugin, rootKey)
-                addPreferencesFromResourceIfEnabled(danaRv2Plugin, rootKey)
-                addPreferencesFromResourceIfEnabled(danaRSPlugin, rootKey)
-                addPreferencesFromResourceIfEnabled(LocalInsightPlugin.getPlugin(), rootKey)
-                addPreferencesFromResourceIfEnabled(ComboPlugin.getPlugin(), rootKey)
-                addPreferencesFromResourceIfEnabled(MedtronicPumpPlugin.getPlugin(), rootKey)
-            }
-            if (!Config.NSCLIENT) {
-                addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey)
-            }
+            addPreferencesFromResourceIfEnabled(danaRPlugin, rootKey, Config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(danaRKoreanPlugin, rootKey, Config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(danaRv2Plugin, rootKey, Config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(danaRSPlugin, rootKey, Config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(LocalInsightPlugin.getPlugin(), rootKey, Config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(ComboPlugin.getPlugin(), rootKey, Config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(MedtronicPumpPlugin.getPlugin(), rootKey, Config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey, !Config.NSCLIENT)
             addPreferencesFromResourceIfEnabled(insulinOrefFreePeakPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), rootKey)
             addPreferencesFromResourceIfEnabled(tidepoolPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(smsCommunicatorPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(automationPlugin, rootKey)
-            addPreferencesFromResource(R.xml.pref_others, rootKey)
-            addPreferencesFromResource(R.xml.pref_datachoices, rootKey)
             addPreferencesFromResourceIfEnabled(wearPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(statusLinePlugin, rootKey)
+            addPreferencesFromResource(R.xml.pref_alerts, rootKey) // TODO not organized well
+            addPreferencesFromResource(R.xml.pref_datachoices, rootKey)
+            addPreferencesFromResourceIfEnabled(maintenancePlugin, rootKey)
         }
         initSummary(preferenceScreen)
         for (plugin in MainApp.getPluginsList()) {

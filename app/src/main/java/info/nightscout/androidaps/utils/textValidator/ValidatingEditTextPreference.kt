@@ -8,11 +8,10 @@ import androidx.preference.EditTextPreference.OnBindEditTextListener
 import androidx.preference.PreferenceViewHolder
 import info.nightscout.androidaps.R
 
-class ValidatingEditTextPreference(private val ctx: Context, val attrs: AttributeSet, private val defStyleAttr: Int, private val defStyleRes: Int)
+class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int)
     : EditTextPreference(ctx, attrs, defStyleAttr, defStyleRes) {
 
     init {
-        dialogLayoutResource = R.layout.dialog_preference
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FormEditText, 0, 0)
         val onBindEditTextListener = OnBindEditTextListener { editText ->
             editTextValidator = DefaultEditTextValidator(editText, typedArray, context)
@@ -27,7 +26,7 @@ class ValidatingEditTextPreference(private val ctx: Context, val attrs: Attribut
         : this(ctx, attrs, TypedArrayUtils.getAttr(ctx, R.attr.editTextPreferenceStyle,
         R.attr.editTextPreferenceStyle))
 
-    lateinit var editTextValidator: EditTextValidator
+    private lateinit var editTextValidator: EditTextValidator
 
     override fun onBindViewHolder(holder: PreferenceViewHolder?) {
         super.onBindViewHolder(holder)

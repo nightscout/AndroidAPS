@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory
-        android:key="openapsama"
-        android:title="@string/openapsama">
 
-        <EditTextPreference
+    <PreferenceCategory
+        android:title="@string/openapsama"
+        app:initialExpandedChildrenCount="0">
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="1"
             android:dialogMessage="@string/openapsma_maxbasal_summary"
+            android:inputType="numberDecimal"
             android:key="@string/key_openapsma_max_basal"
-            android:numeric="decimal"
-            android:title="@string/openapsma_maxbasal_title" />
+            android:title="@string/openapsma_maxbasal_title"
+            validate:floatmaxNumber="12.0"
+            validate:floatminNumber="0.1"
+            validate:testType="floatNumericRange" />
 
-        <EditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="1.5"
             android:dialogMessage="@string/openapsma_maxiob_summary"
+            android:inputType="numberDecimal"
             android:key="@string/key_openapsma_max_iob"
-            android:numeric="decimal"
-            android:title="@string/openapsma_maxiob_title" />
+            android:title="@string/openapsma_maxiob_title"
+            validate:floatmaxNumber="12.0"
+            validate:floatminNumber="0"
+            validate:testType="floatNumericRange" />
 
         <SwitchPreference
             android:defaultValue="false"
@@ -35,12 +43,10 @@
             android:dialogMessage="@string/openapsama_min_5m_carbimpact_summary"
             android:inputType="numberDecimal"
             android:key="@string/key_openapsama_min_5m_carbimpact"
-            android:maxLines="20"
             android:selectAllOnFocus="true"
-            android:singleLine="true"
             android:title="@string/openapsama_min_5m_carbimpact"
             validate:floatmaxNumber="12.0"
-            validate:floatminNumber="0.1"
+            validate:floatminNumber="1"
             validate:testType="floatNumericRange" />
 
         <androidx.preference.PreferenceScreen
