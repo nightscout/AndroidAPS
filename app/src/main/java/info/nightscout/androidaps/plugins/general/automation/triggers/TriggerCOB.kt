@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import android.widget.LinearLayout
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
@@ -15,15 +15,15 @@ import info.nightscout.androidaps.utils.JsonHelper.safeGetDouble
 import org.json.JSONObject
 import java.text.DecimalFormat
 
-class TriggerCOB(mainApp: MainApp) : Trigger(mainApp) {
+class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
     private val minValue = 0
     private val maxValue = sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48)
-    private var cob: InputDouble = InputDouble(mainApp, 0.0, minValue.toDouble(), maxValue.toDouble(), 1.0, DecimalFormat("1"))
-    var comparator: Comparator = Comparator(mainApp)
+    private var cob: InputDouble = InputDouble(injector, 0.0, minValue.toDouble(), maxValue.toDouble(), 1.0, DecimalFormat("1"))
+    var comparator: Comparator = Comparator(injector)
 
-    private constructor(mainApp: MainApp, triggerCOB: TriggerCOB) : this(mainApp) {
-        cob = InputDouble(mainApp, triggerCOB.cob)
-        comparator = Comparator(mainApp, triggerCOB.comparator.value)
+    private constructor(injector: HasAndroidInjector, triggerCOB: TriggerCOB) : this(injector) {
+        cob = InputDouble(injector, triggerCOB.cob)
+        comparator = Comparator(injector, triggerCOB.comparator.value)
     }
 
     override fun shouldRun(): Boolean {
@@ -69,13 +69,13 @@ class TriggerCOB(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.icon_cp_bolus_carbs)
 
-    override fun duplicate(): Trigger = TriggerCOB(mainApp, this)
+    override fun duplicate(): Trigger = TriggerCOB(injector, this)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.triggercoblabel, this))
+            .add(StaticLabel(injector, R.string.triggercoblabel, this))
             .add(comparator)
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.triggercoblabel) + ": ", "", cob))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.triggercoblabel) + ": ", "", cob))
             .build(root)
     }
 }

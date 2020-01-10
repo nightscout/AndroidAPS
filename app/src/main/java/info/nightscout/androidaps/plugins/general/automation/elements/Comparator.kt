@@ -6,12 +6,15 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
+import javax.inject.Inject
 
-class Comparator(mainApp: MainApp) : Element(mainApp) {
+class Comparator(injector: HasAndroidInjector) : Element(injector) {
+    @Inject lateinit var resourceHelper: ResourceHelper
+
     enum class Compare {
         IS_LESSER,
         IS_EQUAL_OR_LESSER,
@@ -53,7 +56,7 @@ class Comparator(mainApp: MainApp) : Element(mainApp) {
         }
     }
 
-    constructor(mainApp: MainApp, value : Compare) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, value: Compare) : this(injector) {
         this.value = value
     }
 

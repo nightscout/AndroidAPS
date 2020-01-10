@@ -191,4 +191,8 @@ public class PumpEnactResult {
         }
         return result;
     }
+
+    public static PumpEnactResult error(String message) {
+        return new PumpEnactResult().enacted(false).success(false).comment(message);
+    }
 }

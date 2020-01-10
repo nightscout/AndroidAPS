@@ -12,6 +12,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -21,7 +22,9 @@ import javax.inject.Singleton
 class OverviewPlugin @Inject constructor(
     private val notificationStore: NotificationStore,
     private val fabricPrivacy: FabricPrivacy,
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    private val rxBus: RxBusWrapper,
+    aapsLogger: AAPSLogger,
+    resourceHelper: ResourceHelper
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(OverviewFragment::class.qualifiedName)
@@ -30,7 +33,7 @@ class OverviewPlugin @Inject constructor(
     .pluginName(R.string.overview)
     .shortName(R.string.overview_shortname)
     .preferencesId(R.xml.pref_overview)
-    .description(R.string.description_overview),  rxBus, aapsLogger
+    .description(R.string.description_overview), aapsLogger, resourceHelper
 ) {
 
     private var disposable: CompositeDisposable = CompositeDisposable()

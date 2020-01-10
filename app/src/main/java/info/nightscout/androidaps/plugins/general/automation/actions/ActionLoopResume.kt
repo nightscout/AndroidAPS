@@ -1,14 +1,23 @@
 package info.nightscout.androidaps.plugins.general.automation.actions
 
 import androidx.annotation.DrawableRes
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import javax.inject.Inject
 
-class ActionLoopResume(mainApp: MainApp) : Action(mainApp) {
+class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var loopPlugin: LoopPlugin
+    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var rxBus: RxBusWrapper
 
     override fun friendlyName(): Int = R.string.resumeloop
     override fun shortDescription(): String = resourceHelper.gs(R.string.resumeloop)

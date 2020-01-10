@@ -2,9 +2,10 @@ package info.nightscout.androidaps.plugins.general.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
 import info.nightscout.androidaps.plugins.general.automation.elements.InputPercent
@@ -13,11 +14,16 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuil
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerProfilePercent
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
+import javax.inject.Inject
 
-class ActionProfileSwitchPercent(mainApp: MainApp) : Action(mainApp) {
-    var pct = InputPercent(mainApp)
-    var duration = InputDuration(mainApp, 0, InputDuration.TimeUnit.MINUTES)
+class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector) {
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var activePlugin: ActivePluginProvider
+
+    var pct = InputPercent(injector)
+    var duration = InputDuration(injector, 0, InputDuration.TimeUnit.MINUTES)
 
     override fun friendlyName(): Int = R.string.profilepercentage
     override fun shortDescription(): String =
@@ -27,18 +33,18 @@ class ActionProfileSwitchPercent(mainApp: MainApp) : Action(mainApp) {
     @DrawableRes override fun icon(): Int = R.drawable.icon_actions_profileswitch
 
     init {
-        precondition = TriggerProfilePercent(mainApp, 100.0, Comparator.Compare.IS_EQUAL)
+        precondition = TriggerProfilePercent(injector, 100.0, Comparator.Compare.IS_EQUAL)
     }
 
     override fun doAction(callback: Callback) {
-        treatmentsPlugin.doProfileSwitch(duration.value, pct.value.toInt(), 0)
+        activePlugin.activeTreatments.doProfileSwitch(duration.value, pct.value.toInt(), 0)
         callback.result(PumpEnactResult().success(true).comment(R.string.ok))?.run()
     }
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.percent_u), "", pct))
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.careportal_newnstreatment_duration_min_label), "", duration))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.percent_u), "", pct))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.careportal_newnstreatment_duration_min_label), "", duration))
             .build(root)
     }
 

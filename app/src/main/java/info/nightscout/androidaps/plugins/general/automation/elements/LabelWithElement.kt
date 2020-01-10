@@ -5,14 +5,18 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TableLayout
 import android.widget.TextView
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import javax.inject.Inject
 
-class LabelWithElement(mainApp: MainApp) : Element(mainApp) {
+class LabelWithElement(injector: HasAndroidInjector) : Element(injector) {
+    @Inject lateinit var resourceHelper: ResourceHelper
+
     var element: Element? = null
     var textPre: String = ""
     var textPost: String = ""
 
-    constructor(mainApp: MainApp, textPre: String, textPost: String, element: Element) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, textPre: String, textPost: String, element: Element) : this(injector) {
         this.textPre = textPre
         this.textPost = textPost
         this.element = element

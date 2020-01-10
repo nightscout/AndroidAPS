@@ -14,7 +14,6 @@ import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -22,12 +21,10 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -38,15 +35,15 @@ import javax.inject.Singleton
 
 @Singleton
 class PersistentNotificationPlugin @Inject constructor(
-    var mainApp: MainApp,
-    var resourceHelper: ResourceHelper,
-    var profileFunction: ProfileFunction,
-    var fabricPrivacy: FabricPrivacy,
-    var activePlugins: ActivePluginProvider,
-    var treatmentsPlugin: TreatmentsPlugin,
-    var iobCobCalculatorPlugin: IobCobCalculatorPlugin,
-    rxBus: RxBusWrapper,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    resourceHelper: ResourceHelper,
+    private var profileFunction: ProfileFunction,
+    private var fabricPrivacy: FabricPrivacy,
+    private var activePlugins: ActivePluginProvider,
+    private var iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private var rxBus: RxBusWrapper,
+    private var context: Context,
+    private var mainApp: MainApp
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .neverVisible(true)
@@ -55,7 +52,7 @@ class PersistentNotificationPlugin @Inject constructor(
     .alwaysEnabled(true)
     .showInList(false)
     .description(R.string.description_persistent_notification),
-    rxBus, aapsLogger
+    aapsLogger, resourceHelper
 ) {
 
     // For Android Auto
@@ -109,7 +106,7 @@ class PersistentNotificationPlugin @Inject constructor(
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val mNotificationManager = mainApp.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val channel = NotificationChannel(mainApp.channelId(), mainApp.channelId() as CharSequence, NotificationManager.IMPORTANCE_HIGH)
             mNotificationManager.createNotificationChannel(channel)
         }
@@ -117,20 +114,20 @@ class PersistentNotificationPlugin @Inject constructor(
 
     override fun onStop() {
         disposable.clear()
-        mainApp.stopService(Intent(mainApp, DummyService::class.java))
+        context.stopService(Intent(context, DummyService::class.java))
         super.onStop()
     }
 
     private fun triggerNotificationUpdate() {
         updateNotification()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            mainApp.startForegroundService(Intent(mainApp, DummyService::class.java))
+            context.startForegroundService(Intent(context, DummyService::class.java))
         else
-            mainApp.startService(Intent(mainApp, DummyService::class.java))
+            context.startService(Intent(context, DummyService::class.java))
     }
 
     private fun updateNotification() {
-        val pump = activePlugins.activePump ?: return
+        val pump = activePlugins.activePumpPlugin ?: return
         var line1: String?
         var line2: String? = null
         var line3: String? = null
@@ -138,7 +135,7 @@ class PersistentNotificationPlugin @Inject constructor(
         if (profileFunction.isProfileValid("Notification")) {
             var line1_aa: String
             val units = profileFunction.getUnits()
-            val lastBG = DatabaseHelper.lastBg()
+            val lastBG = iobCobCalculatorPlugin.lastBg()
             val glucoseStatus = GlucoseStatus.getGlucoseStatusData()
             if (lastBG != null) {
                 line1_aa = lastBG.valueToUnitsToString(units)
@@ -157,16 +154,16 @@ class PersistentNotificationPlugin @Inject constructor(
                 line1_aa = resourceHelper.gs(R.string.missed_bg_readings)
                 line1 = line1_aa
             }
-            val activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())
+            val activeTemp = activePlugins.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())
             if (activeTemp != null) {
                 line1 += "  " + activeTemp.toStringShort()
                 line1_aa += "  " + activeTemp.toStringShort() + "."
             }
             //IOB
-            treatmentsPlugin.updateTotalIOBTreatments()
-            treatmentsPlugin.updateTotalIOBTempBasals()
-            val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
-            val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
+            activePlugins.activeTreatments.updateTotalIOBTreatments()
+            activePlugins.activeTreatments.updateTotalIOBTempBasals()
+            val bolusIob = activePlugins.activeTreatments.lastCalculationTreatments.round()
+            val basalIob = activePlugins.activeTreatments.lastCalculationTempBasals.round()
             line2 = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculatorPlugin.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString()
             val line2_aa = resourceHelper.gs(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + resourceHelper.gs(R.string.cob) + ": " + iobCobCalculatorPlugin.getCobInfo(false, "PersistentNotificationPlugin").generateCOBString() + "."
             line3 = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h"
@@ -179,7 +176,7 @@ class PersistentNotificationPlugin @Inject constructor(
                 .setAction(READ_ACTION)
                 .putExtra(CONVERSATION_ID, mainApp.notificationId())
                 .setPackage(PACKAGE)
-            val msgReadPendingIntent = PendingIntent.getBroadcast(mainApp,
+            val msgReadPendingIntent = PendingIntent.getBroadcast(context,
                 mainApp.notificationId(),
                 msgReadIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT)
@@ -189,7 +186,7 @@ class PersistentNotificationPlugin @Inject constructor(
                 .putExtra(CONVERSATION_ID, mainApp.notificationId())
                 .setPackage(PACKAGE)
             val msgReplyPendingIntent = PendingIntent.getBroadcast(
-                mainApp,
+                context,
                 mainApp.notificationId(),
                 msgReplyIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT)
@@ -206,7 +203,7 @@ class PersistentNotificationPlugin @Inject constructor(
         } else {
             line1 = resourceHelper.gs(R.string.noprofileset)
         }
-        val builder = NotificationCompat.Builder(mainApp, mainApp.channelId())
+        val builder = NotificationCompat.Builder(context, mainApp.channelId())
         builder.setOngoing(true)
         builder.setOnlyAlertOnce(true)
         builder.setCategory(NotificationCompat.CATEGORY_STATUS)
@@ -221,8 +218,8 @@ class PersistentNotificationPlugin @Inject constructor(
                 .setUnreadConversation(unreadConversationBuilder.build()))
         }
         /// End Android Auto
-        val resultIntent = Intent(mainApp, MainActivity::class.java)
-        val stackBuilder = TaskStackBuilder.create(mainApp)
+        val resultIntent = Intent(context, MainActivity::class.java)
+        val stackBuilder = TaskStackBuilder.create(context)
         stackBuilder.addParentStack(MainActivity::class.java)
         stackBuilder.addNextIntent(resultIntent)
         val resultPendingIntent = stackBuilder.getPendingIntent(
@@ -230,7 +227,7 @@ class PersistentNotificationPlugin @Inject constructor(
             PendingIntent.FLAG_UPDATE_CURRENT
         )
         builder.setContentIntent(resultPendingIntent)
-        val mNotificationManager = mainApp.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val notification = builder.build()
         mNotificationManager.notify(mainApp.notificationId(), notification)
         mainApp.notification = notification

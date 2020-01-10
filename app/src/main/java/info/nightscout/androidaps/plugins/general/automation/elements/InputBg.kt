@@ -1,13 +1,17 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
 import android.widget.LinearLayout
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.utils.NumberPicker
 import java.text.DecimalFormat
+import javax.inject.Inject
 
-class InputBg(mainApp: MainApp) : Element(mainApp) {
+class InputBg(injector: HasAndroidInjector) : Element(injector) {
+    @Inject lateinit var profileFunction: ProfileFunction
+
     var units = Constants.MGDL
     var value = 0.0
     private var minValue = 0.0
@@ -15,9 +19,7 @@ class InputBg(mainApp: MainApp) : Element(mainApp) {
     private var step = 0.0
     private var decimalFormat: DecimalFormat? = null
 
-
-
-    constructor(mainApp: MainApp, value : Double, units: String) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, value: Double, units: String) : this(injector) {
         setUnits(units)
         this.value = value
     }

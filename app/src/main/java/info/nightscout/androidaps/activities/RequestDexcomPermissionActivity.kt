@@ -11,7 +11,7 @@ class RequestDexcomPermissionActivity : NoSplashAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requestPermissions(arrayOf(dexcomPlugin.PERMISSION), requestCode)
+        requestPermissions(arrayOf(DexcomPlugin.PERMISSION), requestCode)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

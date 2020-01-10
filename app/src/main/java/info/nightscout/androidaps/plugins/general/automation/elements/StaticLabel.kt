@@ -4,19 +4,23 @@ import android.graphics.Typeface
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import javax.inject.Inject
 
-class StaticLabel(mainApp: MainApp) : Element(mainApp) {
+class StaticLabel(injector: HasAndroidInjector) : Element(injector) {
+    @Inject lateinit var resourceHelper: ResourceHelper
+
     var label = ""
     var trigger: Trigger? = null
 
-    constructor(mainApp: MainApp, label: String, trigger: Trigger) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, label: String, trigger: Trigger) : this(injector) {
         this.label = label
         this.trigger = trigger
     }
 
-    constructor(mainApp: MainApp, resourceId: Int, trigger: Trigger) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, resourceId: Int, trigger: Trigger) : this(injector) {
         label = resourceHelper.gs(resourceId)
         this.trigger = trigger
     }

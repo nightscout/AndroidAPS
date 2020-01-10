@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import android.widget.LinearLayout
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
@@ -14,18 +14,18 @@ import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
-class TriggerWifiSsid(mainApp: MainApp) : Trigger(mainApp) {
-    private var ssid = InputString(mainApp)
-    var comparator = Comparator(mainApp)
+class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
+    private var ssid = InputString(injector)
+    var comparator = Comparator(injector)
 
-    constructor(mainApp: MainApp, ssid: String, compare: Comparator.Compare) : this(mainApp) {
-        this.ssid = InputString(mainApp, ssid)
-        comparator = Comparator(mainApp, compare)
+    constructor(injector: HasAndroidInjector, ssid: String, compare: Comparator.Compare) : this(injector) {
+        this.ssid = InputString(injector, ssid)
+        comparator = Comparator(injector, compare)
     }
 
-    constructor(mainApp: MainApp, triggerWifiSsid: TriggerWifiSsid) : this(mainApp) {
-        this.ssid = InputString(mainApp, triggerWifiSsid.ssid.value)
-        comparator = Comparator(mainApp, triggerWifiSsid.comparator.value)
+    constructor(injector: HasAndroidInjector, triggerWifiSsid: TriggerWifiSsid) : this(injector) {
+        this.ssid = InputString(injector, triggerWifiSsid.ssid.value)
+        comparator = Comparator(injector, triggerWifiSsid.comparator.value)
     }
 
     override fun shouldRun(): Boolean {
@@ -66,13 +66,13 @@ class TriggerWifiSsid(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_network_wifi)
 
-    override fun duplicate(): Trigger = TriggerWifiSsid(mainApp, this)
+    override fun duplicate(): Trigger = TriggerWifiSsid(injector, this)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.ns_wifi_ssids, this))
+            .add(StaticLabel(injector, R.string.ns_wifi_ssids, this))
             .add(comparator)
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.ns_wifi_ssids) + ": ", "", ssid))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.ns_wifi_ssids) + ": ", "", ssid))
             .build(root)
     }
 }

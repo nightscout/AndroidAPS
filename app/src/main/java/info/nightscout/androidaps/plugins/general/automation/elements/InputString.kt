@@ -5,9 +5,9 @@ import android.text.TextWatcher
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 
-class InputString(mainApp: MainApp) : Element(mainApp) {
+class InputString(injector: HasAndroidInjector) : Element(injector) {
     var textWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
@@ -17,7 +17,7 @@ class InputString(mainApp: MainApp) : Element(mainApp) {
     }
     var value = ""
 
-    constructor(mainApp: MainApp, value: String) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, value: String) : this(injector) {
         this.value = value
     }
 

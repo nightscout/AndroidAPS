@@ -1,15 +1,15 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
 import android.widget.LinearLayout
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.NumberPicker
 import java.text.DecimalFormat
 
-class InputInsulin(mainApp: MainApp) : Element(mainApp) {
+class InputInsulin(injector: HasAndroidInjector) : Element(injector) {
     var value = 0.0
 
-    constructor(mainApp: MainApp, another: InputInsulin) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, another: InputInsulin) : this(injector) {
         value = another.value
     }
 

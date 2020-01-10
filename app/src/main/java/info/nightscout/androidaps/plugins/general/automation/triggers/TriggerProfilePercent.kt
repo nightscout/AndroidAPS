@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import android.widget.LinearLayout
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
@@ -13,18 +13,18 @@ import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabe
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
-class TriggerProfilePercent(mainApp: MainApp) : Trigger(mainApp) {
-    private var pct = InputPercent(mainApp)
-    var comparator = Comparator(mainApp)
+class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
+    private var pct = InputPercent(injector)
+    var comparator = Comparator(injector)
 
-    constructor(mainApp: MainApp, value: Double, compare: Comparator.Compare) : this(mainApp) {
-        pct = InputPercent(mainApp, value)
-        comparator = Comparator(mainApp, compare)
+    constructor(injector: HasAndroidInjector, value: Double, compare: Comparator.Compare) : this(injector) {
+        pct = InputPercent(injector, value)
+        comparator = Comparator(injector, compare)
     }
 
-    constructor(mainApp: MainApp, triggerProfilePercent: TriggerProfilePercent) : this(mainApp) {
-        pct = InputPercent(mainApp, triggerProfilePercent.pct.value)
-        comparator = Comparator(mainApp, triggerProfilePercent.comparator.value)
+    constructor(injector: HasAndroidInjector, triggerProfilePercent: TriggerProfilePercent) : this(injector) {
+        pct = InputPercent(injector, triggerProfilePercent.pct.value)
+        comparator = Comparator(injector, triggerProfilePercent.comparator.value)
     }
 
     override fun shouldRun(): Boolean {
@@ -69,13 +69,13 @@ class TriggerProfilePercent(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.icon_actions_profileswitch)
 
-    override fun duplicate(): Trigger = TriggerProfilePercent(mainApp, this)
+    override fun duplicate(): Trigger = TriggerProfilePercent(injector, this)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.profilepercentage, this))
+            .add(StaticLabel(injector, R.string.profilepercentage, this))
             .add(comparator)
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.percent_u), "", pct))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.percent_u), "", pct))
             .build(root)
     }
 }

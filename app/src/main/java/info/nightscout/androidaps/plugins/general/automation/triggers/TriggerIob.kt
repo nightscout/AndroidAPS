@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import android.widget.LinearLayout
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
@@ -14,13 +14,13 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
-class TriggerIob(mainApp: MainApp) : Trigger(mainApp) {
-    private var insulin = InputInsulin(mainApp)
-    var comparator: Comparator = Comparator(mainApp)
+class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
+    private var insulin = InputInsulin(injector)
+    var comparator: Comparator = Comparator(injector)
 
-    constructor(mainApp: MainApp, triggerIob: TriggerIob) : this(mainApp) {
-        insulin = InputInsulin(mainApp, triggerIob.insulin)
-        comparator = Comparator(mainApp, triggerIob.comparator.value)
+    constructor(injector: HasAndroidInjector, triggerIob: TriggerIob) : this(injector) {
+        insulin = InputInsulin(injector, triggerIob.insulin)
+        comparator = Comparator(injector, triggerIob.comparator.value)
     }
 
     val value: Double = 0.0
@@ -60,13 +60,13 @@ class TriggerIob(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_keyboard_capslock)
 
-    override fun duplicate(): Trigger = TriggerIob(mainApp, this)
+    override fun duplicate(): Trigger = TriggerIob(injector, this)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.iob, this))
+            .add(StaticLabel(injector, R.string.iob, this))
             .add(comparator)
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.iob_u), "", insulin))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.iob_u), "", insulin))
             .build(root)
     }
 }

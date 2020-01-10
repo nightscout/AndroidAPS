@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR;
 
-import androidx.fragment.app.FragmentActivity;
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,18 +17,18 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.DanaRInterface;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
@@ -36,7 +36,6 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.pump.danaR.services.AbstractDanaRExecutionService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -44,12 +43,13 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by mike on 28.01.2018.
  */
 
-public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface {
+public abstract class AbstractDanaRPlugin extends PumpPluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface {
     private Logger log = LoggerFactory.getLogger(L.PUMP);
 
     protected AbstractDanaRExecutionService sExecutionService;
@@ -58,21 +58,16 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
 
     public PumpDescription pumpDescription = new PumpDescription();
 
-    protected AbstractDanaRPlugin(RxBusWrapper rxBus, AAPSLogger aapsLogger) {
+    protected AbstractDanaRPlugin(ResourceHelper resourceHelper, AAPSLogger aapsLogger, CommandQueueProvider commandQueue) {
         super(new PluginDescription()
-                .mainType(PluginType.PUMP)
-                .fragmentClass(DanaRFragment.class.getName())
-                .pluginName(R.string.danarspump)
-                .shortName(R.string.danarpump_shortname)
-                .preferencesId(R.xml.pref_danars)
-                .description(R.string.description_pump_dana_r),
-                rxBus, aapsLogger
+                        .mainType(PluginType.PUMP)
+                        .fragmentClass(DanaRFragment.class.getName())
+                        .pluginName(R.string.danarspump)
+                        .shortName(R.string.danarpump_shortname)
+                        .preferencesId(R.xml.pref_danars)
+                        .description(R.string.description_pump_dana_r),
+                aapsLogger, resourceHelper, commandQueue
         );
-    }
-
-    @Override
-    public void switchAllowed(boolean newState, FragmentActivity activity, PluginType type) {
-        confirmPumpPluginActivation(newState, activity, type);
     }
 
     @Override
@@ -87,7 +82,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
     }
 
     // Pump interface
-    @Override
+    @NonNull @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
         PumpEnactResult result = new PumpEnactResult();
 
@@ -154,10 +149,14 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
     }
 
     @Override
-    public double getReservoirLevel() { return DanaRPump.getInstance().reservoirRemainingUnits; }
+    public double getReservoirLevel() {
+        return DanaRPump.getInstance().reservoirRemainingUnits;
+    }
 
     @Override
-    public int getBatteryLevel() { return DanaRPump.getInstance().batteryRemaining; }
+    public int getBatteryLevel() {
+        return DanaRPump.getInstance().batteryRemaining;
+    }
 
     @Override
     public void stopBolusDelivering() {
@@ -168,7 +167,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         sExecutionService.bolusStop();
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         DanaRPump pump = DanaRPump.getInstance();
         PumpEnactResult result = new PumpEnactResult();
@@ -218,7 +217,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         return result;
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         DanaRPump pump = DanaRPump.getInstance();
         insulin = ConstraintChecker.getInstance().applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
@@ -262,7 +261,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         return result;
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult cancelExtendedBolus() {
         PumpEnactResult result = new PumpEnactResult();
         ExtendedBolus runningEB = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
@@ -323,7 +322,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         }
     }
 
-    @Override
+    @NonNull @Override
     public JSONObject getJSONStatus(Profile profile, String profilename) {
         DanaRPump pump = DanaRPump.getInstance();
         long now = System.currentTimeMillis();
@@ -373,17 +372,17 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         return pumpjson;
     }
 
-    @Override
+    @NonNull @Override
     public ManufacturerType manufacturer() {
         return ManufacturerType.Sooil;
     }
 
-    @Override
+    @NonNull @Override
     public String serialNumber() {
         return DanaRPump.getInstance().serialNumber;
     }
 
-    @Override
+    @NonNull @Override
     public PumpDescription getPumpDescription() {
         return pumpDescription;
     }
@@ -426,13 +425,13 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         return applyBolusConstraints(insulin);
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult loadTDDs() {
         return loadHistory(RecordTypes.RECORD_TYPE_DAILY);
     }
 
     // Reply for sms communicator
-    public String shortStatus(boolean veryShort) {
+    @NonNull public String shortStatus(boolean veryShort) {
         DanaRPump pump = DanaRPump.getInstance();
         String ret = "";
         if (pump.lastConnection != 0) {

@@ -12,10 +12,10 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
 import info.nightscout.androidaps.events.EventPumpStatusChanged
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -29,7 +29,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var fabricPrivacy: FabricPrivacy
 
     private val disposable = CompositeDisposable()
@@ -73,7 +73,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
             stopPressed = true
             overview_bolusprogress_stoppressed.visibility = View.VISIBLE
             overview_bolusprogress_stop.visibility = View.INVISIBLE
-            configBuilderPlugin.commandQueue.cancelAllBoluses()
+            commandQueue.cancelAllBoluses()
         }
         val defaultState = resourceHelper.gs(R.string.waitingforpump)
         overview_bolusprogress_progressbar.max = 100
@@ -90,7 +90,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
     override fun onResume() {
         super.onResume()
         aapsLogger.debug(LTag.UI, "onResume")
-        if (!configBuilderPlugin.commandQueue.bolusInQueue())
+        if (!commandQueue.bolusInQueue())
             bolusEnded = true
 
         if (bolusEnded) dismiss()

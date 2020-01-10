@@ -13,8 +13,12 @@ import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.elements.*
 import info.nightscout.androidaps.plugins.general.automation.triggers.*
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Thread
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
 import info.nightscout.androidaps.plugins.treatments.Treatment
-import info.nightscout.androidaps.queue.commands.CommandSetProfile
+import info.nightscout.androidaps.queue.CommandQueue
+import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import javax.inject.Singleton
@@ -32,7 +36,21 @@ import javax.inject.Singleton
 )
 interface AppComponent : AndroidInjector<MainApp> {
 
+    fun injectCommandQueue(commandQueue: CommandQueue)
+    fun injectCommandBolus(commandBolus: CommandBolus)
+    fun injectCommandCancelExtendedBolus(commandCancelExtendedBolus: CommandCancelExtendedBolus)
+    fun injectCommandCancelTempBasal(commandCancelTempBasal: CommandCancelTempBasal)
+    fun injectCommandExtendedBolus(commandExtendedBolus: CommandExtendedBolus)
+    fun injectCommandInsightSetTBROverNotification(commandInsightSetTBROverNotification: CommandInsightSetTBROverNotification)
+    fun injectCommandLoadEvents(commandLoadEvents: CommandLoadEvents)
+    fun injectCommandLoadHistory(commandLoadHistory: CommandLoadHistory)
+    fun injectCommandReadStatus(commandReadStatus: CommandReadStatus)
     fun injectCommandSetProfile(commandSetProfile: CommandSetProfile)
+    fun injectCommandCommandSMBBolus(commandSMBBolus: CommandSMBBolus)
+    fun injectCommandStartPump(commandStartPump: CommandStartPump)
+    fun injectCommandStopPump(commandStopPump: CommandStopPump)
+    fun injectCommandTempBasalAbsolute(commandTempBasalAbsolute: CommandTempBasalAbsolute)
+    fun injectCommandTempBasalPercent(commandTempBasalPercent: CommandTempBasalPercent)
 
     fun injectObjective0(objective0: Objective0)
     fun injectObjective1(objective1: Objective1)
@@ -58,7 +76,7 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectTrigger(triggerRecurringTime: TriggerRecurringTime)
     fun injectTrigger(triggerTempTarget: TriggerTempTarget)
     fun injectTrigger(triggerTime: TriggerTime)
-    fun injectTrigger(triggerTimeRange : TriggerTimeRange)
+    fun injectTrigger(triggerTimeRange: TriggerTimeRange)
     fun injectTrigger(triggerWifiSsid: TriggerWifiSsid)
 
     fun injectAction(action: Action)
@@ -94,6 +112,10 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectElement(inputWeekDay: InputWeekDay)
     fun injectElement(labelWithElement: LabelWithElement)
     fun injectElement(staticLabel: StaticLabel)
+
+    fun injectAutosensDate(autosensData: AutosensData)
+    fun injectIobCobThread(iobCobThread: IobCobThread)
+    fun injectIobCobOref1Thread(iobCobOref1Thread: IobCobOref1Thread)
 
     fun injectTreatment(treatment: Treatment)
     fun injectBgReading(bgReading: BgReading)

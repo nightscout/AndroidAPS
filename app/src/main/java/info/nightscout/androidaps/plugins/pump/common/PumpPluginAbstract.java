@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 
-import androidx.fragment.app.FragmentActivity;
+import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,16 +22,15 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
-import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
@@ -42,6 +41,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -51,16 +51,16 @@ import io.reactivex.schedulers.Schedulers;
 
 // When using this class, make sure that your first step is to create mConnection (see MedtronicPumpPlugin)
 
-public abstract class PumpPluginAbstract extends PluginBase implements PumpInterface, ConstraintsInterface {
+public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpInterface, ConstraintsInterface {
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
-/*
-    protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
-            .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump_driver));
-    protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult().success(false)
-            .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
-*/
+    /*
+        protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
+                .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump_driver));
+        protected static final PumpEnactResult OPERATION_NOT_YET_SUPPORTED = new PumpEnactResult().success(false)
+                .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
+    */
     protected PumpDescription pumpDescription = new PumpDescription();
     protected PumpStatus pumpStatus;
     protected ServiceConnection serviceConnection = null;
@@ -70,9 +70,9 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     protected boolean displayConnectionMessages = false;
 
 
-    protected PumpPluginAbstract(PluginDescription pluginDescription, PumpType pumpType, RxBusWrapper rxBusWrapper, AAPSLogger aapsLogger) {
+    protected PumpPluginAbstract(PluginDescription pluginDescription, PumpType pumpType, ResourceHelper resourceHelper, AAPSLogger aapsLogger, CommandQueueProvider commandQueue) {
 
-        super(pluginDescription, rxBusWrapper, aapsLogger);
+        super(pluginDescription, aapsLogger, resourceHelper, commandQueue);
 
         pumpDescription.setPumpDescription(pumpType);
 
@@ -121,11 +121,6 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
      * If we need to run any custom actions in onStart (triggering events, etc)
      */
     public abstract void onStartCustomActions();
-
-    @Override
-    public void switchAllowed(boolean newState, FragmentActivity activity, PluginType type) {
-        confirmPumpPluginActivation(newState, activity, type);
-    }
 
     /**
      * Service class (same one you did serviceConnection for)
@@ -208,7 +203,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     // Upload to pump new basal profile
-    public PumpEnactResult setNewBasalProfile(Profile profile) {
+    @NonNull public PumpEnactResult setNewBasalProfile(Profile profile) {
         if (isLoggingEnabled())
             LOG.warn("setNewBasalProfile [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
@@ -242,7 +237,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     }
 
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile,
                                                 boolean enforceNew) {
         if (isLoggingEnabled())
@@ -251,7 +246,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     }
 
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile,
                                                boolean enforceNew) {
         if (isLoggingEnabled())
@@ -260,7 +255,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     }
 
 
-    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+    @NonNull public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         if (isLoggingEnabled())
             LOG.warn("setExtendedBolus [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
@@ -270,14 +265,14 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     // some pumps might set a very short temp close to 100% as cancelling a temp can be noisy
     // when the cancel request is requested by the user (forced), the pump should always do a real cancel
 
-    public PumpEnactResult cancelTempBasal(boolean enforceNew) {
+    @NonNull public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         if (isLoggingEnabled())
             LOG.warn("cancelTempBasal [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
 
-    public PumpEnactResult cancelExtendedBolus() {
+    @NonNull public PumpEnactResult cancelExtendedBolus() {
         if (isLoggingEnabled())
             LOG.warn("cancelExtendedBolus [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
@@ -299,7 +294,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
     // Pump capabilities
 
-    public PumpDescription getPumpDescription() {
+    @NonNull public PumpDescription getPumpDescription() {
         return pumpDescription;
     }
 
@@ -313,7 +308,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     }
 
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult loadTDDs() {
         if (isLoggingEnabled())
             LOG.warn("loadTDDs [PumpPluginAbstract] - Not implemented.");
@@ -321,7 +316,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     }
 
 
-    @Override
+    @NonNull @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
 
         long now = System.currentTimeMillis();
@@ -372,7 +367,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     // FIXME i18n, null checks: iob, TDD
-    @Override
+    @NonNull @Override
     public String shortStatus(boolean veryShort) {
         String ret = "";
         if (pumpStatus.lastConnection != 0) {
@@ -405,7 +400,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
     }
 
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
 
         try {

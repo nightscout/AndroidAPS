@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import android.widget.LinearLayout
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
@@ -15,18 +15,18 @@ import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import org.json.JSONObject
 import java.text.DecimalFormat
 
-class TriggerAutosensValue(mainApp: MainApp) : Trigger(mainApp) {
+class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
     private val minValue = (sp.getDouble(R.string.key_openapsama_autosens_min, 0.7) * 100).toInt()
     private val maxValue = (sp.getDouble(R.string.key_openapsama_autosens_max, 1.2) * 100).toInt()
     private val step = 1.0
     private val decimalFormat = DecimalFormat("1")
-    private var autosens: InputDouble = InputDouble(mainApp, 100.0, minValue.toDouble(), maxValue.toDouble(), step, decimalFormat)
+    private var autosens: InputDouble = InputDouble(injector, 100.0, minValue.toDouble(), maxValue.toDouble(), step, decimalFormat)
 
-    var comparator: Comparator = Comparator(mainApp)
+    var comparator: Comparator = Comparator(injector)
 
-    private constructor(mainApp: MainApp, triggerAutosensValue: TriggerAutosensValue) : this(mainApp) {
-        autosens = InputDouble(mainApp, triggerAutosensValue.autosens)
-        comparator = Comparator(mainApp, triggerAutosensValue.comparator.value)
+    private constructor(injector: HasAndroidInjector, triggerAutosensValue: TriggerAutosensValue) : this(injector) {
+        autosens = InputDouble(injector, triggerAutosensValue.autosens)
+        comparator = Comparator(injector, triggerAutosensValue.comparator.value)
     }
 
     override fun shouldRun(): Boolean {
@@ -70,13 +70,13 @@ class TriggerAutosensValue(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.`as`)
 
-    override fun duplicate(): Trigger = TriggerAutosensValue(mainApp, this)
+    override fun duplicate(): Trigger = TriggerAutosensValue(injector, this)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.autosenslabel, this))
+            .add(StaticLabel(injector, R.string.autosenslabel, this))
             .add(comparator)
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.autosenslabel) + ": ", "", autosens))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.autosenslabel) + ": ", "", autosens))
             .build(root)
     }
 }

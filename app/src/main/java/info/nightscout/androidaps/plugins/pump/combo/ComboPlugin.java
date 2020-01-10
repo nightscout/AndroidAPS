@@ -4,7 +4,6 @@ import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentActivity;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -18,6 +17,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -30,19 +32,21 @@ import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.logging.AAPSLoggerProduction;
+import info.nightscout.androidaps.interfaces.PumpPluginBase;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
@@ -68,29 +72,29 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.InstanceId;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by mike on 05.08.2016.
  */
-public class ComboPlugin extends PluginBase implements PumpInterface, ConstraintsInterface {
+@Singleton
+public class ComboPlugin extends PumpPluginBase implements PumpInterface, ConstraintsInterface {
     private static final Logger log = LoggerFactory.getLogger(L.PUMP);
     static final String COMBO_TBRS_SET = "combo_tbrs_set";
     static final String COMBO_BOLUSES_DELIVERED = "combo_boluses_delivered";
 
-    private static ComboPlugin plugin = null;
-
-    @Deprecated
-    public static ComboPlugin getPlugin() {
-        if (plugin == null)
-            plugin = new ComboPlugin();
-        return plugin;
-    }
+    private final ResourceHelper resourceHelper;
+    private final ConstraintChecker constraintChecker;
+    private final ProfileFunction profileFunction;
+    private final TreatmentsPlugin treatmentsPlugin;
+    private final info.nightscout.androidaps.utils.sharedPreferences.SP sp;
+    private final RxBusWrapper rxBus;
+    private final CommandQueueProvider commandQueue;
 
     private final static PumpDescription pumpDescription = new PumpDescription();
 
-    @NonNull
-    private final RuffyCommands ruffyScripter;
+    private RuffyCommands ruffyScripter;
 
     @NonNull
     private static final ComboPump pump = new ComboPump();
@@ -129,22 +133,44 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
      */
     private volatile List<Bolus> recentBoluses = new ArrayList<>(0);
 
-    private static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult()
-            .success(false).enacted(false).comment(MainApp.gs(R.string.combo_pump_unsupported_operation));
+    private PumpEnactResult OPERATION_NOT_SUPPORTED;
 
-    // TODO: dagger
-
-    private ComboPlugin() {
+    @Inject
+    public ComboPlugin(
+            AAPSLogger aapsLogger,
+            RxBusWrapper rxBus,
+            MainApp maiApp,
+            ResourceHelper resourceHelper,
+            ConstraintChecker constraintChecker,
+            ProfileFunction profileFunction,
+            TreatmentsPlugin treatmentsPlugin,
+            SP sp,
+            CommandQueueProvider commandQueue
+    ) {
         super(new PluginDescription()
-                .mainType(PluginType.PUMP)
-                .fragmentClass(ComboFragment.class.getName())
-                .pluginName(R.string.combopump)
-                .shortName(R.string.combopump_shortname)
-                .description(R.string.description_pump_combo),
-                new RxBusWrapper(), new AAPSLoggerProduction() // TODO: dagger
+                        .mainType(PluginType.PUMP)
+                        .fragmentClass(ComboFragment.class.getName())
+                        .pluginName(R.string.combopump)
+                        .shortName(R.string.combopump_shortname)
+                        .description(R.string.description_pump_combo),
+                aapsLogger, resourceHelper, commandQueue
         );
-        ruffyScripter = new RuffyScripter(MainApp.instance().getApplicationContext());
+        this.rxBus = rxBus;
+        this.resourceHelper = resourceHelper;
+        this.constraintChecker = constraintChecker;
+        this.profileFunction = profileFunction;
+        this.treatmentsPlugin = treatmentsPlugin;
+        this.sp = sp;
+        this.commandQueue = commandQueue;
+
         pumpDescription.setPumpDescription(PumpType.AccuChekCombo);
+    }
+
+    @Override protected void onStart() {
+        super.onStart();
+        ruffyScripter = new RuffyScripter(MainApp.instance());
+        OPERATION_NOT_SUPPORTED = new PumpEnactResult()
+                .success(false).enacted(false).comment(MainApp.gs(R.string.combo_pump_unsupported_operation));
     }
 
     public ComboPump getPump() {
@@ -167,11 +193,6 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
             return MainApp.gs(R.string.loopdisabled);
         }
         return MainApp.gs(R.string.combo_pump_state_running);
-    }
-
-    @Override
-    public void switchAllowed(boolean newState, FragmentActivity activity, PluginType type) {
-        confirmPumpPluginActivation(newState, activity, type);
     }
 
     @Override
@@ -232,7 +253,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         // we're not doing that
     }
 
-    @Override
+    @NonNull @Override
     public synchronized PumpEnactResult setNewBasalProfile(Profile profile) {
         if (!isInitialized()) {
             // note that this should not happen anymore since the queue is present, which
@@ -464,7 +485,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
     /**
      * Updates Treatment records with carbs and boluses and delivers a bolus if needed
      */
-    @Override
+    @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         try {
             if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
@@ -642,7 +663,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
     private void incrementTbrCount() {
         try {
-            SP.putLong(COMBO_TBRS_SET, SP.getLong(COMBO_TBRS_SET, 0L) + 1);
+            sp.putLong(COMBO_TBRS_SET, sp.getLong(COMBO_TBRS_SET, 0L) + 1);
         } catch (Exception e) {
             // ignore
         }
@@ -650,7 +671,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
 
     private void incrementBolusCount() {
         try {
-            SP.putLong(COMBO_BOLUSES_DELIVERED, SP.getLong(COMBO_BOLUSES_DELIVERED, 0L) + 1);
+            sp.putLong(COMBO_BOLUSES_DELIVERED, sp.getLong(COMBO_BOLUSES_DELIVERED, 0L) + 1);
         } catch (Exception e) {
             // ignore
         }
@@ -695,7 +716,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
      *              might have other issues though (what happens if the tbr which wasn't re-set to
      *              the new value (and thus still has the old duration of e.g. 1 min) expires?)
      */
-    @Override
+    @NonNull @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean force) {
         if (L.isEnabled(L.PUMP))
             log.debug("setTempBasalAbsolute called with a rate of " + absoluteRate + " for " + durationInMinutes + " min.");
@@ -715,7 +736,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
      * @param forceNew Driver always applies the requested TBR and simply overrides whatever TBR
      *                 is or isn't running at the moment
      */
-    @Override
+    @NonNull @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, final Integer durationInMinutes, Profile profile, boolean forceNew) {
         return setTempBasalPercent(percent, durationInMinutes);
     }
@@ -774,7 +795,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 .percent(state.tbrPercent).duration(state.tbrRemainingDuration);
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         return OPERATION_NOT_SUPPORTED;
     }
@@ -787,7 +808,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
      * make absolutely sure no TBR is running (such a request is also made when resuming the
      * loop, irregardless of whether a TBR is running or not).
      */
-    @Override
+    @NonNull @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
         if (L.isEnabled(L.PUMP))
             log.debug("cancelTempBasal called");
@@ -891,7 +912,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                             Notification.URGENT);
                     n.soundId = R.raw.alarm;
                     RxBus.Companion.getINSTANCE().send(new EventNewNotification(n));
-                    ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
+                    commandQueue.cancelTempBasal(true, null);
                 }
                 updateLocalData(commandResult);
             }
@@ -1070,7 +1091,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
                 n.soundId = R.raw.alarm;
                 RxBus.Companion.getINSTANCE().send(new EventNewNotification(n));
                 violationWarningRaisedForBolusAt = lowSuspendOnlyLoopEnforcedUntil;
-                ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, null);
+                commandQueue.cancelTempBasal(true, null);
             }
         }
     }
@@ -1244,12 +1265,12 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         return null;
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult cancelExtendedBolus() {
         return OPERATION_NOT_SUPPORTED;
     }
 
-    @Override
+    @NonNull @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
         if (!pump.initialized) {
             return null;
@@ -1300,27 +1321,27 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         return null;
     }
 
-    @Override
+    @NonNull @Override
     public ManufacturerType manufacturer() {
         return ManufacturerType.Roche;
     }
 
-    @Override
+    @NonNull @Override
     public PumpType model() {
         return PumpType.AccuChekCombo;
     }
 
-    @Override
+    @NonNull @Override
     public String serialNumber() {
         return InstanceId.INSTANCE.instanceId(); // TODO replace by real serial
     }
 
-    @Override
+    @NonNull @Override
     public PumpDescription getPumpDescription() {
         return pumpDescription;
     }
 
-    @Override
+    @NonNull @Override
     public String shortStatus(boolean veryShort) {
         return getStateSummary();
     }
@@ -1330,7 +1351,7 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
         return false;
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult loadTDDs() {
         PumpEnactResult result = new PumpEnactResult();
         result.success = readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));

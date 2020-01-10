@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.constraints.objectives
 import android.app.Activity
 import com.google.common.base.Charsets
 import com.google.common.hash.Hashing
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
@@ -12,7 +13,6 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
 import info.nightscout.androidaps.utils.DateUtil
@@ -25,10 +25,11 @@ import javax.inject.Singleton
 
 @Singleton
 class ObjectivesPlugin @Inject constructor(
-    private val sp: SP,
-    private val resourceHelper: ResourceHelper,
+    private val injector: HasAndroidInjector,
+    aapsLogger: AAPSLogger,
+    resourceHelper: ResourceHelper,
     private val configBuilderPlugin: ConfigBuilderPlugin,
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    private val sp: SP
 
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
@@ -38,21 +39,23 @@ class ObjectivesPlugin @Inject constructor(
     .pluginName(R.string.objectives)
     .shortName(R.string.objectives_shortname)
     .description(R.string.description_objectives),
-    rxBus, aapsLogger
+    aapsLogger, resourceHelper
 ), ConstraintsInterface {
 
     var objectives: MutableList<Objective> = ArrayList()
 
-    val FIRST_OBJECTIVE = 0
-    val USAGE_OBJECTIVE = 1
-    val EXAM_OBJECTIVE = 2
-    val OPENLOOP_OBJECTIVE = 3
-    val MAXBASAL_OBJECTIVE = 4
-    val MAXIOB_ZERO_CL_OBJECTIVE = 5
-    val MAXIOB_OBJECTIVE = 6
-    val AUTOSENS_OBJECTIVE = 7
-    val AMA_OBJECTIVE = 8
-    val SMB_OBJECTIVE = 9
+    companion object {
+        const val FIRST_OBJECTIVE = 0
+        @Suppress("unused") const val USAGE_OBJECTIVE = 1
+        @Suppress("unused") const val EXAM_OBJECTIVE = 2
+        @Suppress("unused") const val OPENLOOP_OBJECTIVE = 3
+        @Suppress("unused") const val MAXBASAL_OBJECTIVE = 4
+        const val MAXIOB_ZERO_CL_OBJECTIVE = 5
+        @Suppress("unused") const val MAXIOB_OBJECTIVE = 6
+        const val AUTOSENS_OBJECTIVE = 7
+        const val AMA_OBJECTIVE = 8
+        const val SMB_OBJECTIVE = 9
+    }
 
     override fun onStart() {
         super.onStart()
@@ -61,7 +64,7 @@ class ObjectivesPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-        val pump = configBuilderPlugin.activePump
+        val pump = configBuilderPlugin.activePumpPlugin
         return pump == null || pump.pumpDescription.isTempBasalCapable
     }
 
@@ -92,7 +95,7 @@ class ObjectivesPlugin @Inject constructor(
         objectives.add(Objective2())
         objectives.add(Objective3())
         objectives.add(Objective4())
-        objectives.add(Objective5())
+        objectives.add(Objective5(injector))
         objectives.add(Objective6())
         objectives.add(Objective7())
         objectives.add(Objective8())
@@ -118,7 +121,7 @@ class ObjectivesPlugin @Inject constructor(
 
     fun completeObjectives(activity: Activity, request: String) {
         val requestCode = sp.getString(R.string.key_objectives_request_code, "")
-        var url = sp.getString(R.string.key_nsclientinternal_url, "").toLowerCase()
+        var url = sp.getString(R.string.key_nsclientinternal_url, "").toLowerCase(Locale.getDefault())
         if (!url.endsWith("/")) url = "$url/"
         @Suppress("DEPRECATION") val hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID + "/" + requestCode, Charsets.UTF_8).toString()
         if (request.equals(hashNS.substring(0, 10), ignoreCase = true)) {
@@ -181,5 +184,4 @@ class ObjectivesPlugin @Inject constructor(
             maxIob.set(0.0, resourceHelper.gs(R.string.objectivenotfinished, MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
         return maxIob
     }
-
 }

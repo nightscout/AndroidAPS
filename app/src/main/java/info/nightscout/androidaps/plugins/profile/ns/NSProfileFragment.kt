@@ -32,6 +32,7 @@ class NSProfileFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var nsProfilePlugin: NSProfilePlugin
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -47,7 +48,7 @@ class NSProfileFragment : DaggerFragment() {
 
         nsprofile_profileswitch.setOnClickListener {
             val name = nsprofile_spinner.selectedItem?.toString() ?: ""
-            NSProfilePlugin.getPlugin().profile?.let { store ->
+            nsProfilePlugin.profile?.let { store ->
                 store.getSpecificProfile(name)?.let {
                     activity?.let { activity ->
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.nsprofile),
@@ -79,7 +80,7 @@ class NSProfileFragment : DaggerFragment() {
 
                 nsprofile_profileswitch.visibility = View.GONE
 
-                NSProfilePlugin.getPlugin().profile?.let { store ->
+                nsProfilePlugin.profile?.let { store ->
                     store.getSpecificProfile(name)?.let { profile ->
                         profileview_units.text = profile.units
                         profileview_dia.text = resourceHelper.gs(R.string.format_hours, profile.dia)
@@ -124,7 +125,7 @@ class NSProfileFragment : DaggerFragment() {
         if (profileview_noprofile == null) return
         profileview_noprofile.visibility = View.VISIBLE
 
-        NSProfilePlugin.getPlugin().profile?.let { profileStore ->
+        nsProfilePlugin.profile?.let { profileStore ->
             val profileList = profileStore.getProfileList()
             val adapter = ArrayAdapter(context!!, R.layout.spinner_centered, profileList)
             nsprofile_spinner.adapter = adapter

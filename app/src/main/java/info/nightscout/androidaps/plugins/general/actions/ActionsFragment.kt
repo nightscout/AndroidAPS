@@ -16,12 +16,12 @@ import info.nightscout.androidaps.activities.TDDStatsActivity
 import info.nightscout.androidaps.dialogs.*
 import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.SingleClickButton
@@ -44,8 +44,8 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var commandQueue: CommandQueueProvider
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -70,8 +70,8 @@ class ActionsFragment : DaggerFragment() {
             fragmentManager?.let { ExtendedBolusDialog().show(it, "Actions") }
         }
         actions_extendedbolus_cancel.setOnClickListener {
-            if (treatmentsPlugin.isInHistoryExtendedBoluslInProgress) {
-                configBuilderPlugin.commandQueue.cancelExtended(object : Callback() {
+            if (activePlugin.activeTreatments.isInHistoryExtendedBoluslInProgress) {
+                commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
                             val i = Intent(mainApp, ErrorHelperActivity::class.java)
@@ -89,8 +89,8 @@ class ActionsFragment : DaggerFragment() {
             fragmentManager?.let { TempBasalDialog().show(it, "Actions") }
         }
         actions_canceltempbasal.setOnClickListener {
-            if (treatmentsPlugin.isTempBasalInProgress) {
-                configBuilderPlugin.commandQueue.cancelTempBasal(true, object : Callback() {
+            if (activePlugin.activeTreatments.isTempBasalInProgress) {
+                commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
                             val i = Intent(mainApp, ErrorHelperActivity::class.java)
@@ -159,20 +159,22 @@ class ActionsFragment : DaggerFragment() {
     @Synchronized
     fun updateGui() {
         actions_profileswitch?.visibility =
-            if (configBuilderPlugin.activeProfileInterface.profile != null) View.VISIBLE
+            if (activePlugin.activeProfileInterface.profile != null) View.VISIBLE
             else View.GONE
 
-        if (profileFunction.getProfile() == null) {
-            actions_temptarget?.visibility = View.GONE
-            actions_extendedbolus?.visibility = View.GONE
-            actions_extendedbolus_cancel?.visibility = View.GONE
-            actions_settempbasal?.visibility = View.GONE
-            actions_canceltempbasal?.visibility = View.GONE
-            actions_fill?.visibility = View.GONE
-            return
-        }
+        val profile = profileFunction.getProfile()
+        val pump = activePlugin.activePumpPlugin
 
-        val pump = configBuilderPlugin.activePump ?: return
+        actions_temptarget?.visibility = (profile != null).toVisibility()
+        actions_canceltempbasal.visibility = (pump != null || profile == null).toVisibility()
+        actions_settempbasal.visibility = (pump != null || profile == null).toVisibility()
+        actions_fill.visibility = (pump != null || profile == null).toVisibility()
+        actions_extendedbolus.visibility = (pump != null || profile == null).toVisibility()
+        actions_extendedbolus_cancel.visibility = (pump != null || profile == null).toVisibility()
+        actions_historybrowser.visibility = (pump != null || profile == null).toVisibility()
+        actions_tddstats.visibility = (pump != null || profile == null).toVisibility()
+        if (pump == null) return
+
         val basalProfileEnabled = MainApp.isEngineeringModeOrRelease() && pump.pumpDescription.isSetBasalProfileCapable
 
         actions_profileswitch?.visibility = if (!basalProfileEnabled || !pump.isInitialized || pump.isSuspended) View.GONE else View.VISIBLE
@@ -181,7 +183,7 @@ class ActionsFragment : DaggerFragment() {
             actions_extendedbolus?.visibility = View.GONE
             actions_extendedbolus_cancel?.visibility = View.GONE
         } else {
-            val activeExtendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())
+            val activeExtendedBolus = activePlugin.activeTreatments.getExtendedBolusFromHistory(System.currentTimeMillis())
             if (activeExtendedBolus != null) {
                 actions_extendedbolus?.visibility = View.GONE
                 actions_extendedbolus_cancel?.visibility = View.VISIBLE
@@ -197,7 +199,7 @@ class ActionsFragment : DaggerFragment() {
             actions_settempbasal?.visibility = View.GONE
             actions_canceltempbasal?.visibility = View.GONE
         } else {
-            val activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())
+            val activeTemp = activePlugin.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())
             if (activeTemp != null) {
                 actions_settempbasal?.visibility = View.GONE
                 actions_canceltempbasal?.visibility = View.VISIBLE
@@ -220,7 +222,7 @@ class ActionsFragment : DaggerFragment() {
     }
 
     private fun checkPumpCustomActions() {
-        val activePump = configBuilderPlugin.activePump ?: return
+        val activePump = activePlugin.activePumpPlugin ?: return
         val customActions = activePump.customActions ?: return
         removePumpCustomActions()
 
@@ -237,8 +239,9 @@ class ActionsFragment : DaggerFragment() {
             btn.layoutParams = layoutParams
             btn.setOnClickListener { v ->
                 val b = v as SingleClickButton
-                val action = this.pumpCustomActions[b.text.toString()]
-                configBuilderPlugin.activePump!!.executeCustomAction(action!!.customActionType)
+                this.pumpCustomActions[b.text.toString()]?.let {
+                    activePlugin.activePump.executeCustomAction(it.customActionType)
+                }
             }
             val top = activity?.let { ContextCompat.getDrawable(it, customAction.iconResourceId) }
             btn.setCompoundDrawablesWithIntrinsicBounds(null, top, null, null)

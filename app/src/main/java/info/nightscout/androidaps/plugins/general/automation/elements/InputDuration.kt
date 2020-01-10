@@ -1,17 +1,17 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
 import android.widget.LinearLayout
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.NumberPicker
 import java.text.DecimalFormat
 
-class InputDuration(mainApp: MainApp) : Element(mainApp) {
+class InputDuration(injector: HasAndroidInjector) : Element(injector) {
     enum class TimeUnit {
         MINUTES, HOURS
     }
 
-    constructor(mainApp: MainApp, value: Int, unit: TimeUnit) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, value: Int, unit: TimeUnit) : this(injector) {
         this.unit = unit
         this.value = value
     }
@@ -31,7 +31,7 @@ class InputDuration(mainApp: MainApp) : Element(mainApp) {
     }
 
     fun duplicate(): InputDuration {
-        val i = InputDuration(mainApp)
+        val i = InputDuration(injector)
         i.unit = unit
         i.value = value
         return i

@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
@@ -13,9 +13,9 @@ import info.nightscout.androidaps.utils.T;
 public class Objective5 extends Objective {
     @Inject SafetyPlugin safetyPlugin;
 
-    public Objective5() {
+    public Objective5(HasAndroidInjector injector) {
         super("maxiobzero", R.string.objectives_maxiobzero_objective, R.string.objectives_maxiobzero_gate);
-        MainApp.instance().androidInjector().inject(this); // TODO inject or pass itno constructor once AutomationPlugin is prepared for Dagger
+        injector.androidInjector().inject(this);
     }
 
     @Override

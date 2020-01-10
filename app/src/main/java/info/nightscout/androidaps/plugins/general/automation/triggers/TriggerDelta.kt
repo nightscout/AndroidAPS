@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import android.widget.LinearLayout
 import com.google.common.base.Optional
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.logging.LTag
@@ -18,11 +18,11 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 import java.text.DecimalFormat
 
-class TriggerDelta(mainApp: MainApp) : Trigger(mainApp) {
+class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
 
     var units: String = Constants.MGDL
-    private var delta: InputDelta = InputDelta(mainApp)
-    var comparator: Comparator = Comparator(mainApp)
+    private var delta: InputDelta = InputDelta(injector)
+    var comparator: Comparator = Comparator(injector)
 
     companion object {
         private const val MMOL_MAX = 4.0
@@ -31,14 +31,14 @@ class TriggerDelta(mainApp: MainApp) : Trigger(mainApp) {
 
     init {
         units = profileFunction.getUnits()
-        delta = if (units == Constants.MMOL) InputDelta(mainApp, 0.0, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), DeltaType.DELTA)
-        else InputDelta(mainApp, 0.0, (-MGDL_MAX), MGDL_MAX, 1.0, DecimalFormat("1"), DeltaType.DELTA)
+        delta = if (units == Constants.MMOL) InputDelta(injector, 0.0, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), DeltaType.DELTA)
+        else InputDelta(injector, 0.0, (-MGDL_MAX), MGDL_MAX, 1.0, DecimalFormat("1"), DeltaType.DELTA)
     }
 
-    private constructor(mainApp: MainApp, triggerDelta: TriggerDelta) : this(mainApp) {
+    private constructor(injector: HasAndroidInjector, triggerDelta: TriggerDelta) : this(injector) {
         units = triggerDelta.units
-        delta = InputDelta(mainApp, triggerDelta.delta)
-        comparator = Comparator(mainApp, triggerDelta.comparator.value)
+        delta = InputDelta(injector, triggerDelta.delta)
+        comparator = Comparator(injector, triggerDelta.comparator.value)
     }
 
     override fun shouldRun(): Boolean {
@@ -81,8 +81,8 @@ class TriggerDelta(mainApp: MainApp) : Trigger(mainApp) {
         val type = DeltaType.valueOf(JsonHelper.safeGetString(d, "deltaType", ""))
         val value = JsonHelper.safeGetDouble(d, "value")
         delta =
-            if (units == Constants.MMOL) InputDelta(mainApp, value, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), type)
-            else InputDelta(mainApp, value, (-MGDL_MAX), MGDL_MAX, 1.0, DecimalFormat("1"), type)
+            if (units == Constants.MMOL) InputDelta(injector, value, (-MMOL_MAX), MMOL_MAX, 0.1, DecimalFormat("0.1"), type)
+            else InputDelta(injector, value, (-MGDL_MAX), MGDL_MAX, 1.0, DecimalFormat("1"), type)
         comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
         return this
     }
@@ -94,13 +94,13 @@ class TriggerDelta(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.icon_auto_delta)
 
-    override fun duplicate(): Trigger = TriggerDelta(mainApp, this)
+    override fun duplicate(): Trigger = TriggerDelta(injector, this)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.deltalabel, this))
+            .add(StaticLabel(injector, R.string.deltalabel, this))
             .add(comparator)
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.deltalabel_u, units) + ": ", "", delta))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.deltalabel_u, units) + ": ", "", delta))
             .build(root)
     }
 }

@@ -14,9 +14,9 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.logging.L.isEnabled
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
@@ -27,7 +27,8 @@ import javax.inject.Singleton
 @Singleton
 class EversensePlugin @Inject constructor(
     private val sp: SP,
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    resourceHelper: ResourceHelper,
+    aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -35,8 +36,8 @@ class EversensePlugin @Inject constructor(
     .shortName(R.string.eversense_shortname)
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_eversense),
-    rxBus,
-    aapsLogger
+    aapsLogger,
+    resourceHelper
 ), BgSourceInterface {
 
     override fun advancedFilteringSupported(): Boolean {

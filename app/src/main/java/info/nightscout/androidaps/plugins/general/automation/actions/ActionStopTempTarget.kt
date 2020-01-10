@@ -1,14 +1,19 @@
 package info.nightscout.androidaps.plugins.general.automation.actions
 
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import javax.inject.Inject
 
-class ActionStopTempTarget(mainApp: MainApp) : Action(mainApp) {
+class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var activePlugin: ActivePluginProvider
 
     override fun friendlyName(): Int = R.string.stoptemptarget
     override fun shortDescription(): String = resourceHelper.gs(R.string.stoptemptarget)
@@ -21,7 +26,7 @@ class ActionStopTempTarget(mainApp: MainApp) : Action(mainApp) {
             .reason("Automation")
             .source(Source.USER)
             .low(0.0).high(0.0)
-        treatmentsPlugin.addToHistoryTempTarget(tempTarget)
+        activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
         callback.result(PumpEnactResult().success(true).comment(R.string.ok))?.run()
     }
 }

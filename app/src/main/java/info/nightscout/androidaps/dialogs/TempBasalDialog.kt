@@ -6,15 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.OKDialog
@@ -29,10 +28,10 @@ import kotlin.math.abs
 
 class TempBasalDialog : DialogFragmentWithDate() {
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var commandQueue: CommandQueueProvider
 
     private var isPercentPump = true
 
@@ -52,7 +51,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val pumpDescription = configBuilderPlugin.activePump?.pumpDescription ?: return
+        val pumpDescription = activePlugin.activePumpPlugin?.pumpDescription ?: return
         val profile = profileFunction.getProfile() ?: return
 
         val maxTempPercent = pumpDescription.maxTempPercent.toDouble()
@@ -104,20 +103,19 @@ class TempBasalDialog : DialogFragmentWithDate() {
                 val callback: Callback = object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            val i = Intent(mainApp, ErrorHelperActivity::class.java)
+                            val i = Intent(context, ErrorHelperActivity::class.java)
                             i.putExtra("soundid", R.raw.boluserror)
                             i.putExtra("status", result.comment)
                             i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
                             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            mainApp.startActivity(i)
+                            context?.startActivity(i)
                         }
                     }
                 }
-                if (isPercentPump) {
-                    configBuilderPlugin.commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
-                } else {
-                    configBuilderPlugin.commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
-                }
+                if (isPercentPump)
+                    commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
+                else
+                    commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
             })
         }
         return true

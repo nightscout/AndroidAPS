@@ -1,23 +1,25 @@
 package info.nightscout.androidaps.interfaces;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by adrian on 2020-01-07.
- */
-
 public interface ActivePluginProvider {
+
     @Nullable BgSourceInterface getActiveBgSource();
 
-    @NotNull ProfileInterface getActiveProfileInterface();
+    @NotNull ProfileInterface getActiveProfileInterface(); // Forced to LocalProfile if not changed
 
-    @Nullable InsulinInterface getActiveInsulin();
+    @NonNull InsulinInterface getActiveInsulin(); // Forced to RapidActing if not changed
 
     @Nullable APSInterface getActiveAPS();
 
-    @Nullable PumpInterface getActivePump();
+    @Nullable PumpInterface getActivePumpPlugin(); // Use in UI to disable buttons or check if pump is selected
 
-    @Nullable SensitivityInterface getActiveSensitivity();
+    @NotNull PumpInterface getActivePump(); // Use in places not reachable without active pump. Otherwise IllegalStateException is thrown
+
+    @NotNull SensitivityInterface getActiveSensitivity(); // Forced to oref1 if not changed
+
+    @NotNull TreatmentsInterface getActiveTreatments();
 }

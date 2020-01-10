@@ -51,6 +51,7 @@ public class DataService extends DaggerIntentService {
     @Inject PoctechPlugin poctechPlugin;
     @Inject TomatoPlugin tomatoPlugin;
     @Inject XdripPlugin xdripPlugin;
+    @Inject NSProfilePlugin nsProfilePlugin;
 
     public DataService() {
         super("DataService");
@@ -85,7 +86,7 @@ public class DataService extends DaggerIntentService {
             nsClientSourcePlugin.handleNewData(intent);
         } else if (Intents.ACTION_NEW_PROFILE.equals(action)) {
             // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
-            NSProfilePlugin.getPlugin().handleNewData(intent);
+            nsProfilePlugin.handleNewData(intent);
         } else if (acceptNSData &&
                 (Intents.ACTION_NEW_TREATMENT.equals(action) ||
                         Intents.ACTION_CHANGED_TREATMENT.equals(action) ||

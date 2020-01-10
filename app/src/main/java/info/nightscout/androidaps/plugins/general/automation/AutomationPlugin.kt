@@ -1,9 +1,10 @@
 package info.nightscout.androidaps.plugins.general.automation
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Handler
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventChargingState
 import info.nightscout.androidaps.events.EventLocationChange
@@ -40,19 +41,21 @@ import javax.inject.Singleton
 
 @Singleton
 class AutomationPlugin @Inject constructor(
-    private val resourceHelper: ResourceHelper,
-    private val mainApp: MainApp,
+    private val injector: HasAndroidInjector,
+    resourceHelper: ResourceHelper,
+    private val context: Context,
     private val sp: SP,
     private val fabricPrivacy: FabricPrivacy,
     private val loopPlugin: LoopPlugin,
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    private val rxBus: RxBusWrapper,
+    aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(AutomationFragment::class.qualifiedName)
     .pluginName(R.string.automation)
     .shortName(R.string.automation_short)
     .preferencesId(R.xml.pref_automation)
-    .description(R.string.automation_description), rxBus, aapsLogger
+    .description(R.string.automation_description), aapsLogger, resourceHelper
 ) {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -74,9 +77,9 @@ class AutomationPlugin @Inject constructor(
 
     override fun onStart() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            mainApp.startForegroundService(Intent(mainApp, LocationService::class.java))
+            context.startForegroundService(Intent(context, LocationService::class.java))
         else
-            mainApp.startService(Intent(mainApp, LocationService::class.java))
+            context.startService(Intent(context, LocationService::class.java))
 
         super.onStart()
         loadFromSP()
@@ -87,11 +90,11 @@ class AutomationPlugin @Inject constructor(
             .observeOn(Schedulers.io())
             .subscribe({ e ->
                 if (e.isChanged(resourceHelper, R.string.key_location)) {
-                    mainApp.stopService(Intent(mainApp, LocationService::class.java))
+                    context.stopService(Intent(context, LocationService::class.java))
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                        mainApp.startForegroundService(Intent(mainApp, LocationService::class.java))
+                        context.startForegroundService(Intent(context, LocationService::class.java))
                     else
-                        mainApp.startService(Intent(mainApp, LocationService::class.java))
+                        context.startService(Intent(context, LocationService::class.java))
                 }
             }, { fabricPrivacy.logException(it) })
         disposable += rxBus
@@ -124,7 +127,7 @@ class AutomationPlugin @Inject constructor(
     override fun onStop() {
         disposable.clear()
         loopHandler.removeCallbacks(refreshLoop)
-        mainApp.stopService(Intent(mainApp, LocationService::class.java))
+        context.stopService(Intent(context, LocationService::class.java))
         super.onStop()
     }
 
@@ -149,7 +152,7 @@ class AutomationPlugin @Inject constructor(
                 val array = JSONArray(data)
                 for (i in 0 until array.length()) {
                     val o = array.getJSONObject(i)
-                    val event = AutomationEvent(mainApp).fromJSON(o.toString())
+                    val event = AutomationEvent(injector).fromJSON(o.toString())
                     automationEvents.add(event)
                 }
             } catch (e: JSONException) {
@@ -198,36 +201,36 @@ class AutomationPlugin @Inject constructor(
 
     fun getActionDummyObjects(): List<Action> {
         return listOf(
-            //ActionLoopDisable(mainApp),
-            //ActionLoopEnable(mainApp),
-            //ActionLoopResume(mainApp),
-            //ActionLoopSuspend(mainApp),
-            ActionStartTempTarget(mainApp),
-            ActionStopTempTarget(mainApp),
-            ActionNotification(mainApp),
-            ActionProfileSwitchPercent(mainApp),
-            ActionProfileSwitch(mainApp),
-            ActionSendSMS(mainApp)
+            //ActionLoopDisable(injector),
+            //ActionLoopEnable(injector),
+            //ActionLoopResume(injector),
+            //ActionLoopSuspend(injector),
+            ActionStartTempTarget(injector),
+            ActionStopTempTarget(injector),
+            ActionNotification(injector),
+            ActionProfileSwitchPercent(injector),
+            ActionProfileSwitch(injector),
+            ActionSendSMS(injector)
         )
     }
 
     fun getTriggerDummyObjects(): List<Trigger> {
         return listOf(
-            TriggerConnector(mainApp),
-            TriggerTime(mainApp),
-            TriggerRecurringTime(mainApp),
-            TriggerTimeRange(mainApp),
-            TriggerBg(mainApp),
-            TriggerDelta(mainApp),
-            TriggerIob(mainApp),
-            TriggerCOB(mainApp),
-            TriggerProfilePercent(mainApp),
-            TriggerTempTarget(mainApp),
-            TriggerWifiSsid(mainApp),
-            TriggerLocation(mainApp),
-            TriggerAutosensValue(mainApp),
-            TriggerBolusAgo(mainApp),
-            TriggerPumpLastConnection(mainApp)
+            TriggerConnector(injector),
+            TriggerTime(injector),
+            TriggerRecurringTime(injector),
+            TriggerTimeRange(injector),
+            TriggerBg(injector),
+            TriggerDelta(injector),
+            TriggerIob(injector),
+            TriggerCOB(injector),
+            TriggerProfilePercent(injector),
+            TriggerTempTarget(injector),
+            TriggerWifiSsid(injector),
+            TriggerLocation(injector),
+            TriggerAutosensValue(injector),
+            TriggerBolusAgo(injector),
+            TriggerPumpLastConnection(injector)
         )
     }
 

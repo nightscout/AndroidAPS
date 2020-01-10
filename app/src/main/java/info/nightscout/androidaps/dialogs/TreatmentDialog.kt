@@ -8,16 +8,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -34,10 +33,9 @@ import kotlin.math.abs
 
 class TreatmentDialog : DialogFragmentWithDate() {
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var commandQueue: CommandQueueProvider
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {}
@@ -52,11 +50,11 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         if (SafeParse.stringToInt(overview_treatment_carbs.text) > maxCarbs) {
             overview_treatment_carbs.value = 0.0
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.carbsconstraintapplied))
+            ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.carbsconstraintapplied))
         }
         if (SafeParse.stringToDouble(overview_treatment_insulin.text) > maxInsulin) {
             overview_treatment_insulin.value = 0.0
-            ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.bolusconstraintapplied))
+            ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.bolusconstraintapplied))
         }
     }
 
@@ -77,7 +75,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
 
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
-        val pumpDescription = configBuilderPlugin.activePump?.pumpDescription ?: return
+        val pumpDescription = activePlugin.activePumpPlugin?.pumpDescription ?: return
         overview_treatment_carbs.setParams(savedInstanceState?.getDouble("overview_treatment_carbs")
             ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, ok, textWatcher)
         overview_treatment_insulin.setParams(savedInstanceState?.getDouble("overview_treatment_insulin")
@@ -85,7 +83,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val pumpDescription = configBuilderPlugin.activePump?.pumpDescription
+        val pumpDescription = activePlugin.activePumpPlugin?.pumpDescription
             ?: return false
         val insulin = SafeParse.stringToDouble(overview_treatment_insulin.text)
         val carbs = SafeParse.stringToInt(overview_treatment_carbs.text)
@@ -117,20 +115,20 @@ class TreatmentDialog : DialogFragmentWithDate() {
                     detailedBolusInfo.context = context
                     detailedBolusInfo.source = Source.USER
                     if (!(recordOnlyChecked && (detailedBolusInfo.insulin > 0 || pumpDescription.storesCarbInfo))) {
-                        configBuilderPlugin.commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                        commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    val i = Intent(mainApp, ErrorHelperActivity::class.java)
+                                    val i = Intent(context, ErrorHelperActivity::class.java)
                                     i.putExtra("soundid", R.raw.boluserror)
                                     i.putExtra("status", result.comment)
                                     i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
                                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    mainApp.startActivity(i)
+                                    context?.startActivity(i)
                                 }
                             }
                         })
                     } else
-                        treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false)
+                        activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
                 })
             }
         } else

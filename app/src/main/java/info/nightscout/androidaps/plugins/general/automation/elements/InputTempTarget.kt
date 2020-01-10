@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
 import android.widget.LinearLayout
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.NumberPicker
 import java.text.DecimalFormat
 
-class InputTempTarget(mainApp: MainApp) : Element(mainApp) {
+class InputTempTarget(injector: HasAndroidInjector) : Element(injector) {
     var units = Constants.MGDL
     var value = 0.0
 
@@ -15,7 +15,7 @@ class InputTempTarget(mainApp: MainApp) : Element(mainApp) {
         value = if (units == Constants.MMOL) 6.0 else 110.0
     }
 
-    constructor(mainApp: MainApp, inputTempTarget: InputTempTarget) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, inputTempTarget: InputTempTarget) : this(injector) {
         value = inputTempTarget.value
         units = inputTempTarget.units
     }

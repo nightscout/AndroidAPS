@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import android.widget.LinearLayout
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorExists
@@ -11,15 +11,15 @@ import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabe
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
-class TriggerTempTarget(mainApp: MainApp) : Trigger(mainApp) {
-    var comparator = ComparatorExists(mainApp)
+class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
+    var comparator = ComparatorExists(injector)
 
-    constructor(mainApp: MainApp, compare: ComparatorExists.Compare) : this(mainApp) {
-        comparator = ComparatorExists(mainApp, compare)
+    constructor(injector: HasAndroidInjector, compare: ComparatorExists.Compare) : this(injector) {
+        comparator = ComparatorExists(injector, compare)
     }
 
-    constructor(mainApp: MainApp, triggerTempTarget: TriggerTempTarget) : this(mainApp) {
-        comparator = ComparatorExists(mainApp, triggerTempTarget.comparator.value)
+    constructor(injector: HasAndroidInjector, triggerTempTarget: TriggerTempTarget) : this(injector) {
+        comparator = ComparatorExists(injector, triggerTempTarget.comparator.value)
     }
 
     override fun shouldRun(): Boolean {
@@ -58,11 +58,11 @@ class TriggerTempTarget(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_keyboard_tab)
 
-    override fun duplicate(): Trigger = TriggerTempTarget(mainApp, this)
+    override fun duplicate(): Trigger = TriggerTempTarget(injector, this)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.careportal_temporarytarget, this))
+            .add(StaticLabel(injector, R.string.careportal_temporarytarget, this))
             .add(comparator)
             .build(root)
     }

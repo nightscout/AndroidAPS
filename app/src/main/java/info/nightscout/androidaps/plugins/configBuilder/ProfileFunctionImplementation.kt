@@ -13,8 +13,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ProfileFunctionImplementation @Inject constructor(
-    private val sp: SP,
-    private val configBuilderPlugin: ConfigBuilderPlugin
+    private val sp: SP
 ) : ProfileFunction {
 
     override fun getProfileName(): String =
@@ -50,7 +49,6 @@ class ProfileFunctionImplementation @Inject constructor(
         profileSwitch.source = Source.USER
         profileSwitch.profileName = profileName
         profileSwitch.profileJson = profile.data.toString()
-        profileSwitch.profilePlugin = configBuilderPlugin.activeProfileInterface::class.java.name
         profileSwitch.durationInMinutes = duration
         profileSwitch.isCPP = percentage != 100 || timeShift != 0
         profileSwitch.timeshift = timeShift

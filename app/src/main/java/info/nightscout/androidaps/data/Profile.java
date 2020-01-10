@@ -228,7 +228,7 @@ public class Profile {
 
         if (isValid) {
             // Check for hours alignment
-            PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+            PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePumpPlugin();
             if (pump != null && !pump.getPumpDescription().is30minBasalRatesCapable) {
                 for (int index = 0; index < basal_v.size(); index++) {
                     long secondsFromMidnight = basal_v.keyAt(index);

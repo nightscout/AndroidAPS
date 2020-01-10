@@ -1,17 +1,12 @@
 package info.nightscout.androidaps.plugins.constraints.dstHelper
 
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ConstraintsInterface
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
@@ -24,29 +19,31 @@ import javax.inject.Singleton
 
 @Singleton
 class DstHelperPlugin @Inject constructor(
+    private var injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    rxBus: RxBusWrapper,
-    var resourceHelper: ResourceHelper,
-    var mainApp: MainApp,
-    var sp: SP,
-    var configBuilderPlugin: ConfigBuilderPlugin,
-    var loopPlugin: LoopPlugin
-    ) : PluginBase(PluginDescription()
+    private var rxBus: RxBusWrapper,
+    resourceHelper: ResourceHelper,
+    private var sp: SP,
+    private var activePlugin: ActivePluginProvider,
+    private var loopPlugin: LoopPlugin
+) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .neverVisible(true)
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.dst_plugin_name),
-    rxBus, aapsLogger
+    aapsLogger, resourceHelper
 ), ConstraintsInterface {
 
-    private val DISABLE_TIMEFRAME_HOURS = -3
-    private val WARN_PRIOR_TIMEFRAME_HOURS = 12
+    companion object {
+        private const val DISABLE_TIME_FRAME_HOURS = -3
+        private const val WARN_PRIOR_TIME_FRAME_HOURS = 12
+    }
 
     //Return false if time to DST change happened in the last 3 hours.
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        val pump = configBuilderPlugin.activePump
-        if (pump == null || pump.canHandleDST()) {
+        val pump = activePlugin.activePumpPlugin ?: return value
+        if (pump.canHandleDST()) {
             aapsLogger.debug(LTag.CONSTRAINTS, "Pump can handle DST")
             return value
         }
@@ -54,7 +51,7 @@ class DstHelperPlugin @Inject constructor(
         if (willBeDST(cal)) {
             val snoozedTo: Long = sp.getLong(R.string.key_snooze_dst_in24h, 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-                val notification = NotificationWithAction(mainApp, Notification.DST_IN_24H, resourceHelper.gs(R.string.dst_in_24h_warning), Notification.LOW)
+                val notification = NotificationWithAction(injector, Notification.DST_IN_24H, resourceHelper.gs(R.string.dst_in_24h_warning), Notification.LOW)
                 notification.action(R.string.snooze, Runnable {
                     sp.putLong(R.string.key_snooze_dst_in24h, System.currentTimeMillis() + T.hours(24).msecs())
                 })
@@ -69,7 +66,7 @@ class DstHelperPlugin @Inject constructor(
             if (!loopPlugin.isSuspended) {
                 val snoozedTo: Long = sp.getLong(R.string.key_snooze_loopdisabled, 0L)
                 if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-                    val notification = NotificationWithAction(mainApp, Notification.DST_LOOP_DISABLED, resourceHelper.gs(R.string.dst_loop_disabled_warning), Notification.LOW)
+                    val notification = NotificationWithAction(injector, Notification.DST_LOOP_DISABLED, resourceHelper.gs(R.string.dst_loop_disabled_warning), Notification.LOW)
                     notification.action(R.string.snooze, Runnable {
                         sp.putLong(R.string.key_snooze_loopdisabled, System.currentTimeMillis() + T.hours(24).msecs())
                     })
@@ -85,13 +82,13 @@ class DstHelperPlugin @Inject constructor(
 
     fun wasDST(now: Calendar): Boolean {
         val ago = now.clone() as Calendar
-        ago.add(Calendar.HOUR, DISABLE_TIMEFRAME_HOURS)
+        ago.add(Calendar.HOUR, DISABLE_TIME_FRAME_HOURS)
         return now[Calendar.DST_OFFSET] != ago[Calendar.DST_OFFSET]
     }
 
     fun willBeDST(now: Calendar): Boolean {
         val ago = now.clone() as Calendar
-        ago.add(Calendar.HOUR, WARN_PRIOR_TIMEFRAME_HOURS)
+        ago.add(Calendar.HOUR, WARN_PRIOR_TIME_FRAME_HOURS)
         return now[Calendar.DST_OFFSET] != ago[Calendar.DST_OFFSET]
     }
 }

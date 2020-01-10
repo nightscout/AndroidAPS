@@ -26,12 +26,13 @@ import javax.inject.Singleton
 
 @Singleton
 class WearPlugin @Inject constructor(
-    private val resourceHelper: ResourceHelper,
+    aapsLogger: AAPSLogger,
+    resourceHelper: ResourceHelper,
     private val sp: SP,
     private val mainApp: MainApp,
     private val fabricPrivacy: FabricPrivacy,
     private val loopPlugin: Lazy<LoopPlugin>,
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    private val rxBus: RxBusWrapper
 
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
@@ -40,7 +41,7 @@ class WearPlugin @Inject constructor(
     .shortName(R.string.wear_shortname)
     .preferencesId(R.xml.pref_wear)
     .description(R.string.description_wear),
-    rxBus, aapsLogger
+    aapsLogger, resourceHelper
 ) {
 
     private val disposable = CompositeDisposable()
@@ -84,7 +85,8 @@ class WearPlugin @Inject constructor(
             .observeOn(Schedulers.io())
             .subscribe({
                 if (WatchUpdaterService.shouldReportLoopStatus(loopPlugin.get().isEnabled(PluginType.LOOP)))
-                    sendDataToWatch(status = true, basals = false, bgValue = false) }) { fabricPrivacy.logException(it) })
+                    sendDataToWatch(status = true, basals = false, bgValue = false)
+            }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventBolusRequested::class.java)
             .observeOn(Schedulers.io())

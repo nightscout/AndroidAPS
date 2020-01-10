@@ -38,6 +38,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
@@ -60,12 +61,14 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
     @Inject RxBusWrapper rxBus;
     @Inject SP sp;
     @Inject ProfileFunction profileFunction;
-    @Inject ActivePluginProvider activePluginProvider;
+    @Inject ActivePluginProvider activePlugin;
     @Inject DanaRSPlugin danaRSPlugin;
     @Inject DanaRPlugin danaRPlugin;
     @Inject DanaRv2Plugin danaRv2Plugin;
     @Inject DanaRKoreanPlugin danaRKoreanPlugin;
+    @Inject LocalInsightPlugin localInsightPlugin;
     @Inject ConfigBuilderPlugin configBuilderPlugin;
+    @Inject CommandQueueProvider commandQueue;
 
     private static Logger log = LoggerFactory.getLogger(TDDStatsActivity.class);
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -157,7 +160,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
         }
         totalBaseBasal.setText(TBB);
 
-        if (!activePluginProvider.getActivePump().getPumpDescription().needsManualTDDLoad)
+        if (!activePlugin.getActivePump().getPumpDescription().needsManualTDDLoad)
             reloadButton.setVisibility(View.GONE);
 
         // stats table
@@ -261,7 +264,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
                 statsMessage.setVisibility(View.VISIBLE);
                 statsMessage.setText(resourceHelper.gs(R.string.danar_stats_warning_Message));
             });
-            configBuilderPlugin.getCommandQueue().loadTDDs(new Callback() {
+            commandQueue.loadTDDs(new Callback() {
                 @Override
                 public void run() {
                     loadDataFromDB();
@@ -445,7 +448,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
                         TableLayout.LayoutParams.WRAP_CONTENT));
             }
 
-            if (isOldData(historyList) && activePluginProvider.getActivePump().getPumpDescription().needsManualTDDLoad) {
+            if (isOldData(historyList) && activePlugin.getActivePump().getPumpDescription().needsManualTDDLoad) {
                 statsMessage.setVisibility(View.VISIBLE);
                 statsMessage.setText(resourceHelper.gs(R.string.danar_stats_olddata_Message));
 
@@ -525,7 +528,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
 
     public boolean isOldData(List<TDD> historyList) {
 
-        boolean startsYesterday = danaRPlugin.isEnabled() || danaRSPlugin.isEnabled() || danaRv2Plugin.isEnabled() || danaRKoreanPlugin.isEnabled() || LocalInsightPlugin.getPlugin().isEnabled();
+        boolean startsYesterday = danaRPlugin.isEnabled() || danaRSPlugin.isEnabled() || danaRv2Plugin.isEnabled() || danaRKoreanPlugin.isEnabled() || localInsightPlugin.isEnabled();
 
         DateFormat df = new SimpleDateFormat("dd.MM.", Locale.getDefault());
         return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date(System.currentTimeMillis() - (startsYesterday ? 1000 * 60 * 60 * 24 : 0))))));

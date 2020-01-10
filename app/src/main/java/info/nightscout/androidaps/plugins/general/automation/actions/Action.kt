@@ -2,33 +2,17 @@ package info.nightscout.androidaps.plugins.general.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 import kotlin.reflect.full.primaryConstructor
 
-abstract class Action(val mainApp: MainApp) {
+abstract class Action(val injector: HasAndroidInjector) {
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var sp: SP
-    @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
-    @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
 
     var precondition: Trigger? = null
 
@@ -38,7 +22,7 @@ abstract class Action(val mainApp: MainApp) {
     @DrawableRes abstract fun icon(): Int
 
     init {
-        mainApp.androidInjector().inject(this)
+        injector.androidInjector().inject(this)
     }
 
     open fun generateDialog(root: LinearLayout) {}
@@ -62,7 +46,7 @@ abstract class Action(val mainApp: MainApp) {
             val type = obj.getString("type")
             val data = obj.optJSONObject("data")
             val clazz = Class.forName(type).kotlin
-            return (clazz.primaryConstructor?.call(mainApp) as Action).fromJSON(data?.toString()
+            return (clazz.primaryConstructor?.call(injector) as Action).fromJSON(data?.toString()
                 ?: "")
             //return (clazz.newInstance() as Action).fromJSON(data?.toString() ?: "")
         } catch (e: ClassNotFoundException) {

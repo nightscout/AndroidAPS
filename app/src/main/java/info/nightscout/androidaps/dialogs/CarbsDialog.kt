@@ -12,13 +12,13 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.CareportalEvent
-import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.*
@@ -38,6 +38,7 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin;
 
     companion object {
         private const val FAV1_DEFAULT = 5
@@ -118,7 +119,7 @@ class CarbsDialog : DialogFragmentWithDate() {
             validateInputs()
         }
 
-        DatabaseHelper.actualBg()?.let { bgReading ->
+        iobCobCalculatorPlugin.actualBg()?.let { bgReading ->
             if (bgReading.value < 72)
                 overview_carbs_hypo_tt.isChecked = true
         }

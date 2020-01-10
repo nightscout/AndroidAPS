@@ -6,12 +6,12 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CareportalPlugin @Inject constructor(rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+class CareportalPlugin @Inject constructor(aapsLogger: AAPSLogger, resourceHelper: ResourceHelper
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(CareportalFragment::class.java.name)
@@ -20,11 +20,6 @@ class CareportalPlugin @Inject constructor(rxBus: RxBusWrapper, aapsLogger: AAPS
     .visibleByDefault(Config.NSCLIENT)
     .enableByDefault(Config.NSCLIENT)
     .description(R.string.description_careportal),
-    rxBus, aapsLogger
+    aapsLogger, resourceHelper
 
-) {
-
-    override fun specialEnableCondition(): Boolean {
-        return Config.NSCLIENT
-    }
-}
+)

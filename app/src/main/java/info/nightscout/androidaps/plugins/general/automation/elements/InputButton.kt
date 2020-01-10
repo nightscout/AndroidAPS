@@ -2,13 +2,13 @@ package info.nightscout.androidaps.plugins.general.automation.elements
 
 import android.widget.Button
 import android.widget.LinearLayout
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 
-class InputButton(mainApp: MainApp) : Element(mainApp) {
+class InputButton(injector: HasAndroidInjector) : Element(injector) {
     var text: String? = null
     var runnable: Runnable? = null
 
-    constructor(mainApp: MainApp, text: String, runnable: Runnable) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, text: String, runnable: Runnable) : this(injector) {
         this.text = text
         this.runnable = runnable
     }

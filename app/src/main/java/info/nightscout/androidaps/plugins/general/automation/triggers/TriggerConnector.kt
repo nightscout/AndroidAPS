@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
@@ -18,11 +18,11 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
-class TriggerConnector(mainApp: MainApp) : Trigger(mainApp) {
+class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
     var list: MutableList<Trigger> = ArrayList()
     private var connectorType: Type = Type.AND
     // TODO move to TriggerConnector
-    //var connector: TriggerConnector = TriggerConnector(mainApp, TriggerConnector.Type.AND)
+    //var connector: TriggerConnector = TriggerConnector(injector, TriggerConnector.Type.AND)
 
     enum class Type {
         AND, OR, XOR;
@@ -52,7 +52,7 @@ class TriggerConnector(mainApp: MainApp) : Trigger(mainApp) {
         }
     }
 
-    constructor(mainApp: MainApp, connectorType: Type) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, connectorType: Type) : this(injector) {
         this.connectorType = connectorType
     }
 
@@ -120,7 +120,7 @@ class TriggerConnector(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.absent()
 
-    override fun duplicate(): Trigger = TriggerConnector(mainApp, connectorType)
+    override fun duplicate(): Trigger = TriggerConnector(injector, connectorType)
 
     override fun generateDialog(root: LinearLayout) {
         val padding = resourceHelper.dpToPx(5)

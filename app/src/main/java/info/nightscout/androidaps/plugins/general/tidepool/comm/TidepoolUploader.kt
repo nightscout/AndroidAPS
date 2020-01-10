@@ -151,7 +151,7 @@ class TidepoolUploader @Inject constructor(
                 if (session.datasetReply == null) {
                     rxBus.send(EventTidepoolStatus(("Creating new dataset")))
                     val call = session.service.openDataSet(session.token!!, session.authReply!!.userid!!,
-                        OpenDatasetRequestMessage((configBuilderPlugin.activePump?.serialNumber()
+                        OpenDatasetRequestMessage((configBuilderPlugin.activePumpPlugin?.serialNumber()
                             ?: InstanceId.instanceId())).getBody())
                     call.enqueue(TidepoolCallback<DatasetReplyMessage>(rxBus, session, "Open New Dataset", {
                         connectionStatus = ConnectionStatus.CONNECTED

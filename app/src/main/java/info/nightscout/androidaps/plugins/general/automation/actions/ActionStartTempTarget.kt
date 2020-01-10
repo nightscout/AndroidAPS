@@ -2,13 +2,14 @@ package info.nightscout.androidaps.plugins.general.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorExists
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDuration
 import info.nightscout.androidaps.plugins.general.automation.elements.InputTempTarget
@@ -19,14 +20,19 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetDouble
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
+import javax.inject.Inject
 
-class ActionStartTempTarget(mainApp: MainApp) : Action(mainApp) {
-    var value = InputTempTarget(mainApp)
-    var duration = InputDuration(mainApp, 0, InputDuration.TimeUnit.MINUTES)
+class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var activePlugin: ActivePluginProvider
+
+    var value = InputTempTarget(injector)
+    var duration = InputDuration(injector, 0, InputDuration.TimeUnit.MINUTES)
 
     init {
-        precondition = TriggerTempTarget(mainApp, ComparatorExists.Compare.NOT_EXISTS)
+        precondition = TriggerTempTarget(injector, ComparatorExists.Compare.NOT_EXISTS)
     }
 
     override fun friendlyName(): Int = R.string.starttemptarget
@@ -34,15 +40,15 @@ class ActionStartTempTarget(mainApp: MainApp) : Action(mainApp) {
     @DrawableRes override fun icon(): Int = R.drawable.icon_cp_cgm_target
 
     override fun doAction(callback: Callback) {
-        treatmentsPlugin.addToHistoryTempTarget(tt())
+        activePlugin.activeTreatments.addToHistoryTempTarget(tt())
         callback.result(PumpEnactResult().success(true).comment(R.string.ok))?.run()
     }
 
     override fun generateDialog(root: LinearLayout) {
         val unitResId = if (value.units == Constants.MGDL) R.string.mgdl else R.string.mmol
         LayoutBuilder()
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.careportal_temporarytarget) + "\n[" + resourceHelper.gs(unitResId) + "]", "", value))
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.careportal_newnstreatment_duration_min_label), "", duration))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.careportal_temporarytarget) + "\n[" + resourceHelper.gs(unitResId) + "]", "", value))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.careportal_newnstreatment_duration_min_label), "", duration))
             .build(root)
     }
 

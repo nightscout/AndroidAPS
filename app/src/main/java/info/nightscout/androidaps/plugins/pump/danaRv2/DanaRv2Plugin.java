@@ -18,6 +18,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -58,7 +59,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     public static DanaRv2Plugin getPlugin() {
         if (plugin == null)
             throw new IllegalStateException("Accessing DanaRv2Plugin before first instantiation");
-       return plugin;
+        return plugin;
     }
 
     @Inject
@@ -69,9 +70,11 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             ResourceHelper resourceHelper,
             ConstraintChecker constraintChecker,
             TreatmentsPlugin treatmentsPlugin,
-            SP sp
+            SP sp,
+            CommandQueueProvider commandQueue
+
     ) {
-        super(rxBus, aapsLogger);
+        super(resourceHelper, aapsLogger, commandQueue);
         plugin = this;
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
@@ -154,7 +157,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     }
 
     // Pump interface
-    @Override
+    @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
@@ -221,7 +224,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     }
 
     // This is called from APS
-    @Override
+    @NonNull @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
@@ -297,7 +300,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         return result;
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         DanaRPump pump = DanaRPump.getInstance();
         PumpEnactResult result = new PumpEnactResult();
@@ -372,7 +375,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         return result;
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
         TemporaryBasal runningTB = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis());
@@ -396,7 +399,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         }
     }
 
-    @Override
+    @NonNull @Override
     public PumpType model() {
         return PumpType.DanaRv2;
     }

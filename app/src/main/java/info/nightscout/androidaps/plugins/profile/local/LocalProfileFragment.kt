@@ -15,7 +15,6 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.Companion.MIN_DIA
 import info.nightscout.androidaps.plugins.profile.local.events.EventLocalProfileChanged
 import info.nightscout.androidaps.utils.*
@@ -30,7 +29,7 @@ import javax.inject.Inject
 class LocalProfileFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePluginProvider: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var localProfilePlugin: LocalProfilePlugin
 
@@ -94,7 +93,7 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     fun build() {
-        val pumpDescription = activePluginProvider.activePump?.pumpDescription ?: return
+        val pumpDescription = activePlugin.activePumpPlugin?.pumpDescription ?: return
         val units = if (localProfilePlugin.currentProfile().mgdl) Constants.MGDL else Constants.MMOL
 
         localprofile_name.removeTextChangedListener(textWatch)

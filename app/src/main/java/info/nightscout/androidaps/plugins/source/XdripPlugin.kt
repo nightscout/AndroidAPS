@@ -11,24 +11,25 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.BundleLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.services.Intents
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class XdripPlugin @Inject constructor(
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    resourceHelper: ResourceHelper,
+    aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginName(R.string.xdrip)
     .description(R.string.description_source_xdrip),
-    rxBus,
-    aapsLogger
+    aapsLogger,
+    resourceHelper
 ), BgSourceInterface {
 
-    var advancedFiltering = false
+    private var advancedFiltering = false
 
     override fun advancedFilteringSupported(): Boolean {
         return advancedFiltering
@@ -48,7 +49,7 @@ class XdripPlugin @Inject constructor(
         MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP")
     }
 
-    fun setSource(source: String) {
+    private fun setSource(source: String) {
         advancedFiltering = source.contains("G5 Native") || source.contains("G6 Native")
     }
 }

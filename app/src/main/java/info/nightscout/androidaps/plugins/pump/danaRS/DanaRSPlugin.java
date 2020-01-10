@@ -5,10 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import androidx.preference.Preference;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
+import androidx.preference.Preference;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -28,14 +27,15 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.DanaRInterface;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -68,24 +68,17 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 @Singleton
-public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface {
+public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface {
     private CompositeDisposable disposable = new CompositeDisposable();
-    
+
     private final MainApp mainApp;
     private final ResourceHelper resourceHelper;
     private final ConstraintChecker constraintChecker;
     private final ProfileFunction profileFunction;
     private final TreatmentsPlugin treatmentsPlugin;
     private final SP sp;
-
-    private static DanaRSPlugin plugin = null;
-
-    @Deprecated
-    public static DanaRSPlugin getPlugin() {
-        if (plugin == null)
-            throw new IllegalStateException("Accessing DanaRSPlugin before first instantiation");
-        return plugin;
-    }
+    private final RxBusWrapper rxBus;
+    private final CommandQueueProvider commandQueue;
 
     private static DanaRSService danaRSService;
 
@@ -103,24 +96,26 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             ConstraintChecker constraintChecker,
             ProfileFunction profileFunction,
             TreatmentsPlugin treatmentsPlugin,
-            info.nightscout.androidaps.utils.sharedPreferences.SP sp
+            SP sp,
+            CommandQueueProvider commandQueue
     ) {
         super(new PluginDescription()
-                .mainType(PluginType.PUMP)
-                .fragmentClass(DanaRFragment.class.getName())
-                .pluginName(R.string.danarspump)
-                .shortName(R.string.danarspump_shortname)
-                .preferencesId(R.xml.pref_danars)
-                .description(R.string.description_pump_dana_rs),
-                rxBus, aapsLogger
+                        .mainType(PluginType.PUMP)
+                        .fragmentClass(DanaRFragment.class.getName())
+                        .pluginName(R.string.danarspump)
+                        .shortName(R.string.danarspump_shortname)
+                        .preferencesId(R.xml.pref_danars)
+                        .description(R.string.description_pump_dana_rs),
+                aapsLogger, resourceHelper, commandQueue
         );
-        plugin = this;
         this.mainApp = maiApp;
+        this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
         this.constraintChecker = constraintChecker;
         this.profileFunction = profileFunction;
         this.treatmentsPlugin = treatmentsPlugin;
         this.sp = sp;
+        this.commandQueue = commandQueue;
 
         pumpDescription.setPumpDescription(PumpType.DanaRS);
     }
@@ -138,12 +133,12 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         Intent intent = new Intent(mainApp, DanaRSService.class);
         mainApp.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> mainApp.unbindService(mConnection), exception -> FabricPrivacy.getInstance().logException(exception))
         );
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventDanaRSDeviceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> loadAddress(), exception -> FabricPrivacy.getInstance().logException(exception))
@@ -158,11 +153,6 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
 
         disposable.clear();
         super.onStop();
-    }
-
-    @Override
-    public void switchAllowed(boolean newState, FragmentActivity activity, @NonNull PluginType type) {
-        confirmPumpPluginActivation(newState, activity, type);
     }
 
     private ServiceConnection mConnection = new ServiceConnection() {
@@ -300,7 +290,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         return danaRSService.isConnected() || danaRSService.isConnecting();
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
         PumpEnactResult result = new PumpEnactResult();
 
@@ -312,22 +302,22 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         if (!isInitialized()) {
             getAapsLogger().error("setNewBasalProfile not initialized");
             Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, resourceHelper.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
-            getRxBus().send(new EventNewNotification(notification));
+            rxBus.send(new EventNewNotification(notification));
             result.comment = resourceHelper.gs(R.string.pumpNotInitializedProfileNotSet);
             return result;
         } else {
-            getRxBus().send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+            rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
         if (!danaRSService.updateBasalsInPump(profile)) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
-            getRxBus().send(new EventNewNotification(notification));
+            rxBus.send(new EventNewNotification(notification));
             result.comment = resourceHelper.gs(R.string.failedupdatebasalprofile);
             return result;
         } else {
-            getRxBus().send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
-            getRxBus().send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+            rxBus.send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
             Notification notification = new Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60);
-            getRxBus().send(new EventNewNotification(notification));
+            rxBus.send(new EventNewNotification(notification));
             result.success = true;
             result.enacted = true;
             result.comment = "OK";
@@ -375,7 +365,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         return DanaRPump.getInstance().batteryRemaining;
     }
 
-    @Override
+    @NonNull @Override
     public synchronized PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
@@ -457,7 +447,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     // This is called from APS
-    @Override
+    @NonNull @Override
     public synchronized PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         // Recheck pump status if older than 30 min
 
@@ -535,7 +525,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         return result;
     }
 
-    @Override
+    @NonNull @Override
     public synchronized PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         DanaRPump pump = DanaRPump.getInstance();
         PumpEnactResult result = new PumpEnactResult();
@@ -610,7 +600,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         return result;
     }
 
-    @Override
+    @NonNull @Override
     public synchronized PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         DanaRPump pump = DanaRPump.getInstance();
         insulin = constraintChecker.applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
@@ -650,7 +640,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         return result;
     }
 
-    @Override
+    @NonNull @Override
     public synchronized PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
         TemporaryBasal runningTB = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis());
@@ -674,7 +664,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         }
     }
 
-    @Override
+    @NonNull @Override
     public synchronized PumpEnactResult cancelExtendedBolus() {
         PumpEnactResult result = new PumpEnactResult();
         ExtendedBolus runningEB = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis());
@@ -696,12 +686,12 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         }
     }
 
-    @Override
+    @NonNull @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
         DanaRPump pump = DanaRPump.getInstance();
         long now = System.currentTimeMillis();
         if (pump.lastConnection + 5 * 60 * 1000L < System.currentTimeMillis()) {
-            return null;
+            return new JSONObject();
         }
         JSONObject pumpjson = new JSONObject();
         JSONObject battery = new JSONObject();
@@ -747,27 +737,27 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         return pumpjson;
     }
 
-    @Override
+    @NonNull @Override
     public ManufacturerType manufacturer() {
         return ManufacturerType.Sooil;
     }
 
-    @Override
+    @NonNull @Override
     public PumpType model() {
         return PumpType.DanaRS;
     }
 
-    @Override
+    @NonNull @Override
     public String serialNumber() {
         return DanaRPump.getInstance().serialNumber;
     }
 
-    @Override
+    @NonNull @Override
     public PumpDescription getPumpDescription() {
         return pumpDescription;
     }
 
-    @Override
+    @NonNull @Override
     public String shortStatus(boolean veryShort) {
         DanaRPump pump = DanaRPump.getInstance();
         String ret = "";
@@ -800,7 +790,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         return false;
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult loadTDDs() {
         return loadHistory(RecordTypes.RECORD_TYPE_DAILY);
     }

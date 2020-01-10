@@ -5,11 +5,11 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.annotation.StringRes
 import com.dpro.widgets.WeekdaysPicker
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import java.util.*
 
-class InputWeekDay(mainApp: MainApp) : Element(mainApp) {
+class InputWeekDay(injector: HasAndroidInjector) : Element(injector) {
 
     enum class DayOfWeek {
         MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY;

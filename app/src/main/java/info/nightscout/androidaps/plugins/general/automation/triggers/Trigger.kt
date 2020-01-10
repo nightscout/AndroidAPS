@@ -8,12 +8,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseTriggerDialog
 import info.nightscout.androidaps.plugins.general.automation.events.EventTriggerChanged
@@ -22,7 +21,6 @@ import info.nightscout.androidaps.plugins.general.automation.events.EventTrigger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.services.LastLocationDataContainer
-import info.nightscout.androidaps.services.LocationService
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
@@ -30,7 +28,7 @@ import org.json.JSONObject
 import javax.inject.Inject
 import kotlin.reflect.full.primaryConstructor
 
-abstract class Trigger(val mainApp: MainApp) {
+abstract class Trigger(val injector: HasAndroidInjector) {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -38,11 +36,11 @@ abstract class Trigger(val mainApp: MainApp) {
     @Inject lateinit var sp: SP
     @Inject lateinit var locationDataContainer: LastLocationDataContainer
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var activePluginProvider: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
     init {
-        mainApp.androidInjector().inject(this)
+        injector.androidInjector().inject(this)
     }
 
     abstract fun shouldRun(): Boolean
@@ -77,7 +75,7 @@ abstract class Trigger(val mainApp: MainApp) {
             val type = obj.getString("type")
             val data = obj.getJSONObject("data")
             val clazz = Class.forName(type).kotlin
-            return (clazz.primaryConstructor?.call(mainApp) as Trigger).fromJSON(data?.toString()
+            return (clazz.primaryConstructor?.call(injector) as Trigger).fromJSON(data?.toString()
                 ?: "")
         } catch (e: ClassNotFoundException) {
             aapsLogger.error("Unhandled exception", e)

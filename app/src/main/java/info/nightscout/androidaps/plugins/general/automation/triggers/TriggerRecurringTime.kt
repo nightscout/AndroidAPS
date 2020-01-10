@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import android.widget.LinearLayout
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.logging.LTag
@@ -17,11 +17,11 @@ import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
 import java.util.*
 
-class TriggerRecurringTime(mainApp: MainApp) : Trigger(mainApp) {
-    private val days = InputWeekDay(mainApp)
-    private val time = InputTime(mainApp)
+class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
+    private val days = InputWeekDay(injector)
+    private val time = InputTime(injector)
 
-    constructor(mainApp: MainApp, triggerRecurringTime: TriggerRecurringTime) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, triggerRecurringTime: TriggerRecurringTime) : this(injector) {
         this.time.value = triggerRecurringTime.time.value
         if (days.weekdays.size >= 0)
             System.arraycopy(triggerRecurringTime.days.weekdays, 0, days.weekdays, 0, triggerRecurringTime.days.weekdays.size)
@@ -86,7 +86,7 @@ class TriggerRecurringTime(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_access_alarm_24dp)
 
-    override fun duplicate(): Trigger = TriggerRecurringTime(mainApp, this)
+    override fun duplicate(): Trigger = TriggerRecurringTime(injector, this)
 
     private fun toMills(minutesSinceMidnight: Int): Long = MidnightTime.calc() + T.mins(minutesSinceMidnight.toLong()).msecs()
 
@@ -94,7 +94,7 @@ class TriggerRecurringTime(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.recurringTime, this))
+            .add(StaticLabel(injector, R.string.recurringTime, this))
             .add(days)
             .add(time)
             .build(root)

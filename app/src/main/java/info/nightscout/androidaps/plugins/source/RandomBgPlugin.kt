@@ -11,11 +11,11 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.extensions.isRunningTest
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,7 +24,8 @@ import kotlin.math.sin
 
 @Singleton
 class RandomBgPlugin @Inject constructor(
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger,
+    resourceHelper: ResourceHelper,
+    aapsLogger: AAPSLogger,
     private var virtualPumpPlugin: VirtualPumpPlugin
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
@@ -32,8 +33,9 @@ class RandomBgPlugin @Inject constructor(
     .pluginName(R.string.randombg)
     .shortName(R.string.randombg_short)
     .description(R.string.description_source_randombg),
-    rxBus,
-    aapsLogger), BgSourceInterface {
+    aapsLogger,
+    resourceHelper
+), BgSourceInterface {
 
     private val loopHandler = Handler()
     private lateinit var refreshLoop: Runnable

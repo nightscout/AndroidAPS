@@ -27,12 +27,13 @@ import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.collections.ArrayList
+import kotlin.math.max
 
 @Singleton
 class LocalProfilePlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rxBus: RxBusWrapper,
-    private val resourceHelper: ResourceHelper,
+    private val rxBus: RxBusWrapper,
+    resourceHelper: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction
 ) : PluginBase(PluginDescription()
@@ -41,7 +42,7 @@ class LocalProfilePlugin @Inject constructor(
     .enableByDefault(true)
     .pluginName(R.string.localprofile)
     .shortName(R.string.localprofile_shortname)
-    .description(R.string.description_profile_local), rxBus, aapsLogger), ProfileInterface {
+    .description(R.string.description_profile_local), aapsLogger, resourceHelper), ProfileInterface {
 
     var rawProfile: ProfileStore? = null
 
@@ -155,7 +156,7 @@ class LocalProfilePlugin @Inject constructor(
 
         numOfProfiles = sp.getInt(LOCAL_PROFILE + "_profiles", 0)
         profiles.clear()
-        numOfProfiles = Math.max(numOfProfiles, 1) // create at least one default profile if none exists
+        numOfProfiles = max(numOfProfiles, 1) // create at least one default profile if none exists
 
         for (i in 0 until numOfProfiles) {
             val p = SingleProfile()

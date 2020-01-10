@@ -11,7 +11,11 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.ActivityMonitor
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.InstanceId
+import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.stats.TddCalculator
 import info.nightscout.androidaps.utils.stats.TirCalculator
@@ -21,7 +25,7 @@ import javax.inject.Inject
 class SurveyActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var activePluginProvider: ActivePluginProvider
+    @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var tirCalculator: TirCalculator
     @Inject lateinit var profileFunction: ProfileFunction
@@ -33,7 +37,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
 
         survey_id.text = InstanceId.instanceId()
 
-        val profileStore = activePluginProvider.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileInterface.profile
         val profileList = profileStore?.getProfileList() ?: return
         survey_spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 

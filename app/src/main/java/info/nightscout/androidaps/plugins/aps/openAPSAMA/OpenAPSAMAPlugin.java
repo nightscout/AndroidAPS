@@ -12,6 +12,7 @@ import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -23,7 +24,6 @@ import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
@@ -46,7 +46,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final MainApp mainApp;
-    private final ConfigBuilderPlugin configBuilderPlugin;
+    private final ActivePluginProvider activePlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
@@ -64,18 +64,18 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
             MainApp mainApp,
-            ConfigBuilderPlugin configBuilderPlugin,
+            ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
             IobCobCalculatorPlugin iobCobCalculatorPlugin
     ) {
         super(new PluginDescription()
-                .mainType(PluginType.APS)
-                .fragmentClass(OpenAPSAMAFragment.class.getName())
-                .pluginName(R.string.openapsama)
-                .shortName(R.string.oaps_shortname)
-                .preferencesId(R.xml.pref_openapsama)
-                .description(R.string.description_ama),
-                rxBus, aapsLogger
+                        .mainType(PluginType.APS)
+                        .fragmentClass(OpenAPSAMAFragment.class.getName())
+                        .pluginName(R.string.openapsama)
+                        .shortName(R.string.oaps_shortname)
+                        .preferencesId(R.xml.pref_openapsama)
+                        .description(R.string.description_ama),
+                aapsLogger, resourceHelper
         );
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
@@ -83,20 +83,24 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
         this.mainApp = mainApp;
-        this.configBuilderPlugin = configBuilderPlugin;
+        this.activePlugin = activePlugin;
         this.treatmentsPlugin = treatmentsPlugin;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
 
     @Override
     public boolean specialEnableCondition() {
-        PumpInterface pump = configBuilderPlugin.getActivePump();
-        return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        // main fail during init
+        if (activePlugin != null) {
+            PumpInterface pump = activePlugin.getActivePumpPlugin();
+            return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        }
+        return true;
     }
 
     @Override
     public boolean specialShowInListCondition() {
-        PumpInterface pump = configBuilderPlugin.getActivePump();
+        PumpInterface pump = activePlugin.getActivePumpPlugin();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
@@ -119,7 +123,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         Profile profile = profileFunction.getProfile();
-        PumpInterface pump = configBuilderPlugin.getActivePump();
+        PumpInterface pump = activePlugin.getActivePump();
 
         if (profile == null) {
             rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.noprofileselected)));
@@ -207,7 +211,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         start = System.currentTimeMillis();
 
         try {
-            determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, configBuilderPlugin.getActivePump().getBaseBasalRate(), iobArray, glucoseStatus, mealData,
+            determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, activePlugin.getActivePump().getBaseBasalRate(), iobArray, glucoseStatus, mealData,
                     lastAutosensResult.ratio, //autosensDataRatio
                     isTempTarget
             );

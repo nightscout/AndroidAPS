@@ -84,6 +84,7 @@ public class NSClientService extends DaggerService {
     @Inject RxBusWrapper rxBus;
     @Inject ResourceHelper resourceHelper;
     @Inject SP sp;
+    @Inject NSClientPlugin nsClientPlugin;
 
     private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -146,7 +147,7 @@ public class NSClientService extends DaggerService {
                 .toObservable(EventConfigBuilderChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    if (nsEnabled != NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL)) {
+                    if (nsEnabled != nsClientPlugin.isEnabled(PluginType.GENERAL)) {
                         latestDateInReceivedData = 0;
                         destroy();
                         initialize();
@@ -277,10 +278,10 @@ public class NSClientService extends DaggerService {
             nsAPIhashCode = Hashing.sha1().hashString(nsAPISecret, Charsets.UTF_8).toString();
 
         rxBus.send(new EventNSClientStatus("Initializing"));
-        if (!NSClientPlugin.getPlugin().isAllowed()) {
+        if (!nsClientPlugin.isAllowed()) {
             rxBus.send(new EventNSClientNewLog("NSCLIENT", "not allowed"));
             rxBus.send(new EventNSClientStatus("Not allowed"));
-        } else if (NSClientPlugin.getPlugin().paused) {
+        } else if (nsClientPlugin.paused) {
             rxBus.send(new EventNSClientNewLog("NSCLIENT", "paused"));
             rxBus.send(new EventNSClientStatus("Paused"));
         } else if (!nsEnabled) {
@@ -340,12 +341,12 @@ public class NSClientService extends DaggerService {
                 Notification n = new Notification(Notification.NSMALFUNCTION, resourceHelper.gs(R.string.nsmalfunction), Notification.URGENT);
                 rxBus.send(new EventNewNotification(n));
                 rxBus.send(new EventNSClientNewLog("WATCHDOG", "pausing for " + WATCHDOG_RECONNECT_IN + " mins"));
-                NSClientPlugin.getPlugin().pause(true);
+                nsClientPlugin.pause(true);
                 rxBus.send(new EventNSClientUpdateGUI());
                 new Thread(() -> {
                     SystemClock.sleep(T.mins(WATCHDOG_RECONNECT_IN).msecs());
                     rxBus.send(new EventNSClientNewLog("WATCHDOG", "reenabling NSClient"));
-                    NSClientPlugin.getPlugin().pause(false);
+                    nsClientPlugin.pause(false);
                 }).start();
             }
         }
@@ -398,7 +399,7 @@ public class NSClientService extends DaggerService {
     }
 
     public void readPreferences() {
-        nsEnabled = NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL);
+        nsEnabled = nsClientPlugin.isEnabled(PluginType.GENERAL);
         nsURL = sp.getString(R.string.key_nsclientinternal_url, "");
         nsAPISecret = sp.getString(R.string.key_nsclientinternal_api_secret, "");
         nsDevice = sp.getString("careportal_enteredby", "");

@@ -16,11 +16,11 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.DanaRHistoryRecord
 import info.nightscout.androidaps.events.EventPumpStatusChanged
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRSyncStatus
@@ -46,7 +46,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var commandQueue: CommandQueueProvider
 
     private val disposable = CompositeDisposable()
 
@@ -114,7 +114,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
                 danar_history_status.visibility = View.VISIBLE
             }
             clearCardView()
-            configBuilderPlugin.commandQueue.loadHistory(selected.type, object : Callback() {
+            commandQueue.loadHistory(selected.type, object : Callback() {
                 override fun run() {
                     loadDataFromDB(selected.type)
                     runOnUiThread {

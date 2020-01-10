@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import android.widget.LinearLayout
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
@@ -15,13 +15,13 @@ import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import org.json.JSONObject
 
-class TriggerBolusAgo(mainApp: MainApp) : Trigger(mainApp) {
-    private var minutesAgo: InputDuration = InputDuration(mainApp, 0, InputDuration.TimeUnit.MINUTES)
-    var comparator: Comparator = Comparator(mainApp)
+class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
+    private var minutesAgo: InputDuration = InputDuration(injector, 0, InputDuration.TimeUnit.MINUTES)
+    var comparator: Comparator = Comparator(injector)
 
-    private constructor(mainApp: MainApp, triggerBolusAgo: TriggerBolusAgo) : this(mainApp) {
-        minutesAgo = InputDuration(mainApp, triggerBolusAgo.minutesAgo.value, InputDuration.TimeUnit.MINUTES)
-        comparator = Comparator(mainApp, triggerBolusAgo.comparator.value)
+    private constructor(injector: HasAndroidInjector, triggerBolusAgo: TriggerBolusAgo) : this(injector) {
+        minutesAgo = InputDuration(injector, triggerBolusAgo.minutesAgo.value, InputDuration.TimeUnit.MINUTES)
+        comparator = Comparator(injector, triggerBolusAgo.comparator.value)
     }
 
     override fun shouldRun(): Boolean {
@@ -69,13 +69,13 @@ class TriggerBolusAgo(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.icon_bolus)
 
-    override fun duplicate(): Trigger = TriggerBolusAgo(mainApp, this)
+    override fun duplicate(): Trigger = TriggerBolusAgo(injector, this)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.lastboluslabel, this))
+            .add(StaticLabel(injector, R.string.lastboluslabel, this))
             .add(comparator)
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.lastboluslabel) + ": ", "", minutesAgo))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.lastboluslabel) + ": ", "", minutesAgo))
             .build(root)
     }
 }

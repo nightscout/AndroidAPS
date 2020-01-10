@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.constraints.signatureVerifier
 
+import android.content.Context
 import android.content.pm.PackageManager
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ConstraintsInterface
@@ -34,17 +34,18 @@ import javax.inject.Singleton
  */
 @Singleton
 class SignatureVerifierPlugin @Inject constructor(
+    aapsLogger: AAPSLogger,
+    resourceHelper: ResourceHelper,
     private val sp: SP,
-    private val resourceHelper: ResourceHelper,
-    private val mainApp: MainApp,
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    private val rxBus: RxBusWrapper,
+    private val context: Context
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .neverVisible(true)
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.signature_verifier),
-    rxBus, aapsLogger
+    aapsLogger, resourceHelper
 ), ConstraintsInterface {
 
     private val REVOKED_CERTS_URL = "https://raw.githubusercontent.com/MilosKozak/AndroidAPS/master/app/src/main/assets/revoked_certs.txt"
@@ -56,7 +57,7 @@ class SignatureVerifierPlugin @Inject constructor(
     private var revokedCerts: List<ByteArray>? = null
     override fun onStart() {
         super.onStart()
-        revokedCertsFile = File(mainApp.filesDir, "revoked_certs.txt")
+        revokedCertsFile = File(context.filesDir, "revoked_certs.txt")
         Thread(Runnable {
             loadLocalRevokedCerts()
             if (shouldDownloadCerts()) {
@@ -98,7 +99,7 @@ class SignatureVerifierPlugin @Inject constructor(
                 if (revokedCerts == null) return false
                 // TODO Change after raising min API to 28
                 @Suppress("DEPRECATION", "PackageManagerGetSignatures")
-                val signatures = mainApp.packageManager.getPackageInfo(mainApp.packageName, PackageManager.GET_SIGNATURES).signatures
+                val signatures = context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_SIGNATURES).signatures
                 if (signatures != null) {
                     for (signature in signatures) {
                         val digest = MessageDigest.getInstance("SHA256")
@@ -124,7 +125,7 @@ class SignatureVerifierPlugin @Inject constructor(
         try {
             // TODO Change after raising min API to 28
             @Suppress("DEPRECATION", "PackageManagerGetSignatures")
-            val signatures = mainApp.packageManager.getPackageInfo(mainApp.packageName, PackageManager.GET_SIGNATURES).signatures
+            val signatures = context.packageManager.getPackageInfo(context.packageName, PackageManager.GET_SIGNATURES).signatures
             if (signatures != null) {
                 for (signature in signatures) {
                     val digest = MessageDigest.getInstance("SHA256")
@@ -212,7 +213,7 @@ class SignatureVerifierPlugin @Inject constructor(
     }
 
     @Throws(IOException::class) private fun readRevokedCertsInAssets(): String {
-        val inputStream = mainApp.assets.open("revoked_certs.txt")
+        val inputStream = context.assets.open("revoked_certs.txt")
         return readInputStream(inputStream)
     }
 

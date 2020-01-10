@@ -6,12 +6,15 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
+import javax.inject.Inject
 
-class InputLocationMode(mainApp: MainApp) : Element(mainApp) {
+class InputLocationMode(injector: HasAndroidInjector) : Element(injector) {
+    @Inject lateinit var resourceHelper: ResourceHelper
+
     enum class Mode {
         INSIDE, OUTSIDE, GOING_IN, GOING_OUT;
 
@@ -43,7 +46,7 @@ class InputLocationMode(mainApp: MainApp) : Element(mainApp) {
 
     var value: Mode = Mode.INSIDE
 
-    constructor(mainApp: MainApp, value: InputLocationMode.Mode) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, value: InputLocationMode.Mode) : this(injector) {
         this.value = value
     }
 

@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
 import android.widget.LinearLayout
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.NumberPicker
 import java.text.DecimalFormat
 
-class InputDouble(mainApp: MainApp) : Element(mainApp) {
+class InputDouble(injector: HasAndroidInjector) : Element(injector) {
     var value = 0.0
     private var minValue = 0.0
     private var maxValue = 0.0
@@ -14,7 +14,7 @@ class InputDouble(mainApp: MainApp) : Element(mainApp) {
     private var decimalFormat: DecimalFormat? = null
     private var numberPicker: NumberPicker? = null
 
-    constructor(mainApp: MainApp, value: Double, minValue: Double, maxValue: Double, step: Double, decimalFormat: DecimalFormat) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, value: Double, minValue: Double, maxValue: Double, step: Double, decimalFormat: DecimalFormat) : this(injector) {
         this.value = value
         this.minValue = minValue
         this.maxValue = maxValue
@@ -22,7 +22,7 @@ class InputDouble(mainApp: MainApp) : Element(mainApp) {
         this.decimalFormat = decimalFormat
     }
 
-    constructor(mainApp: MainApp, inputDouble: InputDouble) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, inputDouble: InputDouble) : this(injector) {
         this.value = inputDouble.value
         this.minValue = inputDouble.minValue
         this.maxValue = inputDouble.maxValue

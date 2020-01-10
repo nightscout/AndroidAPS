@@ -6,13 +6,13 @@ import javax.inject.Inject;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -24,6 +24,8 @@ public class Objective0 extends Objective {
     @Inject VirtualPumpPlugin virtualPumpPlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject LoopPlugin loopPlugin;
+    @Inject NSClientPlugin nsClientPlugin;
+    @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
     public Objective0() {
         super("config", R.string.objectives_0_objective, R.string.objectives_0_gate);
@@ -41,7 +43,7 @@ public class Objective0 extends Objective {
         tasks.add(new Task(R.string.nsclienthaswritepermission) {
             @Override
             public boolean isCompleted() {
-                return NSClientPlugin.getPlugin().hasWritePermission();
+                return nsClientPlugin.hasWritePermission();
             }
         });
         tasks.add(new Task(R.string.virtualpump_uploadstatus_title) {
@@ -64,7 +66,7 @@ public class Objective0 extends Objective {
         tasks.add(new Task(R.string.hasbgdata) {
             @Override
             public boolean isCompleted() {
-                return DatabaseHelper.lastBg() != null;
+                return iobCobCalculatorPlugin.lastBg() != null;
             }
         });
         tasks.add(new Task(R.string.loopenabled) {

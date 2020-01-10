@@ -13,6 +13,7 @@ import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -26,7 +27,6 @@ import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -49,7 +49,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final MainApp mainApp;
-    private final ConfigBuilderPlugin configBuilderPlugin;
+    private final RxBusWrapper rxBus;
+    private final ActivePluginProvider activePlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
@@ -62,15 +63,15 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
     @Inject
     public OpenAPSSMBPlugin(
             AAPSLogger aapsLogger,
-            RxBusWrapper rxBusWrapper,
+            RxBusWrapper rxBus,
             ConstraintChecker constraintChecker,
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
             MainApp mainApp,
-            ConfigBuilderPlugin configBuilderPlugin,
+            ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
             IobCobCalculatorPlugin iobCobCalculatorPlugin
-            ) {
+    ) {
         super(new PluginDescription()
                         .mainType(PluginType.APS)
                         .fragmentClass(OpenAPSSMBFragment.class.getName())
@@ -78,27 +79,32 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
                         .shortName(R.string.smb_shortname)
                         .preferencesId(R.xml.pref_openapssmb)
                         .description(R.string.description_smb),
-                rxBusWrapper, aapsLogger
+                aapsLogger, resourceHelper
         );
 
         this.constraintChecker = constraintChecker;
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
+        this.rxBus = rxBus;
         this.mainApp = mainApp;
-        this.configBuilderPlugin = configBuilderPlugin;
+        this.activePlugin = activePlugin;
         this.treatmentsPlugin = treatmentsPlugin;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
 
     @Override
     public boolean specialEnableCondition() {
-        PumpInterface pump = configBuilderPlugin.getActivePump();
-        return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        // main fail during init
+        if (activePlugin != null) {
+            PumpInterface pump = activePlugin.getActivePumpPlugin();
+            return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        }
+        return true;
     }
 
     @Override
     public boolean specialShowInListCondition() {
-        PumpInterface pump = configBuilderPlugin.getActivePump();
+        PumpInterface pump = activePlugin.getActivePumpPlugin();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
@@ -121,28 +127,28 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         Profile profile = profileFunction.getProfile();
-        PumpInterface pump = configBuilderPlugin.getActivePump();
+        PumpInterface pump = activePlugin.getActivePump();
 
         if (profile == null) {
-            getRxBus().send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.noprofileselected)));
+            rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.noprofileselected)));
             getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.noprofileselected));
             return;
         }
 
         if (pump == null) {
-            getRxBus().send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.nopumpselected)));
+            rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.nopumpselected)));
             getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.nopumpselected));
             return;
         }
 
         if (!isEnabled(PluginType.APS)) {
-            getRxBus().send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openapsma_disabled)));
+            rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openapsma_disabled)));
             getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.openapsma_disabled));
             return;
         }
 
         if (glucoseStatus == null) {
-            getRxBus().send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openapsma_noglucosedata)));
+            rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openapsma_noglucosedata)));
             getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.openapsma_noglucosedata));
             return;
         }
@@ -198,7 +204,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         if (constraintChecker.isAutosensModeEnabled().value()) {
             AutosensData autosensData = iobCobCalculatorPlugin.getLastAutosensDataSynchronized("OpenAPSPlugin");
             if (autosensData == null) {
-                getRxBus().send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openaps_noasdata)));
+                rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.openaps_noasdata)));
                 return;
             }
             lastAutosensResult = autosensData.autosensResult;
@@ -228,7 +234,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
 
         start = System.currentTimeMillis();
         try {
-            determineBasalAdapterSMBJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, configBuilderPlugin.getActivePump().getBaseBasalRate(), iobArray, glucoseStatus, mealData,
+            determineBasalAdapterSMBJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, activePlugin.getActivePump().getBaseBasalRate(), iobArray, glucoseStatus, mealData,
                     lastAutosensResult.ratio, //autosensDataRatio
                     isTempTarget,
                     smbAllowed.value(),
@@ -269,7 +275,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             lastAPSResult = determineBasalResultSMB;
             lastAPSRun = now;
         }
-        getRxBus().send(new EventOpenAPSUpdateGui());
+        rxBus.send(new EventOpenAPSUpdateGui());
 
         //deviceStatus.suggested = determineBasalResultAMA.json;
     }

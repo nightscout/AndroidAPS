@@ -13,10 +13,11 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
@@ -32,7 +33,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPu
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventRefreshButtonState
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
@@ -52,8 +52,9 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
-    @Inject lateinit var treatmnetsPlugin: TreatmentsPlugin
+    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -94,8 +95,8 @@ class MedtronicFragment : DaggerFragment() {
                 MedtronicUtil.displayNotConfiguredDialog(context)
             } else {
                 medtronic_refresh.isEnabled = false
-                MedtronicPumpPlugin.getPlugin().resetStatusState()
-                configBuilderPlugin.commandQueue.readStatus("Clicked refresh", object : Callback() {
+                medtronicPumpPlugin.resetStatusState()
+                commandQueue.readStatus("Clicked refresh", object : Callback() {
                     override fun run() {
                         activity?.runOnUiThread { medtronic_refresh?.isEnabled = true }
                     }
@@ -226,7 +227,7 @@ class MedtronicFragment : DaggerFragment() {
             else                                 -> aapsLogger.warn(LTag.PUMP, "Unknown pump state: " + pumpStatus.pumpDeviceState)
         }
 
-        val status = configBuilderPlugin.commandQueue.spannedStatus()
+        val status = commandQueue.spannedStatus()
         if (status.toString() == "") {
             medtronic_queue.visibility = View.GONE
         } else {
@@ -250,7 +251,6 @@ class MedtronicFragment : DaggerFragment() {
     @Synchronized
     fun updateGUI() {
         if (medtronic_rl_status == null) return
-        val plugin = MedtronicPumpPlugin.getPlugin()
         val pumpStatus = MedtronicUtil.getPumpStatus()
 
         setDeviceStatus()
@@ -306,9 +306,9 @@ class MedtronicFragment : DaggerFragment() {
 
         // base basal rate
         medtronic_basabasalrate.text = ("(" + pumpStatus.activeProfileName + ")  "
-            + resourceHelper.gs(R.string.pump_basebasalrate, plugin.baseBasalRate))
+            + resourceHelper.gs(R.string.pump_basebasalrate, medtronicPumpPlugin.baseBasalRate))
 
-        medtronic_tempbasal.text = treatmnetsPlugin.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
+        medtronic_tempbasal.text = activePlugin.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
             ?: ""
 
         // battery

@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.general.automation.actions
 
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.queue.Callback
 
 // Used for instantiation of other actions only
-class ActionDummy(mainApp: MainApp) : Action(mainApp) {
+class ActionDummy(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int {
         throw NotImplementedError("An operation is not implemented")

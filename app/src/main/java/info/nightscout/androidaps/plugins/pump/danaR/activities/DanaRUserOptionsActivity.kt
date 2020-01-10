@@ -8,12 +8,12 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.events.EventInitializationChanged
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
@@ -39,7 +39,7 @@ class DanaRUserOptionsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var danaRPlugin: DanaRPlugin
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var commandQueue: CommandQueueProvider
 
     private val disposable = CompositeDisposable()
 
@@ -155,7 +155,7 @@ class DanaRUserOptionsActivity : NoSplashAppCompatActivity() {
         // 10 to 50
         pump.lowReservoirRate = min(max(danar_lowreservoir.value.toInt() * 10 / 10, 10), 50)
 
-        configBuilderPlugin.commandQueue.setUserOptions(object : Callback() {
+        commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
                     val i = Intent(mainApp, ErrorHelperActivity::class.java)

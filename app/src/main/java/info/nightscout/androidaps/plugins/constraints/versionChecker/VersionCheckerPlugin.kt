@@ -22,16 +22,17 @@ import kotlin.math.roundToInt
 @Singleton
 class VersionCheckerPlugin @Inject constructor(
     private val sp: SP,
-    private val resourceHelper: ResourceHelper,
+    resourceHelper: ResourceHelper,
     private val versionCheckerUtils: VersionCheckerUtils,
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    val rxBus: RxBusWrapper,
+    aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .neverVisible(true)
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.versionChecker),
-    rxBus, aapsLogger
+    aapsLogger, resourceHelper
 ), ConstraintsInterface {
 
     enum class GracePeriod(val warning: Long, val old: Long, val veryOld: Long) {

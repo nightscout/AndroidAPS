@@ -6,7 +6,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,17 +20,11 @@ class InsulinOrefUltraRapidActingPlugin @Inject constructor(
 ) : InsulinOrefBasePlugin(resourceHelper, profileFunction, rxBus, aapsLogger) {
 
 
-    override fun getId(): Int {
-        return InsulinInterface.OREF_ULTRA_RAPID_ACTING
-    }
+    override fun getId(): Int = InsulinInterface.OREF_ULTRA_RAPID_ACTING
 
-    override fun getFriendlyName(): String {
-        return resourceHelper.gs(R.string.ultrarapid_oref)
-    }
+    override fun getFriendlyName(): String = resourceHelper.gs(R.string.ultrarapid_oref)
 
-    override fun commentStandardText(): String {
-        return resourceHelper.gs(R.string.ultrafastactinginsulincomment)
-    }
+    override fun commentStandardText(): String = resourceHelper.gs(R.string.ultrafastactinginsulincomment)
 
     override val peak = 55
 
@@ -39,5 +32,6 @@ class InsulinOrefUltraRapidActingPlugin @Inject constructor(
         pluginDescription
             .pluginName(R.string.ultrarapid_oref)
             .description(R.string.description_insulin_ultra_rapid)
+            .enableByDefault(true)
     }
 }

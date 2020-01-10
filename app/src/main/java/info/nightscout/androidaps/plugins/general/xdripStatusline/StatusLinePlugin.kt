@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.general.xdripStatusline
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.*
@@ -16,7 +16,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.plusAssign
@@ -31,14 +30,14 @@ import javax.inject.Singleton
 class StatusLinePlugin @Inject constructor(
     private val sp: SP,
     private val profileFunction: ProfileFunction,
-    private val resourceHelper: ResourceHelper,
-    private val mainApp: MainApp,
+    resourceHelper: ResourceHelper,
+    private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
-    private val activePluginProvider: ActivePluginProvider,
-    private val treatmentsPlugin: TreatmentsPlugin,
+    private val activePlugin: ActivePluginProvider,
     private val loopPlugin: LoopPlugin,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    private val rxBus: RxBusWrapper,
+    aapsLogger: AAPSLogger
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -46,7 +45,7 @@ class StatusLinePlugin @Inject constructor(
         .shortName(R.string.xdripstatus_shortname)
         .neverVisible(true)
         .preferencesId(R.xml.pref_xdripstatus)
-        .description(R.string.description_xdrip_status_line), rxBus, aapsLogger) {
+        .description(R.string.description_xdrip_status_line), aapsLogger, resourceHelper) {
 
     private val disposable = CompositeDisposable()
     private var lastLoopStatus = false
@@ -107,12 +106,12 @@ class StatusLinePlugin @Inject constructor(
         val intent = Intent(ACTION_NEW_EXTERNAL_STATUSLINE)
         intent.putExtras(bundle)
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-        mainApp.sendBroadcast(intent, null)
+        context.sendBroadcast(intent, null)
     }
 
     private fun buildStatusString(profile: Profile): String {
         var status = ""
-        if (activePluginProvider.activePump == null) return ""
+        if (activePlugin.activePumpPlugin == null) return ""
         if (!loopPlugin.isEnabled(PluginType.LOOP)) {
             status += resourceHelper.gs(R.string.disabledloop) + "\n"
             lastLoopStatus = false
@@ -120,15 +119,15 @@ class StatusLinePlugin @Inject constructor(
             lastLoopStatus = true
         }
         //Temp basal
-        val activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())
+        val activeTemp = activePlugin.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())
         if (activeTemp != null) {
             status += activeTemp.toStringShort() + " "
         }
         //IOB
-        treatmentsPlugin.updateTotalIOBTreatments()
-        val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
-        treatmentsPlugin.updateTotalIOBTempBasals()
-        val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
+        activePlugin.activeTreatments.updateTotalIOBTreatments()
+        val bolusIob = activePlugin.activeTreatments.lastCalculationTreatments.round()
+        activePlugin.activeTreatments.updateTotalIOBTempBasals()
+        val basalIob = activePlugin.activeTreatments.lastCalculationTempBasals.round()
         status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U"
         if (sp.getBoolean(R.string.key_xdripstatus_detailediob, true)) {
             status += ("("

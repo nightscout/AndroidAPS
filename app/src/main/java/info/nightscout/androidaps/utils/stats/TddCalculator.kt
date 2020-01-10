@@ -23,7 +23,7 @@ import javax.inject.Inject
 class TddCalculator @Inject constructor(
     aapsLogger: AAPSLogger,
     rxBus: RxBusWrapper,
-    val resourceHelper: ResourceHelper,
+    resourceHelper: ResourceHelper,
     val mainApp: MainApp,
     val sp: SP,
     val configBuilderPlugin: ConfigBuilderPlugin,

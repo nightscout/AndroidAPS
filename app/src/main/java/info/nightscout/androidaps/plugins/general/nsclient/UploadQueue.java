@@ -17,6 +17,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientResend;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
 
 /**
@@ -48,10 +50,7 @@ public class UploadQueue {
                 if (L.isEnabled(L.NSCLIENT))
                     log.debug("Adding to queue: " + dbr.data);
                 MainApp.getDbHelper().create(dbr);
-                NSClientPlugin plugin = NSClientPlugin.getPlugin();
-                if (plugin != null) {
-                    plugin.resend("newdata");
-                }
+                RxBus.getINSTANCE().send(new EventNSClientResend("newdata"));
             });
         }
     }

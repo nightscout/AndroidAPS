@@ -7,14 +7,17 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.NumberPicker
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.text.DecimalFormat
 import java.util.*
+import javax.inject.Inject
 
-class InputDelta(mainApp: MainApp) : Element(mainApp) {
+class InputDelta(injector: HasAndroidInjector) : Element(injector) {
+    @Inject lateinit var resourceHelper: ResourceHelper
+
     enum class DeltaType {
         DELTA, SHORT_AVERAGE, LONG_AVERAGE;
 
@@ -43,7 +46,7 @@ class InputDelta(mainApp: MainApp) : Element(mainApp) {
     private var decimalFormat: DecimalFormat? = null
     var deltaType: DeltaType = DeltaType.DELTA
 
-    constructor(mainApp: MainApp, value: Double, minValue: Double, maxValue: Double, step: Double, decimalFormat: DecimalFormat, deltaType: DeltaType) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, value: Double, minValue: Double, maxValue: Double, step: Double, decimalFormat: DecimalFormat, deltaType: DeltaType) : this(injector) {
         this.value = value
         this.minValue = minValue
         this.maxValue = maxValue
@@ -52,7 +55,7 @@ class InputDelta(mainApp: MainApp) : Element(mainApp) {
         this.deltaType = deltaType
     }
 
-    constructor(mainApp: MainApp, inputDelta: InputDelta) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, inputDelta: InputDelta) : this(injector) {
         value = inputDelta.value
         minValue = inputDelta.minValue
         maxValue = inputDelta.maxValue

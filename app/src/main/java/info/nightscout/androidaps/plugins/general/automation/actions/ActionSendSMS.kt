@@ -1,18 +1,24 @@
 package info.nightscout.androidaps.plugins.general.automation.actions
 
 import android.widget.LinearLayout
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
+import javax.inject.Inject
 
-class ActionSendSMS(mainApp: MainApp) : Action(mainApp) {
-    var text = InputString(mainApp)
+class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
+
+    var text = InputString(injector)
 
     override fun friendlyName(): Int = R.string.sendsmsactiondescription
     override fun shortDescription(): String = resourceHelper.gs(R.string.sendsmsactionlabel, text.value)
@@ -41,7 +47,7 @@ class ActionSendSMS(mainApp: MainApp) : Action(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.sendsmsactiontext), "", text))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.sendsmsactiontext), "", text))
             .build(root)
     }
 }

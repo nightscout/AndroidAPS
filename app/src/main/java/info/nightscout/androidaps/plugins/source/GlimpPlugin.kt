@@ -11,21 +11,22 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.BundleLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GlimpPlugin @Inject constructor(
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    resourceHelper: ResourceHelper,
+    aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginName(R.string.Glimp)
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_glimp),
-    rxBus,
-    aapsLogger
+    aapsLogger,
+    resourceHelper
 ), BgSourceInterface {
 
     override fun advancedFilteringSupported(): Boolean {

@@ -129,11 +129,11 @@ class FabricPrivacy @Inject constructor(
         mainApp.firebaseAnalytics.setUserProperty("Remote", remote)
         val hashes: List<String> = signatureVerifierPlugin.shortHashes()
         if (hashes.isNotEmpty()) mainApp.firebaseAnalytics.setUserProperty("Hash", hashes[0])
-        configBuilderPlugin.activePump?.let { mainApp.firebaseAnalytics.setUserProperty("Pump", it::class.java.simpleName) }
+        configBuilderPlugin.activePumpPlugin?.let { mainApp.firebaseAnalytics.setUserProperty("Pump", it::class.java.simpleName) }
         configBuilderPlugin.activeAPS?.let { mainApp.firebaseAnalytics.setUserProperty("Aps", it::class.java.simpleName) }
         configBuilderPlugin.activeBgSource?.let { mainApp.firebaseAnalytics.setUserProperty("BgSource", it::class.java.simpleName) }
         mainApp.firebaseAnalytics.setUserProperty("Profile", configBuilderPlugin.activeProfileInterface.javaClass.simpleName)
-        configBuilderPlugin.activeSensitivity?.let { mainApp.firebaseAnalytics.setUserProperty("Sensitivity", it::class.java.simpleName) }
-        configBuilderPlugin.activeInsulin?.let { mainApp.firebaseAnalytics.setUserProperty("Insulin", it::class.java.simpleName) }
+        configBuilderPlugin.activeSensitivity.let { mainApp.firebaseAnalytics.setUserProperty("Sensitivity", it::class.java.simpleName) }
+        configBuilderPlugin.activeInsulin.let { mainApp.firebaseAnalytics.setUserProperty("Insulin", it::class.java.simpleName) }
     }
 }

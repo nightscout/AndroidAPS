@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.constraints.safety;
 
+import androidx.annotation.NonNull;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -7,6 +9,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -19,9 +22,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -29,132 +30,133 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 @Singleton
 public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
-    //TODO: dagger
+    // TODO: dagger
+    @Inject SP sp;
+    @Inject RxBusWrapper rxBus;
+    @Inject ResourceHelper resourceHelper;
+    @Inject ConstraintChecker constraintChecker;
+    @Inject OpenAPSAMAPlugin openAPSAMAPlugin;
+    @Inject OpenAPSMAPlugin openAPSMAPlugin;
+    @Inject OpenAPSSMBPlugin openAPSSMBPlugin;
+    @Inject SensitivityOref1Plugin sensitivityOref1Plugin;
+    @Inject ActivePluginProvider activePlugin;
 
     @Inject
-    OpenAPSAMAPlugin openAPSAMAPlugin;
-
-    @Inject
-    OpenAPSMAPlugin openAPSMAPlugin;
-
-    @Inject
-    OpenAPSSMBPlugin openAPSSMBPlugin;
-
-    @Inject
-    public SafetyPlugin(RxBusWrapper rxBusWrapper, AAPSLogger aapsLogger) {
+    public SafetyPlugin(AAPSLogger aapsLogger, ResourceHelper resourceHelper) {
         super(new PluginDescription()
                 .mainType(PluginType.CONSTRAINTS)
                 .neverVisible(true)
                 .alwaysEnabled(true)
                 .showInList(false)
                 .pluginName(R.string.safety)
-                .preferencesId(R.xml.pref_safety), rxBusWrapper, aapsLogger
+                .preferencesId(R.xml.pref_safety), aapsLogger, resourceHelper
         );
     }
 
     /**
      * Constraints interface
      **/
-    @Override
-    public Constraint<Boolean> isLoopInvocationAllowed(Constraint<Boolean> value) {
-        if (!ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().isTempBasalCapable)
-            value.set(false, MainApp.gs(R.string.pumpisnottempbasalcapable), this);
+    @NonNull @Override
+    public Constraint<Boolean> isLoopInvocationAllowed(@NonNull Constraint<Boolean> value) {
+        if (!activePlugin.getActivePumpPlugin().getPumpDescription().isTempBasalCapable)
+            value.set(false, resourceHelper.gs(R.string.pumpisnottempbasalcapable), this);
         return value;
     }
 
-    @Override
-    public Constraint<Boolean> isClosedLoopAllowed(Constraint<Boolean> value) {
-        String mode = SP.getString(R.string.key_aps_mode, "open");
+    @NonNull @Override
+    public Constraint<Boolean> isClosedLoopAllowed(@NonNull Constraint<Boolean> value) {
+        String mode = sp.getString(R.string.key_aps_mode, "open");
         if (!mode.equals("closed"))
-            value.set(false, MainApp.gs(R.string.closedmodedisabledinpreferences), this);
+            value.set(false, resourceHelper.gs(R.string.closedmodedisabledinpreferences), this);
 
         if (!MainApp.isEngineeringModeOrRelease()) {
             if (value.value()) {
-                Notification n = new Notification(Notification.TOAST_ALARM, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL);
-                RxBus.Companion.getINSTANCE().send(new EventNewNotification(n));
+                Notification n = new Notification(Notification.TOAST_ALARM, resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL);
+                rxBus.send(new EventNewNotification(n));
             }
-            value.set(false, MainApp.gs(R.string.closed_loop_disabled_on_dev_branch), this);
+            value.set(false, resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch), this);
         }
 
         return value;
     }
 
-    @Override
-    public Constraint<Boolean> isAutosensModeEnabled(Constraint<Boolean> value) {
-        boolean enabled = SP.getBoolean(R.string.key_openapsama_useautosens, false);
+    @NonNull @Override
+    public Constraint<Boolean> isAutosensModeEnabled(@NonNull Constraint<Boolean> value) {
+        boolean enabled = sp.getBoolean(R.string.key_openapsama_useautosens, false);
         if (!enabled)
-            value.set(false, MainApp.gs(R.string.autosensdisabledinpreferences), this);
+            value.set(false, resourceHelper.gs(R.string.autosensdisabledinpreferences), this);
         return value;
     }
 
-    @Override
-    public Constraint<Boolean> isSMBModeEnabled(Constraint<Boolean> value) {
-        boolean enabled = SP.getBoolean(R.string.key_use_smb, false);
+    @NonNull @Override
+    public Constraint<Boolean> isSMBModeEnabled(@NonNull Constraint<Boolean> value) {
+        boolean enabled = sp.getBoolean(R.string.key_use_smb, false);
         if (!enabled)
-            value.set(false, MainApp.gs(R.string.smbdisabledinpreferences), this);
-        Constraint<Boolean> closedLoop = ConstraintChecker.getInstance().isClosedLoopAllowed();
+            value.set(false, resourceHelper.gs(R.string.smbdisabledinpreferences), this);
+        Constraint<Boolean> closedLoop = constraintChecker.isClosedLoopAllowed();
         if (!closedLoop.value())
-            value.set(false, MainApp.gs(R.string.smbnotallowedinopenloopmode), this);
+            value.set(false, resourceHelper.gs(R.string.smbnotallowedinopenloopmode), this);
         return value;
     }
 
-    @Override
-    public Constraint<Boolean> isUAMEnabled(Constraint<Boolean> value) {
-        boolean enabled = SP.getBoolean(R.string.key_use_uam, false);
+    @NonNull @Override
+    public Constraint<Boolean> isUAMEnabled(@NonNull Constraint<Boolean> value) {
+        boolean enabled = sp.getBoolean(R.string.key_use_uam, false);
         if (!enabled)
-            value.set(false, MainApp.gs(R.string.uamdisabledinpreferences), this);
-        boolean oref1Enabled = SensitivityOref1Plugin.getPlugin().isEnabled(PluginType.SENSITIVITY);
+            value.set(false, resourceHelper.gs(R.string.uamdisabledinpreferences), this);
+        boolean oref1Enabled = sensitivityOref1Plugin.isEnabled(PluginType.SENSITIVITY);
         if (!oref1Enabled)
-            value.set(false, MainApp.gs(R.string.uamdisabledoref1notselected), this);
+            value.set(false, resourceHelper.gs(R.string.uamdisabledoref1notselected), this);
         return value;
     }
 
-    @Override
-    public Constraint<Boolean> isAdvancedFilteringEnabled(Constraint<Boolean> value) {
-        BgSourceInterface bgSource = ConfigBuilderPlugin.getPlugin().getActiveBgSource();
+    @NonNull @Override
+    public Constraint<Boolean> isAdvancedFilteringEnabled(@NonNull Constraint<Boolean> value) {
+        BgSourceInterface bgSource = activePlugin.getActiveBgSource();
 
         if (bgSource != null) {
             if (!bgSource.advancedFilteringSupported())
-                value.set(false, MainApp.gs(R.string.smbalwaysdisabled), this);
+                value.set(false, resourceHelper.gs(R.string.smbalwaysdisabled), this);
         }
         return value;
     }
 
-    @Override
-    public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, Profile profile) {
+    @NonNull @Override
+    public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, @NonNull Profile profile) {
 
-        absoluteRate.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingbasalratio), 0d, MainApp.gs(R.string.itmustbepositivevalue)), this);
+        absoluteRate.setIfGreater(0d, String.format(resourceHelper.gs(R.string.limitingbasalratio), 0d, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
 
         if (Config.APS) {
-            double maxBasal = SP.getDouble(R.string.key_openapsma_max_basal, 1d);
+            double maxBasal = sp.getDouble(R.string.key_openapsma_max_basal, 1d);
             if (maxBasal < profile.getMaxDailyBasal()) {
                 maxBasal = profile.getMaxDailyBasal();
-                absoluteRate.addReason(MainApp.gs(R.string.increasingmaxbasal), this);
+                absoluteRate.addReason(resourceHelper.gs(R.string.increasingmaxbasal), this);
             }
-            absoluteRate.setIfSmaller(maxBasal, String.format(MainApp.gs(R.string.limitingbasalratio), maxBasal, MainApp.gs(R.string.maxvalueinpreferences)), this);
+            absoluteRate.setIfSmaller(maxBasal, String.format(resourceHelper.gs(R.string.limitingbasalratio), maxBasal, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
 
             // Check percentRate but absolute rate too, because we know real current basal in pump
-            Double maxBasalMult = SP.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d);
+            Double maxBasalMult = sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d);
             double maxFromBasalMult = Math.floor(maxBasalMult * profile.getBasal() * 100) / 100;
-            absoluteRate.setIfSmaller(maxFromBasalMult, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromBasalMult, MainApp.gs(R.string.maxbasalmultiplier)), this);
+            absoluteRate.setIfSmaller(maxFromBasalMult, String.format(resourceHelper.gs(R.string.limitingbasalratio), maxFromBasalMult, resourceHelper.gs(R.string.maxbasalmultiplier)), this);
 
-            Double maxBasalFromDaily = SP.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3d);
+            Double maxBasalFromDaily = sp.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3d);
             double maxFromDaily = Math.floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100;
-            absoluteRate.setIfSmaller(maxFromDaily, String.format(MainApp.gs(R.string.limitingbasalratio), maxFromDaily, MainApp.gs(R.string.maxdailybasalmultiplier)), this);
+            absoluteRate.setIfSmaller(maxFromDaily, String.format(resourceHelper.gs(R.string.limitingbasalratio), maxFromDaily, resourceHelper.gs(R.string.maxdailybasalmultiplier)), this);
         }
 
-        absoluteRate.setIfSmaller(HardLimits.maxBasal(), String.format(MainApp.gs(R.string.limitingbasalratio), HardLimits.maxBasal(), MainApp.gs(R.string.hardlimit)), this);
+        absoluteRate.setIfSmaller(HardLimits.maxBasal(), String.format(resourceHelper.gs(R.string.limitingbasalratio), HardLimits.maxBasal(), resourceHelper.gs(R.string.hardlimit)), this);
 
-        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+        PumpInterface pump = activePlugin.getActivePumpPlugin();
         // check for pump max
         if (pump != null && pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
             double pumpLimit = pump.getPumpDescription().pumpType.getTbrSettings().getMaxDose();
-            absoluteRate.setIfSmaller(pumpLimit, String.format(MainApp.gs(R.string.limitingbasalratio), pumpLimit, MainApp.gs(R.string.pumplimit)), this);
+            absoluteRate.setIfSmaller(pumpLimit, String.format(resourceHelper.gs(R.string.limitingbasalratio), pumpLimit, resourceHelper.gs(R.string.pumplimit)), this);
         }
 
         // do rounding
@@ -164,7 +166,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         return absoluteRate;
     }
 
-    @Override
+    @NonNull @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
 
         Double currentBasal = profile.getBasal();
@@ -176,7 +178,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         applyBasalConstraints(absoluteConstraint, profile);
         percentRate.copyReasons(absoluteConstraint);
 
-        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+        PumpInterface pump = activePlugin.getActivePumpPlugin();
 
         Integer percentRateAfterConst = Double.valueOf(absoluteConstraint.value() / currentBasal * 100).intValue();
         if (pump != null) {
@@ -186,75 +188,75 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
                 percentRateAfterConst = Round.floorTo((double) percentRateAfterConst, (double) pump.getPumpDescription().tempPercentStep).intValue();
         }
 
-        percentRate.set(percentRateAfterConst, String.format(MainApp.gs(R.string.limitingpercentrate), percentRateAfterConst, MainApp.gs(R.string.pumplimit)), this);
+        percentRate.set(percentRateAfterConst, String.format(resourceHelper.gs(R.string.limitingpercentrate), percentRateAfterConst, resourceHelper.gs(R.string.pumplimit)), this);
 
         if (pump != null && pump.getPumpDescription().tempBasalStyle == PumpDescription.PERCENT) {
             double pumpLimit = pump.getPumpDescription().pumpType.getTbrSettings().getMaxDose();
-            percentRate.setIfSmaller((int) pumpLimit, String.format(MainApp.gs(R.string.limitingbasalratio), pumpLimit, MainApp.gs(R.string.pumplimit)), this);
+            percentRate.setIfSmaller((int) pumpLimit, String.format(resourceHelper.gs(R.string.limitingbasalratio), pumpLimit, resourceHelper.gs(R.string.pumplimit)), this);
         }
 
         return percentRate;
     }
 
-    @Override
+    @NonNull @Override
     public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        insulin.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingbolus), 0d, MainApp.gs(R.string.itmustbepositivevalue)), this);
+        insulin.setIfGreater(0d, String.format(resourceHelper.gs(R.string.limitingbolus), 0d, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
 
-        Double maxBolus = SP.getDouble(R.string.key_treatmentssafety_maxbolus, 3d);
-        insulin.setIfSmaller(maxBolus, String.format(MainApp.gs(R.string.limitingbolus), maxBolus, MainApp.gs(R.string.maxvalueinpreferences)), this);
+        Double maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3d);
+        insulin.setIfSmaller(maxBolus, String.format(resourceHelper.gs(R.string.limitingbolus), maxBolus, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
 
-        insulin.setIfSmaller(HardLimits.maxBolus(), String.format(MainApp.gs(R.string.limitingbolus), HardLimits.maxBolus(), MainApp.gs(R.string.hardlimit)), this);
+        insulin.setIfSmaller(HardLimits.maxBolus(), String.format(resourceHelper.gs(R.string.limitingbolus), HardLimits.maxBolus(), resourceHelper.gs(R.string.hardlimit)), this);
 
-        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+        PumpInterface pump = activePlugin.getActivePumpPlugin();
         if (pump != null) {
             double rounded = pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulin.value());
-            insulin.setIfDifferent(rounded, MainApp.gs(R.string.pumplimit), this);
+            insulin.setIfDifferent(rounded, resourceHelper.gs(R.string.pumplimit), this);
         }
         return insulin;
     }
 
-    @Override
+    @NonNull @Override
     public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
-        insulin.setIfGreater(0d, String.format(MainApp.gs(R.string.limitingextendedbolus), 0d, MainApp.gs(R.string.itmustbepositivevalue)), this);
+        insulin.setIfGreater(0d, String.format(resourceHelper.gs(R.string.limitingextendedbolus), 0d, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
 
-        Double maxBolus = SP.getDouble(R.string.key_treatmentssafety_maxbolus, 3d);
-        insulin.setIfSmaller(maxBolus, String.format(MainApp.gs(R.string.limitingextendedbolus), maxBolus, MainApp.gs(R.string.maxvalueinpreferences)), this);
+        Double maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3d);
+        insulin.setIfSmaller(maxBolus, String.format(resourceHelper.gs(R.string.limitingextendedbolus), maxBolus, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
 
-        insulin.setIfSmaller(HardLimits.maxBolus(), String.format(MainApp.gs(R.string.limitingextendedbolus), HardLimits.maxBolus(), MainApp.gs(R.string.hardlimit)), this);
+        insulin.setIfSmaller(HardLimits.maxBolus(), String.format(resourceHelper.gs(R.string.limitingextendedbolus), HardLimits.maxBolus(), resourceHelper.gs(R.string.hardlimit)), this);
 
-        PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+        PumpInterface pump = activePlugin.getActivePumpPlugin();
         if (pump != null) {
             double rounded = pump.getPumpDescription().pumpType.determineCorrectExtendedBolusSize(insulin.value());
-            insulin.setIfDifferent(rounded, MainApp.gs(R.string.pumplimit), this);
+            insulin.setIfDifferent(rounded, resourceHelper.gs(R.string.pumplimit), this);
         }
         return insulin;
     }
 
-    @Override
+    @NonNull @Override
     public Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs) {
-        carbs.setIfGreater(0, String.format(MainApp.gs(R.string.limitingcarbs), 0, MainApp.gs(R.string.itmustbepositivevalue)), this);
+        carbs.setIfGreater(0, String.format(resourceHelper.gs(R.string.limitingcarbs), 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
 
-        Integer maxCarbs = SP.getInt(R.string.key_treatmentssafety_maxcarbs, 48);
-        carbs.setIfSmaller(maxCarbs, String.format(MainApp.gs(R.string.limitingcarbs), maxCarbs, MainApp.gs(R.string.maxvalueinpreferences)), this);
+        Integer maxCarbs = sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48);
+        carbs.setIfSmaller(maxCarbs, String.format(resourceHelper.gs(R.string.limitingcarbs), maxCarbs, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
 
         return carbs;
     }
 
-    @Override
-    public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
+    @NonNull @Override
+    public Constraint<Double> applyMaxIOBConstraints(@NonNull Constraint<Double> maxIob) {
         double maxIobPref;
         if (openAPSSMBPlugin.isEnabled(PluginType.APS))
-            maxIobPref = SP.getDouble(R.string.key_openapssmb_max_iob, 3d);
+            maxIobPref = sp.getDouble(R.string.key_openapssmb_max_iob, 3d);
         else
-            maxIobPref = SP.getDouble(R.string.key_openapsma_max_iob, 1.5d);
-        maxIob.setIfSmaller(maxIobPref, String.format(MainApp.gs(R.string.limitingiob), maxIobPref, MainApp.gs(R.string.maxvalueinpreferences)), this);
+            maxIobPref = sp.getDouble(R.string.key_openapsma_max_iob, 1.5d);
+        maxIob.setIfSmaller(maxIobPref, String.format(resourceHelper.gs(R.string.limitingiob), maxIobPref, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
 
         if (openAPSMAPlugin.isEnabled(PluginType.APS))
-            maxIob.setIfSmaller(HardLimits.maxIobAMA(), String.format(MainApp.gs(R.string.limitingiob), HardLimits.maxIobAMA(), MainApp.gs(R.string.hardlimit)), this);
+            maxIob.setIfSmaller(HardLimits.maxIobAMA(), String.format(resourceHelper.gs(R.string.limitingiob), HardLimits.maxIobAMA(), resourceHelper.gs(R.string.hardlimit)), this);
         if (openAPSAMAPlugin.isEnabled(PluginType.APS))
-            maxIob.setIfSmaller(HardLimits.maxIobAMA(), String.format(MainApp.gs(R.string.limitingiob), HardLimits.maxIobAMA(), MainApp.gs(R.string.hardlimit)), this);
+            maxIob.setIfSmaller(HardLimits.maxIobAMA(), String.format(resourceHelper.gs(R.string.limitingiob), HardLimits.maxIobAMA(), resourceHelper.gs(R.string.hardlimit)), this);
         if (openAPSSMBPlugin.isEnabled(PluginType.APS))
-            maxIob.setIfSmaller(HardLimits.maxIobSMB(), String.format(MainApp.gs(R.string.limitingiob), HardLimits.maxIobSMB(), MainApp.gs(R.string.hardlimit)), this);
+            maxIob.setIfSmaller(HardLimits.maxIobSMB(), String.format(resourceHelper.gs(R.string.limitingiob), HardLimits.maxIobSMB(), resourceHelper.gs(R.string.hardlimit)), this);
         return maxIob;
     }
 

@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -17,42 +20,36 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.logging.AAPSLoggerProduction;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by mike on 24.06.2017.
  */
 
+@Singleton
 public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
     private static Logger log = LoggerFactory.getLogger(L.AUTOSENS);
 
-    static SensitivityAAPSPlugin plugin = null;
-
-    @Deprecated
-    public static SensitivityAAPSPlugin getPlugin() {
-        if (plugin == null)
-            plugin = new SensitivityAAPSPlugin();
-        return plugin;
-    }
-
-    // TODO: dagger
-
-    public SensitivityAAPSPlugin() {
+    @Inject
+    public SensitivityAAPSPlugin(
+            AAPSLogger aapsLogger,
+            ResourceHelper resourceHelper
+    ) {
         super(new PluginDescription()
-                .mainType(PluginType.SENSITIVITY)
-                .pluginName(R.string.sensitivityaaps)
-                .shortName(R.string.sensitivity_shortname)
-                .preferencesId(R.xml.pref_absorption_aaps)
-                .description(R.string.description_sensitivity_aaps),
-                new RxBusWrapper(), new AAPSLoggerProduction() // TODO: dagger
+                        .mainType(PluginType.SENSITIVITY)
+                        .pluginName(R.string.sensitivityaaps)
+                        .shortName(R.string.sensitivity_shortname)
+                        .preferencesId(R.xml.pref_absorption_aaps)
+                        .description(R.string.description_sensitivity_aaps),
+                aapsLogger, resourceHelper
         );
     }
 

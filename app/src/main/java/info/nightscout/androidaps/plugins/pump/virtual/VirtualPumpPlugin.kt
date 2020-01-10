@@ -11,11 +11,7 @@ import info.nightscout.androidaps.db.ExtendedBolus
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.events.EventPreferenceChange
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.interfaces.PumpInterface
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -23,7 +19,6 @@ import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -42,17 +37,19 @@ import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.min
 
 @Singleton
 class VirtualPumpPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rxBus: RxBusWrapper,
+    private val rxBus: RxBusWrapper,
     private var fabricPrivacy: FabricPrivacy,
-    private val resourceHelper: ResourceHelper,
+    resourceHelper: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
-    private val treatmentsPlugin: TreatmentsPlugin
-) : PluginBase(PluginDescription()
+    private val treatmentsPlugin: TreatmentsPlugin,
+    commandQueue: CommandQueueProvider
+) : PumpPluginBase(PluginDescription()
     .mainType(PluginType.PUMP)
     .fragmentClass(VirtualPumpFragment::class.java.name)
     .pluginName(R.string.virtualpump)
@@ -60,7 +57,7 @@ class VirtualPumpPlugin @Inject constructor(
     .preferencesId(R.xml.pref_virtualpump)
     .neverVisible(Config.NSCLIENT)
     .description(R.string.description_pump_virtual),
-    rxBus, aapsLogger
+    aapsLogger, resourceHelper, commandQueue
 ), PumpInterface {
 
 
@@ -219,7 +216,7 @@ class VirtualPumpPlugin @Inject constructor(
             SystemClock.sleep(200)
             val bolusingEvent = EventOverviewBolusProgress
             bolusingEvent.status = resourceHelper.gs(R.string.bolusdelivering, delivering)
-            bolusingEvent.percent = Math.min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
+            bolusingEvent.percent = min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
             rxBus.send(bolusingEvent)
             delivering += 0.1
         }

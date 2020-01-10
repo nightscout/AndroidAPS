@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import android.widget.LinearLayout
 import com.google.common.base.Optional
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.logging.LTag
@@ -16,18 +16,18 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
-class TriggerBg(mainApp: MainApp) : Trigger(mainApp) {
-    private var bg = InputBg(mainApp)
-    var comparator = Comparator(mainApp)
+class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
+    private var bg = InputBg(injector)
+    var comparator = Comparator(injector)
 
-    constructor(mainApp: MainApp, value: Double, units: String, compare: Comparator.Compare) : this(mainApp) {
-        bg = InputBg(mainApp, value, units)
-        comparator = Comparator(mainApp, compare)
+    constructor(injector: HasAndroidInjector, value: Double, units: String, compare: Comparator.Compare) : this(injector) {
+        bg = InputBg(injector, value, units)
+        comparator = Comparator(injector, compare)
     }
 
-    constructor(mainApp: MainApp, triggerBg: TriggerBg) : this(mainApp) {
-        bg = InputBg(mainApp, triggerBg.bg.value, triggerBg.bg.units)
-        comparator = Comparator(mainApp, triggerBg.comparator.value)
+    constructor(injector: HasAndroidInjector, triggerBg: TriggerBg) : this(injector) {
+        bg = InputBg(injector, triggerBg.bg.value, triggerBg.bg.units)
+        comparator = Comparator(injector, triggerBg.comparator.value)
     }
 
     override fun shouldRun(): Boolean {
@@ -78,13 +78,13 @@ class TriggerBg(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.icon_cp_bgcheck)
 
-    override fun duplicate(): Trigger = TriggerBg(mainApp, this)
+    override fun duplicate(): Trigger = TriggerBg(injector, this)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.glucose, this))
+            .add(StaticLabel(injector, R.string.glucose, this))
             .add(comparator)
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.glucose_u, bg.units), "", bg))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.glucose_u, bg.units), "", bg))
             .build(root)
     }
 }

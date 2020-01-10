@@ -2,10 +2,11 @@ package info.nightscout.androidaps.plugins.general.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
@@ -14,10 +15,15 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
+import javax.inject.Inject
 
-class ActionNotification(mainApp: MainApp) : Action(mainApp) {
-    var text = InputString(mainApp)
+class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var rxBus: RxBusWrapper
+
+    var text = InputString(injector)
 
     override fun friendlyName(): Int = R.string.notification
     override fun shortDescription(): String = resourceHelper.gs(R.string.notification_message, text.value)
@@ -49,7 +55,7 @@ class ActionNotification(mainApp: MainApp) : Action(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(mainApp,resourceHelper.gs(R.string.message_short), "", text))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.message_short), "", text))
             .build(root)
     }
 }

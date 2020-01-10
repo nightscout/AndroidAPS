@@ -13,17 +13,17 @@ import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.PumpInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRHistoryActivity
 import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRUserOptionsActivity
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRNewStatus
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -40,8 +40,8 @@ class DanaRFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var resourceHelper: ResourceHelper
 
@@ -90,7 +90,7 @@ class DanaRFragment : DaggerFragment() {
         danar_btconnection.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
             DanaRPump.getInstance().lastConnection = 0
-            configBuilderPlugin.commandQueue.readStatus("Clicked connect to pump", null)
+            commandQueue.readStatus("Clicked connect to pump", null)
         }
     }
 
@@ -151,7 +151,7 @@ class DanaRFragment : DaggerFragment() {
     internal fun updateGUI() {
         if (danar_dailyunits == null) return
         val pump = DanaRPump.getInstance()
-        val plugin: PumpInterface = configBuilderPlugin.activePump ?: return
+        val plugin: PumpInterface = activePlugin.activePump
         if (pump.lastConnection != 0L) {
             val agoMsec = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMsec.toDouble() / 60.0 / 1000.0).toInt()
@@ -172,15 +172,15 @@ class DanaRFragment : DaggerFragment() {
         SetWarnColor.setColor(danar_dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9)
         danar_basabasalrate.text = "( " + (pump.activeProfile + 1) + " )  " + resourceHelper.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
         // DanaRPlugin, DanaRKoreanPlugin
-        if (configBuilderPlugin.activePump?.isFakingTempsByExtendedBoluses == true) {
-            danar_tempbasal.text = treatmentsPlugin.getRealTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
+        if (activePlugin.activePump.isFakingTempsByExtendedBoluses == true) {
+            danar_tempbasal.text = activePlugin.activeTreatments.getRealTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
                 ?: ""
         } else {
             // v2 plugin
-            danar_tempbasal.text = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
+            danar_tempbasal.text = activePlugin.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
                 ?: ""
         }
-        danar_extendedbolus.text = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())?.toString()
+        danar_extendedbolus.text = activePlugin.activeTreatments.getExtendedBolusFromHistory(System.currentTimeMillis())?.toString()
             ?: ""
         danar_reservoir.text = resourceHelper.gs(R.string.reservoirvalue, pump.reservoirRemainingUnits, 300)
         SetWarnColor.setColorInverse(danar_reservoir, pump.reservoirRemainingUnits, 50.0, 20.0)
@@ -196,7 +196,7 @@ class DanaRFragment : DaggerFragment() {
         danar_basalstep.text = pump.basalStep.toString()
         danar_bolusstep.text = pump.bolusStep.toString()
         danar_serialnumber.text = pump.serialNumber
-        val status = configBuilderPlugin.commandQueue.spannedStatus()
+        val status = commandQueue.spannedStatus()
         if (status.toString() == "") {
             danar_queue.visibility = View.GONE
         } else {

@@ -149,7 +149,7 @@
     <string name="profileswitch_targethigher">Target wiil be 10% higher.</string>
     <string name="profileswitch_targetlower">Target will be 10% lower.</string>
     <string name="profileswitch_targetbottom">Only bottom target will be 10% lower.</string>
-    <string name="profileswitch_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitchtime_iwant">If you wake up 1h earlier than usual, how should you notify AAPS of the change in your schedule?</string>
     <string name="profileswitchtime_1">Initiate a profile switch with a timeshift of 1</string>
     <string name="profileswitchtime__1">Initiate a profile switch with a timeshift of -1</string>

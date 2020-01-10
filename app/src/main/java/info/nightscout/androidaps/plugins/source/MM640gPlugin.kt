@@ -10,7 +10,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONArray
 import org.json.JSONException
 import javax.inject.Inject
@@ -18,14 +18,15 @@ import javax.inject.Singleton
 
 @Singleton
 class MM640gPlugin @Inject constructor(
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    resourceHelper: ResourceHelper,
+    aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginName(R.string.MM640g)
     .description(R.string.description_source_mm640g),
-    rxBus,
-    aapsLogger
+    aapsLogger,
+    resourceHelper
 ), BgSourceInterface {
 
     override fun advancedFilteringSupported(): Boolean {
@@ -43,15 +44,14 @@ class MM640gPlugin @Inject constructor(
                 try {
                     val jsonArray = JSONArray(data)
                     for (i in 0 until jsonArray.length()) {
-                        val json_object = jsonArray.getJSONObject(i)
-                        val type = json_object.getString("type")
-                        when (type) {
+                        val jsonObject = jsonArray.getJSONObject(i)
+                        when (val type = jsonObject.getString("type")) {
                             "sgv" -> {
                                 val bgReading = BgReading()
-                                bgReading.value = json_object.getDouble("sgv")
-                                bgReading.direction = json_object.getString("direction")
-                                bgReading.date = json_object.getLong("date")
-                                bgReading.raw = json_object.getDouble("sgv")
+                                bgReading.value = jsonObject.getDouble("sgv")
+                                bgReading.direction = jsonObject.getString("direction")
+                                bgReading.date = jsonObject.getLong("date")
+                                bgReading.raw = jsonObject.getDouble("sgv")
                                 MainApp.getDbHelper().createIfNotExists(bgReading, "MM640g")
                             }
 

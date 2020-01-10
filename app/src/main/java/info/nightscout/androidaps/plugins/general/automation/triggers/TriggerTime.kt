@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import android.widget.LinearLayout
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDateTime
@@ -13,14 +13,14 @@ import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
 
-class TriggerTime(mainApp: MainApp) : Trigger(mainApp) {
-    var time = InputDateTime(mainApp)
+class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
+    var time = InputDateTime(injector)
 
-    constructor(mainApp: MainApp, runAt: Long) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, runAt: Long) : this(injector) {
         this.time.value = runAt
     }
 
-    constructor(mainApp: MainApp, triggerTime: TriggerTime) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, triggerTime: TriggerTime) : this(injector) {
         this.time.value = triggerTime.time.value
     }
 
@@ -56,11 +56,11 @@ class TriggerTime(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_access_alarm_24dp)
 
-    override fun duplicate(): Trigger = TriggerTime(mainApp, time.value)
+    override fun duplicate(): Trigger = TriggerTime(injector, time.value)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.time, this))
+            .add(StaticLabel(injector, R.string.time, this))
             .add(time)
             .build(root)
     }

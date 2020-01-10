@@ -11,6 +11,8 @@ import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
@@ -43,13 +45,17 @@ import javax.inject.Singleton
 class SWDefinition @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val mainApp: MainApp,
-    private val resourceHelper: ResourceHelper,
+    resourceHelper: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val localProfilePlugin: LocalProfilePlugin,
-    private val configBuilderPlugin: ConfigBuilderPlugin,
+    private val activePlugin: ActivePluginProvider,
+    private val commandQueue: CommandQueueProvider,
     private val objectivesPlugin: ObjectivesPlugin,
-    private val loopPlugin: LoopPlugin
+    private val configBuilderPlugin: ConfigBuilderPlugin,
+    private val loopPlugin: LoopPlugin,
+    private val nsClientPlugin: NSClientPlugin,
+    private val nsProfilePlugin: NSProfilePlugin
 ) {
 
     var activity: AppCompatActivity? = null
@@ -160,14 +166,14 @@ class SWDefinition @Inject constructor(
         .add(SWButton()
             .text(R.string.enable_nsclient)
             .action {
-                NSClientPlugin.getPlugin().setPluginEnabled(PluginType.GENERAL, true)
-                NSClientPlugin.getPlugin().setFragmentVisible(PluginType.GENERAL, true)
-                configBuilderPlugin.processOnEnabledCategoryChanged(NSClientPlugin.getPlugin(), PluginType.GENERAL)
+                nsClientPlugin.setPluginEnabled(PluginType.GENERAL, true)
+                nsClientPlugin.setFragmentVisible(PluginType.GENERAL, true)
+                configBuilderPlugin.processOnEnabledCategoryChanged(nsClientPlugin, PluginType.GENERAL)
                 configBuilderPlugin.storeSettings("SetupWizard")
                 rxBus.send(EventConfigBuilderChange())
                 rxBus.send(EventSWUpdate(true))
             }
-            .visibility { !NSClientPlugin.getPlugin().isEnabled(PluginType.GENERAL) })
+            .visibility { !nsClientPlugin.isEnabled(PluginType.GENERAL) })
         .add(SWEditUrl()
             .preferenceId(R.string.key_nsclientinternal_url)
             .updateDelay(5)
@@ -182,11 +188,11 @@ class SWDefinition @Inject constructor(
         .add(SWBreak())
         .add(SWEventListener(resourceHelper, rxBus, EventNSClientStatus::class.java)
             .label(R.string.status)
-            .initialStatus(NSClientPlugin.getPlugin().status)
+            .initialStatus(nsClientPlugin.status)
         )
         .add(SWBreak())
-        .validator { NSClientPlugin.getPlugin().nsClientService != null && NSClientService.isConnected && NSClientService.hasWriteAuth }
-        .visibility { !(NSClientPlugin.getPlugin().nsClientService != null && NSClientService.isConnected && NSClientService.hasWriteAuth) }
+        .validator { nsClientPlugin.nsClientService != null && NSClientService.isConnected && NSClientService.hasWriteAuth }
+        .visibility { !(nsClientPlugin.nsClientService != null && NSClientService.isConnected && NSClientService.hasWriteAuth) }
     private val screenAge = SWScreen(R.string.patientage)
         .skippable(false)
         .add(SWBreak())
@@ -209,7 +215,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton()
             .text(R.string.insulinsourcesetup)
             .action {
-                val plugin = configBuilderPlugin.activeInsulin as PluginBase?
+                val plugin = activePlugin.activeInsulin as PluginBase?
                 if (plugin != null) {
                     PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
@@ -218,8 +224,7 @@ class SWDefinition @Inject constructor(
                     }, null)
                 }
             }
-            .visibility { configBuilderPlugin.activeInsulin != null && (configBuilderPlugin.activeInsulin as PluginBase?)!!.preferencesId > 0 })
-        .validator { configBuilderPlugin.activeInsulin != null }
+            .visibility { (activePlugin.activeInsulin as PluginBase).preferencesId > 0 })
     private val screenBgSource = SWScreen(R.string.configbuilder_bgsource)
         .skippable(false)
         .add(SWPlugin()
@@ -229,7 +234,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton()
             .text(R.string.bgsourcesetup)
             .action {
-                val plugin = configBuilderPlugin.activeBgSource as PluginBase?
+                val plugin = activePlugin.activeBgSource as PluginBase?
                 if (plugin != null) {
                     PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
@@ -238,8 +243,8 @@ class SWDefinition @Inject constructor(
                     }, null)
                 }
             }
-            .visibility { configBuilderPlugin.activeBgSource != null && (configBuilderPlugin.activeBgSource as PluginBase?)!!.preferencesId > 0 })
-        .validator { configBuilderPlugin.activeBgSource != null }
+            .visibility { activePlugin.activeBgSource != null && (activePlugin.activeBgSource as PluginBase).preferencesId > 0 })
+        .validator { activePlugin.activeBgSource != null }
     private val screenProfile = SWScreen(R.string.configbuilder_profile)
         .skippable(false)
         .add(SWInfotext()
@@ -254,8 +259,8 @@ class SWDefinition @Inject constructor(
             .label(R.string.adjustprofileinns))
         .add(SWFragment(this)
             .add(NSProfileFragment()))
-        .validator { NSProfilePlugin.getPlugin().profile != null && NSProfilePlugin.getPlugin().profile!!.getDefaultProfile() != null && NSProfilePlugin.getPlugin().profile!!.getDefaultProfile()!!.isValid("StartupWizard") }
-        .visibility { NSProfilePlugin.getPlugin().isEnabled(PluginType.PROFILE) }
+        .validator { nsProfilePlugin.profile != null && nsProfilePlugin.profile!!.getDefaultProfile() != null && nsProfilePlugin.profile!!.getDefaultProfile()!!.isValid("StartupWizard") }
+        .visibility { nsProfilePlugin.isEnabled(PluginType.PROFILE) }
     private val screenLocalProfile = SWScreen(R.string.localprofile)
         .skippable(false)
         .add(SWFragment(this)
@@ -280,7 +285,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton()
             .text(R.string.pumpsetup)
             .action {
-                val plugin = configBuilderPlugin.activePump as PluginBase?
+                val plugin = activePlugin.activePump as PluginBase?
                 if (plugin != null) {
                     PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
@@ -289,13 +294,13 @@ class SWDefinition @Inject constructor(
                     }, null)
                 }
             }
-            .visibility { configBuilderPlugin.activePump != null && (configBuilderPlugin.activePump as PluginBase?)!!.preferencesId > 0 })
+            .visibility { activePlugin.activePumpPlugin != null && (activePlugin.activePump as PluginBase?)!!.preferencesId > 0 })
         .add(SWButton()
             .text(R.string.readstatus)
-            .action { configBuilderPlugin.commandQueue.readStatus("Clicked connect to pump", null) }
-            .visibility { configBuilderPlugin.activePump != null })
+            .action { commandQueue.readStatus("Clicked connect to pump", null) }
+            .visibility { activePlugin.activePumpPlugin != null })
         .add(SWEventListener(resourceHelper, rxBus, EventPumpStatusChanged::class.java))
-        .validator { configBuilderPlugin.activePump != null && configBuilderPlugin.activePump!!.isInitialized }
+        .validator { activePlugin.activePumpPlugin != null && activePlugin.getActivePumpPlugin()!!.isInitialized() }
     private val screenAps = SWScreen(R.string.configbuilder_aps)
         .skippable(false)
         .add(SWInfotext()
@@ -310,7 +315,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton()
             .text(R.string.apssetup)
             .action {
-                val plugin = configBuilderPlugin.activeAPS as PluginBase?
+                val plugin = activePlugin.activeAPS as PluginBase?
                 if (plugin != null) {
                     PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
@@ -319,8 +324,8 @@ class SWDefinition @Inject constructor(
                     }, null)
                 }
             }
-            .visibility { configBuilderPlugin.activeAPS != null && (configBuilderPlugin.activeAPS as PluginBase?)!!.preferencesId > 0 })
-        .validator { configBuilderPlugin.activeAPS != null }
+            .visibility { activePlugin.activeAPS != null && (activePlugin.activeAPS as PluginBase?)!!.preferencesId > 0 })
+        .validator { activePlugin.activeAPS != null }
         .visibility { Config.APS }
     private val screenApsMode = SWScreen(R.string.apsmode_title)
         .skippable(false)
@@ -361,7 +366,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton()
             .text(R.string.sensitivitysetup)
             .action {
-                val plugin = configBuilderPlugin.activeSensitivity as PluginBase?
+                val plugin = activePlugin.activeSensitivity as PluginBase?
                 if (plugin != null) {
                     PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
@@ -370,8 +375,7 @@ class SWDefinition @Inject constructor(
                     }, null)
                 }
             }
-            .visibility { configBuilderPlugin.activeSensitivity != null && (configBuilderPlugin.activeSensitivity as PluginBase?)!!.preferencesId > 0 })
-        .validator { configBuilderPlugin.activeSensitivity != null }
+            .visibility { (activePlugin.activeSensitivity as PluginBase).preferencesId > 0 })
     private val getScreenObjectives = SWScreen(R.string.objectives)
         .skippable(false)
         .add(SWInfotext()
@@ -379,8 +383,8 @@ class SWDefinition @Inject constructor(
         .add(SWBreak())
         .add(SWFragment(this)
             .add(ObjectivesFragment()))
-        .validator { objectivesPlugin.objectives[objectivesPlugin.FIRST_OBJECTIVE].isStarted }
-        .visibility { !objectivesPlugin.objectives[objectivesPlugin.FIRST_OBJECTIVE].isStarted && Config.APS }
+        .validator { objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].isStarted }
+        .visibility { !objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].isStarted && Config.APS }
 
     private fun SWDefinitionFull() { // List all the screens here
         add(screenSetupWizard)

@@ -52,7 +52,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
@@ -933,7 +932,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     }
 
     private void onClickQuickwizard() {
-        final BgReading actualBg = DatabaseHelper.actualBg();
+        final BgReading actualBg = iobCobCalculatorPlugin.actualBg();
         final Profile profile = profileFunction.getProfile();
         final String profileName = profileFunction.getProfileName();
         final PumpInterface pump = configBuilderPlugin.getActivePump();
@@ -1029,8 +1028,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         loopStatusLayout.setVisibility(View.VISIBLE);
 
         statusLightHandler.updateAge(sage, iage, cage, pbage);
-        BgReading actualBG = DatabaseHelper.actualBg();
-        BgReading lastBG = DatabaseHelper.lastBg();
+        BgReading actualBG = iobCobCalculatorPlugin.actualBg();
+        BgReading lastBG = iobCobCalculatorPlugin.lastBg();
 
         final PumpInterface pump = configBuilderPlugin.getActivePump();
 
@@ -1143,9 +1142,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         // **** Calibration & CGM buttons ****
         boolean xDripIsBgSource = xdripPlugin.isEnabled(PluginType.BGSOURCE);
         boolean dexcomIsSource = dexcomPlugin.isEnabled(PluginType.BGSOURCE);
-        boolean bgAvailable = DatabaseHelper.actualBg() != null;
         if (calibrationButton != null) {
-            if ((xDripIsBgSource || dexcomIsSource) && bgAvailable && sp.getBoolean(R.string.key_show_calibration_button, true)) {
+            if ((xDripIsBgSource || dexcomIsSource) && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)) {
                 calibrationButton.setVisibility(View.VISIBLE);
             } else {
                 calibrationButton.setVisibility(View.GONE);
@@ -1167,10 +1165,10 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             if (activeTemp != null) {
                 basalText = "T: " + activeTemp.toStringVeryShort();
             } else {
-                basalText = MainApp.gs(R.string.pump_basebasalrate,profile.getBasal());
+                basalText = MainApp.gs(R.string.pump_basebasalrate, profile.getBasal());
             }
             baseBasalView.setOnClickListener(v -> {
-                String fullText = resourceHelper.gs(R.string.pump_basebasalrate_label) + ": " + resourceHelper.gs(R.string.pump_basebasalrate,profile.getBasal()) + "\n";
+                String fullText = resourceHelper.gs(R.string.pump_basebasalrate_label) + ": " + resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal()) + "\n";
                 if (activeTemp != null) {
                     fullText += resourceHelper.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
                 }
@@ -1181,14 +1179,14 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             if (activeTemp != null) {
                 basalText = activeTemp.toStringFull();
             } else {
-                basalText = resourceHelper.gs(R.string.pump_basebasalrate,profile.getBasal());
+                basalText = resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal());
             }
         }
         baseBasalView.setText(basalText);
         if (activeTemp != null) {
             baseBasalView.setTextColor(resourceHelper.gc(R.color.basal));
         } else {
-           baseBasalView.setTextColor(MainApp.gc(R.color.defaulttextcolor));
+            baseBasalView.setTextColor(MainApp.gc(R.color.defaulttextcolor));
         }
 
 

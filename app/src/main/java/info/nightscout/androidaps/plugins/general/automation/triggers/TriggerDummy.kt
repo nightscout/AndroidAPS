@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 
 // Used for instantiation of other triggers only
-class TriggerDummy(mainApp: MainApp) : Trigger(mainApp) {
+class TriggerDummy(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun shouldRun(): Boolean {
         throw NotImplementedError("An operation is not implemented")

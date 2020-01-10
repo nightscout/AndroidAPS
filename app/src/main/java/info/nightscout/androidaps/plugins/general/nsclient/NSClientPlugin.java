@@ -20,6 +20,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -31,34 +34,31 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.logging.AAPSLoggerProduction;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog;
+import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientResend;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.ToastUtils;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
+@Singleton
 public class NSClientPlugin extends PluginBase {
     private Logger log = LoggerFactory.getLogger(L.NSCLIENT);
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    static NSClientPlugin nsClientPlugin;
-
-    static public NSClientPlugin getPlugin() {
-        if (nsClientPlugin == null) {
-            nsClientPlugin = new NSClientPlugin();
-        }
-        return nsClientPlugin;
-    }
+    private final AAPSLogger aapsLogger;
+    private final RxBusWrapper rxBus;
+    private final ResourceHelper resourceHelper;
 
     public Handler handler;
 
@@ -74,9 +74,12 @@ public class NSClientPlugin extends PluginBase {
 
     private NsClientReceiverDelegate nsClientReceiverDelegate;
 
-    // TODO: dagger
-
-    private NSClientPlugin() {
+    @Inject
+    public NSClientPlugin(
+            AAPSLogger aapsLogger,
+            RxBusWrapper rxBus,
+            ResourceHelper resourceHelper
+    ) {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
                         .fragmentClass(NSClientFragment.class.getName())
@@ -84,23 +87,22 @@ public class NSClientPlugin extends PluginBase {
                         .shortName(R.string.nsclientinternal_shortname)
                         .preferencesId(R.xml.pref_nsclientinternal)
                         .description(R.string.description_ns_client),
-                new RxBusWrapper(), new AAPSLoggerProduction() // TODO: dagger
+                aapsLogger, resourceHelper
         );
+
+        this.aapsLogger = aapsLogger;
+        this.rxBus = rxBus;
+        this.resourceHelper = resourceHelper;
 
         if (Config.NSCLIENT) {
             getPluginDescription().alwaysEnabled(true).visibleByDefault(true);
         }
-        paused = SP.getBoolean(R.string.key_nsclientinternal_paused, false);
-        autoscroll = SP.getBoolean(R.string.key_nsclientinternal_autoscroll, true);
-
         if (handler == null) {
             HandlerThread handlerThread = new HandlerThread(NSClientPlugin.class.getSimpleName() + "Handler");
             handlerThread.start();
             handler = new Handler(handlerThread.getLooper());
         }
 
-        nsClientReceiverDelegate =
-                new NsClientReceiverDelegate();
     }
 
     public boolean isAllowed() {
@@ -110,31 +112,35 @@ public class NSClientPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
+        paused = SP.getBoolean(R.string.key_nsclientinternal_paused, false);
+        autoscroll = SP.getBoolean(R.string.key_nsclientinternal_autoscroll, true);
+        nsClientReceiverDelegate = new NsClientReceiverDelegate();
+
         Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, NSClientService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         super.onStart();
 
         nsClientReceiverDelegate.grabReceiversState();
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventNSClientStatus.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     status = event.getStatus(MainApp.instance().getResourceHelper());
-                    RxBus.Companion.getINSTANCE().send(new EventNSClientUpdateGUI());
+                    rxBus.send(new EventNSClientUpdateGUI());
                 }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventNetworkChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), exception -> FabricPrivacy.getInstance().logException(exception))
         );
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), exception -> FabricPrivacy.getInstance().logException(exception))
         );
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -143,7 +149,7 @@ public class NSClientPlugin extends PluginBase {
                     }
                 }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventNSClientNewLog.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -152,10 +158,15 @@ public class NSClientPlugin extends PluginBase {
                         log.debug(event.getAction() + " " + event.getLogText());
                 }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventChargingState.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> nsClientReceiverDelegate.onStatusEvent(event), exception -> FabricPrivacy.getInstance().logException(exception))
+        );
+        disposable.add(rxBus
+                .toObservable(EventNSClientResend.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> resend(event.getReason()), exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 
@@ -205,7 +216,7 @@ public class NSClientPlugin extends PluginBase {
             synchronized (listLog) {
                 listLog.clear();
             }
-            RxBus.Companion.getINSTANCE().send(new EventNSClientUpdateGUI());
+            rxBus.send(new EventNSClientUpdateGUI());
         });
     }
 
@@ -218,7 +229,7 @@ public class NSClientPlugin extends PluginBase {
                     listLog.remove(0);
                 }
             }
-            RxBus.Companion.getINSTANCE().send(new EventNSClientUpdateGUI());
+            rxBus.send(new EventNSClientUpdateGUI());
         });
     }
 
@@ -244,7 +255,7 @@ public class NSClientPlugin extends PluginBase {
     public void pause(boolean newState) {
         SP.putBoolean(R.string.key_nsclientinternal_paused, newState);
         paused = newState;
-        RxBus.Companion.getINSTANCE().send(new EventPreferenceChange(MainApp.resources(), R.string.key_nsclientinternal_paused));
+        rxBus.send(new EventPreferenceChange(MainApp.resources(), R.string.key_nsclientinternal_paused));
     }
 
     public UploadQueue queue() {

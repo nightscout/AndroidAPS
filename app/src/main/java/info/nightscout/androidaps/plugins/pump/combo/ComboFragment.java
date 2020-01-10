@@ -12,8 +12,10 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.bus.RxBus;
@@ -22,6 +24,7 @@ import info.nightscout.androidaps.plugins.pump.combo.events.EventComboPumpUpdate
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.Bolus;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.queue.events.EventQueueChanged;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -29,7 +32,10 @@ import info.nightscout.androidaps.utils.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class ComboFragment extends Fragment implements View.OnClickListener {
+public class ComboFragment extends DaggerFragment implements View.OnClickListener {
+    @Inject ComboPlugin comboPlugin;
+    @Inject CommandQueue commandQueue;
+
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private TextView stateView;
@@ -111,16 +117,15 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     }
 
     public void updateGui() {
-        ComboPlugin plugin = ComboPlugin.getPlugin();
 
         // state
-        stateView.setText(plugin.getStateSummary());
-        PumpState ps = plugin.getPump().state;
+        stateView.setText(comboPlugin.getStateSummary());
+        PumpState ps = comboPlugin.getPump().state;
         if (ps.insulinState == PumpState.EMPTY || ps.batteryState == PumpState.EMPTY
                 || ps.activeAlert != null && ps.activeAlert.errorCode != null) {
             stateView.setTextColor(Color.RED);
             stateView.setTypeface(null, Typeface.BOLD);
-        } else if (plugin.getPump().state.suspended
+        } else if (comboPlugin.getPump().state.suspended
                 || ps.activeAlert != null && ps.activeAlert.warningCode != null) {
             stateView.setTextColor(Color.YELLOW);
             stateView.setTypeface(null, Typeface.BOLD);
@@ -130,16 +135,16 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         }
 
         // activity
-        String activity = plugin.getPump().activity;
+        String activity = comboPlugin.getPump().activity;
         if (activity != null) {
             activityView.setTextColor(Color.WHITE);
             activityView.setTextSize(14);
             activityView.setText(activity);
-        } else if (ConfigBuilderPlugin.getPlugin().getCommandQueue().size() > 0) {
+        } else if (commandQueue.size() > 0) {
             activityView.setTextColor(Color.WHITE);
             activityView.setTextSize(14);
             activityView.setText("");
-        } else if (plugin.isInitialized()) {
+        } else if (comboPlugin.isInitialized()) {
             activityView.setTextColor(Color.WHITE);
             activityView.setTextSize(20);
             activityView.setText("{fa-bed}");
@@ -149,7 +154,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
             activityView.setText(MainApp.gs(R.string.pump_unreachable));
         }
 
-        if (plugin.isInitialized()) {
+        if (comboPlugin.isInitialized()) {
             // battery
             batteryView.setTextSize(20);
             if (ps.batteryState == PumpState.EMPTY) {
@@ -164,7 +169,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
             }
 
             // reservoir
-            int reservoirLevel = plugin.getPump().reservoirLevel;
+            int reservoirLevel = comboPlugin.getPump().reservoirLevel;
             if (reservoirLevel != -1) {
                 reservoirView.setText(reservoirLevel + " " + MainApp.gs(R.string.insulin_unit_shortname));
             } else if (ps.insulinState == PumpState.LOW) {
@@ -190,12 +195,12 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
             }
 
             // last connection
-            String minAgo = DateUtil.minAgo(plugin.getPump().lastSuccessfulCmdTime);
-            long min = (System.currentTimeMillis() - plugin.getPump().lastSuccessfulCmdTime) / 1000 / 60;
-            if (plugin.getPump().lastSuccessfulCmdTime + 60 * 1000 > System.currentTimeMillis()) {
+            String minAgo = DateUtil.minAgo(comboPlugin.getPump().lastSuccessfulCmdTime);
+            long min = (System.currentTimeMillis() - comboPlugin.getPump().lastSuccessfulCmdTime) / 1000 / 60;
+            if (comboPlugin.getPump().lastSuccessfulCmdTime + 60 * 1000 > System.currentTimeMillis()) {
                 lastConnectionView.setText(R.string.combo_pump_connected_now);
                 lastConnectionView.setTextColor(Color.WHITE);
-            } else if (plugin.getPump().lastSuccessfulCmdTime + 30 * 60 * 1000 < System.currentTimeMillis()) {
+            } else if (comboPlugin.getPump().lastSuccessfulCmdTime + 30 * 60 * 1000 < System.currentTimeMillis()) {
                 lastConnectionView.setText(MainApp.gs(R.string.combo_no_pump_connection, min));
                 lastConnectionView.setTextColor(Color.RED);
             } else {
@@ -204,7 +209,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
             }
 
             // last bolus
-            Bolus bolus = plugin.getPump().lastBolus;
+            Bolus bolus = comboPlugin.getPump().lastBolus;
             if (bolus != null) {
                 long agoMsc = System.currentTimeMillis() - bolus.timestamp;
                 double bolusMinAgo = agoMsc / 60d / 1000d;
@@ -223,12 +228,12 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
             }
 
             // base basal rate
-            baseBasalRate.setText(MainApp.gs(R.string.pump_basebasalrate, plugin.getBaseBasalRate()));
+            baseBasalRate.setText(MainApp.gs(R.string.pump_basebasalrate, comboPlugin.getBaseBasalRate()));
 
             // TBR
             String tbrStr = "";
             if (ps.tbrPercent != -1 && ps.tbrPercent != 100) {
-                long minSinceRead = (System.currentTimeMillis() - plugin.getPump().state.timestamp) / 1000 / 60;
+                long minSinceRead = (System.currentTimeMillis() - comboPlugin.getPump().state.timestamp) / 1000 / 60;
                 long remaining = ps.tbrRemainingDuration - minSinceRead;
                 if (remaining >= 0) {
                     tbrStr = MainApp.gs(R.string.combo_tbr_remaining, ps.tbrPercent, remaining);

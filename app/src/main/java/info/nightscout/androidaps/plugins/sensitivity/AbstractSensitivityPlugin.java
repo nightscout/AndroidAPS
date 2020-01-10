@@ -9,19 +9,19 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public abstract class AbstractSensitivityPlugin extends PluginBase implements SensitivityInterface {
 
     private static final Logger log = LoggerFactory.getLogger(L.AUTOSENS);
 
-    public AbstractSensitivityPlugin(PluginDescription pluginDescription, RxBusWrapper rxBusWrapper, AAPSLogger aapsLogger) {
-        super(pluginDescription, rxBusWrapper, aapsLogger);
+    public AbstractSensitivityPlugin(PluginDescription pluginDescription, AAPSLogger aapsLogger, ResourceHelper resourceHelper) {
+        super(pluginDescription, aapsLogger, resourceHelper);
     }
 
     @Override

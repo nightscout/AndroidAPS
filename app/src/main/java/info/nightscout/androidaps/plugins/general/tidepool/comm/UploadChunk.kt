@@ -150,6 +150,7 @@ class UploadChunk @Inject constructor(
         }
         return results
     }
+
     private fun getBasals(start: Long, end: Long): List<BasalElement> {
         val tbrs = treatmentsPlugin.temporaryBasalsFromHistory
         tbrs.merge()
@@ -160,7 +161,8 @@ class UploadChunk @Inject constructor(
     }
 
     fun newInstanceOrNull(ps: ProfileSwitch): ProfileElement? = try {
-        ProfileElement(ps, configBuilderPlugin.activePump?.serialNumber() ?: InstanceId.instanceId())
+        ProfileElement(ps, configBuilderPlugin.activePumpPlugin?.serialNumber()
+            ?: InstanceId.instanceId())
     } catch (e: Throwable) {
         null
     }

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview.notifications
 
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -14,7 +14,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
 class NotificationWithAction constructor(
-    mainApp: MainApp
+    injector: HasAndroidInjector
 ) : Notification() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -22,21 +22,22 @@ class NotificationWithAction constructor(
     @Inject lateinit var sp: SP
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
+    @Inject lateinit var nsClientPlugin: NSClientPlugin
 
     private var nsAlarm: NSAlarm? = null
 
     init {
-        mainApp.androidInjector().inject(this)
+        injector.androidInjector().inject(this)
     }
 
-    constructor(mainApp: MainApp, id: Int, text: String, level: Int) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, id: Int, text: String, level: Int) : this(injector) {
         this.id = id
         date = System.currentTimeMillis()
         this.text = text
         this.level = level
     }
 
-    constructor (mainApp: MainApp, nsAlarm: NSAlarm) : this(mainApp) {
+    constructor (injector: HasAndroidInjector, nsAlarm: NSAlarm) : this(injector) {
         this.nsAlarm = nsAlarm
         date = System.currentTimeMillis()
         when (nsAlarm.level()) {
@@ -63,7 +64,7 @@ class NotificationWithAction constructor(
         }
         buttonText = R.string.snooze
         action = Runnable {
-            NSClientPlugin.getPlugin().handleClearAlarm(nsAlarm, 60 * 60 * 1000L)
+            nsClientPlugin.handleClearAlarm(nsAlarm, 60 * 60 * 1000L)
             // Adding current time to snooze if we got staleData
             aapsLogger.debug(LTag.NOTIFICATION, "Notification text is: $text")
             val msToSnooze = sp.getInt(R.string.key_nsalarm_staledatavalue, 15) * 60 * 1000L

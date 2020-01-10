@@ -21,15 +21,15 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
  *
  */
 abstract class InsulinOrefBasePlugin(
-    val resourceHelper: ResourceHelper,
+    resourceHelper: ResourceHelper,
     val profileFunction: ProfileFunction,
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    val rxBus: RxBusWrapper, aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.INSULIN)
     .fragmentClass(InsulinFragment::class.java.name)
     .shortName(R.string.insulin_shortname)
     .visibleByDefault(false),
-    rxBus, aapsLogger
+    aapsLogger, resourceHelper
 ), InsulinInterface {
 
     private var lastWarned: Long = 0

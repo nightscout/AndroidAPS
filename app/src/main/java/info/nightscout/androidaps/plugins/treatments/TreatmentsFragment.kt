@@ -103,7 +103,7 @@ class TreatmentsFragment : DaggerFragment() {
     }
 
     private fun updateGui() {
-        if (configBuilderPlugin.activePump?.pumpDescription?.isExtendedBolusCapable == true
+        if (configBuilderPlugin.activePumpPlugin?.pumpDescription?.isExtendedBolusCapable == true
             || treatmentsPlugin.extendedBolusesFromHistory.size() > 0)
             treatments_extendedboluses?.visibility = View.VISIBLE
         else

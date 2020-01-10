@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 import android.location.Location
 import android.widget.LinearLayout
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.general.automation.elements.*
@@ -11,12 +11,12 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 import java.text.DecimalFormat
 
-class TriggerLocation(mainApp: MainApp) : Trigger(mainApp) {
-    var latitude = InputDouble(mainApp, 0.0, -90.0, +90.0, 0.000001, DecimalFormat("0.000000"))
-    var longitude = InputDouble(mainApp, 0.0, -180.0, +180.0, 0.000001, DecimalFormat("0.000000"))
-    var distance = InputDouble(mainApp, 200.0, 0.0, 100000.0, 10.0, DecimalFormat("0"))
-    var modeSelected = InputLocationMode(mainApp)
-    var name: InputString = InputString(mainApp)
+class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
+    var latitude = InputDouble(injector, 0.0, -90.0, +90.0, 0.000001, DecimalFormat("0.000000"))
+    var longitude = InputDouble(injector, 0.0, -180.0, +180.0, 0.000001, DecimalFormat("0.000000"))
+    var distance = InputDouble(injector, 200.0, 0.0, 100000.0, 10.0, DecimalFormat("0"))
+    var modeSelected = InputLocationMode(injector)
+    var name: InputString = InputString(injector)
 
     var lastMode = InputLocationMode.Mode.INSIDE
     private val buttonAction = Runnable {
@@ -27,11 +27,11 @@ class TriggerLocation(mainApp: MainApp) : Trigger(mainApp) {
         }
     }
 
-    private constructor(mainApp: MainApp, triggerLocation: TriggerLocation) : this(mainApp) {
-        latitude = InputDouble(mainApp, triggerLocation.latitude)
-        longitude = InputDouble(mainApp, triggerLocation.longitude)
-        distance = InputDouble(mainApp, triggerLocation.distance)
-        modeSelected = InputLocationMode(mainApp, triggerLocation.modeSelected.value)
+    private constructor(injector: HasAndroidInjector, triggerLocation: TriggerLocation) : this(injector) {
+        latitude = InputDouble(injector, triggerLocation.latitude)
+        longitude = InputDouble(injector, triggerLocation.longitude)
+        distance = InputDouble(injector, triggerLocation.distance)
+        modeSelected = InputLocationMode(injector, triggerLocation.modeSelected.value)
         if (modeSelected.value == InputLocationMode.Mode.GOING_OUT)
             lastMode = InputLocationMode.Mode.OUTSIDE
         name = triggerLocation.name
@@ -87,17 +87,17 @@ class TriggerLocation(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_location_on)
 
-    override fun duplicate(): Trigger = TriggerLocation(mainApp, this)
+    override fun duplicate(): Trigger = TriggerLocation(injector, this)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.location, this))
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.name_short), "", name))
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.latitude_short), "", latitude))
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.longitude_short), "", longitude))
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.distance_short), "", distance))
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.location_mode), "", modeSelected))
-            .add(InputButton(mainApp, resourceHelper.gs(R.string.currentlocation), buttonAction), locationDataContainer.lastLocation != null)
+            .add(StaticLabel(injector, R.string.location, this))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.name_short), "", name))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.latitude_short), "", latitude))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.longitude_short), "", longitude))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.distance_short), "", distance))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.location_mode), "", modeSelected))
+            .add(InputButton(injector, resourceHelper.gs(R.string.currentlocation), buttonAction), locationDataContainer.lastLocation != null)
             .build(root)
     }
 

@@ -20,6 +20,7 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -67,9 +68,10 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             ResourceHelper resourceHelper,
             ConstraintChecker constraintChecker,
             TreatmentsPlugin treatmentsPlugin,
-            SP sp
+            SP sp,
+            CommandQueueProvider commandQueue
     ) {
-        super(rxBus, aapsLogger);
+        super(resourceHelper, aapsLogger, commandQueue);
         plugin = this;
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
@@ -165,7 +167,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         sExecutionService.finishHandshaking();
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
@@ -199,7 +201,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     }
 
     // This is called from APS
-    @Override
+    @NonNull @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
@@ -338,7 +340,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         return result;
     }
 
-    @Override
+    @NonNull @Override
     public PumpEnactResult cancelTempBasal(boolean force) {
         if (treatmentsPlugin.isInHistoryRealTempBasalInProgress())
             return cancelRealTempBasal();
@@ -353,7 +355,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         return result;
     }
 
-    @Override
+    @NonNull @Override
     public PumpType model() {
         return PumpType.DanaR;
     }

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import android.widget.LinearLayout
 import com.google.common.base.Optional
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.logging.LTag
@@ -16,17 +16,17 @@ import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
 
 // Trigger for time range ( from 10:00AM till 13:00PM )
-class TriggerTimeRange(mainApp: MainApp) : Trigger(mainApp) {
+class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
 
     // in minutes since midnight 60 means 1AM
-    var range = InputTimeRange(mainApp)
+    var range = InputTimeRange(injector)
 
-    constructor(mainApp: MainApp, start: Int, end: Int) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, start: Int, end: Int) : this(injector) {
         range.start = start
         range.end = end
     }
 
-    constructor(mainApp: MainApp, triggerTimeRange: TriggerTimeRange) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, triggerTimeRange: TriggerTimeRange) : this(injector) {
         range.start = triggerTimeRange.range.start
         range.end = triggerTimeRange.range.end
     }
@@ -68,7 +68,7 @@ class TriggerTimeRange(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_access_alarm_24dp)
 
-    override fun duplicate(): Trigger = TriggerTimeRange(mainApp, range.start, range.end)
+    override fun duplicate(): Trigger = TriggerTimeRange(injector, range.start, range.end)
 
     private fun toMills(minutesSinceMidnight: Int): Long = MidnightTime.calc() + T.mins(minutesSinceMidnight.toLong()).msecs()
 
@@ -76,7 +76,7 @@ class TriggerTimeRange(mainApp: MainApp) : Trigger(mainApp) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(mainApp, R.string.time_range, this))
+            .add(StaticLabel(injector, R.string.time_range, this))
             .add(range)
             .build(root)
     }

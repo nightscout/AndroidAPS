@@ -30,10 +30,10 @@ class StatusLightHandler @Inject constructor(
      */
     fun statusLight(cageView: TextView?, iAgeView: TextView?, reservoirView: TextView?,
                     sageView: TextView?, batteryView: TextView?) {
-        val pump = configBuilderPlugin.activePump
+        val pump = configBuilderPlugin.activePumpPlugin ?: return
         applyStatusLight("cage", CareportalEvent.SITECHANGE, cageView, "CAN", 48, 72)
         applyStatusLight("iage", CareportalEvent.INSULINCHANGE, iAgeView, "INS", 72, 96)
-        val reservoirLevel = if (pump!!.isInitialized) pump.reservoirLevel else (-1).toDouble()
+        val reservoirLevel = if (pump.isInitialized) pump.reservoirLevel else (-1).toDouble()
         applyStatusLightLevel(R.string.key_statuslights_res_critical, 10.0,
             R.string.key_statuslights_res_warning, 80.0, reservoirView, "RES", reservoirLevel)
         applyStatusLight("sage", CareportalEvent.SENSORCHANGE, sageView, "SEN", 164, 166)
@@ -92,14 +92,14 @@ class StatusLightHandler @Inject constructor(
     fun extendedStatusLight(cageView: TextView, iAgeView: TextView,
                             reservoirView: TextView, sageView: TextView,
                             batteryView: TextView) {
-        val pump = configBuilderPlugin.activePump
+        val pump = configBuilderPlugin.activePumpPlugin ?: return
         handleAge("cage", CareportalEvent.SITECHANGE, cageView, "CAN ",
             48, 72)
         handleAge("iage", CareportalEvent.INSULINCHANGE, iAgeView, "INS ",
             72, 96)
         handleLevel(R.string.key_statuslights_res_critical, 10.0,
             R.string.key_statuslights_res_warning, 80.0,
-            reservoirView, "RES ", pump!!.reservoirLevel)
+            reservoirView, "RES ", pump.reservoirLevel)
         handleAge("sage", CareportalEvent.SENSORCHANGE, sageView, "SEN ",
             164, 166)
         if (pump.model() != PumpType.AccuChekCombo) {

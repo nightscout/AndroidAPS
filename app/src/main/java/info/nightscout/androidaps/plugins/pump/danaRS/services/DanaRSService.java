@@ -21,6 +21,7 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -92,6 +93,7 @@ public class DanaRSService extends DaggerService {
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
     @Inject ProfileFunction profileFunction;
+    @Inject CommandQueueProvider commandQueue;
     @Inject MainApp mainApp;
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject DanaRSPlugin danaRSPlugin;
@@ -171,7 +173,7 @@ public class DanaRSService extends DaggerService {
             if (profile != null && Math.abs(danaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)));
                 bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile, basalStep, maxBasal
-                if (!pump.isThisProfileSet(profile) && !configBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BASALPROFILE)) {
+                if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
                     rxBus.send(new EventProfileNeedsUpdate());
                 }
             }
@@ -357,7 +359,7 @@ public class DanaRSService extends DaggerService {
             SystemClock.sleep(1000);
         }
         // do not call loadEvents() directly, reconnection may be needed
-        configBuilderPlugin.getCommandQueue().loadEvents(new Callback() {
+        commandQueue.loadEvents(new Callback() {
             @Override
             public void run() {
                 // reread bolus status

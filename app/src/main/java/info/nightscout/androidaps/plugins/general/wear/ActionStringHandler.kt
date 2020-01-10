@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.wear
 
 import android.app.NotificationManager
 import android.content.Context
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -9,16 +10,15 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.CareportalEvent
-import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TDD
 import info.nightscout.androidaps.db.TempTarget
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PumpInterface
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
@@ -30,7 +30,6 @@ import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
@@ -52,14 +51,16 @@ class ActionStringHandler @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
+    private val injector: HasAndroidInjector,
+    private val context: Context,
     private val constraintChecker: ConstraintChecker,
     private val profileFunction: ProfileFunction,
-    private val mainApp: MainApp,
     private val loopPlugin: LoopPlugin,
     private val wearPlugin: WearPlugin,
-    private val treatmentsPlugin: TreatmentsPlugin,
-    private val configBuilderPlugin: ConfigBuilderPlugin,
+    private val commandQueue: CommandQueueProvider,
+    private val activePlugin: ActivePluginProvider,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val localInsightPlugin: LocalInsightPlugin,
     private val danaRPlugin: DanaRPlugin,
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
     private val danaRv2Plugin: DanaRv2Plugin,
@@ -175,7 +176,7 @@ class ActionStringHandler @Inject constructor(
                 sendError("No profile found!")
                 return
             }
-            val bgReading = DatabaseHelper.actualBg()
+            val bgReading = iobCobCalculatorPlugin.actualBg()
             if (bgReading == null && useBG) {
                 sendError("No recent BG to base calculation on!")
                 return
@@ -187,7 +188,7 @@ class ActionStringHandler @Inject constructor(
             }
             val format = DecimalFormat("0.00")
             val formatInt = DecimalFormat("0")
-            val bolusWizard = BolusWizard(mainApp).doCalc(profile, profileName, treatmentsPlugin.tempTargetFromHistory,
+            val bolusWizard = BolusWizard(injector).doCalc(profile, profileName, activePlugin.activeTreatments.tempTargetFromHistory,
                 carbsAfterConstraints, cobInfo.displayCob!!, bgReading!!.valueToUnits(profileFunction.getUnits()),
                 0.0, percentage.toDouble(), useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend)
             if (Math.abs(bolusWizard.insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= 0.01) {
@@ -216,7 +217,7 @@ class ActionStringHandler @Inject constructor(
             }
             lastBolusWizard = bolusWizard
         } else if ("opencpp" == act[0]) {
-            val activeProfileSwitch = treatmentsPlugin.getProfileSwitchFromHistory(System.currentTimeMillis())
+            val activeProfileSwitch = activePlugin.activeTreatments.getProfileSwitchFromHistory(System.currentTimeMillis())
             if (activeProfileSwitch == null) {
                 sendError("No active profile switch!")
                 return
@@ -226,7 +227,7 @@ class ActionStringHandler @Inject constructor(
                 rAction = "opencpp" + " " + activeProfileSwitch.percentage + " " + activeProfileSwitch.timeshift
             }
         } else if ("cppset" == act[0]) {
-            val activeProfileSwitch = treatmentsPlugin.getProfileSwitchFromHistory(System.currentTimeMillis())
+            val activeProfileSwitch = activePlugin.activeTreatments.getProfileSwitchFromHistory(System.currentTimeMillis())
             if (activeProfileSwitch == null) {
                 sendError("No active profile switch!")
                 return
@@ -237,7 +238,7 @@ class ActionStringHandler @Inject constructor(
                 rAction = actionString
             }
         } else if ("tddstats" == act[0]) {
-            val activePump: Any? = configBuilderPlugin.activePump
+            val activePump = activePlugin.activePumpPlugin
             if (activePump != null) { // check if DB up to date
                 val dummies: MutableList<TDD> = LinkedList()
                 val historyList = getTDDList(dummies)
@@ -246,12 +247,11 @@ class ActionStringHandler @Inject constructor(
                     rAction = "statusmessage"
                     rMessage = "OLD DATA - "
                     //if pump is not busy: try to fetch data
-                    val pump = configBuilderPlugin.activePump
-                    if (pump!!.isBusy) {
+                    if (activePump.isBusy) {
                         rMessage += resourceHelper.gs(R.string.pumpbusy)
                     } else {
                         rMessage += "trying to fetch data from pump."
-                        configBuilderPlugin.commandQueue.loadTDDs(object : Callback() {
+                        commandQueue.loadTDDs(object : Callback() {
                             override fun run() {
                                 val dummies1: MutableList<TDD> = LinkedList()
                                 val historyList1 = getTDDList(dummies1)
@@ -314,7 +314,7 @@ class ActionStringHandler @Inject constructor(
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
         var message = ""
         val refTDD = profile.baseBasalSum() * 2
-        val pump = configBuilderPlugin.activePump
+        val pump = activePlugin.activePumpPlugin
         if (df.format(Date(historyList[0].date)) == df.format(Date())) {
             val tdd = historyList[0].getTotal()
             historyList.removeAt(0)
@@ -358,9 +358,8 @@ class ActionStringHandler @Inject constructor(
     }
 
     private fun isOldData(historyList: List<TDD>): Boolean {
-        val activePump: Any? = configBuilderPlugin.activePump
-        val insight: PumpInterface = LocalInsightPlugin.getPlugin()
-        val startsYesterday = activePump === danaRPlugin || activePump === danaRSPlugin || activePump === danaRv2Plugin || activePump === danaRKoreanPlugin || activePump === insight
+        val activePump = activePlugin.activePumpPlugin ?: return false
+        val startsYesterday = activePump === danaRPlugin || activePump === danaRSPlugin || activePump === danaRv2Plugin || activePump === danaRKoreanPlugin || activePump === localInsightPlugin
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
         return historyList.size < 3 || df.format(Date(historyList[0].date)) != df.format(Date(System.currentTimeMillis() - if (startsYesterday) 1000 * 60 * 60 * 24 else 0))
     }
@@ -390,7 +389,7 @@ class ActionStringHandler @Inject constructor(
     }
 
     private val pumpStatus: String
-        get() = configBuilderPlugin.activePump?.shortStatus(false) ?: ""
+        get() = activePlugin.activePumpPlugin?.shortStatus(false) ?: ""
 
     // decide if enabled/disabled closed/open; what Plugin as APS?
     private val loopStatus: String
@@ -403,7 +402,7 @@ class ActionStringHandler @Inject constructor(
                 } else {
                     "OPEN LOOP\n"
                 }
-                val aps = configBuilderPlugin.activeAPS
+                val aps = activePlugin.activeAPS
                 ret += "APS: " + if (aps == null) "NO APS SELECTED!" else (aps as PluginBase).name
                 if (loopPlugin.lastRun != null) {
                     if (loopPlugin.lastRun.lastAPSRun != null) ret += "\nLast Run: " + DateUtil.timeString(loopPlugin.lastRun.lastAPSRun)
@@ -424,7 +423,7 @@ class ActionStringHandler @Inject constructor(
             }
             val profile = profileFunction.getProfile() ?: return "No profile set :("
             //Check for Temp-Target:
-            val tempTarget = treatmentsPlugin.tempTargetFromHistory
+            val tempTarget = activePlugin.activeTreatments.tempTargetFromHistory
             if (tempTarget != null) {
                 ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.low, tempTarget.low, Constants.MGDL, profileFunction.getUnits())
                 ret += "\nuntil: " + DateUtil.timeString(tempTarget.originalEnd())
@@ -439,10 +438,11 @@ class ActionStringHandler @Inject constructor(
     private val oAPSResultStatus: String
         get() {
             var ret = ""
-            if (!Config.APS) {
+            if (!Config.APS)
                 return "Only apply in APS mode!"
-            }
-            val usedAPS = configBuilderPlugin.activeAPS ?: return "No active APS :(!"
+            if (activePlugin.activePumpPlugin == null)
+                return resourceHelper.gs((R.string.nopumpselected))
+            val usedAPS = activePlugin.activeAPS ?: return "No active APS :(!"
             val result = usedAPS.lastAPSResult ?: return "Last result not available!"
             ret += if (!result.isChangeRequested) {
                 resourceHelper.gs(R.string.nochangerequested) + "\n"
@@ -450,7 +450,7 @@ class ActionStringHandler @Inject constructor(
                 resourceHelper.gs(R.string.canceltemp) + "\n"
             } else {
                 resourceHelper.gs(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
-                    "(" + DecimalFormatter.to2Decimal(result.rate / configBuilderPlugin.activePump!!.baseBasalRate * 100) + "%)\n" +
+                    "(" + DecimalFormatter.to2Decimal(result.rate / activePlugin.activePump.baseBasalRate * 100) + "%)\n" +
                     resourceHelper.gs(R.string.duration) + ": " + DecimalFormatter.to0Decimal(result.duration.toDouble()) + " min\n"
             }
             ret += "\n" + resourceHelper.gs(R.string.reason) + ": " + result.reason
@@ -471,7 +471,7 @@ class ActionStringHandler @Inject constructor(
             val amount = SafeParse.stringToDouble(act[1])
             val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
             if (amount - insulinAfterConstraints != 0.0) {
-                ToastUtils.showToastInUiThread(mainApp, "aborting: previously applied constraint changed")
+                ToastUtils.showToastInUiThread(context, "aborting: previously applied constraint changed")
                 sendError("aborting: previously applied constraint changed")
                 return
             }
@@ -508,7 +508,7 @@ class ActionStringHandler @Inject constructor(
             rxBus.send(EventDismissNotification(SafeParse.stringToInt(act[1])))
         } else if ("changeRequest" == act[0]) {
             loopPlugin.acceptChangeRequest()
-            val notificationManager = mainApp.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.cancel(Constants.notificationID)
         }
         lastBolusWizard = null
@@ -547,7 +547,7 @@ class ActionStringHandler @Inject constructor(
             return
         }
         //send profile to pumpe
-        treatmentsPlugin.doProfileSwitch(0, percentage, timeshift)
+        activePlugin.activeTreatments.doProfileSwitch(0, percentage, timeshift)
     }
 
     private fun generateTempTarget(duration: Int, low: Double, high: Double) {
@@ -561,7 +561,7 @@ class ActionStringHandler @Inject constructor(
         } else {
             tempTarget.low(0.0).high(0.0)
         }
-        treatmentsPlugin.addToHistoryTempTarget(tempTarget)
+        activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
     }
 
     private fun doFillBolus(amount: Double) {
@@ -569,7 +569,7 @@ class ActionStringHandler @Inject constructor(
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.isValid = false
         detailedBolusInfo.source = Source.USER
-        configBuilderPlugin.commandQueue.bolus(detailedBolusInfo, object : Callback() {
+        commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
                     sendError(resourceHelper.gs(R.string.treatmentdeliveryerror) +
@@ -585,8 +585,9 @@ class ActionStringHandler @Inject constructor(
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.carbs = carbs.toDouble()
         detailedBolusInfo.source = Source.USER
-        if (detailedBolusInfo.insulin > 0 || configBuilderPlugin.activePump!!.pumpDescription.storesCarbInfo) {
-            configBuilderPlugin.commandQueue.bolus(detailedBolusInfo, object : Callback() {
+        val storesCarbs = activePlugin.activePumpPlugin?.pumpDescription?.storesCarbInfo ?: return
+        if (detailedBolusInfo.insulin > 0 || storesCarbs) {
+            commandQueue.bolus(detailedBolusInfo, object : Callback() {
                 override fun run() {
                     if (!result.success) {
                         sendError(resourceHelper.gs(R.string.treatmentdeliveryerror) +
@@ -596,7 +597,7 @@ class ActionStringHandler @Inject constructor(
                 }
             })
         } else {
-            treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false)
+            activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
         }
     }
 

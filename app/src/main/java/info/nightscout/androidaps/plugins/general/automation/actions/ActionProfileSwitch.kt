@@ -2,20 +2,28 @@ package info.nightscout.androidaps.plugins.general.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.automation.elements.InputProfileName
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
+import javax.inject.Inject
 
-class ActionProfileSwitch(mainApp: MainApp) : Action(mainApp) {
-    var inputProfileName: InputProfileName = InputProfileName(mainApp, "")
+class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var profileFunction: ProfileFunction
+
+    var inputProfileName: InputProfileName = InputProfileName(injector, "")
 
     override fun friendlyName(): Int = R.string.profilename
     override fun shortDescription(): String = resourceHelper.gs(R.string.changengetoprofilename, inputProfileName.value)
@@ -39,19 +47,19 @@ class ActionProfileSwitch(mainApp: MainApp) : Action(mainApp) {
             callback.result(PumpEnactResult().success(true).comment(R.string.alreadyset))?.run()
             return
         }
-        val profileStore = configBuilderPlugin.activeProfileInterface.profile ?: return
+        val profileStore = activePlugin.activeProfileInterface.profile ?: return
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile does not exist! - ${inputProfileName.value}")
             callback.result(PumpEnactResult().success(false).comment(R.string.notexists))?.run()
             return
         }
-        treatmentsPlugin.doProfileSwitch(profileStore, inputProfileName.value, 0, 100, 0, DateUtil.now())
+        activePlugin.activeTreatments.doProfileSwitch(profileStore, inputProfileName.value, 0, 100, 0, DateUtil.now())
         callback.result(PumpEnactResult().success(true).comment(R.string.ok))?.run()
     }
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(mainApp, resourceHelper.gs(R.string.profilename), "", inputProfileName))
+            .add(LabelWithElement(injector, resourceHelper.gs(R.string.profilename), "", inputProfileName))
             .build(root)
     }
 

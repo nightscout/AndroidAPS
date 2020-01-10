@@ -29,13 +29,13 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -54,6 +54,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -69,14 +70,17 @@ import io.reactivex.schedulers.Schedulers;
 @Singleton
 public class LoopPlugin extends PluginBase {
     private final SP sp;
+    private final RxBusWrapper rxBus;
     private final ConstraintChecker constraintChecker;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final MainApp mainApp;
+    private final CommandQueueProvider commandQueue;
     private final ConfigBuilderPlugin configBuilderPlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final VirtualPumpPlugin virtualPumpPlugin;
     private final Lazy<ActionStringHandler> actionStringHandler;
+    private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -104,35 +108,40 @@ public class LoopPlugin extends PluginBase {
     @Inject
     public LoopPlugin(
             AAPSLogger aapsLogger,
-            RxBusWrapper rxBusWrapper,
+            RxBusWrapper rxBus,
             SP sp,
             ConstraintChecker constraintChecker,
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
             MainApp mainApp,
+            CommandQueueProvider commandQueue,
             ConfigBuilderPlugin configBuilderPlugin,
             TreatmentsPlugin treatmentsPlugin,
             VirtualPumpPlugin virtualPumpPlugin,
-            Lazy<ActionStringHandler> actionStringHandler // TODO Adrian use RxBus instead of Lazy
+            Lazy<ActionStringHandler> actionStringHandler, // TODO Adrian use RxBus instead of Lazy
+            IobCobCalculatorPlugin iobCobCalculatorPlugin
     ) {
         super(new PluginDescription()
-                .mainType(PluginType.LOOP)
-                .fragmentClass(LoopFragment.class.getName())
-                .pluginName(R.string.loop)
-                .shortName(R.string.loop_shortname)
-                .preferencesId(R.xml.pref_loop)
-                .description(R.string.description_loop),
-                rxBusWrapper, aapsLogger
+                        .mainType(PluginType.LOOP)
+                        .fragmentClass(LoopFragment.class.getName())
+                        .pluginName(R.string.loop)
+                        .shortName(R.string.loop_shortname)
+                        .preferencesId(R.xml.pref_loop)
+                        .description(R.string.description_loop),
+                aapsLogger, resourceHelper
         );
         this.sp = sp;
+        this.rxBus = rxBus;
         this.constraintChecker = constraintChecker;
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
         this.mainApp = mainApp;
         this.configBuilderPlugin = configBuilderPlugin;
+        this.commandQueue = commandQueue;
         this.treatmentsPlugin = treatmentsPlugin;
         this.virtualPumpPlugin = virtualPumpPlugin;
         this.actionStringHandler = actionStringHandler;
+        this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
 
         loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L);
         isSuperBolus = sp.getBoolean("isSuperBolus", false);
@@ -143,7 +152,7 @@ public class LoopPlugin extends PluginBase {
     protected void onStart() {
         createNotificationChannel();
         super.onStart();
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> invoke("EventTempTargetChange", true), exception -> FabricPrivacy.getInstance().logException(exception))
@@ -155,14 +164,14 @@ public class LoopPlugin extends PluginBase {
          * the event causing the calculation is not EventNewBg.
          * <p>
          */
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     // Autosens calculation not triggered by a new BG
                     if (!(event.getCause() instanceof EventNewBG)) return;
 
-                    BgReading bgReading = DatabaseHelper.actualBg();
+                    BgReading bgReading = iobCobCalculatorPlugin.actualBg();
                     // BG outdated
                     if (bgReading == null) return;
                     // already looped with that value
@@ -194,7 +203,7 @@ public class LoopPlugin extends PluginBase {
 
     @Override
     public boolean specialEnableCondition() {
-        PumpInterface pump = configBuilderPlugin.getActivePump();
+        PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
         return pump == null || pump.getPumpDescription().isTempBasalCapable;
     }
 
@@ -297,10 +306,10 @@ public class LoopPlugin extends PluginBase {
             if (!loopEnabled.value()) {
                 String message = resourceHelper.gs(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
                 getAapsLogger().debug(LTag.APS, message);
-                getRxBus().send(new EventLoopSetLastRunGui(message));
+                rxBus.send(new EventLoopSetLastRunGui(message));
                 return;
             }
-            final PumpInterface pump = configBuilderPlugin.getActivePump();
+            final PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
             if (pump == null)
                 return;
             APSResult result = null;
@@ -313,7 +322,7 @@ public class LoopPlugin extends PluginBase {
             if (profile == null || !profileFunction.isProfileValid("Loop")) {
                 if (L.isEnabled(L.APS))
                     getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.noprofileselected));
-                getRxBus().send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.noprofileselected)));
+                rxBus.send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.noprofileselected)));
                 return;
             }
 
@@ -328,7 +337,7 @@ public class LoopPlugin extends PluginBase {
 
             // Check if we have any result
             if (result == null) {
-                getRxBus().send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.noapsselected)));
+                rxBus.send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.noapsselected)));
                 return;
             }
 
@@ -368,13 +377,13 @@ public class LoopPlugin extends PluginBase {
 
             if (isSuspended()) {
                 getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.loopsuspended));
-                getRxBus().send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.loopsuspended)));
+                rxBus.send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.loopsuspended)));
                 return;
             }
 
             if (pump.isSuspended()) {
                 getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.pumpsuspended));
-                getRxBus().send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.pumpsuspended)));
+                rxBus.send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.pumpsuspended)));
                 return;
             }
 
@@ -382,15 +391,15 @@ public class LoopPlugin extends PluginBase {
 
             if (closedLoopEnabled.value()) {
                 if (resultAfterConstraints.isChangeRequested()
-                        && !configBuilderPlugin.getCommandQueue().bolusInQueue()
-                        && !configBuilderPlugin.getCommandQueue().isRunning(Command.CommandType.BOLUS)) {
+                        && !commandQueue.bolusInQueue()
+                        && !commandQueue.isRunning(Command.CommandType.BOLUS)) {
                     final PumpEnactResult waiting = new PumpEnactResult();
                     waiting.queued = true;
                     if (resultAfterConstraints.tempBasalRequested)
                         lastRun.tbrSetByPump = waiting;
                     if (resultAfterConstraints.bolusRequested)
                         lastRun.smbSetByPump = waiting;
-                    getRxBus().send(new EventLoopUpdateGui());
+                    rxBus.send(new EventLoopUpdateGui());
                     FabricPrivacy.getInstance().logCustom("APSRequest");
                     applyTBRRequest(resultAfterConstraints, profile, new Callback() {
                         @Override
@@ -411,11 +420,11 @@ public class LoopPlugin extends PluginBase {
                                                 invoke("tempBasalFallback", allowNotification, true);
                                             }).start();
                                         }
-                                        getRxBus().send(new EventLoopUpdateGui());
+                                        rxBus.send(new EventLoopUpdateGui());
                                     }
                                 });
                             }
-                            getRxBus().send(new EventLoopUpdateGui());
+                            rxBus.send(new EventLoopUpdateGui());
                         }
                     });
                 } else {
@@ -456,7 +465,7 @@ public class LoopPlugin extends PluginBase {
                             (NotificationManager) mainApp.getSystemService(Context.NOTIFICATION_SERVICE);
                     // mId allows you to update the notification later on.
                     mNotificationManager.notify(Constants.notificationID, builder.build());
-                    getRxBus().send(new EventNewOpenLoopNotification());
+                    rxBus.send(new EventNewOpenLoopNotification());
 
                     // Send to Wear
                     actionStringHandler.get().handleInitiate("changeRequest");
@@ -469,7 +478,7 @@ public class LoopPlugin extends PluginBase {
                 }
             }
 
-            getRxBus().send(new EventLoopUpdateGui());
+            rxBus.send(new EventLoopUpdateGui());
         } finally {
             getAapsLogger().debug(LTag.APS, "invoke end");
         }
@@ -488,7 +497,7 @@ public class LoopPlugin extends PluginBase {
                     NSUpload.uploadDeviceStatus(lp);
                     sp.incInt(R.string.key_ObjectivesmanualEnacts);
                 }
-                getRxBus().send(new EventAcceptOpenLoopChange());
+                rxBus.send(new EventAcceptOpenLoopChange());
             }
         });
         FabricPrivacy.getInstance().logCustom("AcceptTemp");
@@ -509,7 +518,7 @@ public class LoopPlugin extends PluginBase {
             return;
         }
 
-        PumpInterface pump = configBuilderPlugin.getActivePump();
+        PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
         if (pump == null) {
             if (callback != null)
                 callback.result(new PumpEnactResult().enacted(false).success(false).comment(resourceHelper.gs(R.string.nopumpselected))).run();
@@ -540,7 +549,7 @@ public class LoopPlugin extends PluginBase {
             if (request.percent == 100 && request.duration == 0) {
                 if (activeTemp != null) {
                     getAapsLogger().debug(LTag.APS, "applyAPSRequest: cancelTempBasal()");
-                    configBuilderPlugin.getCommandQueue().cancelTempBasal(false, callback);
+                    commandQueue.cancelTempBasal(false, callback);
                 } else {
                     getAapsLogger().debug(LTag.APS, "applyAPSRequest: Basal set correctly");
                     if (callback != null) {
@@ -560,13 +569,13 @@ public class LoopPlugin extends PluginBase {
                 }
             } else {
                 getAapsLogger().debug(LTag.APS, "applyAPSRequest: tempBasalPercent()");
-                configBuilderPlugin.getCommandQueue().tempBasalPercent(request.percent, request.duration, false, profile, callback);
+                commandQueue.tempBasalPercent(request.percent, request.duration, false, profile, callback);
             }
         } else {
             if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - pump.getBaseBasalRate()) < pump.getPumpDescription().basalStep) {
                 if (activeTemp != null) {
                     getAapsLogger().debug(LTag.APS, "applyAPSRequest: cancelTempBasal()");
-                    configBuilderPlugin.getCommandQueue().cancelTempBasal(false, callback);
+                    commandQueue.cancelTempBasal(false, callback);
                 } else {
                     getAapsLogger().debug(LTag.APS, "applyAPSRequest: Basal set correctly");
                     if (callback != null) {
@@ -586,7 +595,7 @@ public class LoopPlugin extends PluginBase {
                 }
             } else {
                 getAapsLogger().debug(LTag.APS, "applyAPSRequest: setTempBasalAbsolute()");
-                configBuilderPlugin.getCommandQueue().tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
+                commandQueue.tempBasalAbsolute(request.rate, request.duration, false, profile, callback);
             }
         }
     }
@@ -596,7 +605,7 @@ public class LoopPlugin extends PluginBase {
             return;
         }
 
-        PumpInterface pump = configBuilderPlugin.getActivePump();
+        PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
         if (pump == null) {
             if (callback != null)
                 callback.result(new PumpEnactResult().enacted(false).success(false).comment(resourceHelper.gs(R.string.nopumpselected))).run();
@@ -641,18 +650,18 @@ public class LoopPlugin extends PluginBase {
         detailedBolusInfo.source = Source.USER;
         detailedBolusInfo.deliverAt = request.deliverAt;
         getAapsLogger().debug(LTag.APS, "applyAPSRequest: bolus()");
-        configBuilderPlugin.getCommandQueue().bolus(detailedBolusInfo, callback);
+        commandQueue.bolus(detailedBolusInfo, callback);
     }
 
     public void disconnectPump(int durationInMinutes, Profile profile) {
-        PumpInterface pump = configBuilderPlugin.getActivePump();
+        PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
         if (pump == null)
             return;
 
         disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
 
         if (pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
-            configBuilderPlugin.getCommandQueue().tempBasalAbsolute(0, durationInMinutes, true, profile, new Callback() {
+            commandQueue.tempBasalAbsolute(0, durationInMinutes, true, profile, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -666,7 +675,7 @@ public class LoopPlugin extends PluginBase {
                 }
             });
         } else {
-            configBuilderPlugin.getCommandQueue().tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
+            commandQueue.tempBasalPercent(0, durationInMinutes, true, profile, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -682,7 +691,7 @@ public class LoopPlugin extends PluginBase {
         }
 
         if (pump.getPumpDescription().isExtendedBolusCapable && treatmentsPlugin.isInHistoryExtendedBoluslInProgress()) {
-            configBuilderPlugin.getCommandQueue().cancelExtended(new Callback() {
+            commandQueue.cancelExtended(new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -701,7 +710,7 @@ public class LoopPlugin extends PluginBase {
 
     public void suspendLoop(int durationInMinutes) {
         suspendTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000);
-        configBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+        commandQueue.cancelTempBasal(true, new Callback() {
             @Override
             public void run() {
                 if (!result.success) {

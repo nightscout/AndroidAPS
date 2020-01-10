@@ -6,12 +6,15 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
+import javax.inject.Inject
 
-class ComparatorExists(mainApp: MainApp) : Element(mainApp) {
+class ComparatorExists(injector: HasAndroidInjector) : Element(injector) {
+    @Inject lateinit var resourceHelper: ResourceHelper
+
     enum class Compare {
         EXISTS, NOT_EXISTS;
 
@@ -30,7 +33,7 @@ class ComparatorExists(mainApp: MainApp) : Element(mainApp) {
         }
     }
 
-    constructor(mainApp: MainApp, value: Compare) : this(mainApp) {
+    constructor(injector: HasAndroidInjector, value: Compare) : this(injector) {
         this.value = value
     }
 

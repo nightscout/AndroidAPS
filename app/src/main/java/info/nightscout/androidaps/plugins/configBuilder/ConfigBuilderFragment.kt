@@ -136,10 +136,10 @@ class ConfigBuilderFragment : DaggerFragment() {
             }
 
             enabledExclusive.setOnClickListener {
-                plugin.switchAllowed(if (enabledExclusive.visibility == View.VISIBLE) enabledExclusive.isChecked else enabledInclusive.isChecked, fragment.activity, pluginType)
+                configBuilderPlugin.switchAllowed(plugin, if (enabledExclusive.visibility == View.VISIBLE) enabledExclusive.isChecked else enabledInclusive.isChecked, fragment.activity, pluginType)
             }
             enabledInclusive.setOnClickListener {
-                plugin.switchAllowed(if (enabledExclusive.visibility == View.VISIBLE) enabledExclusive.isChecked else enabledInclusive.isChecked, fragment.activity, pluginType)
+                configBuilderPlugin.switchAllowed(plugin, if (enabledExclusive.visibility == View.VISIBLE) enabledExclusive.isChecked else enabledInclusive.isChecked, fragment.activity, pluginType)
             }
 
             pluginPreferences.setOnClickListener {

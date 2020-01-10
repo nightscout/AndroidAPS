@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.general.tidepool
 
+import android.content.Context
 import android.text.Spanned
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventNetworkChange
 import info.nightscout.androidaps.events.EventNewBG
@@ -42,9 +42,9 @@ import javax.inject.Singleton
 @Singleton
 class TidepoolPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
-    rxBus: RxBusWrapper,
-    private val mainApp: MainApp,
-    private val resourceHelper: ResourceHelper,
+    resourceHelper: ResourceHelper,
+    private val rxBus: RxBusWrapper,
+    private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val tidepoolUploader: TidepoolUploader,
     private val uploadChunk: UploadChunk,
@@ -56,7 +56,7 @@ class TidepoolPlugin @Inject constructor(
     .fragmentClass(TidepoolFragment::class.qualifiedName)
     .preferencesId(R.xml.pref_tidepool)
     .description(R.string.description_tidepool),
-    rxBus, aapsLogger
+    aapsLogger, resourceHelper
 ) {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -135,7 +135,7 @@ class TidepoolPlugin @Inject constructor(
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
 
-        val tidepoolTestLogin :  Preference? = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_tidepool_test_login))
+        val tidepoolTestLogin: Preference? = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_tidepool_test_login))
         tidepoolTestLogin?.setOnPreferenceClickListener {
             preferenceFragment.context?.let {
                 tidepoolUploader.testLogin(it)
@@ -176,7 +176,7 @@ class TidepoolPlugin @Inject constructor(
             }
             textLog = HtmlHelper.fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
-            ToastUtils.showToastInUiThread(mainApp, "Out of memory!\nStop using this phone !!!", R.raw.error)
+            ToastUtils.showToastInUiThread(context, "Out of memory!\nStop using this phone !!!", R.raw.error)
         }
     }
 

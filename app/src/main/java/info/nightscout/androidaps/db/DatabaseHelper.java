@@ -32,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -48,9 +47,9 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
@@ -417,40 +416,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduledBgPost = bgWorker.schedule(task, sec, TimeUnit.SECONDS);
 
     }
-
-    /*
-     * Return last BgReading from database or null if db is empty
-     */
-    @Nullable
-    public static BgReading lastBg() {
-        List<BgReading> bgList = IobCobCalculatorPlugin.getPlugin().getBgReadings();
-
-        if (bgList == null)
-            return null;
-
-        for (int i = 0; i < bgList.size(); i++)
-            if (bgList.get(i).value >= 39)
-                return bgList.get(i);
-        return null;
-    }
-
-    /*
-     * Return bg reading if not old ( <9 min )
-     * or null if older
-     */
-    @Nullable
-    public static BgReading actualBg() {
-        BgReading lastBg = lastBg();
-
-        if (lastBg == null)
-            return null;
-
-        if (lastBg.date > System.currentTimeMillis() - 9 * 60 * 1000)
-            return lastBg;
-
-        return null;
-    }
-
 
     public List<BgReading> getBgreadingsDataFromTime(long mills, boolean ascending) {
         try {

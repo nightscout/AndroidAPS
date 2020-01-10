@@ -18,6 +18,7 @@ public class Objective3 extends Objective {
     @Inject SP sp;
     @Inject ObjectivesPlugin objectivesPlugin;
     @Inject ResourceHelper resourceHelper;
+    @Inject NSClientPlugin nsClientPlugin;
 
     private final int MANUAL_ENACTS_NEEDED = 20;
 
@@ -49,7 +50,7 @@ public class Objective3 extends Objective {
 
     @Override
     public boolean specialActionEnabled() {
-        return NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth;
+        return nsClientPlugin.nsClientService.isConnected && nsClientPlugin.nsClientService.hasWriteAuth;
     }
 
     @Override

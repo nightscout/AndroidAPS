@@ -41,7 +41,6 @@ import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.androidaps.plugins.source.DexcomPlugin
@@ -53,7 +52,6 @@ import info.nightscout.androidaps.utils.OKDialog.show
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import java.util.*
 import javax.inject.Inject
 
 class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener, HasAndroidInjector {
@@ -69,12 +67,20 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var careportalPlugin: CareportalPlugin
+    @Inject lateinit var comboPlugin: ComboPlugin
     @Inject lateinit var insulinOrefFreePeakPlugin: InsulinOrefFreePeakPlugin
     @Inject lateinit var loopPlugin: LoopPlugin
+    @Inject lateinit var localInsightPlugin: LocalInsightPlugin
+    @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
+    @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     @Inject lateinit var openAPSMAPlugin: OpenAPSMAPlugin
     @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     @Inject lateinit var safetyPlugin: SafetyPlugin
+    @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
+    @Inject lateinit var sensitivityOref0Plugin: SensitivityOref1Plugin
+    @Inject lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
+    @Inject lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
     @Inject lateinit var dexcomPlugin: DexcomPlugin
     @Inject lateinit var eversensePlugin: EversensePlugin
     @Inject lateinit var glimpPlugin: GlimpPlugin
@@ -144,20 +150,20 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(openAPSMAPlugin, rootKey, Config.APS)
             addPreferencesFromResourceIfEnabled(openAPSAMAPlugin, rootKey, Config.APS)
             addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, rootKey, Config.APS)
-            addPreferencesFromResourceIfEnabled(SensitivityAAPSPlugin.getPlugin(), rootKey)
-            addPreferencesFromResourceIfEnabled(SensitivityWeightedAveragePlugin.getPlugin(), rootKey)
-            addPreferencesFromResourceIfEnabled(SensitivityOref0Plugin.getPlugin(), rootKey)
-            addPreferencesFromResourceIfEnabled(SensitivityOref1Plugin.getPlugin(), rootKey)
+            addPreferencesFromResourceIfEnabled(sensitivityAAPSPlugin, rootKey)
+            addPreferencesFromResourceIfEnabled(sensitivityWeightedAveragePlugin, rootKey)
+            addPreferencesFromResourceIfEnabled(sensitivityOref0Plugin, rootKey)
+            addPreferencesFromResourceIfEnabled(sensitivityOref1Plugin, rootKey)
             addPreferencesFromResourceIfEnabled(danaRPlugin, rootKey, Config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(danaRKoreanPlugin, rootKey, Config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(danaRv2Plugin, rootKey, Config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(danaRSPlugin, rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(LocalInsightPlugin.getPlugin(), rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(ComboPlugin.getPlugin(), rootKey, Config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(MedtronicPumpPlugin.getPlugin(), rootKey, Config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(localInsightPlugin, rootKey, Config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(comboPlugin, rootKey, Config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, Config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey, !Config.NSCLIENT)
             addPreferencesFromResourceIfEnabled(insulinOrefFreePeakPlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), rootKey)
+            addPreferencesFromResourceIfEnabled(nsClientPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(tidepoolPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(smsCommunicatorPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(automationPlugin, rootKey)
@@ -195,7 +201,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         updatePrefSummary(findPreference(key))
     }
 
-    fun addPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?) {
+    private fun addPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?) {
         val xmlRoot = preferenceManager.inflateFromResource(context,
             preferencesResId, null)
         val root: Preference?
@@ -220,7 +226,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             resourceHelper.gs(R.string.key_high_mark),
             resourceHelper.gs(R.string.key_low_mark)
         )
-        if (Arrays.asList(*unitDependent).contains(pref.key)) {
+        if (listOf(*unitDependent).contains(pref.key)) {
             val editTextPref = pref as EditTextPreference
             val converted = Profile.toCurrentUnitsString(SafeParse.stringToDouble(editTextPref.text))
             editTextPref.summary = converted
@@ -233,12 +239,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             pref.setSummary(pref.entry)
         }
         if (pref is EditTextPreference) {
-            val editTextPref = pref
             if (pref.getKey().contains("password") || pref.getKey().contains("secret")) {
                 pref.setSummary("******")
-            } else if (editTextPref.text != null) {
-                pref.dialogMessage = editTextPref.dialogMessage
-                pref.setSummary(editTextPref.text)
+            } else if (pref.text != null) {
+                pref.dialogMessage = pref.dialogMessage
+                pref.setSummary(pref.text)
             } else {
                 for (plugin in MainApp.getPluginsList()) {
                     plugin.updatePreferenceSummary(pref)
@@ -251,9 +256,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     private fun initSummary(p: Preference) {
         p.isIconSpaceReserved = false // remove extra spacing on left after migration to androidx
         if (p is PreferenceGroup) {
-            val pGrp = p
-            for (i in 0 until pGrp.preferenceCount) {
-                initSummary(pGrp.getPreference(i))
+            for (i in 0 until p.preferenceCount) {
+                initSummary(p.getPreference(i))
             }
         } else {
             updatePrefSummary(p)

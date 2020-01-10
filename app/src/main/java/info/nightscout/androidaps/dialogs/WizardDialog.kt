@@ -18,7 +18,6 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.BgReading
-import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -110,8 +109,7 @@ class WizardDialog : DaggerDialogFragment() {
             ?: 0.0, 0.0, 500.0, 0.1, DecimalFormat("0.0"), false, ok, textWatcher)
         treatments_wizard_carbs_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carbs_input")
             ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, ok, textWatcher)
-        val bolusStep = configBuilderPlugin.activePump?.pumpDescription?.bolusStep
-            ?: 0.1
+        val bolusStep = configBuilderPlugin.activePump.pumpDescription.bolusStep
         treatments_wizard_correction_input.setParams(savedInstanceState?.getDouble("treatments_wizard_correction_input")
             ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
         treatments_wizard_carb_time_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carb_time_input")
@@ -238,7 +236,7 @@ class WizardDialog : DaggerDialogFragment() {
             treatments_wizard_bg_input.setStep(0.1)
 
         // Set BG if not old
-        val lastBg = DatabaseHelper.actualBg()
+        val lastBg = iobCobCalculatorPlugin.actualBg()
 
         if (lastBg != null) {
             treatments_wizard_bg_input.value = lastBg.valueToUnits(units)

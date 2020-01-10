@@ -67,6 +67,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     private final MainApp mainApp;
     private final SP sp;
+    private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final ConfigBuilderPlugin configBuilderPlugin;
@@ -106,17 +107,18 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                             ConfigBuilderPlugin configBuilderPlugin
     ) {
         super(new PluginDescription()
-                .mainType(PluginType.TREATMENT)
-                .fragmentClass(TreatmentsFragment.class.getName())
-                .pluginName(R.string.treatments)
-                .shortName(R.string.treatments_shortname)
-                .alwaysEnabled(true)
-                .description(R.string.description_treatments),
-                rxBus,
-                aapsLogger
+                        .mainType(PluginType.TREATMENT)
+                        .fragmentClass(TreatmentsFragment.class.getName())
+                        .pluginName(R.string.treatments)
+                        .shortName(R.string.treatments_shortname)
+                        .alwaysEnabled(true)
+                        .description(R.string.description_treatments),
+                aapsLogger,
+                resourceHelper
         );
         this.resourceHelper = resourceHelper;
         this.mainApp = mainApp;
+        this.rxBus = rxBus;
         this.sp = sp;
         this.profileFunction = profileFunction;
         this.configBuilderPlugin = configBuilderPlugin;
@@ -128,7 +130,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         this.service = new TreatmentService();
         initializeData(range());
         super.onStart();
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventReloadTreatmentData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -136,23 +138,23 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                             initializeTreatmentData(range());
                             initializeExtendedBolusData(range());
                             updateTotalIOBTreatments();
-                            getRxBus().send(event.getNext());
+                            rxBus.send(event.getNext());
                         },
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventReloadProfileSwitchData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> initializeProfileSwitchData(range()),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> initializeTempTargetData(range()),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventReloadTempBasalData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -240,11 +242,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (profile == null)
             return total;
 
-        InsulinInterface insulinInterface = configBuilderPlugin.getActiveInsulin();
-        if (insulinInterface == null)
-            return total;
-
-        PumpInterface pumpInterface = configBuilderPlugin.getActivePump();
+        PumpInterface pumpInterface = configBuilderPlugin.getActivePumpPlugin();
         if (pumpInterface == null)
             return total;
 
@@ -402,10 +400,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         IobTotal total = new IobTotal(time);
 
         InsulinInterface insulinInterface = configBuilderPlugin.getActiveInsulin();
-        if (insulinInterface == null)
-            return total;
 
-        PumpInterface pumpInterface = configBuilderPlugin.getActivePump();
+        PumpInterface pumpInterface = configBuilderPlugin.getActivePumpPlugin();
         if (pumpInterface == null)
             return total;
 
@@ -462,10 +458,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         IobTotal total = new IobTotal(time);
 
         InsulinInterface insulinInterface = configBuilderPlugin.getActiveInsulin();
-        if (insulinInterface == null)
-            return total;
 
-        PumpInterface pumpInterface = configBuilderPlugin.getActivePump();
+        PumpInterface pumpInterface = configBuilderPlugin.getActivePumpPlugin();
         if (pumpInterface == null)
             return total;
 
@@ -727,7 +721,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
-        getRxBus().send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
+        rxBus.send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         MainApp.getDbHelper().createOrUpdate(profileSwitch);
         NSUpload.uploadProfileSwitch(profileSwitch);
     }

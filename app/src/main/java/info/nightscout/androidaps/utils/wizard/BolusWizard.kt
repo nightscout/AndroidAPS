@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.text.Spanned
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -22,7 +22,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
@@ -37,7 +36,7 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 class BolusWizard @Inject constructor(
-    private val mainApp: MainApp
+    injector: HasAndroidInjector
 ) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -45,14 +44,14 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var constraintChecker: ConstraintChecker
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var activePluginProvider: ActivePluginProvider
-    @Inject lateinit var commandQueueProvider: CommandQueueProvider
+    @Inject lateinit var context: Context
+    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
     init {
-        mainApp.androidInjector().inject(this)
+        injector.androidInjector().inject(this)
     }
 
     // Intermediate
@@ -186,10 +185,10 @@ class BolusWizard @Inject constructor(
 
         // Insulin from IOB
         // IOB calculation
-        treatmentsPlugin.updateTotalIOBTreatments()
-        val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
-        treatmentsPlugin.updateTotalIOBTempBasals()
-        val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
+        activePlugin.activeTreatments.updateTotalIOBTreatments()
+        val bolusIob = activePlugin.activeTreatments.lastCalculationTreatments.round()
+        activePlugin.activeTreatments.updateTotalIOBTempBasals()
+        val basalIob = activePlugin.activeTreatments.lastCalculationTempBasals.round()
 
         insulinFromBolusIOB = if (includeBolusIOB) -bolusIob.iob else 0.0
         insulinFromBasalsIOB = if (includeBasalIOB) -basalIob.basaliob else 0.0
@@ -219,8 +218,7 @@ class BolusWizard @Inject constructor(
             calculatedTotalInsulin = 0.0
         }
 
-        val bolusStep = activePluginProvider.activePump?.pumpDescription?.bolusStep
-            ?: 0.1
+        val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep)
 
         insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(calculatedTotalInsulin)).value()
@@ -301,7 +299,7 @@ class BolusWizard @Inject constructor(
 
     fun confirmAndExecute(context: Context) {
         val profile = profileFunction.getProfile() ?: return
-        val pump = activePluginProvider.activePump ?: return
+        val pump = activePlugin.activePump
 
         if (calculatedTotalInsulin > 0.0 || carbs > 0.0) {
             if (accepted) {
@@ -320,30 +318,30 @@ class BolusWizard @Inject constructor(
                             rxBus.send(EventRefreshOverview("WizardDialog"))
                         }
 
-                        if (pump.pumpDescription?.tempBasalStyle == PumpDescription.ABSOLUTE) {
-                            commandQueueProvider.commandQueue.tempBasalAbsolute(0.0, 120, true, profile, object : Callback() {
+                        if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
+                            commandQueue.tempBasalAbsolute(0.0, 120, true, profile, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
-                                        val i = Intent(mainApp, ErrorHelperActivity::class.java)
+                                        val i = Intent(context, ErrorHelperActivity::class.java)
                                         i.putExtra("soundid", R.raw.boluserror)
                                         i.putExtra("status", result.comment)
                                         i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
                                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        mainApp.startActivity(i)
+                                        context.startActivity(i)
                                     }
                                 }
                             })
                         } else {
 
-                            commandQueueProvider.commandQueue.tempBasalPercent(0, 120, true, profile, object : Callback() {
+                            commandQueue.tempBasalPercent(0, 120, true, profile, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
-                                        val i = Intent(mainApp, ErrorHelperActivity::class.java)
+                                        val i = Intent(context, ErrorHelperActivity::class.java)
                                         i.putExtra("soundid", R.raw.boluserror)
                                         i.putExtra("status", result.comment)
                                         i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror))
                                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        mainApp.startActivity(i)
+                                        context.startActivity(i)
                                     }
                                 }
                             })
@@ -360,21 +358,21 @@ class BolusWizard @Inject constructor(
                     detailedBolusInfo.boluscalc = nsJSON()
                     detailedBolusInfo.source = Source.USER
                     detailedBolusInfo.notes = notes
-                    if (detailedBolusInfo.insulin > 0 || pump.pumpDescription?.storesCarbInfo == true) {
-                        commandQueueProvider.commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                    if (detailedBolusInfo.insulin > 0 || pump.pumpDescription.storesCarbInfo == true) {
+                        commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    val i = Intent(mainApp, ErrorHelperActivity::class.java)
+                                    val i = Intent(context, ErrorHelperActivity::class.java)
                                     i.putExtra("soundid", R.raw.boluserror)
                                     i.putExtra("status", result.comment)
                                     i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
                                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    mainApp.startActivity(i)
+                                    context.startActivity(i)
                                 }
                             }
                         })
                     } else {
-                        treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false)
+                        activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
                     }
                 }
             })

@@ -25,8 +25,12 @@ import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.elements.*
 import info.nightscout.androidaps.plugins.general.automation.triggers.*
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Thread
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
 import info.nightscout.androidaps.plugins.treatments.Treatment
-import info.nightscout.androidaps.queue.commands.CommandSetProfile
+import info.nightscout.androidaps.queue.CommandQueue
+import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -46,8 +50,8 @@ open class AppModule {
 
     @Provides
     @Singleton
-    fun provideProfileFunction(sp: SP, configBuilderPlugin: ConfigBuilderPlugin): ProfileFunction {
-        return ProfileFunctionImplementation(sp, configBuilderPlugin)
+    fun provideProfileFunction(sp: SP): ProfileFunction {
+        return ProfileFunctionImplementation(sp)
     }
 
     @Provides
@@ -69,7 +73,25 @@ open class AppModule {
     @Module
     interface AppBindings {
 
+        @ContributesAndroidInjector fun commandQueueInjector(): CommandQueue
+        @ContributesAndroidInjector fun commandBolusInjector(): CommandBolus
+        @ContributesAndroidInjector
+        fun commandCancelExtendedBolusInjector(): CommandCancelExtendedBolus
+
+        @ContributesAndroidInjector fun commandCancelTempBasalInjector(): CommandCancelTempBasal
+        @ContributesAndroidInjector fun commandExtendedBolusInjector(): CommandExtendedBolus
+        @ContributesAndroidInjector
+        fun commandInsightSetTBROverNotificationInjector(): CommandInsightSetTBROverNotification
+
+        @ContributesAndroidInjector fun commandLoadEventsInjector(): CommandLoadEvents
+        @ContributesAndroidInjector fun commandLoadHistoryInjector(): CommandLoadHistory
+        @ContributesAndroidInjector fun commandReadStatusInjector(): CommandReadStatus
         @ContributesAndroidInjector fun commandSetProfileInjector(): CommandSetProfile
+        @ContributesAndroidInjector fun commandCommandSMBBolusInjector(): CommandSMBBolus
+        @ContributesAndroidInjector fun commandStartPumpInjector(): CommandStartPump
+        @ContributesAndroidInjector fun commandStopPumpInjector(): CommandStopPump
+        @ContributesAndroidInjector fun commandTempBasalAbsoluteInjector(): CommandTempBasalAbsolute
+        @ContributesAndroidInjector fun commandTempBasalPercentInjector(): CommandTempBasalPercent
 
         @ContributesAndroidInjector fun objective0Injector(): Objective0
         @ContributesAndroidInjector fun objective1Injector(): Objective1
@@ -107,7 +129,9 @@ open class AppModule {
         @ContributesAndroidInjector fun actionLoopSuspendInjector(): ActionLoopSuspend
         @ContributesAndroidInjector fun actionNotificationInjector(): ActionNotification
         @ContributesAndroidInjector fun actionProfileSwitchInjector(): ActionProfileSwitch
-        @ContributesAndroidInjector fun actionProfileSwitchPercentInjector(): ActionProfileSwitchPercent
+        @ContributesAndroidInjector
+        fun actionProfileSwitchPercentInjector(): ActionProfileSwitchPercent
+
         @ContributesAndroidInjector fun actionSendSMSInjector(): ActionSendSMS
         @ContributesAndroidInjector fun actionStartTempTargetInjector(): ActionStartTempTarget
         @ContributesAndroidInjector fun actionStopTempTargetInjector(): ActionStopTempTarget
@@ -134,6 +158,10 @@ open class AppModule {
         @ContributesAndroidInjector fun labelWithElementInjector(): LabelWithElement
         @ContributesAndroidInjector fun staticLabelInjector(): StaticLabel
 
+        @ContributesAndroidInjector fun autosensDataInjector(): AutosensData
+        @ContributesAndroidInjector fun iobCobThreadInjector(): IobCobThread
+        @ContributesAndroidInjector fun iobCobOref1ThreadInjector(): IobCobOref1Thread
+
         @ContributesAndroidInjector fun bgReadingInjector(): BgReading
         @ContributesAndroidInjector fun treatmentInjector(): Treatment
 
@@ -146,9 +174,10 @@ open class AppModule {
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
 
-        @Binds  fun bindActivePluginProvider(configBuilderPlugin: ConfigBuilderPlugin): ActivePluginProvider
+        @Binds
+        fun bindActivePluginProvider(configBuilderPlugin: ConfigBuilderPlugin): ActivePluginProvider
 
-        @Binds  fun bindCommandQueueProvider(configBuilderPlugin: ConfigBuilderPlugin): CommandQueueProvider
+        @Binds fun commandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
 
     }
 }

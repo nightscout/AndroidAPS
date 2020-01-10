@@ -14,6 +14,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -55,11 +56,16 @@ import static info.nightscout.androidaps.utils.DateUtil.now;
 
 @Singleton
 public class IobCobCalculatorPlugin extends PluginBase {
+    private final HasAndroidInjector injector;
     private final SP sp;
+    private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final ConfigBuilderPlugin configBuilderPlugin;
     private final TreatmentsPlugin treatmentsPlugin;
+    private final SensitivityOref1Plugin sensitivityOref1Plugin;
+    private final SensitivityAAPSPlugin sensitivityAAPSPlugin;
+    private final SensitivityWeightedAveragePlugin sensitivityWeightedAveragePlugin;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -86,35 +92,44 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     @Inject
     public IobCobCalculatorPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             SP sp,
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
             ConfigBuilderPlugin configBuilderPlugin,
-            TreatmentsPlugin treatmentsPlugin
+            TreatmentsPlugin treatmentsPlugin,
+            SensitivityOref1Plugin sensitivityOref1Plugin,
+            SensitivityAAPSPlugin sensitivityAAPSPlugin,
+            SensitivityWeightedAveragePlugin sensitivityWeightedAveragePlugin
     ) {
         super(new PluginDescription()
-                .mainType(PluginType.GENERAL)
-                .pluginName(R.string.iobcobcalculator)
-                .showInList(false)
-                .neverVisible(true)
-                .alwaysEnabled(true),
-                rxBus, aapsLogger
+                        .mainType(PluginType.GENERAL)
+                        .pluginName(R.string.iobcobcalculator)
+                        .showInList(false)
+                        .neverVisible(true)
+                        .alwaysEnabled(true),
+                aapsLogger, resourceHelper
         );
         this.plugin = this;
+        this.injector = injector;
         this.sp = sp;
+        this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
         this.configBuilderPlugin = configBuilderPlugin;
         this.treatmentsPlugin = treatmentsPlugin;
+        this.sensitivityOref1Plugin = sensitivityOref1Plugin;
+        this.sensitivityAAPSPlugin = sensitivityAAPSPlugin;
+        this.sensitivityWeightedAveragePlugin = sensitivityWeightedAveragePlugin;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         // EventConfigBuilderChange
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventConfigBuilderChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -128,7 +143,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         // EventNewBasalProfile
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventNewBasalProfile.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -146,7 +161,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         // EventNewBG
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventNewBG.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -155,7 +170,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         // EventPreferenceChange
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -180,16 +195,16 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         // EventAppInitialized
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventAppInitialized.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, event), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         // EventNewHistoryData
-        disposable.add(getRxBus()
+        disposable.add(rxBus
                 .toObservable(EventNewHistoryData.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> newHistoryData(event), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(this::newHistoryData, exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 
@@ -668,7 +683,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         long dia_ago = now - (Double.valueOf(profile.getDia() * T.hours(1).msecs())).longValue();
 
         double maxAbsorptionHours = Constants.DEFAULT_MAX_ABSORPTION_TIME;
-        if (SensitivityAAPSPlugin.getPlugin().isEnabled(PluginType.SENSITIVITY) || SensitivityWeightedAveragePlugin.getPlugin().isEnabled(PluginType.SENSITIVITY)) {
+        if (sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled()) {
             maxAbsorptionHours = sp.getDouble(R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME);
         } else {
             maxAbsorptionHours = sp.getDouble(R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME);
@@ -777,10 +792,10 @@ public class IobCobCalculatorPlugin extends PluginBase {
     public void runCalculation(String from, long end, boolean bgDataReload, boolean limitDataToOldestAvailable, Event cause) {
         getAapsLogger().debug(LTag.AUTOSENS, "Starting calculation thread: " + from + " to " + DateUtil.dateAndTimeString(end));
         if (thread == null || thread.getState() == Thread.State.TERMINATED) {
-            if (SensitivityOref1Plugin.getPlugin().isEnabled(PluginType.SENSITIVITY))
-                thread = new IobCobOref1Thread(this, from, end, bgDataReload, limitDataToOldestAvailable, cause);
+            if (sensitivityOref1Plugin.isEnabled())
+                thread = new IobCobOref1Thread(injector, from, end, bgDataReload, limitDataToOldestAvailable, cause);
             else
-                thread = new IobCobThread(this, from, end, bgDataReload, limitDataToOldestAvailable, cause);
+                thread = new IobCobThread(injector, from, end, bgDataReload, limitDataToOldestAvailable, cause);
             thread.start();
         }
     }
@@ -830,6 +845,40 @@ public class IobCobCalculatorPlugin extends PluginBase {
             basalDataTable = new LongSparseArray<>();
         }
     }
+
+    /*
+     * Return last BgReading from database or null if db is empty
+     */
+    @Nullable
+    public BgReading lastBg() {
+        List<BgReading> bgList = getBgReadings();
+
+        if (bgList == null)
+            return null;
+
+        for (int i = 0; i < bgList.size(); i++)
+            if (bgList.get(i).value >= 39)
+                return bgList.get(i);
+        return null;
+    }
+
+    /*
+     * Return bg reading if not old ( <9 min )
+     * or null if older
+     */
+    @Nullable
+    public BgReading actualBg() {
+        BgReading lastBg = lastBg();
+
+        if (lastBg == null)
+            return null;
+
+        if (lastBg.date > System.currentTimeMillis() - 9 * 60 * 1000)
+            return lastBg;
+
+        return null;
+    }
+
 
     // From https://gist.github.com/IceCreamYou/6ffa1b18c4c8f6aeaad2
     // Returns the value at a given percentile in a sorted numeric array.

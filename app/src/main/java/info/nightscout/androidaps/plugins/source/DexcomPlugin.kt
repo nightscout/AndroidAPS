@@ -14,10 +14,10 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject
@@ -27,7 +27,8 @@ import javax.inject.Singleton
 class DexcomPlugin @Inject constructor(
     private val sp: SP,
     private val mainApp: MainApp,
-    rxBus: RxBusWrapper, aapsLogger: AAPSLogger
+    resourceHelper: ResourceHelper,
+    aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -35,15 +36,7 @@ class DexcomPlugin @Inject constructor(
     .shortName(R.string.dexcom_short)
     .preferencesId(R.xml.pref_bgsourcedexcom)
     .description(R.string.description_source_dexcom),
-    rxBus,
-    aapsLogger), BgSourceInterface {
-
-    private val PACKAGE_NAMES = arrayOf("com.dexcom.cgm.region1.mgdl", "com.dexcom.cgm.region1.mmol",
-        "com.dexcom.cgm.region2.mgdl", "com.dexcom.cgm.region2.mmol",
-        "com.dexcom.g6.region1.mmol", "com.dexcom.g6.region2.mgdl",
-        "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol")
-
-    val PERMISSION = "com.dexcom.cgm.EXTERNAL_PERMISSION"
+    aapsLogger, resourceHelper), BgSourceInterface {
 
     override fun advancedFilteringSupported(): Boolean {
         return true
@@ -124,5 +117,13 @@ class DexcomPlugin @Inject constructor(
         } catch (e: Exception) {
             aapsLogger.error("Error while processing intent from Dexcom App", e)
         }
+    }
+
+    companion object {
+        private val PACKAGE_NAMES = arrayOf("com.dexcom.cgm.region1.mgdl", "com.dexcom.cgm.region1.mmol",
+            "com.dexcom.cgm.region2.mgdl", "com.dexcom.cgm.region2.mmol",
+            "com.dexcom.g6.region1.mmol", "com.dexcom.g6.region2.mgdl",
+            "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol")
+        const val PERMISSION = "com.dexcom.cgm.EXTERNAL_PERMISSION"
     }
 }

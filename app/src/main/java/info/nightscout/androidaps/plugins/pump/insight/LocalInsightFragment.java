@@ -12,11 +12,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.bus.RxBus;
@@ -36,7 +38,9 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
-public class LocalInsightFragment extends Fragment implements View.OnClickListener {
+public class LocalInsightFragment extends DaggerFragment implements View.OnClickListener {
+    @Inject LocalInsightPlugin localInsightPlugin;
+
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final boolean ENABLE_OPERATING_MODE_BUTTON = false;
@@ -92,7 +96,7 @@ public class LocalInsightFragment extends Fragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         if (v == operatingMode) {
-            if (LocalInsightPlugin.getPlugin().getOperatingMode() != null) {
+            if (localInsightPlugin.getOperatingMode() != null) {
                 operatingMode.setEnabled(false);
                 operatingModeCallback = new Callback() {
                     @Override
@@ -103,7 +107,7 @@ public class LocalInsightFragment extends Fragment implements View.OnClickListen
                         });
                     }
                 };
-                switch (LocalInsightPlugin.getPlugin().getOperatingMode()) {
+                switch (localInsightPlugin.getOperatingMode()) {
                     case PAUSED:
                     case STOPPED:
                         ConfigBuilderPlugin.getPlugin().getCommandQueue().startPump(operatingModeCallback);
@@ -113,7 +117,7 @@ public class LocalInsightFragment extends Fragment implements View.OnClickListen
                 }
             }
         } else if (v == tbrOverNotification) {
-            TBROverNotificationBlock notificationBlock = LocalInsightPlugin.getPlugin().getTBROverNotificationBlock();
+            TBROverNotificationBlock notificationBlock = localInsightPlugin.getTBROverNotificationBlock();
             if (notificationBlock != null) {
                 tbrOverNotification.setEnabled(false);
                 tbrOverNotificationCallback = new Callback() {
@@ -146,7 +150,7 @@ public class LocalInsightFragment extends Fragment implements View.OnClickListen
     protected void updateGUI() {
         if (!viewsCreated) return;
         statusItemContainer.removeAllViews();
-        if (!LocalInsightPlugin.getPlugin().isInitialized()) {
+        if (!localInsightPlugin.isInitialized()) {
             operatingMode.setVisibility(View.GONE);
             tbrOverNotification.setVisibility(View.GONE);
             refresh.setVisibility(View.GONE);
@@ -154,7 +158,7 @@ public class LocalInsightFragment extends Fragment implements View.OnClickListen
         }
         refresh.setVisibility(View.VISIBLE);
         refresh.setEnabled(refreshCallback == null);
-        TBROverNotificationBlock notificationBlock = LocalInsightPlugin.getPlugin().getTBROverNotificationBlock();
+        TBROverNotificationBlock notificationBlock = localInsightPlugin.getTBROverNotificationBlock();
         tbrOverNotification.setVisibility(notificationBlock == null ? View.GONE : View.VISIBLE);
         if (notificationBlock != null)
             tbrOverNotification.setText(notificationBlock.isEnabled() ? R.string.disable_tbr_over_notification : R.string.enable_tbr_over_notification);
@@ -185,7 +189,7 @@ public class LocalInsightFragment extends Fragment implements View.OnClickListen
 
     private void getConnectionStatusItem(List<View> statusItems) {
         int string = 0;
-        InsightState state = LocalInsightPlugin.getPlugin().getConnectionService().getState();
+        InsightState state = localInsightPlugin.getConnectionService().getState();
         switch (state) {
             case NOT_PAIRED:
                 string = R.string.not_paired;
@@ -217,17 +221,17 @@ public class LocalInsightFragment extends Fragment implements View.OnClickListen
         }
         statusItems.add(getStatusItem(MainApp.gs(R.string.insight_status), MainApp.gs(string)));
         if (state == InsightState.RECOVERING) {
-            statusItems.add(getStatusItem(MainApp.gs(R.string.recovery_duration), LocalInsightPlugin.getPlugin().getConnectionService().getRecoveryDuration() / 1000 + "s"));
+            statusItems.add(getStatusItem(MainApp.gs(R.string.recovery_duration), localInsightPlugin.getConnectionService().getRecoveryDuration() / 1000 + "s"));
         }
     }
 
     private void getLastConnectedItem(List<View> statusItems) {
-        switch (LocalInsightPlugin.getPlugin().getConnectionService().getState()) {
+        switch (localInsightPlugin.getConnectionService().getState()) {
             case CONNECTED:
             case NOT_PAIRED:
                 return;
             default:
-                long lastConnection = LocalInsightPlugin.getPlugin().getConnectionService().getLastConnected();
+                long lastConnection = localInsightPlugin.getConnectionService().getLastConnected();
                 if (lastConnection == 0) return;
                 int min = (int) ((System.currentTimeMillis() - lastConnection) / 60000);
                 statusItems.add(getStatusItem(MainApp.gs(R.string.last_connected), DateUtil.timeString(lastConnection)));
@@ -235,14 +239,14 @@ public class LocalInsightFragment extends Fragment implements View.OnClickListen
     }
 
     private void getOperatingModeItem(List<View> statusItems) {
-        if (LocalInsightPlugin.getPlugin().getOperatingMode() == null) {
+        if (localInsightPlugin.getOperatingMode() == null) {
             operatingMode.setVisibility(View.GONE);
             return;
         }
         int string = 0;
         if (ENABLE_OPERATING_MODE_BUTTON) operatingMode.setVisibility(View.VISIBLE);
         operatingMode.setEnabled(operatingModeCallback == null);
-        switch (LocalInsightPlugin.getPlugin().getOperatingMode()) {
+        switch (localInsightPlugin.getOperatingMode()) {
             case STARTED:
                 operatingMode.setText(R.string.stop_pump);
                 string = R.string.started;
@@ -260,46 +264,46 @@ public class LocalInsightFragment extends Fragment implements View.OnClickListen
     }
 
     private void getBatteryStatusItem(List<View> statusItems) {
-        if (LocalInsightPlugin.getPlugin().getBatteryStatus() == null) return;
+        if (localInsightPlugin.getBatteryStatus() == null) return;
         statusItems.add(getStatusItem(MainApp.gs(R.string.pump_battery_label),
-                LocalInsightPlugin.getPlugin().getBatteryStatus().getBatteryAmount() + "%"));
+                localInsightPlugin.getBatteryStatus().getBatteryAmount() + "%"));
     }
 
     private void getCartridgeStatusItem(List<View> statusItems) {
-        CartridgeStatus cartridgeStatus = LocalInsightPlugin.getPlugin().getCartridgeStatus();
+        CartridgeStatus cartridgeStatus = localInsightPlugin.getCartridgeStatus();
         if (cartridgeStatus == null) return;
         String status;
         if (cartridgeStatus.isInserted())
-            status = DecimalFormatter.to2Decimal(LocalInsightPlugin.getPlugin().getCartridgeStatus().getRemainingAmount()) + "U";
+            status = DecimalFormatter.to2Decimal(localInsightPlugin.getCartridgeStatus().getRemainingAmount()) + "U";
         else status = MainApp.gs(R.string.not_inserted);
         statusItems.add(getStatusItem(MainApp.gs(R.string.pump_reservoir_label), status));
     }
 
     private void getTDDItems(List<View> statusItems) {
-        if (LocalInsightPlugin.getPlugin().getTotalDailyDose() == null) return;
-        TotalDailyDose tdd = LocalInsightPlugin.getPlugin().getTotalDailyDose();
+        if (localInsightPlugin.getTotalDailyDose() == null) return;
+        TotalDailyDose tdd = localInsightPlugin.getTotalDailyDose();
         statusItems.add(getStatusItem(MainApp.gs(R.string.tdd_bolus), DecimalFormatter.to2Decimal(tdd.getBolus())));
         statusItems.add(getStatusItem(MainApp.gs(R.string.tdd_basal), DecimalFormatter.to2Decimal(tdd.getBasal())));
         statusItems.add(getStatusItem(MainApp.gs(R.string.tdd_total), DecimalFormatter.to2Decimal(tdd.getBolusAndBasal())));
     }
 
     private void getBaseBasalRateItem(List<View> statusItems) {
-        if (LocalInsightPlugin.getPlugin().getActiveBasalRate() == null) return;
-        ActiveBasalRate activeBasalRate = LocalInsightPlugin.getPlugin().getActiveBasalRate();
+        if (localInsightPlugin.getActiveBasalRate() == null) return;
+        ActiveBasalRate activeBasalRate = localInsightPlugin.getActiveBasalRate();
         statusItems.add(getStatusItem(MainApp.gs(R.string.pump_basebasalrate_label),
                 DecimalFormatter.to2Decimal(activeBasalRate.getActiveBasalRate()) + " U/h (" + activeBasalRate.getActiveBasalProfileName() + ")"));
     }
 
     private void getTBRItem(List<View> statusItems) {
-        if (LocalInsightPlugin.getPlugin().getActiveTBR() == null) return;
-        ActiveTBR activeTBR = LocalInsightPlugin.getPlugin().getActiveTBR();
+        if (localInsightPlugin.getActiveTBR() == null) return;
+        ActiveTBR activeTBR = localInsightPlugin.getActiveTBR();
         statusItems.add(getStatusItem(MainApp.gs(R.string.pump_tempbasal_label),
                 MainApp.gs(R.string.tbr_formatter, activeTBR.getPercentage(), activeTBR.getInitialDuration() - activeTBR.getRemainingDuration(), activeTBR.getInitialDuration())));
     }
 
     private void getBolusItems(List<View> statusItems) {
-        if (LocalInsightPlugin.getPlugin().getActiveBoluses() == null) return;
-        for (ActiveBolus activeBolus : LocalInsightPlugin.getPlugin().getActiveBoluses()) {
+        if (localInsightPlugin.getActiveBoluses() == null) return;
+        for (ActiveBolus activeBolus : localInsightPlugin.getActiveBoluses()) {
             String label;
             switch (activeBolus.getBolusType()) {
                 case MULTIWAVE:
