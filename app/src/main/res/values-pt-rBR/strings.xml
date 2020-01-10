@@ -331,13 +331,13 @@
     <string name="smscommunicator_profilereplywithcode">Para mudar o perfil para %1$s %2$d%% responda com o código %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">Para começar o bólus estendido %1$.2fU/h para %2$d min responda com o código %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Para inserir %1$dg em %2$s responda com código %3$s</string>
-    <string name="smscommunicator_basalpctreplywithcode">Para começar a basal %1$d% U/h durante %2$d min responda com o código %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">Para começar a basal %1$d%% U/h durante %2$d min responda com o código %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Para suspender o loop por %1$d minutos resposta com código %2$s</string>
     <string name="smscommunicator_tempbasalset">Basal temporária %1$.2fU/h para %2$d min iniciada com êxito</string>
     <string name="smscommunicator_extendedset">Bólus estendido %1$.2fU/h para %2$d min iniciado com êxito</string>
     <string name="smscommunicator_carbsset">Hidratos %1$dg inseridos com sucesso</string>
     <string name="smscommunicator_carbsfailed">Introdução de %1$dg de hidratos falhou</string>
-    <string name="smscommunicator_tempbasalset_percent">Basal temporária %1$d% U/h durante%2$d min iniciada com êxito</string>
+    <string name="smscommunicator_tempbasalset_percent">Basal temporária %1$d%% U/h durante%2$d min iniciada com êxito</string>
     <string name="smscommunicator_tempbasalfailed">Falha ao iniciar basal temp</string>
     <string name="smscommunicator_extendedfailed">Falha ao iniciar o bolus estendido</string>
     <string name="smscommunicator_basalstopreplywithcode">Para parar a basal temporária responda com o código %1$s</string>
@@ -1315,6 +1315,7 @@
     <string name="medtronic_error_pump_frequency_invalid">Frequência da Bomba não suportada.</string>
     <string name="medtronic_error_rileylink_address_invalid">Endereço RileyLink inválido.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">A bomba detectada não é a mesma que a bomba configurada.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">A configuração de perfis/padrões da basal não éstá atcivada na bomba. Active-a na bomba.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Perfil Basal definido na Bomba está incorrecto (deve ser STD).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Tipo de DBT errado definido na bomba (deve ser Absoluto).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Máx. Basal definida na Bomba está incorreta (deve ser %1$.2f).</string>

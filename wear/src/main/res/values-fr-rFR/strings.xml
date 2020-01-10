@@ -51,6 +51,7 @@
     <string name="pref_low">Faible</string>
     <string name="pref_medium">Moyen</string>
     <string name="pref_high">Élevé</string>
+    <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Gros chiffres (Cercle)</string>
     <string name="pref_ring_history">Historique (Cercle)</string>
     <string name="pref_light_ring_history">Historique Léger (Cercle)</string>
