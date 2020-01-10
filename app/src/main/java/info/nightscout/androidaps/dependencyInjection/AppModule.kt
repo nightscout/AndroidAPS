@@ -6,6 +6,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.db.BgReading
@@ -69,6 +70,7 @@ open class AppModule {
     interface AppBindings {
 
         @ContributesAndroidInjector fun commandSetProfileInjector(): CommandSetProfile
+
         @ContributesAndroidInjector fun objective0Injector(): Objective0
         @ContributesAndroidInjector fun objective1Injector(): Objective1
         @ContributesAndroidInjector fun objective2Injector(): Objective2
@@ -89,7 +91,9 @@ open class AppModule {
         @ContributesAndroidInjector fun triggerIobInjector(): TriggerIob
         @ContributesAndroidInjector fun triggerLocationInjector(): TriggerLocation
         @ContributesAndroidInjector fun triggerProfilePercentInjector(): TriggerProfilePercent
-        @ContributesAndroidInjector fun triggerPumpLastConnectonInjector(): TriggerPumpLastConnection
+        @ContributesAndroidInjector
+        fun triggerPumpLastConnectionInjector(): TriggerPumpLastConnection
+
         @ContributesAndroidInjector fun triggerRecurringTimeInjector(): TriggerRecurringTime
         @ContributesAndroidInjector fun triggerTempTargetInjector(): TriggerTempTarget
         @ContributesAndroidInjector fun triggerTime(): TriggerTime
@@ -140,10 +144,11 @@ open class AppModule {
         @ContributesAndroidInjector fun loggerQuickWizardEntry(): QuickWizardEntry
 
         @Binds fun bindContext(mainApp: MainApp): Context
+        @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
 
-        @Binds fun bindActivePluginProvider(configBuilderPlugin: ConfigBuilderPlugin) : ActivePluginProvider
-        @Binds fun bindCommandQueueProvider(configBuilderPlugin: ConfigBuilderPlugin) : CommandQueueProvider
+        @Binds  fun bindActivePluginProvider(configBuilderPlugin: ConfigBuilderPlugin): ActivePluginProvider
 
+        @Binds  fun bindCommandQueueProvider(configBuilderPlugin: ConfigBuilderPlugin): CommandQueueProvider
 
     }
 }
