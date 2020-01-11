@@ -59,7 +59,7 @@ class VersionCheckerUtils @Inject constructor() {
         aapsLogger.debug(LTag.CORE, "Github master version no checked. No connectivity")
 
     @Suppress("SameParameterValue")
-    private fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
+    fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
 
         val newVersionElements = newVersion.toNumberList()
         val currentVersionElements = currentVersion.toNumberList()
@@ -129,7 +129,7 @@ class VersionCheckerUtils @Inject constructor() {
     private fun String?.toNumberList() =
         this?.numericVersionPart().takeIf { !it.isNullOrBlank() }?.split(".")?.map { it.toInt() }
 
-    private fun findVersion(file: String?): String? {
+    fun findVersion(file: String?): String? {
         val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
         return file?.lines()?.filter { regex.matches(it) }?.mapNotNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }?.firstOrNull()
     }
