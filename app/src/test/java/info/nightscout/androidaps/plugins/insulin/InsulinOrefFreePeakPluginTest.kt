@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.insulin
 
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -36,10 +37,15 @@ class InsulinOrefFreePeakPluginTest {
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var profileFunction: ProfileFunction
+    @Mock lateinit var aapsLogger: AAPSLogger
 
     @Before
     fun setup() {
-        sut = InsulinOrefFreePeakPlugin(sp, resourceHelper, rxBus, profileFunction)
+        sut = InsulinOrefFreePeakPlugin(sp = sp,
+            resourceHelper = resourceHelper,
+            rxBus = rxBus,
+            profileFunction = profileFunction,
+            aapsLogger = aapsLogger)
     }
 
     @Test

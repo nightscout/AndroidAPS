@@ -5,6 +5,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.utils.SP
 import org.junit.Assert.assertEquals
+import org.junit.Assert.fail
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
@@ -128,7 +129,7 @@ class VersionCheckerUtilsKtTest {
     fun `should find update1`() {
         prepareMainApp()
 
-        compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1")
 
         //verify(bus, times(1)).post(any())
 
@@ -145,7 +146,7 @@ class VersionCheckerUtilsKtTest {
     fun `should find update2`() {
         prepareMainApp()
 
-        compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1-dev")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.2.1-dev")
 
         //verify(bus, times(1)).post(any())
 
@@ -161,7 +162,7 @@ class VersionCheckerUtilsKtTest {
     fun `should find update3`() {
         prepareMainApp()
 
-        compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.1")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(newVersion = "2.2.3", currentVersion = "2.1")
 
         //verify(bus, times(1)).post(any())
 
@@ -177,7 +178,7 @@ class VersionCheckerUtilsKtTest {
     fun `should find update4`() {
         prepareMainApp()
 
-        compareWithCurrentVersion(newVersion = "2.2", currentVersion = "2.1.1")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(newVersion = "2.2", currentVersion = "2.1.1")
 
         //verify(bus, times(1)).post(any())
 
@@ -192,7 +193,7 @@ class VersionCheckerUtilsKtTest {
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update5`() {
         prepareMainApp()
-        compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2-dev")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2-dev")
 
         //verify(bus, times(1)).post(any())
 
@@ -207,7 +208,7 @@ class VersionCheckerUtilsKtTest {
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should find update6`() {
         prepareMainApp()
-        compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2dev")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(newVersion = "2.2.1", currentVersion = "2.2dev")
 
         //verify(bus, times(1)).post(any())
 
@@ -222,7 +223,7 @@ class VersionCheckerUtilsKtTest {
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should not find update on fourth version digit`() {
         prepareMainApp()
-        compareWithCurrentVersion(newVersion = "2.5.0", currentVersion = "2.5.0.1")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(newVersion = "2.5.0", currentVersion = "2.5.0.1")
 
         //verify(bus, times(0)).post(any())
 
@@ -235,7 +236,7 @@ class VersionCheckerUtilsKtTest {
     @PrepareForTest(MainApp::class, L::class, SP::class)
     fun `should not find update on personal version with same number` (){
         prepareMainApp()
-        compareWithCurrentVersion(newVersion = "2.5.0", currentVersion = "2.5.0-myversion")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(newVersion = "2.5.0", currentVersion = "2.5.0-myversion")
 
         //verify(bus, times(0)).post(any())
 
@@ -256,7 +257,7 @@ class VersionCheckerUtilsKtTest {
             |   appName = "Aaoeu"
         """.trimMargin()
         prepareMainApp()
-        compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.2.2")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.2.2")
 
         //verify(bus, times(0)).post(any())
 
@@ -276,7 +277,7 @@ class VersionCheckerUtilsKtTest {
             |   appName = "Aaoeu"
         """.trimMargin()
         prepareMainApp()
-        compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.2.2")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.2.2")
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
         SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
@@ -297,7 +298,7 @@ class VersionCheckerUtilsKtTest {
             |   appName = "Aaoeu"
         """.trimMargin()
         prepareMainApp()
-        compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.2.2")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.2.2")
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
         SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
@@ -317,7 +318,7 @@ class VersionCheckerUtilsKtTest {
             |   appName = "Aaoeu"
         """.trimMargin()
         prepareMainApp()
-        compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "3.0-RC04")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "3.0-RC04")
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
         SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
@@ -337,7 +338,7 @@ class VersionCheckerUtilsKtTest {
             |   appName = "Aaoeu"
         """.trimMargin()
         prepareMainApp()
-        compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "3.0RC04")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "3.0RC04")
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
         SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
@@ -357,7 +358,7 @@ class VersionCheckerUtilsKtTest {
             |   appName = "Aaoeu"
         """.trimMargin()
         prepareMainApp()
-        compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "3.RC04")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "3.RC04")
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
         SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
@@ -377,7 +378,7 @@ class VersionCheckerUtilsKtTest {
             |   appName = "Aaoeu"
         """.trimMargin()
         prepareMainApp()
-        compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "3.0.RC04")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "3.0.RC04")
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
         SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
@@ -397,7 +398,7 @@ class VersionCheckerUtilsKtTest {
             |   appName = "Aaoeu"
         """.trimMargin()
         prepareMainApp()
-        compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "3.7.9")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "3.7.9")
 
         PowerMockito.verifyStatic(SP::class.java, times(1))
         SP.getLong(eq(R.string.key_last_versionchecker_warning), ArgumentMatchers.anyLong())
@@ -417,7 +418,7 @@ class VersionCheckerUtilsKtTest {
             |   appName = "Aaoeu"
         """.trimMargin()
         prepareMainApp()
-        compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.3")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.3")
 
         //verify(bus, times(0)).post(any())
 
@@ -437,7 +438,7 @@ class VersionCheckerUtilsKtTest {
             |   appName = "Aaoeu"
         """.trimMargin()
         prepareMainApp()
-        compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.3-RC")
+        fail()// TODO setup as Object and test: compareWithCurrentVersion(findVersion(buildGradle), currentVersion = "2.3-RC")
 
         //verify(bus, times(0)).post(any())
 
