@@ -113,18 +113,7 @@ class VersionCheckerUtils @Inject constructor() {
         }
     }
 
-    @Deprecated(replaceWith = ReplaceWith("numericVersionPart()"), message = "Will not work if RCs have another index number in it.")
-    fun String.versionStrip() = this.mapNotNull {
-        when (it) {
-            in '0'..'9' -> it
-            '.'         -> it
-            else        -> null
-        }
-    }.joinToString(separator = "")
 
-    private fun String.numericVersionPart(): String =
-        "(((\\d+)\\.)+(\\d+))(\\D(.*))?".toRegex().matchEntire(this)?.groupValues?.getOrNull(1)
-            ?: ""
 
     private fun String?.toNumberList() =
         this?.numericVersionPart().takeIf { !it.isNullOrBlank() }?.split(".")?.map { it.toInt() }
@@ -139,3 +128,21 @@ class VersionCheckerUtils @Inject constructor() {
         private val WARN_EVERY = TimeUnit.DAYS.toMillis(1)
     }
 }
+
+fun String.numericVersionPart(): String =
+    "(((\\d+)\\.)+(\\d+))(\\D(.*))?".toRegex().matchEntire(this)?.groupValues?.getOrNull(1)
+        ?: ""
+
+fun findVersion(file: String?): String? {
+    val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
+    return file?.lines()?.filter { regex.matches(it) }?.mapNotNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }?.firstOrNull()
+}
+
+@Deprecated(replaceWith = ReplaceWith("numericVersionPart()"), message = "Will not work if RCs have another index number in it.")
+fun String.versionStrip() = this.mapNotNull {
+    when (it) {
+        in '0'..'9' -> it
+        '.'         -> it
+        else        -> null
+    }
+}.joinToString(separator = "")

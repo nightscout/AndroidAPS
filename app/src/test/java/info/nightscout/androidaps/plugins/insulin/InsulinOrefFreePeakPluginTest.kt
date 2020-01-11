@@ -41,7 +41,11 @@ class InsulinOrefFreePeakPluginTest {
 
     @Before
     fun setup() {
-        sut = InsulinOrefFreePeakPlugin(sp, resourceHelper, profileFunction, rxBus, aapsLogger)
+        sut = InsulinOrefFreePeakPlugin(sp = sp,
+            resourceHelper = resourceHelper,
+            rxBus = rxBus,
+            profileFunction = profileFunction,
+            aapsLogger = aapsLogger)
     }
 
     @Test

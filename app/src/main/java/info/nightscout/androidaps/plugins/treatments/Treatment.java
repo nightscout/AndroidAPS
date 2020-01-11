@@ -36,10 +36,10 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
-    @Inject DefaultValueHelper defaultValueHelper;
-    @Inject ResourceHelper resourceHelper;
-    @Inject ProfileFunction profileFunction;
-    @Inject ConfigBuilderPlugin configBuilderPlugin;
+    @Inject public DefaultValueHelper defaultValueHelper;
+    @Inject public ResourceHelper resourceHelper;
+    @Inject public ProfileFunction profileFunction;
+    @Inject public ConfigBuilderPlugin configBuilderPlugin;
 
     public static final String TABLE_TREATMENTS = "Treatments";
 

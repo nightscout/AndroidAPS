@@ -1,13 +1,15 @@
 package info.nightscout.androidaps.plugins.insulin
 
+import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.data.Iob
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.Companion.MIN_DIA
 import info.nightscout.androidaps.plugins.treatments.Treatment
+import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Before
@@ -16,7 +18,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
-import org.powermock.core.classloader.annotations.PrepareForTest
 
 class InsulinOrefBasePluginTest {
 
@@ -53,12 +54,23 @@ class InsulinOrefBasePluginTest {
 
     lateinit var sut: InsulinBaseTest
 
+    @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var aapsLogger: AAPSLogger
+    @Mock lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
-    @Mock lateinit var injector: HasAndroidInjector
+    var treatmentInjector: HasAndroidInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is Treatment) {
+                it.defaultValueHelper = defaultValueHelper
+                it.resourceHelper = resourceHelper
+                it.profileFunction = profileFunction
+                it.configBuilderPlugin = configBuilderPlugin
+            }
+        }
+    }
 
     @Before
     fun setUp() {
@@ -77,7 +89,7 @@ class InsulinOrefBasePluginTest {
 
     @Test
     fun testIobCalcForTreatment() {
-        val treatment = Treatment(injector)
+        val treatment = Treatment(treatmentInjector) //TODO: this should be a separate sut. I'd prefer a separate class.
         val expected = Iob()
         Assert.assertEquals(expected, sut.iobCalcForTreatment(treatment, 0, 0.0))
         testPeak = 30

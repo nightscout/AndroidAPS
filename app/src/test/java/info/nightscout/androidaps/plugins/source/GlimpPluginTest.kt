@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.source
 
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -17,9 +18,11 @@ class GlimpPluginTest {
 
     @Mock lateinit var aapsLogger: AAPSLogger
 
+    @Mock lateinit var resourceHelper: ResourceHelper
+
     @Before
     fun setup() {
-        glimpPlugin = GlimpPlugin(aapsLogger)
+        glimpPlugin = GlimpPlugin(resourceHelper, aapsLogger)
     }
 
     @Test fun advancedFilteringSupported() {
