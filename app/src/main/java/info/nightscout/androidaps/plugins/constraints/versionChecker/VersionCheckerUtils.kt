@@ -118,6 +118,10 @@ class VersionCheckerUtils @Inject constructor() {
     private fun String?.toNumberList() =
         this?.numericVersionPart().takeIf { !it.isNullOrBlank() }?.split(".")?.map { it.toInt() }
 
+    fun findVersion(file: String?): String? {
+        val regex = "(.*)version(.*)\"(((\\d+)\\.)+(\\d+))\"(.*)".toRegex()
+        return file?.lines()?.filter { regex.matches(it) }?.mapNotNull { regex.matchEntire(it)?.groupValues?.getOrNull(3) }?.firstOrNull()
+    }
 
     companion object {
         private val CHECK_EVERY = TimeUnit.DAYS.toMillis(1)

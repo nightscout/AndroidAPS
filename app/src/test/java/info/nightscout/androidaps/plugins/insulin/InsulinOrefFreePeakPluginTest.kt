@@ -6,7 +6,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import junit.framework.Assert.assertEquals
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -62,6 +62,7 @@ class InsulinOrefFreePeakPluginTest {
         return uninitialized()
     }
 
+    @Suppress("Unchecked_Cast")
     private fun <T> uninitialized(): T = null as T
 
 }
