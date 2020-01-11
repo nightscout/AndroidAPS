@@ -52,7 +52,7 @@ class InsulinOrefBasePluginTest {
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    lateinit var sut: InsulinBaseTest
+    private lateinit var sut: InsulinBaseTest
 
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var resourceHelper: ResourceHelper
@@ -61,7 +61,7 @@ class InsulinOrefBasePluginTest {
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
-    var treatmentInjector: HasAndroidInjector = HasAndroidInjector {
+    private var treatmentInjector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
             if (it is Treatment) {
                 it.defaultValueHelper = defaultValueHelper
@@ -85,6 +85,11 @@ class InsulinOrefBasePluginTest {
         testUserDefinedDia = MIN_DIA - 1
         Assert.assertEquals(MIN_DIA, sut.dia, 0.0)
         Assert.assertTrue(shortDiaNotificationSend)
+    }
+
+    @Test
+    fun minDiaTes() {
+        Assert.assertEquals(5.0, MIN_DIA, 0.0001)
     }
 
     @Test

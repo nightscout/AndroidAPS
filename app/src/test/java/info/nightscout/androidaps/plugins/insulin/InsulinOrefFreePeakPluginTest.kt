@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.insulin
 
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.InsulinInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
@@ -52,6 +53,24 @@ class InsulinOrefFreePeakPluginTest {
     fun `simple peak test`() {
         `when`(sp.getInt(eq(R.string.key_insulin_oref_peak), anyInt())).thenReturn(90)
         assertEquals(90, sut.peak)
+    }
+
+    @Test
+    fun getIdTest() {
+        assertEquals(InsulinInterface.OREF_FREE_PEAK, sut.id)
+    }
+
+    @Test
+    fun commentStandardTextTest() {
+        `when`(sp.getInt(eq(R.string.key_insulin_oref_peak), anyInt())).thenReturn(90)
+        `when`(resourceHelper.gs(eq(R.string.insulin_peak_time))).thenReturn("Peak Time [min]")
+        assertEquals("Peak Time [min]: 90", sut.commentStandardText())
+    }
+
+    @Test
+    fun getFriendlyNameTest() {
+        `when`(resourceHelper.gs(eq(R.string.free_peak_oref))).thenReturn("Free-Peak Oref")
+        assertEquals("Free-Peak Oref", sut.friendlyName)
     }
 
     // Workaround for Kotlin nullability. TODO: move to a base class

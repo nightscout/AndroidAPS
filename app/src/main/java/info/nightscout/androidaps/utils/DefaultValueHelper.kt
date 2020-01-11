@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DefaultValueHelper @Inject constructor(
+open class DefaultValueHelper @Inject constructor(
     private val sp: SP,
     private val profileFunction: ProfileFunction
 ) {
