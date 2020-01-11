@@ -15,6 +15,7 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -74,6 +75,10 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
 
     public Treatment() {
         MainApp.instance().androidInjector().inject(this); // TODO it will be removed by new database
+    }
+
+   public Treatment(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
     }
 
     public static Treatment createFromJson(JSONObject json) throws JSONException {

@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RxBusWrapper @Inject constructor() {
+open class RxBusWrapper @Inject constructor() {
 
     private val bus: RxBus = RxBus.INSTANCE
 
