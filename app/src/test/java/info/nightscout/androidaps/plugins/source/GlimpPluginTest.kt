@@ -14,10 +14,9 @@ class GlimpPluginTest {
     @get:Rule
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
-    private lateinit var glimpPlugin: GlimpPlugin;
+    private lateinit var glimpPlugin: GlimpPlugin
 
     @Mock lateinit var aapsLogger: AAPSLogger
-
     @Mock lateinit var resourceHelper: ResourceHelper
 
     @Before
