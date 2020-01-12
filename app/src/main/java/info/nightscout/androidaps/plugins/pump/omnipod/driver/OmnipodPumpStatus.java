@@ -51,6 +51,7 @@ public class OmnipodPumpStatus extends PumpStatus {
     public String podNumber;
     public PodDeviceState podDeviceState = PodDeviceState.NeverContacted;
     public boolean podAvailable = false;
+    public boolean podAvailibityChecked = false;
     public boolean ackAlertsAvailable = false;
     public String ackAlertsText = null;
 
@@ -225,6 +226,6 @@ public class OmnipodPumpStatus extends PumpStatus {
                 ", tempBasalRemainMin=" + tempBasalRemainMin +
                 ", tempBasalStart=" + tempBasalStart +
                 ", pumpDescription=" + pumpDescription +
-                "} " ;
+                "} ";
     }
 }

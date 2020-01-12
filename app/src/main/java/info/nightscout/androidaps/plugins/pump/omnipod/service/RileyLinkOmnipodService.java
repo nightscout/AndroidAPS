@@ -23,12 +23,12 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.SP;
@@ -114,7 +114,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     }
 
     private void initializeErosOmnipodManager() {
-        if(AapsOmnipodManager.getInstance() == null) {
+        if (AapsOmnipodManager.getInstance() == null) {
             PodSessionState podState = null;
             if (SP.contains(OmnipodConst.Prefs.PodState)) {
                 try {
@@ -128,6 +128,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             }
             OmnipodCommunicationService omnipodCommunicationService = new OmnipodCommunicationService(rfspy);
             omnipodCommunicationService.setPumpStatus(pumpStatus);
+            pumpStatus.podAvailibityChecked = true;
 
             omnipodCommunicationManager = new AapsOmnipodManager(omnipodCommunicationService, podState, pumpStatus);
         } else {
@@ -143,11 +144,11 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     @Override
     public RileyLinkCommunicationManager getDeviceCommunicationManager() {
-        if(omnipodCommunicationManager instanceof AapsOmnipodManager) { // Eros
+        if (omnipodCommunicationManager instanceof AapsOmnipodManager) { // Eros
             return ((AapsOmnipodManager) omnipodCommunicationManager).getCommunicationService();
         }
         // FIXME is this correct for Dash?
-        return (RileyLinkCommunicationManager)omnipodCommunicationManager;
+        return (RileyLinkCommunicationManager) omnipodCommunicationManager;
     }
 
 

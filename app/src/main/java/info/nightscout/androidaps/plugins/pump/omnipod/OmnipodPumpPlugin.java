@@ -278,7 +278,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private void doPodCheck() {
 
         if (System.currentTimeMillis() > this.nextPodCheck) {
-            if (!getPodPumpStatusObject().podAvailable) {
+            if (!getPodPumpStatusObject().podAvailable && getPodPumpStatusObject().podAvailibityChecked) {
                 Notification notification = new Notification(Notification.OMNIPOD_POD_NOT_ATTACHED, MainApp.gs(R.string.omnipod_error_pod_not_attached), Notification.NORMAL);
                 RxBus.INSTANCE.send(new EventNewNotification(notification));
             } else {
