@@ -128,7 +128,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             }
             OmnipodCommunicationService omnipodCommunicationService = new OmnipodCommunicationService(rfspy);
             omnipodCommunicationService.setPumpStatus(pumpStatus);
-            pumpStatus.podAvailibityChecked = true;
 
             omnipodCommunicationManager = new AapsOmnipodManager(omnipodCommunicationService, podState, pumpStatus);
         } else {

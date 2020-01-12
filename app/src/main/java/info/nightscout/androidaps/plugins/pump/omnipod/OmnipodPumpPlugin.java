@@ -105,6 +105,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     private Profile currentProfile;
 
+    boolean omnipodServiceRunning = false;
+
     private long nextPodCheck = 0L;
     private static long UNREACHABLE_ALERT_THRESHOLD_MILLIS = T.mins(30).msecs();
 
@@ -152,6 +154,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                                 if (omnipodCommunicationManager == null) {
                                     omnipodCommunicationManager = AapsOmnipodManager.getInstance();
                                     omnipodCommunicationManager.setPumpStatus(pumpStatusLocal);
+                                    omnipodServiceRunning = true;
                                 } else {
                                     omnipodCommunicationManager.setPumpStatus(pumpStatusLocal);
                                 }
@@ -278,7 +281,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private void doPodCheck() {
 
         if (System.currentTimeMillis() > this.nextPodCheck) {
-            if (!getPodPumpStatusObject().podAvailable && getPodPumpStatusObject().podAvailibityChecked) {
+            if (!getPodPumpStatusObject().podAvailable && omnipodServiceRunning) {
                 Notification notification = new Notification(Notification.OMNIPOD_POD_NOT_ATTACHED, MainApp.gs(R.string.omnipod_error_pod_not_attached), Notification.NORMAL);
                 RxBus.INSTANCE.send(new EventNewNotification(notification));
             } else {
