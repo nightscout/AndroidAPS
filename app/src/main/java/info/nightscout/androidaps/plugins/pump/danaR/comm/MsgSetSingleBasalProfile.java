@@ -18,7 +18,7 @@ public class MsgSetSingleBasalProfile extends MessageBase {
     }
 
     // index 0-3
-    public MsgSetSingleBasalProfile(double[] values) {
+    public MsgSetSingleBasalProfile(Double[] values) {
         this();
         for (Integer i = 0; i < 24; i++) {
             AddParamInt((int) (values[i] * 100));

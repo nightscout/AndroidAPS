@@ -53,20 +53,12 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     private final TreatmentsPlugin treatmentsPlugin;
     private final SP sp;
 
-    private static DanaRv2Plugin plugin = null;
-
-    @Deprecated
-    public static DanaRv2Plugin getPlugin() {
-        if (plugin == null)
-            throw new IllegalStateException("Accessing DanaRv2Plugin before first instantiation");
-        return plugin;
-    }
-
     @Inject
     public DanaRv2Plugin(
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             MainApp maiApp,
+            DanaRPump danaRPump,
             ResourceHelper resourceHelper,
             ConstraintChecker constraintChecker,
             TreatmentsPlugin treatmentsPlugin,
@@ -74,8 +66,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             CommandQueueProvider commandQueue
 
     ) {
-        super(resourceHelper, aapsLogger, commandQueue);
-        plugin = this;
+        super(danaRPump, resourceHelper, aapsLogger, commandQueue);
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.mainApp = maiApp;
@@ -143,7 +134,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @Override
     public boolean isInitialized() {
-        return DanaRPump.getInstance().lastConnection > 0 && DanaRPump.getInstance().maxBasal > 0 && DanaRPump.getInstance().isPasswordOK();
+        return danaRPump.getLastConnection() > 0 && danaRPump.getMaxBasal() > 0 && danaRPump.isPasswordOK();
     }
 
     @Override
@@ -302,7 +293,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
-        DanaRPump pump = DanaRPump.getInstance();
+        DanaRPump pump = danaRPump;
         PumpEnactResult result = new PumpEnactResult();
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
@@ -322,8 +313,8 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.success = true;
             result.isTempCancel = false;
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
-            result.duration = pump.tempBasalRemainingMin;
-            result.percent = pump.tempBasalPercent;
+            result.duration = pump.getTempBasalRemainingMin();
+            result.percent = pump.getTempBasalPercent();
             result.isPercent = true;
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: Correct value already set");
             return result;
@@ -335,13 +326,13 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             int durationInHours = Math.max(durationInMinutes / 60, 1);
             connectionOK = sExecutionService.tempBasal(percent, durationInHours);
         }
-        if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
+        if (connectionOK && pump.isTempBasalInProgress() && pump.getTempBasalPercent() == percent) {
             result.enacted = true;
             result.success = true;
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
             result.isTempCancel = false;
-            result.duration = pump.tempBasalRemainingMin;
-            result.percent = pump.tempBasalPercent;
+            result.duration = pump.getTempBasalRemainingMin();
+            result.percent = pump.getTempBasalPercent();
             result.isPercent = true;
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: OK");
             return result;
@@ -354,16 +345,16 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     }
 
     private PumpEnactResult setHighTempBasalPercent(Integer percent) {
-        DanaRPump pump = DanaRPump.getInstance();
+        DanaRPump pump = danaRPump;
         PumpEnactResult result = new PumpEnactResult();
         boolean connectionOK = sExecutionService.highTempBasal(percent);
-        if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
+        if (connectionOK && pump.isTempBasalInProgress() && pump.getTempBasalPercent() == percent) {
             result.enacted = true;
             result.success = true;
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
             result.isTempCancel = false;
-            result.duration = pump.tempBasalRemainingMin;
-            result.percent = pump.tempBasalPercent;
+            result.duration = pump.getTempBasalRemainingMin();
+            result.percent = pump.getTempBasalPercent();
             result.isPercent = true;
             aapsLogger.debug(LTag.PUMP, "setHighTempBasalPercent: OK");
             return result;
@@ -384,7 +375,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.enacted = true;
             result.isTempCancel = true;
         }
-        if (!DanaRPump.getInstance().isTempBasalInProgress) {
+        if (!danaRPump.isTempBasalInProgress()) {
             result.success = true;
             result.isTempCancel = true;
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok);

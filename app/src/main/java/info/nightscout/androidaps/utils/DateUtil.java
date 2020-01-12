@@ -158,10 +158,6 @@ public class DateUtil {
         return dateString(mills) + " " + timeString(mills);
     }
 
-    public static String dateAndTimeFullString(long mills) {
-        return dateString(mills) + " " + timeFullString(mills);
-    }
-
     public static String minAgo(long time) {
         int mins = (int) ((now() - time) / 1000 / 60);
         return MainApp.gs(R.string.minago, mins);

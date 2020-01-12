@@ -31,10 +31,12 @@ public class SerialIOThread extends AbstractSerialIOThread {
 
     private MessageBase processedMessage;
     private MessageHashTableBase hashTable;
+    private DanaRPump danaRPump;
 
-    public SerialIOThread(BluetoothSocket rfcommSocket, MessageHashTableBase hashTable) {
+    public SerialIOThread(BluetoothSocket rfcommSocket, MessageHashTableBase hashTable, DanaRPump danaRPump) {
         super();
         this.hashTable = hashTable;
+        this.danaRPump = danaRPump;
 
         mRfCommSocket = rfcommSocket;
         try {
@@ -172,7 +174,7 @@ public class SerialIOThread extends AbstractSerialIOThread {
             if (L.isEnabled(L.PUMPBTCOMM))
                 log.error("Reply not received " + message.getMessageName());
             if (message.getCommand() == 0xF0F1) {
-                DanaRPump.getInstance().isNewPump = false;
+                danaRPump.setNewPump(false);
                 if (L.isEnabled(L.PUMPCOMM))
                     log.debug("Old firmware detected");
             }

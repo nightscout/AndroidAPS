@@ -64,7 +64,8 @@ class ActionStringHandler @Inject constructor(
     private val danaRPlugin: DanaRPlugin,
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
     private val danaRv2Plugin: DanaRv2Plugin,
-    private val danaRSPlugin: DanaRSPlugin
+    private val danaRSPlugin: DanaRSPlugin,
+    private val danaRPump: DanaRPump
 ) {
 
     private val TIMEOUT = 65 * 1000
@@ -321,7 +322,7 @@ class ActionStringHandler @Inject constructor(
             message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n"
             message += "\n"
         } else if (pump != null && pump is DanaRPlugin) {
-            val tdd = DanaRPump.getInstance().dailyTotalUnits
+            val tdd = danaRPump.dailyTotalUnits
             message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n"
             message += "\n"
         }

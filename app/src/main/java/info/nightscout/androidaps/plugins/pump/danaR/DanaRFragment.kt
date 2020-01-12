@@ -43,6 +43,7 @@ class DanaRFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
+    @Inject lateinit var danaRPump: DanaRPump
     @Inject lateinit var resourceHelper: ResourceHelper
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -70,9 +71,9 @@ class DanaRFragment : DaggerFragment() {
         danar_history.setOnClickListener { startActivity(Intent(context, DanaRHistoryActivity::class.java)) }
         danar_viewprofile.setOnClickListener {
             fragmentManager?.let { fragmentManager ->
-                val profile = DanaRPump.getInstance().createConvertedProfile()?.getDefaultProfile()
+                val profile = danaRPump.createConvertedProfile()?.getDefaultProfile()
                     ?: return@let
-                val profileName = DanaRPump.getInstance().createConvertedProfile()?.getDefaultProfileName()
+                val profileName = danaRPump.createConvertedProfile()?.getDefaultProfileName()
                     ?: return@let
                 val args = Bundle()
                 args.putLong("time", DateUtil.now())
@@ -89,7 +90,7 @@ class DanaRFragment : DaggerFragment() {
         danar_user_options.setOnClickListener { startActivity(Intent(context, DanaRUserOptionsActivity::class.java)) }
         danar_btconnection.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
-            DanaRPump.getInstance().lastConnection = 0
+            danaRPump.lastConnection = 0
             commandQueue.readStatus("Clicked connect to pump", null)
         }
     }
@@ -150,7 +151,7 @@ class DanaRFragment : DaggerFragment() {
     @Synchronized
     internal fun updateGUI() {
         if (danar_dailyunits == null) return
-        val pump = DanaRPump.getInstance()
+        val pump = danaRPump
         val plugin: PumpInterface = activePlugin.activePump
         if (pump.lastConnection != 0L) {
             val agoMsec = System.currentTimeMillis() - pump.lastConnection

@@ -99,7 +99,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
             }
         }
         if (openAPSSMBPlugin.lastAPSRun != 0L) {
-            openapsma_lastrun.text = DateUtil.dateAndTimeFullString(openAPSSMBPlugin.lastAPSRun)
+            openapsma_lastrun.text = DateUtil.dateAndTimeString(openAPSSMBPlugin.lastAPSRun)
         }
         openAPSSMBPlugin.lastAutosensResult?.let {
             openapsma_autosensdata.text = JSONFormatter.format(it.json())

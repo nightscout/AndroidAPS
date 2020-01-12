@@ -63,11 +63,13 @@ open class AppModule {
     @Provides
     @Singleton
     fun provideAAPSLogger(): AAPSLogger {
-        return if (BuildConfig.DEBUG) {
+        return AAPSLoggerProduction()
+/*        if (BuildConfig.DEBUG) {
             AAPSLoggerDebug()
         } else {
             AAPSLoggerProduction()
         }
+ */
     }
 
     @Module
@@ -85,6 +87,7 @@ open class AppModule {
 
         @ContributesAndroidInjector fun commandLoadEventsInjector(): CommandLoadEvents
         @ContributesAndroidInjector fun commandLoadHistoryInjector(): CommandLoadHistory
+        @ContributesAndroidInjector fun commandLoadTDDsInjector(): CommandLoadTDDs
         @ContributesAndroidInjector fun commandReadStatusInjector(): CommandReadStatus
         @ContributesAndroidInjector fun commandSetProfileInjector(): CommandSetProfile
         @ContributesAndroidInjector fun commandCommandSMBBolusInjector(): CommandSMBBolus
@@ -92,6 +95,7 @@ open class AppModule {
         @ContributesAndroidInjector fun commandStopPumpInjector(): CommandStopPump
         @ContributesAndroidInjector fun commandTempBasalAbsoluteInjector(): CommandTempBasalAbsolute
         @ContributesAndroidInjector fun commandTempBasalPercentInjector(): CommandTempBasalPercent
+        @ContributesAndroidInjector fun commandSetUserSettingsInjector(): CommandSetUserSettings
 
         @ContributesAndroidInjector fun objective0Injector(): Objective0
         @ContributesAndroidInjector fun objective1Injector(): Objective1

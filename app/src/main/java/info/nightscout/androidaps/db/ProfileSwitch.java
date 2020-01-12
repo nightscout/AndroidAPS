@@ -236,12 +236,12 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
                 if (zeroDurationOnly) {
                     if (event.durationInMinutes == 0) {
                         if (L.isEnabled(L.DATABASE))
-                            log.debug("Found ProfileSwitch event for time: " + DateUtil.dateAndTimeFullString(time) + " " + event.toString());
+                            log.debug("Found ProfileSwitch event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
                         return true;
                     }
                 } else {
                     if (L.isEnabled(L.DATABASE))
-                        log.debug("Found ProfileSwitch event for time: " + DateUtil.dateAndTimeFullString(time) + " " + event.toString());
+                        log.debug("Found ProfileSwitch event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
                     return true;
                 }
             }

@@ -475,28 +475,24 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
     }
 
     private void confirmPumpPluginActivation(@NonNull PluginBase changedPlugin, boolean newState, @Nullable FragmentActivity activity, @NonNull PluginType type) {
-        if (type == PluginType.PUMP) {
-            boolean allowHardwarePump = sp.getBoolean("allow_hardware_pump", false);
-            if (allowHardwarePump || activity == null) {
-                performPluginSwitch(changedPlugin, newState, type);
-            } else {
-                OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.allow_hardware_pump_text), () -> {
-                    performPluginSwitch(changedPlugin, newState, type);
-                    sp.putBoolean("allow_hardware_pump", true);
-                    aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!");
-                }, () -> {
-                    rxBus.send(new EventConfigBuilderUpdateGui());
-                    aapsLogger.debug(LTag.PUMP, "User does not allow switching to HW pump!");
-                });
-            }
-        } else {
+        boolean allowHardwarePump = sp.getBoolean("allow_hardware_pump", false);
+        if (allowHardwarePump || activity == null) {
             performPluginSwitch(changedPlugin, newState, type);
+        } else {
+            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.allow_hardware_pump_text), () -> {
+                performPluginSwitch(changedPlugin, newState, type);
+                sp.putBoolean("allow_hardware_pump", true);
+                aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!");
+            }, () -> {
+                rxBus.send(new EventConfigBuilderUpdateGui());
+                aapsLogger.debug(LTag.PUMP, "User does not allow switching to HW pump!");
+            });
         }
     }
 
     private void performPluginSwitch(PluginBase changedPlugin, boolean enabled, @NonNull PluginType type) {
-        setPluginEnabled(type, enabled);
-        setFragmentVisible(type, enabled);
+        changedPlugin.setPluginEnabled(type, enabled);
+        changedPlugin.setFragmentVisible(type, enabled);
         processOnEnabledCategoryChanged(changedPlugin, type);
         storeSettings("CheckedCheckboxEnabled");
         rxBus.send(new EventRebuildTabs());

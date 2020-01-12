@@ -5,8 +5,6 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.SystemClock;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 
 import dagger.android.DaggerService;
@@ -21,12 +19,14 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -36,6 +36,7 @@ import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
+import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRSMessageHashTable;
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet;
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_APS_Basal_Set_Temporary_Basal;
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_APS_History_Events;
@@ -70,12 +71,9 @@ import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_History
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_History_Prime;
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_History_Refill;
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_History_Suspend;
-import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_Notify_Delivery_Complete;
-import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_Notify_Delivery_Rate_Display;
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_Option_Get_Pump_Time;
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_Option_Get_User_Option;
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_Option_Set_Pump_Time;
-import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_Option_Set_User_Option;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
@@ -97,10 +95,14 @@ public class DanaRSService extends DaggerService {
     @Inject MainApp mainApp;
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject DanaRSPlugin danaRSPlugin;
+    @Inject DanaRPump danaRPump;
+    @Inject DanaRSMessageHashTable danaRSMessageHashTable;
+    @Inject ActivePluginProvider activePlugin;
+    @Inject ConstraintChecker constraintChecker;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    private BLEComm bleComm = new BLEComm(this);
+    private BLEComm bleComm;
 
     private IBinder mBinder = new LocalBinder();
 
@@ -112,6 +114,7 @@ public class DanaRSService extends DaggerService {
     @Override
     public void onCreate() {
         super.onCreate();
+        bleComm = new BLEComm(this, danaRSMessageHashTable, danaRPump);
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
@@ -154,54 +157,53 @@ public class DanaRSService extends DaggerService {
     }
 
     public void getPumpStatus() {
-        DanaRPump danaRPump = DanaRPump.getInstance();
         try {
             rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpstatus)));
 
-            bleComm.sendMessage(new DanaRS_Packet_General_Initial_Screen_Information());
+            bleComm.sendMessage(new DanaRS_Packet_General_Initial_Screen_Information(aapsLogger, danaRPump));
             rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingextendedbolusstatus)));
-            bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Extended_Bolus_State());
+            bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Extended_Bolus_State(aapsLogger, danaRPump));
             rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingbolusstatus)));
-            bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // last bolus, bolusStep, maxBolus
+            bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information(aapsLogger, danaRPump)); // last bolus, bolusStep, maxBolus
             rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingtempbasalstatus)));
-            bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
+            bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State(aapsLogger, danaRPump));
 
-            danaRPump.lastConnection = System.currentTimeMillis();
+            danaRPump.setLastConnection(System.currentTimeMillis());
 
             Profile profile = profileFunction.getProfile();
             PumpInterface pump = configBuilderPlugin.getActivePump();
-            if (profile != null && Math.abs(danaRPump.currentBasal - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
+            if (profile != null && Math.abs(danaRPump.getCurrentBasal() - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)));
-                bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile, basalStep, maxBasal
+                bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate(aapsLogger, rxBus, resourceHelper, danaRPump)); // basal profile, basalStep, maxBasal
                 if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
                     rxBus.send(new EventProfileNeedsUpdate());
                 }
             }
 
             rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumptime)));
-            bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
+            bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time(aapsLogger, danaRPump));
 
-            long timeDiff = (danaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
-            if (danaRPump.pumpTime == 0) {
+            long timeDiff = (danaRPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
+            if (danaRPump.getPumpTime() == 0) {
                 // initial handshake was not successfull
                 // deinitialize pump
-                danaRPump.lastConnection = 0;
+                danaRPump.setLastConnection(0);
                 rxBus.send(new EventDanaRNewStatus());
                 rxBus.send(new EventInitializationChanged());
                 return;
             }
             long now = System.currentTimeMillis();
-            if (danaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized()) {
+            if (danaRPump.getLastSettingsRead() + 60 * 60 * 1000L < now || !pump.isInitialized()) {
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)));
-                bleComm.sendMessage(new DanaRS_Packet_General_Get_Shipping_Information()); // serial no
-                bleComm.sendMessage(new DanaRS_Packet_General_Get_Pump_Check()); // firmware
-                bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Profile_Number());
-                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Bolus_Option()); // isExtendedEnabled
-                bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile, basalStep, maxBasal
-                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Calculation_Information()); // target
-                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_CIR_CF_Array());
-                bleComm.sendMessage(new DanaRS_Packet_Option_Get_User_Option()); // Getting user options
-                danaRPump.lastSettingsRead = now;
+                bleComm.sendMessage(new DanaRS_Packet_General_Get_Shipping_Information(aapsLogger, danaRPump)); // serial no
+                bleComm.sendMessage(new DanaRS_Packet_General_Get_Pump_Check(aapsLogger,danaRPump, rxBus, resourceHelper)); // firmware
+                bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Profile_Number(aapsLogger, danaRPump));
+                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Bolus_Option(aapsLogger, rxBus, resourceHelper, danaRPump)); // isExtendedEnabled
+                bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate(aapsLogger, rxBus, resourceHelper, danaRPump)); // basal profile, basalStep, maxBasal
+                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Calculation_Information(aapsLogger, danaRPump)); // target
+                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_CIR_CF_Array(aapsLogger, danaRPump));
+                bleComm.sendMessage(new DanaRS_Packet_Option_Get_User_Option(aapsLogger, danaRPump)); // Getting user options
+                danaRPump.setLastSettingsRead(now);
             }
 
             aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: " + timeDiff + " seconds");
@@ -217,20 +219,20 @@ public class DanaRSService extends DaggerService {
                     mainApp.startActivity(i);
 
                     //deinitialize pump
-                    danaRPump.lastConnection = 0;
+                    danaRPump.setLastConnection(0);
                     rxBus.send(new EventDanaRNewStatus());
                     rxBus.send(new EventInitializationChanged());
                     return;
                 } else {
-                    if (danaRPump.protocol >= 6) {
-                        bleComm.sendMessage(new DanaRS_Packet_Option_Set_Pump_Time(new Date()));
+                    if (danaRPump.getProtocol() >= 6) {
+                        bleComm.sendMessage(new DanaRS_Packet_Option_Set_Pump_Time(aapsLogger, DateUtil.now()));
                     } else {
                         waitForWholeMinute(); // Dana can set only whole minute
                         // add 10sec to be sure we are over minute (will be cutted off anyway)
-                        bleComm.sendMessage(new DanaRS_Packet_Option_Set_Pump_Time(new Date(DateUtil.now() + T.secs(10).msecs())));
+                        bleComm.sendMessage(new DanaRS_Packet_Option_Set_Pump_Time(aapsLogger, DateUtil.now() + T.secs(10).msecs()));
                     }
-                    bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
-                    timeDiff = (danaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
+                    bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time(aapsLogger,danaRPump));
+                    timeDiff = (danaRPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: " + timeDiff + " seconds");
                 }
             }
@@ -240,12 +242,12 @@ public class DanaRSService extends DaggerService {
             rxBus.send(new EventDanaRNewStatus());
             rxBus.send(new EventInitializationChanged());
             //NSUpload.uploadDeviceStatus();
-            if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
-                aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits);
+            if (danaRPump.getDailyTotalUnits() > danaRPump.getMaxDailyTotalUnits() * Constants.dailyLimitWarning) {
+                aapsLogger.debug(LTag.PUMPCOMM, "Approaching daily limit: " + danaRPump.getDailyTotalUnits() + "/" + danaRPump.getMaxDailyTotalUnits());
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, resourceHelper.gs(R.string.approachingdailylimit), Notification.URGENT);
                     rxBus.send(new EventNewNotification(reportFail));
-                    NSUpload.uploadError(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits + "U");
+                    NSUpload.uploadError(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaRPump.getDailyTotalUnits() + "/" + danaRPump.getMaxDailyTotalUnits() + "U");
                     lastApproachingDailyLimit = System.currentTimeMillis();
                 }
             }
@@ -267,29 +269,28 @@ public class DanaRSService extends DaggerService {
 
         DanaRS_Packet_APS_History_Events msg;
         if (lastHistoryFetched == 0) {
-            msg = new DanaRS_Packet_APS_History_Events(0);
+            msg = new DanaRS_Packet_APS_History_Events(aapsLogger, rxBus,resourceHelper, activePlugin, danaRSPlugin, 0);
             aapsLogger.debug(LTag.PUMPCOMM, "Loading complete event history");
         } else {
-            msg = new DanaRS_Packet_APS_History_Events(lastHistoryFetched);
-            aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + DateUtil.dateAndTimeFullString(lastHistoryFetched));
+            msg = new DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, lastHistoryFetched);
+            aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + DateUtil.dateAndTimeString(lastHistoryFetched));
         }
         bleComm.sendMessage(msg);
-        while (!msg.done && bleComm.isConnected()) {
+        while (!danaRSPlugin.apsHistoryDone && bleComm.isConnected()) {
             SystemClock.sleep(100);
         }
-        if (DanaRS_Packet_APS_History_Events.lastEventTimeLoaded != 0)
-            lastHistoryFetched = DanaRS_Packet_APS_History_Events.lastEventTimeLoaded - T.mins(1).msecs();
+        if (danaRSPlugin.lastEventTimeLoaded != 0)
+            lastHistoryFetched = danaRSPlugin.lastEventTimeLoaded - T.mins(1).msecs();
         else
             lastHistoryFetched = 0;
         aapsLogger.debug(LTag.PUMPCOMM, "Events loaded");
-        DanaRPump.getInstance().lastConnection = System.currentTimeMillis();
+        danaRPump.setLastConnection(System.currentTimeMillis());
         return new PumpEnactResult().success(true);
     }
 
 
     public PumpEnactResult setUserSettings() {
-        bleComm.sendMessage(new DanaRS_Packet_Option_Set_User_Option());
-        bleComm.sendMessage(new DanaRS_Packet_Option_Get_User_Option());
+        bleComm.sendMessage(new DanaRS_Packet_Option_Get_User_Option(aapsLogger, danaRPump));
         return new PumpEnactResult().success(true);
     }
 
@@ -301,33 +302,35 @@ public class DanaRSService extends DaggerService {
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.startingbolus)));
         bolusingTreatment = t;
         final int preferencesSpeed = sp.getInt(R.string.key_danars_bolusspeed, 0);
-        DanaRS_Packet_Bolus_Set_Step_Bolus_Start start = new DanaRS_Packet_Bolus_Set_Step_Bolus_Start(insulin, preferencesSpeed);
-        DanaRS_Packet_Bolus_Set_Step_Bolus_Stop stop = new DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(insulin, t); // initialize static variables
-        DanaRS_Packet_Notify_Delivery_Complete complete = new DanaRS_Packet_Notify_Delivery_Complete(insulin, t); // initialize static variables
+        danaRSPlugin.bolusingTreatment = t;
+        danaRSPlugin.bolusAmountToBeDelivered = insulin;
+        danaRSPlugin.bolusStopped = false;
+        danaRSPlugin.bolusStopForced = false;
+        danaRSPlugin.bolusProgressLastTimeStamp = DateUtil.now();
 
+        DanaRS_Packet_Bolus_Set_Step_Bolus_Start start = new DanaRS_Packet_Bolus_Set_Step_Bolus_Start(aapsLogger, danaRSPlugin, constraintChecker, insulin, preferencesSpeed);
         if (carbs > 0) {
 //            MsgSetCarbsEntry msg = new MsgSetCarbsEntry(carbtime, carbs); ####
 //            bleComm.sendMessage(msg);
-            DanaRS_Packet_APS_Set_Event_History msgSetHistoryEntry_v2 = new DanaRS_Packet_APS_Set_Event_History(DanaRPump.CARBS, carbtime, carbs, 0);
+            DanaRS_Packet_APS_Set_Event_History msgSetHistoryEntry_v2 = new DanaRS_Packet_APS_Set_Event_History(aapsLogger, DanaRPump.CARBS, carbtime, carbs, 0);
             bleComm.sendMessage(msgSetHistoryEntry_v2);
             lastHistoryFetched = Math.min(lastHistoryFetched, carbtime - T.mins(1).msecs());
         }
 
         final long bolusStart = System.currentTimeMillis();
         if (insulin > 0) {
-            if (!stop.stopped) {
+            if (!danaRSPlugin.bolusStopped) {
                 bleComm.sendMessage(start);
             } else {
                 t.insulin = 0d;
                 return false;
             }
-            DanaRS_Packet_Notify_Delivery_Rate_Display progress = new DanaRS_Packet_Notify_Delivery_Rate_Display(insulin, t); // initialize static variables
 
-            while (!stop.stopped && !start.failed && !complete.done) {
+            while (!danaRSPlugin.bolusStopped && !start.failed && !danaRSPlugin.bolusDone) {
                 SystemClock.sleep(100);
-                if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 20 sec expecting broken comm
-                    stop.stopped = true;
-                    stop.forced = true;
+                if ((System.currentTimeMillis() - danaRSPlugin.bolusProgressLastTimeStamp) > 15 * 1000L) { // if i didn't receive status for more than 20 sec expecting broken comm
+                    danaRSPlugin.bolusStopped = true;
+                    danaRSPlugin.bolusStopForced = true;
                     aapsLogger.debug(LTag.PUMPCOMM, "Communication stopped");
                 }
             }
@@ -364,7 +367,7 @@ public class DanaRSService extends DaggerService {
             public void run() {
                 // reread bolus status
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingbolusstatus)));
-                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // last bolus
+                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information(aapsLogger, danaRPump)); // last bolus
                 bolusingEvent.setPercent(100);
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.disconnecting)));
             }
@@ -374,44 +377,44 @@ public class DanaRSService extends DaggerService {
 
     public void bolusStop() {
         aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ " + (bolusingTreatment == null ? "" : bolusingTreatment.insulin));
-        DanaRS_Packet_Bolus_Set_Step_Bolus_Stop stop = new DanaRS_Packet_Bolus_Set_Step_Bolus_Stop();
-        stop.forced = true;
+        DanaRS_Packet_Bolus_Set_Step_Bolus_Stop stop = new DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(aapsLogger, rxBus, resourceHelper, danaRSPlugin);
+        danaRSPlugin.bolusStopForced = true;
         if (isConnected()) {
             bleComm.sendMessage(stop);
-            while (!stop.stopped) {
+            while (!danaRSPlugin.bolusStopped) {
                 bleComm.sendMessage(stop);
                 SystemClock.sleep(200);
             }
         } else {
-            stop.stopped = true;
+            danaRSPlugin.bolusStopped = true;
         }
     }
 
     public boolean tempBasal(Integer percent, int durationInHours) {
         if (!isConnected()) return false;
-        if (DanaRPump.getInstance().isTempBasalInProgress) {
+        if (danaRPump.isTempBasalInProgress()) {
             rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)));
-            bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal());
+            bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal(aapsLogger));
             SystemClock.sleep(500);
         }
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)));
-        bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Temporary_Basal(percent, durationInHours));
+        bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Temporary_Basal(aapsLogger, percent, durationInHours));
         SystemClock.sleep(200);
-        bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
+        bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State(aapsLogger, danaRPump));
         loadEvents();
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }
 
     public boolean highTempBasal(Integer percent) {
-        if (DanaRPump.getInstance().isTempBasalInProgress) {
+        if (danaRPump.isTempBasalInProgress()) {
             rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)));
-            bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal());
+            bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal(aapsLogger));
             SystemClock.sleep(500);
         }
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)));
-        bleComm.sendMessage(new DanaRS_Packet_APS_Basal_Set_Temporary_Basal(percent));
-        bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
+        bleComm.sendMessage(new DanaRS_Packet_APS_Basal_Set_Temporary_Basal(aapsLogger,percent));
+        bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State(aapsLogger, danaRPump));
         loadEvents();
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
@@ -423,14 +426,14 @@ public class DanaRSService extends DaggerService {
             return false;
         }
 
-        if (DanaRPump.getInstance().isTempBasalInProgress) {
+        if (danaRPump.isTempBasalInProgress()) {
             rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)));
-            bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal());
+            bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal(aapsLogger));
             SystemClock.sleep(500);
         }
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)));
-        bleComm.sendMessage(new DanaRS_Packet_APS_Basal_Set_Temporary_Basal(percent, durationInMinutes == 15, durationInMinutes == 30));
-        bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
+        bleComm.sendMessage(new DanaRS_Packet_APS_Basal_Set_Temporary_Basal(aapsLogger, percent));
+        bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State(aapsLogger, danaRPump));
         loadEvents();
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
@@ -439,8 +442,8 @@ public class DanaRSService extends DaggerService {
     public boolean tempBasalStop() {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)));
-        bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal());
-        bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
+        bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal(aapsLogger));
+        bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State(aapsLogger, danaRPump));
         loadEvents();
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
@@ -449,9 +452,9 @@ public class DanaRSService extends DaggerService {
     public boolean extendedBolus(Double insulin, int durationInHalfHours) {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.settingextendedbolus)));
-        bleComm.sendMessage(new DanaRS_Packet_Bolus_Set_Extended_Bolus(insulin, durationInHalfHours));
+        bleComm.sendMessage(new DanaRS_Packet_Bolus_Set_Extended_Bolus(aapsLogger, insulin, durationInHalfHours));
         SystemClock.sleep(200);
-        bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Extended_Bolus_State());
+        bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Extended_Bolus_State(aapsLogger, danaRPump));
         loadEvents();
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
@@ -460,8 +463,8 @@ public class DanaRSService extends DaggerService {
     public boolean extendedBolusStop() {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingextendedbolus)));
-        bleComm.sendMessage(new DanaRS_Packet_Bolus_Set_Extended_Bolus_Cancel());
-        bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Extended_Bolus_State());
+        bleComm.sendMessage(new DanaRS_Packet_Bolus_Set_Extended_Bolus_Cancel(aapsLogger));
+        bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Extended_Bolus_State(aapsLogger, danaRPump));
         loadEvents();
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
@@ -470,12 +473,12 @@ public class DanaRSService extends DaggerService {
     public boolean updateBasalsInPump(Profile profile) {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.updatingbasalrates)));
-        double[] basal = DanaRPump.getInstance().buildDanaRProfileRecord(profile);
-        DanaRS_Packet_Basal_Set_Profile_Basal_Rate msgSet = new DanaRS_Packet_Basal_Set_Profile_Basal_Rate(0, basal);
+        Double[] basal = danaRPump.buildDanaRProfileRecord(profile);
+        DanaRS_Packet_Basal_Set_Profile_Basal_Rate msgSet = new DanaRS_Packet_Basal_Set_Profile_Basal_Rate(aapsLogger,0, basal);
         bleComm.sendMessage(msgSet);
-        DanaRS_Packet_Basal_Set_Profile_Number msgActivate = new DanaRS_Packet_Basal_Set_Profile_Number(0);
+        DanaRS_Packet_Basal_Set_Profile_Number msgActivate = new DanaRS_Packet_Basal_Set_Profile_Number(aapsLogger,0);
         bleComm.sendMessage(msgActivate);
-        DanaRPump.getInstance().lastSettingsRead = 0; // force read full settings
+        danaRPump.setLastSettingsRead(0); // force read full settings
         getPumpStatus();
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
@@ -487,42 +490,42 @@ public class DanaRSService extends DaggerService {
         DanaRS_Packet_History_ msg = null;
         switch (type) {
             case RecordTypes.RECORD_TYPE_ALARM:
-                msg = new DanaRS_Packet_History_Alarm();
+                msg = new DanaRS_Packet_History_Alarm(aapsLogger, rxBus);
                 break;
             case RecordTypes.RECORD_TYPE_PRIME:
-                msg = new DanaRS_Packet_History_Prime();
+                msg = new DanaRS_Packet_History_Prime(aapsLogger, rxBus);
                 break;
             case RecordTypes.RECORD_TYPE_BASALHOUR:
-                msg = new DanaRS_Packet_History_Basal();
+                msg = new DanaRS_Packet_History_Basal(aapsLogger, rxBus);
                 break;
             case RecordTypes.RECORD_TYPE_BOLUS:
-                msg = new DanaRS_Packet_History_Bolus();
+                msg = new DanaRS_Packet_History_Bolus(aapsLogger, rxBus);
                 break;
             case RecordTypes.RECORD_TYPE_CARBO:
-                msg = new DanaRS_Packet_History_Carbohydrate();
+                msg = new DanaRS_Packet_History_Carbohydrate(aapsLogger, rxBus);
                 break;
             case RecordTypes.RECORD_TYPE_DAILY:
-                msg = new DanaRS_Packet_History_Daily();
+                msg = new DanaRS_Packet_History_Daily(aapsLogger, rxBus);
                 break;
             case RecordTypes.RECORD_TYPE_GLUCOSE:
-                msg = new DanaRS_Packet_History_Blood_Glucose();
+                msg = new DanaRS_Packet_History_Blood_Glucose(aapsLogger, rxBus);
                 break;
             case RecordTypes.RECORD_TYPE_REFILL:
-                msg = new DanaRS_Packet_History_Refill();
+                msg = new DanaRS_Packet_History_Refill(aapsLogger, rxBus);
                 break;
             case RecordTypes.RECORD_TYPE_SUSPEND:
-                msg = new DanaRS_Packet_History_Suspend();
+                msg = new DanaRS_Packet_History_Suspend(aapsLogger, rxBus);
                 break;
         }
         if (msg != null) {
-            bleComm.sendMessage(new DanaRS_Packet_General_Set_History_Upload_Mode(1));
+            bleComm.sendMessage(new DanaRS_Packet_General_Set_History_Upload_Mode(aapsLogger, 1));
             SystemClock.sleep(200);
             bleComm.sendMessage(msg);
-            while (!msg.done && isConnected()) {
+            while (!msg.getDone() && isConnected()) {
                 SystemClock.sleep(100);
             }
             SystemClock.sleep(200);
-            bleComm.sendMessage(new DanaRS_Packet_General_Set_History_Upload_Mode(0));
+            bleComm.sendMessage(new DanaRS_Packet_General_Set_History_Upload_Mode(aapsLogger, 0));
         }
         result.success = true;
         result.comment = "OK";

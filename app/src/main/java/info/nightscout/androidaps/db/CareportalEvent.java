@@ -149,7 +149,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
             CareportalEvent event = list.get(i);
             if (event.date <= time && event.date > (time - T.mins(5).msecs())) {
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("Found event for time: " + DateUtil.dateAndTimeFullString(time) + " " + event.toString());
+                    log.debug("Found event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
                 return true;
             }
         }

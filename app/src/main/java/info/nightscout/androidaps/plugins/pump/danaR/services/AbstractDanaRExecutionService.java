@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
+import dagger.android.DaggerService;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -48,7 +49,7 @@ import info.nightscout.androidaps.utils.ToastUtils;
  * Created by mike on 28.01.2018.
  */
 
-public abstract class AbstractDanaRExecutionService extends Service {
+public abstract class AbstractDanaRExecutionService extends DaggerService {
     protected Logger log = LoggerFactory.getLogger(L.PUMP);
 
     protected String mDevName;

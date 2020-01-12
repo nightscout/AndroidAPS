@@ -52,10 +52,14 @@ public class BLEComm {
 
     private final byte PACKET_START_BYTE = (byte) 0xA5;
     private final byte PACKET_END_BYTE = (byte) 0x5A;
-    private Context context = null;
+    private Context context;
+    private DanaRPump danaRPump;
+    private DanaRSMessageHashTable danaRSMessageHashTable;
 
-    public BLEComm (Context context) {
+    public BLEComm(Context context, DanaRSMessageHashTable danaRSMessageHashTable, DanaRPump danaRPump) {
         this.context = context;
+        this.danaRPump = danaRPump;
+        this.danaRSMessageHashTable = danaRSMessageHashTable;
         initialize();
     }
 
@@ -502,7 +506,7 @@ public class BLEComm {
                                     int size = inputBuffer.length;
                                     int pass = ((inputBuffer[size - 1] & 0x000000FF) << 8) + ((inputBuffer[size - 2] & 0x000000FF));
                                     pass = pass ^ 3463;
-                                    DanaRPump.getInstance().rs_password = Integer.toHexString(pass);
+                                    danaRPump.setRsPassword(Integer.toHexString(pass));
                                     if (L.isEnabled(L.PUMPBTCOMM))
                                         log.debug("Pump user password: " + Integer.toHexString(pass));
 
@@ -525,7 +529,7 @@ public class BLEComm {
                                 message = processsedMessage;
                             } else {
                                 // it's not response to last message, create new instance
-                                message = DanaRSMessageHashTable.findMessage(receivedCommand);
+                                message = danaRSMessageHashTable.findMessage(receivedCommand);
                             }
                             if (message != null) {
                                 if (L.isEnabled(L.PUMPBTCOMM))

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -41,6 +42,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var ctx: Context
 
     companion object {
         private const val PLUS1_DEFAULT = 0.5
@@ -176,12 +178,12 @@ class InsulinDialog : DialogFragmentWithDate() {
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
-                                        val i = Intent(context, ErrorHelperActivity::class.java)
+                                        val i = Intent(ctx, ErrorHelperActivity::class.java)
                                         i.putExtra("soundid", R.raw.boluserror)
                                         i.putExtra("status", result.comment)
                                         i.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror))
                                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        context?.startActivity(i)
+                                        ctx.startActivity(i)
                                     }
                                 }
                             })

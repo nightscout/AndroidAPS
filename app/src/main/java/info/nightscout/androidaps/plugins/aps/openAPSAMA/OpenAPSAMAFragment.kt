@@ -96,7 +96,7 @@ class OpenAPSAMAFragment : DaggerFragment() {
             openapsma_scriptdebugdata.text = determineBasalAdapterAMAJS.scriptDebug
         }
         if (openAPSAMAPlugin.lastAPSRun != 0L) {
-            openapsma_lastrun.text = DateUtil.dateAndTimeFullString(openAPSAMAPlugin.lastAPSRun)
+            openapsma_lastrun.text = DateUtil.dateAndTimeString(openAPSAMAPlugin.lastAPSRun)
         }
         openAPSAMAPlugin.lastAutosensResult?.let {
             openapsma_autosensdata.text = JSONFormatter.format(it.json())

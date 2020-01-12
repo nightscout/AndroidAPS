@@ -44,6 +44,7 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectCommandInsightSetTBROverNotification(commandInsightSetTBROverNotification: CommandInsightSetTBROverNotification)
     fun injectCommandLoadEvents(commandLoadEvents: CommandLoadEvents)
     fun injectCommandLoadHistory(commandLoadHistory: CommandLoadHistory)
+    fun injectCommandLoadTDDs(commandLoadTDDs: CommandLoadTDDs)
     fun injectCommandReadStatus(commandReadStatus: CommandReadStatus)
     fun injectCommandSetProfile(commandSetProfile: CommandSetProfile)
     fun injectCommandCommandSMBBolus(commandSMBBolus: CommandSMBBolus)
@@ -51,6 +52,7 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectCommandStopPump(commandStopPump: CommandStopPump)
     fun injectCommandTempBasalAbsolute(commandTempBasalAbsolute: CommandTempBasalAbsolute)
     fun injectCommandTempBasalPercent(commandTempBasalPercent: CommandTempBasalPercent)
+    fun injectCommandSetUserSettings(commandSetUserSettings: CommandSetUserSettings)
 
     fun injectObjective0(objective0: Objective0)
     fun injectObjective1(objective1: Objective1)

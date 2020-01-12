@@ -53,19 +53,11 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     private final TreatmentsPlugin treatmentsPlugin;
     private final SP sp;
 
-    private static DanaRKoreanPlugin plugin = null;
-
-    @Deprecated
-    public static DanaRKoreanPlugin getPlugin() {
-        if (plugin == null)
-            throw new IllegalStateException("Accessing DanaRKoreanPlugin before first instantiation");
-        return plugin;
-    }
-
     @Inject
     public DanaRKoreanPlugin(
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
+            DanaRPump danaRPump,
             MainApp maiApp,
             ResourceHelper resourceHelper,
             ConstraintChecker constraintChecker,
@@ -74,8 +66,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             CommandQueueProvider commandQueue
 
     ) {
-        super(resourceHelper, aapsLogger, commandQueue);
-        plugin = this;
+        super(danaRPump, resourceHelper, aapsLogger, commandQueue);
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.mainApp = maiApp;
@@ -156,8 +147,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     @Override
     public boolean isInitialized() {
-        DanaRPump pump = DanaRPump.getInstance();
-        return pump.lastConnection > 0 && pump.maxBasal > 0 && !pump.isConfigUD && !pump.isEasyModeEnabled && pump.isExtendedBolusEnabled && pump.isPasswordOK();
+        return danaRPump.getLastConnection() > 0 && danaRPump.getMaxBasal() > 0 && !danaRPump.isConfigUD() && !danaRPump.isEasyModeEnabled() && danaRPump.isExtendedBolusEnabled() && danaRPump.isPasswordOK();
     }
 
     @Override
@@ -211,8 +201,6 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         //if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
         //    connect("setTempBasalAbsolute old data");
         //}
-        DanaRPump pump = DanaRPump.getInstance();
-
         PumpEnactResult result = new PumpEnactResult();
 
         absoluteRate = constraintChecker.applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
@@ -308,16 +296,16 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2); // *2 because of halfhours
 
             // What is current rate of extended bolusing in u/h?
-            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Extended bolus in progress: " + (activeExtended != null) + " rate: " + pump.extendedBolusAbsoluteRate + "U/h duration remaining: " + pump.extendedBolusRemainingMinutes + "min");
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Extended bolus in progress: " + (activeExtended != null) + " rate: " + danaRPump.getExtendedBolusAbsoluteRate() + "U/h duration remaining: " + danaRPump.getExtendedBolusRemainingMinutes() + "min");
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Rate to set: " + extendedRateToSet + "U/h");
 
             // Compare with extended rate in progress
-            if (activeExtended != null && Math.abs(pump.extendedBolusAbsoluteRate - extendedRateToSet) < getPumpDescription().extendedBolusStep) {
+            if (activeExtended != null && Math.abs(danaRPump.getExtendedBolusAbsoluteRate() - extendedRateToSet) < getPumpDescription().extendedBolusStep) {
                 // correct extended already set
                 result.success = true;
-                result.absolute = pump.extendedBolusAbsoluteRate;
+                result.absolute = danaRPump.getExtendedBolusAbsoluteRate();
                 result.enacted = false;
-                result.duration = pump.extendedBolusRemainingMinutes;
+                result.duration = danaRPump.getExtendedBolusRemainingMinutes();
                 result.isPercent = false;
                 result.isTempCancel = false;
                 aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Correct extended already set");
@@ -371,7 +359,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             result.enacted = true;
             result.isTempCancel = true;
         }
-        if (!DanaRPump.getInstance().isTempBasalInProgress) {
+        if (!danaRPump.isTempBasalInProgress()) {
             result.success = true;
             result.isTempCancel = true;
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok);

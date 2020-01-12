@@ -20,7 +20,7 @@ public class MsgSetBasalProfile extends MessageBase {
     }
 
     // index 0-3
-    public MsgSetBasalProfile(byte index, double[] values) {
+    public MsgSetBasalProfile(byte index, Double[] values) {
         this();
         AddParamByte(index);
         for (Integer i = 0; i < 24; i++) {
