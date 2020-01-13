@@ -325,7 +325,7 @@
     <string name="smscommunicator_profilereplywithcode">Om naar profiel %1$s %2$d%% te wisselen antwoord met code %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">Om een vertraagde bolus van %1$.2fE voor %2$d min te starten antwoord met code %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">Antwoord met code %3$s om %1$dg in te voeren op %2$s</string>
-    <string name="smscommunicator_basalpctreplywithcode">Om een basaal van %1$d% voor %2$d min te starten antwoord met code %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">Om een basaal van %1$d%% voor %2$d min te starten antwoord met code %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">Om de loop te onderbreken voor %1$d minuten antwoord met de code %2$s</string>
     <string name="smscommunicator_tempbasalset">Tijdelijk basaal %1$.2fE/u voor %2$d minuten succesvol gestart</string>
     <string name="smscommunicator_extendedset">Vertraagde bolus %1$.2fE voor %2$d minuten succesvol gestart</string>

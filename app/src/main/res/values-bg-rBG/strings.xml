@@ -331,13 +331,13 @@
     <string name="smscommunicator_profilereplywithcode">За да превключите профила към %1$s %2$d%% отговорете с код %3$s</string>
     <string name="smscommunicator_extendedreplywithcode">За да започнете удължен болус %1$.2fЕ за %2$d мин отговорете с код %3$s</string>
     <string name="smscommunicator_carbsreplywithcode">За да въведете %1$dг в %2$s отговорете с код %3$s</string>
-    <string name="smscommunicator_basalpctreplywithcode">За да стартирате базал от %1$d%Е/ч за %2$d мин отговорете с код %3$s</string>
+    <string name="smscommunicator_basalpctreplywithcode">За да стартирате базал от %1$d%%Е/ч за %2$d мин отговорете с код %3$s</string>
     <string name="smscommunicator_suspendreplywithcode">За да спрете APS за %1$d минути отговорете с код %2$s</string>
     <string name="smscommunicator_tempbasalset">Временен базал от %1$.2fЕ/ч за %2$d мин стартиран успешно</string>
     <string name="smscommunicator_extendedset">Удължен болус %1$.2fU за %2$d мин стартиран успешно</string>
     <string name="smscommunicator_carbsset">Въглехидрати %1$dг въведени</string>
     <string name="smscommunicator_carbsfailed">Въвеждане на%1$dг въглехидрати - НЕУСПЕШНО</string>
-    <string name="smscommunicator_tempbasalset_percent">Временен базал от %1$d%Е/ч за %2$d мин стартиран успешно</string>
+    <string name="smscommunicator_tempbasalset_percent">Временен базал от %1$d%%Е/ч за %2$d мин стартиран успешно</string>
     <string name="smscommunicator_tempbasalfailed">Неуспешно стартиране на временен базал</string>
     <string name="smscommunicator_extendedfailed">Неуспешно стартиране на удължен болус</string>
     <string name="smscommunicator_basalstopreplywithcode">За да спрете времен базал отговорете с код %1$s</string>
@@ -1315,6 +1315,7 @@
     <string name="medtronic_error_pump_frequency_invalid">Честотата не се поддържа.</string>
     <string name="medtronic_error_rileylink_address_invalid">Грешен RileyLink адрес.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Откритата помпа не е идентична с кокнфигурираната.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Базалните профили/настройки не са позволен в помпата. Включванете го от настройките на помпата.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Базалния профил в помпата е грешен (трябва да е STD).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Грешен тип TBR в помпата ( трябва да е Absolute).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Грешен максимален болус в помпата ( трябвба да е %1$.2f).</string>

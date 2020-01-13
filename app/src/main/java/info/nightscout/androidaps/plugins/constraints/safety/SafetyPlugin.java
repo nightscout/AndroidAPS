@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.Round;
@@ -83,6 +84,9 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
             value.set(false, resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch), this);
         }
 
+        if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
+            value.set(false, MainApp.gs(R.string.closed_loop_disabled_with_eb), this);
+        }
         return value;
     }
 

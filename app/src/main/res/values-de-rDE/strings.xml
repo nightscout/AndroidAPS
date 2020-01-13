@@ -363,7 +363,7 @@
     <string name="ns_upload_only_summary">Zu Nightscout nur hochladen. Nicht wirksam bei BZ-Werten, wenn nicht eine lokale Quelle wie z. B. xDrip gewählt wird; nicht wirksam bei Profilen, wenn Nightscout-Profile verwendet werden.</string>
     <string name="pumpNotInitialized">Pumpe nicht initialisiert!</string>
     <string name="pumpNotInitializedProfileNotSet">Pumpe nicht initialisiert, Profil nicht gesetzt!</string>
-    <string name="primefill">Vorfüllen/Füllen</string>
+    <string name="primefill">Katheterwechsel</string>
     <string name="fillwarning">Bitte vergewissere Dich, dass die Füllmenge den Eigenschaften des Katheters entspricht!</string>
     <string name="othersettings_title">Andere</string>
     <string name="fillbolus_title">Füll-/Vorfüll-Standardmengen</string>

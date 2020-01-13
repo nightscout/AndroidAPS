@@ -158,6 +158,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     TextView avgdeltaView;
     TextView baseBasalView;
     TextView extendedBolusView;
+    LinearLayout extendedBolusLayout;
     TextView activeProfileView;
     TextView iobView;
     TextView cobView;
@@ -261,6 +262,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
         baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
         extendedBolusView = (TextView) view.findViewById(R.id.overview_extendedbolus);
+        extendedBolusLayout = view.findViewById(R.id.overview_extendedbolus_layout);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
         pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
         pumpDeviceStatusView = (TextView) view.findViewById(R.id.overview_pump);
@@ -1060,8 +1062,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 if (deltaShortView != null)
                     deltaShortView.setText(Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units));
                 if (avgdeltaView != null)
-                    avgdeltaView.setText("øΔ15m: " + Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
-                            "  øΔ40m: " + Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
+                    avgdeltaView.setText("øΔ15m: " + Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) + "\n" +
+                            "øΔ40m: " + Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
             } else {
                 if (deltaView != null)
                     deltaView.setText("Δ " + resourceHelper.gs(R.string.notavailable));
@@ -1167,14 +1169,6 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             } else {
                 basalText = MainApp.gs(R.string.pump_basebasalrate, profile.getBasal());
             }
-            baseBasalView.setOnClickListener(v -> {
-                String fullText = resourceHelper.gs(R.string.pump_basebasalrate_label) + ": " + resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal()) + "\n";
-                if (activeTemp != null) {
-                    fullText += resourceHelper.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
-                }
-                OKDialog.show(getActivity(), resourceHelper.gs(R.string.basal), fullText);
-            });
-
         } else {
             if (activeTemp != null) {
                 basalText = activeTemp.toStringFull();
@@ -1183,6 +1177,14 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             }
         }
         baseBasalView.setText(basalText);
+        baseBasalView.setOnClickListener(v -> {
+            String fullText = MainApp.gs(R.string.pump_basebasalrate_label) + ": " + MainApp.gs(R.string.pump_basebasalrate, profile.getBasal()) + "\n";
+            if (activeTemp != null) {
+                fullText += MainApp.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
+            }
+            OKDialog.show(getActivity(), MainApp.gs(R.string.basal), fullText);
+        });
+
         if (activeTemp != null) {
             baseBasalView.setTextColor(resourceHelper.gc(R.color.basal));
         } else {
@@ -1199,18 +1201,18 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 }
             } else {
                 if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses()) {
-                    extendedBolusText = extendedBolus.toString();
+                    extendedBolusText = extendedBolus.toStringMedium();
                 }
             }
             extendedBolusView.setText(extendedBolusText);
-            if (Config.NSCLIENT) {
-                if (extendedBolus != null)
-                    extendedBolusView.setOnClickListener(v -> OKDialog.show(getActivity(), resourceHelper.gs(R.string.extended_bolus), extendedBolus.toString()));
-            }
-            if (extendedBolusText.equals(""))
-                extendedBolusView.setVisibility(Config.NSCLIENT ? View.INVISIBLE : View.GONE);
-            else
+            extendedBolusView.setOnClickListener(v -> OKDialog.show(getActivity(), resourceHelper.gs(R.string.extended_bolus), extendedBolus.toString()));
+            if (extendedBolusText.equals("")) {
+                extendedBolusLayout.setVisibility(View.GONE);
+                if (extendedBolusLayout != null) extendedBolusView.setVisibility(Config.NSCLIENT ? View.INVISIBLE : View.GONE);
+            } else {
                 extendedBolusView.setVisibility(View.VISIBLE);
+                if (extendedBolusLayout != null) extendedBolusLayout.setVisibility(View.VISIBLE);
+            }
         }
 
         activeProfileView.setText(profileFunction.getProfileNameWithDuration());
