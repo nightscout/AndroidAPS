@@ -13,12 +13,13 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.setupwizard.SWTextValidator;
 import info.nightscout.androidaps.utils.SP;
 
 
 public class SWEditString extends SWItem {
-    private static Logger log = LoggerFactory.getLogger(SWEditString.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(SWEditString.class);
 
     private SWTextValidator validator = null;
     private int updateDelay = 0;

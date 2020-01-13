@@ -8,11 +8,12 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.setupwizard.SWValidator;
 
 
 public class SWBreak extends SWItem {
-    private static Logger log = LoggerFactory.getLogger(SWBreak.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(SWBreak.class);
 
     private TextView l;
     private SWValidator visibilityValidator;

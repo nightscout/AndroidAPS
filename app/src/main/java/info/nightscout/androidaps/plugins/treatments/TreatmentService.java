@@ -37,6 +37,7 @@ import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
@@ -52,7 +53,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
-    private static Logger log = LoggerFactory.getLogger(L.DATATREATMENTS);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.DATATREATMENTS);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final ScheduledExecutorService treatmentEventWorker = Executors.newSingleThreadScheduledExecutor();

@@ -17,6 +17,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientResend;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
@@ -25,7 +26,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientServ
  * Created by mike on 21.02.2016.
  */
 public class UploadQueue {
-    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
 
     public static String status() {
         return "QUEUE: " + MainApp.getDbHelper().size(DatabaseHelper.DATABASE_DBREQUESTS);

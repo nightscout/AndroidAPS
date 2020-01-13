@@ -39,6 +39,7 @@ import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
@@ -70,7 +71,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject CommandQueueProvider commandQueue;
 
-    private static Logger log = LoggerFactory.getLogger(TDDStatsActivity.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(TDDStatsActivity.class);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     TextView statusView, statsMessage, totalBaseBasal2;

@@ -19,6 +19,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -47,7 +48,7 @@ import info.nightscout.androidaps.utils.OKDialog;
 
 public class MedtronicUtil extends RileyLinkUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
     static int ENVELOPE_SIZE = 4; // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
     static int CRC_SIZE = 1;
     private static boolean lowLevelDebug = true;

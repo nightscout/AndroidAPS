@@ -49,6 +49,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
@@ -148,7 +149,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private final SP sp;
     private final CommandQueueProvider commandQueue;
 
-    private Logger log = LoggerFactory.getLogger(L.PUMP);
+    private Logger log = StacktraceLoggerWrapper.getLogger(L.PUMP);
 
     private PumpDescription pumpDescription;
     private InsightAlertService alertService;

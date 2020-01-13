@@ -4,12 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
  * Created by mike on 20.07.2016.
  */
 public class MsgHistoryDailyInsulin extends MsgHistoryAll {
-    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
     public MsgHistoryDailyInsulin() {
         SetCommand(0x3102);
         if (L.isEnabled(L.PUMPCOMM))

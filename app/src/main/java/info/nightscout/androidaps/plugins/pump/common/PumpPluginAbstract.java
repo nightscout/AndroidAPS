@@ -30,6 +30,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
@@ -54,7 +55,7 @@ import io.reactivex.schedulers.Schedulers;
 public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpInterface, ConstraintsInterface {
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMP);
     /*
         protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
                 .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump_driver));

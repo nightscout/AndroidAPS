@@ -31,7 +31,7 @@ public class MedtronicHistoryDataUTest {
     MedtronicPumpHistoryDecoder decoder = new MedtronicPumpHistoryDecoder();
 
 
-    // Logger LOGGER = LoggerFactory.getLogger(MedtronicHistoryDataUTest.class);
+    // Logger LOGGER = StacktraceLoggerWrapper.getLogger(MedtronicHistoryDataUTest.class);
 
     //@Before
     public void setup() {

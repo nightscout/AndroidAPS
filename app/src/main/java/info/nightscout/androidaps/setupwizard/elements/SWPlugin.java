@@ -17,12 +17,13 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 
 public class SWPlugin extends SWItem {
-    private static Logger log = LoggerFactory.getLogger(SWPlugin.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(SWPlugin.class);
 
     private PluginType pType;
     private RadioGroup radioGroup;

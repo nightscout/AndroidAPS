@@ -12,11 +12,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+
 /**
  * Created by mike on 11.07.2016.
  */
 public class JSONFormatter {
-    private static Logger log = LoggerFactory.getLogger(JSONFormatter.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(JSONFormatter.class);
 
     public static Spanned format(final String jsonString) {
         final JsonVisitor visitor = new JsonVisitor(1, '\t');

@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 
 /**
@@ -17,7 +18,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
  */
 public class PumpHistoryResult {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
     private boolean searchFinished = false;
     private PumpHistoryEntry searchEntry = null;

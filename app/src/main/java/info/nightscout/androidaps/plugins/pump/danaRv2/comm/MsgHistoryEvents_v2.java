@@ -13,6 +13,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
@@ -21,7 +22,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 
 public class MsgHistoryEvents_v2 extends MessageBase {
-    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
+    private Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
     public boolean done;
 
     public static long lastEventTimeLoaded = 0;

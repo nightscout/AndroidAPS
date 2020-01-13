@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.ReadQuickInfoCommand;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.BolusCommand;
@@ -45,7 +46,7 @@ import info.nightscout.androidaps.plugins.pump.combo.ruffyscripter.commands.SetT
  * operations and are cleanly separated from the thread management, connection management etc
  */
 public class RuffyScripter implements RuffyCommands {
-    private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(RuffyScripter.class);
 
     private IRuffyService ruffyService;
 

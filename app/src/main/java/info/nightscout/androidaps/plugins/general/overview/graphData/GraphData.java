@@ -29,6 +29,7 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
@@ -57,7 +58,7 @@ import info.nightscout.androidaps.utils.SP;
  */
 
 public class GraphData {
-    private static Logger log = LoggerFactory.getLogger(L.OVERVIEW);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.OVERVIEW);
 
     private GraphView graph;
     public double maxY = Double.MIN_VALUE;

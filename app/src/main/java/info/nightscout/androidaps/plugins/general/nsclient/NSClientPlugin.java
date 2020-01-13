@@ -36,6 +36,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm;
@@ -53,7 +54,7 @@ import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class NSClientPlugin extends PluginBase {
-    private Logger log = LoggerFactory.getLogger(L.NSCLIENT);
+    private Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private final AAPSLogger aapsLogger;
@@ -72,7 +73,7 @@ public class NSClientPlugin extends PluginBase {
 
     public NSClientService nsClientService = null;
 
-    private NsClientReceiverDelegate nsClientReceiverDelegate;
+    private NsClientReceiverDelegate  nsClientReceiverDelegate = new NsClientReceiverDelegate();
 
     @Inject
     public NSClientPlugin(
@@ -114,7 +115,6 @@ public class NSClientPlugin extends PluginBase {
     protected void onStart() {
         paused = SP.getBoolean(R.string.key_nsclientinternal_paused, false);
         autoscroll = SP.getBoolean(R.string.key_nsclientinternal_autoscroll, true);
-        nsClientReceiverDelegate = new NsClientReceiverDelegate();
 
         Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, NSClientService.class);

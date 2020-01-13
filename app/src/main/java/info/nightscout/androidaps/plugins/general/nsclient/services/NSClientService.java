@@ -43,6 +43,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
@@ -86,7 +87,7 @@ public class NSClientService extends DaggerService {
     @Inject SP sp;
     @Inject NSClientPlugin nsClientPlugin;
 
-    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     static public PowerManager.WakeLock mWakeLock;

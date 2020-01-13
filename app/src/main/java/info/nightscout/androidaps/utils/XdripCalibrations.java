@@ -13,6 +13,7 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.services.Intents;
 
@@ -21,7 +22,7 @@ import info.nightscout.androidaps.services.Intents;
  */
 
 public class XdripCalibrations {
-    private static Logger log = LoggerFactory.getLogger(XdripCalibrations.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(XdripCalibrations.class);
 
     public static void confirmAndSendCalibration(final Double bg, final Context parentContext) {
         if (parentContext != null) {

@@ -4,9 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 public class MsgPCCommStop extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
     public MsgPCCommStop() {
         SetCommand(0x3002);
         if (L.isEnabled(L.PUMPCOMM))

@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.Map;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BatteryStatusDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
@@ -27,7 +28,7 @@ import static info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUt
 
 public class MedtronicUIPostprocessor {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMP);
 
     MedtronicPumpStatus pumpStatus;
 

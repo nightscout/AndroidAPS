@@ -8,10 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.services.DataService;
 
 public class DataReceiver extends WakefulBroadcastReceiver {
-    private static Logger log = LoggerFactory.getLogger(L.DATASERVICE);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.DATASERVICE);
 
     @Override
     public void onReceive(Context context, Intent intent) {

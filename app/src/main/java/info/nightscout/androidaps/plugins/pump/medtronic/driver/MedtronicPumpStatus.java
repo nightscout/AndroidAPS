@@ -14,6 +14,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -37,7 +38,7 @@ import info.nightscout.androidaps.utils.SP;
 
 public class MedtronicPumpStatus extends PumpStatus {
 
-    private static Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    private static Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMP);
 
     public String errorDescription = null;
     public String serialNumber;

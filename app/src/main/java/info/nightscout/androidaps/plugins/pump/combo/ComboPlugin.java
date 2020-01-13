@@ -42,6 +42,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
@@ -80,7 +81,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 @Singleton
 public class ComboPlugin extends PumpPluginBase implements PumpInterface, ConstraintsInterface {
-    private static final Logger log = LoggerFactory.getLogger(L.PUMP);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(L.PUMP);
     static final String COMBO_TBRS_SET = "combo_tbrs_set";
     static final String COMBO_BOLUSES_DELIVERED = "combo_boluses_delivered";
 

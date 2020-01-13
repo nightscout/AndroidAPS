@@ -12,13 +12,14 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 
 public class RileyLinkBluetoothStateReceiver extends BroadcastReceiver {
 
-    private static Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    private static Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMP);
 
     @Override
     public void onReceive(Context context, Intent intent) {

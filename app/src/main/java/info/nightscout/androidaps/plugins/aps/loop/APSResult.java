@@ -22,6 +22,7 @@ import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
@@ -33,7 +34,7 @@ import info.nightscout.androidaps.utils.SP;
  * Created by mike on 09.06.2016.
  */
 public class APSResult {
-    private static Logger log = LoggerFactory.getLogger(L.APS);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.APS);
 
     public long date = 0;
     public String reason;

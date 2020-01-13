@@ -32,6 +32,7 @@ import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import io.reactivex.disposables.CompositeDisposable;
@@ -42,7 +43,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
-    private Logger log = LoggerFactory.getLogger(L.DATAFOOD);
+    private Logger log = StacktraceLoggerWrapper.getLogger(L.DATAFOOD);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final ScheduledExecutorService foodEventWorker = Executors.newSingleThreadScheduledExecutor();

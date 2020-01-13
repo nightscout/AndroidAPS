@@ -16,12 +16,13 @@ import java.util.concurrent.TimeUnit;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 import info.nightscout.androidaps.utils.SP;
 
 public class SWItem {
-    private static Logger log = LoggerFactory.getLogger(SWItem.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(SWItem.class);
 
     private static final ScheduledExecutorService eventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledEventPost = null;

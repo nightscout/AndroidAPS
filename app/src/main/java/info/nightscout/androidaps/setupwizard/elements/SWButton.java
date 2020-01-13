@@ -8,10 +8,11 @@ import android.widget.LinearLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.setupwizard.SWValidator;
 
 public class SWButton extends SWItem {
-    private static Logger log = LoggerFactory.getLogger(SWButton.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(SWButton.class);
 
     private Runnable buttonRunnable;
     private int buttonText;

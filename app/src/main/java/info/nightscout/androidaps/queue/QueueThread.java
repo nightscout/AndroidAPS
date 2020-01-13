@@ -14,6 +14,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning;
@@ -26,7 +27,7 @@ import info.nightscout.androidaps.utils.T;
  */
 
 public class QueueThread extends Thread {
-    private Logger log = LoggerFactory.getLogger(L.PUMPQUEUE);
+    private Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPQUEUE);
 
     private CommandQueue queue;
 

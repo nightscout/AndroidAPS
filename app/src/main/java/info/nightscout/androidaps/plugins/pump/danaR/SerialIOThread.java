@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageHashTableBase;
 import info.nightscout.androidaps.plugins.pump.danaR.services.AbstractSerialIOThread;
@@ -20,7 +21,7 @@ import info.nightscout.androidaps.utils.CRC;
  * Created by mike on 17.07.2016.
  */
 public class SerialIOThread extends AbstractSerialIOThread {
-    private static Logger log = LoggerFactory.getLogger(L.PUMPBTCOMM);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPBTCOMM);
 
     private InputStream mInputStream = null;
     private OutputStream mOutputStream = null;

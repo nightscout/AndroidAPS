@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.tidepool.comm
 
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import org.slf4j.LoggerFactory
@@ -9,7 +10,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 internal class TidepoolCallback<T>(private val rxBus: RxBusWrapper, private val session: Session, val name: String, val onSuccess: () -> Unit, val onFail: () -> Unit) : Callback<T> {
-    private val log = LoggerFactory.getLogger(L.TIDEPOOL)
+    private val log = StacktraceLoggerWrapper.getLogger(L.TIDEPOOL)
 
     override fun onResponse(call: Call<T>, response: Response<T>) {
         if (response.isSuccessful && response.body() != null) {
