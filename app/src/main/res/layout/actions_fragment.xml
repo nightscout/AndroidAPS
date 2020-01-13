@@ -190,6 +190,34 @@
                 app:layout_gravity="fill"
                 app:layout_row="3" />
 
+            <info.nightscout.androidaps.utils.SingleClickButton
+                android:id="@+id/actions_note"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:drawableTop="@drawable/icon_cp_note"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/careportal_note"
+                app:layout_column="0"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="4" />
+
+            <info.nightscout.androidaps.utils.SingleClickButton
+                android:id="@+id/actions_exercise"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:drawableTop="@drawable/icon_cp_exercise"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/careportal_exercise"
+                app:layout_column="1"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="4" />
+
         </androidx.gridlayout.widget.GridLayout>
 
         <include

@@ -22,7 +22,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/icon_cp_age_sensor"
                 android:gravity="center_vertical"
@@ -41,7 +41,7 @@
                 android:textSize="14sp" />
 
             <ImageView
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:src="@drawable/icon_cp_age_insulin"
@@ -61,7 +61,7 @@
                 android:textSize="14sp" />
 
             <ImageView
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:src="@drawable/icon_cp_age_canula"
@@ -81,7 +81,7 @@
                 android:textSize="14sp" />
 
             <ImageView
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0"
                 android:src="@drawable/icon_cp_age_battery"

@@ -111,6 +111,12 @@ class ActionsFragment : Fragment() {
         actions_pumpbatterychange.setOnClickListener {
             fragmentManager?.let { CareDialog().setOptions(CareDialog.EventType.BATTERY_CHANGE, R.string.careportal_pumpbatterychange).show(it, "Actions") }
         }
+        actions_note.setOnClickListener {
+            fragmentManager?.let { CareDialog().setOptions(CareDialog.EventType.NOTE, R.string.careportal_note).show(it, "Actions") }
+        }
+        actions_exercise.setOnClickListener {
+            fragmentManager?.let { CareDialog().setOptions(CareDialog.EventType.EXERCISE, R.string.careportal_exercise).show(it, "Actions") }
+        }
 
         SP.putBoolean(R.string.key_objectiveuseactions, true)
     }

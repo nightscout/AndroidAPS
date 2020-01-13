@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.annotation.StringRes
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
@@ -25,7 +26,6 @@ import info.nightscout.androidaps.utils.Translator
 import kotlinx.android.synthetic.main.dialog_care.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
-import org.json.JSONException
 import org.json.JSONObject
 import java.text.DecimalFormat
 import java.util.*
@@ -35,7 +35,9 @@ class CareDialog : DialogFragmentWithDate() {
     enum class EventType {
         BGCHECK,
         SENSOR_INSERT,
-        BATTERY_CHANGE
+        BATTERY_CHANGE,
+        NOTE,
+        EXERCISE
     }
 
     private var options: EventType = EventType.BGCHECK
@@ -51,6 +53,7 @@ class CareDialog : DialogFragmentWithDate() {
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putDouble("actions_care_bg", actions_care_bg.value)
+        savedInstanceState.putDouble("actions_care_duration", actions_care_duration.value)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -66,21 +69,31 @@ class CareDialog : DialogFragmentWithDate() {
             EventType.BGCHECK        -> R.drawable.icon_cp_bgcheck
             EventType.SENSOR_INSERT  -> R.drawable.icon_cp_cgm_insert
             EventType.BATTERY_CHANGE -> R.drawable.icon_cp_pump_battery
+            EventType.NOTE           -> R.drawable.icon_cp_note
+            EventType.EXERCISE       -> R.drawable.icon_cp_exercise
         })
         actions_care_title.text = MainApp.gs(when (options) {
             EventType.BGCHECK        -> R.string.careportal_bgcheck
             EventType.SENSOR_INSERT  -> R.string.careportal_cgmsensorinsert
             EventType.BATTERY_CHANGE -> R.string.careportal_pumpbatterychange
+            EventType.NOTE           -> R.string.careportal_note
+            EventType.EXERCISE       -> R.string.careportal_exercise
         })
 
         when (options) {
+            EventType.BGCHECK        -> {
+                action_care_duration_layout.visibility = View.GONE
+            }
             EventType.SENSOR_INSERT,
             EventType.BATTERY_CHANGE -> {
                 action_care_bg_layout.visibility = View.GONE
                 actions_care_bgsource.visibility = View.GONE
+                action_care_duration_layout.visibility = View.GONE
             }
-
-            else                     -> {
+            EventType.NOTE,
+            EventType.EXERCISE -> {
+                action_care_bg_layout.visibility = View.GONE
+                actions_care_bgsource.visibility = View.GONE
             }
         }
 
@@ -103,6 +116,10 @@ class CareDialog : DialogFragmentWithDate() {
             actions_care_bg.setParams(savedInstanceState?.getDouble("actions_care_bg")
                 ?: bg, 36.0, 500.0, 1.0, DecimalFormat("0"), false, ok, bgTextWatcher)
         }
+        actions_care_duration.setParams(savedInstanceState?.getDouble("actions_care_duration")
+            ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, ok)
+        if (options == EventType.NOTE)
+            notes_layout?.visibility = View.VISIBLE // independent to preferences
     }
 
     override fun submit(): Boolean {
@@ -123,6 +140,10 @@ class CareDialog : DialogFragmentWithDate() {
             json.put("glucose", actions_care_bg.value)
             json.put("glucoseType", type)
         }
+        if (options == EventType.NOTE || options == EventType.EXERCISE) {
+            actions.add(MainApp.gs(R.string.careportal_newnstreatment_duration_label) + ": " + MainApp.gs(R.string.format_mins, actions_care_duration.value.toInt()))
+            json.put("duration", actions_care_duration.value.toInt())
+        }
         val notes = notes.text.toString()
         if (notes.isNotEmpty()) {
             actions.add(MainApp.gs(R.string.careportal_newnstreatment_notes_label) + ": " + notes)
@@ -139,6 +160,8 @@ class CareDialog : DialogFragmentWithDate() {
             EventType.BGCHECK        -> CareportalEvent.BGCHECK
             EventType.SENSOR_INSERT  -> CareportalEvent.SENSORCHANGE
             EventType.BATTERY_CHANGE -> CareportalEvent.PUMPBATTERYCHANGE
+            EventType.NOTE           -> CareportalEvent.NOTE
+            EventType.EXERCISE       -> CareportalEvent.EXERCISE
         })
         json.put("units", ProfileFunctions.getSystemUnits())
         if (enteredBy.isNotEmpty())
@@ -153,6 +176,8 @@ class CareDialog : DialogFragmentWithDate() {
                     EventType.BGCHECK        -> CareportalEvent.BGCHECK
                     EventType.SENSOR_INSERT  -> CareportalEvent.SENSORCHANGE
                     EventType.BATTERY_CHANGE -> CareportalEvent.PUMPBATTERYCHANGE
+                    EventType.NOTE           -> CareportalEvent.NOTE
+                    EventType.EXERCISE       -> CareportalEvent.EXERCISE
                 }
                 careportalEvent.json = json.toString()
                 MainApp.getDbHelper().createOrUpdate(careportalEvent)
