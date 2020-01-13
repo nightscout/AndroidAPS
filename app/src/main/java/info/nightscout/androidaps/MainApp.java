@@ -261,7 +261,7 @@ public class MainApp extends DaggerApplication {
         if (Config.PUMPDRIVERS) pluginsList.add(medtronicPumpPlugin);
         if (!Config.NSCLIENT) pluginsList.add(mdiPlugin);
         if (!Config.NSCLIENT) pluginsList.add(virtualPumpPlugin);
-        pluginsList.add(careportalPlugin);
+        if (Config.NSCLIENT) pluginsList.add(careportalPlugin);
         if (Config.APS) pluginsList.add(loopPlugin);
         if (Config.APS) pluginsList.add(openAPSMAPlugin);
         if (Config.APS) pluginsList.add(openAPSAMAPlugin);
