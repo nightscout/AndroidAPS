@@ -61,4 +61,4 @@ class AAPSLoggerProduction : AAPSLogger {
 fun StackTraceElement.toLogString(): String = "[${this.className.substringAfterLast(".")}.${this.methodName}():${this.lineNumber}]: "
 
 /* Needs to be inline. Don't remove even if IDE suggests it. */
-private inline fun stackLogMarker() = Throwable().stackTrace[1].toLogString()
+inline fun stackLogMarker() = Throwable().stackTrace[1].toLogString()

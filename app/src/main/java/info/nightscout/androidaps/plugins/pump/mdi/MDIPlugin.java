@@ -26,6 +26,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
@@ -42,7 +43,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
  */
 @Singleton
 public class MDIPlugin extends PumpPluginBase implements PumpInterface {
-    private static Logger log = LoggerFactory.getLogger(MDIPlugin.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(MDIPlugin.class);
 
     private PumpDescription pumpDescription = new PumpDescription();
 

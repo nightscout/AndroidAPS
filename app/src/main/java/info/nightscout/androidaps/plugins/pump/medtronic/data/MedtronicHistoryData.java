@@ -30,6 +30,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
@@ -69,7 +70,7 @@ import info.nightscout.androidaps.utils.SP;
 // All things marked with "TODO: Fix db code" needs to be updated in new 2.5 database code
 
 public class MedtronicHistoryData {
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMP);
 
     private List<PumpHistoryEntry> allHistory = null;
     private List<PumpHistoryEntry> newHistory = null;

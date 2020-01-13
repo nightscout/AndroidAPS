@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 
 /**
@@ -12,7 +13,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
  */
 
 public class HardLimits {
-    private static Logger log = LoggerFactory.getLogger(HardLimits.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(HardLimits.class);
 
     final static int CHILD = 0;
     final static int TEENAGE = 1;

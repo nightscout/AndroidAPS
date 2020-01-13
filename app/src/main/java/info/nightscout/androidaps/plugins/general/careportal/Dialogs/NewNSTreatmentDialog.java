@@ -49,6 +49,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
@@ -76,7 +77,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
 
-    private static Logger log = LoggerFactory.getLogger(NewNSTreatmentDialog.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(NewNSTreatmentDialog.class);
 
     private static OptionsToShow options;
     private static @StringRes int event;

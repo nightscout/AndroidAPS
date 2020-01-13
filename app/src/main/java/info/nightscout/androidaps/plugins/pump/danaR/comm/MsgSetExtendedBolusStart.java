@@ -5,10 +5,11 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 
 public class MsgSetExtendedBolusStart extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
     public MsgSetExtendedBolusStart() {
         SetCommand(0x0407);

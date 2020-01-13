@@ -24,6 +24,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStop;
@@ -50,7 +51,7 @@ import info.nightscout.androidaps.utils.ToastUtils;
  */
 
 public abstract class AbstractDanaRExecutionService extends DaggerService {
-    protected Logger log = LoggerFactory.getLogger(L.PUMP);
+    protected Logger log = StacktraceLoggerWrapper.getLogger(L.PUMP);
 
     protected String mDevName;
 

@@ -29,6 +29,7 @@ import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
@@ -51,7 +52,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
  */
 
 public abstract class AbstractDanaRPlugin extends PumpPluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface {
-    private Logger log = LoggerFactory.getLogger(L.PUMP);
+    private Logger log = StacktraceLoggerWrapper.getLogger(L.PUMP);
 
     protected AbstractDanaRExecutionService sExecutionService;
 

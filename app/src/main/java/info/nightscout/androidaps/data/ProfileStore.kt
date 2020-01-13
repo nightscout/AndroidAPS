@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.data
 
 import androidx.collection.ArrayMap
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONException
 import org.json.JSONObject
@@ -8,7 +9,7 @@ import org.slf4j.LoggerFactory
 import java.util.*
 
 class ProfileStore(val data: JSONObject) {
-    private val log = LoggerFactory.getLogger(ProfileStore::class.java)
+    private val log = StacktraceLoggerWrapper.getLogger(ProfileStore::class.java)
 
     private val cachedObjects = ArrayMap<String, Profile>()
 

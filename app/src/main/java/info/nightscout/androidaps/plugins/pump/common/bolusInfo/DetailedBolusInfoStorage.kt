@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.bolusInfo
 
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData
 import info.nightscout.androidaps.utils.T
 import org.slf4j.LoggerFactory
@@ -9,7 +10,7 @@ import java.util.*
 import kotlin.math.abs
 
 object DetailedBolusInfoStorage {
-    private val log = LoggerFactory.getLogger(L.PUMP)
+    private val log = StacktraceLoggerWrapper.getLogger(L.PUMP)
     val store = ArrayList<DetailedBolusInfo>()
 
     @Synchronized

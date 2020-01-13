@@ -4,10 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
 
 public class MsgSetAPSTempBasalStart_v2 extends MessageBase {
-    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
+    private Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
     protected final int PARAM30MIN = 160;
     protected final int PARAM15MIN = 150;

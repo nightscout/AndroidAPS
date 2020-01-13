@@ -10,6 +10,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
@@ -19,7 +20,7 @@ import info.nightscout.androidaps.utils.Round;
  */
 
 public class GlucoseStatus {
-    private static Logger log = LoggerFactory.getLogger(GlucoseStatus.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(GlucoseStatus.class);
     public double glucose = 0d;
     public double delta = 0d;
     public double avgdelta = 0d;

@@ -8,6 +8,7 @@ import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
@@ -37,7 +38,7 @@ class UploadChunk @Inject constructor(
 
     private val MAX_UPLOAD_SIZE = T.days(7).msecs() // don't change this
 
-    private val log = LoggerFactory.getLogger(L.TIDEPOOL)
+    private val log = StacktraceLoggerWrapper.getLogger(L.TIDEPOOL)
 
     fun getNext(session: Session?): String? {
         if (session == null)

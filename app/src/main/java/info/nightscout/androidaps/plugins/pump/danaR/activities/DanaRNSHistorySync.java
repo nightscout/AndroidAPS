@@ -14,6 +14,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
@@ -26,7 +27,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
  */
 
 public class DanaRNSHistorySync {
-    private static Logger log = LoggerFactory.getLogger(L.PUMP);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.PUMP);
     private List<DanaRHistoryRecord> historyRecords;
 
     private final static int SYNC_BOLUS = 0b00000001;

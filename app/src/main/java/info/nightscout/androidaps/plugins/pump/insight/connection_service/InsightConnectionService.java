@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.ReadParameterBlockMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage;
@@ -86,7 +87,7 @@ import info.nightscout.androidaps.utils.SP;
 
 public class InsightConnectionService extends Service implements ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
 
-    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
     private static final int BUFFER_SIZE = 1024;
     private static final int TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD = 3;

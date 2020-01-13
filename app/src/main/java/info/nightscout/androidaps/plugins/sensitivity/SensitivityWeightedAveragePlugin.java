@@ -20,6 +20,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
@@ -33,7 +34,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
  */
 @Singleton
 public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin {
-    private static Logger log = LoggerFactory.getLogger(L.AUTOSENS);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.AUTOSENS);
 
     @Inject
     public SensitivityWeightedAveragePlugin(

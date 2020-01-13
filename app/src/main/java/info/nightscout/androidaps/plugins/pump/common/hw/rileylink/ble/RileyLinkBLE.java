@@ -20,6 +20,7 @@ import java.util.UUID;
 import java.util.concurrent.Semaphore;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
@@ -39,7 +40,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
  */
 public class RileyLinkBLE {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPBTCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPBTCOMM);
 
     private final Context context;
     public boolean gattDebugEnabled = true;

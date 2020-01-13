@@ -7,10 +7,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
 
 public class MsgSetHistoryEntry_v2 extends MessageBase {
-    private Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
+    private Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
     public MsgSetHistoryEntry_v2() {
         SetCommand(0xE004);

@@ -3,12 +3,13 @@ package info.nightscout.androidaps.plugins.general.smsCommunicator
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.slf4j.LoggerFactory
 
 class AuthRequest internal constructor(val plugin: SmsCommunicatorPlugin, val resourceHelper: ResourceHelper, var requester: Sms, requestText: String, var confirmCode: String, val action: SmsAction) {
-    private val log = LoggerFactory.getLogger(L.SMS)
+    private val log = StacktraceLoggerWrapper.getLogger(L.SMS)
 
     private val date = DateUtil.now()
     private var processed = false

@@ -41,6 +41,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
@@ -109,7 +110,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import io.fabric.sdk.android.Fabric;
 
 public class MainApp extends DaggerApplication {
-    static Logger log = LoggerFactory.getLogger(L.CORE);
+    static Logger log = StacktraceLoggerWrapper.getLogger(L.CORE);
 
     static MainApp sInstance;
     private static Resources sResources;

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.tidepool.comm
 
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
 import okhttp3.Interceptor
 import okhttp3.Response
 import okio.Buffer
@@ -9,7 +10,7 @@ import java.io.IOException
 
 class InfoInterceptor(tag: String) : Interceptor {
 
-    private val log = LoggerFactory.getLogger(L.TIDEPOOL)
+    private val log = StacktraceLoggerWrapper.getLogger(L.TIDEPOOL)
     private var tag = "interceptor"
 
     init {

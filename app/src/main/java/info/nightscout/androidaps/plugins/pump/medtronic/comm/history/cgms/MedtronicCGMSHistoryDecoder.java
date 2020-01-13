@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDecodeStatus;
@@ -22,7 +23,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDeco
 
 public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHistoryEntry> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
 
     // CGMSValuesWriter cgmsValuesWriter = null;

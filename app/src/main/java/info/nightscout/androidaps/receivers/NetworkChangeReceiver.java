@@ -16,11 +16,12 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventNetworkChange;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
-    private static Logger log = LoggerFactory.getLogger(L.CORE);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.CORE);
 
     private static EventNetworkChange lastEvent = null;
 

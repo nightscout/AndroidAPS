@@ -27,6 +27,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
@@ -37,7 +38,7 @@ import info.nightscout.androidaps.utils.ToastUtils;
  */
 
 public class ImportExportPrefs {
-    private static Logger log = LoggerFactory.getLogger(L.CORE);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.CORE);
     private static File path = new File(Environment.getExternalStorageDirectory().toString());
     static public final File file = new File(path, MainApp.gs(R.string.app_name) + "Preferences");
 

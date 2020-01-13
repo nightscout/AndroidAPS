@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -26,7 +27,7 @@ public class TabPageAdapter extends FragmentPagerAdapter {
 
     Context context;
 
-    private static Logger log = LoggerFactory.getLogger(L.CORE);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.CORE);
 
     public TabPageAdapter(FragmentManager fm, Context context) {
         super(fm);

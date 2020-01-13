@@ -7,13 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
  * Created by mike on 19.03.2018.
  */
 
 public class Constraint<T extends Comparable> {
-    private static Logger log = LoggerFactory.getLogger(L.CONSTRAINTS);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.CONSTRAINTS);
 
     T value;
     T originalValue;

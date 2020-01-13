@@ -14,6 +14,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
@@ -27,7 +28,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class AutosensData implements DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(L.AUTOSENS);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.AUTOSENS);
 
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;

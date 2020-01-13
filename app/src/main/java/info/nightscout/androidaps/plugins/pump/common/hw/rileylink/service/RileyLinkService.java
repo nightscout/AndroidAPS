@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
@@ -33,7 +34,7 @@ import info.nightscout.androidaps.utils.SP;
  */
 public abstract class RileyLinkService extends Service {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
     public RileyLinkBLE rileyLinkBLE; // android-bluetooth management
     protected BluetoothAdapter bluetoothAdapter;

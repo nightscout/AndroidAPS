@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -21,7 +22,7 @@ import info.nightscout.androidaps.utils.SP;
  */
 
 public class SWCheckbox extends SWItem {
-    private static Logger log = LoggerFactory.getLogger(SWCheckbox.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(SWCheckbox.class);
 
     int labelsArray;
     int valuesArray;

@@ -43,6 +43,7 @@ import java.util.Map;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
@@ -56,7 +57,7 @@ import info.nightscout.androidaps.utils.SP;
 // IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
 public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
-    private static final Logger LOG = LoggerFactory.getLogger(RileyLinkBLEScanActivity.class);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(RileyLinkBLEScanActivity.class);
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 30241; // arbitrary.
     private static final int REQUEST_ENABLE_BT = 30242; // arbitrary

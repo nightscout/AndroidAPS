@@ -12,11 +12,12 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 
 public class TimeDateOrTZChangeReceiver extends BroadcastReceiver {
 
-    private static Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    private static Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMP);
 
     @Override
     public void onReceive(Context context, Intent intent) {

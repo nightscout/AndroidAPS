@@ -16,12 +16,13 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.setupwizard.events.EventSWLabel;
 import info.nightscout.androidaps.utils.SP;
 
 public class SWEditUrl extends SWItem {
-    private static Logger log = LoggerFactory.getLogger(SWEditUrl.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(SWEditUrl.class);
 
     private int updateDelay = 0;
 

@@ -25,6 +25,7 @@ import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
@@ -35,7 +36,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class ProfileFunctions implements ProfileFunction {
-    private static Logger log = LoggerFactory.getLogger(L.PROFILE);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.PROFILE);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private static ProfileFunctions profileFunctions = null;

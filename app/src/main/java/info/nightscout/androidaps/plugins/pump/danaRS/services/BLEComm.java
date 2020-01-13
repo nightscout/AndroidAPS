@@ -26,6 +26,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -43,7 +44,7 @@ import info.nightscout.androidaps.utils.SP;
  */
 
 public class BLEComm {
-    private Logger log = LoggerFactory.getLogger(L.PUMPBTCOMM);
+    private Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPBTCOMM);
 
     private final long WRITE_DELAY_MILLIS = 50;
 

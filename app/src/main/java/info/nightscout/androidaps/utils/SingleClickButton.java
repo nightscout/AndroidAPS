@@ -10,12 +10,14 @@ import android.view.View;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+
 /**
  * Created by mike on 22.12.2017.
  */
 
 public class SingleClickButton extends androidx.appcompat.widget.AppCompatButton implements View.OnClickListener {
-    private static Logger log = LoggerFactory.getLogger(SingleClickButton.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(SingleClickButton.class);
 
     Context context;
     OnClickListener listener = null;
