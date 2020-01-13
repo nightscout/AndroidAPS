@@ -73,7 +73,7 @@ public class NSClientPlugin extends PluginBase {
 
     public NSClientService nsClientService = null;
 
-    private NsClientReceiverDelegate nsClientReceiverDelegate;
+    private NsClientReceiverDelegate  nsClientReceiverDelegate = new NsClientReceiverDelegate();
 
     @Inject
     public NSClientPlugin(
@@ -115,7 +115,6 @@ public class NSClientPlugin extends PluginBase {
     protected void onStart() {
         paused = SP.getBoolean(R.string.key_nsclientinternal_paused, false);
         autoscroll = SP.getBoolean(R.string.key_nsclientinternal_autoscroll, true);
-        nsClientReceiverDelegate = new NsClientReceiverDelegate();
 
         Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, NSClientService.class);
