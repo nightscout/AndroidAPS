@@ -9,6 +9,7 @@ import android.telephony.SmsManager
 import android.telephony.SmsMessage
 import android.text.TextUtils
 import com.andreabaccega.widget.ValidatingEditTextPreference
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -597,6 +598,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                             override fun run() {
                                 if (result.success) {
                                     var replyText = String.format(MainApp.gs(R.string.smscommunicator_extendedset), aDouble, duration)
+                                    if (Config.APS) replyText += "\n" + MainApp.gs(R.string.loopsuspended)
                                     replyText += "\n" + ConfigBuilderPlugin.getPlugin().activePump?.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                 } else {
