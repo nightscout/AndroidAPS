@@ -1193,7 +1193,7 @@ Eversense-appen.</string>
     <string name="message_short">Medd:</string>
     <string name="profilepercentage">Procent av profil</string>
     <string name="percent_u">Procent [%]:</string>
-    <string name="startprofile">Byt till profil %1$d% i %2$d min</string>
+    <string name="startprofile">Byt till profil %1$d%% i %2$d min</string>
     <string name="startprofileforever">Byt till profil %1$d%%</string>
     <string name="exists">finns</string>
     <string name="notexists">finns inte</string>
