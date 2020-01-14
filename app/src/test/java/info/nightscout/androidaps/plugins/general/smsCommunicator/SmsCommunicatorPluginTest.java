@@ -648,7 +648,7 @@ public class SmsCommunicatorPluginTest {
         passCode = smsCommunicatorPlugin.getMessageToConfirm().getConfirmCode();
         smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
         Assert.assertEquals(passCode, smsCommunicatorPlugin.getMessages().get(2).getText());
-        Assert.assertEquals("Extended bolus 1.00U for 20 min started successfully\nVirtual Pump", smsCommunicatorPlugin.getMessages().get(3).getText());
+        Assert.assertEquals("Extended bolus 1.00U for 20 min started successfully\nnull\nVirtual Pump", smsCommunicatorPlugin.getMessages().get(3).getText());
     }
 
     @Test
