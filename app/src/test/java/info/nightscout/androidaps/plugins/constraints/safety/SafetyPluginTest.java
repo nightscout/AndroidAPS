@@ -21,6 +21,8 @@ import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.source.GlimpPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentService;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.Mockito.when;
@@ -30,7 +32,7 @@ import static org.mockito.Mockito.when;
  */
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, SP.class, Context.class})
+@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, SP.class, Context.class, TreatmentsPlugin.class, TreatmentService.class})
 public class SafetyPluginTest {
 
     private VirtualPumpPlugin pump = new VirtualPumpPlugin();
@@ -230,6 +232,8 @@ public class SafetyPluginTest {
         AAPSMocker.mockConstraintsChecker();
         AAPSMocker.mockSP();
         AAPSMocker.mockStrings();
+        AAPSMocker.mockTreatmentService();
+        AAPSMocker.mockTreatmentPlugin();
 
 
         when(ConfigBuilderPlugin.getPlugin().getActivePump()).thenReturn(pump);
