@@ -1183,23 +1183,19 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final ExtendedBolus extendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
         String extendedBolusText = "";
         if (extendedBolusView != null) { // must not exists in all layouts
-            if (shorttextmode) {
-                if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses()) {
-                    extendedBolusText = DecimalFormatter.to2Decimal(extendedBolus.absoluteRate()) + "U/h";
-                }
-            } else {
-                if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses()) {
-                    extendedBolusText = extendedBolus.toStringMedium();
-                }
-            }
+            if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses())
+                extendedBolusText = shorttextmode ? DecimalFormatter.to2Decimal(extendedBolus.absoluteRate()) + "U/h" : extendedBolus.toStringMedium();
             extendedBolusView.setText(extendedBolusText);
-            extendedBolusView.setOnClickListener(v -> OKDialog.show(getActivity(), MainApp.gs(R.string.extended_bolus), extendedBolus.toString()));
-            if (extendedBolusText.equals("")) {
-                extendedBolusLayout.setVisibility(View.GONE);
-                if (extendedBolusLayout != null) extendedBolusView.setVisibility(Config.NSCLIENT ? View.INVISIBLE : View.GONE);
-            } else {
-                extendedBolusView.setVisibility(View.VISIBLE);
-                if (extendedBolusLayout != null) extendedBolusLayout.setVisibility(View.VISIBLE);
+            extendedBolusView.setOnClickListener(v -> {
+                if (extendedBolus != null)
+                    OKDialog.show(getActivity(), MainApp.gs(R.string.extended_bolus), extendedBolus.toString());
+            });
+            // hide whole line for APS mode
+            if (extendedBolusLayout != null) {
+                if (extendedBolusText.equals(""))
+                    extendedBolusLayout.setVisibility(View.GONE);
+                else
+                    extendedBolusLayout.setVisibility(View.VISIBLE);
             }
         }
 
