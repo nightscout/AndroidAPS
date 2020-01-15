@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsCarepor
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.OKDialog
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.Translator
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -106,6 +107,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             val careportalEvent = careportalEventList[position]
             holder.ns.visibility = if (NSUpload.isIdValid(careportalEvent._id)) View.VISIBLE else View.GONE
             holder.date.text = DateUtil.dateAndTimeString(careportalEvent.date)
+            holder.duration.text = if (careportalEvent.durationInMsec() == 0L) "" else DateUtil.niceTimeScalar(careportalEvent.durationInMsec())
             holder.note.text = careportalEvent.notes
             holder.type.text = Translator.translate(careportalEvent.eventType)
             holder.remove.tag = careportalEvent
@@ -118,6 +120,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
         inner class CareportalEventsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             var cv: CardView = itemView.findViewById(R.id.careportal_cardview)
             var date: TextView = itemView.findViewById(R.id.careportal_date)
+            var duration: TextView = itemView.findViewById(R.id.careportal_duration)
             var type: TextView = itemView.findViewById(R.id.careportal_type)
             var note: TextView = itemView.findViewById(R.id.careportal_note)
             var remove: TextView = itemView.findViewById(R.id.careportal_remove)
