@@ -1690,5 +1690,6 @@
     <string name="ebstopsloop">Use of Extended bolus feature will stop closed loop mode for the time of running extended bolus. Do you really want it?</string>
     <string name="closed_loop_disabled_with_eb">Closed loop disabled because of running Extended bolus</string>
     <string name="extended_bolus_short">EB</string>
+    <string name="phonechecker">\"PhoneChecker\"</string>
 
 </resources>
