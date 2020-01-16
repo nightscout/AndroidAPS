@@ -371,7 +371,8 @@ public class GraphData {
                 actArrayHist.add(new ScaledDataPoint(time, act, actScale));
             else
                 actArrayPred.add(new ScaledDataPoint(time, act, actScale));
-            if (act > maxIAValue) maxIAValue = act;
+            
+            maxIAValue = Math.max(maxIAValue, Math.abs(act));
         }
 
         ScaledDataPoint[] actData = new ScaledDataPoint[actArrayHist.size()];
