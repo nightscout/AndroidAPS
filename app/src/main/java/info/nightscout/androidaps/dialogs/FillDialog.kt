@@ -131,6 +131,7 @@ class FillDialog : DialogFragmentWithDate() {
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
+                        careportalEvent.date  = eventTime + 1000
                         careportalEvent.json = generateJson(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes).toString()
                         careportalEvent.eventType = CareportalEvent.INSULINCHANGE
                         NSUpload.uploadEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
