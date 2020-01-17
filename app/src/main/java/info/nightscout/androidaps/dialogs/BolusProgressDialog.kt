@@ -56,7 +56,7 @@ class BolusProgressDialog : DialogFragment() {
                               savedInstanceState: Bundle?): View? {
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
-        isCancelable = true
+        isCancelable = false
         dialog?.setCanceledOnTouchOutside(false)
         return inflater.inflate(R.layout.dialog_bolusprogress, container, false)
     }
