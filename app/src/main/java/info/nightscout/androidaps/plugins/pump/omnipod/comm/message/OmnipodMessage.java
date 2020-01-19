@@ -105,15 +105,6 @@ public class OmnipodMessage {
         return sequenceNumber;
     }
 
-    @Override
-    public String toString() {
-        return "OmnipodMessage{" +
-                "address=" + address +
-                ", encoded=" + ByteUtil.shortHexString(getEncoded()) +
-                ", sequenceNumber=" + sequenceNumber +
-                '}';
-    }
-
     public boolean isNonceResyncable() {
         return containsBlock(NonceResyncableMessageBlock.class);
     }
@@ -142,5 +133,16 @@ public class OmnipodMessage {
             }
         }
         return false;
+    }
+
+
+    @Override
+    public String toString() {
+        return "OmnipodMessage{" +
+                "address=" + address +
+                ", messageBlocks=" + messageBlocks +
+                ", encoded=" + ByteUtil.shortHexStringWithoutSpaces(getEncoded()) +
+                ", sequenceNumber=" + sequenceNumber +
+                '}';
     }
 }

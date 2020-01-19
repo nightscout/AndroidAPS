@@ -87,4 +87,12 @@ public class SetInsulinScheduleCommand extends NonceResyncableMessageBlock {
         this.nonce = nonce;
         encode();
     }
+
+    @Override
+    public String toString() {
+        return "SetInsulinScheduleCommand{" +
+                "schedule=" + schedule +
+                ", nonce=" + nonce +
+                '}';
+    }
 }

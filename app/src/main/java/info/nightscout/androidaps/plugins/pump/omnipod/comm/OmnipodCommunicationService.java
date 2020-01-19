@@ -102,6 +102,11 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
     }
 
     public synchronized <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodState podState, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride, boolean automaticallyResyncNonce) {
+        if (isLoggingEnabled()) {
+            LOG.debug("Exchanging OmnipodMessage [responseClass={}, podState={}, message={}, addressOverride={}, ackAddressOverride={}, automaticallyResyncNonce={}]: {}", //
+                    responseClass.getSimpleName(), podState, message, addressOverride, ackAddressOverride, automaticallyResyncNonce, message);
+        }
+
         for (int i = 0; 2 > i; i++) {
 
             if (podState.hasNonceState() && message.isNonceResyncable()) {

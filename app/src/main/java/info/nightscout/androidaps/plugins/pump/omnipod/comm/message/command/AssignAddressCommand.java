@@ -22,4 +22,10 @@ public class AssignAddressCommand extends MessageBlock {
         return MessageBlockType.ASSIGN_ADDRESS;
     }
 
+    @Override
+    public String toString() {
+        return "AssignAddressCommand{" +
+                "address=" + address +
+                '}';
+    }
 }

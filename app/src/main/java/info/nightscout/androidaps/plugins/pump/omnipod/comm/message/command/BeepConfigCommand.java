@@ -45,4 +45,17 @@ public class BeepConfigCommand extends MessageBlock {
     public MessageBlockType getType() {
         return MessageBlockType.BEEP_CONFIG;
     }
+
+    @Override
+    public String toString() {
+        return "BeepConfigCommand{" +
+                "beepType=" + beepType +
+                ", basalCompletionBeep=" + basalCompletionBeep +
+                ", basalIntervalBeep=" + basalIntervalBeep +
+                ", tempBasalCompletionBeep=" + tempBasalCompletionBeep +
+                ", tempBasalIntervalBeep=" + tempBasalIntervalBeep +
+                ", bolusCompletionBeep=" + bolusCompletionBeep +
+                ", bolusIntervalBeep=" + bolusIntervalBeep +
+                '}';
+    }
 }

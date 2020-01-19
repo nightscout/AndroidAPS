@@ -43,4 +43,14 @@ public class ConfigurePodCommand extends MessageBlock {
         encodedData = ByteUtil.concat(encodedData, ByteUtil.getBytesFromInt(lot));
         encodedData = ByteUtil.concat(encodedData, ByteUtil.getBytesFromInt(tid));
     }
+
+    @Override
+    public String toString() {
+        return "ConfigurePodCommand{" +
+                "lot=" + lot +
+                ", tid=" + tid +
+                ", date=" + date +
+                ", address=" + address +
+                '}';
+    }
 }

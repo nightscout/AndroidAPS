@@ -111,4 +111,17 @@ public class BasalScheduleExtraCommand extends MessageBlock {
     public List<RateEntry> getRateEntries() {
         return new ArrayList<>(rateEntries);
     }
+
+    @Override
+    public String toString() {
+        return "BasalScheduleExtraCommand{" +
+                "acknowledgementBeep=" + acknowledgementBeep +
+                ", completionBeep=" + completionBeep +
+                ", programReminderInterval=" + programReminderInterval +
+                ", currentEntryIndex=" + currentEntryIndex +
+                ", remainingPulses=" + remainingPulses +
+                ", delayUntilNextTenthOfPulseInSeconds=" + delayUntilNextTenthOfPulseInSeconds +
+                ", rateEntries=" + rateEntries +
+                '}';
+    }
 }

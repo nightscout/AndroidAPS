@@ -39,4 +39,12 @@ public class ConfigureAlertsCommand extends NonceResyncableMessageBlock {
         this.nonce = nonce;
         encode();
     }
+
+    @Override
+    public String toString() {
+        return "ConfigureAlertsCommand{" +
+                "configurations=" + configurations +
+                ", nonce=" + nonce +
+                '}';
+    }
 }
