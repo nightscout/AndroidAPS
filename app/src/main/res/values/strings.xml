@@ -812,6 +812,7 @@
     <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
     <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
     <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
+    <string name="key_preferences_screen_local_alerts">preferences_screen_local_alerts</string>
     <string name="localalertsettings_title">Local alerts</string>
     <string name="enable_missed_bg_readings_alert">Alert if no BG data is received</string>
     <string name="enable_pump_unreachable_alert">Alert if pump is unreachable</string>

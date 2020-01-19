@@ -72,7 +72,7 @@
             android:key="@string/key_short_tabtitles"
             android:title="@string/short_tabtitles" />
     </PreferenceCategory>
-    <PreferenceScreen android:title="@string/localalertsettings_title">
+    <PreferenceScreen android:key="@string/key_preferences_screen_local_alerts" android:title="@string/localalertsettings_title">
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_enable_missed_bg_readings_alert"
