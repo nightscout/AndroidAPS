@@ -10,6 +10,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -208,12 +209,14 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             if (activePump != null && localAlertsPreferenceScreen != null && activePump.getPumpDescription().hasFixedUnreachableAlert) {
                 Preference pumpUnreachableEnabledPreference = findPreference(MainApp.gs(R.string.key_enable_pump_unreachable_alert));
                 if (pumpUnreachableEnabledPreference != null) {
-                    localAlertsPreferenceScreen.removePreference(pumpUnreachableEnabledPreference);
+                    ((SwitchPreference) pumpUnreachableEnabledPreference).setChecked(true);
+                    pumpUnreachableEnabledPreference.setEnabled(false);
+                    pumpUnreachableEnabledPreference.setShouldDisableView(true);
                 }
 
                 Preference pumpUnreachableThresholdPreference = findPreference(MainApp.gs(R.string.key_pump_unreachable_threshold));
                 if (pumpUnreachableThresholdPreference != null) {
-                    localAlertsPreferenceScreen.removePreference(pumpUnreachableThresholdPreference);
+                    pumpUnreachableThresholdPreference.setDependency(null);
                 }
             }
         }

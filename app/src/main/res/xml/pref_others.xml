@@ -89,7 +89,7 @@
             android:title="@string/enable_pump_unreachable_alert" />
         <com.andreabaccega.widget.ValidatingEditTextPreference
             validate:testType="numericRange"
-            validate:minNumber="30"
+            validate:minNumber="20"
             validate:maxNumber="300"
             android:defaultValue="30"
             android:dependency="@string/key_enable_pump_unreachable_alert"
