@@ -77,13 +77,33 @@ public class PodInfoFaultEventTest {
     }
 
     @Test
-    public void testPodInfoFaultEventIsulinNotDelivered() {
+    public void testPodInfoFaultEventInsulinNotDelivered() {
         PodInfoFaultEvent podInfoFaultEvent = new PodInfoFaultEvent(ByteUtil.fromHexString("020f0000010200ec6a026803ff026b000028a7082023"));
 
         assertEquals(PodProgressStatus.INACTIVE, podInfoFaultEvent.getPodProgressStatus());
         assertEquals(DeliveryStatus.SUSPENDED, podInfoFaultEvent.getDeliveryStatus());
         assertEquals(11.8, podInfoFaultEvent.getTotalInsulinDelivered(), 0.000001);
         assertEquals(0.05, podInfoFaultEvent.getInsulinNotDelivered(), 0.000001);
+        assertEquals(0x02, podInfoFaultEvent.getPodMessageCounter());
+        assertEquals(FaultEventType.OCCLUSION_CHECK_ABOVE_THRESHOLD, podInfoFaultEvent.getFaultEventType());
+        assertTrue(Duration.standardMinutes(616).isEqual(podInfoFaultEvent.getFaultEventTime()));
+        assertNull(podInfoFaultEvent.getReservoirLevel());
+        assertEquals(0, podInfoFaultEvent.getUnacknowledgedAlerts().getRawValue());
+        assertFalse(podInfoFaultEvent.isFaultAccessingTables());
+        assertEquals(LogEventErrorCode.INTERNAL_2_BIT_VARIABLE_SET_AND_MANIPULATED_IN_MAIN_LOOP_ROUTINES_2, podInfoFaultEvent.getLogEventErrorType());
+        assertEquals(PodProgressStatus.RUNNING_ABOVE_FIFTY_UNITS, podInfoFaultEvent.getPodProgressStatusAtTimeOfFirstLoggedFaultEvent());
+        assertEquals(2, podInfoFaultEvent.getReceiverLowGain());
+        assertEquals(39, podInfoFaultEvent.getRadioRSSI());
+    }
+
+    @Test
+    public void testPodInfoFaultEventMaxInsulinNotDelivered() {
+        PodInfoFaultEvent podInfoFaultEvent = new PodInfoFaultEvent(ByteUtil.fromHexString("020f00ffff0200ec6a026803ff026b000028a7082023"));
+
+        assertEquals(PodProgressStatus.INACTIVE, podInfoFaultEvent.getPodProgressStatus());
+        assertEquals(DeliveryStatus.SUSPENDED, podInfoFaultEvent.getDeliveryStatus());
+        assertEquals(11.8, podInfoFaultEvent.getTotalInsulinDelivered(), 0.000001);
+        assertEquals(3276.75, podInfoFaultEvent.getInsulinNotDelivered(), 0.000001); // Insane and will not happen, but this verifies that we convert it to an unsigned int
         assertEquals(0x02, podInfoFaultEvent.getPodMessageCounter());
         assertEquals(FaultEventType.OCCLUSION_CHECK_ABOVE_THRESHOLD, podInfoFaultEvent.getFaultEventType());
         assertTrue(Duration.standardMinutes(616).isEqual(podInfoFaultEvent.getFaultEventTime()));
