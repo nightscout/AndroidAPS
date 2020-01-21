@@ -45,9 +45,9 @@ public class OmnipodConst {
     public static final Duration AVERAGE_BOLUS_COMMAND_COMMUNICATION_DURATION = Duration.millis(1500);
 
     public static final Duration SERVICE_DURATION = Duration.standardHours(80);
-    public static final Duration EXPIRATION_ADVISORY_WINDOW = Duration.standardHours(2);
+    public static final Duration EXPIRATION_ADVISORY_WINDOW = Duration.standardHours(9);
     public static final Duration END_OF_SERVICE_IMMINENT_WINDOW = Duration.standardHours(1);
-    public static final Duration NOMINAL_POD_LIFE = SERVICE_DURATION.minus(END_OF_SERVICE_IMMINENT_WINDOW).minus(EXPIRATION_ADVISORY_WINDOW);
+    public static final Duration NOMINAL_POD_LIFE = Duration.standardHours(72);
     public static final double LOW_RESERVOIR_ALERT = 20.0;
 
     public static final double POD_PRIME_BOLUS_UNITS = 2.6;
