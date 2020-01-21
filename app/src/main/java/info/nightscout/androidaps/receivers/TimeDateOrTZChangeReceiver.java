@@ -13,6 +13,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 public class TimeDateOrTZChangeReceiver extends BroadcastReceiver {
 
@@ -25,6 +26,8 @@ public class TimeDateOrTZChangeReceiver extends BroadcastReceiver {
         PumpInterface activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
 
         LOG.debug("Date, Time and/or TimeZone changed.");
+
+        LOG.debug("TimeDateOrTZChangeReceiver::Intent::{}", OmnipodUtil.getGsonInstance().toJson(intent));
 
         if (action != null && activePump != null) {
             LOG.debug("Date, Time and/or TimeZone changed. Notifying pump driver.");
