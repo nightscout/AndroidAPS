@@ -7,10 +7,8 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.BeepConfigCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.CancelDeliveryCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepConfigType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
@@ -38,18 +36,18 @@ public class CancelDeliveryAction implements OmnipodAction<StatusResponse> {
     public StatusResponse execute(OmnipodCommunicationService communicationService) {
         List<MessageBlock> messageBlocks = new ArrayList<>();
 
-        messageBlocks.add(new CancelDeliveryCommand(podState.getCurrentNonce(),
-                acknowledgementBeep && deliveryTypes.size() == 1 ? BeepType.BEEP : BeepType.NO_BEEP, deliveryTypes));
-
         if (acknowledgementBeep && deliveryTypes.size() > 1) {
-            // Workaround for strange beep behaviour when cancelling multiple delivery types at the same time
+            // Workaround for strange beep behaviour when cancelling multiple delivery types
+            List<DeliveryType> deliveryTypeList = new ArrayList<>(deliveryTypes);
 
-            // FIXME we should use other constructor with all beep configs.
-            //  Theoretically, if we would cancel multiple delivery types but not all,
-            //  we should keep the beep config for delivery types that we're not cancelling.
-            //  We currently have no use case that though,
-            //  as we either cancel 1 type or all types,
-            messageBlocks.add(new BeepConfigCommand(BeepConfigType.BEEP));
+            EnumSet<DeliveryType> deliveryTypeWithBeep = EnumSet.of(deliveryTypeList.remove(deliveryTypeList.size() - 1));
+            EnumSet<DeliveryType> deliveryTypesWithoutBeep = EnumSet.copyOf(deliveryTypeList);
+
+            messageBlocks.add(new CancelDeliveryCommand(podState.getCurrentNonce(), BeepType.NO_BEEP, deliveryTypesWithoutBeep));
+            messageBlocks.add(new CancelDeliveryCommand(podState.getCurrentNonce(), BeepType.BEEP, deliveryTypeWithBeep));
+        } else {
+            messageBlocks.add(new CancelDeliveryCommand(podState.getCurrentNonce(),
+                    acknowledgementBeep && deliveryTypes.size() == 1 ? BeepType.BEEP : BeepType.NO_BEEP, deliveryTypes));
         }
 
         return communicationService.exchangeMessages(StatusResponse.class, podState,
