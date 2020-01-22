@@ -149,7 +149,7 @@ public class TriggerTimeRange extends Trigger {
 
     public int getMinSinceMidnight(long time) {
         // if passed argument is smaller than 1440 ( 24 h * 60 min ) that value is already converted
-        if (0 < time && time < 1441)
+        if (0 <= time && time < 1441)
             return (int) time;
         Calendar calendar = DateUtil.gregorianCalendar();
         calendar.setTimeInMillis(time);
