@@ -266,7 +266,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     @Override
     public PumpEnactResult resetPodStatus() {
-        delegate.resetPodState();
+        delegate.resetPodState(true);
 
         reportImplicitlyCanceledTbr();
 

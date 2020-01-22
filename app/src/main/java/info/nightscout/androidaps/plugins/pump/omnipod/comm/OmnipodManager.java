@@ -446,10 +446,13 @@ public class OmnipodManager {
             logCommandExecutionFinished("deactivatePod");
         }
 
-        resetPodState();
+        resetPodState(false);
     }
 
-    public void resetPodState() {
+    public void resetPodState(boolean forcedByUser) {
+        if(isLoggingEnabled()) {
+            LOG.warn("resetPodState has been called. forcedByUser={}", forcedByUser);
+        }
         podState = null;
         SP.remove(OmnipodConst.Prefs.PodState);
     }

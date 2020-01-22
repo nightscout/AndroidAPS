@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.defs;
 
+import java.util.Arrays;
+
 public class NonceState {
     private final long[] table = new long[21];
     private int index;
@@ -44,7 +46,7 @@ public class NonceState {
     @Override
     public String toString() {
         return "NonceState{" +
-                "currentNonce=" + getCurrentNonce() +
+                "table=" + Arrays.toString(table) +
                 ", index=" + index +
                 '}';
     }
