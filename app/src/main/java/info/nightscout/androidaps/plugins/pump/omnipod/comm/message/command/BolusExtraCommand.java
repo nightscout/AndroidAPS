@@ -60,4 +60,17 @@ public class BolusExtraCommand extends MessageBlock {
     public MessageBlockType getType() {
         return MessageBlockType.BOLUS_EXTRA;
     }
+
+    @Override
+    public String toString() {
+        return "BolusExtraCommand{" +
+                "acknowledgementBeep=" + acknowledgementBeep +
+                ", completionBeep=" + completionBeep +
+                ", programReminderInterval=" + programReminderInterval +
+                ", units=" + units +
+                ", timeBetweenPulses=" + timeBetweenPulses +
+                ", squareWaveUnits=" + squareWaveUnits +
+                ", squareWaveDuration=" + squareWaveDuration +
+                '}';
+    }
 }

@@ -41,4 +41,13 @@ public class BasalTableEntry implements IRawRepresentable {
     public boolean isAlternateSegmentPulse() {
         return alternateSegmentPulse;
     }
+
+    @Override
+    public String toString() {
+        return "BasalTableEntry{" +
+                "segments=" + segments +
+                ", pulses=" + pulses +
+                ", alternateSegmentPulse=" + alternateSegmentPulse +
+                '}';
+    }
 }

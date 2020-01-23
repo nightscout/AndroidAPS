@@ -43,4 +43,12 @@ public class AcknowledgeAlertsCommand extends NonceResyncableMessageBlock {
         this.nonce = nonce;
         encode();
     }
+
+    @Override
+    public String toString() {
+        return "AcknowledgeAlertsCommand{" +
+                "alerts=" + alerts +
+                ", nonce=" + nonce +
+                '}';
+    }
 }

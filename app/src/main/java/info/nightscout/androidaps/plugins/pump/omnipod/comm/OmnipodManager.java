@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
@@ -158,13 +159,13 @@ public class OmnipodManager {
         }
     }
 
-    public synchronized void acknowledgeAlerts() {
+    public synchronized StatusResponse acknowledgeAlerts() {
         assertReadyForDelivery();
 
         logStartingCommandExecution("acknowledgeAlerts");
 
         try {
-            executeAndVerify(() -> communicationService.executeAction(new AcknowledgeAlertsAction(podState, podState.getActiveAlerts())));
+            return executeAndVerify(() -> communicationService.executeAction(new AcknowledgeAlertsAction(podState, podState.getActiveAlerts())));
         } finally {
             logCommandExecutionFinished("acknowledgeAlerts");
         }
@@ -172,7 +173,7 @@ public class OmnipodManager {
 
     // CAUTION: cancels all delivery
     // CAUTION: suspends and then resumes delivery. An OmnipodException[certainFailure=false] indicates that the pod is or might be suspended
-    public synchronized void setBasalSchedule(BasalSchedule schedule, boolean acknowledgementBeep) {
+    public synchronized StatusResponse setBasalSchedule(BasalSchedule schedule, boolean acknowledgementBeep) {
         assertReadyForDelivery();
 
         logStartingCommandExecution("setBasalSchedule [basalSchedule=" + schedule + ", acknowledgementBeep=" + acknowledgementBeep + "]");
@@ -186,7 +187,7 @@ public class OmnipodManager {
 
         try {
             try {
-                executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podState, schedule,
+                return executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podState, schedule,
                         false, podState.getScheduleOffset(), acknowledgementBeep)));
             } catch (OmnipodException ex) {
                 // Treat all exceptions as uncertain failures, because all delivery has been suspended here.
@@ -200,7 +201,7 @@ public class OmnipodManager {
     }
 
     // CAUTION: cancels temp basal and then sets new temp basal. An OmnipodException[certainFailure=false] indicates that the pod might have cancelled the previous temp basal, but did not set a new temp basal
-    public synchronized void setTemporaryBasal(double rate, Duration duration, boolean acknowledgementBeep, boolean completionBeep) {
+    public synchronized StatusResponse setTemporaryBasal(double rate, Duration duration, boolean acknowledgementBeep, boolean completionBeep) {
         assertReadyForDelivery();
 
         logStartingCommandExecution("setTemporaryBasal [rate=" + rate + ", duration=" + duration + ", acknowledgementBeep=" + acknowledgementBeep + ", completionBeep=" + completionBeep + "]");
@@ -213,7 +214,7 @@ public class OmnipodManager {
         }
 
         try {
-            executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(
+            return executeAndVerify(() -> communicationService.executeAction(new SetTempBasalAction(
                     podState, rate, duration,
                     acknowledgementBeep, completionBeep)));
         } catch (OmnipodException ex) {
@@ -230,17 +231,18 @@ public class OmnipodManager {
         cancelDelivery(EnumSet.of(DeliveryType.TEMP_BASAL), acknowledgementBeep);
     }
 
-    private synchronized void cancelDelivery(EnumSet<DeliveryType> deliveryTypes, boolean acknowledgementBeep) {
+    private synchronized StatusResponse cancelDelivery(EnumSet<DeliveryType> deliveryTypes, boolean acknowledgementBeep) {
         assertReadyForDelivery();
 
         logStartingCommandExecution("cancelDelivery [deliveryTypes=" + deliveryTypes + ", acknowledgementBeep=" + acknowledgementBeep + "]");
 
         try {
-            executeAndVerify(() -> {
+            return executeAndVerify(() -> {
                 StatusResponse statusResponse = communicationService.executeAction(new CancelDeliveryAction(podState, deliveryTypes, acknowledgementBeep));
                 if (isLoggingEnabled()) {
                     LOG.info("Status response after cancel delivery[types={}]: {}", deliveryTypes.toString(), statusResponse.toString());
                 }
+                return statusResponse;
             });
         } finally {
             logCommandExecutionFinished("cancelDelivery");
@@ -303,10 +305,11 @@ public class OmnipodManager {
                 .observeOn(Schedulers.io()) //
                 .doOnComplete(() -> {
                     synchronized (bolusDataMutex) {
+                        StatusResponse statusResponse = null;
                         for (int i = 0; i < ACTION_VERIFICATION_TRIES; i++) {
                             try {
                                 // Retrieve a status response in order to update the pod state
-                                StatusResponse statusResponse = getPodStatus();
+                                statusResponse = getPodStatus();
                                 if (statusResponse.getDeliveryStatus().isBolusing()) {
                                     throw new IllegalDeliveryStatusException(DeliveryStatus.NORMAL, statusResponse.getDeliveryStatus());
                                 } else {
@@ -319,8 +322,11 @@ public class OmnipodManager {
                             }
                         }
 
+                        // Substract units not delivered in case of a Pod failure
+                        double unitsNotDelivered = statusResponse != null && PodProgressStatus.FAULT_EVENT_OCCURRED.equals(statusResponse.getPodProgressStatus()) ? statusResponse.getInsulinNotDelivered() : 0.0D;
+
                         if (hasActiveBolus()) {
-                            activeBolusData.bolusCompletionSubject.onSuccess(new BolusDeliveryResult(units));
+                            activeBolusData.bolusCompletionSubject.onSuccess(new BolusDeliveryResult(units - unitsNotDelivered));
                             activeBolusData = null;
                         }
                     }
@@ -341,22 +347,23 @@ public class OmnipodManager {
             logStartingCommandExecution("cancelBolus [acknowledgementBeep=" + acknowledgementBeep + "]");
 
             try {
-                cancelDelivery(EnumSet.of(DeliveryType.BOLUS), acknowledgementBeep);
+                StatusResponse statusResponse = cancelDelivery(EnumSet.of(DeliveryType.BOLUS), acknowledgementBeep);
+                discardActiveBolusData(statusResponse.getInsulinNotDelivered());
             } catch (PodFaultException ex) {
-                discardActiveBolusData();
+                discardActiveBolusData(ex.getFaultEvent().getInsulinNotDelivered());
                 throw ex;
             } finally {
                 logCommandExecutionFinished("cancelBolus");
             }
-
-            discardActiveBolusData();
         }
     }
 
-    private void discardActiveBolusData() {
-        activeBolusData.getDisposables().dispose();
-        activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(activeBolusData.estimateUnitsDelivered()));
-        activeBolusData = null;
+    private void discardActiveBolusData(double unitsNotDelivered) {
+        synchronized (bolusDataMutex) {
+            activeBolusData.getDisposables().dispose();
+            activeBolusData.getBolusCompletionSubject().onSuccess(new BolusDeliveryResult(activeBolusData.getUnits() - unitsNotDelivered));
+            activeBolusData = null;
+        }
     }
 
     public synchronized void suspendDelivery(boolean acknowledgementBeep) {
@@ -364,12 +371,12 @@ public class OmnipodManager {
     }
 
     // Same as setting basal schedule, but without suspending delivery first
-    public synchronized void resumeDelivery(boolean acknowledgementBeep) {
+    public synchronized StatusResponse resumeDelivery(boolean acknowledgementBeep) {
         assertReadyForDelivery();
         logStartingCommandExecution("resumeDelivery");
 
         try {
-            executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podState, podState.getBasalSchedule(),
+            return executeAndVerify(() -> communicationService.executeAction(new SetBasalScheduleAction(podState, podState.getBasalSchedule(),
                     false, podState.getScheduleOffset(), acknowledgementBeep)));
         } finally {
             logCommandExecutionFinished("resumeDelivery");
@@ -439,10 +446,13 @@ public class OmnipodManager {
             logCommandExecutionFinished("deactivatePod");
         }
 
-        resetPodState();
+        resetPodState(false);
     }
 
-    public void resetPodState() {
+    public void resetPodState(boolean forcedByUser) {
+        if(isLoggingEnabled()) {
+            LOG.warn("resetPodState has been called. forcedByUser={}", forcedByUser);
+        }
         podState = null;
         SP.remove(OmnipodConst.Prefs.PodState);
     }
@@ -475,34 +485,46 @@ public class OmnipodManager {
     }
 
     // Only works for commands with nonce resyncable message blocks
-    private void executeAndVerify(Runnable runnable) {
+    // FIXME method is too big, needs refactoring
+    private StatusResponse executeAndVerify(VerifiableAction runnable) {
         try {
-            runnable.run();
-        } catch (Exception ex) {
-            if (isCertainFailure(ex)) {
-                throw ex;
+            return runnable.run();
+        } catch (Exception originalException) {
+            if (isCertainFailure(originalException)) {
+                throw originalException;
             } else {
                 if (isLoggingEnabled()) {
-                    LOG.debug("Caught exception in executeAndVerify: ", ex);
+                    LOG.warn("Caught exception in executeAndVerify. Verifying command by using cancel none command to verify nonce", originalException);
                 }
 
-                CommandDeliveryStatus verificationResult = verifyCommand();
+                try {
+                    logStartingCommandExecution("verifyCommand");
+                    StatusResponse statusResponse = communicationService.sendCommand(StatusResponse.class, podState,
+                            new CancelDeliveryCommand(podState.getCurrentNonce(), BeepType.NO_BEEP, DeliveryType.NONE), false);
+                    if (isLoggingEnabled()) {
+                        LOG.info("Command status resolved to SUCCESS. Status response after cancelDelivery[types=DeliveryType.NONE]: {}", statusResponse);
+                    }
 
-                switch (verificationResult) {
-                    case CERTAIN_FAILURE:
-                        if (ex instanceof OmnipodException) {
-                            ((OmnipodException) ex).setCertainFailure(true);
-                            throw ex;
-                        } else {
-                            OmnipodException newException = new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
-                            newException.setCertainFailure(true);
-                            throw newException;
-                        }
-                    case UNCERTAIN_FAILURE:
-                        throw ex;
-                    case SUCCESS:
-                        // Ignore original exception
-                        break;
+                    return statusResponse;
+                } catch (NonceOutOfSyncException verificationException) {
+                    if (isLoggingEnabled()) {
+                        LOG.error("Command resolved to FAILURE (CERTAIN_FAILURE)", verificationException);
+                    }
+                    if (originalException instanceof OmnipodException) {
+                        ((OmnipodException) originalException).setCertainFailure(true);
+                        throw originalException;
+                    } else {
+                        OmnipodException newException = new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, originalException);
+                        newException.setCertainFailure(true);
+                        throw newException;
+                    }
+                } catch (Exception verificationException) {
+                    if (isLoggingEnabled()) {
+                        LOG.error("Command unresolved (UNCERTAIN_FAILURE)", verificationException);
+                    }
+                    throw originalException;
+                } finally {
+                    logCommandExecutionFinished("verifyCommand");
                 }
             }
         }
@@ -535,40 +557,6 @@ public class OmnipodManager {
             }
         }
         return result;
-    }
-
-    // Only works for commands which contain nonce resyncable message blocks
-    private CommandDeliveryStatus verifyCommand() {
-        if (isLoggingEnabled()) {
-            LOG.warn("Verifying command by using cancel none command to verify nonce");
-        }
-        try {
-            logStartingCommandExecution("verifyCommand");
-            StatusResponse statusResponse = communicationService.sendCommand(StatusResponse.class, podState,
-                    new CancelDeliveryCommand(podState.getCurrentNonce(), BeepType.NO_BEEP, DeliveryType.NONE), false);
-            if (isLoggingEnabled()) {
-                LOG.info("Status response after verifyCommand (cancelDelivery[types=DeliveryType.NONE]): {}", statusResponse.toString());
-            }
-        } catch (NonceOutOfSyncException ex) {
-            if (isLoggingEnabled()) {
-                LOG.info("Command resolved to FAILURE (CERTAIN_FAILURE)", ex);
-            }
-            return CommandDeliveryStatus.CERTAIN_FAILURE;
-        } catch (Exception ex) {
-            if (isLoggingEnabled()) {
-                LOG.error("Command unresolved (UNCERTAIN_FAILURE)", ex);
-            }
-            return CommandDeliveryStatus.UNCERTAIN_FAILURE;
-        } finally {
-            logCommandExecutionFinished("verifyCommand");
-        }
-
-        if (isLoggingEnabled()) {
-            if (isLoggingEnabled()) {
-                LOG.info("Command status resolved to SUCCESS");
-            }
-        }
-        return CommandDeliveryStatus.SUCCESS;
     }
 
     private void logStartingCommandExecution(String action) {
@@ -670,10 +658,6 @@ public class OmnipodManager {
             return bolusCompletionSubject;
         }
 
-        public void setBolusCompletionSubject(SingleSubject<BolusDeliveryResult> bolusCompletionSubject) {
-            this.bolusCompletionSubject = bolusCompletionSubject;
-        }
-
         public double estimateUnitsDelivered() {
             long elapsedMillis = new Duration(startDate, DateTime.now()).getMillis();
             long totalDurationMillis = (long) (units / OmnipodConst.POD_BOLUS_DELIVERY_RATE * 1000);
@@ -683,5 +667,11 @@ public class OmnipodManager {
             int roundingDivisor = (int) (1 / OmnipodConst.POD_PULSE_SIZE);
             return (double) Math.round(estimatedUnits * roundingDivisor) / roundingDivisor;
         }
+    }
+
+    // Could be replaced with Supplier<StatusResponse> when min API level >= 24
+    @FunctionalInterface
+    private interface VerifiableAction {
+        StatusResponse run();
     }
 }

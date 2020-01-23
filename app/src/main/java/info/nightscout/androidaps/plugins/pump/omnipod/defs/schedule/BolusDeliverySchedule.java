@@ -49,4 +49,12 @@ public class BolusDeliverySchedule extends DeliverySchedule implements IRawRepre
         }
         return checksum;
     }
+
+    @Override
+    public String toString() {
+        return "BolusDeliverySchedule{" +
+                "units=" + units +
+                ", timeBetweenPulses=" + timeBetweenPulses +
+                '}';
+    }
 }

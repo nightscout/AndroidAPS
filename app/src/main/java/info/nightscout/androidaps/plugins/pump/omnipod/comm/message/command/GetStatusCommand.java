@@ -20,4 +20,11 @@ public class GetStatusCommand extends MessageBlock {
     public MessageBlockType getType() {
         return MessageBlockType.GET_STATUS;
     }
+
+    @Override
+    public String toString() {
+        return "GetStatusCommand{" +
+                "podInfoType=" + podInfoType +
+                '}';
+    }
 }

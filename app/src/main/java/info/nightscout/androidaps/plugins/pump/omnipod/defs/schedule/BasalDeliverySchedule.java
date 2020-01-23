@@ -48,4 +48,14 @@ public class BasalDeliverySchedule extends DeliverySchedule implements IRawRepre
 
         return checksum;
     }
+
+    @Override
+    public String toString() {
+        return "BasalDeliverySchedule{" +
+                "currentSegment=" + currentSegment +
+                ", secondsRemaining=" + secondsRemaining +
+                ", pulsesRemaining=" + pulsesRemaining +
+                ", basalTable=" + basalTable +
+                '}';
+    }
 }

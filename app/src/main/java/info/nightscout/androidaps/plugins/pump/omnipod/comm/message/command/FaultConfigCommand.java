@@ -38,4 +38,13 @@ public class FaultConfigCommand extends NonceResyncableMessageBlock {
         this.nonce = nonce;
         encode();
     }
+
+    @Override
+    public String toString() {
+        return "FaultConfigCommand{" +
+                "tab5sub16=" + tab5sub16 +
+                ", tab5sub17=" + tab5sub17 +
+                ", nonce=" + nonce +
+                '}';
+    }
 }

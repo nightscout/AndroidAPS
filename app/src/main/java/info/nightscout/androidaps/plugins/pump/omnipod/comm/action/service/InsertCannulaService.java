@@ -31,7 +31,7 @@ public class InsertCannulaService {
         DateTime endOfServiceTime = podState.getActivatedAt().plus(OmnipodConst.SERVICE_DURATION);
 
         Duration timeUntilExpirationAdvisoryAlarm = new Duration(DateTime.now(),
-                endOfServiceTime.minus(OmnipodConst.END_OF_SERVICE_IMMINENT_WINDOW).minus(OmnipodConst.EXPIRATION_ADVISORY_WINDOW));
+                endOfServiceTime.minus(OmnipodConst.EXPIRATION_ADVISORY_WINDOW));
         Duration timeUntilShutdownImminentAlarm = new Duration(DateTime.now(),
                 endOfServiceTime.minus(OmnipodConst.END_OF_SERVICE_IMMINENT_WINDOW));
 

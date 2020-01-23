@@ -59,4 +59,13 @@ public class CancelDeliveryCommand extends NonceResyncableMessageBlock {
         this.nonce = nonce;
         encode();
     }
+
+    @Override
+    public String toString() {
+        return "CancelDeliveryCommand{" +
+                "beepType=" + beepType +
+                ", deliveryTypes=" + deliveryTypes +
+                ", nonce=" + nonce +
+                '}';
+    }
 }

@@ -70,7 +70,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
-import info.nightscout.androidaps.utils.T;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -108,7 +107,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     boolean omnipodServiceRunning = false;
 
     private long nextPodCheck = 0L;
-    private static long UNREACHABLE_ALERT_THRESHOLD_MILLIS = T.mins(30).msecs();
 
     private OmnipodPumpPlugin() {
 
@@ -942,11 +940,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
 
     @Override
-    public boolean isFixedUnreachableAlertTimeoutExceeded() {
+    public boolean isFixedUnreachableAlertTimeoutExceeded(long unreachableTimeoutMilliseconds) {
         getPodPumpStatusObject();
 
         if (pumpStatusLocal.lastConnection != 0 || pumpStatusLocal.lastErrorConnection != 0) {
-            if (pumpStatusLocal.lastConnection + UNREACHABLE_ALERT_THRESHOLD_MILLIS < System.currentTimeMillis()) {
+            if (pumpStatusLocal.lastConnection + unreachableTimeoutMilliseconds < System.currentTimeMillis()) {
                 if (pumpStatusLocal.lastErrorConnection > pumpStatusLocal.lastConnection) {
                     // We exceeded the alert threshold, and our last connection failed
                     // We should show an alert
@@ -960,8 +958,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         }
 
-        // If we have no last connection and error data, don't show any alert
-        // FIXME is this appropriate?
         return false;
     }
 }

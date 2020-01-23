@@ -93,4 +93,16 @@ public class TempBasalExtraCommand extends MessageBlock {
     public List<RateEntry> getRateEntries() {
         return new ArrayList<>(rateEntries);
     }
+
+    @Override
+    public String toString() {
+        return "TempBasalExtraCommand{" +
+                "acknowledgementBeep=" + acknowledgementBeep +
+                ", completionBeep=" + completionBeep +
+                ", programReminderInterval=" + programReminderInterval +
+                ", remainingPulses=" + remainingPulses +
+                ", delayUntilNextPulse=" + delayUntilNextPulse +
+                ", rateEntries=" + rateEntries +
+                '}';
+    }
 }

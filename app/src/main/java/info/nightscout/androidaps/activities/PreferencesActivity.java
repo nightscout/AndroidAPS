@@ -9,6 +9,8 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -17,11 +19,13 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
@@ -198,6 +202,22 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
             for (PluginBase plugin : MainApp.getPluginsList()) {
                 plugin.preprocessPreferences(this);
+            }
+
+            PumpInterface activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
+            PreferenceScreen localAlertsPreferenceScreen = (PreferenceScreen) findPreference(MainApp.gs(R.string.key_preferences_screen_local_alerts));
+            if (activePump != null && localAlertsPreferenceScreen != null && activePump.getPumpDescription().hasFixedUnreachableAlert) {
+                Preference pumpUnreachableEnabledPreference = findPreference(MainApp.gs(R.string.key_enable_pump_unreachable_alert));
+                if (pumpUnreachableEnabledPreference != null) {
+                    ((SwitchPreference) pumpUnreachableEnabledPreference).setChecked(true);
+                    pumpUnreachableEnabledPreference.setEnabled(false);
+                    pumpUnreachableEnabledPreference.setShouldDisableView(true);
+                }
+
+                Preference pumpUnreachableThresholdPreference = findPreference(MainApp.gs(R.string.key_pump_unreachable_threshold));
+                if (pumpUnreachableThresholdPreference != null) {
+                    pumpUnreachableThresholdPreference.setDependency(null);
+                }
             }
         }
 

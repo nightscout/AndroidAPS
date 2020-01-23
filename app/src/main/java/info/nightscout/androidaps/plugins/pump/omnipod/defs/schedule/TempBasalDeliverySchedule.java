@@ -57,4 +57,13 @@ public class TempBasalDeliverySchedule extends DeliverySchedule implements IRawR
     public BasalDeliveryTable getBasalTable() {
         return basalTable;
     }
+
+    @Override
+    public String toString() {
+        return "TempBasalDeliverySchedule{" +
+                "secondsRemaining=" + secondsRemaining +
+                ", firstSegmentPulses=" + firstSegmentPulses +
+                ", basalTable=" + basalTable +
+                '}';
+    }
 }

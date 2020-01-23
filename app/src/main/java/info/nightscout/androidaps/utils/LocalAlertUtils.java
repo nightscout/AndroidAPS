@@ -36,7 +36,7 @@ public class LocalAlertUtils {
 
     public static void checkPumpUnreachableAlarm(long lastConnection, boolean isStatusOutdated) {
         PumpInterface activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
-        if(activePump != null && activePump.getPumpDescription().hasFixedUnreachableAlert) {
+        if (activePump != null && activePump.getPumpDescription().hasFixedUnreachableAlert) {
             checkPumpUnreachableAlarmStatic(activePump);
         } else {
             checkPumpUnreachableAlarmConfigured(lastConnection, isStatusOutdated);
@@ -44,14 +44,16 @@ public class LocalAlertUtils {
     }
 
     private static void checkPumpUnreachableAlarmStatic(PumpInterface pump) {
-        if(pump == null) {
+        if (pump == null) {
             return;
         }
 
-        if(pump.isFixedUnreachableAlertTimeoutExceeded()) {
+        long pumpUnreachableThresholdMilliseconds = pumpUnreachableThreshold();
+
+        if (pump.isFixedUnreachableAlertTimeoutExceeded(pumpUnreachableThresholdMilliseconds)) {
             log.debug("Generating static pump unreachable alarm.");
 
-            showUnreachableNotification(T.mins(30).msecs());
+            showUnreachableNotification(pumpUnreachableThresholdMilliseconds);
         } else {
             RxBus.INSTANCE.send(new EventDismissNotification(Notification.PUMP_UNREACHABLE));
         }
@@ -85,10 +87,10 @@ public class LocalAlertUtils {
      * Call only at startup!
      */
     public static void presnoozeAlarms() {
-        if (SP.getLong("nextMissedReadingsAlarm", 0l) < System.currentTimeMillis()) {
+        if (SP.getLong("nextMissedReadingsAlarm", 0L) < System.currentTimeMillis()) {
             SP.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + 5 * 60 * 1000);
         }
-        if (SP.getLong("nextPumpDisconnectedAlarm", 0l) < System.currentTimeMillis()) {
+        if (SP.getLong("nextPumpDisconnectedAlarm", 0L) < System.currentTimeMillis()) {
             SP.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + 5 * 60 * 1000);
         }
     }
@@ -112,7 +114,7 @@ public class LocalAlertUtils {
         if (pump != null && profile != null) {
             long lastConnection = pump.lastDataTime();
             long earliestAlarmTime = lastConnection + pumpUnreachableThreshold();
-            if (SP.getLong("nextPumpDisconnectedAlarm", 0l) < earliestAlarmTime) {
+            if (SP.getLong("nextPumpDisconnectedAlarm", 0L) < earliestAlarmTime) {
                 SP.putLong("nextPumpDisconnectedAlarm", earliestAlarmTime);
             }
         }
@@ -122,7 +124,7 @@ public class LocalAlertUtils {
         BgReading bgReading = DatabaseHelper.lastBg();
         if (SP.getBoolean(MainApp.gs(R.string.key_enable_missed_bg_readings_alert), false)
                 && bgReading != null && bgReading.date + missedReadingsThreshold() < System.currentTimeMillis()
-                && SP.getLong("nextMissedReadingsAlarm", 0l) < System.currentTimeMillis()) {
+                && SP.getLong("nextMissedReadingsAlarm", 0L) < System.currentTimeMillis()) {
             Notification n = new Notification(Notification.BG_READINGS_MISSED, MainApp.gs(R.string.missed_bg_readings), Notification.URGENT);
             n.soundId = R.raw.alarm;
             SP.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold());

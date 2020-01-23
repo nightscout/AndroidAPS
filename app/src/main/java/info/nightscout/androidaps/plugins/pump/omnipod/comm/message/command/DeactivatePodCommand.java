@@ -31,4 +31,11 @@ public class DeactivatePodCommand extends NonceResyncableMessageBlock {
         this.nonce = nonce;
         encode();
     }
+
+    @Override
+    public String toString() {
+        return "DeactivatePodCommand{" +
+                "nonce=" + nonce +
+                '}';
+    }
 }

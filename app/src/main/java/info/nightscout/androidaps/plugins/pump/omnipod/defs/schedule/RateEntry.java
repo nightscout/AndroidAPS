@@ -66,4 +66,12 @@ public class RateEntry implements IRawRepresentable {
         }
         return rawData;
     }
+
+    @Override
+    public String toString() {
+        return "RateEntry{" +
+                "totalPulses=" + totalPulses +
+                ", delayBetweenPulsesInSeconds=" + delayBetweenPulsesInSeconds +
+                '}';
+    }
 }

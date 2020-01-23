@@ -90,6 +90,13 @@ public class BasalDeliveryTable {
         return numSegments;
     }
 
+    @Override
+    public String toString() {
+        return "BasalDeliveryTable{" +
+                "entries=" + entries +
+                '}';
+    }
+
     private class TempSegment {
         private int pulses;
 
