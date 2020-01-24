@@ -1,11 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import org.joda.time.LocalDateTime;
 
@@ -99,7 +100,7 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
 
         RileyLinkTargetDevice targetDevice = RileyLinkUtil.getTargetDevice();
 
-        if (RileyLinkUtil.getServiceState()==null)
+        if (RileyLinkUtil.getServiceState() == null)
             this.connectionStatus.setText(MainApp.gs(RileyLinkServiceState.NotStarted.getResourceId(targetDevice)));
         else
             this.connectionStatus.setText(MainApp.gs(RileyLinkUtil.getServiceState().getResourceId(targetDevice)));
@@ -113,7 +114,7 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
 
             RileyLinkFirmwareVersion firmwareVersion = rileyLinkServiceData.versionCC110;
 
-            if (firmwareVersion==null) {
+            if (firmwareVersion == null) {
                 this.firmwareVersion.setText("BLE113: -\nCC110: -");
             } else {
                 this.firmwareVersion.setText("BLE113: " + rileyLinkServiceData.versionBLE113 + //
@@ -149,17 +150,18 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
             }
         } else {
 
+            // if (OmnipodUtil.isOmnipodDash())
             // TODO add handling for Omnipod Dash pump status
             this.omnipodPumpStatus = OmnipodUtil.getPumpStatus();
 
             if (omnipodPumpStatus != null) {
                 this.deviceType.setText(MainApp.gs(RileyLinkTargetDevice.Omnipod.getResourceId()));
-                this.deviceModel.setText(omnipodPumpStatus.pumpType== PumpType.Insulet_Omnipod ? "Eros" : "Dash");
+                this.deviceModel.setText(omnipodPumpStatus.pumpType == PumpType.Insulet_Omnipod ? "Eros" : "Dash");
                 this.pumpFrequency.setText(MainApp.gs(R.string.omnipod_frequency));
 
                 if (omnipodPumpStatus.podAvailable) {
-                    this.serialNumber.setText(omnipodPumpStatus.podNumber);
-                    this.connectedDevice.setText(omnipodPumpStatus.pumpType== PumpType.Insulet_Omnipod ? "Eros Pod" : "Dash Pod");
+                    this.serialNumber.setText(omnipodPumpStatus.podSessionState.getLot());
+                    this.connectedDevice.setText(omnipodPumpStatus.pumpType == PumpType.Insulet_Omnipod ? "Eros Pod" : "Dash Pod");
                 } else {
                     this.connectedDevice.setText("-");
                 }

@@ -9,7 +9,6 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializer;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
@@ -20,20 +19,22 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
+import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
+import info.nightscout.androidaps.plugins.pump.omnipod_dash.OmnipodDashPumpPlugin;
 import info.nightscout.androidaps.utils.OKDialog;
 
 /**
@@ -205,4 +206,14 @@ public class OmnipodUtil extends RileyLinkUtil {
     public static PodSessionState getPodSessionState() {
         return omnipodPumpStatus.podSessionState;
     }
+
+    public static boolean isOmnipodEros() {
+        return OmnipodPumpPlugin.getPlugin().isEnabled(PluginType.PUMP);
+    }
+
+    public static boolean isOmnipodDash() {
+        return OmnipodDashPumpPlugin.getPlugin().isEnabled(PluginType.PUMP);
+    }
+
+
 }
