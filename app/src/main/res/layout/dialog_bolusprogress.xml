@@ -14,6 +14,12 @@
         android:orientation="horizontal"
         android:padding="5dp">
 
+        <ImageView
+            android:id="@+id/header_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_trending_flat_white_48dp" />
+
         <TextView
             android:id="@+id/overview_bolusprogress_title"
             android:layout_width="match_parent"
@@ -23,6 +29,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:textAlignment="center"
+            android:layout_toEndOf="@id/header_icon"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
     </RelativeLayout>
