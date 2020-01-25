@@ -47,7 +47,13 @@ public class UploadQueue {
             NSClientService.handler.post(() -> {
                 if (L.isEnabled(L.NSCLIENT))
                     log.debug("Adding to queue: " + dbr.data);
-                MainApp.getDbHelper().create(dbr);
+                try {
+                    MainApp.getDbHelper().create(dbr);
+                } catch (Exception e) {
+                    log.error("Unhandled exception", e);
+                    dbr.nsClientID += "1";
+                    MainApp.getDbHelper().create(dbr);
+                }
                 NSClientPlugin plugin = NSClientPlugin.getPlugin();
                 if (plugin != null) {
                     plugin.resend("newdata");
