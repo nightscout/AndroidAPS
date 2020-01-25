@@ -160,9 +160,10 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
                 this.pumpFrequency.setText(MainApp.gs(R.string.omnipod_frequency));
 
                 if (omnipodPumpStatus.podAvailable) {
-                    this.serialNumber.setText(omnipodPumpStatus.podSessionState.getLot());
+                    this.serialNumber.setText(omnipodPumpStatus.podLotNumber);
                     this.connectedDevice.setText(omnipodPumpStatus.pumpType == PumpType.Insulet_Omnipod ? "Eros Pod" : "Dash Pod");
                 } else {
+                    this.serialNumber.setText("??");
                     this.connectedDevice.setText("-");
                 }
 

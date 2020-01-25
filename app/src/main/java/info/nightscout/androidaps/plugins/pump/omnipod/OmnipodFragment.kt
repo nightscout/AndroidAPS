@@ -222,10 +222,12 @@ class OmnipodFragment : Fragment() {
             pumpStatus.podNumber == null
         } else {
             //podAvailable = true
+            pumpStatus.podLotNumber = "" + pumpStatus.podSessionState.lot
             pumpStatus.podAvailable = true
             omnipod_pod_address.text = pumpStatus.podSessionState.address.toString()
             omnipod_pod_expiry.text = pumpStatus.podSessionState.expiryDateAsString
-            pumpStatus.podNumber == pumpStatus.podSessionState.address.toString()
+            pumpStatus.podNumber = pumpStatus.podSessionState.address.toString()
+
 
             //pumpStatus.podSessionState = checkStatusSet(pumpStatus.podSessionState,
             //        OmnipodUtil.getPodSessionState()) as PodSessionState?
