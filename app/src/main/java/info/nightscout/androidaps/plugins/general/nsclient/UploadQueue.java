@@ -52,7 +52,11 @@ public class UploadQueue {
                 } catch (Exception e) {
                     log.error("Unhandled exception", e);
                     dbr.nsClientID += "1";
-                    MainApp.getDbHelper().create(dbr);
+                    try {
+                        MainApp.getDbHelper().create(dbr);
+                    } catch (Exception e1) {
+                        log.error("Unhandled exception", e1);
+                    }
                 }
                 NSClientPlugin plugin = NSClientPlugin.getPlugin();
                 if (plugin != null) {

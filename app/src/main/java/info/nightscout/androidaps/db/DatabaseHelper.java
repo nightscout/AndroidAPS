@@ -550,12 +550,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // ------------- DbRequests handling -------------------
 
-    public void create(DbRequest dbr) {
-        try {
+    public void create(DbRequest dbr) throws SQLException {
             getDaoDbRequest().create(dbr);
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
-        }
     }
 
     public int delete(DbRequest dbr) {
