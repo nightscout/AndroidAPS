@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -121,6 +122,7 @@ import info.nightscout.androidaps.utils.wizard.QuickWizard;
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static info.nightscout.androidaps.utils.DateUtil.now;
 
@@ -158,7 +160,6 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     TextView avgdeltaView;
     TextView baseBasalView;
     TextView extendedBolusView;
-    LinearLayout extendedBolusLayout;
     TextView activeProfileView;
     TextView iobView;
     TextView cobView;
@@ -169,7 +170,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     TextView openapsDeviceStatusView;
     TextView uploaderDeviceStatusView;
     TextView iobCalculationProgressView;
-    LinearLayout loopStatusLayout;
+    ConstraintLayout loopStatusLayout;
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
     GraphView iobGraph;
@@ -190,7 +191,6 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     RecyclerView notificationsView;
     LinearLayoutManager llm;
 
-    LinearLayout acceptTempLayout;
     SingleClickButton acceptTempButton;
 
     SingleClickButton treatmentButton;
@@ -242,8 +242,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         } else if (Config.NSCLIENT) {
             view = inflater.inflate(R.layout.overview_fragment_nsclient, container, false);
             shorttextmode = true;
-        } else if (smallHeight || landscape) {
-            view = inflater.inflate(R.layout.overview_fragment_smallheight, container, false);
+        } else if (smallHeight || landscape) { // now testing the same layout for small displays as well
+            view = inflater.inflate(R.layout.overview_fragment, container, false);
         } else {
             view = inflater.inflate(R.layout.overview_fragment, container, false);
         }
@@ -262,14 +262,13 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
         baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
         extendedBolusView = (TextView) view.findViewById(R.id.overview_extendedbolus);
-        extendedBolusLayout = view.findViewById(R.id.overview_extendedbolus_layout);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
         pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
         pumpDeviceStatusView = (TextView) view.findViewById(R.id.overview_pump);
         openapsDeviceStatusView = (TextView) view.findViewById(R.id.overview_openaps);
         uploaderDeviceStatusView = (TextView) view.findViewById(R.id.overview_uploader);
         iobCalculationProgressView = (TextView) view.findViewById(R.id.overview_iobcalculationprogess);
-        loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
+        loopStatusLayout = view.findViewById(R.id.overview_looplayout);
         pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
 
         pumpStatusView.setBackgroundColor(resourceHelper.gc(R.color.colorInitializingBorder));
@@ -316,8 +315,6 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         cgmButton = (SingleClickButton) view.findViewById(R.id.overview_cgmbutton);
         if (cgmButton != null)
             cgmButton.setOnClickListener(this);
-
-        acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
 
         notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
         notificationsView.setHasFixedSize(false);
@@ -379,80 +376,80 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         super.onResume();
         disposable.add(rxBus
                 .toObservable(EventRefreshOverview.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(eventOpenAPSUpdateGui -> scheduleUpdateGUI(eventOpenAPSUpdateGui.getFrom()),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventExtendedBolusChange.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventExtendedBolusChange"),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventTempBasalChange.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventTempBasalChange"),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventTreatmentChange.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventTreatmentChange"),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventTempTargetChange"),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventAcceptOpenLoopChange.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventAcceptOpenLoopChange"),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventCareportalEventChange.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventCareportalEventChange"),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventInitializationChanged.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventInitializationChanged"),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventAutosensCalculationFinished.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventAutosensCalculationFinished"),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventProfileNeedsUpdate.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventProfileNeedsUpdate"),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventPreferenceChange"),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventNewOpenLoopNotification.class)
-                .observeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventNewOpenLoopNotification"),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updatePumpStatus(event.getStatus(resourceHelper)),
+                .subscribe(event -> updatePumpStatus(event),
                         exception -> FabricPrivacy.getInstance().logException(exception)
                 ));
         disposable.add(rxBus
@@ -961,8 +958,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(() -> {
-                if (acceptTempLayout != null)
-                    acceptTempLayout.setVisibility(View.GONE);
+                if (acceptTempButton != null)
+                    acceptTempButton.setVisibility(View.GONE);
             });
     }
 
@@ -974,7 +971,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         actionStringHandler.handleInitiate("cancelChangeRequest");
     }
 
-    private void updatePumpStatus(String status) {
+    private void updatePumpStatus(EventPumpStatusChanged event) {
+        String status = event.getStatus(resourceHelper);
         if (!status.equals("")) {
             pumpStatusView.setText(status);
             pumpStatusLayout.setVisibility(View.VISIBLE);
@@ -1117,27 +1115,25 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         if (tempTarget != null) {
             tempTargetView.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning));
             tempTargetView.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning));
-            tempTargetView.setVisibility(View.VISIBLE);
             tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end()));
         } else {
             tempTargetView.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault));
             tempTargetView.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault));
             tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), Constants.MGDL, units));
-            tempTargetView.setVisibility(View.VISIBLE);
         }
 
         // **** Temp button ****
-        if (acceptTempLayout != null) {
+        if (acceptTempButton != null) {
             boolean showAcceptButton = !closedLoopEnabled.value(); // Open mode needed
             showAcceptButton = showAcceptButton && loopPlugin.lastRun != null && loopPlugin.lastRun.lastAPSRun != null; // aps result must exist
             showAcceptButton = showAcceptButton && (loopPlugin.lastRun.lastOpenModeAccept == null || loopPlugin.lastRun.lastOpenModeAccept.getTime() < loopPlugin.lastRun.lastAPSRun.getTime()); // never accepted or before last result
             showAcceptButton = showAcceptButton && loopPlugin.lastRun.constraintsProcessed.isChangeRequested(); // change is requested
 
             if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && loopPlugin.isEnabled(PluginType.LOOP)) {
-                acceptTempLayout.setVisibility(View.VISIBLE);
+                acceptTempButton.setVisibility(View.VISIBLE);
                 acceptTempButton.setText(resourceHelper.gs(R.string.setbasalquestion) + "\n" + loopPlugin.lastRun.constraintsProcessed);
             } else {
-                acceptTempLayout.setVisibility(View.GONE);
+                acceptTempButton.setVisibility(View.GONE);
             }
         }
 
@@ -1202,13 +1198,6 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 if (extendedBolus != null)
                     OKDialog.show(getActivity(), MainApp.gs(R.string.extended_bolus), extendedBolus.toString());
             });
-            // hide whole line for APS mode
-            if (extendedBolusLayout != null) {
-                if (extendedBolusText.equals(""))
-                    extendedBolusLayout.setVisibility(View.GONE);
-                else
-                    extendedBolusLayout.setVisibility(View.VISIBLE);
-            }
         }
 
         activeProfileView.setText(profileFunction.getProfileNameWithDuration());

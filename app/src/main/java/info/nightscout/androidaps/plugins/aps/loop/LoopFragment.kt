@@ -59,7 +59,7 @@ class LoopFragment : DaggerFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 clearGUI()
-                loop_lastrun.text = it.text
+                loop_lastrun?.text = it.text
             }, { fabricPrivacy.logException(it) })
 
         updateGUI()
@@ -76,16 +76,16 @@ class LoopFragment : DaggerFragment() {
     fun updateGUI() {
         if (loop_request == null) return
         loopPlugin.lastRun?.let {
-            loop_request.text = it.request?.toSpanned() ?: ""
-            loop_constraintsprocessed.text = it.constraintsProcessed?.toSpanned() ?: ""
-            loop_source.text = it.source ?: ""
-            loop_lastrun.text = it.lastAPSRun?.let { lastRun -> DateUtil.dateAndTimeString(lastRun.time) }
+            loop_request?.text = it.request?.toSpanned() ?: ""
+            loop_constraintsprocessed?.text = it.constraintsProcessed?.toSpanned() ?: ""
+            loop_source?.text = it.source ?: ""
+            loop_lastrun?.text = it.lastAPSRun?.let { lastRun -> DateUtil.dateAndTimeString(lastRun.time) }
                 ?: ""
-            loop_lastenact.text = it.lastAPSRun?.let { lastEnact -> DateUtil.dateAndTimeString(lastEnact.time) }
+            loop_lastenact?.text = it.lastAPSRun?.let { lastEnact -> DateUtil.dateAndTimeString(lastEnact.time) }
                 ?: ""
-            loop_tbrsetbypump.text = it.tbrSetByPump?.let { tbrSetByPump -> HtmlHelper.fromHtml(tbrSetByPump.toHtml()) }
+            loop_tbrsetbypump?.text = it.tbrSetByPump?.let { tbrSetByPump -> HtmlHelper.fromHtml(tbrSetByPump.toHtml()) }
                 ?: ""
-            loop_smbsetbypump.text = it.smbSetByPump?.let { smbSetByPump -> HtmlHelper.fromHtml(smbSetByPump.toHtml()) }
+            loop_smbsetbypump?.text = it.smbSetByPump?.let { smbSetByPump -> HtmlHelper.fromHtml(smbSetByPump.toHtml()) }
                 ?: ""
 
             val constraints =
@@ -95,20 +95,19 @@ class LoopFragment : DaggerFragment() {
                     constraintsProcessed.smbConstraint?.let { smbConstraint -> allConstraints.copyReasons(smbConstraint) }
                     allConstraints.mostLimitedReasons
                 } ?: ""
-            loop_constraints.text = constraints
+            loop_constraints?.text = constraints
         }
     }
 
     @Synchronized
     private fun clearGUI() {
-        if (loop_request == null) return
-        loop_request.text = ""
-        loop_constraints.text = ""
-        loop_constraintsprocessed.text = ""
-        loop_source.text = ""
-        loop_lastrun.text = ""
-        loop_lastenact.text = ""
-        loop_tbrsetbypump.text = ""
-        loop_smbsetbypump.text = ""
+        loop_request?.text = ""
+        loop_constraints?.text = ""
+        loop_constraintsprocessed?.text = ""
+        loop_source?.text = ""
+        loop_lastrun?.text = ""
+        loop_lastenact?.text = ""
+        loop_tbrsetbypump?.text = ""
+        loop_smbsetbypump?.text = ""
     }
 }

@@ -7,7 +7,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
-class ErrorHelperActivity : NoSplashAppCompatActivity() {
+class ErrorHelperActivity : DialogAppCompatActivity() {
     @Inject lateinit var sp : SP
 
     @Override

@@ -43,7 +43,7 @@ class StatusLightHandler @Inject constructor(
                 R.string.key_statuslights_bat_warning, 22.0,
                 batteryView, "BAT", batteryLevel)
         } else {
-            applyStatusLight("bage", CareportalEvent.PUMPBATTERYCHANGE, batteryView, "BAT", 504, 240)
+            applyStatusLight("bage", CareportalEvent.PUMPBATTERYCHANGE, batteryView, "BAT", 224, 336)
         }
     }
 
@@ -108,12 +108,12 @@ class StatusLightHandler @Inject constructor(
                 batteryView, "BAT ", pump.batteryLevel.toDouble())
         } else {
             handleAge("bage", CareportalEvent.PUMPBATTERYCHANGE, batteryView, "BAT ",
-                336, 240)
+                224, 336)
         }
     }
 
     private fun handleAge(nsSettingPlugin: String, eventName: String, view: TextView, text: String,
-                          defaultUrgentThreshold: Int, defaultWarnThreshold: Int) {
+                          defaultWarnThreshold: Int, defaultUrgentThreshold: Int) {
         val urgent = nsSettingsStatus.getExtendedWarnValue(nsSettingPlugin, "urgent", defaultUrgentThreshold.toDouble())
         val warn = nsSettingsStatus.getExtendedWarnValue(nsSettingPlugin, "warn", defaultWarnThreshold.toDouble())
         handleAge(view, text, eventName, warn, urgent, true)
