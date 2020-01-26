@@ -95,13 +95,13 @@ public enum PumpType {
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, //
-            0.05d, 0.05d, null, PumpCapability.VirtualPumpCapabilities, true),
+            0.05d, 0.05d, null, PumpCapability.OmnipodCapabilities, true),
 
     Insulet_Omnipod_Dash("Insulet Omnipod Dash", ManufacturerType.Insulet, "Omnipod Dash", 0.05d, null, //
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
             new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, // 
-            0.05d, 0.05d, null, PumpCapability.VirtualPumpCapabilities, true), // TODO just copied OmniPod for now
+            0.05d, 0.05d, null, PumpCapability.OmnipodCapabilities, true), // TODO just copied OmniPod for now
 
     // Medtronic
     Medtronic_512_712("Medtronic 512/712", ManufacturerType.Medtronic, "512/712", 0.1d, null, //
