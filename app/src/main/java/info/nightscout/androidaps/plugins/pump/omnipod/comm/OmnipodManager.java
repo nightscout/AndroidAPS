@@ -33,7 +33,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
@@ -305,25 +304,31 @@ public class OmnipodManager {
                 .observeOn(Schedulers.io()) //
                 .doOnComplete(() -> {
                     synchronized (bolusDataMutex) {
-                        StatusResponse statusResponse = null;
+                        double unitsNotDelivered = 0.0d;
+
                         for (int i = 0; i < ACTION_VERIFICATION_TRIES; i++) {
                             try {
                                 // Retrieve a status response in order to update the pod state
-                                statusResponse = getPodStatus();
+                                StatusResponse statusResponse = getPodStatus();
                                 if (statusResponse.getDeliveryStatus().isBolusing()) {
                                     throw new IllegalDeliveryStatusException(DeliveryStatus.NORMAL, statusResponse.getDeliveryStatus());
                                 } else {
                                     break;
                                 }
+                            } catch (PodFaultException ex) {
+                                // Substract units not delivered in case of a Pod failure
+                                unitsNotDelivered = ex.getFaultEvent().getInsulinNotDelivered();
+
+                                if (isLoggingEnabled()) {
+                                    LOG.debug("Caught PodFaultException in bolus completion verification", ex);
+                                }
+                                break;
                             } catch (Exception ex) {
                                 if (isLoggingEnabled()) {
                                     LOG.debug("Ignoring exception in bolus completion verification", ex);
                                 }
                             }
                         }
-
-                        // Substract units not delivered in case of a Pod failure
-                        double unitsNotDelivered = statusResponse != null && PodProgressStatus.FAULT_EVENT_OCCURRED.equals(statusResponse.getPodProgressStatus()) ? statusResponse.getInsulinNotDelivered() : 0.0D;
 
                         if (hasActiveBolus()) {
                             activeBolusData.bolusCompletionSubject.onSuccess(new BolusDeliveryResult(units - unitsNotDelivered));
@@ -450,7 +455,7 @@ public class OmnipodManager {
     }
 
     public void resetPodState(boolean forcedByUser) {
-        if(isLoggingEnabled()) {
+        if (isLoggingEnabled()) {
             LOG.warn("resetPodState has been called. forcedByUser={}", forcedByUser);
         }
         podState = null;

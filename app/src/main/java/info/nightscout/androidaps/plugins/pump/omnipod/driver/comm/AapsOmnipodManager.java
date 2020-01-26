@@ -326,6 +326,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
         TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
 
+        if (delegate.getPodState().hasFaultEvent()) {
+            showPodFaultErrorDialog(delegate.getPodState().getFaultEvent().getFaultEventType(), R.raw.urgentalarm);
+        }
+
         return new PumpEnactResult().success(true).enacted(true).bolusDelivered(unitsDelivered);
     }
 
@@ -339,7 +343,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
                 return new PumpEnactResult().success(true).enacted(true);
             } catch (PodFaultException ex) {
-                showErrorDialog(createPodFaultErrorMessage(ex.getFaultEvent().getFaultEventType()), null);
+                showPodFaultErrorDialog(ex.getFaultEvent().getFaultEventType(), null);
                 addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
                 return new PumpEnactResult().success(true).enacted(true);
             } catch (Exception ex) {
@@ -359,9 +363,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             delegate.setTemporaryBasal(PumpType.Insulet_Omnipod.determineCorrectBasalSize(tempBasalPair.getInsulinRate()), Duration.standardMinutes(tempBasalPair.getDurationMinutes()), beepsEnabled, beepsEnabled);
             time = System.currentTimeMillis();
         } catch (Exception ex) {
-            if (ex instanceof PodFaultException) {
-                showErrorDialog(createPodFaultErrorMessage(((PodFaultException) ex).getFaultEvent().getFaultEventType()), R.raw.urgentalarm);
-            } else if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
+            if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
                 addToHistory(time, PodHistoryEntryType.SetTemporaryBasal, "Uncertain failure", false);
                 return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_temp_basal_failed_uncertain));
             }
@@ -617,6 +619,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 comment = getStringResource(R.string.omnipod_driver_error_not_enough_data);
             } else if (ex instanceof PodFaultException) {
                 FaultEventType faultEventType = ((PodFaultException) ex).getFaultEvent().getFaultEventType();
+                showPodFaultErrorDialog(faultEventType, R.raw.urgentalarm);
                 comment = createPodFaultErrorMessage(faultEventType);
             } else if (ex instanceof PodReturnedErrorResponseException) {
                 comment = getStringResource(R.string.omnipod_driver_error_pod_returned_error_response);
@@ -646,6 +649,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     private void sendEvent(Event event) {
         RxBus.INSTANCE.send(event);
+    }
+
+    private void showPodFaultErrorDialog(FaultEventType faultEventType, Integer sound) {
+        showErrorDialog(createPodFaultErrorMessage(faultEventType), sound);
     }
 
     private void showErrorDialog(String message, Integer sound) {
