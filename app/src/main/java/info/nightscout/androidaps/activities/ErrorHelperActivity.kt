@@ -6,7 +6,7 @@ import info.nightscout.androidaps.dialogs.ErrorDialog
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.SP
 
-class ErrorHelperActivity : NoSplashAppCompatActivity() {
+class ErrorHelperActivity : DialogAppCompatActivity() {
 
     @Override
     override fun onCreate(savedInstanceState: Bundle?) {
