@@ -444,7 +444,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="0/155"
+                android:text=""
                 android:textSize="15sp"
                 app:layout_constraintBottom_toBottomOf="@+id/overview_bggraph"
                 app:layout_constraintEnd_toEndOf="@+id/overview_bggraph"
