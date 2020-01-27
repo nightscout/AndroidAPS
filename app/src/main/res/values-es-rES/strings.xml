@@ -1443,4 +1443,7 @@
     <string name="alreadyset">Set listo</string>
     <string name="message">Mensaje</string>
     <string name="clearqueueconfirm">¿Borrar cola? ¡Se perderán todos los datos de la cola!</string>
+    <string name="ebstopsloop">El uso de la función de bolo extendido detendrá el modo de bucle cerrado durante el tiempo de ejecución del bolo extendido. ¿Realmente quieres esto?</string>
+    <string name="closed_loop_disabled_with_eb">Bucle cerrado inhabilitado debido a la ejecución del bolo extendido</string>
+    <string name="extended_bolus_short">EB</string>
 </resources>

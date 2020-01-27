@@ -1443,4 +1443,8 @@
     <string name="alreadyset">Již nastaveno</string>
     <string name="message">Zpráva</string>
     <string name="clearqueueconfirm">Vymazat frontu? Všechna data ve frontě budou ztracena!</string>
+    <string name="ebstopsloop">Použití funkce rozloženého bolusu zastaví uzavřenou smyčku po dobu trvání rozloženého bolusu. Opravdu to chcete?</string>
+    <string name="closed_loop_disabled_with_eb">Uzavřená smyčka je zastavena kvůli běžícímu rozloženému bolusu</string>
+    <string name="extended_bolus_short">EB</string>
+    <string name="phonechecker">PhoneChecker</string>
 </resources>
