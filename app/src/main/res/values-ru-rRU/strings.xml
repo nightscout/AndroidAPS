@@ -1445,4 +1445,8 @@ Context | Edit Context</string>
     <string name="alreadyset">Уже установлено</string>
     <string name="message">Сообщение</string>
     <string name="clearqueueconfirm">Очистить очередь? Все данные в очереди будут потеряны!</string>
+    <string name="ebstopsloop">Функция Пролонгированный Болюс остановит режим замкнутого цикла на время действия пролонгированного болюса. Подтверждаете выбор?</string>
+    <string name="closed_loop_disabled_with_eb">Замкнутый цикл отключен из-за работы Пролонгированного Болюса</string>
+    <string name="extended_bolus_short">ПБ</string>
+    <string name="phonechecker">\"PhoneChecker\"</string>
 </resources>

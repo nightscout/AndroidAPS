@@ -1444,4 +1444,8 @@ Eversense-appen.</string>
     <string name="alreadyset">Redan satt</string>
     <string name="message">Meddelande</string>
     <string name="clearqueueconfirm">Allt data som inte synkats kommer att kastas bort. Är du säker på att du vill tömma kön?</string>
+    <string name="ebstopsloop">OBS! Om du använder förlängd bolus, kommer du inte längre vara i Closed Loop under den tiden som den förlängda bolusen är igång. Vill du fortsätta?</string>
+    <string name="closed_loop_disabled_with_eb">Closed Loop-läget inaktiverat pga att en förlängd bolus är aktiv</string>
+    <string name="extended_bolus_short">FB</string>
+    <string name="phonechecker">Telefonkontroll</string>
 </resources>
