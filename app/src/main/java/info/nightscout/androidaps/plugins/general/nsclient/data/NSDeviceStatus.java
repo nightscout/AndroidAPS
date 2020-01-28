@@ -282,13 +282,13 @@ public class NSDeviceStatus {
 
     // ********* OpenAPS data ***********
 
-    static DeviceStatusOpenAPSData deviceStatusOpenAPSData = new DeviceStatusOpenAPSData();
+    public static DeviceStatusOpenAPSData deviceStatusOpenAPSData = new DeviceStatusOpenAPSData();
 
-    static class DeviceStatusOpenAPSData {
-        long clockSuggested = 0L;
-        long clockEnacted = 0L;
+    public static class DeviceStatusOpenAPSData {
+        public long clockSuggested = 0L;
+        public long clockEnacted = 0L;
 
-        JSONObject suggested = null;
+        public JSONObject suggested = null;
         public JSONObject enacted = null;
     }
 

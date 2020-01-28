@@ -1695,5 +1695,6 @@
     <string name="phonechecker">\"PhoneChecker\"</string>
     <string name="chartmenu">Chart menu</string>
     <string name="sensitivity_short">AS</string>
+    <string name="databroadcaster" translatable="false">Data Broadcaster</string>
 
 </resources>

@@ -1,10 +1,7 @@
 package info.nightscout.androidaps.plugins.general.wear.wearintegration;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.AsyncTask;
-import android.os.BatteryManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -53,6 +50,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.BatteryLevel;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.ToastUtils;
@@ -706,7 +704,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
 
             //batteries
-            int phoneBattery = getBatteryLevel(getApplicationContext());
+            int phoneBattery = BatteryLevel.getBatteryLevel();
             String rigBattery = nsDeviceStatus.getUploaderStatus().trim();
 
 
@@ -847,18 +845,5 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
     public static boolean shouldReportLoopStatus(boolean enabled) {
         return (lastLoopStatus != enabled);
-    }
-
-    public static int getBatteryLevel(Context context) {
-        Intent batteryIntent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
-        if (batteryIntent != null) {
-            int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-            int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-            if (level == -1 || scale == -1) {
-                return 50;
-            }
-            return (int) (((float) level / (float) scale) * 100.0f);
-        }
-        return 50;
     }
 }

@@ -58,6 +58,7 @@ import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionChec
 import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin;
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
+import info.nightscout.androidaps.plugins.general.dataBroadcaster.DataBroadcastPlugin;
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin;
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin;
@@ -146,6 +147,7 @@ public class MainApp extends DaggerApplication {
     @Inject DanaRSPlugin danaRSPlugin;
     @Inject DanaRv2Plugin danaRv2Plugin;
     @Inject DanaRKoreanPlugin danaRKoreanPlugin;
+    @Inject DataBroadcastPlugin dataBroadcastPlugin;
     @Inject DstHelperPlugin dstHelperPlugin;
     @Inject FoodPlugin foodPlugin;
     @Inject InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin;
@@ -295,6 +297,7 @@ public class MainApp extends DaggerApplication {
         pluginsList.add(maintenancePlugin);
         pluginsList.add(automationPlugin);
         pluginsList.add(dstHelperPlugin);
+        pluginsList.add(dataBroadcastPlugin);
 
         pluginsList.add(configBuilderPlugin);
 

@@ -34,4 +34,7 @@ public interface Intents {
 
     String POCTECH_BG = "com.china.poctech.data";
     String TOMATO_BG = "com.fanqies.tomatofn.BgEstimate";
+
+    // Broadcast status
+    String AAPS_BROADCAST = "info.nightscout.androidaps.status";
 }
