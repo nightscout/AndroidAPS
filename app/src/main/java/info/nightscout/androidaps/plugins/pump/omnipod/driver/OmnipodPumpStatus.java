@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver;
 
-import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +61,8 @@ public class OmnipodPumpStatus extends PumpStatus {
     public boolean beepTBREnabled = true;
     public boolean podDebuggingOptionsEnabled = false;
     public String podLotNumber = "???";
+
+    public OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
 
     public OmnipodPumpStatus(PumpDescription pumpDescription) {
         super(pumpDescription);

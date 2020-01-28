@@ -1667,6 +1667,7 @@
     <string name="omnipod_pod_expiry">Pod Expires</string>
     <string name="omnipod_pod_name_no_info">No info</string>
     <string name="omnipod_pod_no_pod_connected">No Pod connected</string>
+    <string name="omnipod_pod_not_initalized">Not initialized</string>
     <string name="omnipod_pod_active_alerts">Active Pod Alerts</string>
     <string name="omnipod_ack_short">Ack Alerts</string>
 

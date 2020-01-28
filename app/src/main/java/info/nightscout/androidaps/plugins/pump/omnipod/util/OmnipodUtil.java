@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
@@ -54,6 +55,7 @@ public class OmnipodUtil extends RileyLinkUtil {
     //private static PodDeviceState podDeviceState;
     private static OmnipodPumpPluginInterface omnipodPumpPlugin;
     private static OmnipodPodType omnipodPodType;
+    private static OmnipodDriverState driverState;
 
     public static Gson getGsonInstance() {
         return gsonInstance;
@@ -147,6 +149,26 @@ public class OmnipodUtil extends RileyLinkUtil {
 
     public static OmnipodPumpStatus getPumpStatus() {
         return omnipodPumpStatus;
+    }
+
+    public static OmnipodDriverState getDriverState() {
+        return OmnipodUtil.driverState;
+    }
+
+    public static void setDriverState(OmnipodDriverState state) {
+        if (OmnipodUtil.driverState == state)
+            return;
+
+        OmnipodUtil.driverState = state;
+
+        // TODO maybe remove
+        if (OmnipodUtil.omnipodPumpStatus != null) {
+            OmnipodUtil.omnipodPumpStatus.driverState = state;
+        }
+
+        if (OmnipodUtil.omnipodPumpPlugin != null) {
+            OmnipodUtil.omnipodPumpPlugin.setDriverState(state);
+        }
     }
 
     public static void setPumpStatus(OmnipodPumpStatus omnipodPumpStatus) {
