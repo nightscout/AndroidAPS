@@ -217,6 +217,8 @@ class OmnipodFragment : Fragment() {
 
         val driverState = OmnipodUtil.getDriverState();
 
+        LOG.info("getDriverState: [driverState={}]", driverState)
+
         if (driverState == OmnipodDriverState.NotInitalized) {
             omnipod_pod_address.text = MainApp.gs(R.string.omnipod_pod_name_no_info)
             omnipod_pod_expiry.text = "-"

@@ -55,7 +55,7 @@ public class OmnipodUtil extends RileyLinkUtil {
     //private static PodDeviceState podDeviceState;
     private static OmnipodPumpPluginInterface omnipodPumpPlugin;
     private static OmnipodPodType omnipodPodType;
-    private static OmnipodDriverState driverState;
+    private static OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
 
     public static Gson getGsonInstance() {
         return gsonInstance;
@@ -162,13 +162,13 @@ public class OmnipodUtil extends RileyLinkUtil {
         OmnipodUtil.driverState = state;
 
         // TODO maybe remove
-        if (OmnipodUtil.omnipodPumpStatus != null) {
-            OmnipodUtil.omnipodPumpStatus.driverState = state;
-        }
-
-        if (OmnipodUtil.omnipodPumpPlugin != null) {
-            OmnipodUtil.omnipodPumpPlugin.setDriverState(state);
-        }
+//        if (OmnipodUtil.omnipodPumpStatus != null) {
+//            OmnipodUtil.omnipodPumpStatus.driverState = state;
+//        }
+//
+//        if (OmnipodUtil.omnipodPumpPlugin != null) {
+//            OmnipodUtil.omnipodPumpPlugin.setDriverState(state);
+//        }
     }
 
     public static void setPumpStatus(OmnipodPumpStatus omnipodPumpStatus) {

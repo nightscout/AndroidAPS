@@ -108,7 +108,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     boolean omnipodServiceRunning = false;
 
     private long nextPodCheck = 0L;
-    OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
+    //OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
 
     private OmnipodPumpPlugin() {
 
@@ -124,11 +124,16 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         displayConnectionMessages = false;
 
-        OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
 
-        if (OmnipodUtil.isOmnipodEros()) {
-            OmnipodUtil.setPlugin(this);
-        }
+
+//        if (OmnipodUtil.isOmnipodEros()) {
+//            OmnipodUtil.setPlugin(this);
+//            OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
+//        }
+
+        // TODO ccc
+        OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
+        OmnipodUtil.setPlugin(this);
 
         serviceConnection = new ServiceConnection() {
 
@@ -284,7 +289,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private void doPodCheck() {
 
         if (System.currentTimeMillis() > this.nextPodCheck) {
-            if (!getPodPumpStatusObject().podAvailable && omnipodServiceRunning) {
+            if (OmnipodUtil.getDriverState()==OmnipodDriverState.Initalized_NoPod) {
                 Notification notification = new Notification(Notification.OMNIPOD_POD_NOT_ATTACHED, MainApp.gs(R.string.omnipod_error_pod_not_attached), Notification.NORMAL);
                 RxBus.INSTANCE.send(new EventNewNotification(notification));
             } else {
@@ -376,7 +381,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     public boolean isConnected() {
         if (isLoggingEnabled() && displayConnectionMessages)
             LOG.debug(getLogPrefix() + "isConnected");
-        return isServiceSet() && this.omnipodService.isInitialized() && isInitialized;
+        return isServiceSet() && omnipodService.isInitialized();
     }
 
 
@@ -384,14 +389,22 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     public boolean isConnecting() {
         if (isLoggingEnabled() && displayConnectionMessages)
             LOG.debug(getLogPrefix() + "isConnecting");
-        return !isServiceSet() || (!omnipodService.isInitialized() || (!isInitialized));
+        return !isServiceSet() || !omnipodService.isInitialized();
     }
 
 
     @Override
     public boolean isSuspended() {
-        return (driverState == OmnipodDriverState.Initalized_NoPod) ||
+
+        return (OmnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) ||
                 (OmnipodUtil.getPodSessionState() != null && OmnipodUtil.getPodSessionState().isSuspended());
+
+//        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
+//                (OmnipodUtil.getPodSessionState() != null && OmnipodUtil.getPodSessionState().isSuspended());
+//
+// TODO ddd
+//        return (OmnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) ||
+//                (OmnipodUtil.getPodSessionState() != null && OmnipodUtil.getPodSessionState().isSuspended());
 //
 //        return (pumpStatusLocal != null && !pumpStatusLocal.podAvailable) ||
 //                (OmnipodUtil.getPodSessionState() != null && OmnipodUtil.getPodSessionState().isSuspended());
@@ -491,7 +504,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public void setDriverState(OmnipodDriverState state) {
-        this.driverState = state;
+        //this.driverState = state;
     }
 
 
@@ -511,7 +524,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         if (isLoggingEnabled())
             LOG.info(getLogPrefix() + "initializePump - start");
 
-        OmnipodPumpStatus podPumpStatus = getPodPumpStatusObject();
+        // TODO ccc
+        //OmnipodPumpStatus podPumpStatus = getPodPumpStatusObject();
 
         setRefreshButtonEnabled(false);
 
