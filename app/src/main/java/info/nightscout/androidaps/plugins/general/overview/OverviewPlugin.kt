@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview
 
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.EventRefreshOverview
@@ -65,14 +66,14 @@ object OverviewPlugin : PluginBase(PluginDescription()
 
     fun determineHighLine(): Double {
         var highLineSetting = SP.getDouble(R.string.key_high_mark, bgTargetHigh)
-        if (highLineSetting < 1) highLineSetting = 180.0
+        if (highLineSetting < 1) highLineSetting = Constants.HIGHMARK
         highLineSetting = Profile.toCurrentUnits(highLineSetting)
         return highLineSetting
     }
 
     fun determineLowLine(): Double {
         var lowLineSetting = SP.getDouble(R.string.key_low_mark, bgTargetLow)
-        if (lowLineSetting < 1) lowLineSetting = 76.0
+        if (lowLineSetting < 1) lowLineSetting = Constants.LOWMARK
         lowLineSetting = Profile.toCurrentUnits(lowLineSetting)
         return lowLineSetting
     }

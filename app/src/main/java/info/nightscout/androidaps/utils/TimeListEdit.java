@@ -50,6 +50,7 @@ public class TimeListEdit {
     private Context context;
     private View view;
     private int resLayoutId;
+    private String tagPrefix;
     private String label;
     private JSONArray data1;
     private JSONArray data2;
@@ -63,10 +64,11 @@ public class TimeListEdit {
     private int inflatedUntil = -1;
 
 
-    public TimeListEdit(Context context, View view, int resLayoutId, String label, JSONArray data1, JSONArray data2, double min, double max, double step, NumberFormat formatter, Runnable save) {
+    public TimeListEdit(Context context, View view, int resLayoutId, String tagPrefix, String label, JSONArray data1, JSONArray data2, double min, double max, double step, NumberFormat formatter, Runnable save) {
         this.context = context;
         this.view = view;
         this.resLayoutId = resLayoutId;
+        this.tagPrefix = tagPrefix;
         this.label = label;
         this.data1 = data1;
         this.data2 = data2;
@@ -185,7 +187,7 @@ public class TimeListEdit {
                                       int before, int count) {
             }
         });
-
+        numberPickers1[position].setTag(tagPrefix +"-1-" + position);
 
         numberPickers2[position].setTextWatcher(new TextWatcher() {
             @Override
@@ -205,6 +207,7 @@ public class TimeListEdit {
                                       int before, int count) {
             }
         });
+        numberPickers2[position].setTag(tagPrefix +"-2-" + position);
 
         layout.addView(childView);
     }

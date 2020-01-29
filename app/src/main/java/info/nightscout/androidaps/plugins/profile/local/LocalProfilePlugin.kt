@@ -27,11 +27,11 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 object LocalProfilePlugin : PluginBase(PluginDescription()
-        .mainType(PluginType.PROFILE)
-        .fragmentClass(LocalProfileFragment::class.java.name)
-        .pluginName(R.string.localprofile)
-        .shortName(R.string.localprofile_shortname)
-        .description(R.string.description_profile_local)), ProfileInterface {
+    .mainType(PluginType.PROFILE)
+    .fragmentClass(LocalProfileFragment::class.java.name)
+    .pluginName(R.string.localprofile)
+    .shortName(R.string.localprofile_shortname)
+    .description(R.string.description_profile_local)), ProfileInterface {
 
     override fun onStart() {
         super.onStart()
@@ -98,7 +98,7 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
     @Synchronized
     fun isValidEditState(): Boolean {
         return createProfileStore().getDefaultProfile()?.isValid(MainApp.gs(R.string.localprofile), false)
-                ?: false
+            ?: false
     }
 
     @Synchronized
@@ -132,7 +132,7 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
             rawProfile?.let { NSUpload.uploadProfileStore(it.data) }
         else
             activity?.let {
-                OKDialog.show(it,"", MainApp.gs(R.string.profilenamecontainsdot), null)
+                OKDialog.show(it, "", MainApp.gs(R.string.profilenamecontainsdot))
             }
     }
 
@@ -423,7 +423,7 @@ object LocalProfilePlugin : PluginBase(PluginDescription()
 
     override fun getProfileName(): String {
         return DecimalFormatter.to2Decimal(rawProfile?.getDefaultProfile()?.percentageBasalSum()
-                ?: 0.0) + "U "
+            ?: 0.0) + "U "
     }
 
 }

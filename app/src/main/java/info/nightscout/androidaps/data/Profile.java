@@ -397,7 +397,7 @@ public class Profile {
         return toMgdl(getIsfTimeFromMidnight(secondsFromMidnight(time)), units);
     }
 
-    double getIsfTimeFromMidnight(int timeAsSeconds) {
+    public double getIsfTimeFromMidnight(int timeAsSeconds) {
         if (isf_v == null)
             isf_v = convertToSparseArray(isf);
         return getValueToTime(isf_v, timeAsSeconds);
@@ -589,7 +589,7 @@ public class Profile {
     public double getMaxDailyBasal() {
         double max = 0d;
         for (int hour = 0; hour < 24; hour++) {
-            double value = getBasalTimeFromMidnight((Integer) (hour * 60 * 60));
+            double value = getBasalTimeFromMidnight(hour * 60 * 60);
             if (value > max) max = value;
         }
         return max;

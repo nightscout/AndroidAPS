@@ -4,16 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.actions.Action
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateAction
 import kotlinx.android.synthetic.main.automation_dialog_action.*
-import kotlinx.android.synthetic.main.okcancel.*
 import org.json.JSONObject
 
-class EditActionDialog : DialogFragment() {
+class EditActionDialog : DialogFragmentWithDate() {
     private var action: Action? = null
     private var actionPosition: Int = -1
 
@@ -24,8 +23,7 @@ class EditActionDialog : DialogFragment() {
             actionPosition = bundle.getInt("actionPosition", -1)
             bundle.getString("action")?.let { action = Action.instantiate(JSONObject(it)) }
         }
-
-        dialog?.setCanceledOnTouchOutside(false)
+        onCreateViewGeneral()
         return inflater.inflate(R.layout.automation_dialog_action, container, false)
     }
 
@@ -37,22 +35,13 @@ class EditActionDialog : DialogFragment() {
             automation_editActionLayout.removeAllViews()
             it.generateDialog(automation_editActionLayout)
         }
-
-        // OK button
-        ok.setOnClickListener {
-            dismiss()
-            action?.let {
-                RxBus.send(EventAutomationUpdateAction(it, actionPosition))
-            }
-        }
-
-        // Cancel button
-        cancel.setOnClickListener { dismiss() }
     }
 
-    override fun onStart() {
-        super.onStart()
-        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    override fun submit(): Boolean {
+        action?.let {
+            RxBus.send(EventAutomationUpdateAction(it, actionPosition))
+        }
+        return true
     }
 
     override fun onSaveInstanceState(bundle: Bundle) {

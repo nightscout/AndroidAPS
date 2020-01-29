@@ -80,17 +80,10 @@
 
         <com.andreabaccega.widget.ValidatingEditTextPreference
             android:defaultValue="30"
-            android:dialogMessage="@string/smbmaxminutes"
-            android:digits="0123456789"
-            android:inputType="number"
+            android:entries="@array/smbMaxMinutes"
+            android:entryValues="@array/smbMaxMinutes"
             android:key="@string/key_smbmaxminutes"
-            android:maxLines="20"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/smbmaxminutes_summary"
-            validate:maxNumber="120"
-            validate:minNumber="15"
-            validate:testType="numericRange" />
+            android:title="@string/smbmaxminutes_summary" />
 
         <com.andreabaccega.widget.ValidatingEditTextPreference
             android:defaultValue="30"

@@ -3,6 +3,8 @@ package info.nightscout.androidaps.utils;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.util.Map;
+
 import info.nightscout.androidaps.MainApp;
 
 /**
@@ -11,6 +13,10 @@ import info.nightscout.androidaps.MainApp;
 
 public class SP {
     private static SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+
+    static public Map<String, ?> getAll() {
+        return sharedPreferences.getAll();
+    }
 
     static public void clear() {
         sharedPreferences.edit().clear().apply();

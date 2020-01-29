@@ -13,6 +13,7 @@
         android:orientation="horizontal">
 
         <ImageButton
+            android:id="@+id/sw_exit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

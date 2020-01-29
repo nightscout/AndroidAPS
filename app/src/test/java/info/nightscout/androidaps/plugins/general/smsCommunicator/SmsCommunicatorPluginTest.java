@@ -39,6 +39,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.XdripCalibrations;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -648,7 +649,7 @@ public class SmsCommunicatorPluginTest {
         passCode = smsCommunicatorPlugin.getMessageToConfirm().getConfirmCode();
         smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
         Assert.assertEquals(passCode, smsCommunicatorPlugin.getMessages().get(2).getText());
-        Assert.assertEquals("Extended bolus 1.00U for 20 min started successfully\nVirtual Pump", smsCommunicatorPlugin.getMessages().get(3).getText());
+        Assert.assertEquals("Extended bolus 1.00U for 20 min started successfully\nnull\nVirtual Pump", smsCommunicatorPlugin.getMessages().get(3).getText());
     }
 
     @Test
@@ -674,6 +675,7 @@ public class SmsCommunicatorPluginTest {
         when(MainApp.getConstraintChecker().applyBolusConstraints(any())).thenReturn(new Constraint<>(1d));
 
         when(DateUtil.now()).thenReturn(1000L);
+        when(SP.getLong(R.string.key_smscommunicator_remotebolusmindistance, T.msecs(Constants.remoteBolusMinDistance).mins())).thenReturn(15L);
         //BOLUS 1
         smsCommunicatorPlugin.setMessages(new ArrayList<>());
         sms = new Sms("1234", "BOLUS 1");

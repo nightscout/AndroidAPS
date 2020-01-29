@@ -4,15 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateTrigger
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import kotlinx.android.synthetic.main.automation_dialog_edit_trigger.*
-import kotlinx.android.synthetic.main.okcancel.*
 
-class EditTriggerDialog : DialogFragment() {
+class EditTriggerDialog : DialogFragmentWithDate() {
 
     private var trigger: Trigger? = null
 
@@ -23,7 +22,7 @@ class EditTriggerDialog : DialogFragment() {
             bundle.getString("trigger")?.let { trigger = Trigger.instantiate(it) }
         }
 
-        dialog?.setCanceledOnTouchOutside(false)
+        onCreateViewGeneral()
         return inflater.inflate(R.layout.automation_dialog_edit_trigger, container, false)
     }
 
@@ -32,24 +31,15 @@ class EditTriggerDialog : DialogFragment() {
 
         // display root trigger
         trigger?.generateDialog(automation_layoutTrigger, fragmentManager)
-
-        // OK button
-        ok.setOnClickListener {
-            dismiss()
-            trigger?.let { trigger -> RxBus.send(EventAutomationUpdateTrigger(trigger)) }
-        }
-
-        // Cancel button
-        cancel.setOnClickListener { dismiss() }
     }
 
-    override fun onStart() {
-        super.onStart()
-        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    override fun submit():Boolean {
+        trigger?.let { trigger -> RxBus.send(EventAutomationUpdateTrigger(trigger)) }
+        return true
     }
 
-    override fun onSaveInstanceState(bundle: Bundle) {
-        super.onSaveInstanceState(bundle)
-        trigger?.let { bundle.putString("trigger", it.toJSON()) }
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        trigger?.let { savedInstanceState.putString("trigger", it.toJSON()) }
     }
 }

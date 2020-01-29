@@ -12,10 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import info.nightscout.androidaps.R;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
@@ -71,7 +72,7 @@ public class BolusActivity extends ViewSelectorActivity {
                     def = SafeParse.stringToDouble(editInsulin.editText.getText().toString());
                 }
                 editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 30d, 0.1d, new DecimalFormat("#0.0"), false);
-                setLabelToPlusMinusView(view, "insulin");
+                setLabelToPlusMinusView(view, aaps.gs(R.string.action_insulin));
                 container.addView(view);
                 return view;
             } else if(col == 1){
@@ -81,7 +82,7 @@ public class BolusActivity extends ViewSelectorActivity {
                     def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
                 }
                 editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), false);
-                setLabelToPlusMinusView(view, "carbs");
+                setLabelToPlusMinusView(view, aaps.gs(R.string.action_carbs));
                 container.addView(view);
                 return view;
             } else {

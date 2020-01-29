@@ -25,12 +25,22 @@ public class SafeParse {
     }
 
    public static Long stringToLong(String input) {
-        Long result = 0L;
-        input = input.replace(",", ".");
-        try {
-            result = Long.parseLong(input);
-        } catch (Exception e) {
-        }
-        return result;
+       Long result = 0L;
+       input = input.replace(",", ".");
+       try {
+           result = Long.parseLong(input);
+       } catch (Exception e) {
+       }
+       return result;
+   }
+   
+   public static Float stringToFloat(String input) {
+       Float result = 0f;
+       input = input.replace(",", ".");
+       try {
+           result = Float.valueOf(input);
+       } catch (Exception e) {
+       }
+       return result;
     }
 }

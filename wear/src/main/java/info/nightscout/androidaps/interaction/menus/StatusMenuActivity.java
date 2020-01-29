@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.interaction.menus;
 
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.MenuListActivity;
 
@@ -12,23 +14,23 @@ public class StatusMenuActivity extends MenuListActivity {
     @Override
     protected String[] getElements() {
         return new String[] {
-                "Pump",
-                "Loop",
-                "CPP",
-                "TDD"};
+                aaps.gs(R.string.status_pump),
+                aaps.gs(R.string.status_loop),
+                aaps.gs(R.string.status_cpp),
+                aaps.gs(R.string.status_tdd)};
 
 
     }
 
     @Override
     protected void doAction(String action) {
-        if ("Pump".equals(action)) {
+        if (aaps.gs(R.string.status_pump).equals(action)) {
             ListenerService.initiateAction(this, "status pump");
-        } else if ("Loop".equals(action)) {
+        } else if (aaps.gs(R.string.status_loop).equals(action)) {
             ListenerService.initiateAction(this, "status loop");
-        } else if ("CPP".equals(action)) {
+        } else if (aaps.gs(R.string.status_cpp).equals(action)) {
             ListenerService.initiateAction(this, "opencpp");
-        } else if ("TDD".equals(action)) {
+        } else if (aaps.gs(R.string.status_tdd).equals(action)) {
             ListenerService.initiateAction(this, "tddstats");
         }
     }

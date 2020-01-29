@@ -325,8 +325,8 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     }
 
     public String toStringMedium() {
-        return "E " + DecimalFormatter.to2Decimal(absoluteRate()) + "U/h ("
-                + getRealDuration() + "/" + durationInMinutes + ") ";
+        return DecimalFormatter.to2Decimal(absoluteRate()) + "U/h "
+                + getRealDuration() + "/" + durationInMinutes + "'";
     }
 
     public String toStringTotal() {
