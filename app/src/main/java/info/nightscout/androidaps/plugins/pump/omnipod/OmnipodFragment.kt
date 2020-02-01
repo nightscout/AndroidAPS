@@ -133,6 +133,8 @@ class OmnipodFragment : Fragment() {
             }
         }
 
+        omnipod_lastconnection.setTextColor(Color.WHITE)
+
         setVisibilityOfPodDebugButton()
 
         updateGUI()
@@ -343,12 +345,12 @@ class OmnipodFragment : Fragment() {
         if (pumpStatus.podAvailable) {
             // last connection
             if (pumpStatus.lastConnection != 0L) {
-                val minAgo = DateUtil.minAgo(pumpStatus.lastConnection)
+                //val minAgo = DateUtil.minAgo(pumpStatus.lastConnection)
                 val min = (System.currentTimeMillis() - pumpStatus.lastConnection) / 1000 / 60
                 if (pumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
                     omnipod_lastconnection.setText(R.string.combo_pump_connected_now)
-                    omnipod_lastconnection.setTextColor(Color.WHITE)
-                } else if (pumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
+                    //omnipod_lastconnection.setTextColor(Color.WHITE)
+                } else { //if (pumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
 
                     if (min < 60) {
                         omnipod_lastconnection.text = MainApp.gs(R.string.minago, min)
@@ -363,11 +365,12 @@ class OmnipodFragment : Fragment() {
                         omnipod_lastconnection.text = (MainApp.gq(R.plurals.objective_days, d, d) + " "
                                 + MainApp.gs(R.string.ago))
                     }
-                    omnipod_lastconnection.setTextColor(Color.RED)
-                } else {
-                    omnipod_lastconnection.text = minAgo
-                    omnipod_lastconnection.setTextColor(Color.WHITE)
+                    //omnipod_lastconnection.setTextColor(Color.RED)
                 }
+//                } else {
+//                    omnipod_lastconnection.text = minAgo
+//                    //omnipod_lastconnection.setTextColor(Color.WHITE)
+//                }
             }
 
             // last bolus

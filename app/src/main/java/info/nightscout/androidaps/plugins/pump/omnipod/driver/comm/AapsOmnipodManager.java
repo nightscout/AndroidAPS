@@ -225,9 +225,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
-        addSuccessToHistory(time, PodHistoryEntryType.DeactivatePod, null);
-
         reportImplicitlyCanceledTbr();
+
+        addSuccessToHistory(time, PodHistoryEntryType.DeactivatePod, null);
 
         podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, true, null);
 
@@ -247,19 +247,21 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 throw new CommandInitializationException("Basal profile mapping failed", ex);
             }
             delegate.setBasalSchedule(basalSchedule, isBasalBeepsEnabled());
+            // Because setting a basal profile actually suspends and then resumes delivery, TBR is implicitly cancelled
+            reportImplicitlyCanceledTbr();
             addSuccessToHistory(time, PodHistoryEntryType.SetBasalSchedule, profile.getBasalValues());
         } catch (Exception ex) {
             if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
+                reportImplicitlyCanceledTbr();
                 addToHistory(time, PodHistoryEntryType.SetBasalSchedule, "Uncertain failure", false);
                 return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_basal_failed_uncertain));
             }
             String comment = handleAndTranslateException(ex);
+            reportImplicitlyCanceledTbr();
             addFailureToHistory(time, PodHistoryEntryType.SetBasalSchedule, comment);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
-        // Because setting a basal profile actually suspends and then resumes delivery, TBR is implicitly cancelled
-        reportImplicitlyCanceledTbr();
 
         return new PumpEnactResult().success(true).enacted(true);
     }
@@ -476,19 +478,20 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         long time = System.currentTimeMillis();
         try {
             delegate.setTime(isBasalBeepsEnabled());
+            // Because set time actually suspends and then resumes delivery, TBR is implicitly cancelled
+            reportImplicitlyCanceledTbr();
             addSuccessToHistory(time, PodHistoryEntryType.SetTime, null);
         } catch (Exception ex) {
             if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
+                reportImplicitlyCanceledTbr();
                 addFailureToHistory(time, PodHistoryEntryType.SetTime, "Uncertain failure");
                 return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_time_failed_uncertain));
             }
             String comment = handleAndTranslateException(ex);
+            reportImplicitlyCanceledTbr();
             addFailureToHistory(time, PodHistoryEntryType.SetTime, comment);
             return new PumpEnactResult().success(false).enacted(false).comment(comment);
         }
-
-        // Because set time actually suspends and then resumes delivery, TBR is implicitly cancelled
-        reportImplicitlyCanceledTbr();
 
         return new PumpEnactResult().success(true).enacted(true);
     }
@@ -521,7 +524,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 LOG.debug("Reporting implicitly cancelled TBR to Treatments plugin");
             }
 
-            long time = System.currentTimeMillis();
+            long time = System.currentTimeMillis()-1000;
 
             addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasal, null);
 
