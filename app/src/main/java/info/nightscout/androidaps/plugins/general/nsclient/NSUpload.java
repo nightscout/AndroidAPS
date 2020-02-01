@@ -323,7 +323,9 @@ public class NSUpload {
                 prebolus.put("created_at", DateUtil.toISOString(preBolusDate));
                 uploadCareportalEntryToNS(prebolus);
             }
-            UploadQueue.add(new DbRequest("dbAdd", "treatments", data));
+            DbRequest dbr = new DbRequest("dbAdd", "treatments", data);
+            log.debug("Prepared: " + dbr.log());
+            UploadQueue.add(dbr);
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
