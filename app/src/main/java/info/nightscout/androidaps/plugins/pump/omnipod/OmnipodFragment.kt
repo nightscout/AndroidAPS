@@ -339,6 +339,7 @@ class OmnipodFragment : Fragment() {
     fun updateGUI() {
         val plugin = OmnipodPumpPlugin.getPlugin()
         val pumpStatus = OmnipodUtil.getPumpStatus()
+        val pumpType = OmnipodUtil.getPumpType()
 
         setDeviceStatus()
 
@@ -388,14 +389,13 @@ class OmnipodFragment : Fragment() {
                 } else {
                     ago = DateUtil.hourAgo(pumpStatus.lastBolusTime.time)
                 }
-                omnipod_lastbolus.text = MainApp.gs(R.string.combo_last_bolus, bolus, unit, ago)
+                omnipod_lastbolus.text = MainApp.gs(R.string.omnipod_last_bolus, pumpType.determineCorrectBolusSize(bolus), unit, ago)
             } else {
                 omnipod_lastbolus.text = ""
             }
 
             // base basal rate
-
-            omnipod_basabasalrate.text = MainApp.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
+            omnipod_basabasalrate.text = MainApp.gs(R.string.pump_basebasalrate, pumpType.determineCorrectBasalSize(plugin.baseBasalRate))
 
             omnipod_tempbasal.text = TreatmentsPlugin.getPlugin()
                     .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: ""

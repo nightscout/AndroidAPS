@@ -1670,6 +1670,7 @@
     <string name="omnipod_pod_not_initalized">Not initialized</string>
     <string name="omnipod_pod_active_alerts">Active Pod Alerts</string>
     <string name="omnipod_ack_short">Ack Alerts</string>
+    <string name="omnipod_last_bolus" translatable="false">%1$.2f %2$s (%3$s)</string>
 
     <!-- Omnipod - Dialogs -->
     <string name="omnipod_frequency">Omnipod (433.91 MHz)</string>

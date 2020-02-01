@@ -126,14 +126,15 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
 
 
-//        if (OmnipodUtil.isOmnipodEros()) {
-//            OmnipodUtil.setPlugin(this);
-//            OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
-//        }
+        if (OmnipodUtil.isOmnipodEros()) {
+            OmnipodUtil.setPlugin(this);
+            OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
+            OmnipodUtil.setPumpType(PumpType.Insulet_Omnipod);
+        }
 
-        // TODO ccc
-        OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
-        OmnipodUtil.setPlugin(this);
+//        // TODO ccc
+//        OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
+//        OmnipodUtil.setPlugin(this);
 
         serviceConnection = new ServiceConnection() {
 

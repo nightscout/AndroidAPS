@@ -22,6 +22,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
@@ -56,6 +57,7 @@ public class OmnipodUtil extends RileyLinkUtil {
     private static OmnipodPumpPluginInterface omnipodPumpPlugin;
     private static OmnipodPodType omnipodPodType;
     private static OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
+    private static PumpType pumpType;
 
     public static Gson getGsonInstance() {
         return gsonInstance;
@@ -238,4 +240,11 @@ public class OmnipodUtil extends RileyLinkUtil {
     }
 
 
+    public static void setPumpType(PumpType pumpType) {
+        OmnipodUtil.pumpType = pumpType;
+    }
+
+    public static PumpType getPumpType() {
+        return pumpType;
+    }
 }
