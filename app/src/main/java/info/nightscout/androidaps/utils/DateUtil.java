@@ -141,6 +141,14 @@ public class DateUtil {
         return new DateTime(mills).toString(DateTimeFormat.forPattern(format));
     }
 
+    public static String timeStringWithSeconds(long mills) {
+        String format = "hh:mm:ssa";
+        if (android.text.format.DateFormat.is24HourFormat(MainApp.instance())) {
+            format = "HH:mm:ss";
+        }
+        return new DateTime(mills).toString(DateTimeFormat.forPattern(format));
+    }
+
     public static String timeFullString(long mills) {
         return new DateTime(mills).toString(DateTimeFormat.fullTime());
     }
@@ -156,6 +164,11 @@ public class DateUtil {
     public static String dateAndTimeString(long mills) {
         if (mills == 0) return "";
         return dateString(mills) + " " + timeString(mills);
+    }
+
+    public static String dateAndTimeAndSecondsString(long mills) {
+        if (mills == 0) return "";
+        return dateString(mills) + " " + timeStringWithSeconds(mills);
     }
 
     public static String dateAndTimeFullString(long mills) {

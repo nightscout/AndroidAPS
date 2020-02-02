@@ -1693,5 +1693,9 @@
     <string name="phonechecker">\"PhoneChecker\"</string>
     <string name="chartmenu">Chart menu</string>
     <string name="sensitivity_short">AS</string>
+    <string name="loop_smbrequest_time_label">SMB request time</string>
+    <string name="loop_smbexecution_time_label">SMB execution time</string>
+    <string name="loop_tbrrequest_time_label">Temp basal request time</string>
+    <string name="loop_tbrexecution_time_label">Temp basal execution time</string>
 
 </resources>

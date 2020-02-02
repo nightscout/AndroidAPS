@@ -57,6 +57,7 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
@@ -84,9 +85,9 @@ public class LoopPlugin extends PluginBase {
         return loopPlugin;
     }
 
-    private long loopSuspendedTill = 0L; // end of manual loop suspend
-    private boolean isSuperBolus = false;
-    private boolean isDisconnected = false;
+    private long loopSuspendedTill; // end of manual loop suspend
+    private boolean isSuperBolus;
+    private boolean isDisconnected;
 
     public class LastRun {
         public APSResult request = null;
@@ -95,8 +96,11 @@ public class LoopPlugin extends PluginBase {
         public PumpEnactResult smbSetByPump = null;
         public String source = null;
         public Date lastAPSRun = null;
-        public Date lastEnact = null;
-        public Date lastOpenModeAccept;
+        public long lastTBREnact = 0;
+        public long lastSMBEnact = 0;
+        public long lastTBRRequest = 0;
+        public long lastSMBRequest = 0;
+        public long lastOpenModeAccept;
     }
 
     static public LastRun lastRun = null;
@@ -342,6 +346,10 @@ public class LoopPlugin extends PluginBase {
             lastRun.source = ((PluginBase) usedAPS).getName();
             lastRun.tbrSetByPump = null;
             lastRun.smbSetByPump = null;
+            lastRun.lastTBREnact = 0;
+            lastRun.lastTBRRequest = 0;
+            lastRun.lastSMBEnact = 0;
+            lastRun.lastSMBRequest = 0;
 
             NSUpload.uploadDeviceStatus();
 
@@ -378,14 +386,17 @@ public class LoopPlugin extends PluginBase {
                         public void run() {
                             if (result.enacted || result.success) {
                                 lastRun.tbrSetByPump = result;
-                                lastRun.lastEnact = lastRun.lastAPSRun;
+                                lastRun.lastTBRRequest = lastRun.lastAPSRun.getTime();
+                                lastRun.lastTBREnact = DateUtil.now();
+                                RxBus.INSTANCE.send(new EventLoopUpdateGui());
                                 applySMBRequest(resultAfterConstraints, new Callback() {
                                     @Override
                                     public void run() {
                                         //Callback is only called if a bolus was acutally requested
                                         if (result.enacted || result.success) {
                                             lastRun.smbSetByPump = result;
-                                            lastRun.lastEnact = lastRun.lastAPSRun;
+                                            lastRun.lastSMBRequest = lastRun.lastAPSRun.getTime();
+                                            lastRun.lastSMBEnact = DateUtil.now();
                                         } else {
                                             new Thread(() -> {
                                                 SystemClock.sleep(1000);
@@ -465,8 +476,9 @@ public class LoopPlugin extends PluginBase {
             public void run() {
                 if (result.enacted) {
                     lastRun.tbrSetByPump = result;
-                    lastRun.lastEnact = new Date();
-                    lastRun.lastOpenModeAccept = new Date();
+                    lastRun.lastTBRRequest = lastRun.lastAPSRun.getTime();
+                    lastRun.lastTBREnact = DateUtil.now();
+                    lastRun.lastOpenModeAccept = DateUtil.now();
                     NSUpload.uploadDeviceStatus();
                     SP.incInt(R.string.key_ObjectivesmanualEnacts);
                 }
