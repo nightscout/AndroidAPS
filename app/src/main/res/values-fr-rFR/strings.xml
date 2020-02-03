@@ -423,7 +423,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="danar_stats_expweight">DTI avec Pondération Exponentielle</string>
     <string name="danar_stats_basalrate">Basal</string>
     <string name="danar_stats_bolus">Bolus</string>
-    <string name="danar_stats_tdd">DTI Dosage Total d\'Insuline</string>
+    <string name="danar_stats_tdd">DTI</string>
     <string name="danar_stats_date">Date</string>
     <string name="danar_stats_ratio">Ratio</string>
     <string name="danar_stats_amount_days">Nb Jours</string>
@@ -628,7 +628,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="notloadedplugins">Les profils ne sont pas tous téléchargés !</string>
     <string name="valuesnotstored">Valeurs non enregistrées !</string>
     <string name="ns_localbroadcasts">Active les diffusions vers d\'autres applications (comme xDrip). Ne pas activer si plusieurs instances d\'AAPS ou de NSClient sont installées !</string>
-    <string name="ns_localbroadcasts_title">Activer les transmissions locales.</string>
+    <string name="ns_localbroadcasts_title">Activer les transmissions locales</string>
     <string name="careportal_activity_label">ACTIVITÉ et FEEDBACK</string>
     <string name="careportal_carbsandbolus_label">GLUCIDES et BOLUS</string>
     <string name="careportal_cgm_label">MGC et OPENAPS</string>
@@ -809,7 +809,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wear_notifysmb_title">Notifier en SMB</string>
     <string name="wear_notifysmb_summary">Afficher SMB sur la montre comme un bolus standard.</string>
     <string name="ns_create_announcements_from_errors_title">Créer des messages d’erreurs</string>
-    <string name="ns_create_announcements_from_errors_summary">Créer des annonces Nightscout pour les dialogues d’erreur et alertes locales (également visible dans Careportal sous Traitements)</string>
+    <string name="ns_create_announcements_from_errors_summary">Créer une annonce Nightscout pour les messages d\'erreur et les alertes locales (également visible dans la section Careportal de l\'onglet traitements)</string>
     <string name="wear_predictions_summary">Affichez les prédictions sur l\'écran de montre.</string>
     <string name="wear_predictions_title">Prédictions</string>
     <string name="data_choices">Choix de données</string>
@@ -824,7 +824,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="category">Catégorie</string>
     <string name="subcategory">Sous-catégorie</string>
     <string name="bolusrecordedonly">Le bolus sera seulement enregistré</string>
-    <string name="ns_autobackfill_summary">Réassortiment automatique des glycémies manquantes en utilisant NS</string>
+    <string name="ns_autobackfill_summary">Remplissage automatique des glycémies manquantes en utilisant NS</string>
     <string name="loop_smbsetbypump_label">SMB défini par la pompe</string>
     <string name="overview_show_activity">Activité</string>
     <string name="overview_show_sensitivity">Sensibilité</string>
@@ -847,7 +847,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="combo_error_failure_reading_changed_basal_rate">Le pourcentage de basal a changé dans la pompe mais sa lecture a échoué</string>
     <string name="combo_activity_checking_for_history_changes">Vérification des modifications de l\'historique</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">De multiples bolus similaires viennent d\'être importés dans la même minute. Un seul enregistrement a pu être ajouté aux traitements. Merci de vérifier la pompe et d\'ajouter manuellement un enregistrement de bolus en utilisant l\'onglet Careportal. Assurez vous de créer ce bolus avec un temps différent de tous les autres Bolus.</string>
-    <string name="about_link_urls">\n\nhttp://www.androidaps.org\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
+    <string name="about_link_urls">\n\nhttps://androidaps.readthedocs.io/en/latest/CROWDIN/fr\nhttp://www.androidaps.de (de)\n\nfacebook:\nhttp://facebook.androidaps.org\nhttp://facebook.androidaps.de (de)</string>
     <string name="combo_check_date">Le dernier bolus enregistré date d\'il y a plus de 24h ou est dans le futur. Vérifiez que la date dans la pompe est correctement définie.</string>
     <string name="combo_suspious_bolus_time">L\'heure/date sur la pompe du dernier bolus administré semble erroné. L\'IA est probablement incorrecte. Vérifiez l\'heure/date de la pompe.</string>
     <string name="profileswitch_ismissing">ProfileSwitch manquant. S’il vous plaît faire un changement de profil ou appuyez sur « Activer le profil » dans le LocalProfile.</string>
@@ -1056,9 +1056,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="stop_pump">Arrêter la pompe</string>
     <string name="operating_mode">Mode de fonctionnement</string>
     <string name="insight_status">État</string>
-    <string name="tdd_bolus">Bolus DTI</string>
-    <string name="tdd_basal">DTI basale</string>
-    <string name="tdd_total">Total DTI</string>
+    <string name="tdd_bolus">DTI Bolus</string>
+    <string name="tdd_basal">DTI Basale</string>
+    <string name="tdd_total">DTI Total</string>
     <string name="recovering">Récupération en cours.</string>
     <string name="not_paired">Non appairé</string>
     <string name="last_connected">Dernière connexion</string>
@@ -1444,4 +1444,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="alreadyset">Déjà configuré</string>
     <string name="message">Message</string>
     <string name="clearqueueconfirm">Effacer la file d\'attente ? Toutes les données en file d\'attente seront perdues !</string>
+    <string name="ebstopsloop">L\'utilisation du bolus étendu arrètera la boucle fermée pour la durée d\'exécution du bolus étendu. Voulez-vous vraiment le faire ?</string>
+    <string name="closed_loop_disabled_with_eb">Boucle fermée désactivée à cause du bolus étendu</string>
+    <string name="extended_bolus_short">EB</string>
+    <string name="phonechecker">\"Vérif. du téléphone\"</string>
 </resources>

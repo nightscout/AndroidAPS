@@ -20,6 +20,7 @@
     <string name="pref_on">Įjungti</string>
     <string name="pref_off">Išjungti</string>
     <string name="pref_vibrate_on_bolus">Vibruoti, kai leidžiamas bolusas</string>
+    <string name="pref_units_for_actions">Veiksmų vienetai</string>
     <string name="pref_show_date">Rodyti datą</string>
     <string name="pref_show_iob">Rodyti AIO</string>
     <string name="pref_show_cob">Rodyti AAO</string>
@@ -50,6 +51,7 @@
     <string name="pref_low">Žemas</string>
     <string name="pref_medium">Vidutinis</string>
     <string name="pref_high">Aukštas</string>
+    <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Dideli Skaičiai</string>
     <string name="pref_ring_history">Glikemijos istorija</string>
     <string name="pref_light_ring_history">Glikemijos istorija - šviesi</string>
@@ -81,6 +83,7 @@
     <string name="action_preset_1">Ruošinys 1</string>
     <string name="action_preset_2">Ruošinys 2</string>
     <string name="action_preset_3">Ruošinys 3</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Užpildymo kiekis</string>
     <string name="action_confirm">PATVIRTINTI</string>
     <string name="action_status_pump">POMPOS BŪKLĖ</string>
     <string name="action_status_loop">CIKLO STATUSAS</string>
@@ -89,6 +92,7 @@
     <string name="action_bolus">bolusas</string>
     <string name="status_pump">Pompa</string>
     <string name="status_loop">Ciklas</string>
+    <string name="status_cpp">CPP (Procentinis dienos profilis)</string>
     <string name="status_tdd">BPD</string>
     <string name="activity_carb">AV</string>
     <string name="activity_IOB">AIO</string>

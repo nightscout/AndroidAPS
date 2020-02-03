@@ -23,7 +23,6 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
@@ -200,6 +199,12 @@ class SmsCommunicatorPlugin @Inject constructor(
         aapsLogger.debug(LTag.SMS, receivedSms.toString())
         val splitted = receivedSms.text.split(Regex("\\s+")).toTypedArray()
         val remoteCommandsAllowed = sp.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)
+
+        val minDistance =
+            if (areMoreNumbers(sp.getString(R.string.key_smscommunicator_allowednumbers, "")))
+                T.mins(sp.getLong(R.string.key_smscommunicator_remotebolusmindistance, T.msecs(Constants.remoteBolusMinDistance).mins())).msecs()
+            else Constants.remoteBolusMinDistance
+
         if (splitted.isNotEmpty() && isCommand(splitted[0].toUpperCase(Locale.getDefault()), receivedSms.phoneNumber)) {
             when (splitted[0].toUpperCase(Locale.getDefault())) {
                 "BG"         ->
@@ -232,7 +237,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 "BOLUS"      ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotecommandnotallowed)))
-                    else if (splitted.size == 2 && DateUtil.now() - lastRemoteBolusTime < Constants.remoteBolusMinDistance) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotebolusnotallowed)))
+                    else if (splitted.size == 2 && DateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_remotebolusnotallowed)))
                     else if (splitted.size == 2 && pump.isSuspended) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.pumpsuspended)))
                     else if (splitted.size == 2 || splitted.size == 3) processBOLUS(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
@@ -332,7 +337,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
             "RESUME"          -> {
                 rxBus.send(EventRefreshOverview("SMS_LOOP_RESUME"))
-                NSUpload.uploadOpenAPSOffline(0.0)
+                loopPlugin.createOfflineEvent(0)
                 sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_loopresumed)))
             }
 
@@ -355,7 +360,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                 override fun run() {
                                     if (result.success) {
                                         loopPlugin.suspendTo(System.currentTimeMillis() + anInteger() * 60L * 1000)
-                                        NSUpload.uploadOpenAPSOffline(anInteger() * 60.toDouble())
+                                        loopPlugin.createOfflineEvent(anInteger() * 60)
                                         rxBus.send(EventRefreshOverview("SMS_LOOP_SUSPENDED"))
                                         val replyText = resourceHelper.gs(R.string.smscommunicator_loopsuspended) + " " +
                                             resourceHelper.gs(if (result.success) R.string.smscommunicator_tempbasalcanceled else R.string.smscommunicator_tempbasalcancelfailed)

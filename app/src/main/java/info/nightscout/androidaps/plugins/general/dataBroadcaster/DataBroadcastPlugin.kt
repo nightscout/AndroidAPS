@@ -19,7 +19,6 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.BundleLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui
@@ -154,14 +153,14 @@ class DataBroadcastPlugin @Inject constructor(
     private fun loopStatus(bundle: Bundle) {
         //batteries
         bundle.putInt("phoneBattery", BatteryLevel.getBatteryLevel())
-        bundle.putInt("rigBattery", nsDeviceStatus.uploaderStatus.replace("%","").trim { it <= ' ' }.toInt())
+        bundle.putInt("rigBattery", nsDeviceStatus.uploaderStatus.replace("%", "").trim { it <= ' ' }.toInt())
 
-        if (Config.APS && lazyLoopPlugin.get().lastRun?.lastEnact != null) { //we are AndroidAPS
+        if (Config.APS && lazyLoopPlugin.get().lastRun?.lastTBREnact != 0L) { //we are AndroidAPS
             bundle.putLong("suggestedTimeStamp", lazyLoopPlugin.get().lastRun?.lastAPSRun?.time
                 ?: -1L)
             bundle.putString("suggested", lazyLoopPlugin.get().lastRun?.request?.json().toString())
             if (lazyLoopPlugin.get().lastRun.tbrSetByPump != null && lazyLoopPlugin.get().lastRun.tbrSetByPump.enacted) {
-                bundle.putLong("enactedTimeStamp", lazyLoopPlugin.get().lastRun?.lastEnact?.time
+                bundle.putLong("enactedTimeStamp", lazyLoopPlugin.get().lastRun?.lastTBREnact
                     ?: -1L)
                 bundle.putString("enacted", lazyLoopPlugin.get().lastRun?.request?.json().toString())
             }

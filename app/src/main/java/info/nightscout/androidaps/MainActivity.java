@@ -159,6 +159,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         if (Config.PUMPDRIVERS) {
             AndroidPermission.notifyForLocationPermissions(this);
             AndroidPermission.notifyForSMSPermissions(this, smsCommunicatorPlugin);
+            AndroidPermission.notifyForSystemWindowPermissions(this);
         }
     }
 
@@ -257,6 +258,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                     case AndroidPermission.CASE_SMS:
                     case AndroidPermission.CASE_BATTERY:
                     case AndroidPermission.CASE_PHONE_STATE:
+                    case AndroidPermission.CASE_SYSTEM_WINDOW:
                         break;
                 }
             }

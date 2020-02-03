@@ -42,6 +42,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.XdripCalibrations;
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation;
 
@@ -678,6 +679,7 @@ public class SmsCommunicatorPluginTest {
         when(ConstraintChecker.getInstance().applyBolusConstraints(any())).thenReturn(new Constraint<>(1d));
 
         when(DateUtil.now()).thenReturn(1000L);
+        when(SP.getLong(R.string.key_smscommunicator_remotebolusmindistance, T.msecs(Constants.remoteBolusMinDistance).mins())).thenReturn(15L);
         //BOLUS 1
         smsCommunicatorPlugin.setMessages(new ArrayList<>());
         sms = new Sms("1234", "BOLUS 1");

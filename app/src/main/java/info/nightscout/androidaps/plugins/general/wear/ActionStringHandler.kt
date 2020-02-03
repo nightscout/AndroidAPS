@@ -407,7 +407,7 @@ class ActionStringHandler @Inject constructor(
                 ret += "APS: " + if (aps == null) "NO APS SELECTED!" else (aps as PluginBase).name
                 if (loopPlugin.lastRun != null) {
                     if (loopPlugin.lastRun.lastAPSRun != null) ret += "\nLast Run: " + DateUtil.timeString(loopPlugin.lastRun.lastAPSRun)
-                    if (loopPlugin.lastRun.lastEnact != null) ret += "\nLast Enact: " + DateUtil.timeString(loopPlugin.lastRun.lastEnact)
+                    if (loopPlugin.lastRun.lastTBREnact != 0L) ret += "\nLast Enact: " + DateUtil.timeString(loopPlugin.lastRun.lastTBREnact)
                 }
             } else {
                 ret += "LOOP DISABLED\n"

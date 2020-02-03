@@ -712,7 +712,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             //OpenAPS status
             if (Config.APS) {
                 //we are AndroidAPS
-                openApsStatus = loopPlugin.lastRun != null && loopPlugin.lastRun.lastEnact != null && loopPlugin.lastRun.lastEnact.getTime() != 0 ? loopPlugin.lastRun.lastEnact.getTime() : -1;
+                openApsStatus = loopPlugin.lastRun != null && loopPlugin.lastRun.lastTBREnact != 0 ? loopPlugin.lastRun.lastTBREnact : -1;
             } else {
                 //NSClient or remote
                 openApsStatus = NSDeviceStatus.getOpenApsTimestamp();

@@ -27,7 +27,7 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
         if (loopPlugin.isSuspended) {
             loopPlugin.suspendTo(0)
             configBuilderPlugin.storeSettings("ActionLoopResume")
-            NSUpload.uploadOpenAPSOffline(0.0)
+            loopPlugin.createOfflineEvent(0)
             rxBus.send(EventRefreshOverview("ActionLoopResume"))
             callback.result(PumpEnactResult().success(true).comment(R.string.ok))?.run()
         } else {

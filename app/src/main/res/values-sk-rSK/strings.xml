@@ -1443,4 +1443,10 @@
     <string name="alreadyset">Už nastavené</string>
     <string name="message">Správa</string>
     <string name="clearqueueconfirm">Vymazať frontu? Všetky dáta vo fronte budú stratené!</string>
+    <string name="ebstopsloop">Použitie funkcie rozloženého bolusu zastaví uzavretý okruh na dobu trvania rozloženého bolusu. Naozaj to chcete?</string>
+    <string name="closed_loop_disabled_with_eb">Uzavretý okruh je zastavený kvôli prebiehajúcemu rozloženému bolusu</string>
+    <string name="extended_bolus_short">EB</string>
+    <string name="phonechecker">PhoneChecker</string>
+    <string name="chartmenu">Grafové menu</string>
+    <string name="sensitivity_short">AS</string>
 </resources>

@@ -697,14 +697,14 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                     }
                 }
             });
-            NSUpload.uploadOpenAPSOffline(24 * 60); // upload 24h, we don't know real duration
+            loopPlugin.createOfflineEvent(24 * 60); // upload 24h, we don't know real duration
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.enableloop))) {
             loopPlugin.setPluginEnabled(PluginType.LOOP, true);
             loopPlugin.setFragmentVisible(PluginType.LOOP, true);
             configBuilderPlugin.storeSettings("EnablingLoop");
             updateGUI("suspendmenu");
-            NSUpload.uploadOpenAPSOffline(0);
+            loopPlugin.createOfflineEvent(0);
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.resume)) ||
                 item.getTitle().equals(resourceHelper.gs(R.string.reconnect))) {
@@ -719,7 +719,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 }
             });
             sp.putBoolean(R.string.key_objectiveusereconnect, true);
-            NSUpload.uploadOpenAPSOffline(0);
+            loopPlugin.createOfflineEvent(0);
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.suspendloopfor1h))) {
             loopPlugin.suspendLoop(60);
@@ -1126,7 +1126,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         if (acceptTempButton != null) {
             boolean showAcceptButton = !closedLoopEnabled.value(); // Open mode needed
             showAcceptButton = showAcceptButton && loopPlugin.lastRun != null && loopPlugin.lastRun.lastAPSRun != null; // aps result must exist
-            showAcceptButton = showAcceptButton && (loopPlugin.lastRun.lastOpenModeAccept == null || loopPlugin.lastRun.lastOpenModeAccept.getTime() < loopPlugin.lastRun.lastAPSRun.getTime()); // never accepted or before last result
+            showAcceptButton = showAcceptButton && (loopPlugin.lastRun.lastOpenModeAccept == 0 || loopPlugin.lastRun.lastOpenModeAccept < loopPlugin.lastRun.lastAPSRun.getTime()); // never accepted or before last result
             showAcceptButton = showAcceptButton && loopPlugin.lastRun.constraintsProcessed.isChangeRequested(); // change is requested
 
             if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && loopPlugin.isEnabled(PluginType.LOOP)) {

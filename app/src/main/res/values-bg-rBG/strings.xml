@@ -1443,4 +1443,10 @@
     <string name="alreadyset">Вече направено</string>
     <string name="message">Съобщение</string>
     <string name="clearqueueconfirm">Изтрий опашка? Всички данни ще се загубят!</string>
+    <string name="ebstopsloop">Използване на удължен болус ще спре режим затворен цикъл за времето на болуса. Сигурни ли сте?</string>
+    <string name="closed_loop_disabled_with_eb">Затворен цикъл е недостъпен поради стартиран Удължен болус</string>
+    <string name="extended_bolus_short">УБ</string>
+    <string name="phonechecker">\"PhoneChecker\"</string>
+    <string name="chartmenu">Меню на графиката</string>
+    <string name="sensitivity_short">АS</string>
 </resources>
