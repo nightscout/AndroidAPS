@@ -14,6 +14,8 @@ import android.os.SystemClock;
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -697,7 +699,7 @@ public class LoopPlugin extends PluginBase {
                 }
             });
         }
-        NSUpload.uploadOpenAPSOffline(durationInMinutes);
+        createOfflineEvent(durationInMinutes);
     }
 
     public void suspendLoop(int durationInMinutes) {
@@ -715,7 +717,23 @@ public class LoopPlugin extends PluginBase {
                 }
             }
         });
-        NSUpload.uploadOpenAPSOffline(durationInMinutes);
+        createOfflineEvent(durationInMinutes);
     }
 
+    public void createOfflineEvent(int durationInMinutes) {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("eventType", CareportalEvent.OPENAPSOFFLINE);
+            data.put("duration", durationInMinutes);
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+        CareportalEvent event = new CareportalEvent();
+        event.date = DateUtil.now();
+        event.source = Source.USER;
+        event.eventType = CareportalEvent.OPENAPSOFFLINE;
+        event.json = data.toString();
+        MainApp.getDbHelper().createOrUpdate(event);
+        NSUpload.uploadOpenAPSOffline(event);
+    }
 }
