@@ -78,6 +78,7 @@ public class Notification {
     public static final int USERMESSAGE = 53;
     public static final int OVER_24H_TIME_CHANGE_REQUESTED = 54;
     public static final int INVALID_VERSION = 55;
+    public static final int PERMISSION_SYSTEM_WINDOW = 56;
 
 
     public int id;

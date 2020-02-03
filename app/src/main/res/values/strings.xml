@@ -1102,6 +1102,7 @@
     <string name="startobjective">Start your first objective</string>
     <string name="permission">Permission</string>
     <string name="askforpermission">Ask for permission</string>
+    <string name="needsystemwindowpermission">Application needs system window permission for notifications</string>
     <string name="needlocationpermission">Application needs location permission for BT scan</string>
     <string name="needstoragepermission">Application needs storage permission to be able store log files</string>
     <string name="request">Request</string>
