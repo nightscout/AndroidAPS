@@ -273,7 +273,7 @@
     <string name="smscommunicator_tt_canceled">임시 목표 취소가 완료되었습니다</string>
     <string name="bolusdelivering">%1$.2fU 주입중</string>
     <string name="smscommunicator_remotecommandsallowed">SMS 원격 명령 사용하기</string>
-    <string name="glucosetype_finger">체혈</string>
+    <string name="glucosetype_finger">채혈</string>
     <string name="glucosetype_sensor">센서</string>
     <string name="manual">수동</string>
     <string name="careportal_temporarytarget">임시 목표</string>
@@ -641,7 +641,7 @@
     <string name="enableuam_summary">알리지 않은 식사 감지</string>
     <string name="insulin_oref_peak">IOB 커브 피크 시간</string>
     <string name="insulin_peak_time">피크 시간 [min]</string>
-    <string name="free_peak_oref">자유-피크 Oref</string>
+    <string name="free_peak_oref">사용자지정-피크 Oref</string>
     <string name="rapid_acting_oref">초속효성 Oref</string>
     <string name="ultrarapid_oref">초-초속효성 Oref</string>
     <string name="dia_too_short">DIA %1$f는 너무 짧습니다. 대신 %2$f을 사용하세요!</string>
@@ -783,15 +783,15 @@
     <string name="ago">전</string>
     <string name="format_hours">%1$.2f 시간</string>
     <string name="format_mins">%1$d 분</string>
-    <string name="enablesmbalways">항상 SMB를 사용합니다.</string>
+    <string name="enablesmbalways">항상 SMB 사용하기</string>
     <string name="enablesmbalways_summary">Bolus와 독립적으로 항상 SMB를 사용합니다. G5처럼 잘 필터된 혈당소스와만 사용이 가능합니다.</string>
     <string name="enablesmbaftercarbs">탄수화물 이후 SMB를 사용합니다.</string>
     <string name="enablesmbaftercarbs_summary">탄수화물 이후 6시간동안 SMB를 사용합니다, 0 COB이라도 적용됩니다. G5처럼 잘 필터된 혈당소스와만 사용이 가능합니다.</string>
     <string name="enablesmbwithcob">COB와 SMB를 사용합니다.</string>
     <string name="enablesmbwithcob_summary">활성화된 COB가 있으면 SMB를 사용합니다.</string>
-    <string name="enablesmbwithtemptarget">임시 목표와 SMB를 사용합니다.</string>
+    <string name="enablesmbwithtemptarget">임시 목표에서 SMB 사용하기</string>
     <string name="enablesmbwithtemptarget_summary">활성화된 임시 목표(식사직전, 운동)가 있으면 SMB를 사용합니다.</string>
-    <string name="enablesmbwithhightemptarget">높은임시 목표와 SMB를 사용합니다.</string>
+    <string name="enablesmbwithhightemptarget">높은 임시 목표에서 SMB 사용하기</string>
     <string name="enablesmbwithhightemptarget_summary">활성화된 높은 임시 목표(운동)가 있으면 SMB를 사용합니다.</string>
     <string name="let_temp_basal_run">임시Basal 허용</string>
     <string name="mute">음소거</string>
@@ -946,6 +946,7 @@
     <string name="startobjective">첫번째 목표를 시작하세요.</string>
     <string name="permission">권한</string>
     <string name="askforpermission">권한 요청하기</string>
+    <string name="needsystemwindowpermission">알림에 대한 시스템 창 권한이 필요합니다</string>
     <string name="needlocationpermission">블루투스 스캔을 위해 위치 권한이 필요로 합니다.</string>
     <string name="needstoragepermission">로그 파일을 저장하기 위해 저장공간 권한이 필요로 합니다.</string>
     <string name="request">요청</string>
@@ -1449,4 +1450,8 @@
     <string name="phonechecker">\"전화확인\"</string>
     <string name="chartmenu">차트 메뉴</string>
     <string name="sensitivity_short">AS</string>
+    <string name="loop_smbrequest_time_label">SMB 요청시간</string>
+    <string name="loop_smbexecution_time_label">SMB 실행시간</string>
+    <string name="loop_tbrrequest_time_label">임시 Basal 요청시간</string>
+    <string name="loop_tbrexecution_time_label">임시 Basal 실행시간</string>
 </resources>

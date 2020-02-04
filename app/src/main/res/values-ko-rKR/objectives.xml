@@ -28,13 +28,13 @@
     <string name="accomplished">완료: %1$s</string>
     <string name="objectives_usage_objective">AndroidAPS를 사용하는 방법을 배워봅니다</string>
     <string name="objectives_usage_gate">AndroidAPS에서 다양한 작업을 수행해보세요</string>
-    <string name="objectives_useprofileswitch">10분동안 프로파일 90%를 설정해보세요(개요에서 프로파일명을 길게 눌러보세요)</string>
-    <string name="objectives_usedisconnectpump">샤워한다고 가정하고 펌프를 1시간 동안 펌프를 일시중지하세요 (개요에서 Open Loop를 길게 눌러보세요)</string>
+    <string name="objectives_useprofileswitch">10분동안 프로파일 90%를 설정해보세요(홈에서 프로파일명을 길게 눌러보세요)</string>
+    <string name="objectives_usedisconnectpump">샤워한다고 가정하고 펌프를 1시간 동안 펌프를 일시중지하세요 (홈에서 Open Loop를 길게 눌러보세요)</string>
     <string name="objectives_usereconnectpump">... 그리고 같은 방법으로 펌프를 재연결하세요</string>
-    <string name="objectives_usetemptarget">10분의 사용자정의 임시 목표를 생성해 보세요 (개요에서 본인의 현재 목표혈당을 길게 눌러보세요)</string>
+    <string name="objectives_usetemptarget">사용자정의 임시 목표를 10분동안 실행해보세요 (홈에서 본인의 현재 목표혈당을 길게 눌러보세요)</string>
     <string name="objectives_useactions">구성관리자에서 실행 플러그인을 활성화하고 메뉴에서 표시되게 합니다</string>
     <string name="objectives_useloop">Loop 플러그인 내용을 표시합니다</string>
-    <string name="objectives_usescale">개요의 혈당 차트를 길게 눌러 차트 시간을 변경하세요</string>
+    <string name="objectives_usescale">홈의 혈당 차트를 길게 눌러 차트 시간을 변경하세요</string>
     <string name="objectives_button_enter">입력</string>
     <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">당신이 OpenAPS 사용자였고 당신의 NS가 최소 3개월의 Loop 데이터가 저장되어 있다면, objectives@androidaps.org로 메일을 보내 당신의 NS주소를 알려주시고 목표를 건너뛸 수 있는 코드를 요청하세요. 그리고 개발자로 부터 받은 코드를 입력하세요.</string>
     <string name="codeaccepted">코드 인증</string>

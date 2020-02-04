@@ -1447,4 +1447,6 @@
     <string name="closed_loop_disabled_with_eb">Closed Loop desabilitado por causa da execução do Bólus Estendido</string>
     <string name="extended_bolus_short">BE</string>
     <string name="phonechecker">\"VerificadorTelefone\"</string>
+    <string name="chartmenu">Menu do Gráfico</string>
+    <string name="sensitivity_short">AS</string>
 </resources>
