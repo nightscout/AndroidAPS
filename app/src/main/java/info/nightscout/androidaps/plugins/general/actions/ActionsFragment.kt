@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
 import info.nightscout.androidaps.dialogs.TempTargetDialog
+import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.*
@@ -34,9 +35,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.actions_fragment.*
 import kotlinx.android.synthetic.main.careportal_stats_fragment.*
+import org.slf4j.LoggerFactory
 import java.util.*
 
 class ActionsFragment : Fragment() {
+    private val log = LoggerFactory.getLogger(L.CORE)
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -67,6 +70,7 @@ class ActionsFragment : Fragment() {
         }
         actions_extendedbolus_cancel.setOnClickListener {
             if (TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress) {
+                log.debug("USER ENTRY: CANCEL EXTENDED BOLUS")
                 ConfigBuilderPlugin.getPlugin().commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -86,6 +90,7 @@ class ActionsFragment : Fragment() {
         }
         actions_canceltempbasal.setOnClickListener {
             if (TreatmentsPlugin.getPlugin().isTempBasalInProgress) {
+                log.debug("USER ENTRY: CANCEL TEMP BASAL")
                 ConfigBuilderPlugin.getPlugin().commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {

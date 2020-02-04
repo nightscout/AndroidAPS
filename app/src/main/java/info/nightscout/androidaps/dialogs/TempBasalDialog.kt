@@ -104,8 +104,10 @@ class TempBasalDialog : DialogFragmentWithDate() {
                     }
                 }
                 if (isPercentPump) {
+                    log.debug("USER ENTRY: TEMP BASAL $percent% duration: $durationInMinutes")
                     ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
                 } else {
+                    log.debug("USER ENTRY: TEMP BASAL $absolute duration: $durationInMinutes")
                     ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
                 }
             })

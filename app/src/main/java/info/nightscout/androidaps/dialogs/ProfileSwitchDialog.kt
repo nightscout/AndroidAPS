@@ -97,6 +97,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, MainApp.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+                log.debug("USER ENTRY: PROFILE SWITCH $profile percent: $percent timeshift: $timeShift duration: $duration")
                 ProfileFunctions.doProfileSwitch(profileStore, profile, duration.toInt(), percent, timeShift, eventTime)
             })
         }

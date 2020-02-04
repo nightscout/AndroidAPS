@@ -277,6 +277,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
             OKDialog.showConfirmation(context, MainApp.gs(R.string.boluswizard), HtmlHelper.fromHtml(confirmMessage), Runnable {
                 if (insulinAfterConstraints > 0 || carbs > 0) {
                     if (useSuperBolus) {
+                        log.debug("USER ENTRY: SUPERBOLUS TBR")
                         val loopPlugin = LoopPlugin.getPlugin()
                         if (loopPlugin.isEnabled(PluginType.LOOP)) {
                             loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000)
@@ -325,6 +326,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
                     detailedBolusInfo.boluscalc = nsJSON()
                     detailedBolusInfo.source = Source.USER
                     detailedBolusInfo.notes = notes
+                    log.debug("USER ENTRY: BOLUS insulin $insulinAfterConstraints carbs: $carbs")
                     if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription?.storesCarbInfo == true) {
                         ConfigBuilderPlugin.getPlugin().commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {

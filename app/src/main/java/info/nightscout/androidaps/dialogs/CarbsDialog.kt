@@ -177,6 +177,7 @@ class CarbsDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, MainApp.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                     if (activitySelected) {
+                        log.debug("USER ENTRY: TEMPTARGET ACTIVITY $activityTT duration: $activityTTDuration")
                         val tempTarget = TempTarget()
                             .date(eventTime)
                             .duration(activityTTDuration)
@@ -186,6 +187,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                             .high(Profile.toMgdl(activityTT, ProfileFunctions.getSystemUnits()))
                         TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
                     } else if (eatingSoonSelected) {
+                        log.debug("USER ENTRY: TEMPTARGET EATING SOON $eatingSoonTT duration: $eatingSoonTTDuration")
                         val tempTarget = TempTarget()
                             .date(eventTime)
                             .duration(eatingSoonTTDuration)
@@ -195,6 +197,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                             .high(Profile.toMgdl(eatingSoonTT, ProfileFunctions.getSystemUnits()))
                         TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
                     } else if (hypoSelected) {
+                        log.debug("USER ENTRY: TEMPTARGET HYPO $hypoTT duration: $hypoTTDuration")
                         val tempTarget = TempTarget()
                             .date(eventTime)
                             .duration(hypoTTDuration)
@@ -206,8 +209,10 @@ class CarbsDialog : DialogFragmentWithDate() {
                     }
                     if (carbsAfterConstraints > 0) {
                         if (duration == 0) {
+                            log.debug("USER ENTRY: CARBS $carbsAfterConstraints time: $time")
                             CarbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes)
                         } else {
+                            log.debug("USER ENTRY: CARBS $carbsAfterConstraints time: $time duration: $duration")
                             CarbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
                             NSUpload.uploadEvent(CareportalEvent.NOTE, time - 2000, MainApp.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
