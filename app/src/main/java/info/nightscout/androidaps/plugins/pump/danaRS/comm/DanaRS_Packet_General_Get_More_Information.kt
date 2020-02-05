@@ -6,6 +6,7 @@ import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.logging.L.isEnabled
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.utils.DateUtil
 import java.util.*
 
 class DanaRS_Packet_General_Get_More_Information(
@@ -54,7 +55,7 @@ class DanaRS_Packet_General_Get_More_Information(
             aapsLogger.debug(LTag.PUMPCOMM, "Daily total units: " + danaRPump.dailyTotalUnits.toString() + " U")
             aapsLogger.debug(LTag.PUMPCOMM, "Is extended in progress: " + danaRPump.isExtendedInProgress)
             aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus remaining minutes: " + danaRPump.extendedBolusRemainingMinutes)
-            aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + lastBolusTime.toLocaleString())
+            aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + DateUtil.dateAndTimeAndSecondsString(lastBolusTime.time))
             aapsLogger.debug(LTag.PUMPCOMM, "Last bolus amount: " + danaRPump.lastBolusAmount)
         }
     }

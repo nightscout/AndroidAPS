@@ -146,7 +146,7 @@ class CareDialog : DialogFragmentWithDate() {
             json.put("glucoseType", type)
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
-            actions.add(MainApp.gs(R.string.careportal_newnstreatment_duration_label) + ": " + MainApp.gs(R.string.format_mins, actions_care_duration.value.toInt()))
+            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, actions_care_duration.value.toInt()))
             json.put("duration", actions_care_duration.value.toInt())
         }
         val notes = notes.text.toString()

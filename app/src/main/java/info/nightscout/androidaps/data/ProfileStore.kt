@@ -1,15 +1,15 @@
 package info.nightscout.androidaps.data
 
 import androidx.collection.ArrayMap
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONException
 import org.json.JSONObject
-import org.slf4j.LoggerFactory
 import java.util.*
+import javax.inject.Inject
 
 class ProfileStore(val data: JSONObject) {
-    private val log = StacktraceLoggerWrapper.getLogger(ProfileStore::class.java)
+    @Inject lateinit var aapsLogger: AAPSLogger
 
     private val cachedObjects = ArrayMap<String, Profile>()
 
@@ -17,7 +17,7 @@ class ProfileStore(val data: JSONObject) {
         try {
             if (data.has("store")) return data.getJSONObject("store")
         } catch (e: JSONException) {
-            log.error("Unhandled exception", e)
+            aapsLogger.error("Unhandled exception", e)
         }
         return null
     }
