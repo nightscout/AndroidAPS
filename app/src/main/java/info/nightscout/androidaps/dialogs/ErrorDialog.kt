@@ -13,7 +13,6 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.services.AlarmSoundService
 import kotlinx.android.synthetic.main.dialog_error.*
 import javax.inject.Inject
@@ -39,6 +38,7 @@ class ErrorDialog : DaggerDialogFragment() {
             bundle.getString("title")?.let { title = it }
             sound = bundle.getInt("sound", R.raw.error)
         }
+        aapsLogger.debug("Error dialog displayed")
         return inflater.inflate(R.layout.dialog_error, container, false)
     }
 
@@ -47,11 +47,11 @@ class ErrorDialog : DaggerDialogFragment() {
 
         error_title.text = title
         overview_error_ok.setOnClickListener {
-            aapsLogger.debug(LTag.UI, "Error dialog ok button pressed")
+            aapsLogger.debug("USER ENTRY: Error dialog ok button pressed")
             dismiss()
         }
         overview_error_mute.setOnClickListener {
-            aapsLogger.debug(LTag.UI, "Error dialog mute button pressed")
+            aapsLogger.debug("USER ENTRY: Error dialog mute button pressed")
             stopAlarm()
         }
         startAlarm()

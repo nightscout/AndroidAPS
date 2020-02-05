@@ -189,6 +189,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                     when {
                         activitySelected   -> {
+                            aapsLogger.debug("USER ENTRY: TEMPTARGET ACTIVITY $activityTT duration: $activityTTDuration")
                             val tempTarget = TempTarget()
                                 .date(System.currentTimeMillis())
                                 .duration(activityTTDuration)
@@ -200,6 +201,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         eatingSoonSelected -> {
+                            aapsLogger.debug("USER ENTRY: TEMPTARGET EATING SOON $eatingSoonTT duration: $eatingSoonTTDuration")
                             val tempTarget = TempTarget()
                                 .date(System.currentTimeMillis())
                                 .duration(eatingSoonTTDuration)
@@ -211,6 +213,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                         }
 
                         hypoSelected       -> {
+                            aapsLogger.debug("USER ENTRY: TEMPTARGET HYPO $hypoTT duration: $hypoTTDuration")
                             val tempTarget = TempTarget()
                                 .date(System.currentTimeMillis())
                                 .duration(hypoTTDuration)
@@ -223,8 +226,10 @@ class CarbsDialog : DialogFragmentWithDate() {
                     }
                     if (carbsAfterConstraints > 0) {
                         if (duration == 0) {
+                            aapsLogger.debug("USER ENTRY: CARBS $carbsAfterConstraints time: $time")
                             CarbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes)
                         } else {
+                            aapsLogger.debug("USER ENTRY: CARBS $carbsAfterConstraints time: $time duration: $duration")
                             CarbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
                             NSUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }

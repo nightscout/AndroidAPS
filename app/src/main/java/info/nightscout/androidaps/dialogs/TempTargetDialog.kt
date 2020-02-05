@@ -133,6 +133,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+                aapsLogger.debug("USER ENTRY: TEMP TARGET $target duration: $duration")
                 if (target == 0.0 || duration == 0.0) {
                     val tempTarget = TempTarget()
                         .date(eventTime)

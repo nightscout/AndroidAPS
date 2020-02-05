@@ -946,6 +946,7 @@
     <string name="startobjective">Starte deine erste Zielsetzung</string>
     <string name="permission">Berechtigung</string>
     <string name="askforpermission">Nach Berechtigung fragen</string>
+    <string name="needsystemwindowpermission">Die App benötigt die Systemberechtigung für App-Benachrichtigungen</string>
     <string name="needlocationpermission">AndroidAPS benötigt die Standortfreigabe für den BT-Scan.</string>
     <string name="needstoragepermission">AndroidAPS benötigt Zugriff auf den Speicher, um Log-Dateien speichern zu können.</string>
     <string name="request">Anfordern</string>
@@ -1450,4 +1451,8 @@ Unerwartetes Verhalten.</string>
     <string name="phonechecker">\"PhoneChecker\"</string>
     <string name="chartmenu">Diagrammmenü</string>
     <string name="sensitivity_short">AS</string>
+    <string name="loop_smbrequest_time_label">SMB Anfragezeit</string>
+    <string name="loop_smbexecution_time_label">SMB Ausführungszeit</string>
+    <string name="loop_tbrrequest_time_label">Temp. BR Anfragezeit</string>
+    <string name="loop_tbrexecution_time_label">Temp. BR Ausführungszeit</string>
 </resources>

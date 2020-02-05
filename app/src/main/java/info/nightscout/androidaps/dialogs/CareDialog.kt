@@ -6,7 +6,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.annotation.StringRes
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
@@ -88,14 +87,16 @@ class CareDialog : DialogFragmentWithDate() {
             EventType.BGCHECK        -> {
                 action_care_duration_layout.visibility = View.GONE
             }
+
             EventType.SENSOR_INSERT,
             EventType.BATTERY_CHANGE -> {
                 action_care_bg_layout.visibility = View.GONE
                 actions_care_bgsource.visibility = View.GONE
                 action_care_duration_layout.visibility = View.GONE
             }
+
             EventType.NOTE,
-            EventType.EXERCISE -> {
+            EventType.EXERCISE       -> {
                 action_care_bg_layout.visibility = View.GONE
                 actions_care_bgsource.visibility = View.GONE
             }
@@ -184,6 +185,7 @@ class CareDialog : DialogFragmentWithDate() {
                     EventType.EXERCISE       -> CareportalEvent.EXERCISE
                 }
                 careportalEvent.json = json.toString()
+                aapsLogger.debug("USER ENTRY: CAREPORTAL ${careportalEvent.eventType} json: ${careportalEvent.json}")
                 MainApp.getDbHelper().createOrUpdate(careportalEvent)
                 NSUpload.uploadCareportalEntryToNS(json)
             }, null)

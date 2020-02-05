@@ -116,13 +116,16 @@ class FillDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.primefill), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                     if (insulinAfterConstraints > 0) {
+                        aapsLogger.debug("USER ENTRY: PRIME BOLUS $insulinAfterConstraints")
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
                     if (siteChange) {
+                        aapsLogger.debug("USER ENTRY: SITE CHANGE")
                         generateCareportalEvent(CareportalEvent.SITECHANGE, eventTime, notes)
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
+                        aapsLogger.debug("USER ENTRY: INSULIN CHANGE")
                         generateCareportalEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
                     }
                 }, null)

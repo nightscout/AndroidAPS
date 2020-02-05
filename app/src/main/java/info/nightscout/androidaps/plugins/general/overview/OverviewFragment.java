@@ -685,6 +685,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         if (profile == null)
             return true;
         if (item.getTitle().equals(resourceHelper.gs(R.string.disableloop))) {
+            aapsLogger.debug("USER ENTRY: LOOP DISABLED");
             loopPlugin.setPluginEnabled(PluginType.LOOP, false);
             loopPlugin.setFragmentVisible(PluginType.LOOP, false);
             configBuilderPlugin.storeSettings("DisablingLoop");
@@ -700,6 +701,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             loopPlugin.createOfflineEvent(24 * 60); // upload 24h, we don't know real duration
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.enableloop))) {
+            aapsLogger.debug("USER ENTRY: LOOP ENABLED");
             loopPlugin.setPluginEnabled(PluginType.LOOP, true);
             loopPlugin.setFragmentVisible(PluginType.LOOP, true);
             configBuilderPlugin.storeSettings("EnablingLoop");
@@ -708,6 +710,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.resume)) ||
                 item.getTitle().equals(resourceHelper.gs(R.string.reconnect))) {
+            aapsLogger.debug("USER ENTRY: RESUME");
             loopPlugin.suspendTo(0L);
             updateGUI("suspendmenu");
             configBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
@@ -722,39 +725,48 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             loopPlugin.createOfflineEvent(0);
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.suspendloopfor1h))) {
+            aapsLogger.debug("USER ENTRY: SUSPEND 1h");
             loopPlugin.suspendLoop(60);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.suspendloopfor2h))) {
+            aapsLogger.debug("USER ENTRY: SUSPEND 2h");
             loopPlugin.suspendLoop(120);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.suspendloopfor3h))) {
+            aapsLogger.debug("USER ENTRY: SUSPEND 3h");
             loopPlugin.suspendLoop(180);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.suspendloopfor10h))) {
+            aapsLogger.debug("USER ENTRY: SUSPEND 10h");
             loopPlugin.suspendLoop(600);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.disconnectpumpfor15m))) {
+            aapsLogger.debug("USER ENTRY: DISCONNECT 15m");
             loopPlugin.disconnectPump(15, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.disconnectpumpfor30m))) {
+            aapsLogger.debug("USER ENTRY: DISCONNECT 30m");
             loopPlugin.disconnectPump(30, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.disconnectpumpfor1h))) {
+            aapsLogger.debug("USER ENTRY: DISCONNECT 1h");
             loopPlugin.disconnectPump(60, profile);
             sp.putBoolean(R.string.key_objectiveusedisconnect, true);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.disconnectpumpfor2h))) {
+            aapsLogger.debug("USER ENTRY: DISCONNECT 2h");
             loopPlugin.disconnectPump(120, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.disconnectpumpfor3h))) {
+            aapsLogger.debug("USER ENTRY: DISCONNECT 3h");
             loopPlugin.disconnectPump(180, profile);
             updateGUI("suspendmenu");
             return true;
@@ -772,6 +784,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             if (manager != null)
                 pvd.show(manager, "ProfileViewDialog");
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.eatingsoon))) {
+            aapsLogger.debug("USER ENTRY: TEMP TARGET EATING SOON");
             double target = Profile.toMgdl(defaultValueHelper.determineEatingSoonTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(System.currentTimeMillis())
@@ -782,6 +795,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                     .high(target);
             treatmentsPlugin.addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.activity))) {
+            aapsLogger.debug("USER ENTRY: TEMP TARGET ACTIVITY");
             double target = Profile.toMgdl(defaultValueHelper.determineActivityTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
@@ -792,6 +806,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                     .high(target);
             treatmentsPlugin.addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.hypo))) {
+            aapsLogger.debug("USER ENTRY: TEMP TARGET HYPO");
             double target = Profile.toMgdl(defaultValueHelper.determineHypoTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
@@ -806,6 +821,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             if (manager != null)
                 new TempTargetDialog().show(manager, "Overview");
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.cancel))) {
+            aapsLogger.debug("USER ENTRY: TEMP TARGET CANCEL");
             TempTarget tempTarget = new TempTarget()
                     .source(Source.USER)
                     .date(now())
@@ -922,6 +938,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             loopPlugin.invoke("Accept temp button", false);
             if (loopPlugin.lastRun != null && loopPlugin.lastRun.lastAPSRun != null && loopPlugin.lastRun.constraintsProcessed.isChangeRequested()) {
                 OKDialog.showConfirmation(context, resourceHelper.gs(R.string.pump_tempbasal_label), loopPlugin.lastRun.constraintsProcessed.toSpanned(), () -> {
+                    aapsLogger.debug("USER ENTRY: ACCEPT TEMP BASAL");
                     hideTempRecommendation();
                     clearNotification();
                     loopPlugin.acceptChangeRequest();
@@ -937,7 +954,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         final PumpInterface pump = configBuilderPlugin.getActivePump();
 
         final QuickWizardEntry quickWizardEntry = quickWizard.getActive();
-        if (quickWizardEntry != null && actualBg != null && profile != null && pump != null) {
+        if (quickWizardEntry != null && actualBg != null && profile != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
             final BolusWizard wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true);
 
