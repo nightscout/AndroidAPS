@@ -133,20 +133,20 @@ public class AndroidPermission {
     }
 
     public static synchronized void notifyForSystemWindowPermissions(Activity activity) {
-        if (!Settings.canDrawOverlays(activity)) {
-            NotificationWithAction notification = new NotificationWithAction(Notification.PERMISSION_SYSTEM_WINDOW, MainApp.gs(R.string.needsystemwindowpermission), Notification.URGENT);
-            notification.action(R.string.request, () -> {
-                        // Check if Android Q or higher
-                        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
-                            // Show alert dialog to the user saying a separate permission is needed
-                            // Launch the settings activity if the user prefers
-                            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                                    Uri.parse("package:" + activity.getPackageName()));
-                            activity.startActivity(intent);
-                        }
-                    });
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
-        } else
-            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PERMISSION_SYSTEM_WINDOW));
+        // Check if Android Q or higher
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            if (!Settings.canDrawOverlays(activity)) {
+                NotificationWithAction notification = new NotificationWithAction(Notification.PERMISSION_SYSTEM_WINDOW, MainApp.gs(R.string.needsystemwindowpermission), Notification.URGENT);
+                notification.action(R.string.request, () -> {
+                    // Show alert dialog to the user saying a separate permission is needed
+                    // Launch the settings activity if the user prefers
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + activity.getPackageName()));
+                    activity.startActivity(intent);
+                });
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
+            } else
+                RxBus.INSTANCE.send(new EventDismissNotification(Notification.PERMISSION_SYSTEM_WINDOW));
+        }
     }
 }
