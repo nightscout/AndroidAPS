@@ -1524,6 +1524,12 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             data.put("created_at", DateUtil.toISOString(date));
             data.put("eventType", CareportalEvent.NOTE);
             data.put("notes", note);
+            CareportalEvent careportalEvent = new CareportalEvent();
+            careportalEvent.date = date;
+            careportalEvent.source = Source.USER;
+            careportalEvent.eventType = CareportalEvent.NOTE;
+            careportalEvent.json = data.toString();
+            MainApp.getDbHelper().createOrUpdate(careportalEvent);
             NSUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
@@ -1552,6 +1558,12 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
             data.put("created_at", DateUtil.toISOString(date));
             data.put("eventType", event);
+            CareportalEvent careportalEvent = new CareportalEvent();
+            careportalEvent.date = date;
+            careportalEvent.source = Source.USER;
+            careportalEvent.eventType = event;
+            careportalEvent.json = data.toString();
+            MainApp.getDbHelper().createOrUpdate(careportalEvent);
             NSUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
