@@ -4,6 +4,9 @@ import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 
 fun ViewInteraction.isDisplayed(): Boolean {
     try {
@@ -25,3 +28,8 @@ fun ViewInteraction.waitAndPerform(viewActions: ViewAction): ViewInteraction? {
     return perform(viewActions)
 }
 
+fun clickOkInDialog() {
+    val uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+    val button = uiDevice.findObject(UiSelector().clickable(true).checkable(false).index(1))
+    if (button.exists() && button.isEnabled) button.click()
+}
