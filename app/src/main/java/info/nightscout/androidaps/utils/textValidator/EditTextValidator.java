@@ -93,4 +93,6 @@ public interface EditTextValidator {
 
     int TEST_MULTI_PHONE = 19;
 
+    int TEST_PIN_STRENGTH = 20;
+
 }

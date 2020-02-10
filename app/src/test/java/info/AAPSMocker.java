@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.powermock.api.mockito.PowerMockito;
 
+import java.util.Base64;
 import java.util.Locale;
 
 import info.nightscout.androidaps.Constants;
@@ -27,6 +28,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorP
 import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.CommandQueue;
+import info.nightscout.androidaps.utils.OneTimePassword;
 import info.nightscout.androidaps.utils.SP;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -294,4 +296,7 @@ public class AAPSMocker {
         return iobCobCalculatorPlugin;
     }
 
+    public static void mockOTP() {
+        PowerMockito.when(OneTimePassword.getInstance().isEnabled()).thenReturn(false);
+    }
 }

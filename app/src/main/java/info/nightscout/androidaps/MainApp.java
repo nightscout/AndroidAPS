@@ -106,6 +106,7 @@ import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.ActivityMonitor;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
+import info.nightscout.androidaps.utils.OneTimePassword;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import io.fabric.sdk.android.Fabric;
@@ -137,6 +138,7 @@ public class MainApp extends DaggerApplication {
     @Inject FabricPrivacy fabricPrivacy;
     @Inject ResourceHelper resourceHelper;
     @Inject VersionCheckerUtils versionCheckersUtils;
+    @Inject OneTimePassword oneTimePassword;
 
     @Inject ActionsPlugin actionsPlugin;
     @Inject AutomationPlugin automationPlugin;

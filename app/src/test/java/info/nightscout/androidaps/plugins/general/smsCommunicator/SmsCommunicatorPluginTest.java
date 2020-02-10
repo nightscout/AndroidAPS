@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.general.smsCommunicator;
 
 import android.telephony.SmsManager;
 
+import com.google.firebase.auth.OAuthCredential;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +43,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.OneTimePassword;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.XdripCalibrations;
@@ -68,6 +71,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class SmsCommunicatorPluginTest {
 
     private SmsCommunicatorPlugin smsCommunicatorPlugin;
+    private OneTimePassword otp;
     private LoopPlugin loopPlugin;
 
     private boolean hasBeenRun = false;
@@ -87,7 +91,7 @@ public class SmsCommunicatorPluginTest {
         Assert.assertTrue(smsCommunicatorPlugin.isCommand("BOLUS", ""));
         smsCommunicatorPlugin.setMessageToConfirm(null);
         Assert.assertFalse(smsCommunicatorPlugin.isCommand("BLB", ""));
-        smsCommunicatorPlugin.setMessageToConfirm(new AuthRequest(smsCommunicatorPlugin, new Sms("1234", "ddd"), "RequestText", "ccode", new SmsAction() {
+        smsCommunicatorPlugin.setMessageToConfirm(new AuthRequest(smsCommunicatorPlugin, new Sms("1234", "ddd"), otp, "RequestText", "ccode", new SmsAction() {
             @Override
             public void run() {
             }
@@ -892,6 +896,7 @@ public class SmsCommunicatorPluginTest {
         AAPSMocker.mockConfigBuilder();
         AAPSMocker.mockCommandQueue();
         AAPSMocker.mockNSUpload();
+        AAPSMocker.mockOTP();
         ConstraintChecker constraintChecker = AAPSMocker.mockConstraintsChecker();
 
         BgReading reading = new BgReading();

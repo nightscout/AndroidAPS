@@ -27,6 +27,8 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSClientFragment
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorFragment
+import info.nightscout.androidaps.plugins.general.smsCommunicator.fragments.SmsCommunicatorLogFragment
+import info.nightscout.androidaps.plugins.general.smsCommunicator.fragments.SmsCommunicatorOtpFragment
 import info.nightscout.androidaps.plugins.general.tidepool.TidepoolFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
@@ -69,8 +71,9 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesMedtronicFragment(): MedtronicFragment
     @ContributesAndroidInjector abstract fun contributesNSProfileFragment(): NSProfileFragment
     @ContributesAndroidInjector abstract fun contributesNSClientFragment(): NSClientFragment
-    @ContributesAndroidInjector
-    abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
+    @ContributesAndroidInjector abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
+    @ContributesAndroidInjector abstract fun contributesSmsCommunicatorLogFragment(): SmsCommunicatorLogFragment
+    @ContributesAndroidInjector abstract fun contributesSmsCommunicatorOtpFragment(): SmsCommunicatorOtpFragment
 
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsFragment(): TreatmentsFragment

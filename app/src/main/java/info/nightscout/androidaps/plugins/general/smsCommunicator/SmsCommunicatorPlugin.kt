@@ -56,7 +56,8 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val activePlugin: ActivePluginProvider,
     private val commandQueue: CommandQueueProvider,
     private val loopPlugin: LoopPlugin,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private var otp: OneTimePassword
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(SmsCommunicatorFragment::class.java.name)
@@ -354,7 +355,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val passCode = generatePasscode()
                     val reply = String.format(resourceHelper.gs(R.string.smscommunicator_suspendreplywithcode), duration, passCode)
                     receivedSms.processed = true
-                    messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction(duration) {
+                    messageToConfirm = AuthRequest(this, resourceHelper, otp, receivedSms, reply, passCode, object : SmsAction(duration) {
                         override fun run() {
                             commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
@@ -469,7 +470,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val reply = String.format(resourceHelper.gs(R.string.smscommunicator_profilereplywithcode), list[pindex - 1], percentage, passCode)
                     receivedSms.processed = true
                     val finalPercentage = percentage
-                    messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction(list[pindex - 1] as String, finalPercentage) {
+                    messageToConfirm = AuthRequest(this, resourceHelper, otp, receivedSms, reply, passCode, object : SmsAction(list[pindex - 1] as String, finalPercentage) {
                         override fun run() {
                             activePlugin.activeTreatments.doProfileSwitch(store, list[pindex - 1] as String, 0, finalPercentage, 0, DateUtil.now())
                             sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.profileswitchcreated)))
@@ -486,7 +487,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val passCode = generatePasscode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_basalstopreplywithcode), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction() {
+            messageToConfirm = AuthRequest(this, resourceHelper, otp, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
                     commandQueue.cancelTempBasal(true, object : Callback() {
                         override fun run() {
@@ -516,7 +517,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 val passCode = generatePasscode()
                 val reply = String.format(resourceHelper.gs(R.string.smscommunicator_basalpctreplywithcode), tempBasalPct, duration, passCode)
                 receivedSms.processed = true
-                messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction(tempBasalPct, duration) {
+                messageToConfirm = AuthRequest(this, resourceHelper, otp, receivedSms, reply, passCode, object : SmsAction(tempBasalPct, duration) {
                     override fun run() {
                         commandQueue.tempBasalPercent(anInteger(), secondInteger(), true, profile, object : Callback() {
                             override fun run() {
@@ -548,7 +549,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 val passCode = generatePasscode()
                 val reply = String.format(resourceHelper.gs(R.string.smscommunicator_basalreplywithcode), tempBasal, duration, passCode)
                 receivedSms.processed = true
-                messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction(tempBasal, duration) {
+                messageToConfirm = AuthRequest(this, resourceHelper, otp, receivedSms, reply, passCode, object : SmsAction(tempBasal, duration) {
                     override fun run() {
                         commandQueue.tempBasalAbsolute(aDouble(), secondInteger(), true, profile, object : Callback() {
                             override fun run() {
@@ -575,7 +576,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val passCode = generatePasscode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_extendedstopreplywithcode), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction() {
+            messageToConfirm = AuthRequest(this, resourceHelper, otp, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
                     commandQueue.cancelExtended(object : Callback() {
                         override fun run() {
@@ -603,7 +604,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 val passCode = generatePasscode()
                 val reply = String.format(resourceHelper.gs(R.string.smscommunicator_extendedreplywithcode), extended, duration, passCode)
                 receivedSms.processed = true
-                messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction(extended, duration) {
+                messageToConfirm = AuthRequest(this, resourceHelper, otp, receivedSms, reply, passCode, object : SmsAction(extended, duration) {
                     override fun run() {
                         commandQueue.extendedBolus(aDouble(), secondInteger(), object : Callback() {
                             override fun run() {
@@ -638,7 +639,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             else
                 String.format(resourceHelper.gs(R.string.smscommunicator_bolusreplywithcode), bolus, passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction(bolus) {
+            messageToConfirm = AuthRequest(this, resourceHelper, otp, receivedSms, reply, passCode, object : SmsAction(bolus) {
                 override fun run() {
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.insulin = aDouble()
@@ -714,7 +715,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val passCode = generatePasscode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_carbsreplywithcode), grams, DateUtil.timeString(time), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction(grams, time) {
+            messageToConfirm = AuthRequest(this, resourceHelper, otp, receivedSms, reply, passCode, object : SmsAction(grams, time) {
                 override fun run() {
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.carbs = anInteger().toDouble()
@@ -746,7 +747,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val passCode = generatePasscode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_temptargetwithcode), splitted[1].toUpperCase(Locale.getDefault()), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction() {
+            messageToConfirm = AuthRequest(this, resourceHelper, otp, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
                     val units = profileFunction.getUnits()
                     var keyDuration = 0
@@ -801,7 +802,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val passCode = generatePasscode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_temptargetcancel), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction() {
+            messageToConfirm = AuthRequest(this, resourceHelper, otp, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
                     val tempTarget = TempTarget()
                         .source(Source.USER)
@@ -825,7 +826,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val passCode = generatePasscode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_stopsmswithcode), passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction() {
+            messageToConfirm = AuthRequest(this, resourceHelper, otp, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
                     sp.putBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)
                     val replyText = String.format(resourceHelper.gs(R.string.smscommunicator_stoppedsms))
@@ -841,7 +842,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val passCode = generatePasscode()
             val reply = String.format(resourceHelper.gs(R.string.smscommunicator_calibrationreplywithcode), cal, passCode)
             receivedSms.processed = true
-            messageToConfirm = AuthRequest(this, resourceHelper, receivedSms, reply, passCode, object : SmsAction(cal) {
+            messageToConfirm = AuthRequest(this, resourceHelper, otp, receivedSms, reply, passCode, object : SmsAction(cal) {
                 override fun run() {
                     val result = XdripCalibrations.sendIntent(aDouble)
                     if (result) sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_calibrationsent))) else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_calibrationfailed)))
@@ -898,6 +899,12 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun generatePasscode(): String {
+
+        if (otp.isEnabled()) {
+            // this not realy generate password - rather info to use Authenticator TOTP instead
+            return resourceHelper.gs(R.string.smscommunicator_code_from_authenticator_for, otp.name());
+        }
+
         val startChar1 = 'A'.toInt() // on iphone 1st char is uppercase :)
         var passCode = Character.toString((startChar1 + Math.random() * ('z' - 'a' + 1)).toChar())
         val startChar2: Int = if (Math.random() > 0.5) 'a'.toInt() else 'A'.toInt()

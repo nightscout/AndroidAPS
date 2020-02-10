@@ -27,6 +27,25 @@
             validate:minNumber="3"
             validate:testType="numericRange" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_smscommunicator_otp_enabled"
+            android:title="@string/smscommunicator_otp_enabled"
+            android:summary="@string/smscommunicator_otp_enabled_summary"/>
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:key="@string/key_smscommunicator_otp_pin"
+            android:summary="@string/smscommunicator_otp_pin_summary"
+            android:title="@string/smscommunicator_otp_pin"
+            validate:testType="pinStrength" />
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:key="@string/key_smscommunicator_otp_name"
+            android:summary="@string/smscommunicator_otp_name_summary"
+            android:title="@string/smscommunicator_otp_name"
+            validate:testType="personName" />
+
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
