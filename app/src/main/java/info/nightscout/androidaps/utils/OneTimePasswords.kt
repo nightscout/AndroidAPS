@@ -48,7 +48,7 @@ class OneTimePassword @Inject constructor(
      */
     fun name(): String {
         val defaultUserName = resourceHelper.gs(R.string.smscommunicator_default_user_display_name)
-        var userName = sp.getString(R.string.key_smscommunicator_otp_name, defaultUserName).trim()
+        var userName = sp.getString(R.string.key_smscommunicator_otp_name, defaultUserName).replace(":", "").trim()
         if (userName.length == 0)
             userName = defaultUserName
         return userName
