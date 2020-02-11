@@ -1,22 +1,30 @@
 package info.nightscout.androidaps.plugins.general.maintenance.formats
 
-import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
-import java.io.*
+import info.nightscout.androidaps.R
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.storage.Storage
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
+class ClassicPrefsFormat @Inject constructor(
+    private var resourceHelper: ResourceHelper,
+    private var storage: Storage
+) : PrefsFormat {
 
-object ClassicPrefsFormat : PrefsFormat {
+    companion object {
+        val FORMAT_KEY = "aaps_old"
+    }
 
-    const val FORMAT_KEY = "old"
-
-    override fun savePreferences(file:File, prefs: Prefs)  {
+    override fun savePreferences(file: File, prefs: Prefs, masterPassword: String?) {
         try {
-            val fw = FileWriter(file)
-            val pw = PrintWriter(fw)
-            for ((key, value) in prefs.values) {
-                pw.println(key + "::" + value)
+            val contents = prefs.values.entries.joinToString("\n") { entry ->
+                "${entry.key}::${entry.value}"
             }
-            pw.close()
-            fw.close()
+            storage.putFileContents(file, contents)
         } catch (e: FileNotFoundException) {
             throw PrefFileNotFoundError(file.absolutePath)
         } catch (e: IOException) {
@@ -24,31 +32,29 @@ object ClassicPrefsFormat : PrefsFormat {
         }
     }
 
-    override fun loadPreferences(file:File): Prefs {
-        var line: String
+    override fun loadPreferences(file: File, masterPassword: String?): Prefs {
         var lineParts: Array<String>
         val entries: MutableMap<String, String> = mutableMapOf()
         val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = mutableMapOf()
         try {
-            val reader = BufferedReader(FileReader(file))
-            while (reader.readLine().also { line = it } != null) {
+
+            val rawLines = storage.getFileContents(file).split("\n")
+            rawLines.forEach { line ->
                 lineParts = line.split("::").toTypedArray()
                 if (lineParts.size == 2) {
                     entries[lineParts[0]] = lineParts[1]
                 }
             }
-            reader.close()
 
-            metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(FORMAT_KEY, PrefsStatus.WARN)
+            metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(FORMAT_KEY, PrefsStatus.WARN, resourceHelper.gs(R.string.metadata_warning_outdated_format))
 
             return Prefs(entries, metadata)
 
-        }  catch (e: FileNotFoundException) {
+        } catch (e: FileNotFoundException) {
             throw PrefFileNotFoundError(file.absolutePath)
         } catch (e: IOException) {
             throw PrefIOError(file.absolutePath)
         }
     }
-
 
 }
