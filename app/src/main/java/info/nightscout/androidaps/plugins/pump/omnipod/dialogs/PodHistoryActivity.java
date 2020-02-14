@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil;
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistory;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
@@ -73,29 +74,24 @@ public class PodHistoryActivity extends NoSplashActivity {
 
         this.filteredHistoryList.clear();
 
+        LOG.debug("Items on full list: {}", fullHistoryList.size());
 
-        //LOG.debug("Items on full list: {}", list.size());
-
-        this.filteredHistoryList.addAll(fullHistoryList);
-
-        // TODO grouping
-
-//        if (group == PumpHistoryEntryGroup.All) {
-//            this.filteredHistoryList.addAll(list);
-//        } else {
-//            for (PumpHistoryEntry pumpHistoryEntry : list) {
-//                if (pumpHistoryEntry.getEntryType().getGroup() == group) {
-//                    this.filteredHistoryList.add(pumpHistoryEntry);
-//                }
-//            }
-//        }
+        if (group == PumpHistoryEntryGroup.All) {
+            this.filteredHistoryList.addAll(fullHistoryList);
+        } else {
+            for (PodHistory pumpHistoryEntry : fullHistoryList) {
+                if (pumpHistoryEntry.getPodDbEntryType().getGroup() == group) {
+                    this.filteredHistoryList.add(pumpHistoryEntry);
+                }
+            }
+        }
 
         if (this.recyclerViewAdapter != null) {
             this.recyclerViewAdapter.setHistoryList(this.filteredHistoryList);
             this.recyclerViewAdapter.notifyDataSetChanged();
         }
 
-        //LOG.debug("Items on filtered list: {}", filteredHistoryList.size());
+        LOG.debug("Items on filtered list: {}", filteredHistoryList.size());
     }
 
 
