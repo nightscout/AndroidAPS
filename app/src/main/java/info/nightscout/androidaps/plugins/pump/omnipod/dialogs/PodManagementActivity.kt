@@ -12,10 +12,12 @@ import info.nightscout.androidaps.activities.NoSplashActivity
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress
+import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.defs.PodActionType
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.FullInitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.RemovePodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.ShortInitPodWizardModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitPodRefreshAction
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
@@ -71,7 +73,7 @@ class PodManagementActivity : NoSplashActivity() {
     fun initPodAction() {
 
         val pagerSettings = WizardPagerSettings()
-        var refreshAction = InitPodRefreshAction(this)
+        var refreshAction = InitPodRefreshAction(this, PodActionType.InitPod)
 
         pagerSettings.setWizardStepsWayType(WizardStepsWayType.CancelNext)
         pagerSettings.setFinishStringResourceId(R.string.close)
@@ -99,7 +101,7 @@ class PodManagementActivity : NoSplashActivity() {
 
     fun removePodAction() {
         val pagerSettings = WizardPagerSettings()
-        var refreshAction = InitPodRefreshAction(this)
+        var refreshAction = InitPodRefreshAction(this, PodActionType.RemovePod)
 
         pagerSettings.setWizardStepsWayType(WizardStepsWayType.CancelNext)
         pagerSettings.setFinishStringResourceId(R.string.close)
@@ -124,6 +126,7 @@ class PodManagementActivity : NoSplashActivity() {
         OKDialog.showConfirmation(this,
                 MainApp.gs(R.string.omnipod_cmd_reset_pod_desc), Thread {
             AapsOmnipodManager.getInstance().resetPodStatus()
+            OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod)
             refreshButtons()
         })
     }
@@ -144,6 +147,13 @@ class PodManagementActivity : NoSplashActivity() {
 
         initpod_remove_pod.isEnabled = isPodSessionActive
         initpod_reset_pod.isEnabled = isPodSessionActive
+
+        if (OmnipodUtil.getDriverState()==OmnipodDriverState.NotInitalized) {
+            // if rileylink is not running we disable all operations
+            initpod_init_pod.isEnabled = false
+            initpod_remove_pod.isEnabled = false
+            initpod_reset_pod.isEnabled = false
+        }
     }
 
 }
