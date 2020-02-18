@@ -40,11 +40,12 @@ public class BatteryStatusDTO {
 
 
     public String toString() {
-        return String.format(Locale.ENGLISH, "BatteryStatusDTO [voltage=%.2f, alkaline=%d, lithium=%d, niZn={}]",
+        return String.format(Locale.ENGLISH, "BatteryStatusDTO [voltage=%.2f, alkaline=%d, lithium=%d, niZn=%d, nimh=%d]",
                 voltage == null ? 0.0f : voltage,
                 getCalculatedPercent(BatteryType.Alkaline),
                 getCalculatedPercent(BatteryType.Lithium),
-                getCalculatedPercent(BatteryType.NiZn));
+                getCalculatedPercent(BatteryType.NiZn),
+                getCalculatedPercent(BatteryType.NiMH));
     }
 
 
