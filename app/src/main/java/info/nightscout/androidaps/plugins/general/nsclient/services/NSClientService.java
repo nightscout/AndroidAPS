@@ -401,7 +401,11 @@ public class NSClientService extends Service {
     private Emitter.Listener onError = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            RxBus.INSTANCE.send(new EventNSClientNewLog("ERROR", args[0].toString()));
+            String msg = "Unknown Error";
+            if (args.length > 0 && args[0] != null) {
+                msg = args[0].toString();
+            }
+            RxBus.INSTANCE.send(new EventNSClientNewLog("ERROR", msg));
         }
     };
 
