@@ -274,7 +274,7 @@ public class NSClientService extends Service {
         } else if (!nsEnabled) {
             RxBus.INSTANCE.send(new EventNSClientNewLog("NSCLIENT", "disabled"));
             RxBus.INSTANCE.send(new EventNSClientStatus("Disabled"));
-        } else if (!nsURL.equals("")) {
+        } else if (!nsURL.equals("") && (MainApp.engineeringMode || nsURL.toLowerCase().startsWith("https://"))) {
             try {
                 RxBus.INSTANCE.send(new EventNSClientStatus("Connecting ..."));
                 IO.Options opt = new IO.Options();
@@ -295,6 +295,9 @@ public class NSClientService extends Service {
                 RxBus.INSTANCE.send(new EventNSClientNewLog("NSCLIENT", "Wrong URL syntax"));
                 RxBus.INSTANCE.send(new EventNSClientStatus("Wrong URL syntax"));
             }
+        } else if (nsURL.toLowerCase().startsWith("http://")) {
+            RxBus.INSTANCE.send(new EventNSClientNewLog("NSCLIENT", "NS URL not encrypted"));
+            RxBus.INSTANCE.send(new EventNSClientStatus("Not encrypted"));
         } else {
             RxBus.INSTANCE.send(new EventNSClientNewLog("NSCLIENT", "No NS URL specified"));
             RxBus.INSTANCE.send(new EventNSClientStatus("Not configured"));
