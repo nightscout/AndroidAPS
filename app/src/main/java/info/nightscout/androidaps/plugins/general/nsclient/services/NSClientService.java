@@ -283,6 +283,9 @@ public class NSClientService extends Service {
                 mSocket = IO.socket(nsURL, opt);
                 mSocket.on(Socket.EVENT_CONNECT, onConnect);
                 mSocket.on(Socket.EVENT_DISCONNECT, onDisconnect);
+                mSocket.on(Socket.EVENT_ERROR, onError);
+                mSocket.on(Socket.EVENT_CONNECT_ERROR, onError);
+                mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onError);
                 mSocket.on(Socket.EVENT_PING, onPing);
                 RxBus.INSTANCE.send(new EventNSClientNewLog("NSCLIENT", "do connect"));
                 mSocket.connect();
@@ -394,6 +397,13 @@ public class NSClientService extends Service {
         nsAPISecret = SP.getString(R.string.key_nsclientinternal_api_secret, "");
         nsDevice = SP.getString("careportal_enteredby", "");
     }
+
+    private Emitter.Listener onError = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            RxBus.INSTANCE.send(new EventNSClientNewLog("ERROR", args[0].toString()));
+        }
+    };
 
     private Emitter.Listener onPing = new Emitter.Listener() {
         @Override
