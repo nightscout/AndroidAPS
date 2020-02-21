@@ -36,6 +36,7 @@ import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.elements.*
 import info.nightscout.androidaps.plugins.general.automation.triggers.*
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
+import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.general.smsCommunicator.AuthRequest
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
@@ -248,6 +249,8 @@ open class AppModule {
         @ContributesAndroidInjector fun glucoseStatusInjector(): GlucoseStatus
 
         @ContributesAndroidInjector fun graphDataInjector(): GraphData
+
+        @ContributesAndroidInjector fun importExportPrefsInjector(): ImportExportPrefs
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
