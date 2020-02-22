@@ -146,7 +146,7 @@ public class OmnipodUtil extends RileyLinkUtil {
 
     public static void displayNotConfiguredDialog(Context context) {
         OKDialog.show(context, MainApp.gs(R.string.combo_warning),
-                MainApp.gs(R.string.medtronic_error_operation_not_possible_no_configuration), null);
+                MainApp.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null);
     }
 
     public static OmnipodPumpStatus getPumpStatus() {
