@@ -342,7 +342,7 @@ task copyLibs(dependsOn: downloadAndUnzipFile, type: Copy) {
 task full_clean(type: Delete) {
     delete file("src/main/jniLibs")
 }
-
+/*
 // Run 'adb' shell command to clear application data of main app for 'debug' variant
 task clearMainAppData(type: Exec) {
     // we have to iterate to find the 'debug' variant to obtain a variant reference
@@ -372,7 +372,7 @@ tasks.whenTaskAdded { task ->
         task.dependsOn(clearMainAppData)
     }
 }
-
+*/
 clean.dependsOn full_clean
 preBuild.dependsOn copyLibs
 
