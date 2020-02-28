@@ -2,30 +2,35 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.AAPSMocker
-import info.nightscout.androidaps.MainApp
-import info.nightscout.androidaps.logging.L
+import info.TestBase
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(MainApp::class, SP::class, L::class)
-class DanaRS_Packet_Bolus_Set_Step_Bolus_StopTest : DanaRS_Packet_Bolus_Set_Step_Bolus_Stop() {
+@PrepareForTest(RxBusWrapper::class)
+class DanaRS_Packet_Bolus_Set_Step_Bolus_StopTest : TestBase() {
 
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
+    @Mock lateinit var rxBus: RxBusWrapper
+    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Mock lateinit var danaRSPlugin: DanaRSPlugin
 
     private var treatmentInjector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -39,17 +44,15 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_StopTest : DanaRS_Packet_Bolus_Set_Step
     }
 
     @Test fun runTest() {
-        AAPSMocker.mockMainApp()
-        AAPSMocker.mockApplicationContext()
-        AAPSMocker.mockStrings()
-        AAPSMocker.mockSP()
-        AAPSMocker.mockL()
-        val testPacket = DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(1.0, Treatment(treatmentInjector))
+        `when`(resourceHelper.gs(Mockito.anyInt())).thenReturn("SomeString")
+
+        danaRSPlugin.bolusingTreatment = Treatment(treatmentInjector)
+        val testPacket = DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(aapsLogger, rxBus, resourceHelper, danaRSPlugin)
         // test message decoding
         testPacket.handleMessage(byteArrayOf(0.toByte(), 0.toByte(), 0.toByte()))
         Assert.assertEquals(false, testPacket.failed)
         testPacket.handleMessage(byteArrayOf(1.toByte(), 1.toByte(), 1.toByte(), 1.toByte(), 1.toByte(), 1.toByte(), 1.toByte(), 1.toByte()))
         Assert.assertEquals(true, testPacket.failed)
-        Assert.assertEquals("BOLUS__SET_STEP_BOLUS_STOP", friendlyName)
+        Assert.assertEquals("BOLUS__SET_STEP_BOLUS_STOP", testPacket.friendlyName)
     }
 }
