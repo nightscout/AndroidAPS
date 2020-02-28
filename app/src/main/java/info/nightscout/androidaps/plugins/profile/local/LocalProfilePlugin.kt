@@ -102,7 +102,7 @@ class LocalProfilePlugin @Inject constructor(
     var isEdited: Boolean = false
     var profiles: ArrayList<SingleProfile> = ArrayList()
 
-    private var numOfProfiles = 0
+    var numOfProfiles = 0
     internal var currentProfileIndex = 0
 
     fun currentProfile() = profiles[currentProfileIndex]

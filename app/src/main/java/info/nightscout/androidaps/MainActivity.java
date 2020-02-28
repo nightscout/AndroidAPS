@@ -66,6 +66,8 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
+import static info.nightscout.androidaps.utils.extensions.EspressoTestHelperKt.isRunningRealPumpTest;
+
 public class MainActivity extends NoSplashAppCompatActivity {
 
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -149,7 +151,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 .subscribe(this::processPreferenceChange, exception -> FabricPrivacy.getInstance().logException(exception))
         );
 
-        if (!sp.getBoolean(R.string.key_setupwizard_processed, false)) {
+        if (!sp.getBoolean(R.string.key_setupwizard_processed, false) && !isRunningRealPumpTest()) {
             Intent intent = new Intent(this, SetupWizardActivity.class);
             startActivity(intent);
         }

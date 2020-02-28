@@ -109,6 +109,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+                    aapsLogger.debug("USER ENTRY: BOLUS insulin $insulin carbs: $carbs")
                     val detailedBolusInfo = DetailedBolusInfo()
                     if (insulinAfterConstraints == 0.0) detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION
                     if (carbsAfterConstraints == 0) detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS

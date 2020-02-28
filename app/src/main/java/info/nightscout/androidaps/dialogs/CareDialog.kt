@@ -184,6 +184,7 @@ class CareDialog : DialogFragmentWithDate() {
                     EventType.EXERCISE       -> CareportalEvent.EXERCISE
                 }
                 careportalEvent.json = json.toString()
+                aapsLogger.debug("USER ENTRY: CAREPORTAL ${careportalEvent.eventType} json: ${careportalEvent.json}")
                 MainApp.getDbHelper().createOrUpdate(careportalEvent)
                 NSUpload.uploadCareportalEntryToNS(json)
             }, null)

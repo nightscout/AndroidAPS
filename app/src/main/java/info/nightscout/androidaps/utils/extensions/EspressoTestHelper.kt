@@ -9,3 +9,13 @@ fun isRunningTest(): Boolean {
         false
     }
 }
+
+@Synchronized
+fun isRunningRealPumpTest(): Boolean {
+    return try {
+        Class.forName("info.nightscout.androidaps.RealPumpTest")
+        true
+    } catch (e: ClassNotFoundException) {
+        false
+    }
+}

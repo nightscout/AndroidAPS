@@ -66,7 +66,7 @@ class RandomBgPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-        return virtualPumpPlugin.isEnabled(PluginType.PUMP) && (MainApp.engineeringMode || isRunningTest())
+        return isRunningTest() || virtualPumpPlugin.isEnabled(PluginType.PUMP) && MainApp.engineeringMode
     }
 
     override fun handleNewData(intent: Intent) {
@@ -76,7 +76,7 @@ class RandomBgPlugin @Inject constructor(
 
         val cal = GregorianCalendar()
         val currentMinute = cal.get(Calendar.MINUTE) + (cal.get(Calendar.HOUR_OF_DAY) % 2) * 60
-        val bgMgdl = min + (max - min) * sin(currentMinute / 120.0 * 2 * PI)
+        val bgMgdl = min + (max - min) + (max - min) * sin(currentMinute / 120.0 * 2 * PI)
 
         val bgReading = BgReading()
         bgReading.value = bgMgdl

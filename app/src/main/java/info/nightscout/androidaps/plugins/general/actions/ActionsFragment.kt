@@ -18,6 +18,7 @@ import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
@@ -34,10 +35,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.actions_fragment.*
 import kotlinx.android.synthetic.main.careportal_stats_fragment.*
+import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 
 class ActionsFragment : DaggerFragment() {
+    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
@@ -77,6 +80,7 @@ class ActionsFragment : DaggerFragment() {
         }
         actions_extendedbolus_cancel.setOnClickListener {
             if (activePlugin.activeTreatments.isInHistoryExtendedBoluslInProgress) {
+                aapsLogger.debug("USER ENTRY: CANCEL EXTENDED BOLUS")
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -96,6 +100,7 @@ class ActionsFragment : DaggerFragment() {
         }
         actions_canceltempbasal.setOnClickListener {
             if (activePlugin.activeTreatments.isTempBasalInProgress) {
+                aapsLogger.debug("USER ENTRY: CANCEL TEMP BASAL")
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {

@@ -114,10 +114,13 @@ class TempBasalDialog : DialogFragmentWithDate() {
                         }
                     }
                 }
-                if (isPercentPump)
+                if (isPercentPump) {
+                    aapsLogger.debug("USER ENTRY: TEMP BASAL $percent% duration: $durationInMinutes")
                     commandQueue.tempBasalPercent(percent, durationInMinutes, true, profile, callback)
-                else
+                } else {
+                    aapsLogger.debug("USER ENTRY: TEMP BASAL $absolute duration: $durationInMinutes")
                     commandQueue.tempBasalAbsolute(absolute, durationInMinutes, true, profile, callback)
+                }
             })
         }
         return true

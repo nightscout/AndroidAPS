@@ -490,7 +490,7 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
         }
     }
 
-    private void performPluginSwitch(PluginBase changedPlugin, boolean enabled, @NonNull PluginType type) {
+    public void performPluginSwitch(PluginBase changedPlugin, boolean enabled, @NonNull PluginType type) {
         changedPlugin.setPluginEnabled(type, enabled);
         changedPlugin.setFragmentVisible(type, enabled);
         processOnEnabledCategoryChanged(changedPlugin, type);

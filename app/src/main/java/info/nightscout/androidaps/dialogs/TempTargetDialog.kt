@@ -120,11 +120,11 @@ class TempTargetDialog : DialogFragmentWithDate() {
         val reason = overview_temptarget_reason.selectedItem.toString()
         val unitResId = if (profileFunction.getUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
         val target = overview_temptarget_temptarget.value
-        val duration = overview_temptarget_duration.value
-        if (target != 0.0 && duration != 0.0) {
+        val duration = overview_temptarget_duration.value.toInt()
+        if (target != 0.0 && duration != 0) {
             actions.add(resourceHelper.gs(R.string.reason) + ": " + reason)
             actions.add(resourceHelper.gs(R.string.nsprofileview_target_label) + ": " + Profile.toCurrentUnitsString(target) + " " + resourceHelper.gs(unitResId))
-            actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_hours, duration))
+            actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, duration))
         } else {
             actions.add(resourceHelper.gs(R.string.stoptemptarget))
         }
@@ -133,7 +133,8 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
-                if (target == 0.0 || duration == 0.0) {
+                aapsLogger.debug("USER ENTRY: TEMP TARGET $target duration: $duration")
+                if (target == 0.0 || duration == 0) {
                     val tempTarget = TempTarget()
                         .date(eventTime)
                         .duration(0)
@@ -143,14 +144,14 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 } else {
                     val tempTarget = TempTarget()
                         .date(eventTime)
-                        .duration(duration.toInt())
+                        .duration(duration)
                         .reason(reason)
                         .source(Source.USER)
                         .low(Profile.toMgdl(target, profileFunction.getUnits()))
                         .high(Profile.toMgdl(target, profileFunction.getUnits()))
                     treatmentsPlugin.addToHistoryTempTarget(tempTarget)
                 }
-                if (duration == 10.0) sp.putBoolean(R.string.key_objectiveusetemptarget, true)
+                if (duration == 10) sp.putBoolean(R.string.key_objectiveusetemptarget, true)
             })
         }
         return true
