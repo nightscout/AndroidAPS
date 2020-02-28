@@ -47,11 +47,11 @@ class ErrorDialog : DaggerDialogFragment() {
 
         error_title.text = title
         overview_error_ok.setOnClickListener {
-            aapsLogger.debug("Error dialog ok button pressed")
+            aapsLogger.debug("USER ENTRY: Error dialog ok button pressed")
             dismiss()
         }
         overview_error_mute.setOnClickListener {
-            aapsLogger.debug("Error dialog mute button pressed")
+            aapsLogger.debug("USER ENTRY: Error dialog mute button pressed")
             stopAlarm()
         }
         startAlarm()

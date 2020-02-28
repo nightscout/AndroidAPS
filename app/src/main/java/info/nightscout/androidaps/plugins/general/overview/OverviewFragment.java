@@ -954,7 +954,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         final PumpInterface pump = configBuilderPlugin.getActivePump();
 
         final QuickWizardEntry quickWizardEntry = quickWizard.getActive();
-        if (quickWizardEntry != null && actualBg != null && profile != null && pump != null) {
+        if (quickWizardEntry != null && actualBg != null && profile != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
             final BolusWizard wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true);
 

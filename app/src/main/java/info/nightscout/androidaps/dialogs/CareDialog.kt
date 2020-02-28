@@ -6,7 +6,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.annotation.StringRes
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
@@ -88,14 +87,16 @@ class CareDialog : DialogFragmentWithDate() {
             EventType.BGCHECK        -> {
                 action_care_duration_layout.visibility = View.GONE
             }
+
             EventType.SENSOR_INSERT,
             EventType.BATTERY_CHANGE -> {
                 action_care_bg_layout.visibility = View.GONE
                 actions_care_bgsource.visibility = View.GONE
                 action_care_duration_layout.visibility = View.GONE
             }
+
             EventType.NOTE,
-            EventType.EXERCISE -> {
+            EventType.EXERCISE       -> {
                 action_care_bg_layout.visibility = View.GONE
                 actions_care_bgsource.visibility = View.GONE
             }
@@ -145,7 +146,7 @@ class CareDialog : DialogFragmentWithDate() {
             json.put("glucoseType", type)
         }
         if (options == EventType.NOTE || options == EventType.EXERCISE) {
-            actions.add(MainApp.gs(R.string.careportal_newnstreatment_duration_label) + ": " + MainApp.gs(R.string.format_mins, actions_care_duration.value.toInt()))
+            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_duration_label) + ": " + resourceHelper.gs(R.string.format_mins, actions_care_duration.value.toInt()))
             json.put("duration", actions_care_duration.value.toInt())
         }
         val notes = notes.text.toString()

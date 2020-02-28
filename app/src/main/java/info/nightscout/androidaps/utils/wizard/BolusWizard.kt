@@ -313,6 +313,7 @@ class BolusWizard @Inject constructor(
             OKDialog.showConfirmation(context, resourceHelper.gs(R.string.boluswizard), confirmMessage, Runnable {
                 if (insulinAfterConstraints > 0 || carbs > 0) {
                     if (useSuperBolus) {
+                        aapsLogger.debug("USER ENTRY: SUPERBOLUS TBR")
                         if (loopPlugin.isEnabled(PluginType.LOOP)) {
                             loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000)
                             rxBus.send(EventRefreshOverview("WizardDialog"))
@@ -358,7 +359,8 @@ class BolusWizard @Inject constructor(
                     detailedBolusInfo.boluscalc = nsJSON()
                     detailedBolusInfo.source = Source.USER
                     detailedBolusInfo.notes = notes
-                    if (detailedBolusInfo.insulin > 0 || pump.pumpDescription.storesCarbInfo == true) {
+                    aapsLogger.debug("USER ENTRY: BOLUS insulin $insulinAfterConstraints carbs: $carbs")
+                    if (detailedBolusInfo.insulin > 0 || pump.pumpDescription.storesCarbInfo) {
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
