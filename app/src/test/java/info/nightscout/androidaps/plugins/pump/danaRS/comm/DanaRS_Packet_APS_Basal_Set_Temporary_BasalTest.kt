@@ -1,19 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.TestBase
-import info.nightscout.androidaps.logging.AAPSLogger
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest()
-class DanaRS_Packet_APS_Basal_Set_Temporary_BasalTest : TestBase() {
-
-    @Mock lateinit var aapsLogger: AAPSLogger
+class DanaRS_Packet_APS_Basal_Set_Temporary_BasalTest : DanaRSTestBase() {
 
     @Test fun runTest() {
 

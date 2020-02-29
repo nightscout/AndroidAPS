@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.TestBase
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
@@ -22,11 +21,10 @@ import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(RxBusWrapper::class)
-class DanaRS_Packet_Bolus_Set_Step_Bolus_StopTest : TestBase() {
+class DanaRS_Packet_Bolus_Set_Step_Bolus_StopTest : DanaRSTestBase() {
 
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var rxBus: RxBusWrapper
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var configBuilderPlugin: ConfigBuilderPlugin

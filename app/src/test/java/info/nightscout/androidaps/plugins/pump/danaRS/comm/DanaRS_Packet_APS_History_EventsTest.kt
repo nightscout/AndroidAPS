@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.TestBase
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -17,9 +15,8 @@ import java.util.*
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(RxBusWrapper::class)
-class DanaRS_Packet_APS_History_EventsTest : TestBase() {
+class DanaRS_Packet_APS_History_EventsTest : DanaRSTestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var activePlugin: ActivePluginProvider
@@ -48,14 +45,6 @@ class DanaRS_Packet_APS_History_EventsTest : TestBase() {
         testPacket.handleMessage(createArray(50, 0.toByte()))
         Assert.assertEquals(false, testPacket.failed)
         Assert.assertEquals("APS_HISTORY_EVENTS", testPacket.friendlyName)
-    }
-
-    fun createArray(length: Int, fillWith: Byte): ByteArray {
-        val ret = ByteArray(length)
-        for (i in 0 until length) {
-            ret[i] = fillWith
-        }
-        return ret
     }
 
     fun getCalender(from: Long): ByteArray {

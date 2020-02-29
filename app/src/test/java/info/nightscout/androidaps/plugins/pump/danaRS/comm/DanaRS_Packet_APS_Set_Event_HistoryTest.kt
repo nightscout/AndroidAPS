@@ -19,13 +19,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest()
-class DanaRS_Packet_APS_Set_Event_HistoryTest {
-
-    @Mock lateinit var aapsLogger: AAPSLogger
-    @Mock lateinit var rxBus: RxBusWrapper
-    @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var activePlugin: ActivePluginProvider
-    @Mock lateinit var danaRSPlugin: DanaRSPlugin
+class DanaRS_Packet_APS_Set_Event_HistoryTest : DanaRSTestBase() {
 
     @Test fun runTest() { // test for negative carbs
         val now = DateUtil.now()
