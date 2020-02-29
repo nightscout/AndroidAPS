@@ -138,7 +138,7 @@
                 android:title="@string/ns_localbroadcasts_title" />
 
             <SwitchPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="@string/key_ns_upload_only"
                 android:summary="@string/ns_upload_only_summary"
                 android:title="@string/ns_upload_only" />

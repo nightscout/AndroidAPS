@@ -136,7 +136,7 @@ public class TreatmentsCareportalFragment extends Fragment {
         view.findViewById(R.id.careportal_removeandroidapsstartedevents).setOnClickListener(v ->
                 OKDialog.showConfirmation(getContext(), MainApp.gs(R.string.careportal), MainApp.gs(R.string.careportal_removestartedevents), this::removeAndroidAPSStatedEvents));
 
-        boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, false);
+        boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, true);
         if (nsUploadOnly)
             refreshFromNS.setVisibility(View.GONE);
 
