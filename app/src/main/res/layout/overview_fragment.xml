@@ -465,7 +465,7 @@
             <com.jjoe64.graphview.GraphView
                 android:id="@+id/overview_bggraph"
                 android:layout_width="0dp"
-                android:layout_height="200dp"
+                android:layout_height="320dp"
                 app:layout_constraintBottom_toTopOf="@+id/overview_iobgraph"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
