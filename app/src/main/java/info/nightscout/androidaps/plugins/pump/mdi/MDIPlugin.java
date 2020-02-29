@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.InstanceId;
+import info.nightscout.androidaps.utils.TimeChangeType;
 
 
 /**
@@ -279,7 +280,7 @@ public class MDIPlugin extends PluginBase implements PumpInterface {
     }
 
     @Override
-    public void timeDateOrTimeZoneChanged() {
+    public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
 
     }
 

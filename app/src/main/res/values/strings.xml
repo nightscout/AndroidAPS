@@ -1652,11 +1652,13 @@
     <string name="key_omnipod_beep_smb_enabled" translatable="false">pref_omnipod_beep_smb_enabled</string>
     <string name="key_omnipod_beep_tbr_enabled" translatable="false">pref_omnipod_beep_tbr_enabled</string>
     <string name="key_omnipod_pod_debugging_options_enabled" translatable="false">pref_omnipod_pod_debugging_options_enabled</string>
+    <string name="key_omnipod_timechange_enabled" translatable="false">pref_omnipod_timechange_enabled</string>
     <string name="omnipod_config_beep_bolus_enabled">Bolus Beep Enabled</string>
     <string name="omnipod_config_beep_basal_enabled">Basal Beep Enabled</string>
     <string name="omnipod_config_beep_smb_enabled">SMB Beep Enabled</string>
     <string name="omnipod_config_beep_tbr_enabled">TBR Beep Enabled</string>
     <string name="omnipod_config_pod_debugging_options_enabled">Pod Debugging Options Enabled</string>
+    <string name="omnipod_config_timechange_enabled">DST/Timezone Detection Enabled</string>
 
     <!-- Omnipod - Fragment -->
     <string name="omnipod_pod_mgmt">Pod Mgmt</string>

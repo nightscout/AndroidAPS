@@ -42,6 +42,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.TimeChangeType;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -477,7 +478,7 @@ public abstract class PumpPluginAbstract extends PluginBase implements PumpInter
 
 
     @Override
-    public void timeDateOrTimeZoneChanged() {
+    public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
     }
 
 

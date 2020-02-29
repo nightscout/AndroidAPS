@@ -19,17 +19,18 @@ public class OmnipodConst {
         public static final int BeepSMBEnabled = R.string.key_omnipod_beep_smb_enabled;
         public static final int BeepTBREnabled = R.string.key_omnipod_beep_tbr_enabled;
         public static final int PodDebuggingOptionsEnabled = R.string.key_omnipod_pod_debugging_options_enabled;
+        public static final int TimeChangeEventEnabled = R.string.key_omnipod_timechange_enabled;
     }
 
     public class Statistics {
         public static final String StatsPrefix = "omnipod_";
         public static final String FirstPumpStart = Prefix + "first_pump_use";
         public static final String LastGoodPumpCommunicationTime = Prefix + "lastGoodPumpCommunicationTime";
-        public static final String LastGoodPumpFrequency = Prefix + "LastGoodPumpFrequency";
+        //public static final String LastGoodPumpFrequency = Prefix + "LastGoodPumpFrequency";
         public static final String TBRsSet = StatsPrefix + "tbrs_set";
         public static final String StandardBoluses = StatsPrefix + "std_boluses_delivered";
         public static final String SMBBoluses = StatsPrefix + "smb_boluses_delivered";
-        public static final String LastPumpHistoryEntry = StatsPrefix + "pump_history_entry";
+        //public static final String LastPumpHistoryEntry = StatsPrefix + "pump_history_entry";
     }
 
     public static final double POD_PULSE_SIZE = 0.05;

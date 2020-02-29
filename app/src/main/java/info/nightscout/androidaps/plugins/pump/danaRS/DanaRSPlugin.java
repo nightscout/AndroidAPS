@@ -63,6 +63,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.TimeChangeType;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -849,7 +850,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
     }
 
     @Override
-    public void timeDateOrTimeZoneChanged() {
+    public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
 
     }
 

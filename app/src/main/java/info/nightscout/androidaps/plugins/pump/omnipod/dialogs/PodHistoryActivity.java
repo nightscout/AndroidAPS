@@ -245,6 +245,8 @@ public class PodHistoryActivity extends NoSplashActivity {
 
 
         private void setValue(PodHistory historyEntry, TextView valueView) {
+            //valueView.setText("");
+
             if (historyEntry.isSuccess()) {
                 switch (historyEntry.getPodDbEntryType()) {
 
@@ -262,13 +264,6 @@ public class PodHistoryActivity extends NoSplashActivity {
                     }
                     break;
 
-                    case GetPodStatus:
-                        break;
-                    case GetPodInfo:
-                        break;
-                    case SetTime:
-                        break;
-
                     case SetBolus: {
                         if (historyEntry.getData().contains(";")) {
                             String[] splitVal = historyEntry.getData().split(";");
@@ -279,6 +274,9 @@ public class PodHistoryActivity extends NoSplashActivity {
                     }
                     break;
 
+                    case GetPodStatus:
+                    case GetPodInfo:
+                    case SetTime:
                     case PairAndPrime:
                     case CancelTemporaryBasal:
                     case CancelTemporaryBasalForce:

@@ -44,6 +44,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.TimeChangeType;
 
 /**
  * Created by mike on 28.01.2018.
@@ -506,7 +507,7 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
     }
 
     @Override
-    public void timeDateOrTimeZoneChanged() {
+    public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
 
     }
 

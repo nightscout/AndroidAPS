@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefres
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod_dash.comm.OmnipodDashCommunicationManager;
+import info.nightscout.androidaps.utils.TimeChangeType;
 
 /**
  * Created by andy on 23.04.18.
@@ -284,7 +285,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
 
     @Override
-    public void timeDateOrTimeZoneChanged() {
+    public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
 
 //        if (isLoggingEnabled())
 //            LOG.warn(getLogPrefix() + "Time, Date and/or TimeZone changed. ");

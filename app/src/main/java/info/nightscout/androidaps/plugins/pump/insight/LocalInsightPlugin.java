@@ -129,6 +129,7 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.TimeChangeType;
 
 public class LocalInsightPlugin extends PluginBase implements PumpInterface, ConstraintsInterface, InsightConnectionService.StateCallback {
 
@@ -1624,7 +1625,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     }
 
     @Override
-    public void timeDateOrTimeZoneChanged() {
+    public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
 
     }
 

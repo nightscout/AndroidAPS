@@ -36,5 +36,10 @@
             android:key="@string/key_omnipod_pod_debugging_options_enabled"
             android:title="@string/omnipod_config_pod_debugging_options_enabled" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_omnipod_timechange_enabled"
+            android:title="@string/omnipod_config_pod_debugging_options_enabled" />
+
     </PreferenceCategory>
 </PreferenceScreen>

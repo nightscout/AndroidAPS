@@ -54,7 +54,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.pod
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
@@ -71,6 +70,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.TimeChangeType;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -124,13 +124,14 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         displayConnectionMessages = false;
 
+        //OmnipodUtil.setDriverState();
 
-
-        if (OmnipodUtil.isOmnipodEros()) {
-            OmnipodUtil.setPlugin(this);
-            OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
-            OmnipodUtil.setPumpType(PumpType.Insulet_Omnipod);
-        }
+// TODO loop
+//        if (OmnipodUtil.isOmnipodEros()) {
+//            OmnipodUtil.setPlugin(this);
+//            OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
+//            OmnipodUtil.setPumpType(PumpType.Insulet_Omnipod);
+//        }
 
 //        // TODO ccc
 //        OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
@@ -202,7 +203,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                             (event.isChanged(R.string.key_omnipod_beep_bolus_enabled)) ||
                             (event.isChanged(R.string.key_omnipod_beep_tbr_enabled)) ||
                             (event.isChanged(R.string.key_omnipod_pod_debugging_options_enabled)) ||
-                            (event.isChanged(R.string.key_omnipod_beep_smb_enabled)))
+                            (event.isChanged(R.string.key_omnipod_beep_smb_enabled)) ||
+                            (event.isChanged(R.string.key_omnipod_timechange_enabled)))
                         refreshConfiguration();
                 }, FabricPrivacy::logException)
         );
@@ -488,7 +490,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         //getPodPumpStatusObject().driverState = OmnipodDriverState.Initalized_PodAvailable;
         //driverState = OmnipodDriverState.Initalized_PodAvailable;
-        OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAvailable);
+        //OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAvailable);
         // we would probably need to read Basal Profile here too
     }
 
@@ -959,12 +961,17 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     }
 
     @Override
-    public void timeDateOrTimeZoneChanged() {
+    public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
 
         if (isLoggingEnabled())
-            LOG.warn(getLogPrefix() + "Time, Date and/or TimeZone changed. ");
+            LOG.warn(getLogPrefix() + "Time, Date and/or TimeZone changed. [changeType={}, eventHandlingEnabled={}]", timeChangeType.name(), pumpStatusLocal.timeChangeEventEnabled);
 
-        this.hasTimeDateOrTimeZoneChanged = true;
+        if (OmnipodUtil.getDriverState()==OmnipodDriverState.Initalized_PodAvailable) {
+            if (pumpStatusLocal.timeChangeEventEnabled) {
+                LOG.info(getLogPrefix() + "Time,and/or TimeZone changed event received and will be consumed by driver.");
+                this.hasTimeDateOrTimeZoneChanged = true;
+            }
+        }
     }
 
 

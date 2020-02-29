@@ -61,6 +61,7 @@ public class OmnipodPumpStatus extends PumpStatus {
     public boolean beepTBREnabled = true;
     public boolean podDebuggingOptionsEnabled = false;
     public String podLotNumber = "???";
+    public boolean timeChangeEventEnabled = true;
 
     public OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
 
@@ -111,6 +112,7 @@ public class OmnipodPumpStatus extends PumpStatus {
             this.beepSMBEnabled = SP.getBoolean(OmnipodConst.Prefs.BeepSMBEnabled, true);
             this.beepTBREnabled = SP.getBoolean(OmnipodConst.Prefs.BeepTBREnabled, true);
             this.podDebuggingOptionsEnabled = SP.getBoolean(OmnipodConst.Prefs.PodDebuggingOptionsEnabled, false);
+            this.timeChangeEventEnabled = SP.getBoolean(OmnipodConst.Prefs.TimeChangeEventEnabled, true);
 
             LOG.debug("Beeps [basal={}, bolus={}, SMB={}, TBR={}]", this.beepBasalEnabled, this.beepBolusEnabled, this.beepSMBEnabled, this.beepTBREnabled);
 
