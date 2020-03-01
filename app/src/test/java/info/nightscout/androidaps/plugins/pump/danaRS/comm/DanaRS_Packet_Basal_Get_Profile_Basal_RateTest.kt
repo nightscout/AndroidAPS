@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet.byteArrayToInt
-import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet.getBytes
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -15,11 +13,11 @@ class DanaRS_Packet_Basal_Get_Profile_Basal_RateTest : DanaRSTestBase() {
     @Test fun runTest() {
         val testPacket = DanaRS_Packet_Basal_Get_Profile_Basal_Rate(aapsLogger, danaRPump, 1)
         // test if pumpProfile array is set right
-        val basal01 = byteArrayToInt(getBytes(createArray(50, 1.toByte()), 2, 2)) / 100.0
-        val basal05 = byteArrayToInt(getBytes(createArray(50, 5.toByte()), 2, 2)) / 100.0
-        val basal12 = byteArrayToInt(getBytes(createArray(50, 12.toByte()), 2, 2)) / 100.0
+        val basal01 = DanaRS_Packet.byteArrayToInt(DanaRS_Packet.getBytes(createArray(50, 1.toByte()), 2, 2)) / 100.0
+        val basal05 = DanaRS_Packet.byteArrayToInt(DanaRS_Packet.getBytes(createArray(50, 5.toByte()), 2, 2)) / 100.0
+        val basal12 = DanaRS_Packet.byteArrayToInt(DanaRS_Packet.getBytes(createArray(50, 12.toByte()), 2, 2)) / 100.0
         // basal rate > 1U/hr
-        val basal120 = byteArrayToInt(getBytes(createArray(50, 120.toByte()), 2, 2)) / 100.0
+        val basal120 = DanaRS_Packet.byteArrayToInt(DanaRS_Packet.getBytes(createArray(50, 120.toByte()), 2, 2)) / 100.0
         val params = testPacket.requestParams
         assertEquals(1.toByte(), params[0])
         testPacket.handleMessage(createArray(50, 0.toByte()))

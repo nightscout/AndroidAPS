@@ -12,10 +12,11 @@ class DanaRS_Packet_Basal_Get_Profile_NumberTest : DanaRSTestBase() {
 
     @Test fun runTest() {
         val packet = DanaRS_Packet_Basal_Get_Profile_Number(aapsLogger, danaRPump)
-        // test message decoding
-        packet.handleMessage(byteArrayOf(0.toByte(), 0.toByte(), 0.toByte()))
-        Assert.assertEquals(false, packet.failed)
-        // if data.length > 4 should return fail
+
+        val array = ByteArray(100)
+        putByteToArray(array, 0, 1.toByte())
+        packet.handleMessage(array)
+        Assert.assertEquals(1, danaRPump.activeProfile)
         Assert.assertEquals("BASAL__GET_PROFILE_NUMBER", packet.friendlyName)
     }
 }

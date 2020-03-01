@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.danaRS.comm
+package info
 
 import org.junit.Rule
 import org.mockito.Mockito

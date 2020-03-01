@@ -13,10 +13,18 @@ class DanaRS_Packet_Basal_Get_Temporary_Basal_StateTest : DanaRSTestBase() {
     @Test fun runTest() {
         val packet = DanaRS_Packet_Basal_Get_Temporary_Basal_State(aapsLogger, danaRPump)
         // test message decoding
-        packet.handleMessage(createArray(50, 0.toByte()))
-        Assert.assertEquals(false, packet.failed)
-        packet.handleMessage(createArray(50, 1.toByte()))
-        Assert.assertEquals(true, packet.failed)
+        val array = ByteArray(100)
+        putByteToArray(array, 0, 1.toByte())
+        putByteToArray(array, 1, 1.toByte())
+        putByteToArray(array, 2, 2.toByte())
+        putByteToArray(array, 3, 230.toByte())
+        putByteToArray(array, 4, 150.toByte())
+        putIntToArray(array, 5, 1)
+        packet.handleMessage(array)
+        Assert.assertTrue(packet.failed)
+        Assert.assertTrue(danaRPump.isTempBasalInProgress)
+        Assert.assertEquals(300, danaRPump.tempBasalPercent)
+        Assert.assertEquals(15 * 60, danaRPump.tempBasalTotalSec)
         Assert.assertEquals("BASAL__TEMPORARY_BASAL_STATE", packet.friendlyName)
     }
 }

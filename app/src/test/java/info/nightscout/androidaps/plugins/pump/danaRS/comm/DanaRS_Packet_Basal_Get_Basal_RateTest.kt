@@ -20,10 +20,13 @@ class DanaRS_Packet_Basal_Get_Basal_RateTest : DanaRSTestBase() {
         val packet = DanaRS_Packet_Basal_Get_Basal_Rate(aapsLogger, rxBus, resourceHelper, danaRPump)
         // test message decoding
         // rate is 0.01
-        packet.handleMessage(createArray(100, 1.toByte()))
-        Assert.assertEquals(false, packet.failed)
-        packet.handleMessage(createArray(100, 5.toByte()))
-        Assert.assertEquals(true, packet.failed)
+        val array = ByteArray(100)
+        putIntToArray(array, 0, (1.0 * 100).toInt())
+        putByteToArray(array, 2, (0.05 * 100).toByte())
+        packet.handleMessage(array)
+        Assert.assertEquals(1.0, danaRPump.maxBasal, 0.0)
+        Assert.assertEquals(0.05, danaRPump.basalStep, 0.0)
+        Assert.assertTrue(packet.failed)
         Assert.assertEquals("BASAL__GET_BASAL_RATE", packet.friendlyName)
     }
 }
