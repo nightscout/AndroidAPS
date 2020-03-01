@@ -78,7 +78,7 @@ public class LoopPlugin extends PluginBase {
     private final ConstraintChecker constraintChecker;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
-    private final MainApp mainApp;
+    private final Context context;
     private final CommandQueueProvider commandQueue;
     private final ConfigBuilderPlugin configBuilderPlugin;
     private final TreatmentsPlugin treatmentsPlugin;
@@ -120,7 +120,7 @@ public class LoopPlugin extends PluginBase {
             ConstraintChecker constraintChecker,
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
-            MainApp mainApp,
+            Context context,
             CommandQueueProvider commandQueue,
             ConfigBuilderPlugin configBuilderPlugin,
             TreatmentsPlugin treatmentsPlugin,
@@ -142,7 +142,7 @@ public class LoopPlugin extends PluginBase {
         this.constraintChecker = constraintChecker;
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
-        this.mainApp = mainApp;
+        this.context = context;
         this.configBuilderPlugin = configBuilderPlugin;
         this.commandQueue = commandQueue;
         this.treatmentsPlugin = treatmentsPlugin;
@@ -194,7 +194,7 @@ public class LoopPlugin extends PluginBase {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             NotificationManager mNotificationManager =
-                    (NotificationManager) mainApp.getSystemService(Context.NOTIFICATION_SERVICE);
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                     CHANNEL_ID,
                     NotificationManager.IMPORTANCE_HIGH);
@@ -448,7 +448,7 @@ public class LoopPlugin extends PluginBase {
             } else {
                 if (resultAfterConstraints.isChangeRequested() && allowNotification) {
                     NotificationCompat.Builder builder =
-                            new NotificationCompat.Builder(mainApp, CHANNEL_ID);
+                            new NotificationCompat.Builder(context, CHANNEL_ID);
                     builder.setSmallIcon(R.drawable.notif_icon)
                             .setContentTitle(resourceHelper.gs(R.string.openloop_newsuggestion))
                             .setContentText(resultAfterConstraints.toString())
@@ -461,13 +461,13 @@ public class LoopPlugin extends PluginBase {
                     }
 
                     // Creates an explicit intent for an Activity in your app
-                    Intent resultIntent = new Intent(mainApp, MainActivity.class);
+                    Intent resultIntent = new Intent(context, MainActivity.class);
 
                     // The stack builder object will contain an artificial back stack for the
                     // started Activity.
                     // This ensures that navigating backward from the Activity leads out of
                     // your application to the Home screen.
-                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(mainApp);
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
                     stackBuilder.addParentStack(MainActivity.class);
                     // Adds the Intent that starts the Activity to the top of the stack
                     stackBuilder.addNextIntent(resultIntent);
@@ -476,7 +476,7 @@ public class LoopPlugin extends PluginBase {
                     builder.setContentIntent(resultPendingIntent);
                     builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
                     NotificationManager mNotificationManager =
-                            (NotificationManager) mainApp.getSystemService(Context.NOTIFICATION_SERVICE);
+                            (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                     // mId allows you to update the notification later on.
                     mNotificationManager.notify(Constants.notificationID, builder.build());
                     rxBus.send(new EventNewOpenLoopNotification());
@@ -486,7 +486,7 @@ public class LoopPlugin extends PluginBase {
                 } else if (allowNotification) {
                     // dismiss notifications
                     NotificationManager notificationManager =
-                            (NotificationManager) mainApp.getSystemService(Context.NOTIFICATION_SERVICE);
+                            (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.cancel(Constants.notificationID);
                     actionStringHandler.get().handleInitiate("cancelChangeRequest");
                 }
@@ -680,12 +680,12 @@ public class LoopPlugin extends PluginBase {
                 @Override
                 public void run() {
                     if (!result.success) {
-                        Intent i = new Intent(mainApp, ErrorHelperActivity.class);
+                        Intent i = new Intent(context, ErrorHelperActivity.class);
                         i.putExtra("soundid", R.raw.boluserror);
                         i.putExtra("status", result.comment);
                         i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror));
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mainApp.startActivity(i);
+                        context.startActivity(i);
                     }
                 }
             });
@@ -694,12 +694,12 @@ public class LoopPlugin extends PluginBase {
                 @Override
                 public void run() {
                     if (!result.success) {
-                        Intent i = new Intent(mainApp, ErrorHelperActivity.class);
+                        Intent i = new Intent(context, ErrorHelperActivity.class);
                         i.putExtra("soundid", R.raw.boluserror);
                         i.putExtra("status", result.comment);
                         i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror));
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mainApp.startActivity(i);
+                        context.startActivity(i);
                     }
                 }
             });
@@ -710,12 +710,12 @@ public class LoopPlugin extends PluginBase {
                 @Override
                 public void run() {
                     if (!result.success) {
-                        Intent i = new Intent(mainApp, ErrorHelperActivity.class);
+                        Intent i = new Intent(context, ErrorHelperActivity.class);
                         i.putExtra("soundid", R.raw.boluserror);
                         i.putExtra("status", result.comment);
                         i.putExtra("title", resourceHelper.gs(R.string.extendedbolusdeliveryerror));
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mainApp.startActivity(i);
+                        context.startActivity(i);
                     }
                 }
             });
@@ -729,12 +729,12 @@ public class LoopPlugin extends PluginBase {
             @Override
             public void run() {
                 if (!result.success) {
-                    Intent i = new Intent(mainApp, ErrorHelperActivity.class);
+                    Intent i = new Intent(context, ErrorHelperActivity.class);
                     i.putExtra("soundid", R.raw.boluserror);
                     i.putExtra("status", result.comment);
                     i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror));
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mainApp.startActivity(i);
+                    context.startActivity(i);
                 }
             }
         });
