@@ -73,8 +73,6 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IAB:</string>
     <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
-    <string name="treatments_newtreatment_insulinamount_label">Insulin</string>
-    <string name="treatments_newtreatment_carbsamount_label">Karbs</string>
     <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Karbs</string>
@@ -112,7 +110,6 @@
     <string name="overview">Oorsig</string>
     <string name="nsprofile">Ns Profiel</string>
     <string name="simpleprofile">Maklike profiel</string>
-    <string name="tempbasal">TydelikeBasaal</string>
     <string name="treatments">Behandelings</string>
     <string name="virtualpump">Virtuele Pomp</string>
     <string name="careportal">Careportal</string>
@@ -144,21 +141,17 @@
     <string name="constraints_violation">Beperkings skending</string>
     <string name="treatmentdeliveryerror">Bolus aflewering fout</string>
     <string name="tempbasaldeliveryerror">Tempbasal aflewering fout</string>
-    <string name="overview_newtempbasal_basalpercent">Basale waarde [%%]</string>
-    <string name="overview_newtempbasal_percent_label">%% (100%% = huidig)</string>
     <string name="setbasalquestion">Aanvaar nuwe tydelike basale:</string>
     <string name="overview_treatment_label">Behandeling</string>
     <string name="overview_calculator_label">Rekenaar</string>
     <string name="constraintapllied">Beperking toegepas!</string>
     <string name="confirmation">Bevestiging</string>
-    <string name="entertreatmentquestion">Voer nuwe behandeling in:</string>
     <string name="bolus">Bolus</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="basal">Basale</string>
     <string name="sms_basal">Basale:</string>
     <string name="carbs">Karbs</string>
     <string name="changeyourinput">Verander jou insette!</string>
-    <string name="setextendedbolusquestion">Stel nuwe verlengde bolus:</string>
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="configbuilder_bgsource_description">Waarvandaan  moet AndroidAPS data kry?</string>
     <string name="xdrip">xDrip</string>
@@ -185,7 +178,6 @@
     <string name="careportal_cgmsensorinsert">CGM Sensor insetsel</string>
     <string name="careportal_cgmsensorstart">CGM Sensor Begin</string>
     <string name="careportal_insulincartridgechange">Insulien stoor verandering</string>
-    <string name="careportal_profileswitch">Profiel wissel</string>
     <string name="careportal_snackbolus">Peuselhappie Bolus</string>
     <string name="careportal_mealbolus">Maaltyd Bolus</string>
     <string name="careportal_correctionbolus">Regstelling Bolus</string>
@@ -206,7 +198,6 @@
     <string name="careportal_newnstreatment_percent_label">Persentasie</string>
     <string name="careportal_newnstreatment_absolute_label">Absolute</string>
     <string name="careportal_newnstreatment_notes_label">Notas</string>
-    <string name="careportal_newnstreatment_eventtime_label">Gebeurtenis tyd</string>
     <string name="careportal_newnstreatment_profile_label">Profiel</string>
     <string name="careportal_newnstreatment_enteredby_title">Ingetik deur</string>
     <string name="careportal_newnstreatment_glucosetype">Glukose tipe</string>
@@ -230,7 +221,6 @@
     <string name="connecting">Koppel</string>
     <string name="connected">Gekoppel</string>
     <string name="disconnected">Ontkoppel</string>
-    <string name="danar_pump_settings">DanaR pump settings</string>
     <string name="end_user_license_agreement">Eindverbruiker Lisensie Ooreenkoms</string>
     <string name="end_user_license_agreement_text">MOET NIE GEBRUIK WORD OM MEDIESE BESLUITE TE MAAK NIE. DAAR IS GEEN WAARBORG DAT DIE PROGRAM, ONDERWORPE AAN TOEPASSELIKE WETTE EN WETGEWING. TENSY ANDERS GEMELD IN TEKS VOORSIEN DIE KOPIEREG-HOUERS EN / OF ANDER PARTYE DIE PROGRAM \"AS IS\" SONDER ËNIGE WAARBORG VAN ENIGE ORDE, UITDRUKKELIK OF IMPLISIET, INKLUSIEF, MAAR NIE BEPERK TOT DIE IMPLISIETE WAARBORG VAN TOEPAASBAARHEID OF NUT VIR EEN SPESIFIEKE DOEL. DIE TOTALE EN ALLE RISIKOVIR DIE KWALITEIT EN PRESTASIE VAN DIE PROGRAM RUS MET JOUSELF. VIR ENIGE PROGRAM DEFEKTIEWE OF FALINGS MOET JY PERSOONLIK DIE KOSTE EN REGSAANSPREEKLIKHEID DRA VAN ALLE NODIGE AKSIES, DIENS, REPARASIES OF KORREKSIES VIR USELF OF ENIGE DERDE PARTYE EN/OF AKSIES, DIENS, REPARASIES OF KORREKSIES WAT DEUR DIE PROGRAM GEDOEN WAS.</string>
     <string name="end_user_license_agreement_i_understand">EK VERSTAAN en STEM IN</string>
@@ -267,8 +257,6 @@
     <string name="glucosetype_finger">Vinger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Per hand</string>
-    <string name="careportal_temporarytarget">Tydelike teiken</string>
-    <string name="careportal_temporarytargetcancel">Tydelike teiken kanselleer</string>
     <string name="danarprofile">DanaR profiel stellings</string>
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="danarprofile_dia_summary">Duur van insulien aktiwiteit</string>
@@ -358,10 +346,8 @@
     <string name="button1">Knoppie 1</string>
     <string name="button2">Knoppie 2</string>
     <string name="button3">Knoppie 3</string>
-    <string name="units">Eenhede:</string>
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
-    <string name="dia">DIA:</string>
     <string name="target_range">Doelwit reeks:</string>
     <string name="prefs_range_title">Reeks vir visualisering</string>
     <string name="prefs_range_summary">Hoë en lae merke vir die diagramme in Overview en Smartwatch</string>
@@ -403,7 +389,6 @@
     <string name="eatingsoon">Eet binnekort</string>
     <string name="hypo">Hipo</string>
     <string name="activity">Aktiwiteit</string>
-    <string name="removerecord">Verwyder rekord:</string>
     <string name="danar_stats">DanaR Stats</string>
     <string name="danar_stats_cumulative_tdd">Kumulatiewe TDD</string>
     <string name="danar_stats_expweight">Eksponensiele geweegde TDD</string>
@@ -560,16 +545,12 @@
     <string name="ns_noupload_summary">Alle data na NS gestuur word laat val is gedaal. AAPS is gekoppel aan NS maar geen verandering in NS is gedoen</string>
     <string name="basal_step">Basale Stap</string>
     <string name="bolus_step">Bolus Stap</string>
-    <string name="extendedbolus">VerlengdeBolus</string>
-    <string name="temptarget">TydelikeDoelwit</string>
     <string name="overview_extendedbolus_cancel_button">Kanselleer Verlengde Bolus</string>
     <string name="careportal_sensorage_label">Sensor ouderdom</string>
     <string name="careportal_canulaage_label">Canula tydsduur</string>
     <string name="careportal_insulinage_label">Insulien ouderdom</string>
     <string name="hours">ure</string>
-    <string name="overview_newtempbasal_basaltype_label">Basale tipe</string>
     <string name="invalidprofile">Ongeldige profiel !!!</string>
-    <string name="profileswitch">ProfileSwitch</string>
     <string name="careportal_pbage_label">Pomp battery ouderdom</string>
     <string name="careportal_pumpbatterychange">Pomp Battery Verander</string>
     <string name="ns_alarmoptions">Alarm Opsies</string>
@@ -617,7 +598,6 @@
     <string name="careportal_carbsandbolus_label">KARBS &amp; BOLUS</string>
     <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
     <string name="careportal_pump_label">POMP</string>
-    <string name="overview_newtempbasal_basalabsolute">Basale waarde [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Durasie [min]</string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="smb_shortname">SMB</string>
@@ -637,7 +617,6 @@
     <string name="waitingforpairing">Wag vir paring op pomp</string>
     <string name="pairingok">Paring OK</string>
     <string name="pairingtimedout">Paring tyd verstreke</string>
-    <string name="pairing">PARING</string>
     <string name="danars_nodeviceavailable">Geen toestel gevind so ver</string>
     <string name="emptyreservoir">Leë stoor</string>
     <string name="bloodsugarmeasurementalert">Bloed suiker meting alarm</string>
@@ -746,7 +725,6 @@
     <string name="bolus_frequency_exceeded">\'n Bolus met dieselfde hoeveelheid was versoek binne die laaste twee minute. Om te waak teen toevallige dubbele boluses en om te waak teen goggas is dit nie toegelaat nie.</string>
     <string name="combo_pump_connected_now">Nou</string>
     <string name="combo_activity_reading_pump_history">Lees pomp geskiedenis</string>
-    <string name="danar_history">pomp geskiedenis</string>
     <string name="combo_activity_setting_basal_profile">Instelling basale profiel</string>
     <string name="combo_pump_cartridge_low_warrning">Pomp kasset vlak is laag</string>
     <string name="combo_pump_battery_low_warrning">Pomp battery is laag</string>
@@ -941,11 +919,7 @@
     <string name="danar_pumpalarm_sound">Klank</string>
     <string name="danar_pumpalarm_vibrate">Vibreer</string>
     <string name="danar_pumpalarm_both">Beide</string>
-    <string name="danar_screentimeout">LCD aantyd [s]</string>
-    <string name="danar_backlight">Agterlig aantyd [s]</string>
     <string name="danar_glucoseunits">Glukose eenhede</string>
-    <string name="danar_shutdown">Staking(ure)</string>
-    <string name="danar_lowreservoir">Lae reserwe (eenhede)</string>
     <string name="danar_saveuseroptions">Stoor opsies te pomp</string>
     <string name="option_on">Aan</string>
     <string name="option_off">Af</string>
@@ -1138,8 +1112,6 @@
     <string name="tidepool_upload_tbr">Laai tydelike basale op</string>
     <string name="tidepool_upload_profile">Laai profiel veranderings, tydelike teikens op</string>
     <string name="tidepool_upload_bg">Laai BG toetse op</string>
-    <string name="dst_in_24h_warning">Daglig spaar tyd verandering in 24 h of minder</string>
-    <string name="dst_loop_disabled_warning">Daglig spaar tyd het verander minder as 3 ure terug - Geslote lus afgeskakel</string>
     <string name="storage">interne berging beperking</string>
     <string name="diskfull">Bevry ten minste %1$d MB van intene stoorspasie! Lus gedeaktiveer!</string>
     <string name="wrongformat">Verkeerde formaat</string>
@@ -1163,7 +1135,6 @@
     <string name="running_invalid_version">Die weergawe is ongeldig. Lus afgeskakel!</string>
     <string name="old_version">ou weergawe</string>
     <string name="very_old_version">baie ou weergawe</string>
-    <string name="new_version_warning">Nuwe weergawe reeds beskikbaar vir %1$d! Sal na 60 dae terugval na LGS, lus sal ongeldig gemaak word na 90 dae</string>
     <string name="twohours">2h</string>
     <string name="formatinsulinunits">%1$.2fU</string>
     <string name="dexcom_app_patched">DexcomG App (opgedateerde)</string>
@@ -1190,15 +1161,12 @@
     <string name="longitude_short">Lengte:</string>
     <string name="distance_short">Afst [m]:</string>
     <string name="name_short">Naam:</string>
-    <string name="locationis">Ligging is %1$s</string>
     <string name="lastboluslabel">Laaste bolus</string>
     <string name="lastboluscompared">Laaste bolus tyd %1$s %2$s min terug</string>
     <string name="triggercoblabel">KOB</string>
     <string name="cobcompared">KOB %1$s %2$.0f</string>
     <string name="taskname">Aksie naam</string>
     <string name="edit_short">WYSIG</string>
-    <string name="please_choose_an_action_type">Kies asb \'n aksie tipe:</string>
-    <string name="please_choose_a_trigger_type">Kies \'n sneller tipe:</string>
     <string name="triggers">Snellers:</string>
     <string name="remove_label">VERWYDER</string>
     <string name="preconditions">Vereistes:</string>
@@ -1288,7 +1256,6 @@
     <string name="medtronic_error_pump_frequency_invalid">Pomp frekwensie word nie ondersteun.</string>
     <string name="medtronic_error_rileylink_address_invalid">RileyLink Adres ongeldig.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Pomp tipe bespeur en is nie dieselfde as gestelde.</string>
-    <string name="medtronic_error_pump_basal_profiles_not_enabled">Basale Profiele is nie aan op pomp.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Basale profiel is verkeerd op pomp (moet STD wees).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Verkeerde TBR op pomp (Moet Absoluut wees).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Verkeerde Maks Bolus gestel op Pomp(moet %1$.2f wees).</string>
@@ -1339,7 +1306,6 @@
     <string name="automation_trigger_pump_last_connection_description">Laaste konneksie na pomp [minute gelede]</string>
     <string name="automation_trigger_pump_last_connection_compared">Vorige konneksie na pomp %1$s %2$s min terug</string>
     <string name="sendsmsactionlabel">Stuur\'n SMS: %1$s</string>
-    <string name="sendsmsactiondescription">Stuur SMS na alle fone in voorkeure</string>
     <string name="sendsmsactiontext">Stuur\'n SMS met die teks</string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus beperking aangewend: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>

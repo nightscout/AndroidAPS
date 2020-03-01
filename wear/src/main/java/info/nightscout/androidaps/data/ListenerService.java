@@ -1,24 +1,22 @@
 package info.nightscout.androidaps.data;
 
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-
 import android.util.Log;
 
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,10 +34,14 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
-import info.nightscout.androidaps.interaction.AAPSPreferences;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.interaction.actions.AcceptActivity;
 import info.nightscout.androidaps.interaction.actions.CPPActivity;
+import info.nightscout.androidaps.interaction.utils.Persistence;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
 import info.nightscout.androidaps.interaction.utils.WearUtil;
 
@@ -78,6 +80,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
 
     private static final String ACTION_RESEND_BULK = "com.dexdrip.stephenblack.nightwatch.RESEND_BULK_DATA";
+    private static final String AAPS_NOTIFY_CHANNEL_ID = "AndroidAPS-Openloop";
 
     GoogleApiClient googleApiClient;
     private long lastRequest = 0;
@@ -512,12 +515,14 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("status", dataMap.toBundle());
+                    Persistence.storeDataMap(RawDisplayData.STATUS_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 } else if (path.equals(BASAL_DATA_PATH)){
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("basals", dataMap.toBundle());
+                    Persistence.storeDataMap(RawDisplayData.BASALS_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 } else if (path.equals(NEW_PREFERENCES_PATH)){
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
@@ -541,6 +546,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("data", dataMap.toBundle());
+                    Persistence.storeDataMap(RawDisplayData.DATA_PERSISTENCE_KEY, dataMap);
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 }
             }
@@ -548,13 +554,29 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     }
 
     private void notifyChangeRequest(String title, String message, String actionstring) {
+            // Create the NotificationChannel, but only on API 26+ because
+            // the NotificationChannel class is new and not in the support library
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                CharSequence name = "AAPS Open Loop";
+                String description = "Open Loop request notiffication";//getString(R.string.channel_description);
+                NotificationChannel channel = new NotificationChannel(AAPS_NOTIFY_CHANNEL_ID, name, NotificationManager.IMPORTANCE_HIGH);
+                channel.setDescription(description);
+                channel.enableVibration(true);
 
-        Notification.Builder builder =
-                new Notification.Builder(this); //,"AndroidAPS-Openloop");
-        builder.setSmallIcon(R.drawable.notif_icon)
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
+                NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                notificationManager.createNotificationChannel(channel);
+            }
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(this, AAPS_NOTIFY_CHANNEL_ID);
+
+        builder = builder.setSmallIcon(R.drawable.notif_icon)
                 .setContentTitle(title)
                 .setContentText(message)
-                .setPriority(Notification.PRIORITY_HIGH);
+                .setPriority(Notification.PRIORITY_HIGH)
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
 
         // Creates an explicit intent for an Activity in your app
         Intent intent = new Intent(this, AcceptActivity.class);
@@ -567,8 +589,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
         PendingIntent resultPendingIntent =
                 PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(resultPendingIntent);
-        builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+
+        builder = builder.setContentIntent(resultPendingIntent);
 
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

@@ -181,7 +181,7 @@ public class PersistentNotificationPlugin extends PluginBase {
             line1 = MainApp.gs(R.string.loading);
         } else if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() != null && ProfileFunctions.getInstance().isProfileValid("Notification")) {
             String line1_aa;
-            String units = ProfileFunctions.getInstance().getProfileUnits();
+            String units = ProfileFunctions.getSystemUnits();
 
 
             BgReading lastBG = DatabaseHelper.lastBg();

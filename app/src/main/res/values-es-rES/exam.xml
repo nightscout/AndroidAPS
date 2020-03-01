@@ -8,9 +8,9 @@
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
     <string name="dia_meaningisequaltodiapump">El significado es igual al parámetro DIA utilizado en su bomba.</string>
     <string name="dia_valuemustbedetermined">Debes determinar tu valor individual (pero no menos de 5 horas).</string>
-    <string name="hypott_label">Tema: Hypo Temp-Objetivo</string>
-    <string name="hypott_whenhypott">¿Cuál es la razón principal para establecer un hipo TT?</string>
-    <string name="hypott_goinglow">Para evitar que BG caiga si ya hay basal temporal a cero corriendo.</string>
+    <string name="hypott_label">Tema: Objetivo Temporal por Hipoglucemia</string>
+    <string name="hypott_whenhypott">¿Cuál es la razón principal para establecer un objetivo temporal por hipoglucemia?</string>
+    <string name="hypott_goinglow">Para evitar que la glucemia caiga si ya hay una basal temporal a cero activada.</string>
     <string name="hypott_preventoversmb">Para evitar que AAPS inyecte demasiada insulina después de una subida causada por los carbohidratos de acción rápida utilizados para tratar una bajada en las lecturas de glucosa.</string>
     <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">¿Qué perfil puede ser usado y configurado estando desconectado?</string>
@@ -163,4 +163,7 @@
     <string name="basalhelp_diabetesteam">Tu equipo de diabetes</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
+    <string name="other_medication_label">Otra medicación</string>
+    <string name="other_medication_text">La AAPS reduce el BR para aumentar la glucosa en la sangre. Los inhibidores del grupo de las SGLT2 (gliflozinas) pueden prevenir el aumento esperado de BG y, por lo tanto, pueden producir una deficiencia de insulina peligrosa (DKA).
+\nLos nombres comunes de marca son: Invokana ®, Forxiga ®, Steglatro ®, Suglat ®, Apleway ®, Synjardy ®, Vokanamet ®, Xigduo ®.\n\nI prometo que no tomaré este tipo de medicamentos cuando use AAPS o desactivará el lazo cerrado antes de usar estas drogas.</string>
 </resources>

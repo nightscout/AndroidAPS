@@ -21,7 +21,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.general.nsclient.broadcasts.BroadcastAckAlarm;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -93,7 +93,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
             Notification notification = (Notification) v.getTag();
             RxBus.INSTANCE.send(new EventDismissNotification(notification.id));
             if (notification.nsAlarm != null) {
-                BroadcastAckAlarm.handleClearAlarm(notification.nsAlarm, MainApp.instance().getApplicationContext(), 60 * 60 * 1000L);
+                NSClientPlugin.getPlugin().handleClearAlarm(notification.nsAlarm, 60 * 60 * 1000L);
             }
             // Adding current time to snooze if we got staleData
             if (L.isEnabled(L.NOTIFICATION))

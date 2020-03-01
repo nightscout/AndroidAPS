@@ -17,11 +17,13 @@ import androidx.core.content.ContextCompat;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction;
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
 
 public class AndroidPermission {
 
@@ -30,6 +32,7 @@ public class AndroidPermission {
     public static final int CASE_LOCATION = 0x3;
     public static final int CASE_BATTERY = 0x4;
     public static final int CASE_PHONE_STATE = 0x5;
+    public static final int CASE_SYSTEM_WINDOW = 0x6;
 
     private static boolean permission_battery_optimization_failed = false;
 
@@ -79,7 +82,7 @@ public class AndroidPermission {
     }
 
     public static synchronized void notifyForSMSPermissions(Activity activity) {
-        if (SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)) {
+        if (SmsCommunicatorPlugin.INSTANCE.isEnabled(PluginType.GENERAL)) {
             if (permissionNotGranted(activity, Manifest.permission.RECEIVE_SMS)) {
                 NotificationWithAction notification = new NotificationWithAction(Notification.PERMISSION_SMS, MainApp.gs(R.string.smscommunicator_missingsmspermission), Notification.URGENT);
                 notification.action(R.string.request, () -> AndroidPermission.askForPermission(activity, new String[]{Manifest.permission.RECEIVE_SMS,
@@ -127,5 +130,23 @@ public class AndroidPermission {
             RxBus.INSTANCE.send(new EventNewNotification(notification));
         } else
             RxBus.INSTANCE.send(new EventDismissNotification(Notification.PERMISSION_LOCATION));
+    }
+
+    public static synchronized void notifyForSystemWindowPermissions(Activity activity) {
+        // Check if Android Q or higher
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            if (!Settings.canDrawOverlays(activity)) {
+                NotificationWithAction notification = new NotificationWithAction(Notification.PERMISSION_SYSTEM_WINDOW, MainApp.gs(R.string.needsystemwindowpermission), Notification.URGENT);
+                notification.action(R.string.request, () -> {
+                    // Show alert dialog to the user saying a separate permission is needed
+                    // Launch the settings activity if the user prefers
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + activity.getPackageName()));
+                    activity.startActivity(intent);
+                });
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
+            } else
+                RxBus.INSTANCE.send(new EventDismissNotification(Notification.PERMISSION_SYSTEM_WINDOW));
+        }
     }
 }

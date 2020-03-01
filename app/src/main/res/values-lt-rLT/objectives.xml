@@ -36,7 +36,7 @@
     <string name="objectives_useloop">Parodyti Ciklo įskiepio turinį</string>
     <string name="objectives_usescale">Panaudokite vaizdo dydžio keitimo funkciją ilgai spaudžiant ant glikemijos kreivės</string>
     <string name="objectives_button_enter">Įeiti</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Įveskite kūrėjo kodą, kad apeitumėte likusius tikslus</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Jei anksčiau naudojote OpenAPS ir jūsų Nightscout svetainėje yra bent trijų mėnesių uždaro ciklo duomenų, galite atsiųsti el. laišką objectives@androidaps.org su savo NS svetainės adresu, ir paprašykite kodo, kad praleistumėte likusius tikslus. Įveskite kodą, kurį pateikė kūrėjai</string>
     <string name="codeaccepted">Kodas priimtas</string>
     <string name="codeinvalid">Neteisingas kodas</string>
     <string name="objectives_exam_objective">Patvirtinkite savo žinias</string>
@@ -46,10 +46,10 @@
     <string name="unfinshed_button">Kitas neužbaigtas</string>
     <string name="requestcode">Paprašyti kodo: %1$s</string>
     <string name="objectives_hint">(pasirinkite visus teisingus atsakymus)</string>
-    <string name="disconnectpump_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Neprisijungta prie interneto</string>
     <string name="failedretrievetime">Nepavyko nuskaityti laiko</string>
     <string name="requirementnotmet">Tikslo reikalavimai neįvykdyti</string>

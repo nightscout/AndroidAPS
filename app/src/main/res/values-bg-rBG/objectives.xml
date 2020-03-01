@@ -36,16 +36,17 @@
     <string name="objectives_useloop">Отворете съдържанието на Цикъл плъгина.</string>
     <string name="objectives_usescale">Използвайте функцията за удължаване на периода на графиката, като задържите върху нея.</string>
     <string name="objectives_button_enter">Въведи</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Въведете кода, получен от разработчиците да прескочите останалите цели</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Ако сте били потребител на OpenAPS и НС има най-малко 3 месеца цикъл на данни, можете да изпращате по електронна поща objectives@androidaps.org с адрес на НС, за да поискате код за заобикаляне на останалите цели. Въведете кода, получен от разработчици</string>
     <string name="codeaccepted">Код приет!</string>
     <string name="codeinvalid">Неправилен код</string>
     <string name="objectives_exam_objective">Докажете знанията си</string>
     <string name="objectives_exam_gate">Отговорете правилно на въпросите</string>
+    <string name="answerdisabledto">Изключено до: %1$s</string>
     <string name="wronganswer">Грешен отговор!</string>
     <string name="unfinshed_button">Следващия неотговорен</string>
     <string name="requestcode">Код (request code): %1$s</string>
     <string name="objectives_hint">(отбележете всички правилни отговори)</string>
-    <string name="disconnectpump_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
     <string name="failedretrievetime">Не може да се вземе времето</string>
     <string name="requirementnotmet">Задачите не са изпълнени</string>
     <plurals name="objective_days">

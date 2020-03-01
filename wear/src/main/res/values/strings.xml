@@ -4,53 +4,119 @@
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
 
-    <string-array name="chart_timeframe">
-        <item>1 hour</item>
-        <item>2 hours</item>
-        <item>3 hours</item>
-        <item>4 hours</item>
-        <item>5 hours</item>
-
-    </string-array>
-    <string-array name="chart_timeframe_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-    </string-array>
-
-    <string-array name="delta_granularity">
-        <item>Low</item>
-        <item>Medium</item>
-        <item>High</item>
-    </string-array>
-
-    <string-array name="delta_granularity_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="input_design">
-        <item>Default</item>
-        <item>Quick righty</item>
-        <item>Quick lefty</item>
-        <item>Modern Sparse</item>
-
-    </string-array>
-    <string-array name="input_design_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
-
-
     <string name="label_xdrip">AAPS</string>
     <string name="label_xdrip_large">AAPS(Large)</string>
     <string name="label_xdrip_big_chart">AAPS(BigChart)</string>
     <string name="label_xdrip_no_chart">AAPS(NoChart)</string>
     <string name="label_xdrip_circle">AAPS(Circle)</string>
+    <string name="label_xdrip_v2">AAPSv2</string>
+    <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
+    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
+
+    <string name="label_warning_sync">No data!</string>
+    <string name="label_warning_old">Old data!</string>
+    <string name="label_warning_since">Since %1$s</string>
+    <string name="label_warning_sync_aaps">Sync with AAPS!</string>
+
+    <string name="msg_warning_sync">No data received since %1$s! Check if AAPS on the phone sends data to watch</string>
+    <string name="msg_warning_old">AAPS data is %1$s old! Check your sensor, xDrip+, NS, AAPS config or other!</string>
+
+    <string name="pref_on">On</string>
+    <string name="pref_off">Off</string>
+    <string name="pref_vibrate_on_bolus">Vibrate on Bolus</string>
+    <string name="pref_units_for_actions">Units for Actions</string>
+    <string name="pref_show_date">Show Date</string>
+    <string name="pref_show_iob">Show IOB</string>
+    <string name="pref_show_cob">Show COB</string>
+    <string name="pref_show_delta">Show Delta</string>
+    <string name="pref_show_avgdelta">Show AvgDelta</string>
+    <string name="pref_show_phone_battery">Show Phone Battery</string>
+    <string name="pref_show_rig_battery">Show Rig Battery</string>
+    <string name="pref_show_basal_rate">Show Basal Rate</string>
+    <string name="pref_show_loop_status">Show Loop Status</string>
+    <string name="pref_show_bg">Show BG</string>
+    <string name="pref_show_direction_arrow">Show Direction Arrow</string>
+    <string name="pref_show_ago">Show Ago</string>
+    <string name="pref_dark" comment="Enables dark visual theme">Dark</string>
+    <string name="pref_highlight_basals">Highlight Basals</string>
+    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Matching divider</string>
+    <string name="pref_chart_timeframe">Chart Timeframe</string>
+    <string name="pref_1_hour">1 hour</string>
+    <string name="pref_2_hours">2 hours</string>
+    <string name="pref_3_hours">3 hours</string>
+    <string name="pref_4_hours">4 hours</string>
+    <string name="pref_5_hours">5 hours</string>
+    <string name="pref_input_design">Input Design</string>
+    <string name="pref_default">Default</string>
+    <string name="pref_quick_righty">Quick righty</string>
+    <string name="pref_quick_lefty">Quick lefty</string>
+    <string name="pref_modern_sparse">Modern Sparse</string>
+    <string name="pref_delta_granularity">Delta Granularity (Steampunk)</string>
+    <string name="pref_low">Low</string>
+    <string name="pref_medium">Medium</string>
+    <string name="pref_high">High</string>
+    <string name="pref_auto">Auto</string>
+    <string name="pref_big_numbers">Big Numbers</string>
+    <string name="pref_ring_history">Ring History</string>
+    <string name="pref_light_ring_history">Light Ring History</string>
+    <string name="pref_animations">Animations</string>
+    <string name="pref_wizard_in_menu">Wizard in Menu</string>
+    <string name="pref_prime_in_menu">Prime in Menu</string>
+    <string name="pref_single_target">Single Target</string>
+    <string name="pref_wizard_percentage">Wizard Percentage</string>
+    <string name="pref_complication_tap_action">Complication Tap Action</string>
+    <string name="pref_unicode_in_complications">Unicode in Complications</string>
+    <string name="pref_version">Version:</string>
+
+    <string name="menu_tempt">TempT</string>
+    <string name="menu_wizard">Wizard</string>
+    <string name="menu_bolus">Bolus</string>
+    <string name="menu_ecarb">eCarb</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_status">Status</string>
+    <string name="menu_prime_fill">Prime/Fill</string>
+    <string name="menu_none">None</string>
+    <string name="menu_default">Default</string>
+    <string name="menu_menu">Menu</string>
+
+    <string name="action_duration">duration</string>
+    <string name="action_target" comment="In temp target menu, single target value">target</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">low</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">high</string>
+    <string name="action_carbs">carbs</string>
+    <string name="action_percentage">percentage</string>
+    <string name="action_start_min">start [min]</string>
+    <string name="action_duration_h">duration [h]</string>
+    <string name="action_insulin">insulin</string>
+    <string name="action_preset_1">Preset 1</string>
+    <string name="action_preset_2">Preset 2</string>
+    <string name="action_preset_3">Preset 3</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Free amount</string>
+    <string name="action_confirm">CONFIRM</string>
+    <string name="action_status_pump">STATUS PUMP</string>
+    <string name="action_status_loop">STATUS LOOP</string>
+    <string name="action_timeshift">timeshift</string>
+    <string name="action_tdd_weighted">TDD weighted</string>
+    <string name="action_bolus">bolus</string>
+
+
+    <string name="status_pump">Pump</string>
+    <string name="status_loop">Loop</string>
+    <string name="status_cpp">CPP</string>
+    <string name="status_tdd">TDD</string>
+
+    <string name="activity_carb">Carb</string>
+    <string name="activity_IOB">IOB</string>
+    <string name="activity_no_status">no status</string>
+
+    <string name="unit_mg_dl">mg/dl</string>
+    <string name="unit_mmol_l">mmol/l</string>
+    <string name="unit_g" comment="Shortcut for ISO unit: gram">g</string>
+    <string name="unit_u" comment="Shortcut for: insulin Unit">U</string>
+    <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">U/h</string>
+    <string name="unit_h" comment="One letter shortcut for: Hour" maxLength="1">h</string>
+    <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">d</string>
+    <string name="unit_w" comment="One letter shortcut for: Week" maxLength="1">w</string>
+
 
 </resources>

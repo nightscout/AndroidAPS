@@ -48,7 +48,6 @@
                 <androidx.gridlayout.widget.GridLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:padding="10dip"
                     app:columnCount="3">
 

@@ -9,98 +9,210 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/invalidprofile"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/invalidprofile"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@android:color/holo_red_light"
-            android:textStyle="bold" />
+            android:layout_height="match_parent"
+            android:gravity="start"
+            android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/linearBlockBackground"
-            android:layout_marginStart="10dp"
-            android:text="@string/units"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/selected_profile"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <Spinner
+                android:id="@+id/localprofile_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:gravity="start"
             android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/localprofile_mgdl"
+            <TextView
+                android:id="@+id/localprofile_units"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/mgdl" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:text="@string/units_colon"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <RadioButton
-                android:id="@+id/localprofile_mmol"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/mmol" />
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/localprofile_profile_add"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:contentDescription="@string/addnew"
+                android:src="@drawable/add" />
+
+            <ImageView
+                android:id="@+id/localprofile_profile_clone"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:contentDescription="@string/clone_label"
+                android:src="@drawable/clone" />
+
+            <ImageView
+                android:id="@+id/localprofile_profile_remove"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:contentDescription="@string/remove_label"
+                android:src="@drawable/remove" />
 
         </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/linearBlockBackground"
-            android:layout_marginStart="10dp"
-            android:text="@string/dia"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:paddingTop="5dp"
-            android:textAppearance="?android:attr/textAppearanceSmall">
+            android:weightSum="5"
+            android:paddingBottom="10dp">
 
-            <!-- dummy to align with TimeListEdits added dynamically -->
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="10dp"
-                android:minWidth="80dp"
-                android:visibility="invisible"/>
-
-            <info.nightscout.androidaps.utils.NumberPicker
-                android:id="@+id/localprofile_dia"
-                android:layout_width="130dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="10dp"/>
-
-            <!-- dummy to align with TimeListEdits added dynamically -->
-            <ImageView
-                android:id="@+id/timelistedit_add"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/dia_tab"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:src="@drawable/add"
-                android:visibility="invisible"/>
+                android:layout_weight="1"
+                android:text="@string/dia_short"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
 
-            <!-- dummy to align with TimeListEdits added dynamically -->
-            <ImageView
-                android:id="@+id/timelistedit_remove"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/ic_tab"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="15dp"
-                android:src="@drawable/remove"
-                android:visibility="invisible"/>
+                android:layout_weight="1"
+                android:text="@string/ic_short"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/isf_tab"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/isf_short"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/basal_tab"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/basal_short"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/target_tab"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="@string/target_short"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/localprofile_dia_placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:labelFor="@+id/localprofile_name"
+                    android:text="@string/profile_name"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <EditText
+                    android:id="@+id/localprofile_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:importantForAutofill="no"
+                    android:inputType="text" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/dia"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <info.nightscout.androidaps.utils.NumberPicker
+                    android:id="@+id/localprofile_dia"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="10dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/hours"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/localprofile_ic"
@@ -136,7 +248,7 @@
             android:id="@+id/localprofile_profileswitch"
             style="?android:attr/buttonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="3dp"
             android:layout_marginLeft="10dp"

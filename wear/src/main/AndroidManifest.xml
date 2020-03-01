@@ -10,6 +10,7 @@
 
 
     <application
+        android:name=".aaps"
         android:allowBackup="true"
         android:icon="@drawable/ic_icon"
         android:label="@string/app_name"
@@ -231,6 +232,229 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".complications.LongStatusComplication"
+            android:icon="@drawable/ic_aaps_full"
+            android:label="Full Status"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+        <intent-filter>
+            <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+        </intent-filter>
+
+        <meta-data
+            android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+            android:value="LONG_TEXT" />
+        <meta-data
+            android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+            android:value="300" />
+        </service>
+
+        <service
+            android:name=".complications.LongStatusFlippedComplication"
+            android:icon="@drawable/ic_aaps_full"
+            android:label="Full Status (flipped)"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LONG_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+
+        <service
+            android:name=".complications.SgvComplication"
+            android:icon="@drawable/ic_sgv"
+            android:label="Blood Glucose"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+
+        <service
+            android:name=".complications.BrCobIobComplication"
+            android:icon="@drawable/ic_br_cob_iob"
+            android:label="BR, CoB &amp; IoB"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+
+        <service
+            android:name=".complications.CobIobComplication"
+            android:icon="@drawable/ic_cob_iob"
+            android:label="CoB &amp; IoB"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+
+        <service
+            android:name=".complications.CobIconComplication"
+            android:icon="@drawable/ic_carbs"
+            android:label="CoB Icon"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+
+        <service
+            android:name=".complications.CobDetailedComplication"
+            android:icon="@drawable/ic_cob_detailed"
+            android:label="CoB Detailed"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+
+        <service
+            android:name=".complications.IobIconComplication"
+            android:icon="@drawable/ic_ins"
+            android:label="IoB Icon"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+
+        <service
+            android:name=".complications.IobDetailedComplication"
+            android:icon="@drawable/ic_iob_detailed"
+            android:label="IoB Detailed"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+
+        <service
+            android:name=".complications.UploaderBattery"
+            android:icon="@drawable/ic_battery_charging_wireless_50"
+            android:label="Uploader/Phone Battery"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="RANGED_VALUE,SHORT_TEXT,ICON" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="300" />
+        </service>
+
+        <service
+            android:name=".complications.WallpaperLightComplication"
+            android:icon="@drawable/ic_aaps_light"
+            android:label="Light Walpaper"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LARGE_IMAGE"/>
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0"/>
+        </service>
+
+        <service
+            android:name=".complications.WallpaperDarkComplication"
+            android:icon="@drawable/ic_aaps_dark"
+            android:label="Dark Walpaper"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LARGE_IMAGE"/>
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0"/>
+        </service>
+
+        <service
+            android:name=".complications.WallpaperGrayComplication"
+            android:icon="@drawable/ic_aaps_gray"
+            android:label="Gray Walpaper"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="LARGE_IMAGE"/>
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0"/>
+        </service>
+
+        <receiver android:name=".complications.ComplicationTapBroadcastReceiver"/>
+
         <activity
             android:name=".interaction.menus.MainMenuActivity"
             android:label="@string/label_actions_activity">
@@ -241,44 +465,44 @@
         </activity>
         <activity
             android:name=".interaction.AAPSPreferences"
-            android:label="SETTINGS">
+            android:label="@string/menu_settings">
         </activity>
         <activity
             android:name=".interaction.actions.WizardActivity"
-            android:label="Wizard">
+            android:label="@string/menu_wizard">
         </activity>
         <activity
             android:name=".interaction.menus.FillMenuActivity"
-            android:label="Fillmenu">
+            android:label="@string/menu_prime_fill">
         </activity>
         <activity
             android:name=".interaction.menus.StatusMenuActivity"
-            android:label="Status">
+            android:label="@string/menu_status">
         </activity>
         <activity
             android:name=".interaction.actions.BolusActivity"
-            android:label="Bolus">
+            android:label="@string/action_bolus">
         </activity>
         <activity
             android:name=".interaction.actions.CPPActivity"
-            android:label="CPP">
+            android:label="@string/status_cpp">
         </activity>
         <activity
             android:name=".interaction.actions.AcceptActivity"
             android:launchMode="singleInstance"
-            android:label="ACCEPT">
+            android:label="@string/action_confirm">
         </activity>
         <activity
             android:name=".interaction.actions.FillActivity"
-            android:label="Fill">
+            android:label="@string/menu_prime_fill">
         </activity>
         <activity
             android:name=".interaction.actions.ECarbActivity"
-            android:label="Fill">
+            android:label="@string/action_carbs">
         </activity>
         <activity
             android:name=".interaction.actions.TempTargetActivity"
-            android:label="TempTarget">
+            android:label="@string/menu_tempt">
         </activity>
     </application>
 </manifest>

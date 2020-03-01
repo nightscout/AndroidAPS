@@ -32,24 +32,24 @@
     <string name="objectives_usedisconnectpump">Simula la doccia. Disconnetti il micro per 1h (premi a lungo su Loop aperto)</string>
     <string name="objectives_usereconnectpump">... e riconnetti allo stesso modo</string>
     <string name="objectives_usetemptarget">Crea un target temporaneo personalizzato con una durata di 10 min (premi a lungo sul tuo target corrente)</string>
-    <string name="objectives_useactions">Nel Configuratore attiva il plugin Azioni, rendilo visibile e visualizzane i contenuti tramite il menu in alto</string>
+    <string name="objectives_useactions">Nel Configuratore strutturale attiva il plugin Azioni, rendilo visibile e visualizzane i contenuti tramite il menu in alto</string>
     <string name="objectives_useloop">Visualizza il contenuto del plugin Loop</string>
     <string name="objectives_usescale">Usa la funzione di ridimensionamento premendo a lungo sul grafico delle glicemie</string>
     <string name="objectives_button_enter">Entra</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Inserisci il codice ottenuto dagli sviluppatori per aggirare il resto degli obiettivi</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se prima eri un utente OpenAPS e il tuo NS ha almeno 3 mesi di dati in loop, puoi inviare un\'e-mail a objectives@androidaps.org con il tuo indirizzo NS e richiedere il codice per ignorare il resto degli obiettivi. Inserisci il codice ottenuto dagli sviluppatori</string>
     <string name="codeaccepted">Codice accettato</string>
     <string name="codeinvalid">Codice non valido</string>
     <string name="objectives_exam_objective">Dai prova della tua conoscenza</string>
     <string name="objectives_exam_gate">Studia e rispondi correttamente alle domande</string>
-    <string name="answerdisabledto">Risposta disabilitata per: %1$s</string>
+    <string name="answerdisabledto">Risposta disabilitata fino a: %1$s</string>
     <string name="wronganswer">Risposta sbagliata!</string>
-    <string name="unfinshed_button">Prossimo non completato</string>
+    <string name="unfinshed_button">Prossimo N.C.</string>
     <string name="requestcode">Codice richiesta: %1$s</string>
     <string name="objectives_hint">(segna tutte le risposte corrette)</string>
-    <string name="disconnectpump_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Non connesso a internet</string>
     <string name="failedretrievetime">Impossibile recuperare l\'orario</string>
     <string name="requirementnotmet">Requisiti obiettivo non soddisfatti</string>

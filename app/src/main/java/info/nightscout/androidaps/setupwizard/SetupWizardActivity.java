@@ -8,12 +8,9 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -37,8 +34,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class SetupWizardActivity extends NoSplashAppCompatActivity {
-    //logging
-    private static Logger log = LoggerFactory.getLogger(SetupWizardActivity.class);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     ScrollView scrollView;
@@ -54,7 +49,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
         LocaleHelper.INSTANCE.update(getApplicationContext());
         setContentView(R.layout.activity_setupwizard);
 
-        scrollView = (ScrollView) findViewById(R.id.sw_scrollview);
+        scrollView = findViewById(R.id.sw_scrollview);
 
         Intent intent = getIntent();
         currentWizardPage = intent.getIntExtra(SetupWizardActivity.INTENT_MESSAGE, 0);
@@ -62,7 +57,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
             SWScreen currentScreen = screens.get(currentWizardPage);
 
             //Set screen name
-            TextView screenName = (TextView) findViewById(R.id.sw_content);
+            TextView screenName = findViewById(R.id.sw_content);
             screenName.setText(currentScreen.getHeader());
 
             swDefinition.setActivity(this);
@@ -70,18 +65,6 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
             generateLayout();
             updateButtons();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (currentWizardPage == 0)
-            OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
-        else showPreviousPage(null);
-    }
-
-    public void exitPressed(View view) {
-        SP.putBoolean(R.string.key_setupwizard_processed, true);
-        OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
     }
 
     @Override
@@ -157,6 +140,18 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        if (currentWizardPage == 0)
+            OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
+        else showPreviousPage(null);
+    }
+
+    public void exitPressed(View view) {
+        SP.putBoolean(R.string.key_setupwizard_processed, true);
+        OKDialog.showConfirmation(this, MainApp.gs(R.string.exitwizard), this::finish);
+    }
+
     public void showNextPage(View view) {
         this.finish();
         Intent intent = new Intent(this, SetupWizardActivity.class);
@@ -187,7 +182,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
                 return page;
             page++;
         }
-        return currentWizardPage;
+        return Math.min(currentWizardPage, screens.size() - 1);
     }
 
     private int previousPage() {
@@ -197,21 +192,18 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
                 return page;
             page--;
         }
-        return currentWizardPage;
+        return Math.max(currentWizardPage, 0);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (permissions.length != 0) {
             if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
                 switch (requestCode) {
                     case AndroidPermission.CASE_STORAGE:
                         //show dialog after permission is granted
-                        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                        alert.setMessage(R.string.alert_dialog_storage_permission_text);
-                        alert.setPositiveButton(R.string.ok, null);
-                        alert.show();
+                        OKDialog.show(this, MainApp.gs(R.string.permission), MainApp.gs(R.string.alert_dialog_storage_permission_text));
                         break;
                     case AndroidPermission.CASE_LOCATION:
                     case AndroidPermission.CASE_SMS:

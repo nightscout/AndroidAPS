@@ -2,9 +2,9 @@ package info.nightscout.androidaps.utils
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AlertDialog
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.CareportalEvent
@@ -20,7 +20,6 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
-import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -117,18 +116,18 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
     private fun doCalc() {
 
         // Insulin from BG
-        sens = profile.isf
-        targetBGLow = profile.targetLow
-        targetBGHigh = profile.targetHigh
+        sens = Profile.fromMgdlToUnits(profile.isfMgdl, ProfileFunctions.getSystemUnits())
+        targetBGLow = Profile.fromMgdlToUnits(profile.targetLowMgdl, ProfileFunctions.getSystemUnits())
+        targetBGHigh = Profile.fromMgdlToUnits(profile.targetHighMgdl, ProfileFunctions.getSystemUnits())
         if (useTT && tempTarget != null) {
-            targetBGLow = Profile.fromMgdlToUnits(tempTarget.low, profile.units)
-            targetBGHigh = Profile.fromMgdlToUnits(tempTarget.high, profile.units)
+            targetBGLow = Profile.fromMgdlToUnits(tempTarget.low, ProfileFunctions.getSystemUnits())
+            targetBGHigh = Profile.fromMgdlToUnits(tempTarget.high, ProfileFunctions.getSystemUnits())
         }
         if (useBg && bg > 0) {
             bgDiff = when {
                 bg in targetBGLow..targetBGHigh -> 0.0
-                bg <= targetBGLow -> bg - targetBGLow
-                else -> bg - targetBGHigh
+                bg <= targetBGLow               -> bg - targetBGLow
+                else                            -> bg - targetBGHigh
             }
             insulinFromBG = bgDiff / sens
         }
@@ -138,10 +137,9 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
         glucoseStatus?.let {
             if (useTrend) {
                 trend = it.short_avgdelta
-                insulinFromTrend = Profile.fromMgdlToUnits(trend, profile.units) * 3 / sens
+                insulinFromTrend = Profile.fromMgdlToUnits(trend, ProfileFunctions.getSystemUnits()) * 3 / sens
             }
         }
-
 
         // Insulin from carbs
         ic = profile.ic
@@ -185,7 +183,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
         }
 
         val bolusStep = ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription?.bolusStep
-                ?: 0.1
+            ?: 0.1
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep)
 
         insulinAfterConstraints = MainApp.getConstraintChecker().applyBolusConstraints(Constraint(calculatedTotalInsulin)).value()
@@ -236,7 +234,7 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
 
     private fun confirmMessageAfterConstraints(pump: PumpInterface): String {
 
-        var confirmMessage = MainApp.gs(R.string.entertreatmentquestion)
+        var confirmMessage = ""
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100.0) " (" + percentageCorrection.toInt() + "%)" else ""
             confirmMessage += "<br/>" + MainApp.gs(R.string.bolus) + ": " + "<font color='" + MainApp.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + "U" + pct + "</font>"
@@ -268,89 +266,85 @@ class BolusWizard @JvmOverloads constructor(val profile: Profile,
         val pump = ConfigBuilderPlugin.getPlugin().activePump ?: return
 
         if (calculatedTotalInsulin > 0.0 || carbs > 0.0) {
+            if (accepted) {
+                log.debug("guarding: already accepted")
+                return
+            }
+            accepted = true
+
             val confirmMessage = confirmMessageAfterConstraints(pump)
 
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle(MainApp.gs(R.string.confirmation))
-            builder.setMessage(HtmlHelper.fromHtml(confirmMessage))
-            builder.setPositiveButton(MainApp.gs(R.string.ok)) { _, _ ->
-                synchronized(builder) {
-                    if (accepted) {
-                        log.debug("guarding: already accepted")
-                        return@setPositiveButton
-                    }
-                    accepted = true
-                    if (insulinAfterConstraints > 0 || carbs > 0) {
-                        if (useSuperBolus) {
-                            val loopPlugin = LoopPlugin.getPlugin()
-                            if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                                loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000)
-                                RxBus.send(EventRefreshOverview("WizardDialog"))
-                            }
-
-                            val pump1 = ConfigBuilderPlugin.getPlugin().activePump
-
-                            if (pump1?.pumpDescription?.tempBasalStyle == PumpDescription.ABSOLUTE) {
-                                ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalAbsolute(0.0, 120, true, profile, object : Callback() {
-                                    override fun run() {
-                                        if (!result.success) {
-                                            val i = Intent(MainApp.instance(), ErrorHelperActivity::class.java)
-                                            i.putExtra("soundid", R.raw.boluserror)
-                                            i.putExtra("status", result.comment)
-                                            i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror))
-                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                            MainApp.instance().startActivity(i)
-                                        }
-                                    }
-                                })
-                            } else {
-
-                                ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalPercent(0, 120, true, profile, object : Callback() {
-                                    override fun run() {
-                                        if (!result.success) {
-                                            val i = Intent(MainApp.instance(), ErrorHelperActivity::class.java)
-                                            i.putExtra("soundid", R.raw.boluserror)
-                                            i.putExtra("status", result.comment)
-                                            i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror))
-                                            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                            MainApp.instance().startActivity(i)
-                                        }
-                                    }
-                                })
-                            }
+            OKDialog.showConfirmation(context, MainApp.gs(R.string.boluswizard), HtmlHelper.fromHtml(confirmMessage), Runnable {
+                if (insulinAfterConstraints > 0 || carbs > 0) {
+                    if (useSuperBolus) {
+                        log.debug("USER ENTRY: SUPERBOLUS TBR")
+                        val loopPlugin = LoopPlugin.getPlugin()
+                        if (loopPlugin.isEnabled(PluginType.LOOP)) {
+                            loopPlugin.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000)
+                            RxBus.send(EventRefreshOverview("WizardDialog"))
                         }
-                        val detailedBolusInfo = DetailedBolusInfo()
-                        detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD
-                        detailedBolusInfo.insulin = insulinAfterConstraints
-                        detailedBolusInfo.carbs = carbs.toDouble()
-                        detailedBolusInfo.context = context
-                        detailedBolusInfo.glucose = bg
-                        detailedBolusInfo.glucoseType = "Manual"
-                        detailedBolusInfo.carbTime = carbTime
-                        detailedBolusInfo.boluscalc = nsJSON()
-                        detailedBolusInfo.source = Source.USER
-                        detailedBolusInfo.notes = notes
-                        if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription?.storesCarbInfo == true) {
-                            ConfigBuilderPlugin.getPlugin().commandQueue.bolus(detailedBolusInfo, object : Callback() {
+
+                        val pump1 = ConfigBuilderPlugin.getPlugin().activePump
+
+                        if (pump1?.pumpDescription?.tempBasalStyle == PumpDescription.ABSOLUTE) {
+                            ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalAbsolute(0.0, 120, true, profile, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
                                         val i = Intent(MainApp.instance(), ErrorHelperActivity::class.java)
                                         i.putExtra("soundid", R.raw.boluserror)
                                         i.putExtra("status", result.comment)
-                                        i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror))
+                                        i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror))
                                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                         MainApp.instance().startActivity(i)
                                     }
                                 }
                             })
                         } else {
-                            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false)
+
+                            ConfigBuilderPlugin.getPlugin().commandQueue.tempBasalPercent(0, 120, true, profile, object : Callback() {
+                                override fun run() {
+                                    if (!result.success) {
+                                        val i = Intent(MainApp.instance(), ErrorHelperActivity::class.java)
+                                        i.putExtra("soundid", R.raw.boluserror)
+                                        i.putExtra("status", result.comment)
+                                        i.putExtra("title", MainApp.gs(R.string.tempbasaldeliveryerror))
+                                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        MainApp.instance().startActivity(i)
+                                    }
+                                }
+                            })
                         }
                     }
+                    val detailedBolusInfo = DetailedBolusInfo()
+                    detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD
+                    detailedBolusInfo.insulin = insulinAfterConstraints
+                    detailedBolusInfo.carbs = carbs.toDouble()
+                    detailedBolusInfo.context = context
+                    detailedBolusInfo.glucose = bg
+                    detailedBolusInfo.glucoseType = "Manual"
+                    detailedBolusInfo.carbTime = carbTime
+                    detailedBolusInfo.boluscalc = nsJSON()
+                    detailedBolusInfo.source = Source.USER
+                    detailedBolusInfo.notes = notes
+                    log.debug("USER ENTRY: BOLUS insulin $insulinAfterConstraints carbs: $carbs")
+                    if (detailedBolusInfo.insulin > 0 || ConfigBuilderPlugin.getPlugin().activePump?.pumpDescription?.storesCarbInfo == true) {
+                        ConfigBuilderPlugin.getPlugin().commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                            override fun run() {
+                                if (!result.success) {
+                                    val i = Intent(MainApp.instance(), ErrorHelperActivity::class.java)
+                                    i.putExtra("soundid", R.raw.boluserror)
+                                    i.putExtra("status", result.comment)
+                                    i.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror))
+                                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    MainApp.instance().startActivity(i)
+                                }
+                            }
+                        })
+                    } else {
+                        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false)
+                    }
                 }
-            }
-            builder.setNegativeButton(MainApp.gs(R.string.cancel), null)
-            builder.show()
+            })
         }
     }
 }

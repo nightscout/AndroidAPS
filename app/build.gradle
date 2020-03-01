@@ -109,7 +109,7 @@ android {
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.5.1"
+        version "2.6.0"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -225,8 +225,10 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
-    implementation 'com.google.firebase:firebase-core:17.2.0'
-    implementation("com.crashlytics.sdk.android:crashlytics:2.9.9@aar") {
+    implementation 'com.google.firebase:firebase-core:17.2.1'
+    implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-database:19.2.0'
+    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
         transitive = true;
     }
 
@@ -234,11 +236,11 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation "com.wdullaer:materialdatetimepicker:2.3.0"
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
 
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
 
@@ -247,11 +249,11 @@ dependencies {
     implementation("com.github.tony19:logback-android-classic:1.1.1-6") {
         exclude group: "com.google.android", module: "android"
     }
-    implementation "org.apache.commons:commons-lang3:3.7"
-    implementation "org.slf4j:slf4j-api:1.7.21"
+    implementation "org.apache.commons:commons-lang3:3.9"
+    implementation "org.slf4j:slf4j-api:1.7.29"
     // Graphview cannot be upgraded
     implementation "com.jjoe64:graphview:4.0.1"
-    implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.1.1"
+    implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation(name: "android-edittext-validator-v1.3.4-mod", ext: "aar")
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
@@ -263,26 +265,29 @@ dependencies {
         // excluding org.json which is provided by Android
         exclude group: "org.json", module: "json"
     }
-    implementation "com.google.code.gson:gson:2.8.5"
-    implementation "com.google.guava:guava:24.1-jre"
+    implementation "com.google.code.gson:gson:2.8.6"
+    implementation ("com.google.guava:guava:24.1-jre") {
+        exclude group: "com.google.code.findbugs", module: "jsr305"
+    }
+    implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
-    implementation "net.danlew:android.joda:2.9.9.1"
-    implementation "uk.com.robust-it:cloning:1.9.9"
+    implementation "net.danlew:android.joda:2.10.3"
 
-    implementation 'org.mozilla:rhino:1.7.7.2'
+    implementation 'org.mozilla:rhino:1.7.11'
 
     implementation 'com.github.DavidProdinger:weekdays-selector:1.1.0'
 
     testImplementation "junit:junit:4.12"
-    testImplementation "org.json:json:20140107"
+    testImplementation "org.json:json:20190722"
     testImplementation "org.mockito:mockito-core:2.8.47"
     testImplementation "org.powermock:powermock-api-mockito2:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule-agent:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
-    testImplementation "joda-time:joda-time:2.9.9"
+    testImplementation "joda-time:joda-time:2.10.5"
     testImplementation("com.google.truth:truth:0.39") {
         exclude group: "com.google.guava", module: "guava"
+        exclude group: "com.google.code.findbugs", module: "jsr305"
     }
     testImplementation "org.skyscreamer:jsonassert:1.5.0"
     testImplementation "org.hamcrest:hamcrest-all:1.3"
@@ -292,20 +297,25 @@ dependencies {
     }
 */
 
-    androidTestImplementation "org.mockito:mockito-core:2.8.47"
-    androidTestImplementation "com.google.dexmaker:dexmaker:${dexmakerVersion}"
-    androidTestImplementation "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
 
     // new for tidepool
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
-    implementation "com.squareup.retrofit2:retrofit:2.4.0"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:2.4.0"
-    implementation "com.squareup.retrofit2:converter-gson:2.4.0"
+    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
+    implementation "com.squareup.retrofit2:retrofit:2.6.2"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.2"
+    implementation "com.squareup.retrofit2:converter-gson:2.6.2"
 
+    // Phone checker
+    implementation 'com.scottyab:rootbeer-lib:0.0.7'
+    
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-alpha03'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test:rules:1.3.0-alpha03'
+    androidTestImplementation 'com.google.code.findbugs:jsr305:3.0.2'
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
 
 
@@ -332,7 +342,37 @@ task copyLibs(dependsOn: downloadAndUnzipFile, type: Copy) {
 task full_clean(type: Delete) {
     delete file("src/main/jniLibs")
 }
-
+/*
+// Run 'adb' shell command to clear application data of main app for 'debug' variant
+task clearMainAppData(type: Exec) {
+    // we have to iterate to find the 'debug' variant to obtain a variant reference
+    android.applicationVariants.all { variant ->
+        if (variant.name == "fullDebug") {
+            def applicationId = [variant.mergedFlavor.applicationId, variant.buildType.applicationIdSuffix].findAll().join()
+            def clearDataCommand = ['adb', 'shell', 'pm', 'clear', applicationId]
+            println "Clearing application data of ${variant.name} variant: [${clearDataCommand}]"
+            def stdout = new ByteArrayOutputStream()
+            exec {
+                commandLine clearDataCommand
+                standardOutput = stdout
+            }
+            String result = stdout.toString().trim()
+            if (!result.startsWith("Success")) {
+                println result
+                throw new GradleException(clearDataCommand.join(" "))
+            }
+        }
+    }
+}
+// Clear Application Data (once) before running instrumentation test
+tasks.whenTaskAdded { task ->
+    // Both of these targets are equivalent today, although in future connectedCheck
+    // will also include connectedUiAutomatorTest (not implemented yet)
+    if(task.name == "connectedAndroidTest" || task.name == "connectedCheck"){
+        task.dependsOn(clearMainAppData)
+    }
+}
+*/
 clean.dependsOn full_clean
 preBuild.dependsOn copyLibs
 

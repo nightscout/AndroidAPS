@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.danaR;
 
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
 import org.json.JSONException;
@@ -15,7 +14,6 @@ import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -25,7 +23,6 @@ import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
@@ -49,7 +46,7 @@ import info.nightscout.androidaps.utils.SP;
  * Created by mike on 28.01.2018.
  */
 
-public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface, ProfileInterface {
+public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface {
     protected Logger log = LoggerFactory.getLogger(L.PUMP);
 
     protected AbstractDanaRExecutionService sExecutionService;
@@ -143,7 +140,6 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
         for (int h = 0; h < basalValues; h++) {
             Double pumpValue = pump.pumpProfiles[pump.activeProfile][h];
             Double profileValue = profile.getBasalTimeFromMidnight(h * basalIncrement);
-            if (profileValue == null) return true;
             if (Math.abs(pumpValue - profileValue) > getPumpDescription().basalStep) {
                 if (L.isEnabled(L.PUMP))
                     log.debug("Diff found. Hour: " + h + " Pump: " + pumpValue + " Profile: " + profileValue);
@@ -434,24 +430,6 @@ public abstract class AbstractDanaRPlugin extends PluginBase implements PumpInte
     @Override
     public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
         return applyBolusConstraints(insulin);
-    }
-
-    @Nullable
-    @Override
-    public ProfileStore getProfile() {
-        if (DanaRPump.getInstance().lastSettingsRead == 0)
-            return null; // no info now
-        return DanaRPump.getInstance().createConvertedProfile();
-    }
-
-    @Override
-    public String getUnits() {
-        return DanaRPump.getInstance().getUnits();
-    }
-
-    @Override
-    public String getProfileName() {
-        return DanaRPump.getInstance().createConvertedProfileName();
     }
 
     @Override

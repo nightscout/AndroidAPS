@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
-import android.app.Activity;
 import android.graphics.Typeface;
 import android.text.format.DateFormat;
 import android.view.ViewGroup;
@@ -9,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.dpro.widgets.WeekdaysPicker;
@@ -163,7 +163,7 @@ public class TriggerRecurringTime extends Trigger {
             object.put("type", TriggerRecurringTime.class.getName());
             object.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return object.toString();
     }
@@ -181,7 +181,7 @@ public class TriggerRecurringTime extends Trigger {
             minute = JsonHelper.safeGetInt(o, "minute");
             validTo = JsonHelper.safeGetLong(o, "validTo");
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }
@@ -269,6 +269,8 @@ public class TriggerRecurringTime extends Trigger {
         weekdaysPicker.setSelectedDays(getSelectedDays());
         weekdaysPicker.setOnWeekdaysChangeListener((view, i, list) -> set(DayOfWeek.fromCalendarInt(i), list.contains(i)));
         weekdaysPicker.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        weekdaysPicker.setSundayFirstDay(Calendar.getInstance().getFirstDayOfWeek() == Calendar.SUNDAY);
+        weekdaysPicker.redrawDays();
 
         root.addView(weekdaysPicker);
 
@@ -294,9 +296,9 @@ public class TriggerRecurringTime extends Trigger {
             );
             tpd.setThemeDark(true);
             tpd.dismissOnPause(true);
-            Activity a = scanForActivity(root.getContext());
+            AppCompatActivity a = scanForActivity(root.getContext());
             if (a != null)
-                tpd.show(a.getFragmentManager(), "TimePickerDialog");
+                tpd.show(a.getSupportFragmentManager(), "TimePickerDialog");
         });
 
         int px = MainApp.dpToPx(10);

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AAPS</string>
+    <string name="label_actions_activity">AAPS</string>
+    <string name="label_xdrip">AAPS</string>
+    <string name="label_xdrip_large">AAPS(velké)</string>
+    <string name="label_xdrip_big_chart">AAPS(VelkýGraf)</string>
+    <string name="label_xdrip_no_chart">AAPS(BezGrafu)</string>
+    <string name="label_xdrip_circle">APS(Kruh)</string>
+    <string name="label_xdrip_v2">AAPSv2</string>
+    <string name="label_xdrip_cockpit">AAPS (Cockpit)</string>
+    <string name="label_xdrip_steampunk">AAPS (Steampunk)</string>
+    <string name="label_warning_sync">Žádná data!</string>
+    <string name="label_warning_old">Stará data!</string>
+    <string name="label_warning_since">Od %1$s</string>
+    <string name="label_warning_sync_aaps">Synchronizovat s AAPS!</string>
+    <string name="msg_warning_sync">Od %1$s nebyla obdržena žádná data! Zkontrolujte, zda AAPS na telefonu odesílá data ke sledování</string>
+    <string name="msg_warning_old">AAPS data jsou %1$s stará! Zkontrolujte svůj senzor, xDrip +, NS, AAPS konfigurace nebo ostatní!</string>
+    <string name="pref_on">Zap.</string>
+    <string name="pref_off">Vyp.</string>
+    <string name="pref_vibrate_on_bolus">Vibrovat při bolusu</string>
+    <string name="pref_units_for_actions">Jednotky pro akce</string>
+    <string name="pref_show_date">Zobrazit datum</string>
+    <string name="pref_show_iob">Zobrazit IOB</string>
+    <string name="pref_show_cob">Zobrazit COB</string>
+    <string name="pref_show_delta">Zobrazit deltu</string>
+    <string name="pref_show_avgdelta">Zobrazit průměrnou deltu</string>
+    <string name="pref_show_phone_battery">Zobrazit stav baterie telefonu</string>
+    <string name="pref_show_rig_battery">Zobrazovat kruhový graf baterie</string>
+    <string name="pref_show_basal_rate">Zobrazit bazál</string>
+    <string name="pref_show_loop_status">Zobrazovat stav smyčky</string>
+    <string name="pref_show_bg">Zobrazovat glykemii</string>
+    <string name="pref_show_direction_arrow">Zobrazovat trendovou šipku</string>
+    <string name="pref_show_ago">Zobrazit aktualizováno před</string>
+    <string name="pref_dark" comment="Enables dark visual theme">Tmavý</string>
+    <string name="pref_highlight_basals">Zvýraznit bazály</string>
+    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Odpovídající oddělovač</string>
+    <string name="pref_chart_timeframe">Časové okno grafu</string>
+    <string name="pref_1_hour">1 hodina</string>
+    <string name="pref_2_hours">2 hodiny</string>
+    <string name="pref_3_hours">3 hodiny</string>
+    <string name="pref_4_hours">4 hodiny</string>
+    <string name="pref_5_hours">5 hodin</string>
+    <string name="pref_input_design">Design zadávání</string>
+    <string name="pref_default">Výchozí</string>
+    <string name="pref_quick_righty">Rychle zprava</string>
+    <string name="pref_quick_lefty">Rychle zleva</string>
+    <string name="pref_modern_sparse">Modern Sparse</string>
+    <string name="pref_delta_granularity">Míra podrobnosti delty (Steampunk)</string>
+    <string name="pref_low">Nízká</string>
+    <string name="pref_medium">Střední</string>
+    <string name="pref_high">Vysoká</string>
+    <string name="pref_auto">Auto</string>
+    <string name="pref_big_numbers">Velké číslice</string>
+    <string name="pref_animations">Animace</string>
+    <string name="pref_wizard_in_menu">Kalkulačka v nabídce</string>
+    <string name="pref_prime_in_menu">Plnění v nabídce</string>
+    <string name="pref_single_target">Jeden cíl</string>
+    <string name="pref_wizard_percentage">Procenta z kalkulátoru</string>
+    <string name="pref_complication_tap_action">Akce po klepnutí na komplikaci</string>
+    <string name="pref_unicode_in_complications">Znaky Unicode v komplikacích</string>
+    <string name="pref_version">Verze:</string>
+    <string name="menu_tempt">TempT</string>
+    <string name="menu_wizard">Kalkulačka</string>
+    <string name="menu_bolus">Bolus</string>
+    <string name="menu_ecarb">eCarbs</string>
+    <string name="menu_settings">Nastavení</string>
+    <string name="menu_status">Stav</string>
+    <string name="menu_prime_fill">Plnění/doplňování</string>
+    <string name="menu_none">Nic</string>
+    <string name="menu_default">Výchozí</string>
+    <string name="menu_menu">Menu</string>
+    <string name="action_duration">trvání</string>
+    <string name="action_target" comment="In temp target menu, single target value">cíl</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">nízká</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">vysoká</string>
+    <string name="action_carbs">sacharidy</string>
+    <string name="action_percentage">procento</string>
+    <string name="action_start_min">začátek [min]</string>
+    <string name="action_duration_h">trvání [h]</string>
+    <string name="action_insulin">inzulín</string>
+    <string name="action_preset_1">Předvolba 1</string>
+    <string name="action_preset_2">Předvolba 2</string>
+    <string name="action_preset_3">Předvolba 3</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Libovolné množství</string>
+    <string name="action_confirm">POTVRDIT</string>
+    <string name="action_status_pump">STAV PUMPY</string>
+    <string name="action_status_loop">STAV SMYČKY</string>
+    <string name="action_timeshift">posun času</string>
+    <string name="action_tdd_weighted">TDD vážený</string>
+    <string name="action_bolus">bolus</string>
+    <string name="status_pump">Pumpa</string>
+    <string name="status_loop">Smyčka</string>
+    <string name="status_cpp">CPP</string>
+    <string name="status_tdd">TDD</string>
+    <string name="activity_carb">Sacharidy</string>
+    <string name="activity_IOB">IOB</string>
+    <string name="activity_no_status">žádný stav</string>
+    <string name="unit_mg_dl">mg/dl</string>
+    <string name="unit_mmol_l">mmol/l</string>
+    <string name="unit_g" comment="Shortcut for ISO unit: gram">g</string>
+    <string name="unit_u" comment="Shortcut for: insulin Unit">U</string>
+    <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">U/h</string>
+    <string name="unit_h" comment="One letter shortcut for: Hour" maxLength="1">h</string>
+    <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">d</string>
+    <string name="unit_w" comment="One letter shortcut for: Week" maxLength="1">t</string>
+</resources>

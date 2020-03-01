@@ -36,7 +36,7 @@
     <string name="objectives_useloop">Affichage du contenu du plugin Boucle</string>
     <string name="objectives_usescale">Modification de l\'échelle du graphique par un appui long sur la courbe de glycémie</string>
     <string name="objectives_button_enter">Entrer</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Entrez le code obtenu auprès des développeurs pour contourner le reste des objectifs</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Si vous étiez avant un utilisateur d\'OpenAPS et que votre NS a au moins 3 mois de données de bouclage, vous pouvez envoyer un e-mail à objectives@androidaps.org avec votre adresse NS et demander un code pour contourner le reste des objectifs. Entrez le code obtenu auprès des développeurs</string>
     <string name="codeaccepted">Code accepté</string>
     <string name="codeinvalid">Code invalide</string>
     <string name="objectives_exam_objective">Prouver ses connaissances</string>
@@ -46,10 +46,10 @@
     <string name="unfinshed_button">Prochain non terminé</string>
     <string name="requestcode">Code requis : %1$s</string>
     <string name="objectives_hint">(Sélectionnez toutes les bonnes réponses)</string>
-    <string name="disconnectpump_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/Screenshots.html#config-builder</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Non connecté à Internet</string>
     <string name="failedretrievetime">Échec de la récupération de l\'heure</string>
     <string name="requirementnotmet">Exigences de l\'objectif non atteintes</string>

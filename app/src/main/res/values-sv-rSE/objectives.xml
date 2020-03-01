@@ -36,7 +36,7 @@
     <string name="objectives_useloop">Visa innehållet i insticksprogrammet \"Loop\"</string>
     <string name="objectives_usescale">Testa skala om BG-grafen genom att trycka och hålla in fingret på den</string>
     <string name="objectives_button_enter">Enter</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Ange kod som erhållits från utvecklare för att kringgå resten av målen</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Om du var OpenAPS-användare innan och din NS har minst 3 månaders APS-data, kan du skicka ett e-postmeddelande till objectives@androidaps.org med din NS-adress och begära kod för att kringgå resten av målen. Ange kod som du fått från utvecklarna</string>
     <string name="codeaccepted">Koden godkänd</string>
     <string name="codeinvalid">Koden är felaktig</string>
     <string name="objectives_exam_objective">Bevisa dina kunskaper</string>
@@ -46,10 +46,10 @@
     <string name="unfinshed_button">Nästa icke slutförda</string>
     <string name="requestcode">Begärd kod: %1$s</string>
     <string name="objectives_hint">(kontrollera alla korrekta svar)</string>
-    <string name="disconnectpump_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Inte ansluten till internet</string>
     <string name="failedretrievetime">Fel vid hämtning av tid</string>
     <string name="requirementnotmet">Målets krav är inte uppfyllda</string>

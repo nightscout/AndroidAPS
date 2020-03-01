@@ -10,7 +10,7 @@
     <string name="alert_w32_title">Pila baja</string>
     <string name="alert_w33_title">Fecha/hora no válida</string>
     <string name="alert_w34_title">Fin de la garantía</string>
-    <string name="alert_w36_title">TBR cancelada</string>
+    <string name="alert_w36_title">Basal Temporal cancelada</string>
     <string name="alert_w38_title">Bolo cancelado</string>
     <string name="alert_w39_title">Aviso de préstamo de infusora</string>
     <string name="alert_m20_title">Reservorio no insertado</string>

@@ -104,8 +104,8 @@ object ObjectivesPlugin : PluginBase(PluginDescription()
     fun completeObjectives(activity: Activity, request: String) {
         val requestCode = SP.getString(R.string.key_objectives_request_code, "")
         var url = SP.getString(R.string.key_nsclientinternal_url, "").toLowerCase()
-        if (!url.endsWith("\"")) url = "$url/"
-        val hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID + "/" + requestCode, Charsets.UTF_8).toString()
+        if (!url.endsWith("/")) url = "$url/"
+        @Suppress("DEPRECATION") val hashNS = Hashing.sha1().hashString(url + BuildConfig.APPLICATION_ID + "/" + requestCode, Charsets.UTF_8).toString()
         if (request.equals(hashNS.substring(0, 10), ignoreCase = true)) {
             SP.putLong("Objectives_" + "openloop" + "_started", DateUtil.now())
             SP.putLong("Objectives_" + "openloop" + "_accomplished", DateUtil.now())
@@ -122,9 +122,9 @@ object ObjectivesPlugin : PluginBase(PluginDescription()
             SP.putLong("Objectives_" + "smb" + "_started", DateUtil.now())
             SP.putLong("Objectives_" + "smb" + "_accomplished", DateUtil.now())
             setupObjectives()
-            OKDialog.show(activity, "", MainApp.gs(R.string.codeaccepted), null)
+            OKDialog.show(activity, MainApp.gs(R.string.objectives), MainApp.gs(R.string.codeaccepted))
         } else {
-            OKDialog.show(activity, "", MainApp.gs(R.string.codeinvalid), null)
+            OKDialog.show(activity, MainApp.gs(R.string.objectives), MainApp.gs(R.string.codeinvalid))
         }
     }
 

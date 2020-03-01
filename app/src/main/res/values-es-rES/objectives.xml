@@ -36,7 +36,7 @@
     <string name="objectives_useloop">Mostrar contenido del plugin Loop</string>
     <string name="objectives_usescale">Usar función de escala mediante un gráfico BG pulsado largo</string>
     <string name="objectives_button_enter">Intro</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Introduzca el código obtenido de los desarrolladores para eludir el resto de objetivos</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Si fuiste usuario de OpenAPS y tu NS tiene al menos 3 meses de datos de lazo cerrado, puedes enviar un correo electrónico a objectives@androidaps.org con tu dirección web de NS y solicitar código para saltarse el resto de objetivos. Ingresa posteriormente el código obtenido de los desarrolladores</string>
     <string name="codeaccepted">Código aceptado</string>
     <string name="codeinvalid">Código no válido</string>
     <string name="objectives_exam_objective">Compruebe su conocimiento</string>
@@ -46,10 +46,10 @@
     <string name="unfinshed_button">Siguien&amp;te sin terminar</string>
     <string name="requestcode">Solicitar código: %1$s</string>
     <string name="objectives_hint">(compruebe todas las respuestas correctas)</string>
-    <string name="disconnectpump_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Sin conexión a Internet</string>
     <string name="failedretrievetime">Fallo tiempo de recuperación</string>
     <string name="requirementnotmet">No se cumplen los requisitos de objetivo</string>

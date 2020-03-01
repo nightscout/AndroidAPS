@@ -25,6 +25,11 @@
             android:key="@string/key_ns_logappstartedevent"
             android:title="@string/ns_logappstartedevent" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_ns_uploadlocalprofile"
+            android:title="@string/ns_ploadlocalprofile" />
+
         <PreferenceScreen android:title="@string/ns_alarmoptions">
 
             <SwitchPreference
@@ -133,7 +138,7 @@
                 android:title="@string/ns_localbroadcasts_title" />
 
             <SwitchPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="@string/key_ns_upload_only"
                 android:summary="@string/ns_upload_only_summary"
                 android:title="@string/ns_upload_only" />

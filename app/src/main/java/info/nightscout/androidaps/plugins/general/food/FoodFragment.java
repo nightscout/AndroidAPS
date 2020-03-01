@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.food;
 
-import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,13 +13,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -33,6 +29,7 @@ import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SpinnerHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -42,43 +39,36 @@ import io.reactivex.disposables.CompositeDisposable;
  */
 
 public class FoodFragment extends Fragment {
-    private static Logger log = LoggerFactory.getLogger(FoodFragment.class);
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    EditText filter;
-    ImageView clearFilter;
-    SpinnerHelper category;
-    SpinnerHelper subcategory;
-    RecyclerView recyclerView;
+    private EditText filter;
+    private SpinnerHelper category;
+    private SpinnerHelper subcategory;
+    private RecyclerView recyclerView;
 
-    List<Food> unfiltered;
-    List<Food> filtered;
-    ArrayList<CharSequence> categories;
-    ArrayList<CharSequence> subcategories;
+    private List<Food> unfiltered;
+    private List<Food> filtered;
 
-    final String EMPTY = MainApp.gs(R.string.none);
+    private final String EMPTY = MainApp.gs(R.string.none);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.food_fragment, container, false);
-        filter = (EditText) view.findViewById(R.id.food_filter);
-        clearFilter = (ImageView) view.findViewById(R.id.food_clearfilter);
+        filter = view.findViewById(R.id.food_filter);
+        ImageView clearFilter = view.findViewById(R.id.food_clearfilter);
         category = new SpinnerHelper(view.findViewById(R.id.food_category));
         subcategory = new SpinnerHelper(view.findViewById(R.id.food_subcategory));
-        recyclerView = (RecyclerView) view.findViewById(R.id.food_recyclerview);
+        recyclerView = view.findViewById(R.id.food_recyclerview);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        clearFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                filter.setText("");
-                category.setSelection(0);
-                subcategory.setSelection(0);
-                filterData();
-            }
+        clearFilter.setOnClickListener(v -> {
+            filter.setText("");
+            category.setSelection(0);
+            subcategory.setSelection(0);
+            filterData();
         });
 
         category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -149,11 +139,11 @@ public class FoodFragment extends Fragment {
         disposable.clear();
     }
 
-    void loadData() {
+    private void loadData() {
         unfiltered = FoodPlugin.getPlugin().getService().getFoodData();
     }
 
-    void fillCategories() {
+    private void fillCategories() {
         Set<CharSequence> catSet = new HashSet<>();
 
         for (Food f : unfiltered) {
@@ -162,7 +152,7 @@ public class FoodFragment extends Fragment {
         }
 
         // make it unique
-        categories = new ArrayList<>(catSet);
+        ArrayList<CharSequence> categories = new ArrayList<>(catSet);
         categories.add(0, MainApp.gs(R.string.none));
 
         ArrayAdapter<CharSequence> adapterCategories = new ArrayAdapter<>(getContext(),
@@ -170,7 +160,7 @@ public class FoodFragment extends Fragment {
         category.setAdapter(adapterCategories);
     }
 
-    void fillSubcategories() {
+    private void fillSubcategories() {
         String categoryFilter = category.getSelectedItem().toString();
 
         Set<CharSequence> subCatSet = new HashSet<>();
@@ -184,7 +174,7 @@ public class FoodFragment extends Fragment {
         }
 
         // make it unique
-        subcategories = new ArrayList<>(subCatSet);
+        ArrayList<CharSequence> subcategories = new ArrayList<>(subCatSet);
         subcategories.add(0, MainApp.gs(R.string.none));
 
         ArrayAdapter<CharSequence> adapterSubcategories = new ArrayAdapter<>(getContext(),
@@ -192,7 +182,7 @@ public class FoodFragment extends Fragment {
         subcategory.setAdapter(adapterSubcategories);
     }
 
-    void filterData() {
+    private void filterData() {
         String textFilter = filter.getText().toString();
         String categoryFilter = category.getSelectedItem().toString();
         String subcategoryFilter = subcategory.getSelectedItem().toString();
@@ -227,6 +217,7 @@ public class FoodFragment extends Fragment {
             this.foodList = foodList;
         }
 
+        @NonNull
         @Override
         public FoodsViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.food_item, viewGroup, false);
@@ -257,7 +248,7 @@ public class FoodFragment extends Fragment {
             return foodList.size();
         }
 
-        class FoodsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        class FoodsViewHolder extends RecyclerView.ViewHolder {
             TextView name;
             TextView portion;
             TextView carbs;
@@ -269,43 +260,26 @@ public class FoodFragment extends Fragment {
 
             FoodsViewHolder(View itemView) {
                 super(itemView);
-                name = (TextView) itemView.findViewById(R.id.food_name);
-                portion = (TextView) itemView.findViewById(R.id.food_portion);
-                carbs = (TextView) itemView.findViewById(R.id.food_carbs);
-                fat = (TextView) itemView.findViewById(R.id.food_fat);
-                protein = (TextView) itemView.findViewById(R.id.food_protein);
-                energy = (TextView) itemView.findViewById(R.id.food_energy);
-                ns = (TextView) itemView.findViewById(R.id.ns_sign);
-                remove = (TextView) itemView.findViewById(R.id.food_remove);
-                remove.setOnClickListener(this);
+                name = itemView.findViewById(R.id.food_name);
+                portion = itemView.findViewById(R.id.food_portion);
+                carbs = itemView.findViewById(R.id.food_carbs);
+                fat = itemView.findViewById(R.id.food_fat);
+                protein = itemView.findViewById(R.id.food_protein);
+                energy = itemView.findViewById(R.id.food_energy);
+                ns = itemView.findViewById(R.id.ns_sign);
+                remove = itemView.findViewById(R.id.food_remove);
+                remove.setOnClickListener(v -> {
+                    final Food food = (Food) v.getTag();
+                    OKDialog.showConfirmation(getContext(), MainApp.gs(R.string.confirmation), MainApp.gs(R.string.removerecord) + "\n" + food.name, (dialog, id) -> {
+                        final String _id = food._id;
+                        if (_id != null && !_id.equals("")) {
+                            NSUpload.removeFoodFromNS(_id);
+                        }
+                        FoodPlugin.getPlugin().getService().delete(food);
+                    }, null);
+                });
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-            }
-
-            @Override
-            public void onClick(View v) {
-                final Food food = (Food) v.getTag();
-                switch (v.getId()) {
-
-                    case R.id.food_remove:
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle(MainApp.gs(R.string.confirmation));
-                        builder.setMessage(MainApp.gs(R.string.removerecord) + "\n" + food.name);
-                        builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                final String _id = food._id;
-                                if (_id != null && !_id.equals("")) {
-                                    NSUpload.removeFoodFromNS(_id);
-                                }
-                                FoodPlugin.getPlugin().getService().delete(food);
-                            }
-                        });
-                        builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
-                        builder.show();
-                        break;
-
-                }
             }
         }
     }
-
 }

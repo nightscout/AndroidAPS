@@ -14,10 +14,12 @@ import org.slf4j.LoggerFactory;
 import java.sql.SQLException;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 21.02.2016.
@@ -42,21 +44,22 @@ public class UploadQueue {
     }
 
     public static void add(final DbRequest dbr) {
+        if (SP.getBoolean(R.string.key_ns_noupload, false)) return;
         startService();
-        if (NSClientService.handler != null) {
-            NSClientService.handler.post(() -> {
-                if (L.isEnabled(L.NSCLIENT))
-                    log.debug("Adding to queue: " + dbr.data);
-                MainApp.getDbHelper().create(dbr);
-                NSClientPlugin plugin = NSClientPlugin.getPlugin();
-                if (plugin != null) {
-                    plugin.resend("newdata");
-                }
-            });
+        if (L.isEnabled(L.NSCLIENT))
+            log.debug("Adding to queue: " + dbr.log());
+        try {
+            MainApp.getDbHelper().create(dbr);
+        } catch (Exception e) {
+            log.error("Unhandled exception", e);
+        }
+        NSClientPlugin plugin = NSClientPlugin.getPlugin();
+        if (plugin != null) {
+            plugin.resend("newdata");
         }
     }
 
-    public static void clearQueue() {
+    static void clearQueue() {
         startService();
         if (NSClientService.handler != null) {
             NSClientService.handler.post(() -> {
@@ -104,7 +107,7 @@ public class UploadQueue {
         }
     }
 
-    public String textList() {
+    String textList() {
         String result = "";
         CloseableIterator<DbRequest> iterator;
         try {

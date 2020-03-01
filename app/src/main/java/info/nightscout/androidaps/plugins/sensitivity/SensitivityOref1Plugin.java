@@ -146,7 +146,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         Double[] deviations = new Double[deviationsArray.size()];
         deviations = deviationsArray.toArray(deviations);
 
-        double sens = profile.getIsf();
+        double sens = profile.getIsfMgdl();
 
         double ratio = 1;
         String ratioLimit = "";
@@ -174,10 +174,10 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         double basalOff = 0;
 
         if (pSensitive < 0) { // sensitive
-            basalOff = pSensitive * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
+            basalOff = pSensitive * (60 / 5.0) / sens;
             sensResult = "Excess insulin sensitivity detected";
         } else if (pResistant > 0) { // resistant
-            basalOff = pResistant * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
+            basalOff = pResistant * (60 / 5.0) / sens;
             sensResult = "Excess insulin resistance detected";
         } else {
             sensResult = "Sensitivity normal";

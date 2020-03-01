@@ -1,14 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.common.utils;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
-import android.os.Build;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.utils.OKDialog;
 
 /**
  * Helper for checking if location services are enabled on the device.
@@ -45,18 +44,9 @@ public class LocationHelper {
         }
 
         // Shamelessly borrowed from http://stackoverflow.com/a/10311877/868533
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(parent);
-        builder.setTitle(R.string.location_not_found_title);
-        builder.setMessage(R.string.location_not_found_message);
-        builder.setPositiveButton(R.string.location_yes, new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialogInterface, int i) {
-                parent.startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-            }
+        OKDialog.showConfirmation(parent, MainApp.gs(R.string.location_not_found_title), MainApp.gs(R.string.location_not_found_message), () -> {
+            parent.startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
         });
-        builder.setNegativeButton(R.string.location_no, null);
-        builder.create().show();
     }
 
 

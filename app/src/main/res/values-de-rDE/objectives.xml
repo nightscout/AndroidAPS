@@ -37,7 +37,7 @@ die Formel maxIOB = durchschnittlicher Essensbolus + 3 x höchste Basalrate</str
     <string name="objectives_useloop">Zeige den Inhalt des Loop-Plugins an</string>
     <string name="objectives_usescale">Nutze die Skalierfunktion. Drücke dazu lange auf das BZ-Diagramm</string>
     <string name="objectives_button_enter">OK</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Gib den Code ein, den Du von den Entwicklern erhalten hast, um die restlichen Objectives zu überspringen.</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Wenn Du früher bereits OpenAPS genutzt hast und auf Deiner Nightscout-Seite mindestens drei Monate Closed-Loop-Daten ersichtlich sind, kannst Du eine E-Mail an objectives@androidaps.org mit Deiner NS-URL und Deinem Anforderungscode senden, um die restlichen Ziele zu überspringen. Code eingeben, der von den Entwicklern übermittelt wurde:</string>
     <string name="codeaccepted">Code akzeptiert</string>
     <string name="codeinvalid">Code ungültig</string>
     <string name="objectives_exam_objective">Prüfe Dein Wissen</string>
@@ -47,10 +47,10 @@ die Formel maxIOB = durchschnittlicher Essensbolus + 3 x höchste Basalrate</str
     <string name="unfinshed_button">Nächste offene</string>
     <string name="requestcode">Code anfordern: %1$s</string>
     <string name="objectives_hint">(Kreuze alle richtigen Antworten an)</string>
-    <string name="disconnectpump_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Getting-Started/FAQ.html#was-mache-ich-wenn-ich-duschen-oder-ein-bad-nehmen-mochte</string>
-    <string name="usetemptarget_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Getting-Started/Screenshots.html#die-startseite</string>
-    <string name="useaction_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Getting-Started/Screenshots.html#konfiguration</string>
-    <string name="usescale_hint">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Getting-Started/Screenshots.html#die-startseite</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Getting-Started/FAQ.html#was-mache-ich-wenn-ich-duschen-oder-ein-bad-nehmen-mochte</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Getting-Started/Screenshots.html#die-startseite</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Getting-Started/Screenshots.html#konfiguration</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Getting-Started/Screenshots.html#die-startseite</string>
     <string name="notconnected">Keine Verbindung zum Internet</string>
     <string name="failedretrievetime">Abruf der Uhrzeit fehlgeschlagen</string>
     <string name="requirementnotmet">Anforderungen des Zieles nicht erfüllt</string>
