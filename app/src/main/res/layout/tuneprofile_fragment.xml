@@ -206,7 +206,7 @@
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tune run" />
+                android:text="@string/run_autotune" />
             <Button
                 android:id="@+id/tune_profileswitch"
                 style="@style/Widget.AppCompat.Button.Colored"

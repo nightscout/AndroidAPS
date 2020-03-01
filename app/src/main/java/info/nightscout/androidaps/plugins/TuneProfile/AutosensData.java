@@ -11,11 +11,11 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
-import info.nightscout.androidaps.plugins.Sensitivity.SensitivityAAPSPlugin;
-import info.nightscout.androidaps.plugins.Sensitivity.SensitivityWeightedAveragePlugin;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
+import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 25.04.2017.
@@ -38,7 +38,7 @@ public class AutosensData {
                 double maxAbsorptionHours = SP.getDouble(R.string.key_absorption_maxtime, 4d);
 //                Profile profile = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile(t.date);
                 Profile profile = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile().getDefaultProfile();
-                double sens = Profile.toMgdl(profile.getIsf(t.date), profile.getUnits());
+                double sens = Profile.toMgdl(profile.getIsfMgdl(t.date), profile.getUnits());
                 double ic = profile.getIc(t.date);
                 min5minCarbImpact = t.carbs / (maxAbsorptionHours * 60 / 5) * sens / ic;
                 //log.debug("Min 5m carbs impact for " + carbs + "g @" + new Date(t.date).toLocaleString() + " for " + maxAbsorptionHours + "h calculated to " + min5minCarbImpact + " ISF: " + sens + " IC: " + ic);

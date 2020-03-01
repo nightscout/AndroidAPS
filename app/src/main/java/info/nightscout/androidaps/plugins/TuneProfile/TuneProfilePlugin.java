@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.TuneProfile;
 
 import android.content.res.Resources;
-import android.support.v4.util.LongSparseArray;
+import android.util.LongSparseArray;
 import android.widget.TextView;
 
 import info.nightscout.androidaps.Constants;
@@ -15,19 +15,19 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventProfileStoreChanged;
 import info.nightscout.androidaps.interfaces.PluginDescription;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.db.BGDatum;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.SafeParse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -502,7 +502,7 @@ public class TuneProfilePlugin extends PluginBase {
 
             //sens = ISF
 //            int sens = ISF.isfLookup(IOBInputs.profile.isfProfile,BGDate);
-            double sens = profile.getIsf(BGTime);
+            double sens = profile.getIsfMgdl(BGTime);
 //            IOBInputs.clock=BGDate.toString();
             // trim down IOBInputs.history to just the data for 6h prior to BGDate
             //log.debug(IOBInputs.history[0].created_at);
@@ -849,7 +849,7 @@ public class TuneProfilePlugin extends PluginBase {
             return null;
         if(profile.getUnits().equals("mmol"))
             toMgDl = 18;
-        double ISF = profile.getIsf()*toMgDl;
+        double ISF = profile.getIsfMgdl();
 
         //log.debug(ISF);
         double carbRatio = profile.getIc();
@@ -863,8 +863,8 @@ public class TuneProfilePlugin extends PluginBase {
         pumpCSF = CSF;
         // conditional on there being a pump profile; if not then skip
         if (pumpProfile != null) { pumpISFProfile = pumpProfile; }
-        if (pumpISFProfile != null && pumpISFProfile.getIsf() != 0d) {
-            pumpISF = pumpISFProfile.getIsf()*toMgDl;
+        if (pumpISFProfile != null && pumpISFProfile.getIsfMgdl() != 0d) {
+            pumpISF = pumpISFProfile.getIsfMgdl();
             pumpCarbRatio = pumpProfile.getIc();
             pumpCSF = pumpISF / pumpCarbRatio;
             log.debug("After getting pumpProfile: pumpISF is "+pumpISF+" pumpCSF "+pumpCSF+" pumpCarbRatio "+pumpCarbRatio);
@@ -1370,11 +1370,11 @@ public class TuneProfilePlugin extends PluginBase {
             }
             result += line;
             // show ISF CR and CSF
-            result += "|  ISF    |    "+round(profile.getIsf(), 3) +"    |    "+round(previousResult.optDouble("sens", 0d)/toMgDl,3)+"     |\n";
+            result += "|  ISF    |    "+round(profile.getIsfMgdl(), 3) +"    |    "+round(previousResult.optDouble("sens", 0d)/toMgDl,3)+"     |\n";
             result += line;
             result += "|   CR   |    "+profile.getIc()+"    |    "+round(previousResult.optDouble("carb_ratio", 0d),3)+"     |\n";
             result += line;
-            result += "|  CSF  |    "+round(profile.getIsf()/profile.getIc(),3)+"    |    "+round(previousResult.optDouble("csf", 0d)/toMgDl,3)+"     |\n";
+            result += "|  CSF  |    "+round(profile.getIsfMgdl()/profile.getIc(),3)+"    |    "+round(previousResult.optDouble("csf", 0d)/toMgDl,3)+"     |\n";
             result += line;
 
             // trying to create new profile ready for switch
@@ -1396,14 +1396,14 @@ public class TuneProfilePlugin extends PluginBase {
                     basals.put(new JSONObject().put("time", time).put("timeAsSeconds", h * basalIncrement).put("value", tunedProfile.get(h)));
                 };
                 convertedProfile.put("basal", basals);
-                convertedProfile.put("target_low", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", profile.getTargetLow())));
-                convertedProfile.put("target_high", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", profile.getTargetHigh())));
+                convertedProfile.put("target_low", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", profile.getTargetLowMgdl())));
+                convertedProfile.put("target_high", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", profile.getTargetHighMgdl())));
                 convertedProfile.put("units", profile.getUnits());
                 store.put(MainApp.gs(R.string.tuneprofile_name), convertedProfile);
                 ProfileStore profileStore = new ProfileStore(json);
                 SP.putString("autotuneprofile", profileStore.getData().toString());
                 log.debug("Entered in ProfileStore "+profileStore.getSpecificProfile(MainApp.gs(R.string.tuneprofile_name)));
-                MainApp.bus().post(new EventProfileStoreChanged());
+ //ATCOMPIL               MainApp.bus().post(new EventProfileStoreChanged());
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }

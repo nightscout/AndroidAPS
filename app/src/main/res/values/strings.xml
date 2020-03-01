@@ -741,6 +741,7 @@
     <string name="autotune">Autotune</string>
     <string name="autotune_shortname">AT</string>
     <string name="tuneprofile_name">Autotune</string>
+    <string name="run_autotune">Tune run</string>
 
 
     <string name="absorption_maxtime_title">Meal max absorption time [h]</string>

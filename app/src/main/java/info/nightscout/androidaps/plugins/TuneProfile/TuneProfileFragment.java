@@ -22,8 +22,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 
-import butterknife.BindView;
-import butterknife.OnClick;
+//ATCOMPIL import butterknife.BindView;
+//ATCOMPIL import butterknife.OnClick;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -49,7 +49,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
     }
 
     Button runTuneNowButton;
-    @BindView(R.id.tune_profileswitch)
+//ATCOMPIL    @BindView(R.id.tune_profileswitch)
     Button tuneProfileSwitch;
     TextView warningView;
     TextView resultView;
@@ -80,16 +80,16 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
         return null;
     }
 
-    @OnClick(R.id.nsprofile_profileswitch)
+//ATCOMPIL    @OnClick(R.id.nsprofile_profileswitch)
     public void onClickProfileSwitch() {
         String name = MainApp.gs(R.string.tuneprofile_name);
         ProfileStore store = NSProfilePlugin.getPlugin().getProfile();
         if (store != null) {
             Profile profile = store.getSpecificProfile(name);
             if (profile != null) {
-                OKDialog.showConfirmation(getActivity(), MainApp.gs(R.string.activate_profile) + ": " + name + " ?", () ->
-                        NewNSTreatmentDialog.doProfileSwitch(store, name, 0, 100, 0)
-                );
+//ATCOMPIL                 OKDialog.showConfirmation(getActivity(), MainApp.gs(R.string.activate_profile) + ": " + name + " ?", () ->
+//ATCOMPIL                         NewNSTreatmentDialog.doProfileSwitch(store, name, 0, 100, 0)
+//ATCOMPIL                 );
             }
         }
     }
@@ -142,9 +142,10 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
 //                profileswitch.executeProfileSwitch = true;
 //                newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
 //                newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
-                OKDialog.showConfirmation(getActivity(), MainApp.gs(R.string.activate_profile) + ": " + name + " ?", () ->
-                        NewNSTreatmentDialog.doProfileSwitch(store, name, 0, 100, 0)
-                );
+
+//ATCOMPIL                 OKDialog.showConfirmation(getActivity(), MainApp.gs(R.string.activate_profile) + ": " + name + " ?", () ->
+//ATCOMPIL                         NewNSTreatmentDialog.doProfileSwitch(store, name, 0, 100, 0)
+//ATCOMPIL                 );
             } else
                 log.debug("ProfileStore is null!");
         }
@@ -152,7 +153,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
         //updateGUI();
     }
 
-    @Override
+//ATCOMPIL    @Override
     protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)

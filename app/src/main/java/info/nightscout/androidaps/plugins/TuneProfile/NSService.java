@@ -32,8 +32,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.plugins.Treatments.Treatment;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.utils.SP;
 
 
 
