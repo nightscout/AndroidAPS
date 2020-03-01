@@ -437,7 +437,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="loop_shortname">BOUCLE</string>
     <string name="simpleprofile_shortname">P.S.</string>
     <string name="oaps_shortname">OAPS</string>
-    <string name="localprofile_shortname">P.L.</string>
+    <string name="localprofile_shortname">PL</string>
     <string name="danarpump_shortname">DANA</string>
     <string name="overview_shortname">ACCUEIL</string>
     <string name="virtualpump_shortname">POMPEV</string>
@@ -1396,7 +1396,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="format_carbs">%1$dg</string>
     <string name="common_on">On</string>
     <string name="common_off">Off</string>
-    <string name="objectives_button_unfinish">Suppression terminée</string>
+    <string name="objectives_button_unfinish">Refaire l\'objectif</string>
     <string name="objectives_button_unstart">Suppression démarrée</string>
     <string name="timedetection">Détection de temps</string>
     <string name="doyouwantresetstart">Voulez-vous réinitialiser le début de l\'objectif ? Vous risquez de perdre vos progrès.</string>
