@@ -3,7 +3,9 @@ package info.nightscout.androidaps.plugins.general.automation.actions
 import android.content.Context
 import com.google.common.base.Optional
 import dagger.Lazy
-import info.AAPSMocker
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
+import info.TestBase
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PluginType
@@ -23,15 +25,11 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.powermock.api.mockito.PowerMockito
-import org.powermock.core.classloader.annotations.PrepareForTest
-import org.powermock.modules.junit4.PowerMockRunner
+import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 
-@RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class)
-class ActionLoopDisableTest : ActionTestBase() {
+class ActionLoopDisableTest : TestBase() {
 
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var sp: SP
@@ -45,45 +43,50 @@ class ActionLoopDisableTest : ActionTestBase() {
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var lazyActionStringHandler: Lazy<ActionStringHandler>
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
-    lateinit var loopPlugin: LoopPlugin
+    @Mock lateinit var loopPlugin: LoopPlugin
 
-    lateinit var actionLoopDisable : ActionLoopDisable
+    lateinit var sut: ActionLoopDisable
+
+    @Before
+    fun setup() {
+
+        `when`(virtualPumpPlugin.specialEnableCondition()).thenReturn(true)
+        val pumpDescription = PumpDescription().apply { isTempBasalCapable = true }
+        `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
+        `when`(configBuilderPlugin.activePump).thenReturn(virtualPumpPlugin)
+
+        sut = ActionLoopDisable(HasAndroidInjector { AndroidInjector { Unit } }) // do nothing injector
+            .also { // inject the mocks
+                it.loopPlugin = loopPlugin
+                it.resourceHelper = resourceHelper
+                it.configBuilderPlugin = configBuilderPlugin
+                it.commandQueue = commandQueue
+                it.rxBus = rxBus
+            }
+    }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(R.string.disableloop.toLong(), actionLoopDisable.friendlyName().toLong())
+        Assert.assertEquals(R.string.disableloop.toLong(), sut.friendlyName().toLong())
     }
 
     @Test fun shortDescriptionTest() {
-        Assert.assertEquals("Disable loop", actionLoopDisable.shortDescription())
+        Assert.assertEquals("Disable loop", sut.shortDescription())
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.ic_stop_24dp), actionLoopDisable.icon())
+        Assert.assertEquals(Optional.of(R.drawable.ic_stop_24dp), sut.icon())
     }
 
     @Test fun doActionTest() {
-        loopPlugin.setPluginEnabled(PluginType.LOOP, true)
-        actionLoopDisable.doAction(object : Callback() {
+        sut.doAction(object : Callback() {
             override fun run() {}
         })
-        Assert.assertEquals(false, loopPlugin.isEnabled(PluginType.LOOP))
+        Mockito.verify(loopPlugin, Mockito.times(1)).setPluginEnabled(PluginType.LOOP, true)
+
         // another call should keep it disabled
-        actionLoopDisable.doAction(object : Callback() {
+        sut.doAction(object : Callback() {
             override fun run() {}
         })
-        Assert.assertEquals(false, loopPlugin.isEnabled(PluginType.LOOP))
-    }
-
-    @Before fun prepareTest() {
-        actionLoopDisable = ActionLoopDisable(actionInjector)
-
-        val pump = PowerMockito.mock(VirtualPumpPlugin::class.java)
-        PowerMockito.`when`(pump.specialEnableCondition()).thenReturn(true)
-        val pumpDescription = PumpDescription()
-        pumpDescription.isTempBasalCapable = true
-        PowerMockito.`when`(pump.pumpDescription).thenReturn(pumpDescription)
-        PowerMockito.`when`(configBuilderPlugin.activePump).thenReturn(pump)
-
-        loopPlugin = LoopPlugin(aapsLogger, rxBus, sp, constraintChecker, resourceHelper, profileFunction, context, commandQueue, configBuilderPlugin, treatmentsPlugin, virtualPumpPlugin, lazyActionStringHandler, iobCobCalculatorPlugin)
+        Mockito.verify(loopPlugin, Mockito.times(2)).setPluginEnabled(PluginType.LOOP, true)
     }
 }
