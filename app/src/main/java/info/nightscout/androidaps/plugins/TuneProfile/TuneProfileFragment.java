@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.TuneProfile;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,20 +29,19 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
-import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
-import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
-import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
-import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
+import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
+import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
+import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.services.Intents;
-import info.nightscout.utils.OKDialog;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by Rumen Georgiev on 1/29/2018.
  */
 
-public class TuneProfileFragment extends SubscriberFragment implements View.OnClickListener {
+public class TuneProfileFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TuneProfileFragment.class);
     public TuneProfileFragment() {super();}
     static public TuneProfilePlugin getPlugin() throws IOException {
@@ -50,7 +50,7 @@ public class TuneProfileFragment extends SubscriberFragment implements View.OnCl
 
     Button runTuneNowButton;
     @BindView(R.id.tune_profileswitch)
-            Button tuneProfileSwitch;
+    Button tuneProfileSwitch;
     TextView warningView;
     TextView resultView;
     TextView lastRunView;
@@ -82,7 +82,7 @@ public class TuneProfileFragment extends SubscriberFragment implements View.OnCl
 
     @OnClick(R.id.nsprofile_profileswitch)
     public void onClickProfileSwitch() {
-        String name = getString(R.string.tuneprofile_name);
+        String name = MainApp.gs(R.string.tuneprofile_name);
         ProfileStore store = NSProfilePlugin.getPlugin().getProfile();
         if (store != null) {
             Profile profile = store.getSpecificProfile(name);
@@ -116,7 +116,7 @@ public class TuneProfileFragment extends SubscriberFragment implements View.OnCl
             warningView.setText("You already pressed RUN - NO WARNING NEEDED!");
             lastRunView.setText(""+lastRun.toLocaleString());
         } else if (id == R.id.tune_profileswitch){
-            String name = getString(R.string.tuneprofile_name);
+            String name = MainApp.gs(R.string.tuneprofile_name);
             ProfileStore profile = null;
             log.debug("ProfileSwitch pressed");
 

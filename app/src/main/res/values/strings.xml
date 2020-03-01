@@ -738,6 +738,10 @@
     <string name="absorptionsettings_title">Absorption settings</string>
     <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
     <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
+    <string name="autotune">Autotune</string>
+    <string name="autotune_shortname">AT</string>
+    <string name="tuneprofile_name">Autotune</string>
+
 
     <string name="absorption_maxtime_title">Meal max absorption time [h]</string>
     <string name="absorption_maxtime_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
@@ -1631,9 +1635,6 @@
     <string name="medtronic_history_group_unknown">Unknowns</string>
     <string name="medtronic_history_group_all">All</string>
     <string name="medtronic_pump_history">Medtronic Pump History</string>
-    <string name="autotune">Autotune</string>
-    <string name="autotune_shortname">AT</string>
-    <string name="tuneprofile_name">Autotune</string>
 
 
     <!-- MDT Pump Status -->
