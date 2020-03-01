@@ -21,6 +21,14 @@ open class DanaRSTestBase : TestBase() {
         return ret
     }
 
+    fun createArray(length: Int, fillWith: Double): Array<Double> {
+        val ret = Array(length) {0.0}
+        for (i in 0 until length) {
+            ret[i] = fillWith
+        }
+        return ret
+    }
+
     @Before
     fun setup() {
         danaRPump = DanaRPump(aapsLogger, sp)

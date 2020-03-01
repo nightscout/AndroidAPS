@@ -2,8 +2,6 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import com.cozmo.danar.util.BleCommandUtil
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.logging.L.isEnabled
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 
@@ -94,24 +92,22 @@ class DanaRS_Packet_Bolus_Get_CIR_CF_Array(
             danaRPump.nightCF = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
         }
         if (danaRPump.units < 0 || danaRPump.units > 1) failed = true
-        if (isEnabled(L.PUMPCOMM)) {
-            aapsLogger.debug(LTag.PUMPCOMM, "Language: $language")
-            aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaRPump.units == DanaRPump.UNITS_MGDL) "MGDL" else "MMOL")
-            aapsLogger.debug(LTag.PUMPCOMM, "Current pump morning CIR: " + danaRPump.morningCIR)
-            aapsLogger.debug(LTag.PUMPCOMM, "Current pump morning CF: " + danaRPump.morningCF)
-            aapsLogger.debug(LTag.PUMPCOMM, "Current pump afternoon CIR: " + danaRPump.afternoonCIR)
-            aapsLogger.debug(LTag.PUMPCOMM, "Current pump afternoon CF: " + danaRPump.afternoonCF)
-            aapsLogger.debug(LTag.PUMPCOMM, "Current pump evening CIR: " + danaRPump.eveningCIR)
-            aapsLogger.debug(LTag.PUMPCOMM, "Current pump evening CF: " + danaRPump.eveningCF)
-            aapsLogger.debug(LTag.PUMPCOMM, "Current pump night CIR: " + danaRPump.nightCIR)
-            aapsLogger.debug(LTag.PUMPCOMM, "Current pump night CF: " + danaRPump.nightCF)
-            aapsLogger.debug(LTag.PUMPCOMM, "cir02: $cir02")
-            aapsLogger.debug(LTag.PUMPCOMM, "cir04: $cir04")
-            aapsLogger.debug(LTag.PUMPCOMM, "cir06: $cir06")
-            aapsLogger.debug(LTag.PUMPCOMM, "cf02: $cf02")
-            aapsLogger.debug(LTag.PUMPCOMM, "cf04: $cf04")
-            aapsLogger.debug(LTag.PUMPCOMM, "cf06: $cf06")
-        }
+        aapsLogger.debug(LTag.PUMPCOMM, "Language: $language")
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaRPump.units == DanaRPump.UNITS_MGDL) "MGDL" else "MMOL")
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump morning CIR: " + danaRPump.morningCIR)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump morning CF: " + danaRPump.morningCF)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump afternoon CIR: " + danaRPump.afternoonCIR)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump afternoon CF: " + danaRPump.afternoonCF)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump evening CIR: " + danaRPump.eveningCIR)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump evening CF: " + danaRPump.eveningCF)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump night CIR: " + danaRPump.nightCIR)
+        aapsLogger.debug(LTag.PUMPCOMM, "Current pump night CF: " + danaRPump.nightCF)
+        aapsLogger.debug(LTag.PUMPCOMM, "cir02: $cir02")
+        aapsLogger.debug(LTag.PUMPCOMM, "cir04: $cir04")
+        aapsLogger.debug(LTag.PUMPCOMM, "cir06: $cir06")
+        aapsLogger.debug(LTag.PUMPCOMM, "cf02: $cf02")
+        aapsLogger.debug(LTag.PUMPCOMM, "cf04: $cf04")
+        aapsLogger.debug(LTag.PUMPCOMM, "cf06: $cf06")
     }
 
     override fun getFriendlyName(): String {
