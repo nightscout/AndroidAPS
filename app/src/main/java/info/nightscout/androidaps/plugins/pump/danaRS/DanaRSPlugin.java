@@ -19,7 +19,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
@@ -70,7 +69,7 @@ import io.reactivex.schedulers.Schedulers;
 public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface {
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    private final MainApp mainApp;
+    private final Context context;
     private final ResourceHelper resourceHelper;
     private final ConstraintChecker constraintChecker;
     private final ProfileFunction profileFunction;
@@ -102,7 +101,7 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
     public DanaRSPlugin(
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
-            MainApp maiApp,
+            Context context,
             ResourceHelper resourceHelper,
             ConstraintChecker constraintChecker,
             ProfileFunction profileFunction,
@@ -120,7 +119,7 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
                         .description(R.string.description_pump_dana_rs),
                 aapsLogger, resourceHelper, commandQueue
         );
-        this.mainApp = maiApp;
+        this.context = context;
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
         this.constraintChecker = constraintChecker;
@@ -143,13 +142,13 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
 
     @Override
     protected void onStart() {
-        Intent intent = new Intent(mainApp, DanaRSService.class);
-        mainApp.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        Intent intent = new Intent(context, DanaRSService.class);
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> mainApp.unbindService(mConnection), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> context.unbindService(mConnection), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventDanaRSDeviceChange.class)
@@ -162,7 +161,7 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
 
     @Override
     protected void onStop() {
-        mainApp.unbindService(mConnection);
+        context.unbindService(mConnection);
 
         disposable.clear();
         super.onStop();

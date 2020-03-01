@@ -61,13 +61,11 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump");
         when(MainApp.gs(R.string.autosensdisabledinpreferences)).thenReturn("Autosens disabled in preferences");
         when(MainApp.gs(R.string.smbdisabledinpreferences)).thenReturn("SMB disabled in preferences");
-        when(MainApp.gs(R.string.limitingbasalratio)).thenReturn("Limiting basal rate to %.2f U/h because of %s");
         when(MainApp.gs(R.string.pumplimit)).thenReturn("pump limit");
         when(MainApp.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value");
         when(MainApp.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences");
         when(MainApp.gs(R.string.maxbasalmultiplier)).thenReturn("max basal multiplier");
         when(MainApp.gs(R.string.maxdailybasalmultiplier)).thenReturn("max daily basal multiplier");
-        when(MainApp.gs(R.string.limitingpercentrate)).thenReturn("Limiting percent rate to %d%% because of %s");
         when(MainApp.gs(R.string.pumplimit)).thenReturn("pump limit");
         when(MainApp.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %.1f U because of %s");
         when(MainApp.gs(R.string.hardlimit)).thenReturn("hard limit");
