@@ -2,8 +2,6 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import com.cozmo.danar.util.BleCommandUtil
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.logging.L.isEnabled
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.utils.DateUtil
@@ -51,13 +49,11 @@ class DanaRS_Packet_General_Get_More_Information(
         danaRPump.lastBolusAmount = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
         // On DanaRS DailyUnits can't be more than 160
         if (danaRPump.dailyTotalUnits > 160) failed = true
-        if (isEnabled(L.PUMPCOMM)) {
-            aapsLogger.debug(LTag.PUMPCOMM, "Daily total units: " + danaRPump.dailyTotalUnits.toString() + " U")
-            aapsLogger.debug(LTag.PUMPCOMM, "Is extended in progress: " + danaRPump.isExtendedInProgress)
-            aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus remaining minutes: " + danaRPump.extendedBolusRemainingMinutes)
-            aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + DateUtil.dateAndTimeAndSecondsString(lastBolusTime.time))
-            aapsLogger.debug(LTag.PUMPCOMM, "Last bolus amount: " + danaRPump.lastBolusAmount)
-        }
+        aapsLogger.debug(LTag.PUMPCOMM, "Daily total units: " + danaRPump.dailyTotalUnits.toString() + " U")
+        aapsLogger.debug(LTag.PUMPCOMM, "Is extended in progress: " + danaRPump.isExtendedInProgress)
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus remaining minutes: " + danaRPump.extendedBolusRemainingMinutes)
+        aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + DateUtil.dateAndTimeAndSecondsString(lastBolusTime.time))
+        aapsLogger.debug(LTag.PUMPCOMM, "Last bolus amount: " + danaRPump.lastBolusAmount)
     }
 
     override fun getFriendlyName(): String {
