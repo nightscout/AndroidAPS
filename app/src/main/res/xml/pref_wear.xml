@@ -61,7 +61,7 @@
                 android:title="@string/wear_display_settings">
                 <SwitchPreference
                     android:defaultValue="false"
-                    android:key="wear_detailediob"
+                    android:key="@string/key_wear_detailediob"
                     android:summary="@string/wear_detailedIOB_summary"
                     android:title="@string/wear_detailedIOB_title" />
 
@@ -73,7 +73,7 @@
 
                 <SwitchPreference
                     android:defaultValue="false"
-                    android:key="wear_showbgi"
+                    android:key="@string/key_wear_showbgi"
                     android:summary="@string/wear_showbgi_summary"
                     android:title="@string/wear_showbgi_title" />
                 <SwitchPreference

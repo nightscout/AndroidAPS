@@ -128,11 +128,6 @@
                 android:summary="@string/show_calibration_button_summary"
                 android:title="@string/overview_calibration" />
 
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_show_notes_entry_dialogs"
-                android:title="@string/overview_show_notes_field_in_dialogs_title" />
-
         </PreferenceScreen>
 
         <Preference
@@ -140,6 +135,11 @@
             android:title="@string/quickwizardsettings">
             <intent android:action="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
         </Preference>
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_show_notes_entry_dialogs"
+            android:title="@string/overview_show_notes_field_in_dialogs_title" />
 
         <PreferenceScreen android:title="@string/advancedsettings_title" android:key="@string/key_advancedsettings">
 

@@ -1,16 +1,15 @@
 package info.nightscout.androidaps.plugins.general.careportal.Dialogs;
 
 
-import android.app.Activity;
 import android.os.Bundle;
-import androidx.fragment.app.DialogFragment;
-import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -20,9 +19,11 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatDialogFragment;
+import androidx.fragment.app.DialogFragment;
+
 import com.google.common.collect.Lists;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
-import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONException;
@@ -39,39 +40,35 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ProfileSwitch;
-import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.NumberPicker;
+import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.Translator;
 
-public class NewNSTreatmentDialog extends DialogFragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+public class NewNSTreatmentDialog extends AppCompatDialogFragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static Logger log = LoggerFactory.getLogger(NewNSTreatmentDialog.class);
-
-    private Activity context;
 
     private static OptionsToShow options;
     private static String event;
 
-    Profile profile;
+    private Profile profile;
     public ProfileStore profileStore;
-    String units = Constants.MGDL;
 
     TextView eventTypeText;
     LinearLayout layoutPercent;
@@ -107,9 +104,10 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     private static Integer seconds = null;
 
-    public void setOptions(OptionsToShow options, int event) {
+    public NewNSTreatmentDialog setOptions(OptionsToShow options, int event) {
         this.options = options;
         this.event = MainApp.gs(event);
+        return this;
     }
 
     public NewNSTreatmentDialog() {
@@ -121,22 +119,13 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        context = activity;
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        this.context = null;
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         if (options == null) return null;
-        getDialog().setTitle(MainApp.gs(options.eventName));
+        getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        setCancelable(true);
+        getDialog().setCanceledOnTouchOutside(false);
         setStyle(DialogFragment.STYLE_NORMAL, getTheme());
         View view = inflater.inflate(R.layout.careportal_newnstreatment_dialog, container, false);
 
@@ -179,7 +168,6 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             }
         } else {
             ArrayList<CharSequence> profileList;
-            units = profile != null ? profile.getUnits() : Constants.MGDL;
             profileList = profileStore.getProfileList();
             ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(getContext(),
                     R.layout.spinner_centered, profileList);
@@ -190,7 +178,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     profileSpinner.setSelection(p);
             }
         }
-        final Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, units);
+        final Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, ProfileFunctions.getSystemUnits());
 
         // temp target
         final List<String> reasonList = Lists.newArrayList(
@@ -205,8 +193,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 double defaultDuration;
-                double defaultTarget = 0;
-                if (profile != null && editTemptarget.getValue() == bg) {
+                double defaultTarget;
+                if (profile != null && editTemptarget.getValue().equals(bg)) {
                     defaultTarget = bg;
                 } else {
                     //prevent changes on screen rotate
@@ -214,17 +202,16 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 }
                 boolean erase = false;
 
-                String units = ProfileFunctions.getInstance().getProfileUnits();
-                DefaultValueHelper helper = new DefaultValueHelper();
+                String units = ProfileFunctions.getSystemUnits();
                 if (MainApp.gs(R.string.eatingsoon).equals(reasonList.get(position))) {
-                    defaultDuration = helper.determineEatingSoonTTDuration();
-                    defaultTarget = helper.determineEatingSoonTT(units);
+                    defaultDuration = DefaultValueHelper.determineEatingSoonTTDuration();
+                    defaultTarget = DefaultValueHelper.determineEatingSoonTT();
                 } else if (MainApp.gs(R.string.activity).equals(reasonList.get(position))) {
-                    defaultDuration = helper.determineActivityTTDuration();
-                    defaultTarget = helper.determineActivityTT(units);
+                    defaultDuration = DefaultValueHelper.determineActivityTTDuration();
+                    defaultTarget = DefaultValueHelper.determineActivityTT();
                 } else if (MainApp.gs(R.string.hypo).equals(reasonList.get(position))) {
-                    defaultDuration = helper.determineHypoTTDuration();
-                    defaultTarget = helper.determineHypoTT(units);
+                    defaultDuration = DefaultValueHelper.determineHypoTTDuration();
+                    defaultTarget = DefaultValueHelper.determineHypoTT();
                 } else if (editDuration.getValue() != 0) {
                     defaultDuration = editDuration.getValue();
                 } else {
@@ -249,7 +236,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         });
 
         // bg
-        bgUnitsView.setText(units);
+        bgUnitsView.setText(ProfileFunctions.getSystemUnits());
 
         TextWatcher bgTextWatcher = new TextWatcher() {
 
@@ -268,7 +255,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         if (profile == null) {
             editBg.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok), bgTextWatcher);
             editTemptarget.setParams(Constants.MIN_TT_MGDL, Constants.MIN_TT_MGDL, Constants.MAX_TT_MGDL, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok));
-        } else if (units.equals(Constants.MMOL)) {
+        } else if (ProfileFunctions.getSystemUnits().equals(Constants.MMOL)) {
             editBg.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok), bgTextWatcher);
             editTemptarget.setParams(Constants.MIN_TT_MMOL, Constants.MIN_TT_MMOL, Constants.MAX_TT_MMOL, 0.1d, new DecimalFormat("0.0"), false, view.findViewById(R.id.ok));
         } else {
@@ -277,7 +264,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         }
 
         sensorRadioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Double bg1 = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, units);
+            Double bg1 = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, ProfileFunctions.getSystemUnits());
             if (savedInstanceState != null && savedInstanceState.getDouble("editBg") != bg1) {
                 editBg.setValue(savedInstanceState.getDouble("editBg"));
             } else {
@@ -286,16 +273,16 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         });
 
         Integer maxCarbs = MainApp.getConstraintChecker().getMaxCarbsAllowed().value();
-        editCarbs = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_carbsinput);
+        editCarbs = view.findViewById(R.id.careportal_newnstreatment_carbsinput);
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
 
         Double maxInsulin = MainApp.getConstraintChecker().getMaxBolusAllowed().value();
-        editInsulin = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_insulininput);
+        editInsulin = view.findViewById(R.id.careportal_newnstreatment_insulininput);
         editInsulin.setParams(0d, 0d, maxInsulin, 0.05d, new DecimalFormat("0.00"), false, view.findViewById(R.id.ok));
 
-        editSplit = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_splitinput);
+        editSplit = view.findViewById(R.id.careportal_newnstreatment_splitinput);
         editSplit.setParams(100d, 0d, 100d, 5d, new DecimalFormat("0"), true, view.findViewById(R.id.ok));
-        editDuration = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_durationinput);
+        editDuration = view.findViewById(R.id.careportal_newnstreatment_durationinput);
         editDuration.setParams(0d, 0d, Constants.MAX_PROFILE_SWITCH_DURATION, 10d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
 
         TextWatcher percentTextWatcher = new TextWatcher() {
@@ -319,7 +306,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         Integer maxPercent = 200;
         if (profile != null)
             maxPercent = MainApp.getConstraintChecker().getMaxBasalPercentAllowed(profile).value();
-        editPercent = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_percentinput);
+        editPercent = view.findViewById(R.id.careportal_newnstreatment_percentinput);
         editPercent.setParams(0d, -100d, (double) maxPercent, 5d, new DecimalFormat("0"), true, view.findViewById(R.id.ok), percentTextWatcher);
 
         TextWatcher absoluteTextWatcher = new TextWatcher() {
@@ -343,16 +330,16 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         Double maxAbsolute = HardLimits.maxBasal();
         if (profile != null)
             maxAbsolute = MainApp.getConstraintChecker().getMaxBasalAllowed(profile).value();
-        editAbsolute = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_absoluteinput);
+        editAbsolute = view.findViewById(R.id.careportal_newnstreatment_absoluteinput);
         editAbsolute.setParams(0d, 0d, maxAbsolute, 0.05d, new DecimalFormat("0.00"), true, view.findViewById(R.id.ok), absoluteTextWatcher);
 
-        editCarbTime = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_carbtimeinput);
+        editCarbTime = view.findViewById(R.id.careportal_newnstreatment_carbtimeinput);
         editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
 
-        editPercentage = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_percentage);
+        editPercentage = view.findViewById(R.id.careportal_newnstreatment_percentage);
         editPercentage.setParams(100d, (double) Constants.CPP_MIN_PERCENTAGE, (double) Constants.CPP_MAX_PERCENTAGE, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
 
-        editTimeshift = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_timeshift);
+        editTimeshift = view.findViewById(R.id.careportal_newnstreatment_timeshift);
         editTimeshift.setParams(0d, (double) Constants.CPP_MIN_TIMESHIFT, (double) Constants.CPP_MAX_TIMESHIFT, 1d, new DecimalFormat("0"), false, view.findViewById(R.id.ok));
 
         ProfileSwitch ps = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(DateUtil.now());
@@ -369,21 +356,21 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             options.duration = false;
         }
 
-        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_eventtime_layout), options.date);
-        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_bg_layout), options.bg);
-        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_bgsource_layout), options.bg);
-        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_insulin_layout), options.insulin);
-        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_carbs_layout), options.carbs);
-        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_split_layout), options.split);
-        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_duration_layout), options.duration);
+        showOrHide(view.findViewById(R.id.careportal_newnstreatment_eventtime_layout), options.date);
+        showOrHide(view.findViewById(R.id.careportal_newnstreatment_bg_layout), options.bg);
+        showOrHide(view.findViewById(R.id.careportal_newnstreatment_bgsource_layout), options.bg);
+        showOrHide(view.findViewById(R.id.careportal_newnstreatment_insulin_layout), options.insulin);
+        showOrHide(view.findViewById(R.id.careportal_newnstreatment_carbs_layout), options.carbs);
+        showOrHide(view.findViewById(R.id.careportal_newnstreatment_split_layout), options.split);
+        showOrHide(view.findViewById(R.id.careportal_newnstreatment_duration_layout), options.duration);
         showOrHide(layoutPercent, options.percent);
         showOrHide(layoutAbsolute, options.absolute);
-        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_carbtime_layout), options.prebolus);
-        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_profile_layout), options.profile);
-        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_percentage_layout), options.profile);
-        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_timeshift_layout), options.profile);
-        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_reuse_layout), options.profile && ps != null && ps.isCPP);
-        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_temptarget_layout), options.tempTarget);
+        showOrHide(view.findViewById(R.id.careportal_newnstreatment_carbtime_layout), options.prebolus);
+        showOrHide(view.findViewById(R.id.careportal_newnstreatment_profile_layout), options.profile);
+        showOrHide(view.findViewById(R.id.careportal_newnstreatment_percentage_layout), options.profile);
+        showOrHide(view.findViewById(R.id.careportal_newnstreatment_timeshift_layout), options.profile);
+        showOrHide(view.findViewById(R.id.careportal_newnstreatment_reuse_layout), options.profile && ps != null && ps.isCPP);
+        showOrHide(view.findViewById(R.id.careportal_newnstreatment_temptarget_layout), options.tempTarget);
 
         setCancelable(true);
         getDialog().setCanceledOnTouchOutside(false);
@@ -410,6 +397,13 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+    }
+
+    @Override
     public void onClick(View view) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(eventTime);
@@ -423,18 +417,18 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 );
                 dpd.setThemeDark(true);
                 dpd.dismissOnPause(true);
-                dpd.show(context.getFragmentManager(), "Datepickerdialog");
+                dpd.show(getActivity().getSupportFragmentManager(), "Datepickerdialog");
                 break;
             case R.id.careportal_newnstreatment_eventtime:
                 TimePickerDialog tpd = TimePickerDialog.newInstance(
                         this,
                         calendar.get(Calendar.HOUR_OF_DAY),
                         calendar.get(Calendar.MINUTE),
-                        DateFormat.is24HourFormat(context)
+                        DateFormat.is24HourFormat(getContext())
                 );
                 tpd.setThemeDark(true);
                 tpd.dismissOnPause(true);
-                tpd.show(context.getFragmentManager(), "Timepickerdialog");
+                tpd.show(getActivity().getSupportFragmentManager(), "Timepickerdialog");
                 break;
             case R.id.ok:
                 confirmNSTreatmentCreation();
@@ -457,7 +451,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         if ((data.size() > 0) &&
                 (data.get(0).date > millis - 7 * 60 * 1000L) &&
                 (data.get(0).date < millis + 7 * 60 * 1000L)) {
-            editBg.setValue(Profile.fromMgdlToUnits(data.get(0).value, units));
+            editBg.setValue(Profile.fromMgdlToUnits(data.get(0).value, ProfileFunctions.getSystemUnits()));
         }
     }
 
@@ -471,14 +465,13 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     }
 
     @Override
-    public void onTimeSet(RadialPickerLayout view, int hourOfDay, int minute, int second) {
+    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
         eventTime.setHours(hourOfDay);
         eventTime.setMinutes(minute);
         eventTime.setSeconds(this.seconds++); // randomize seconds to prevent creating record of the same time, if user choose time manually
         timeButton.setText(DateUtil.timeString(eventTime));
         updateBGforDateTime();
     }
-
 
     JSONObject gatherData() {
         String enteredBy = SP.getString("careportal_enteredby", "");
@@ -585,7 +578,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 data.put("preBolus", SafeParse.stringToDouble(editCarbTime.getText()));
             if (!notesEdit.getText().toString().equals(""))
                 data.put("notes", notesEdit.getText().toString());
-            data.put("units", units);
+            data.put("units", ProfileFunctions.getSystemUnits());
             if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
             if (options.eventType == R.id.careportal_combobolus) {
                 Double enteredInsulin = SafeParse.stringToDouble(editInsulin.getText());
@@ -601,17 +594,17 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     String buildConfirmText(JSONObject data) {
         String ret = "";
-        if (data.has("eventType")) {
-            ret += MainApp.gs(R.string.careportal_newnstreatment_eventtype);
-            ret += ": ";
-            ret += Translator.translate(JsonHelper.safeGetString(data, "eventType", ""));
-            ret += "\n";
-        }
+//        if (data.has("eventType")) {
+//            ret += MainApp.gs(R.string.careportal_newnstreatment_eventtype);
+//            ret += ": ";
+//            ret += Translator.translate(JsonHelper.safeGetString(data, "eventType", ""));
+//            ret += "\n";
+//        }
         if (data.has("glucose")) {
             ret += MainApp.gs(R.string.treatments_wizard_bg_label);
             ret += ": ";
             ret += JsonHelper.safeGetObject(data, "glucose", "");
-            ret += " " + units + "\n";
+            ret += " " + ProfileFunctions.getSystemUnits() + "\n";
         }
         if (data.has("glucoseType")) {
             ret += MainApp.gs(R.string.careportal_newnstreatment_glucosetype);
@@ -688,7 +681,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             ret += "\n";
         }
         if (data.has("created_at")) {
-            ret += MainApp.gs(R.string.careportal_newnstreatment_eventtime_label);
+            ret += MainApp.gs(R.string.event_time_label);
             ret += ": ";
             ret += eventTime.toLocaleString();
             ret += "\n";
@@ -703,60 +696,25 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         return ret;
     }
 
-    void confirmNSTreatmentCreation() {
-        if (context != null) {
-            final JSONObject data = gatherData();
-            final String confirmText = buildConfirmText(data);
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle(MainApp.gs(R.string.confirmation));
-            builder.setMessage(confirmText);
-            builder.setPositiveButton(MainApp.gs(R.string.ok), (dialog, id) -> createNSTreatment(data));
-            builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
-            builder.show();
-        }
+    private void confirmNSTreatmentCreation() {
+        final JSONObject data = gatherData();
+        OKDialog.showConfirmation(getContext(), Translator.translate(JsonHelper.safeGetString(data, "eventType", MainApp.gs(R.string.overview_treatment_label))), buildConfirmText(data), () -> createNSTreatment(data));
     }
 
 
-    public void createNSTreatment(JSONObject data) {
-        if (options.executeProfileSwitch) {
-            if (data.has("profile")) {
-                ProfileFunctions.doProfileSwitch(profileStore, JsonHelper.safeGetString(data, "profile"), JsonHelper.safeGetInt(data, "duration"), JsonHelper.safeGetInt(data, "percentage"), JsonHelper.safeGetInt(data, "timeshift"));
-            }
-        } else if (options.executeTempTarget) {
-            final int duration = JsonHelper.safeGetInt(data, "duration");
-            final double targetBottom = JsonHelper.safeGetDouble(data, "targetBottom");
-            final double targetTop = JsonHelper.safeGetDouble(data, "targetTop");
-            final String reason = JsonHelper.safeGetString(data, "reason", "");
-            if ((targetBottom != 0d && targetTop != 0d) || duration == 0) {
-                TempTarget tempTarget = new TempTarget()
-                        .date(eventTime.getTime())
-                        .duration(duration)
-                        .reason(reason)
-                        .source(Source.USER);
-                if (tempTarget.durationInMinutes != 0) {
-                    tempTarget.low(Profile.toMgdl(targetBottom, units))
-                            .high(Profile.toMgdl(targetTop, units));
-                } else {
-                    tempTarget.low(0).high(0);
-                }
-                TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
-            }
-            if (duration == 10)
-                SP.putBoolean(R.string.key_objectiveusetemptarget, true);
+    void createNSTreatment(JSONObject data) {
+        if (JsonHelper.safeGetString(data, "eventType", "").equals(CareportalEvent.PROFILESWITCH)) {
+            ProfileSwitch profileSwitch = ProfileFunctions.prepareProfileSwitch(
+                    profileStore,
+                    JsonHelper.safeGetString(data, "profile"),
+                    JsonHelper.safeGetInt(data, "duration"),
+                    JsonHelper.safeGetInt(data, "percentage"),
+                    JsonHelper.safeGetInt(data, "timeshift"),
+                    eventTime.getTime()
+            );
+            NSUpload.uploadProfileSwitch(profileSwitch);
         } else {
-            if (JsonHelper.safeGetString(data, "eventType").equals(CareportalEvent.PROFILESWITCH)) {
-                ProfileSwitch profileSwitch = ProfileFunctions.prepareProfileSwitch(
-                        profileStore,
-                        JsonHelper.safeGetString(data, "profile"),
-                        JsonHelper.safeGetInt(data, "duration"),
-                        JsonHelper.safeGetInt(data, "percentage"),
-                        JsonHelper.safeGetInt(data, "timeshift"),
-                        eventTime.getTime()
-                );
-                NSUpload.uploadProfileSwitch(profileSwitch);
-            } else {
-                NSUpload.uploadCareportalEntryToNS(data);
-            }
+            NSUpload.uploadCareportalEntryToNS(data);
         }
     }
 

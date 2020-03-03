@@ -117,6 +117,14 @@ public class DateUtil {
         return df.format(mills);
     }
 
+    public static String dateStringShort(long mills) {
+        String format = "MM/dd";
+        if (android.text.format.DateFormat.is24HourFormat(MainApp.instance())) {
+            format = "dd/MM";
+        }
+        return new DateTime(mills).toString(DateTimeFormat.forPattern(format));
+    }
+
     public static String timeString(Date date) {
         String format = "hh:mma";
         if (android.text.format.DateFormat.is24HourFormat(MainApp.instance())) {
@@ -129,6 +137,14 @@ public class DateUtil {
         String format = "hh:mma";
         if (android.text.format.DateFormat.is24HourFormat(MainApp.instance())) {
             format = "HH:mm";
+        }
+        return new DateTime(mills).toString(DateTimeFormat.forPattern(format));
+    }
+
+    public static String timeStringWithSeconds(long mills) {
+        String format = "hh:mm:ssa";
+        if (android.text.format.DateFormat.is24HourFormat(MainApp.instance())) {
+            format = "HH:mm:ss";
         }
         return new DateTime(mills).toString(DateTimeFormat.forPattern(format));
     }
@@ -148,6 +164,11 @@ public class DateUtil {
     public static String dateAndTimeString(long mills) {
         if (mills == 0) return "";
         return dateString(mills) + " " + timeString(mills);
+    }
+
+    public static String dateAndTimeAndSecondsString(long mills) {
+        if (mills == 0) return "";
+        return dateString(mills) + " " + timeStringWithSeconds(mills);
     }
 
     public static String dateAndTimeFullString(long mills) {
@@ -207,6 +228,11 @@ public class DateUtil {
     public static boolean isCloseToNow(long date) {
         long diff = Math.abs(date - now());
         return diff < T.mins(2).msecs();
+    }
+
+    public static boolean isOlderThan(long date, long minutes) {
+        long diff = now() - date;
+        return diff > T.mins(minutes).msecs();
     }
 
     public static GregorianCalendar gregorianCalendar() {

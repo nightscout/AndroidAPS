@@ -32,13 +32,14 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.profile.simple.SimpleProfilePlugin;
+import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.XdripCalibrations;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -57,7 +58,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
         L.class, SP.class, MainApp.class, DateUtil.class, ProfileFunctions.class,
         TreatmentsPlugin.class, SmsManager.class, IobCobCalculatorPlugin.class,
         CommandQueue.class, ConfigBuilderPlugin.class, NSUpload.class, ProfileInterface.class,
-        SimpleProfilePlugin.class, XdripCalibrations.class, VirtualPumpPlugin.class, LoopPlugin.class
+        LocalProfilePlugin.class, XdripCalibrations.class, VirtualPumpPlugin.class, LoopPlugin.class
 })
 
 public class SmsCommunicatorPluginTest {
@@ -439,7 +440,7 @@ public class SmsCommunicatorPluginTest {
         Assert.assertEquals("PROFILE LIST", smsCommunicatorPlugin.getMessages().get(0).getText());
         Assert.assertEquals("Not configured", smsCommunicatorPlugin.getMessages().get(1).getText());
 
-        ProfileInterface profileInterface = mock(SimpleProfilePlugin.class);
+        ProfileInterface profileInterface = mock(LocalProfilePlugin.class);
         when(ConfigBuilderPlugin.getPlugin().getActiveProfileInterface()).thenReturn(profileInterface);
 
         //PROFILE LIST (no profile defined)
@@ -648,7 +649,7 @@ public class SmsCommunicatorPluginTest {
         passCode = smsCommunicatorPlugin.getMessageToConfirm().getConfirmCode();
         smsCommunicatorPlugin.processSms(new Sms("1234", passCode));
         Assert.assertEquals(passCode, smsCommunicatorPlugin.getMessages().get(2).getText());
-        Assert.assertEquals("Extended bolus 1.00U for 20 min started successfully\nVirtual Pump", smsCommunicatorPlugin.getMessages().get(3).getText());
+        Assert.assertEquals("Extended bolus 1.00U for 20 min started successfully\nnull\nVirtual Pump", smsCommunicatorPlugin.getMessages().get(3).getText());
     }
 
     @Test
@@ -674,6 +675,7 @@ public class SmsCommunicatorPluginTest {
         when(MainApp.getConstraintChecker().applyBolusConstraints(any())).thenReturn(new Constraint<>(1d));
 
         when(DateUtil.now()).thenReturn(1000L);
+        when(SP.getLong(R.string.key_smscommunicator_remotebolusmindistance, T.msecs(Constants.remoteBolusMinDistance).mins())).thenReturn(15L);
         //BOLUS 1
         smsCommunicatorPlugin.setMessages(new ArrayList<>());
         sms = new Sms("1234", "BOLUS 1");

@@ -237,7 +237,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:text="Carb"
+                        android:text="@string/activity_carb"
                         android:textColor="#FFFFFF"
                         android:textSize="10sp"
                         android:textStyle="bold" />
@@ -327,7 +327,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:text="IOB"
+                        android:text="@string/activity_IOB"
                         android:textAlignment="center"
                         android:textColor="#FFFFFF"
                         android:textSize="10sp"

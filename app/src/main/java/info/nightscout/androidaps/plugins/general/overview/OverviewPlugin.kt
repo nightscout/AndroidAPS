@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview
 
-import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.EventRefreshOverview
@@ -9,7 +9,6 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.bus.RxBus
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationStore
@@ -65,22 +64,17 @@ object OverviewPlugin : PluginBase(PluginDescription()
         super.onStop()
     }
 
-    fun determineHighLine(units: String): Double {
-        var highLineSetting = SP.getDouble("high_mark", Profile.fromMgdlToUnits(bgTargetHigh, units))!!
-        if (highLineSetting < 1)
-            highLineSetting = Profile.fromMgdlToUnits(180.0, units)
+    fun determineHighLine(): Double {
+        var highLineSetting = SP.getDouble(R.string.key_high_mark, bgTargetHigh)
+        if (highLineSetting < 1) highLineSetting = Constants.HIGHMARK
+        highLineSetting = Profile.toCurrentUnits(highLineSetting)
         return highLineSetting
     }
 
     fun determineLowLine(): Double {
-        val profile = ProfileFunctions.getInstance().profile ?: return bgTargetLow
-        return determineLowLine(profile.units)
-    }
-
-    fun determineLowLine(units: String): Double {
-        var lowLineSetting = SP.getDouble("low_mark", Profile.fromMgdlToUnits(bgTargetLow, units))!!
-        if (lowLineSetting < 1)
-            lowLineSetting = Profile.fromMgdlToUnits(76.0, units)
+        var lowLineSetting = SP.getDouble(R.string.key_low_mark, bgTargetLow)
+        if (lowLineSetting < 1) lowLineSetting = Constants.LOWMARK
+        lowLineSetting = Profile.toCurrentUnits(lowLineSetting)
         return lowLineSetting
     }
 }

@@ -59,12 +59,12 @@
             <EditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
-                android:key="low_mark"
+                android:key="@string/key_low_mark"
                 android:title="@string/low_mark" />
             <EditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
-                android:key="high_mark"
+                android:key="@string/key_high_mark"
                 android:title="@string/high_mark" />
         </PreferenceScreen>
         <SwitchPreference

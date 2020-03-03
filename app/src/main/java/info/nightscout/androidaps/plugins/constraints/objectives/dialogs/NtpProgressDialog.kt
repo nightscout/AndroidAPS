@@ -14,7 +14,7 @@ import info.nightscout.androidaps.plugins.constraints.objectives.events.EventNtp
 import info.nightscout.androidaps.utils.FabricPrivacy
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.overview_bolusprogress_dialog.*
+import kotlinx.android.synthetic.main.dialog_bolusprogress.*
 import org.slf4j.LoggerFactory
 
 class NtpProgressDialog : DialogFragment() {
@@ -33,16 +33,17 @@ class NtpProgressDialog : DialogFragment() {
         state = savedInstanceState?.getString("state", DEFAULT_STATE) ?: DEFAULT_STATE
         percent = savedInstanceState?.getInt("percent", 0) ?: 0
 
-        return inflater.inflate(R.layout.overview_bolusprogress_dialog, container, false)
+        return inflater.inflate(R.layout.dialog_bolusprogress, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         overview_bolusprogress_stop.setOnClickListener { dismiss() }
-        overview_bolusprogress_status.setText(state)
-        overview_bolusprogress_progressbar.setMax(100)
-        overview_bolusprogress_progressbar.setProgress(percent)
+        overview_bolusprogress_status.text = state
+        overview_bolusprogress_progressbar.max = 100
+        overview_bolusprogress_progressbar.progress = percent
         overview_bolusprogress_stop.text = MainApp.gs(R.string.close)
+        overview_bolusprogress_title.text = MainApp.gs(R.string.please_wait)
     }
 
     override fun onResume() {

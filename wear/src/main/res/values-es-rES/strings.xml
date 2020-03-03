@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AAPS</string>
+    <string name="label_actions_activity">AAPS</string>
+    <string name="label_xdrip">AAPS</string>
+    <string name="label_xdrip_large">AAPS (Grande)</string>
+    <string name="label_xdrip_big_chart">AAPS(BigChart)</string>
+    <string name="label_xdrip_no_chart">AAPS (NoChart)</string>
+    <string name="label_xdrip_circle">AAPS (Círculo)</string>
+    <string name="label_xdrip_v2">AAPSv2</string>
+    <string name="label_xdrip_cockpit">AAPS (Cockpit)</string>
+    <string name="label_xdrip_steampunk">AAPS (Steampunk)</string>
+    <string name="label_warning_sync">¡Sin datos!</string>
+    <string name="label_warning_old">¡Viejos datos!</string>
+    <string name="label_warning_since">Desde %1$s</string>
+    <string name="label_warning_sync_aaps">¡Sincronización con AAPS!</string>
+    <string name="msg_warning_sync">No se han recibido datos desde %1$s. Comprobar si AAPS en el teléfono envía los datos al reloj</string>
+    <string name="msg_warning_old">¡Los datos de AAPS son %1$s antiguos! ¡Compruebe su sensor, xDrip+, NS, configuración AAPS u otro!</string>
+    <string name="pref_on">Activado</string>
+    <string name="pref_off">Desactivado</string>
+    <string name="pref_vibrate_on_bolus">Vibrar con bolos</string>
+    <string name="pref_units_for_actions">Unidades para Acciones</string>
+    <string name="pref_show_date">Mostrar fecha</string>
+    <string name="pref_show_iob">Mostrar Insulina activa (IOB)</string>
+    <string name="pref_show_cob">Mostrar COB</string>
+    <string name="pref_show_delta">Mostrar delta</string>
+    <string name="pref_show_avgdelta">Mostrar AvgDelta</string>
+    <string name="pref_show_phone_battery">Mostrar batería del teléfono</string>
+    <string name="pref_show_rig_battery">Mostrar batería de Rig</string>
+    <string name="pref_show_basal_rate">Mostrar Tasa Basal</string>
+    <string name="pref_show_loop_status">Mostrar estado del lazo</string>
+    <string name="pref_show_bg">Mostrar BG</string>
+    <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
+    <string name="pref_show_ago">Mostrar histórico</string>
+    <string name="pref_dark" comment="Enables dark visual theme">Oscuro</string>
+    <string name="pref_highlight_basals">Resaltar las basales</string>
+    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Divisor de coincidencia</string>
+    <string name="pref_chart_timeframe">Gráfico por franja de tiempo</string>
+    <string name="pref_1_hour">1 hora</string>
+    <string name="pref_2_hours">2 horas</string>
+    <string name="pref_3_hours">3 horas</string>
+    <string name="pref_4_hours">4 horas</string>
+    <string name="pref_5_hours">5 horas</string>
+    <string name="pref_input_design">Diseño de entrada</string>
+    <string name="pref_default">Por defecto</string>
+    <string name="pref_quick_righty">Rápido a la derecha</string>
+    <string name="pref_quick_lefty">Rápido a la izquierda</string>
+    <string name="pref_modern_sparse">Disperso moderno</string>
+    <string name="pref_delta_granularity">Granularidad delta (Steampunk)</string>
+    <string name="pref_low">Bajo</string>
+    <string name="pref_medium">Medio</string>
+    <string name="pref_high">Alto</string>
+    <string name="pref_auto">Auto</string>
+    <string name="pref_big_numbers">Números grandes</string>
+    <string name="pref_ring_history">Historial de Ring</string>
+    <string name="pref_light_ring_history">Historial de Ring Light</string>
+    <string name="pref_animations">Animaciones</string>
+    <string name="pref_wizard_in_menu">Asistente en el menú</string>
+    <string name="pref_prime_in_menu">Cebar en menú</string>
+    <string name="pref_single_target">Objetivo único</string>
+    <string name="pref_wizard_percentage">Porcentaje del asistente</string>
+    <string name="pref_complication_tap_action">Acción de Toque Complicación</string>
+    <string name="pref_unicode_in_complications">Unicode en complicaciones</string>
+    <string name="pref_version">Versión:</string>
+    <string name="menu_tempt">TempT</string>
+    <string name="menu_wizard">Asistente</string>
+    <string name="menu_bolus">Bolo</string>
+    <string name="menu_ecarb">eCarb</string>
+    <string name="menu_settings">Configuración</string>
+    <string name="menu_status">Estado</string>
+    <string name="menu_prime_fill">Cebar/llenar</string>
+    <string name="menu_none">Ninguno</string>
+    <string name="menu_default">Por defecto</string>
+    <string name="menu_menu">Menú</string>
+    <string name="action_duration">duración</string>
+    <string name="action_target" comment="In temp target menu, single target value">objetivo</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">bajo</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">alto</string>
+    <string name="action_carbs">carbohidratos</string>
+    <string name="action_percentage">porcentaje</string>
+    <string name="action_start_min">inicio [min]</string>
+    <string name="action_duration_h">duración [h]</string>
+    <string name="action_insulin">insulina</string>
+    <string name="action_preset_1">Predefinido 1</string>
+    <string name="action_preset_2">Predefinido 2</string>
+    <string name="action_preset_3">Predefinido 3</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Importe gratuito</string>
+    <string name="action_confirm">Confirmar</string>
+    <string name="action_status_pump">ESTADO DE LA BOMBA</string>
+    <string name="action_status_loop">Estado del loop</string>
+    <string name="action_timeshift">intervalo de tiempo</string>
+    <string name="action_tdd_weighted">TDD ponderada</string>
+    <string name="action_bolus">bolo</string>
+    <string name="status_pump">Bomba</string>
+    <string name="status_loop">Lazo</string>
+    <string name="status_cpp">CPP</string>
+    <string name="status_tdd">TDD</string>
+    <string name="activity_carb">Carbohidratos</string>
+    <string name="activity_IOB">IOB</string>
+    <string name="activity_no_status">sin estado</string>
+    <string name="unit_mg_dl">mg/dl</string>
+    <string name="unit_mmol_l">mmol/l</string>
+    <string name="unit_g" comment="Shortcut for ISO unit: gram">g</string>
+    <string name="unit_u" comment="Shortcut for: insulin Unit">U</string>
+    <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">U/h</string>
+    <string name="unit_h" comment="One letter shortcut for: Hour" maxLength="1">h</string>
+    <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">d</string>
+    <string name="unit_w" comment="One letter shortcut for: Week" maxLength="1">s</string>
+</resources>

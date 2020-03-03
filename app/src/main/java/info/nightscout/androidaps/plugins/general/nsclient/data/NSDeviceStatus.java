@@ -407,7 +407,7 @@ public class NSDeviceStatus {
             }
             Uploader uploader = uploaders.get(device);
             // check if this is new data
-            if (clock != 0 && (uploader != null && clock > uploader.clock || uploader == null)) {
+            if (clock != 0 && battery != null && (uploader != null && clock > uploader.clock || uploader == null)) {
                 if (uploader == null)
                     uploader = new Uploader();
                 uploader.battery = battery;

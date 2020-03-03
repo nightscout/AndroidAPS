@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,19 +32,19 @@ public class SWEditString extends SWItem {
         Context context = layout.getContext();
 
         TextView l = new TextView(context);
-        l.setId(layout.generateViewId());
+        l.setId(View.generateViewId());
         l.setText(label);
         l.setTypeface(l.getTypeface(), Typeface.BOLD);
         layout.addView(l);
 
         TextView c = new TextView(context);
-        c.setId(layout.generateViewId());
+        c.setId(View.generateViewId());
         c.setText(comment);
         c.setTypeface(c.getTypeface(), Typeface.ITALIC);
         layout.addView(c);
 
         EditText editText = new EditText(context);
-        editText.setId(layout.generateViewId());
+        editText.setId(View.generateViewId());
         editText.setInputType(InputType.TYPE_CLASS_TEXT);
         editText.setMaxLines(1);
         editText.setText(SP.getString(preferenceId, ""));

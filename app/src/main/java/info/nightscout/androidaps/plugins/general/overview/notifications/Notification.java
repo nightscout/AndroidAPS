@@ -78,9 +78,10 @@ public class Notification {
     public static final int USERMESSAGE = 53;
     public static final int OVER_24H_TIME_CHANGE_REQUESTED = 54;
     public static final int INVALID_VERSION = 55;
-    public static final int OMNIPOD_PUMP_ALARM = 56;
-    public static final int TIME_OR_TIMEZONE_CHANGE = 57;
-    public static final int OMNIPOD_POD_NOT_ATTACHED = 58;
+    public static final int PERMISSION_SYSTEM_WINDOW = 56;
+    public static final int OMNIPOD_PUMP_ALARM = 57;
+    public static final int TIME_OR_TIMEZONE_CHANGE = 58;
+    public static final int OMNIPOD_POD_NOT_ATTACHED = 59;
 
     public int id;
     public Date date;

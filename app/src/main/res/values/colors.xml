@@ -28,9 +28,12 @@
     <color name="graphgrid">#757575</color>
     <color name="colorLightGray">#d8d8d8</color>
     <color name="warning">#ff1a1a</color>
+    <color name="error_background">#66FC0000</color>
+    <color name="ok_background">#323232</color>
 
     <color name="defaultbackground">#424242</color>
     <color name="defaulttext">#BBBBBB</color>
+    <color name="defaulttextcolor">#B3FFFFFF</color>
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="tempTargetConfirmation">#77dd77</color>
@@ -41,6 +44,9 @@
     <color name="colorAccent">#40bbaa</color>
     <color name="mdtp_accent_color">#40bbaa</color>
     <color name="colorInitializingBorder">#00695c</color>
+
+    <color name="dialog_title_background">#303030</color>
+    <color name="activity_title_background">#121212</color>
 
     <color name="cardColorBackground">#121212</color>
     <color name="cardObjectiveText">#779ECB</color>

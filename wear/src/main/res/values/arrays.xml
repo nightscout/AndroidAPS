@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="chart_timeframe">
+        <item>@string/pref_1_hour</item>
+        <item>@string/pref_2_hours</item>
+        <item>@string/pref_3_hours</item>
+        <item>@string/pref_4_hours</item>
+        <item>@string/pref_5_hours</item>
+    </string-array>
+
+    <string-array name="chart_timeframe_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="delta_granularity">
+        <item>@string/pref_low</item>
+        <item>@string/pref_medium</item>
+        <item>@string/pref_high</item>
+        <item>@string/pref_auto</item>
+    </string-array>
+
+    <string-array name="delta_granularity_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="input_design">
+        <item>@string/pref_default</item>
+        <item>@string/pref_quick_righty</item>
+        <item>@string/pref_quick_lefty</item>
+        <item>@string/pref_modern_sparse</item>
+    </string-array>
+
+    <string-array name="input_design_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="complication_tap_action">
+        <item>@string/menu_default</item>
+        <item>@string/menu_menu</item>
+        <item>@string/menu_wizard</item>
+        <item>@string/menu_bolus</item>
+        <item>@string/menu_ecarb</item>
+        <item>@string/menu_status</item>
+        <item>@string/menu_none</item>
+    </string-array>
+
+    <string-array name="complication_tap_action_values">
+        <item>default</item>
+        <item>menu</item>
+        <item>wizard</item>
+        <item>bolus</item>
+        <item>ecarb</item>
+        <item>status</item>
+        <item>none</item>
+    </string-array>
+
+</resources>

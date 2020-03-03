@@ -29,8 +29,8 @@ public class PluginDescription {
         return this;
     }
 
-     public PluginDescription alwaysVisible(boolean alwayVisible) {
-        this.alwaysVisible = alwayVisible;
+     public PluginDescription alwaysVisible(boolean alwaysVisible) {
+        this.alwaysVisible = alwaysVisible;
         return this;
     }
 

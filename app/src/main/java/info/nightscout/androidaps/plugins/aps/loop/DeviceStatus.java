@@ -381,13 +381,11 @@ public class DeviceStatus {
         try {
             if (device != null) record.put("device", device);
             if (pump != null) record.put("pump", pump);
-            if (suggested != null) {
-                JSONObject openaps = new JSONObject();
-                if (enacted != null) openaps.put("enacted", enacted);
-                if (suggested != null) openaps.put("suggested", suggested);
-                if (iob != null) openaps.put("iob", iob);
-                record.put("openaps", openaps);
-            }
+            JSONObject openaps = new JSONObject();
+            if (enacted != null) openaps.put("enacted", enacted);
+            if (suggested != null) openaps.put("suggested", suggested);
+            if (iob != null) openaps.put("iob", iob);
+            record.put("openaps", openaps);
             if (uploaderBattery != 0) record.put("uploaderBattery", uploaderBattery);
             if (created_at != null) record.put("created_at", created_at);
         } catch (JSONException e) {

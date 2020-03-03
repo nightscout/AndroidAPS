@@ -9,6 +9,7 @@ import android.telephony.SmsManager
 import android.telephony.SmsMessage
 import android.text.TextUtils
 import com.andreabaccega.widget.ValidatingEditTextPreference
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -190,6 +191,12 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
         log.debug(receivedSms.toString())
         val splitted = receivedSms.text.split(Regex("\\s+")).toTypedArray()
         val remoteCommandsAllowed = SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)
+
+        val minDistance =
+            if (areMoreNumbers(SP.getString(R.string.key_smscommunicator_allowednumbers, "")))
+                T.mins(SP.getLong(R.string.key_smscommunicator_remotebolusmindistance, T.msecs(Constants.remoteBolusMinDistance).mins())).msecs()
+            else Constants.remoteBolusMinDistance
+
         if (splitted.isNotEmpty() && isCommand(splitted[0].toUpperCase(Locale.getDefault()), receivedSms.phoneNumber)) {
             when (splitted[0].toUpperCase(Locale.getDefault())) {
                 "BG" ->
@@ -222,7 +229,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                     else sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
                 "BOLUS" ->
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotecommandnotallowed))
-                    else if (splitted.size == 2 && DateUtil.now() - lastRemoteBolusTime < Constants.remoteBolusMinDistance) sendSMS(Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotebolusnotallowed))
+                    else if (splitted.size == 2 && DateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, R.string.smscommunicator_remotebolusnotallowed))
                     else if (splitted.size == 2 && pump.isSuspended) sendSMS(Sms(receivedSms.phoneNumber, R.string.pumpsuspended))
                     else if (splitted.size == 2 || splitted.size == 3) processBOLUS(splitted, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, R.string.wrongformat))
@@ -259,7 +266,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
         val actualBG = DatabaseHelper.actualBg()
         val lastBG = DatabaseHelper.lastBg()
         var reply = ""
-        val units = ProfileFunctions.getInstance().profileUnits
+        val units = ProfileFunctions.getSystemUnits()
         if (actualBG != null) {
             reply = MainApp.gs(R.string.sms_actualbg) + " " + actualBG.valueToUnitsToString(units) + ", "
         } else if (lastBG != null) {
@@ -323,7 +330,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             "RESUME" -> {
                 LoopPlugin.getPlugin().suspendTo(0)
                 send(EventRefreshOverview("SMS_LOOP_RESUME"))
-                NSUpload.uploadOpenAPSOffline(0.0)
+                LoopPlugin.getPlugin().createOfflineEvent(0)
                 sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, R.string.smscommunicator_loopresumed))
             }
             "SUSPEND" -> {
@@ -345,7 +352,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                                 override fun run() {
                                     if (result.success) {
                                         LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + anInteger() * 60L * 1000)
-                                        NSUpload.uploadOpenAPSOffline(anInteger() * 60.toDouble())
+                                        LoopPlugin.getPlugin().createOfflineEvent(anInteger() * 60)
                                         send(EventRefreshOverview("SMS_LOOP_SUSPENDED"))
                                         val replyText = MainApp.gs(R.string.smscommunicator_loopsuspended) + " " +
                                                 MainApp.gs(if (result.success) R.string.smscommunicator_tempbasalcanceled else R.string.smscommunicator_tempbasalcancelfailed)
@@ -428,7 +435,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             receivedSms.processed = true
             return
         }
-        val list = store.profileList
+        val list = store.getProfileList()
         if (splitted[1].toUpperCase(Locale.getDefault()) == "STATUS") {
             sendSMS(Sms(receivedSms.phoneNumber, ProfileFunctions.getInstance().profileName))
         } else if (splitted[1].toUpperCase(Locale.getDefault()) == "LIST") {
@@ -459,7 +466,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                     val finalPercentage = percentage
                     messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction(list[pindex - 1] as String, finalPercentage) {
                         override fun run() {
-                            ProfileFunctions.doProfileSwitch(store, list[pindex - 1] as String, 0, finalPercentage, 0)
+                            ProfileFunctions.doProfileSwitch(store, list[pindex - 1] as String, 0, finalPercentage, 0, DateUtil.now())
                             sendSMS(Sms(receivedSms.phoneNumber, R.string.profileswitchcreated))
                         }
                     })
@@ -597,6 +604,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                             override fun run() {
                                 if (result.success) {
                                     var replyText = String.format(MainApp.gs(R.string.smscommunicator_extendedset), aDouble, duration)
+                                    if (Config.APS) replyText += "\n" + MainApp.gs(R.string.loopsuspended)
                                     replyText += "\n" + ConfigBuilderPlugin.getPlugin().activePump?.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                 } else {
@@ -735,50 +743,47 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             receivedSms.processed = true
             messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    val currentProfile = ProfileFunctions.getInstance().profile
-                    if (currentProfile != null) {
-                        var keyDuration = 0
-                        var defaultTargetDuration = 0
-                        var keyTarget = 0
-                        var defaultTargetMMOL = 0.0
-                        var defaultTargetMGDL = 0.0
-                        if (isMeal) {
-                            keyDuration = R.string.key_eatingsoon_duration
-                            defaultTargetDuration = Constants.defaultEatingSoonTTDuration
-                            keyTarget = R.string.key_eatingsoon_target
-                            defaultTargetMMOL = Constants.defaultEatingSoonTTmmol
-                            defaultTargetMGDL = Constants.defaultEatingSoonTTmgdl
-                        } else if (isActivity) {
-                            keyDuration = R.string.key_activity_duration
-                            defaultTargetDuration = Constants.defaultActivityTTDuration
-                            keyTarget = R.string.key_activity_target
-                            defaultTargetMMOL = Constants.defaultActivityTTmmol
-                            defaultTargetMGDL = Constants.defaultActivityTTmgdl
-                        } else if (isHypo) {
-                            keyDuration = R.string.key_hypo_duration
-                            defaultTargetDuration = Constants.defaultHypoTTDuration
-                            keyTarget = R.string.key_hypo_target
-                            defaultTargetMMOL = Constants.defaultHypoTTmmol
-                            defaultTargetMGDL = Constants.defaultHypoTTmgdl
-                        }
-                        var ttDuration = SP.getInt(keyDuration, defaultTargetDuration)
-                        ttDuration = if (ttDuration > 0) ttDuration else defaultTargetDuration
-                        var tt = SP.getDouble(keyTarget, if (currentProfile.units == Constants.MMOL) defaultTargetMMOL else defaultTargetMGDL)
-                        tt = if (tt > 0) tt else if (currentProfile.units == Constants.MMOL) defaultTargetMMOL else defaultTargetMGDL
-                        val tempTarget = TempTarget()
-                                .date(System.currentTimeMillis())
-                                .duration(ttDuration)
-                                .reason(MainApp.gs(R.string.eatingsoon))
-                                .source(Source.USER)
-                                .low(Profile.toMgdl(tt, currentProfile.units))
-                                .high(Profile.toMgdl(tt, currentProfile.units))
-                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
-                        val ttString = if (currentProfile.units == Constants.MMOL) DecimalFormatter.to1Decimal(tt) else DecimalFormatter.to0Decimal(tt)
-                        val replyText = String.format(MainApp.gs(R.string.smscommunicator_tt_set), ttString, ttDuration)
-                        sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                    } else {
-                        sendSMS(Sms(receivedSms.phoneNumber, R.string.smscommunicator_unknowncommand))
+                    val units = ProfileFunctions.getSystemUnits()
+                    var keyDuration = 0
+                    var defaultTargetDuration = 0
+                    var keyTarget = 0
+                    var defaultTargetMMOL = 0.0
+                    var defaultTargetMGDL = 0.0
+                    if (isMeal) {
+                        keyDuration = R.string.key_eatingsoon_duration
+                        defaultTargetDuration = Constants.defaultEatingSoonTTDuration
+                        keyTarget = R.string.key_eatingsoon_target
+                        defaultTargetMMOL = Constants.defaultEatingSoonTTmmol
+                        defaultTargetMGDL = Constants.defaultEatingSoonTTmgdl
+                    } else if (isActivity) {
+                        keyDuration = R.string.key_activity_duration
+                        defaultTargetDuration = Constants.defaultActivityTTDuration
+                        keyTarget = R.string.key_activity_target
+                        defaultTargetMMOL = Constants.defaultActivityTTmmol
+                        defaultTargetMGDL = Constants.defaultActivityTTmgdl
+                    } else if (isHypo) {
+                        keyDuration = R.string.key_hypo_duration
+                        defaultTargetDuration = Constants.defaultHypoTTDuration
+                        keyTarget = R.string.key_hypo_target
+                        defaultTargetMMOL = Constants.defaultHypoTTmmol
+                        defaultTargetMGDL = Constants.defaultHypoTTmgdl
                     }
+                    var ttDuration = SP.getInt(keyDuration, defaultTargetDuration)
+                    ttDuration = if (ttDuration > 0) ttDuration else defaultTargetDuration
+                    var tt = SP.getDouble(keyTarget, if (units == Constants.MMOL) defaultTargetMMOL else defaultTargetMGDL)
+                    tt = Profile.toCurrentUnits(tt)
+                    tt = if (tt > 0) tt else if (units == Constants.MMOL) defaultTargetMMOL else defaultTargetMGDL
+                    val tempTarget = TempTarget()
+                            .date(System.currentTimeMillis())
+                            .duration(ttDuration)
+                            .reason(MainApp.gs(R.string.eatingsoon))
+                            .source(Source.USER)
+                            .low(Profile.toMgdl(tt, units))
+                            .high(Profile.toMgdl(tt, units))
+                    TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
+                    val ttString = if (units == Constants.MMOL) DecimalFormatter.to1Decimal(tt) else DecimalFormatter.to0Decimal(tt)
+                    val replyText = String.format(MainApp.gs(R.string.smscommunicator_tt_set), ttString, ttDuration)
+                    sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                 }
             })
         } else if (isStop) {
@@ -787,20 +792,15 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             receivedSms.processed = true
             messageToConfirm = AuthRequest(this, receivedSms, reply, passCode, object : SmsAction() {
                 override fun run() {
-                    val currentProfile = ProfileFunctions.getInstance().profile
-                    if (currentProfile != null) {
-                        val tempTarget = TempTarget()
-                                .source(Source.USER)
-                                .date(DateUtil.now())
-                                .duration(0)
-                                .low(0.0)
-                                .high(0.0)
-                        TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
-                        val replyText = String.format(MainApp.gs(R.string.smscommunicator_tt_canceled))
-                        sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                    } else {
-                        sendSMS(Sms(receivedSms.phoneNumber, R.string.smscommunicator_unknowncommand))
-                    }
+                    val tempTarget = TempTarget()
+                            .source(Source.USER)
+                            .date(DateUtil.now())
+                            .duration(0)
+                            .low(0.0)
+                            .high(0.0)
+                    TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
+                    val replyText = String.format(MainApp.gs(R.string.smscommunicator_tt_canceled))
+                    sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                 }
             })
         } else
