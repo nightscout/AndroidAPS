@@ -980,7 +980,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
 
     @Override
-    public boolean isFixedUnreachableAlertTimeoutExceeded(long unreachableTimeoutMilliseconds) {
+    public boolean isUnreachableAlertTimeoutExceeded(long unreachableTimeoutMilliseconds) {
         getPodPumpStatusObject();
 
         if (pumpStatusLocal.lastConnection != 0 || pumpStatusLocal.lastErrorConnection != 0) {
