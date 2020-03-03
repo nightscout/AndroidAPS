@@ -109,11 +109,8 @@ android {
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.6-omnipod-0.3-SNAPSHOT"
+        version "2.6.0-omnipod-0.3-SNAPSHOT"
         buildConfigField "String", "VERSION", '"' + version + '"'
-        buildConfigField "String", "DEV_VERSION", '"2.6-dev"'
-        buildConfigField "String", "DEV_VERSION_COMMIT", '"99e31cad9af3244eac32b274ff1936b641c209bb"'
-        buildConfigField "String", "DEV_VERSION_COMMIT_DATE", '"7.11.2019"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
