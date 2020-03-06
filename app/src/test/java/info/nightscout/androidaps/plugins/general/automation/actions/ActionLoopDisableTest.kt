@@ -25,24 +25,23 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.powermock.core.classloader.annotations.PrepareForTest
+import org.powermock.modules.junit4.PowerMockRunner
 
+@RunWith(PowerMockRunner::class)
+@PrepareForTest(VirtualPumpPlugin::class, RxBusWrapper::class)
 class ActionLoopDisableTest : TestBase() {
 
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var sp: SP
-    @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var context: Context
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var configBuilderPlugin: ConfigBuilderPlugin
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
-    @Mock lateinit var lazyActionStringHandler: Lazy<ActionStringHandler>
-    @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Mock lateinit var loopPlugin: LoopPlugin
 
     lateinit var sut: ActionLoopDisable
@@ -54,6 +53,8 @@ class ActionLoopDisableTest : TestBase() {
         val pumpDescription = PumpDescription().apply { isTempBasalCapable = true }
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         `when`(configBuilderPlugin.activePump).thenReturn(virtualPumpPlugin)
+        `when`(resourceHelper.gs(R.string.disableloop)).thenReturn("Disable loop")
+        `when`(resourceHelper.gs(R.string.alreadydisabled)).thenReturn("Disable loop")
 
         sut = ActionLoopDisable(HasAndroidInjector { AndroidInjector { Unit } }) // do nothing injector
             .also { // inject the mocks
@@ -65,19 +66,23 @@ class ActionLoopDisableTest : TestBase() {
             }
     }
 
-    @Test fun friendlyNameTest() {
+    @Test
+    fun friendlyNameTest() {
         Assert.assertEquals(R.string.disableloop.toLong(), sut.friendlyName().toLong())
     }
 
-    @Test fun shortDescriptionTest() {
+    @Test
+    fun shortDescriptionTest() {
         Assert.assertEquals("Disable loop", sut.shortDescription())
     }
 
-    @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(R.drawable.ic_stop_24dp), sut.icon())
+    @Test
+    fun iconTest() {
+        Assert.assertEquals(R.drawable.ic_stop_24dp, sut.icon())
     }
 
-    @Test fun doActionTest() {
+    @Test
+    fun doActionTest() {
         sut.doAction(object : Callback() {
             override fun run() {}
         })

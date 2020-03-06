@@ -10,6 +10,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.data.ProfileStore
+import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -77,6 +78,8 @@ open class AppModule {
     interface AppBindings {
 
         @ContributesAndroidInjector fun profileStoreInjector(): ProfileStore
+
+        @ContributesAndroidInjector fun pumpEnactResultInjector(): PumpEnactResult
 
         @ContributesAndroidInjector fun commandQueueInjector(): CommandQueue
         @ContributesAndroidInjector fun commandBolusInjector(): CommandBolus

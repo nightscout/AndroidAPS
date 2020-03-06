@@ -6,6 +6,7 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.data.ProfileStore
+import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
@@ -38,6 +39,7 @@ import javax.inject.Singleton
 interface AppComponent : AndroidInjector<MainApp> {
 
     fun injectProfileStore(profileStore: ProfileStore)
+    fun injectPumpEnactResult(pumpEnactResult: PumpEnactResult)
 
     fun injectCommandQueue(commandQueue: CommandQueue)
     fun injectCommandBolus(commandBolus: CommandBolus)

@@ -2,18 +2,18 @@ package info.nightscout.androidaps.data;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.MainApp;
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class PumpEnactResult {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.APS);
+    @Inject AAPSLogger aapsLogger;
+    @Inject ResourceHelper resourceHelper;
 
     public boolean success = false;    // request was processed successfully (but possible no change was needed)
     public boolean enacted = false;    // request was processed successfully and change has been made
@@ -47,7 +47,7 @@ public class PumpEnactResult {
     }
 
     public PumpEnactResult comment(int comment) {
-        this.comment = MainApp.gs(comment);
+        this.comment = resourceHelper.gs(comment);
         return this;
     }
 
@@ -106,66 +106,66 @@ public class PumpEnactResult {
     }
 
     public String toString() {
-        String ret = MainApp.gs(R.string.success) + ": " + success;
+        String ret = resourceHelper.gs(R.string.success) + ": " + success;
         if (enacted) {
             if (bolusDelivered > 0) {
-                ret += "\n" + MainApp.gs(R.string.enacted) + ": " + enacted;
-                ret += "\n" + MainApp.gs(R.string.comment) + ": " + comment;
-                ret += "\n" + MainApp.gs(R.string.configbuilder_insulin)
-                        + ": " + bolusDelivered + " " + MainApp.gs(R.string.insulin_unit_shortname);
+                ret += "\n" + resourceHelper.gs(R.string.enacted) + ": " + enacted;
+                ret += "\n" + resourceHelper.gs(R.string.comment) + ": " + comment;
+                ret += "\n" + resourceHelper.gs(R.string.configbuilder_insulin)
+                        + ": " + bolusDelivered + " " + resourceHelper.gs(R.string.insulin_unit_shortname);
             } else if (isTempCancel) {
-                ret += "\n" + MainApp.gs(R.string.enacted) + ": " + enacted;
+                ret += "\n" + resourceHelper.gs(R.string.enacted) + ": " + enacted;
                 if (!comment.isEmpty())
-                    ret += "\n" + MainApp.gs(R.string.comment) + ": " + comment;
-                ret += "\n" + MainApp.gs(R.string.canceltemp);
+                    ret += "\n" + resourceHelper.gs(R.string.comment) + ": " + comment;
+                ret += "\n" + resourceHelper.gs(R.string.canceltemp);
             } else if (isPercent) {
-                ret += "\n" + MainApp.gs(R.string.enacted) + ": " + enacted;
+                ret += "\n" + resourceHelper.gs(R.string.enacted) + ": " + enacted;
                 if (!comment.isEmpty())
-                    ret += "\n" + MainApp.gs(R.string.comment) + ": " + comment;
-                ret += "\n" + MainApp.gs(R.string.duration) + ": " + duration + " min";
-                ret += "\n" + MainApp.gs(R.string.percent) + ": " + percent + "%";
+                    ret += "\n" + resourceHelper.gs(R.string.comment) + ": " + comment;
+                ret += "\n" + resourceHelper.gs(R.string.duration) + ": " + duration + " min";
+                ret += "\n" + resourceHelper.gs(R.string.percent) + ": " + percent + "%";
             } else {
-                ret += "\n" + MainApp.gs(R.string.enacted) + ": " + enacted;
+                ret += "\n" + resourceHelper.gs(R.string.enacted) + ": " + enacted;
                 if (!comment.isEmpty())
-                    ret += "\n" + MainApp.gs(R.string.comment) + ": " + comment;
-                ret += "\n" + MainApp.gs(R.string.duration) + ": " + duration + " min";
-                ret += "\n" + MainApp.gs(R.string.absolute) + ": " + absolute + " U/h";
+                    ret += "\n" + resourceHelper.gs(R.string.comment) + ": " + comment;
+                ret += "\n" + resourceHelper.gs(R.string.duration) + ": " + duration + " min";
+                ret += "\n" + resourceHelper.gs(R.string.absolute) + ": " + absolute + " U/h";
             }
         } else {
-            ret += "\n" + MainApp.gs(R.string.comment) + ": " + comment;
+            ret += "\n" + resourceHelper.gs(R.string.comment) + ": " + comment;
         }
         return ret;
     }
 
     public String toHtml() {
-        String ret = "<b>" + MainApp.gs(R.string.success) + "</b>: " + success;
+        String ret = "<b>" + resourceHelper.gs(R.string.success) + "</b>: " + success;
         if (queued) {
-            ret = MainApp.gs(R.string.waitingforpumpresult);
+            ret = resourceHelper.gs(R.string.waitingforpumpresult);
         } else if (enacted) {
             if (bolusDelivered > 0) {
-                ret += "<br><b>" + MainApp.gs(R.string.enacted) + "</b>: " + enacted;
+                ret += "<br><b>" + resourceHelper.gs(R.string.enacted) + "</b>: " + enacted;
                 if (!comment.isEmpty())
-                    ret += "<br><b>" + MainApp.gs(R.string.comment) + "</b>: " + comment;
-                ret += "<br><b>" + MainApp.gs(R.string.smb_shortname) + "</b>: " + bolusDelivered + " " + MainApp.gs(R.string.insulin_unit_shortname);
+                    ret += "<br><b>" + resourceHelper.gs(R.string.comment) + "</b>: " + comment;
+                ret += "<br><b>" + resourceHelper.gs(R.string.smb_shortname) + "</b>: " + bolusDelivered + " " + resourceHelper.gs(R.string.insulin_unit_shortname);
             } else if (isTempCancel) {
-                ret += "<br><b>" + MainApp.gs(R.string.enacted) + "</b>: " + enacted;
-                ret += "<br><b>" + MainApp.gs(R.string.comment) + "</b>: " + comment +
-                        "<br>" + MainApp.gs(R.string.canceltemp);
+                ret += "<br><b>" + resourceHelper.gs(R.string.enacted) + "</b>: " + enacted;
+                ret += "<br><b>" + resourceHelper.gs(R.string.comment) + "</b>: " + comment +
+                        "<br>" + resourceHelper.gs(R.string.canceltemp);
             } else if (isPercent && percent != -1) {
-                ret += "<br><b>" + MainApp.gs(R.string.enacted) + "</b>: " + enacted;
+                ret += "<br><b>" + resourceHelper.gs(R.string.enacted) + "</b>: " + enacted;
                 if (!comment.isEmpty())
-                    ret += "<br><b>" + MainApp.gs(R.string.comment) + "</b>: " + comment;
-                ret += "<br><b>" + MainApp.gs(R.string.duration) + "</b>: " + duration + " min";
-                ret += "<br><b>" + MainApp.gs(R.string.percent) + "</b>: " + percent + "%";
+                    ret += "<br><b>" + resourceHelper.gs(R.string.comment) + "</b>: " + comment;
+                ret += "<br><b>" + resourceHelper.gs(R.string.duration) + "</b>: " + duration + " min";
+                ret += "<br><b>" + resourceHelper.gs(R.string.percent) + "</b>: " + percent + "%";
             } else if (absolute != -1) {
-                ret += "<br><b>" + MainApp.gs(R.string.enacted) + "</b>: " + enacted;
+                ret += "<br><b>" + resourceHelper.gs(R.string.enacted) + "</b>: " + enacted;
                 if (!comment.isEmpty())
-                    ret += "<br><b>" + MainApp.gs(R.string.comment) + "</b>: " + comment;
-                ret += "<br><b>" + MainApp.gs(R.string.duration) + "</b>: " + duration + " min";
-                ret += "<br><b>" + MainApp.gs(R.string.absolute) + "</b>: " + DecimalFormatter.to2Decimal(absolute) + " U/h";
+                    ret += "<br><b>" + resourceHelper.gs(R.string.comment) + "</b>: " + comment;
+                ret += "<br><b>" + resourceHelper.gs(R.string.duration) + "</b>: " + duration + " min";
+                ret += "<br><b>" + resourceHelper.gs(R.string.absolute) + "</b>: " + DecimalFormatter.to2Decimal(absolute) + " U/h";
             }
         } else {
-            ret += "<br><b>" + MainApp.gs(R.string.comment) + "</b>: " + comment;
+            ret += "<br><b>" + resourceHelper.gs(R.string.comment) + "</b>: " + comment;
         }
         return ret;
     }
@@ -188,7 +188,7 @@ public class PumpEnactResult {
                 result.put("duration", duration);
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return result;
     }
