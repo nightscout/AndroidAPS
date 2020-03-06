@@ -565,7 +565,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="pump_lastconnection_label">Dernière connexion</string>
     <string name="danar_bluetooth_status">État Bluetooth</string>
-    <string name="nav_about">À propos de</string>
+    <string name="nav_about">À propos</string>
     <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
     <string name="smscommunicator_missingphonestatepermission">Autorisation du téléphone manquante</string>
     <string name="xdripstatus_settings">état Xdrip (montre)</string>
