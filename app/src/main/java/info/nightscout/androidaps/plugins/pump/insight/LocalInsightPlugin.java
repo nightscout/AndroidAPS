@@ -937,6 +937,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
         long now = System.currentTimeMillis();
+        if (connectionService == null) return null;
         if (System.currentTimeMillis() - connectionService.getLastConnected() > (60 * 60 * 1000)) {
             return null;
         }
