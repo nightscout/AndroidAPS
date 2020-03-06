@@ -1,13 +1,10 @@
 package info.nightscout.androidaps.plugins.sensitivity;
 
+import androidx.annotation.NonNull;
 import androidx.collection.LongSparseArray;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -21,26 +18,29 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by mike on 24.06.2017.
  */
 @Singleton
 public class SensitivityOref0Plugin extends AbstractSensitivityPlugin {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.AUTOSENS);
+
+    private ProfileFunction profileFunction;
 
     @Inject
     public SensitivityOref0Plugin(
             AAPSLogger aapsLogger,
-            ResourceHelper resourceHelper
+            ResourceHelper resourceHelper,
+            SP sp,
+            ProfileFunction profileFunction
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.SENSITIVITY)
@@ -48,33 +48,32 @@ public class SensitivityOref0Plugin extends AbstractSensitivityPlugin {
                         .shortName(R.string.sensitivity_shortname)
                         .preferencesId(R.xml.pref_absorption_oref0)
                         .description(R.string.description_sensitivity_oref0),
-                aapsLogger, resourceHelper
+                aapsLogger, resourceHelper, sp
         );
+        this.profileFunction = profileFunction;
     }
 
-    @Override
+    @NonNull @Override
     public AutosensResult detectSensitivity(IobCobCalculatorPlugin iobCobCalculatorPlugin, long fromTime, long toTime) {
         LongSparseArray<AutosensData> autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable();
 
         int hoursForDetection = 24;
 
-        Profile profile = ProfileFunctions.getInstance().getProfile();
+        Profile profile = profileFunction.getProfile();
 
         if (profile == null) {
-            log.error("No profile");
+            getAapsLogger().error("No profile");
             return new AutosensResult();
         }
 
         if (autosensDataTable == null || autosensDataTable.size() < 4) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("No autosens data available. lastDataTime=" + iobCobCalculatorPlugin.lastDataTime());
+            getAapsLogger().debug(LTag.AUTOSENS, "No autosens data available. lastDataTime=" + iobCobCalculatorPlugin.lastDataTime());
             return new AutosensResult();
         }
 
         AutosensData current = iobCobCalculatorPlugin.getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("No autosens data available. toTime: " + DateUtil.dateAndTimeString(toTime) + " lastDataTime: " + iobCobCalculatorPlugin.lastDataTime());
+            getAapsLogger().debug(LTag.AUTOSENS, "No autosens data available. toTime: " + DateUtil.dateAndTimeString(toTime) + " lastDataTime: " + iobCobCalculatorPlugin.lastDataTime());
             return new AutosensResult();
         }
 
@@ -135,19 +134,17 @@ public class SensitivityOref0Plugin extends AbstractSensitivityPlugin {
 
         double sens = profile.getIsfMgdl();
 
-        double ratio = 1;
+        double ratio;
         String ratioLimit = "";
-        String sensResult = "";
+        String sensResult;
 
-        if (L.isEnabled(L.AUTOSENS))
-            log.debug("Records: " + index + "   " + pastSensitivity);
+        getAapsLogger().debug(LTag.AUTOSENS, "Records: " + index + "   " + pastSensitivity);
 
         Arrays.sort(deviations);
 
         for (double i = 0.9; i > 0.1; i = i - 0.02) {
             if (IobCobCalculatorPlugin.percentile(deviations, (i + 0.02)) >= 0 && IobCobCalculatorPlugin.percentile(deviations, i) < 0) {
-                if (L.isEnabled(L.AUTOSENS))
-                    log.debug(Math.round(100 * i) + "% of non-meal deviations negative (target 45%-50%)");
+                getAapsLogger().debug(LTag.AUTOSENS, Math.round(100 * i) + "% of non-meal deviations negative (target 45%-50%)");
             }
         }
         double pSensitive = IobCobCalculatorPlugin.percentile(deviations, 0.50);
@@ -165,17 +162,17 @@ public class SensitivityOref0Plugin extends AbstractSensitivityPlugin {
             sensResult = "Sensitivity normal";
         }
 
-        if (L.isEnabled(L.AUTOSENS))
-            log.debug(sensResult);
+        getAapsLogger().debug(LTag.AUTOSENS, sensResult);
 
         ratio = 1 + (basalOff / profile.getMaxDailyBasal());
 
         AutosensResult output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
                 sensResult, deviationsArray.size());
 
-        if (L.isEnabled(L.AUTOSENS))
-            log.debug("Sensitivity to: {} ratio: {} mealCOB: {}",
-                    new Date(toTime).toLocaleString(), output.ratio, current.cob);
+        getAapsLogger().debug(LTag.AUTOSENS, "Sensitivity to: "
+                + DateUtil.dateAndTimeString(toTime) +
+                " ratio: " + output.ratio
+                + " mealCOB: " + current.cob);
 
         return output;
     }
