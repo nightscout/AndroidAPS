@@ -112,6 +112,13 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         outState.putInt("id", pluginId)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        PreferenceManager
+            .getDefaultSharedPreferences(context)
+            .unregisterOnSharedPreferenceChangeListener(this)
+    }
+
     private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?, enabled: Boolean) {
         if (enabled) addPreferencesFromResourceIfEnabled(p, rootKey)
     }
