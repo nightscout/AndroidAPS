@@ -221,8 +221,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (Config.NSCLIENT) {
             view = inflater.inflate(R.layout.overview_fragment_nsclient, container, false);
             shorttextmode = true;
-        } else if (smallHeight || landscape) { // now testing the same layout for small displays as well
-            view = inflater.inflate(R.layout.overview_fragment, container, false);
+        } else if (smallHeight || landscape) {
+            view = inflater.inflate(R.layout.overview_fragment_landscape, container, false);
         } else {
             view = inflater.inflate(R.layout.overview_fragment, container, false);
         }
