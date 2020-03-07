@@ -26,8 +26,8 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.BolusProgressDialog;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
+import info.nightscout.androidaps.dialogs.BolusProgressDialog;
+import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -181,6 +181,20 @@ public class DanaRSService extends Service {
                 RxBus.INSTANCE.send(new EventInitializationChanged());
                 return;
             }
+            long now = System.currentTimeMillis();
+            if (danaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized()) {
+                RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
+                bleComm.sendMessage(new DanaRS_Packet_General_Get_Shipping_Information()); // serial no
+                bleComm.sendMessage(new DanaRS_Packet_General_Get_Pump_Check()); // firmware
+                bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Profile_Number());
+                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Bolus_Option()); // isExtendedEnabled
+                bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile, basalStep, maxBasal
+                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Calculation_Information()); // target
+                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_CIR_CF_Array());
+                bleComm.sendMessage(new DanaRS_Packet_Option_Get_User_Option()); // Getting user options
+                danaRPump.lastSettingsRead = now;
+            }
+
             if (L.isEnabled(L.PUMPCOMM))
                 log.debug("Pump time difference: " + timeDiff + " seconds");
             if (Math.abs(timeDiff) > 3) {
@@ -201,28 +215,18 @@ public class DanaRSService extends Service {
                     RxBus.INSTANCE.send(new EventInitializationChanged());
                     return;
                 } else {
-                    waitForWholeMinute(); // Dana can set only whole minute
-                    // add 10sec to be sure we are over minute (will be cutted off anyway)
-                    bleComm.sendMessage(new DanaRS_Packet_Option_Set_Pump_Time(new Date(DateUtil.now() + T.secs(10).msecs())));
+                    if (danaRPump.protocol >= 6) {
+                        bleComm.sendMessage(new DanaRS_Packet_Option_Set_Pump_Time(new Date()));
+                    } else {
+                        waitForWholeMinute(); // Dana can set only whole minute
+                        // add 10sec to be sure we are over minute (will be cutted off anyway)
+                        bleComm.sendMessage(new DanaRS_Packet_Option_Set_Pump_Time(new Date(DateUtil.now() + T.secs(10).msecs())));
+                    }
                     bleComm.sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
                     timeDiff = (danaRPump.pumpTime - System.currentTimeMillis()) / 1000L;
                     if (L.isEnabled(L.PUMPCOMM))
                         log.debug("Pump time difference: " + timeDiff + " seconds");
                 }
-            }
-
-            long now = System.currentTimeMillis();
-            if (danaRPump.lastSettingsRead + 60 * 60 * 1000L < now || !pump.isInitialized()) {
-                RxBus.INSTANCE.send(new EventPumpStatusChanged(MainApp.gs(R.string.gettingpumpsettings)));
-                bleComm.sendMessage(new DanaRS_Packet_General_Get_Shipping_Information()); // serial no
-                bleComm.sendMessage(new DanaRS_Packet_General_Get_Pump_Check()); // firmware
-                bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Profile_Number());
-                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Bolus_Option()); // isExtendedEnabled
-                bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile, basalStep, maxBasal
-                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_Calculation_Information()); // target
-                bleComm.sendMessage(new DanaRS_Packet_Bolus_Get_CIR_CF_Array());
-                bleComm.sendMessage(new DanaRS_Packet_Option_Get_User_Option()); // Getting user options
-                danaRPump.lastSettingsRead = now;
             }
 
             loadEvents();

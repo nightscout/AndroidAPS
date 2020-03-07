@@ -63,7 +63,6 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
     public static final OptionsToShow TEMPBASALSTART = new OptionsToShow(R.id.careportal_tempbasalstart, R.string.careportal_tempbasalstart).date().bg().duration().percent().absolute();
     public static final OptionsToShow TEMPBASALEND = new OptionsToShow(R.id.careportal_tempbasalend, R.string.careportal_tempbasalend).date().bg();
     public static final OptionsToShow PROFILESWITCH = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch).date().duration().profile();
-    public static final OptionsToShow PROFILESWITCHDIRECT = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch).duration().profile();
     public static final OptionsToShow OPENAPSOFFLINE = new OptionsToShow(R.id.careportal_openapsoffline, R.string.careportal_openapsoffline).date().duration();
     public static final OptionsToShow TEMPTARGET = new OptionsToShow(R.id.careportal_temporarytarget, R.string.careportal_temporarytarget).date().duration().tempTarget();
 
@@ -180,7 +179,6 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
                 newDialog.setOptions(NOTE, R.string.careportal_note);
                 break;
             case R.id.careportal_profileswitch:
-                PROFILESWITCH.executeProfileSwitch = false;
                 newDialog.setOptions(PROFILESWITCH, R.string.careportal_profileswitch);
                 break;
             case R.id.careportal_pumpsitechange:
@@ -202,7 +200,6 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
                 newDialog.setOptions(OPENAPSOFFLINE, R.string.careportal_openapsoffline);
                 break;
             case R.id.careportal_temporarytarget:
-                TEMPTARGET.executeTempTarget = false;
                 newDialog.setOptions(TEMPTARGET, R.string.careportal_temporarytarget);
                 break;
             default:
@@ -222,7 +219,7 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
             activity.runOnUiThread(
                     () -> {
                         CareportalEvent careportalEvent;
-                        NSSettingsStatus nsSettings = new NSSettingsStatus().getInstance();
+                        NSSettingsStatus nsSettings = NSSettingsStatus.getInstance();
 
                         double iageUrgent = nsSettings.getExtendedWarnValue("iage", "urgent", 96);
                         double iageWarn = nsSettings.getExtendedWarnValue("iage", "warn", 72);

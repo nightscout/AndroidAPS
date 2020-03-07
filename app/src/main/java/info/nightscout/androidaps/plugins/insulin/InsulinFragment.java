@@ -52,7 +52,7 @@ public class InsulinFragment extends Fragment {
     private void updateGUI() {
         insulinName.setText(ConfigBuilderPlugin.getPlugin().getActiveInsulin().getFriendlyName());
         insulinComment.setText(ConfigBuilderPlugin.getPlugin().getActiveInsulin().getComment());
-        insulinDia.setText(MainApp.gs(R.string.dia) + "  " + ConfigBuilderPlugin.getPlugin().getActiveInsulin().getDia() + "h");
+        insulinDia.setText(MainApp.gs(R.string.dia) + ":  " + ConfigBuilderPlugin.getPlugin().getActiveInsulin().getDia() + "h");
         insulinGraph.show(ConfigBuilderPlugin.getPlugin().getActiveInsulin());
     }
 

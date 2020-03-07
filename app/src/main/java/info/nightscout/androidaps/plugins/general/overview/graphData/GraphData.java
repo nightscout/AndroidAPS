@@ -69,7 +69,7 @@ public class GraphData {
     private IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
     public GraphData(GraphView graph, IobCobCalculatorPlugin iobCobCalculatorPlugin) {
-        units = ProfileFunctions.getInstance().getProfileUnits();
+        units = ProfileFunctions.getSystemUnits();
         this.graph = graph;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
@@ -264,9 +264,9 @@ public class GraphData {
             TempTarget tt = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(time);
             double value;
             if (tt == null) {
-                value = (profile.getTargetLow(time) + profile.getTargetHigh(time)) / 2;
+                value = Profile.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2, ProfileFunctions.getSystemUnits());
             } else {
-                value = Profile.fromMgdlToUnits(tt.target(), profile.getUnits());
+                value = Profile.fromMgdlToUnits(tt.target(), ProfileFunctions.getSystemUnits());
             }
             if (lastTarget != value) {
                 if (lastTarget != -1)
@@ -371,7 +371,8 @@ public class GraphData {
                 actArrayHist.add(new ScaledDataPoint(time, act, actScale));
             else
                 actArrayPred.add(new ScaledDataPoint(time, act, actScale));
-            if (act > maxIAValue) maxIAValue = act;
+            
+            maxIAValue = Math.max(maxIAValue, Math.abs(act));
         }
 
         ScaledDataPoint[] actData = new ScaledDataPoint[actArrayHist.size()];

@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
-import android.app.Activity;
 import android.graphics.Typeface;
 import android.text.format.DateFormat;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.common.base.Optional;
@@ -142,9 +142,9 @@ public class TriggerTime extends Trigger {
             );
             dpd.setThemeDark(true);
             dpd.dismissOnPause(true);
-            Activity a = scanForActivity(root.getContext());
+            AppCompatActivity a = scanForActivity(root.getContext());
             if (a != null)
-                dpd.show(a.getFragmentManager(), "DatePickerDialog");
+                dpd.show(a.getSupportFragmentManager(), "DatePickerDialog");
         });
         timeButton.setOnClickListener(view -> {
             GregorianCalendar calendar = new GregorianCalendar();
@@ -162,9 +162,9 @@ public class TriggerTime extends Trigger {
             );
             tpd.setThemeDark(true);
             tpd.dismissOnPause(true);
-            Activity a = scanForActivity(root.getContext());
+            AppCompatActivity a = scanForActivity(root.getContext());
             if (a != null)
-                tpd.show(a.getFragmentManager(), "TimePickerDialog");
+                tpd.show(a.getSupportFragmentManager(), "TimePickerDialog");
         });
 
         int px = MainApp.dpToPx(10);

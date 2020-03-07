@@ -36,41 +36,38 @@ public class LocalAlertUtils {
 
     public static void checkPumpUnreachableAlarm(long lastConnection, boolean isStatusOutdated) {
         PumpInterface activePump = ConfigBuilderPlugin.getPlugin().getActivePump();
-        if (activePump != null && activePump.getPumpDescription().hasFixedUnreachableAlert) {
-            checkPumpUnreachableAlarmStatic(activePump);
-        } else {
-            checkPumpUnreachableAlarmConfigured(lastConnection, isStatusOutdated);
+
+        boolean alertsEnabled = Config.APS && //
+                ((activePump != null && activePump.getPumpDescription().hasFixedUnreachableAlert) //
+                        || SP.getBoolean(MainApp.gs(R.string.key_enable_pump_unreachable_alert), true));
+
+        if (alertsEnabled) {
+            boolean isUnreachable;
+
+            if (activePump != null && activePump.getPumpDescription().hasCustomUnreachableAlertCheck) {
+                isUnreachable = checkCustomPumpUnreachableAlarm(activePump);
+            } else {
+                isUnreachable = checkDefaultPumpUnreachableAlarm(lastConnection, isStatusOutdated);
+            }
+
+            if (isUnreachable) {
+                log.debug("Generating pump unreachable alarm.");
+                showUnreachableNotification(pumpUnreachableThreshold());
+            } else {
+                RxBus.INSTANCE.send(new EventDismissNotification(Notification.PUMP_UNREACHABLE));
+            }
         }
     }
 
-    private static void checkPumpUnreachableAlarmStatic(PumpInterface pump) {
-        if (pump == null) {
-            return;
-        }
-
-        long pumpUnreachableThresholdMilliseconds = pumpUnreachableThreshold();
-
-        if (pump.isFixedUnreachableAlertTimeoutExceeded(pumpUnreachableThresholdMilliseconds)) {
-            log.debug("Generating static pump unreachable alarm.");
-
-            showUnreachableNotification(pumpUnreachableThresholdMilliseconds);
-        } else {
-            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PUMP_UNREACHABLE));
-        }
+    private static boolean checkCustomPumpUnreachableAlarm(PumpInterface pump) {
+        return pump != null && pump.isUnreachableAlertTimeoutExceeded(pumpUnreachableThreshold());
     }
 
-    private static void checkPumpUnreachableAlarmConfigured(long lastConnection, boolean isStatusOutdated) {
+    private static boolean checkDefaultPumpUnreachableAlarm(long lastConnection, boolean isStatusOutdated) {
         boolean alarmTimeoutExpired = lastConnection + pumpUnreachableThreshold() < System.currentTimeMillis();
         boolean nextAlarmOccurrenceReached = SP.getLong("nextPumpDisconnectedAlarm", 0L) < System.currentTimeMillis();
 
-        if (Config.APS && SP.getBoolean(MainApp.gs(R.string.key_enable_pump_unreachable_alert), true)
-                && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !LoopPlugin.getPlugin().isDisconnected()) {
-            log.debug("Generating configured pump unreachable alarm. lastConnection: " + DateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated);
-
-            showUnreachableNotification(pumpUnreachableThreshold());
-        }
-        if (!isStatusOutdated && !alarmTimeoutExpired)
-            RxBus.INSTANCE.send(new EventDismissNotification(Notification.PUMP_UNREACHABLE));
+        return isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !LoopPlugin.getPlugin().isDisconnected();
     }
 
     private static void showUnreachableNotification(long nextAlarmTimeoutMillis) {

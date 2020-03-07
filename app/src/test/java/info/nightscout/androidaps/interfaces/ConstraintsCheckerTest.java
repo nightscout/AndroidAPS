@@ -30,6 +30,8 @@ import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.source.SourceGlimpPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentService;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 
@@ -39,7 +41,7 @@ import static org.mockito.Mockito.when;
  * Created by mike on 18.03.2018.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, FabricPrivacy.class, SP.class, Context.class, OpenAPSMAPlugin.class, OpenAPSAMAPlugin.class, OpenAPSSMBPlugin.class})
+@PrepareForTest({MainApp.class, ConfigBuilderPlugin.class, FabricPrivacy.class, SP.class, Context.class, OpenAPSMAPlugin.class, OpenAPSAMAPlugin.class, OpenAPSSMBPlugin.class, TreatmentsPlugin.class, TreatmentService.class})
 public class ConstraintsCheckerTest {
 
     VirtualPumpPlugin pump = new VirtualPumpPlugin();
@@ -278,6 +280,8 @@ public class ConstraintsCheckerTest {
         AAPSMocker.mockStrings();
         AAPSMocker.mockSP();
         AAPSMocker.mockCommandQueue();
+        AAPSMocker.mockTreatmentService();
+        AAPSMocker.mockTreatmentPlugin();
 
         when(mainApp.getPackageName()).thenReturn("info.nightscout.androidaps");
 

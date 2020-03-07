@@ -43,7 +43,7 @@ import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
+import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;

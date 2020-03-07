@@ -50,6 +50,7 @@ public class TimeListEdit {
     private Context context;
     private View view;
     private int resLayoutId;
+    private String tagPrefix;
     private String label;
     private JSONArray data1;
     private JSONArray data2;
@@ -63,10 +64,11 @@ public class TimeListEdit {
     private int inflatedUntil = -1;
 
 
-    public TimeListEdit(Context context, View view, int resLayoutId, String label, JSONArray data1, JSONArray data2, double min, double max, double step, NumberFormat formatter, Runnable save) {
+    public TimeListEdit(Context context, View view, int resLayoutId, String tagPrefix, String label, JSONArray data1, JSONArray data2, double min, double max, double step, NumberFormat formatter, Runnable save) {
         this.context = context;
         this.view = view;
         this.resLayoutId = resLayoutId;
+        this.tagPrefix = tagPrefix;
         this.label = label;
         this.data1 = data1;
         this.data2 = data2;
@@ -84,11 +86,11 @@ public class TimeListEdit {
 
         textlabel = new TextView(context);
         textlabel.setText(label);
-        textlabel.setGravity(Gravity.START);
+        textlabel.setGravity(Gravity.CENTER);
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        llp.setMargins(10, 0, 0, 0); // llp.setMargins(left, top, right, bottom);
+        llp.setMargins(0, 5, 0, 5);
         textlabel.setLayoutParams(llp);
-        textlabel.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.linearBlockBackground));
+        //textlabel.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.linearBlockBackground));
         TextViewCompat.setTextAppearance(textlabel, android.R.style.TextAppearance_Medium);
         layout.addView(textlabel);
 
@@ -119,7 +121,8 @@ public class TimeListEdit {
     private void inflateRow(final int position) {
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        View childView = intervals[position] = inflater.inflate(R.layout.timelistedit_element, layout, false);
+        int resource = data2 == null ? R.layout.timelistedit_element : R.layout.timelistedit_element_vertical;
+        View childView = intervals[position] = inflater.inflate(resource, layout, false);
         spinners[position] = new SpinnerHelper(childView.findViewById(R.id.timelistedit_time));
         numberPickers1[position] = childView.findViewById(R.id.timelistedit_edit1);
         numberPickers2[position] = childView.findViewById(R.id.timelistedit_edit2);
@@ -184,7 +187,7 @@ public class TimeListEdit {
                                       int before, int count) {
             }
         });
-
+        numberPickers1[position].setTag(tagPrefix +"-1-" + position);
 
         numberPickers2[position].setTextWatcher(new TextWatcher() {
             @Override
@@ -204,6 +207,7 @@ public class TimeListEdit {
                                       int before, int count) {
             }
         });
+        numberPickers2[position].setTag(tagPrefix +"-2-" + position);
 
         layout.addView(childView);
     }

@@ -161,7 +161,7 @@ object AutomationPlugin : PluginBase(PluginDescription()
     private fun processActions() {
         if (!isEnabled(PluginType.GENERAL))
             return
-        if (LoopPlugin.getPlugin().isSuspended) {
+        if (LoopPlugin.getPlugin().isSuspended || !LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Loop deactivated")
             return
@@ -178,10 +178,10 @@ object AutomationPlugin : PluginBase(PluginDescription()
                             val sb = StringBuilder()
                             sb.append(DateUtil.timeString(DateUtil.now()))
                             sb.append(" ")
-                            sb.append(if (result.success) "☺" else "X")
-                            sb.append(" ")
+                            sb.append(if (result.success) "☺" else "▼")
+                            sb.append(" <b>")
                             sb.append(event.title)
-                            sb.append(": ")
+                            sb.append(":</b> ")
                             sb.append(action.shortDescription())
                             sb.append(": ")
                             sb.append(result.comment)

@@ -24,6 +24,7 @@ import java.util.Set;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -38,7 +39,6 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -292,7 +292,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private void doPodCheck() {
 
         if (System.currentTimeMillis() > this.nextPodCheck) {
-            if (OmnipodUtil.getDriverState()==OmnipodDriverState.Initalized_NoPod) {
+            if (OmnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) {
                 Notification notification = new Notification(Notification.OMNIPOD_POD_NOT_ATTACHED, MainApp.gs(R.string.omnipod_error_pod_not_attached), Notification.NORMAL);
                 RxBus.INSTANCE.send(new EventNewNotification(notification));
             } else {
@@ -950,7 +950,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         if (isLoggingEnabled())
             LOG.warn(getLogPrefix() + "Time, Date and/or TimeZone changed. [changeType={}, eventHandlingEnabled={}]", timeChangeType.name(), pumpStatusLocal.timeChangeEventEnabled);
 
-        if (OmnipodUtil.getDriverState()==OmnipodDriverState.Initalized_PodAvailable) {
+        if (OmnipodUtil.getDriverState() == OmnipodDriverState.Initalized_PodAvailable) {
             if (pumpStatusLocal.timeChangeEventEnabled) {
                 LOG.info(getLogPrefix() + "Time,and/or TimeZone changed event received and will be consumed by driver.");
                 this.hasTimeDateOrTimeZoneChanged = true;
@@ -959,7 +959,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     }
 
     @Override
-    public boolean isFixedUnreachableAlertTimeoutExceeded(long unreachableTimeoutMilliseconds) {
+    public boolean isUnreachableAlertTimeoutExceeded(long unreachableTimeoutMilliseconds) {
         getPodPumpStatusObject();
 
         if (pumpStatusLocal.lastConnection != 0 || pumpStatusLocal.lastErrorConnection != 0) {

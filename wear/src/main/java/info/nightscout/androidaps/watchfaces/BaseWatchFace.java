@@ -34,6 +34,7 @@ import com.ustwo.clockwise.common.WatchShape;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.complications.BaseComplicationProviderService;
 import info.nightscout.androidaps.data.RawDisplayData;
 import info.nightscout.androidaps.data.ListenerService;
@@ -65,6 +66,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public boolean lowResMode = false;
     public boolean layoutSet = false;
     public boolean bIsRound = false;
+    public boolean dividerMatchesBg = false;
     public int pointSize = 2;
     public BgGraphBuilder bgGraphBuilder;
     public LineChartView chart;
@@ -340,7 +342,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                     mIOB1.setText(rawData.sIOB1);
                     mIOB2.setText(rawData.sIOB2);
                 } else {
-                    mIOB1.setText("IOB");
+                    mIOB1.setText(aaps.gs(R.string.activity_IOB));
                     mIOB2.setText(rawData.sIOB1);
                 }
             } else {
@@ -480,6 +482,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     }
 
     public void setColor() {
+        dividerMatchesBg = sharedPrefs.getBoolean("match_divider", false);
         if(lowResMode){
             setColorLowRes();
         } else if (sharedPrefs.getBoolean("dark", true)) {

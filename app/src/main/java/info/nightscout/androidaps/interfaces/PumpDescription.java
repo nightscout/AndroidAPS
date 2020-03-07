@@ -56,6 +56,7 @@ public class PumpDescription {
     public boolean needsManualTDDLoad;
 
     public boolean hasFixedUnreachableAlert;
+    public boolean hasCustomUnreachableAlertCheck;
 
     public void resetSettings() {
         isBolusCapable = true;
@@ -90,6 +91,7 @@ public class PumpDescription {
         needsManualTDDLoad = true;
 
         hasFixedUnreachableAlert = false;
+        hasCustomUnreachableAlertCheck = false;
     }
 
     public void setPumpDescription(PumpType pumpType) {
@@ -139,6 +141,7 @@ public class PumpDescription {
         is30minBasalRatesCapable = pumpCapability.hasCapability(PumpCapability.BasalRate30min);
 
         hasFixedUnreachableAlert = pumpType.getHasFixedUnreachableAlert();
+        hasCustomUnreachableAlertCheck = pumpType.getHasCustomUnreachableAlertCheck();
     }
 
 }

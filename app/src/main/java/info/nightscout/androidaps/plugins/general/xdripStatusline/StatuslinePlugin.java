@@ -206,7 +206,7 @@ public class StatuslinePlugin extends PluginBase {
             return status;
         }
 
-        double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
+        double bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), ProfileFunctions.getSystemUnits());
 
         status += " " + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to2Decimal(bgi);
         status += " " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "StatuslinePlugin").generateCOBString();

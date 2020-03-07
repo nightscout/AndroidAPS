@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.utils.DateUtil;
 
 /**
  * Created by mike on 27.02.2016.
@@ -40,66 +41,55 @@ public class DbRequest {
     }
 
     // dbAdd
-    public DbRequest(String action, String collection, String nsClientID, JSONObject data) {
+    public DbRequest(String action, String collection, JSONObject json) {
         this.action = action;
         this.collection = collection;
-        this.data = data.toString();
-        this.nsClientID = nsClientID;
+        this.nsClientID = "" + DateUtil.now();
+        try {
+            json.put("NSCLIENT_ID", nsClientID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        this.data = json.toString();
         this._id = "";
     }
 
     // dbUpdate, dbUpdateUnset
-    public DbRequest(String action, String collection, String nsClientID, String _id, JSONObject data) {
+    public DbRequest(String action, String collection, String _id, JSONObject json) {
         this.action = action;
         this.collection = collection;
-        this.data = data.toString();
-        this.nsClientID = nsClientID;
+        this.nsClientID = "" + DateUtil.now();
+        try {
+            json.put("NSCLIENT_ID", nsClientID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        this.data = json.toString();
         this._id = _id;
     }
 
     // dbRemove
-    public DbRequest(String action, String collection, String nsClientID, String _id) {
+    public DbRequest(String action, String collection,
+                     String _id) {
+        JSONObject json = new JSONObject();
         this.action = action;
         this.collection = collection;
-        this.data = new JSONObject().toString();
-        this.nsClientID = nsClientID;
+        this.nsClientID = "" + DateUtil.now();
+        try {
+            json.put("NSCLIENT_ID", nsClientID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        this.data = json.toString();
         this._id = _id;
     }
 
-    public String hash() {
-        return Hashing.sha1().hashString(action + collection + _id + data.toString(), Charsets.UTF_8).toString();
-    }
-
-    public JSONObject toJSON() {
-        JSONObject object = new JSONObject();
-        try {
-            object.put("action", action);
-            object.put("collection", collection);
-            object.put("data", new JSONObject(data));
-            if (_id != null) object.put("_id", _id);
-            if (nsClientID != null) object.put("nsClientID", nsClientID);
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
-        return object;
-    }
-
-    public static DbRequest fromJSON(JSONObject jsonObject) {
-        DbRequest result = new DbRequest();
-        try {
-            if (jsonObject.has("action"))
-                result.action = jsonObject.getString("action");
-            if (jsonObject.has("collection"))
-                result.collection = jsonObject.getString("collection");
-            if (jsonObject.has("data"))
-                result.data = jsonObject.getJSONObject("data").toString();
-            if (jsonObject.has("_id"))
-                result._id = jsonObject.getString("_id");
-            if (jsonObject.has("nsClientID"))
-                result.nsClientID = jsonObject.getString("nsClientID");
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
-        }
-        return result;
+    public String log() {
+        return
+                "\nnsClientID:" + nsClientID +
+                "\naction:" + action +
+                "\ncollection:" + collection +
+                "\ndata:" + data +
+                "\n_id:" + _id;
     }
 }

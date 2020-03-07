@@ -32,6 +32,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder;
@@ -527,6 +528,12 @@ public class MedtronicHistoryData {
             if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
             data.put("created_at", DateUtil.toISOString(date));
             data.put("eventType", event);
+            CareportalEvent careportalEvent = new CareportalEvent();
+            careportalEvent.date = date;
+            careportalEvent.source = Source.USER;
+            careportalEvent.eventType = event;
+            careportalEvent.json = data.toString();
+            MainApp.getDbHelper().createOrUpdate(careportalEvent);
             NSUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             LOG.error("Unhandled exception", e);
@@ -613,6 +620,8 @@ public class MedtronicHistoryData {
             return;
         }
 
+        filterOutNonInsulinEntries(entriesFromHistory);
+
         if (doubleBolusDebug)
             LOG.debug("DoubleBolusDebug: List (after filter): {}, FromDb={}", gson.toJson(entryList),
                     gsonCore.toJson(entriesFromHistory));
@@ -637,6 +646,23 @@ public class MedtronicHistoryData {
                 addBolus(treatment, (Treatment) treatmentDb);
             }
         }
+    }
+
+
+    private void filterOutNonInsulinEntries(List<? extends DbObjectBase> entriesFromHistory) {
+        // when we try to pair PumpHistory with AAPS treatments, we need to ignore all non-insulin entries
+        List<DbObjectBase> removeList = new ArrayList<>();
+
+        for (DbObjectBase dbObjectBase : entriesFromHistory) {
+
+            Treatment treatment = (Treatment)dbObjectBase;
+
+            if (RileyLinkUtil.isSame(treatment.insulin, 0d)) {
+                removeList.add(dbObjectBase);
+            }
+        }
+
+        entriesFromHistory.removeAll(removeList);
     }
 
 

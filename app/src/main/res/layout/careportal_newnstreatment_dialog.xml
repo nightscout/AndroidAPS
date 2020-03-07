@@ -544,7 +544,7 @@
                     android:layout_gravity="center_horizontal"
                     android:width="120dp"
                     android:padding="10dp"
-                    android:text="@string/careportal_newnstreatment_eventtime_label"
+                    android:text="@string/event_time_label"
                     android:textAppearance="@android:style/TextAppearance.Material.Small"
                     android:textStyle="bold" />
 
@@ -567,7 +567,7 @@
 
             </LinearLayout>
 
-            <include layout="@layout/mdtp_done_button" />
+            <include layout="@layout/okcancel" />
 
         </LinearLayout>
 

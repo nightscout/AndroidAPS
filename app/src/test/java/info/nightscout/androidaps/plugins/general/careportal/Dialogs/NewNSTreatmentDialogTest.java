@@ -12,10 +12,13 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.util.Date;
+
 import info.AAPSMocker;
 import info.SPMocker;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
@@ -44,10 +47,11 @@ public class NewNSTreatmentDialogTest {
             profileSwitchUpload = ps;
             return null;
         }).when(NSUpload.class, "uploadProfileSwitch", ArgumentMatchers.any());
-        PROFILESWITCH.executeProfileSwitch = true;
         dialog.setOptions(PROFILESWITCH, R.string.careportal_profileswitch);
         dialog.profileStore = AAPSMocker.getValidProfileStore();
+        dialog.eventTime = new Date();
         JSONObject data = new JSONObject();
+        data.put("eventType", CareportalEvent.PROFILESWITCH);
         data.put("profile", AAPSMocker.TESTPROFILENAME);
         data.put("duration", 0);
         data.put("percentage", 110);
@@ -75,5 +79,8 @@ public class NewNSTreatmentDialogTest {
                 .thenReturn(profilePlugin);
 
         dialog = new NewNSTreatmentDialog();
+
+        PowerMockito.spy(System.class);
+        when(System.currentTimeMillis()).thenReturn(1000L);
     }
 }

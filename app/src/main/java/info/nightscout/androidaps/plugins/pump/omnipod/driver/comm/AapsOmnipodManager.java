@@ -16,6 +16,7 @@ import java.util.Objects;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -25,7 +26,6 @@ import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -524,7 +524,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 LOG.debug("Reporting implicitly cancelled TBR to Treatments plugin");
             }
 
-            long time = System.currentTimeMillis()-1000;
+            long time = System.currentTimeMillis() - 1000;
 
             addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasal, null);
 

@@ -15,6 +15,7 @@ import java.util.LinkedList;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.activities.BolusProgressHelperActivity;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -25,8 +26,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.BolusProgressDialog;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.BolusProgressHelperActivity;
+import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -279,7 +279,7 @@ public class CommandQueue {
         }
         removeAll(Command.CommandType.BOLUS);
         removeAll(Command.CommandType.SMB_BOLUS);
-        ConfigBuilderPlugin.getPlugin().getActivePump().stopBolusDelivering();
+        new Thread(() -> ConfigBuilderPlugin.getPlugin().getActivePump().stopBolusDelivering()).run();
     }
 
     // returns true if command is queued

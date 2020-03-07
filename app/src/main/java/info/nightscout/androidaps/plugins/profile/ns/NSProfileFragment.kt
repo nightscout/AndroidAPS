@@ -12,6 +12,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.profile.ns.events.EventNSProfileUpdateGUI
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.OKDialog
@@ -20,7 +21,6 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.close.*
 import kotlinx.android.synthetic.main.nsprofile_fragment.*
 import kotlinx.android.synthetic.main.profileviewer_fragment.*
-
 
 class NSProfileFragment : Fragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -39,10 +39,11 @@ class NSProfileFragment : Fragment() {
             val name = nsprofile_spinner.selectedItem?.toString() ?: ""
             NSProfilePlugin.getPlugin().profile?.let { store ->
                 store.getSpecificProfile(name)?.let {
-                    OKDialog.showConfirmation(activity,
-                            MainApp.gs(R.string.activate_profile) + ": " + name + " ?"
-                    ) {
-                        ProfileFunctions.doProfileSwitch(store, name, 0, 100, 0)
+                    activity?.let { activity ->
+                        OKDialog.showConfirmation(activity, MainApp.gs(R.string.nsprofile),
+                            MainApp.gs(R.string.activate_profile) + ": " + name + " ?", Runnable {
+                            ProfileFunctions.doProfileSwitch(store, name, 0, 100, 0, DateUtil.now())
+                        })
                     }
                 }
             }
@@ -96,13 +97,9 @@ class NSProfileFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         disposable.add(RxBus
-                .toObservable(EventNSProfileUpdateGUI::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateGUI()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+            .toObservable(EventNSProfileUpdateGUI::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
         )
         updateGUI()
     }
@@ -119,7 +116,7 @@ class NSProfileFragment : Fragment() {
         profileview_noprofile.visibility = View.VISIBLE
 
         NSProfilePlugin.getPlugin().profile?.let { profileStore ->
-            val profileList = profileStore.profileList
+            val profileList = profileStore.getProfileList()
             val adapter = ArrayAdapter(context!!, R.layout.spinner_centered, profileList)
             nsprofile_spinner.adapter = adapter
             // set selected to actual profile

@@ -281,10 +281,10 @@ public class AAPSMocker {
     public static void mockProfileFunctions() {
         PowerMockito.mockStatic(ProfileFunctions.class);
         profileFunctions = PowerMockito.mock(ProfileFunctions.class);
+        PowerMockito.when(ProfileFunctions.getSystemUnits()).thenReturn(Constants.MGDL);
         PowerMockito.when(ProfileFunctions.getInstance()).thenReturn(profileFunctions);
         profile = getValidProfile();
         PowerMockito.when(ProfileFunctions.getInstance().getProfile()).thenReturn(profile);
-        PowerMockito.when(ProfileFunctions.getInstance().getProfileUnits()).thenReturn(Constants.MGDL);
         PowerMockito.when(ProfileFunctions.getInstance().getProfileName()).thenReturn(TESTPROFILENAME);
     }
 

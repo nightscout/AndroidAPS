@@ -122,9 +122,9 @@ object ObjectivesPlugin : PluginBase(PluginDescription()
             SP.putLong("Objectives_" + "smb" + "_started", DateUtil.now())
             SP.putLong("Objectives_" + "smb" + "_accomplished", DateUtil.now())
             setupObjectives()
-            OKDialog.show(activity, "", MainApp.gs(R.string.codeaccepted), null)
+            OKDialog.show(activity, MainApp.gs(R.string.objectives), MainApp.gs(R.string.codeaccepted))
         } else {
-            OKDialog.show(activity, "", MainApp.gs(R.string.codeinvalid), null)
+            OKDialog.show(activity, MainApp.gs(R.string.objectives), MainApp.gs(R.string.codeinvalid))
         }
     }
 

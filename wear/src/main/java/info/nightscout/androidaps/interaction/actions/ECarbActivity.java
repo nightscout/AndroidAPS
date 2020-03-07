@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
@@ -71,7 +72,7 @@ public class ECarbActivity extends ViewSelectorActivity {
                     def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
                 }
                 editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), true);
-                setLabelToPlusMinusView(view, "carbs");
+                setLabelToPlusMinusView(view, aaps.gs(R.string.action_carbs));
                 container.addView(view);
                 return view;
             } else if(col == 1){
@@ -81,7 +82,7 @@ public class ECarbActivity extends ViewSelectorActivity {
                     def = SafeParse.stringToDouble(editStartTime.editText.getText().toString());
                 }
                 editStartTime = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 300d, 15d, new DecimalFormat("0"), false);
-                setLabelToPlusMinusView(view, "start [min]");
+                setLabelToPlusMinusView(view, aaps.gs(R.string.action_start_min));
                 container.addView(view);
                 return view;
             } else if(col == 2){
@@ -91,7 +92,7 @@ public class ECarbActivity extends ViewSelectorActivity {
                     def = SafeParse.stringToDouble(editDuration.editText.getText().toString());
                 }
                 editDuration = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 8d, 1d, new DecimalFormat("0"), false);
-                setLabelToPlusMinusView(view, "duration [h]");
+                setLabelToPlusMinusView(view, aaps.gs(R.string.action_duration_h));
                 container.addView(view);
                 return view;
             } else {

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.danaR
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -11,6 +10,7 @@ import androidx.fragment.app.Fragment
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.TDDStatsActivity
+import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
@@ -24,9 +24,12 @@ import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRUserOptions
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRNewStatus
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.plugins.treatments.fragments.ProfileViewerDialog
 import info.nightscout.androidaps.queue.events.EventQueueChanged
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.SetWarnColor
+import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.danar_fragment.*
@@ -59,9 +62,16 @@ class DanaRFragment : Fragment() {
         danar_history.setOnClickListener { startActivity(Intent(context, DanaRHistoryActivity::class.java)) }
         danar_viewprofile.setOnClickListener {
             fragmentManager?.let { fragmentManager ->
+                val profile = DanaRPump.getInstance().createConvertedProfile()?.getDefaultProfile()
+                    ?: return@let
+                val profileName = DanaRPump.getInstance().createConvertedProfile()?.getDefaultProfileName()
+                    ?: return@let
                 val args = Bundle()
                 args.putLong("time", DateUtil.now())
-                args.putInt("mode", ProfileViewerDialog.Mode.PUMP_PROFILE.ordinal)
+                args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
+                args.putString("customProfile", profile.data.toString())
+                args.putString("customProfileUnits", profile.units)
+                args.putString("customProfileName", profileName)
                 val pvd = ProfileViewerDialog()
                 pvd.arguments = args
                 pvd.show(fragmentManager, "ProfileViewDialog")
@@ -82,37 +92,37 @@ class DanaRFragment : Fragment() {
         super.onResume()
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
         disposable += RxBus
-                .toObservable(EventDanaRNewStatus::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .toObservable(EventDanaRNewStatus::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
         disposable += RxBus
-                .toObservable(EventExtendedBolusChange::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .toObservable(EventExtendedBolusChange::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
         disposable += RxBus
-                .toObservable(EventTempBasalChange::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .toObservable(EventTempBasalChange::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
         disposable += RxBus
-                .toObservable(EventQueueChanged::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
+            .toObservable(EventQueueChanged::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGUI() }, { FabricPrivacy.logException(it) })
         disposable += RxBus
-                .toObservable(EventPumpStatusChanged::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    when {
-                        it.sStatus == EventPumpStatusChanged.Status.CONNECTING -> danar_btconnection?.text = "{fa-bluetooth-b spin} " + it.sSecondsElapsed + "s"
-                        it.sStatus == EventPumpStatusChanged.Status.CONNECTED -> danar_btconnection?.text = "{fa-bluetooth}"
-                        it.sStatus == EventPumpStatusChanged.Status.DISCONNECTED -> danar_btconnection?.text = "{fa-bluetooth-b}"
-                    }
-                    if (it.getStatus() != "") {
-                        dana_pumpstatus?.text = it.getStatus()
-                        dana_pumpstatuslayout?.visibility = View.VISIBLE
-                    } else {
-                        dana_pumpstatuslayout?.visibility = View.GONE
-                    }
-                }, { FabricPrivacy.logException(it) })
+            .toObservable(EventPumpStatusChanged::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                when {
+                    it.sStatus == EventPumpStatusChanged.Status.CONNECTING   -> danar_btconnection?.text = "{fa-bluetooth-b spin} " + it.sSecondsElapsed + "s"
+                    it.sStatus == EventPumpStatusChanged.Status.CONNECTED    -> danar_btconnection?.text = "{fa-bluetooth}"
+                    it.sStatus == EventPumpStatusChanged.Status.DISCONNECTED -> danar_btconnection?.text = "{fa-bluetooth-b}"
+                }
+                if (it.getStatus() != "") {
+                    dana_pumpstatus?.text = it.getStatus()
+                    dana_pumpstatuslayout?.visibility = View.VISIBLE
+                } else {
+                    dana_pumpstatuslayout?.visibility = View.GONE
+                }
+            }, { FabricPrivacy.logException(it) })
         updateGUI()
     }
 
@@ -151,14 +161,14 @@ class DanaRFragment : Fragment() {
         // DanaRPlugin, DanaRKoreanPlugin
         if (ConfigBuilderPlugin.getPlugin().activePump!!.isFakingTempsByExtendedBoluses) {
             danar_tempbasal.text = TreatmentsPlugin.getPlugin()
-                    .getRealTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: ""
+                .getRealTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: ""
         } else {
             // v2 plugin
             danar_tempbasal.text = TreatmentsPlugin.getPlugin()
-                    .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: ""
+                .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: ""
         }
         danar_extendedbolus.text = TreatmentsPlugin.getPlugin()
-                .getExtendedBolusFromHistory(System.currentTimeMillis())?.toString() ?: ""
+            .getExtendedBolusFromHistory(System.currentTimeMillis())?.toString() ?: ""
         danar_reservoir.text = MainApp.gs(R.string.reservoirvalue, pump.reservoirRemainingUnits, 300)
         SetWarnColor.setColorInverse(danar_reservoir, pump.reservoirRemainingUnits, 50.0, 20.0)
         danar_battery.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"

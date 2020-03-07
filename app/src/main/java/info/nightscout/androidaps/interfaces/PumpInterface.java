@@ -101,8 +101,8 @@ public interface PumpInterface {
      */
     void timezoneOrDSTChanged(TimeChangeType timeChangeType);
 
-    /* Only used for pump types where hasFixedUnreachableAlert=true */
-    default boolean isFixedUnreachableAlertTimeoutExceeded(long alertTimeoutMilliseconds) {
+    /* Only used for pump types where hasCustomUnreachableAlertCheck=true */
+    default boolean isUnreachableAlertTimeoutExceeded(long alertTimeoutMilliseconds) {
         return false;
     }
 

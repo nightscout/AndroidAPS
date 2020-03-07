@@ -131,12 +131,7 @@ public class ActionStringHandler {
             ///////////////////////////////////////////////////////// TEMPTARGET
             boolean isMGDL = Boolean.parseBoolean(act[1]);
 
-            Profile profile = ProfileFunctions.getInstance().getProfile();
-            if (profile == null) {
-                sendError("No profile found!");
-                return;
-            }
-            if (profile.getUnits().equals(Constants.MGDL) != isMGDL) {
+            if (ProfileFunctions.getSystemUnits().equals(Constants.MGDL) != isMGDL) {
                 sendError("Different units used on watch and phone!");
                 return;
             }
@@ -222,7 +217,7 @@ public class ActionStringHandler {
             DecimalFormat format = new DecimalFormat("0.00");
             DecimalFormat formatInt = new DecimalFormat("0");
             BolusWizard bolusWizard = new BolusWizard(profile, profileName, TreatmentsPlugin.getPlugin().getTempTargetFromHistory(),
-                    carbsAfterConstraints, cobInfo.displayCob, bgReading.valueToUnits(profile.getUnits()),
+                    carbsAfterConstraints, cobInfo.displayCob, bgReading.valueToUnits(ProfileFunctions.getSystemUnits()),
                     0d, percentage, useBG, useCOB, useBolusIOB, useBasalIOB, false, useTT, useTrend);
 
             if (Math.abs(bolusWizard.getInsulinAfterConstraints() - bolusWizard.getCalculatedTotalInsulin()) >= 0.01) {
@@ -507,8 +502,8 @@ public class ActionStringHandler {
                 if (LoopPlugin.lastRun.lastAPSRun != null)
                     ret += "\nLast Run: " + DateUtil.timeString(LoopPlugin.lastRun.lastAPSRun);
 
-                if (LoopPlugin.lastRun.lastEnact != null)
-                    ret += "\nLast Enact: " + DateUtil.timeString(LoopPlugin.lastRun.lastEnact);
+                if (LoopPlugin.lastRun.lastTBREnact != 0)
+                    ret += "\nLast Enact: " + DateUtil.timeString(LoopPlugin.lastRun.lastTBREnact);
 
             }
 
@@ -534,14 +529,14 @@ public class ActionStringHandler {
         //Check for Temp-Target:
         TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
         if (tempTarget != null) {
-            ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.low, tempTarget.low, Constants.MGDL, profile.getUnits());
+            ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.low, tempTarget.low, Constants.MGDL, ProfileFunctions.getSystemUnits());
             ret += "\nuntil: " + DateUtil.timeString(tempTarget.originalEnd());
             ret += "\n\n";
         }
 
         ret += "DEFAULT RANGE: ";
-        ret += profile.getTargetLow() + " - " + profile.getTargetHigh();
-        ret += " target: " + profile.getTarget();
+        ret += Profile.fromMgdlToUnits(profile.getTargetLowMgdl(), ProfileFunctions.getSystemUnits()) + " - " + Profile.fromMgdlToUnits(profile.getTargetHighMgdl(), ProfileFunctions.getSystemUnits());
+        ret += " target: " + Profile.fromMgdlToUnits(profile.getTargetMgdl(), ProfileFunctions.getSystemUnits());
         return ret;
     }
 

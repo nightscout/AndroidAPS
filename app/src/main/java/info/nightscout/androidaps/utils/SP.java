@@ -3,6 +3,8 @@ package info.nightscout.androidaps.utils;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import java.util.Map;
+
 import info.nightscout.androidaps.MainApp;
 
 /**
@@ -10,7 +12,15 @@ import info.nightscout.androidaps.MainApp;
  */
 
 public class SP {
-    static SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+    private static SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+
+    static public Map<String, ?> getAll() {
+        return sharedPreferences.getAll();
+    }
+
+    static public void clear() {
+        sharedPreferences.edit().clear().apply();
+    }
 
     static public boolean contains(String key) {
         return sharedPreferences.contains(key);
@@ -85,75 +95,51 @@ public class SP {
     }
 
     static public void putBoolean(String key, boolean value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(key, value);
-        editor.apply();
+        sharedPreferences.edit().putBoolean(key, value).apply();
     }
 
     static public void putBoolean(int resourceID, boolean value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(MainApp.gs(resourceID), value);
-        editor.apply();
+        sharedPreferences.edit().putBoolean(MainApp.gs(resourceID), value).apply();
     }
 
     static public void putDouble(String key, double value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(key, Double.toString(value));
-        editor.apply();
+        sharedPreferences.edit().putString(key, Double.toString(value)).apply();
     }
 
     static public void putLong(String key, long value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(key, value);
-        editor.apply();
+        sharedPreferences.edit().putLong(key, value).apply();
     }
 
     static public void putLong(int resourceID, long value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putLong(MainApp.gs(resourceID), value);
-        editor.apply();
+        sharedPreferences.edit().putLong(MainApp.gs(resourceID), value).apply();
     }
 
     static public void putInt(String key, int value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(key, value);
-        editor.apply();
+        sharedPreferences.edit().putInt(key, value).apply();
     }
 
     static public void putInt(int resourceID, int value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(MainApp.gs(resourceID), value);
-        editor.apply();
+        sharedPreferences.edit().putInt(MainApp.gs(resourceID), value).apply();
     }
 
     static public void incInt(int resourceID) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
         int value = SP.getInt(resourceID, 0) + 1;
-        editor.putInt(MainApp.gs(resourceID), value);
-        editor.apply();
+        sharedPreferences.edit().putInt(MainApp.gs(resourceID), value).apply();
     }
 
     static public void putString(int resourceID, String value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(MainApp.gs(resourceID), value);
-        editor.apply();
+        sharedPreferences.edit().putString(MainApp.gs(resourceID), value).apply();
     }
 
     static public void putString(String key, String value) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(key, value);
-        editor.apply();
+        sharedPreferences.edit().putString(key, value).apply();
     }
 
     static public void remove(int resourceID) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(MainApp.gs(resourceID));
-        editor.apply();
+        sharedPreferences.edit().remove(MainApp.gs(resourceID)).apply();
     }
 
     static public void remove(String key) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(key);
-        editor.apply();
+        sharedPreferences.edit().remove(key).apply();
     }
 }

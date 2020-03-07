@@ -8,7 +8,7 @@ import com.atech.android.library.wizardpager.data.WizardPagerSettings
 import com.atech.android.library.wizardpager.defs.WizardStepsWayType
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.activities.NoSplashActivity
+import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress
@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.omnipod_pod_mgmt.*
 /**
  * Created by andy on 30/08/2019
  */
-class PodManagementActivity : NoSplashActivity() {
+class PodManagementActivity : NoSplashAppCompatActivity() {
 
     private var initPodChanged = false
     private var podSessionFullyInitalized = false
@@ -68,7 +68,6 @@ class PodManagementActivity : NoSplashActivity() {
             RxBus.send(EventRefreshOverview("Omnipod Pod Management"))
         }
     }
-
 
     fun initPodAction() {
 
@@ -124,7 +123,7 @@ class PodManagementActivity : NoSplashActivity() {
 
     fun resetPodAction() {
         OKDialog.showConfirmation(this,
-                MainApp.gs(R.string.omnipod_cmd_reset_pod_desc), Thread {
+            MainApp.gs(R.string.omnipod_cmd_reset_pod_desc), Thread {
             AapsOmnipodManager.getInstance().resetPodStatus()
             OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod)
             refreshButtons()
@@ -138,17 +137,16 @@ class PodManagementActivity : NoSplashActivity() {
         startActivity(Intent(applicationContext, PodHistoryActivity::class.java))
     }
 
-
     fun refreshButtons() {
         initpod_init_pod.isEnabled = (OmnipodUtil.getPodSessionState() == null ||
-                OmnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED))
+            OmnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED))
 
         val isPodSessionActive = (OmnipodUtil.getPodSessionState() != null)
 
         initpod_remove_pod.isEnabled = isPodSessionActive
         initpod_reset_pod.isEnabled = isPodSessionActive
 
-        if (OmnipodUtil.getDriverState()==OmnipodDriverState.NotInitalized) {
+        if (OmnipodUtil.getDriverState() == OmnipodDriverState.NotInitalized) {
             // if rileylink is not running we disable all operations
             initpod_init_pod.isEnabled = false
             initpod_remove_pod.isEnabled = false
