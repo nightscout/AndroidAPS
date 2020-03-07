@@ -24,7 +24,7 @@
     <string name="objectives_bgavailableinns">Glicemia disponibile in NS</string>
     <string name="objectives_pumpstatusavailableinns">Stato micro disponibile in NS</string>
     <string name="objectives_manualenacts">Attivazioni manuali</string>
-    <string name="accomplished">Compiuto: %1$s</string>
+    <string name="accomplished">Completato: %1$s</string>
     <string name="objectives_usage_objective">Impara a controllare AndroidAPS</string>
     <string name="objectives_usage_gate">Esegui varie azioni in AndroidAPS</string>
     <string name="objectives_useprofileswitch">Imposta il profilo \"90%\" per 10 min (premi a lungo sul nome profilo nella sezione Panoramica)</string>

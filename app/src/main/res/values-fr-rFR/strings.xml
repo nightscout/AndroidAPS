@@ -1425,10 +1425,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="invalidage">Âge invalide</string>
     <string name="invalidweight">Poids invalide</string>
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Bas: <b>%2$02d%%</b> Médian: <b>%3$02d%%</b> Haut: <b>%4$02d%%</b>]]></string>
+    <string name="tirformat"><![CDATA[<b>%1$s:</b> Bas: <b>%2$02d%%</b> Cible: <b>%3$02d%%</b> Haut: <b>%4$02d%%</b>]]></string>
     <string name="average">Moyenne</string>
     <string name="tdd">DTI</string>
-    <string name="tir">TIR</string>
+    <string name="tir">Cible Gly</string>
     <string name="activitymonitor">Moniteur d\'activité</string>
     <string name="doyouwantresetstats">Voulez-vous réinitialiser les stats d\'activité ?</string>
     <string name="statistics">Statistiques</string>

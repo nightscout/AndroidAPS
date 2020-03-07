@@ -119,7 +119,7 @@
     <string name="configbuilder_treatments">Trattamenti</string>
     <string name="configbuilder_treatments_description">Quale plugin dovrebbe essere utilizzato per la gestione del trattamento?</string>
     <string name="configbuilder_profile">Profilo</string>
-    <string name="configbuilder_profile_description">Quale profilo dovrebbe usare AndroidAPS?</string>
+    <string name="configbuilder_profile_description">Quale profilo AndroidAPS dovrebbe usare?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Quale algoritmo APS dovrebbe apportare aggiustamenti terapeutici?</string>
     <string name="configbuilder_general">Generale</string>
@@ -247,7 +247,7 @@
     <string name="success">OK</string>
     <string name="percent">Percentuale</string>
     <string name="absolute">Assoluto</string>
-    <string name="canceltemp">Cancellare basale temporanea</string>
+    <string name="canceltemp">Cancella basale temporanea</string>
     <string name="smscommunicator">Comunicazioni SMS</string>
     <string name="waitingforpumpresult">In attesa del risultato</string>
     <string name="smscommunicator_allowednumbers">Numeri di telefono consentiti</string>
@@ -343,8 +343,8 @@
     <string name="smscommunicator_extendedstopreplywithcode">Per stoppare il bolo esteso rispondi col codice %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">Basale temporanea cancellata</string>
     <string name="smscommunicator_extendedcanceled">Bolo esteso cancellato</string>
-    <string name="smscommunicator_tempbasalcancelfailed">Cancellazione basale temporanea fallita</string>
-    <string name="smscommunicator_extendedcancelfailed">Cancellazione bolo esteso fallita</string>
+    <string name="smscommunicator_tempbasalcancelfailed">Basale temporanea: cancellazione fallita</string>
+    <string name="smscommunicator_extendedcancelfailed">Bolo esteso: cancellazione fallita</string>
     <string name="smscommunicator_unknowncommand">Comando sconosciuto o risposta errata</string>
     <string name="quickwizard">Calcolatore Rapido</string>
     <string name="quickwizardsettings">Impostazioni Calcolatore Rapido</string>
@@ -638,8 +638,8 @@
     <string name="enablesmb">Abilita SMB</string>
     <string name="enablesmb_summary">Utilizza Super Micro Boli al posto della basale temporanea per un\'azione più veloce</string>
     <string name="enableuam_summary">Rilevazione dei pasti Non Annunciati</string>
-    <string name="insulin_oref_peak">Momento picco Curva IOB</string>
-    <string name="insulin_peak_time">Momento del picco [min]</string>
+    <string name="insulin_oref_peak">Tempo picco Curva IOB</string>
+    <string name="insulin_peak_time">Tempo del picco [min]</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
@@ -771,7 +771,7 @@
     <string name="combo_reservoir_normal">Normale</string>
     <string name="combo_notification_check_time_date">Necessario aggiornare orologio micro</string>
     <string name="combo_warning">Attenzione</string>
-    <string name="combo_pump_tbr_cancelled_warrning">Avviso TBR CANCELLATO confermato</string>
+    <string name="combo_pump_tbr_cancelled_warrning">Avviso TBR CANCELLATO: confermato</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Il micro potrebbe non essere raggiungibile. Nessun bolo erogato</string>
     <string name="combo_error_no_bolus_delivered">Erogazione bolo fallita. Sembra che nessun bolo sia stato erogato. Per sicurezza, controlla il micro per evitare un doppio bolo e se è tutto ok, erogalo di nuovo. Come protezione da eventuali \"bug\", i boli non vengono ripetuti automaticamente.</string>
     <string name="combo_error_partial_bolus_delivered">Solo la quantità di %1$.2f U del bolo richiesto di %2$.2f U è stata erogata a causa di un errore. Controlla il micro per verificare quanto accaduto e intraprendi le azioni necessarie.</string>
@@ -890,7 +890,7 @@
     <string name="pump_paused">Micro in pausa</string>
     <string name="absorption_cutoff_title">Max tempo assorbimento pasto [h]</string>
     <string name="absorption_cutoff_summary">Tempo entro il quale ogni pasto si considera assorbito. Eventuali carboidrati rimanenti verranno tagliati fuori.</string>
-    <string name="time">Offset</string>
+    <string name="time">Tempo</string>
     <string name="overview_show_notes_field_in_dialogs_title">Finestre tratt.nto: mostra campo note</string>
     <string name="next_button">Avanti</string>
     <string name="previous_button">Indietro</string>
@@ -1161,10 +1161,10 @@
     <string name="storage">vincolo di archiviazione interna</string>
     <string name="diskfull">Libera almeno %1$d MB dalla memoria interna! Loop disabilitato!</string>
     <string name="wrongformat">Formato errato</string>
-    <string name="sms_wrongcode">Codice errato. Comando annullato.</string>
+    <string name="sms_wrongcode">Codice errato. Comando cancellato.</string>
     <string name="notconfigured">Non configurato</string>
     <string name="profileswitchcreated">Cambio profilo creato</string>
-    <string name="recurringTime">Tempo di ripetizione</string>
+    <string name="recurringTime">Tempo ricorrente</string>
     <string name="every">Ogni</string>
     <string name="never">Mai</string>
     <string name="mins">%1$dmin</string>
@@ -1395,8 +1395,8 @@
     <string name="format_carbs">%1$dg</string>
     <string name="common_on">On</string>
     <string name="common_off">Off</string>
-    <string name="objectives_button_unfinish">Cancella completato</string>
-    <string name="objectives_button_unstart">Cancella avviato</string>
+    <string name="objectives_button_unfinish">Cancella completamento</string>
+    <string name="objectives_button_unstart">Cancella avvio</string>
     <string name="timedetection">Rilevazione tempo</string>
     <string name="doyouwantresetstart">Vuoi resettare l\'avvio dell\'obiettivo? Potresti perdere i tuoi progressi.</string>
     <string name="nopumpselected">Nessun micro selezionato</string>
