@@ -109,7 +109,7 @@ android {
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.6.0-omnipod-0.3-SNAPSHOT"
+        version "2.7-omnipod-0.3-SNAPSHOT"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -118,7 +118,7 @@ android {
         // if you change minSdkVersion to less than 11, you need to change executeTask for wear
 
         // OMNIPOD: Keep track of what commit from the main repository we're on, these fields aren't actually used anywhere
-        buildConfigField "String", "DEV_VERSION", '"2.6.0"'
+        buildConfigField "String", "DEV_VERSION", '"2.7-dev"'
         buildConfigField "String", "DEV_VERSION_COMMIT", '"c3dbd1ec2446647169bb8ee1e3067a96ff8af394"'
         buildConfigField "String", "DEV_VERSION_COMMIT_DATE", '"1.3.2020"' // 1st of March
 
