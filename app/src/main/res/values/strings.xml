@@ -1679,7 +1679,7 @@
 
 
     <!-- Omnipod - Error -->
-    <string name="omnipod_error_operation_not_possible_no_configuration">Operation is not possible.\n\n You need to configure Omnipod first, before you can use this operation.</string>
+    <string name="omnipod_error_operation_not_possible_no_configuration">Operation is not possible.\n\nYou need to configure Omnipod first, before you can use this operation.</string>
     <string name="omnipod_error_operation_not_possible_no_profile">Operation is not possible.\n\n You need to wait few minutes, until AAPS tries to set profile for first time.</string>
     <string name="omnipod_error_illegal_init_action_type">Illegal PodInitActionType: %1$s</string>
     <string name="omnipod_error_pod_not_attached">No active pod.</string>

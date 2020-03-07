@@ -911,18 +911,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private CustomAction customActionResetRLConfig = new CustomAction(
             R.string.medtronic_custom_action_reset_rileylink, OmnipodCustomActionType.ResetRileyLinkConfiguration, true);
 
-//    protected CustomAction customActionPairAndPrime = new CustomAction(
-//            R.string.omnipod_cmd_init_pod, OmnipodCustomActionType.PairAndPrime, true);
-//
-//    protected CustomAction customActionFillCanullaSetBasalProfile = new CustomAction(
-//            R.string.omnipod_cmd_init_pod, OmnipodCustomActionType.FillCanulaSetBasalProfile, false);
-//
-//    protected CustomAction customActionDeactivatePod = new CustomAction(
-//            R.string.omnipod_cmd_deactivate_pod, OmnipodCustomActionType.DeactivatePod, false);
-//
-//    protected CustomAction customActionResetPod = new CustomAction(
-//            R.string.omnipod_cmd_reset_pod, OmnipodCustomActionType.ResetPodStatus, true);
-
 
     @Override
     public List<CustomAction> getCustomActions() {
@@ -930,10 +918,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         if (customActions == null) {
             this.customActions = Arrays.asList(
                     customActionResetRLConfig //,
-                    //customActionPairAndPrime, //
-                    //customActionFillCanullaSetBasalProfile, //
-                    //customActionDeactivatePod, //
-                    //customActionResetPod
             );
         }
 
@@ -973,11 +957,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             }
         }
     }
-
-
-    public void setEnableCustomAction(OmnipodCustomActionType customAction, boolean isEnabled) {
-    }
-
 
     @Override
     public boolean isFixedUnreachableAlertTimeoutExceeded(long unreachableTimeoutMilliseconds) {
