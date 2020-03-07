@@ -70,6 +70,9 @@ import java.util.List;
  -- get profile - done
  -- get treatments
 
+ * Update by philoul on 03/02/2020
+ *  property getIsf / getTargetLow / getTargetHigh replaced by getIsfMgdl / getTargetLowMgdl / getTargetHighMgdl in Profile objects
+ *  TODO: add Preference for main settings (categorize_uam_as_basal, nb of days, may be advanced settings for % of adjustment (default 20%))
  */
 
 public class TuneProfilePlugin extends PluginBase {
@@ -109,6 +112,7 @@ public class TuneProfilePlugin extends PluginBase {
         return tuneProfilePlugin;
     }
 
+    // TODO: philoul here add ".preferencesId(R.xml.pref_tuneprofile)" and xml file for settings
     public TuneProfilePlugin() throws IOException {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
@@ -844,6 +848,7 @@ public class TuneProfilePlugin extends PluginBase {
         //log.debug(basalProfile);
 //        var isfProfile = previousAutotune.isfProfile;
         //log.debug(isfProfile);
+// TODO: Philoul retrieve the units from the main parameters instead of the profile or delete 5 lines below if not used
         int toMgDl = 1;
         if(profile.equals(null))
             return null;
@@ -1108,6 +1113,7 @@ public class TuneProfilePlugin extends PluginBase {
             // how much change would be required to account for all of the deviations
             fullNewCSF = Math.round( (totalDeviations / totalMealCarbs)*100 )/100;
         }
+        // TODO: philoul may be allow % of adjustments in settings with safety limits
         // only adjust by 20%
         double newCSF = ( 0.8 * CSF ) + ( 0.2 * fullNewCSF );
         // safety cap CSF
@@ -1150,6 +1156,7 @@ public class TuneProfilePlugin extends PluginBase {
                 fullNewCR = minCR;
             } //else { log.debug("newCR",newCR,"is close enough to",pumpCarbRatio); }
         }
+        // TODO: philoul may be allow % of adjustments in settings with safety limits
         // only adjust by 20%
         double newCR = ( 0.8 * carbRatio ) + ( 0.2 * fullNewCR );
         // safety cap newCR
@@ -1241,6 +1248,7 @@ public class TuneProfilePlugin extends PluginBase {
                 adjustedISF = minISF;
             }
 
+            // TODO: philoul may be allow % of adjustments in settings with safety limits Check % (10% in original autotune OAPS for ISF ?)
             // and apply 20% of that adjustment
             newISF = ( 0.8 * ISF ) + ( 0.2 * adjustedISF );
 
@@ -1303,6 +1311,7 @@ public class TuneProfilePlugin extends PluginBase {
         if(profile.equals(null))
             return null;
         tunedProfileResult = profile;
+// TODO: Philoul retrieve the units from the main app parameters instead of the profile
         if(profile.getUnits().equals("mmol"))
             toMgDl = 18;
         log.debug("ActiveProfile units: " + profile.getUnits()+" so divisor is "+toMgDl);
@@ -1370,11 +1379,11 @@ public class TuneProfilePlugin extends PluginBase {
             }
             result += line;
             // show ISF CR and CSF
-            result += "|  ISF    |    "+round(profile.getIsfMgdl(), 3) +"    |    "+round(previousResult.optDouble("sens", 0d)/toMgDl,3)+"     |\n";
+            result += "|  ISF    |    "+round(profile.getIsfMgdl()/toMgDl, 3) +"    |    "+round(previousResult.optDouble("sens", 0d)/toMgDl,3)+"     |\n";
             result += line;
             result += "|   CR   |    "+profile.getIc()+"    |    "+round(previousResult.optDouble("carb_ratio", 0d),3)+"     |\n";
             result += line;
-            result += "|  CSF  |    "+round(profile.getIsfMgdl()/profile.getIc(),3)+"    |    "+round(previousResult.optDouble("csf", 0d)/toMgDl,3)+"     |\n";
+            result += "|  CSF  |    "+round(profile.getIsfMgdl()/profile.getIc()/toMgDl,3)+"    |    "+round(previousResult.optDouble("csf", 0d)/toMgDl,3)+"     |\n";
             result += line;
 
             // trying to create new profile ready for switch
@@ -1388,7 +1397,7 @@ public class TuneProfilePlugin extends PluginBase {
                 json.put("store", store);
                 convertedProfile.put("dia", profile.getDia());
                 convertedProfile.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("carb_ratio", 0d))));
-                convertedProfile.put("sens", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("sens", 0d)/toMgDl)));
+                convertedProfile.put("sens", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("sens", 0d))));
                 JSONArray basals = new JSONArray();
                 for (int h = 0; h < 24; h++) {
                     String time;
@@ -1403,7 +1412,8 @@ public class TuneProfilePlugin extends PluginBase {
                 ProfileStore profileStore = new ProfileStore(json);
                 SP.putString("autotuneprofile", profileStore.getData().toString());
                 log.debug("Entered in ProfileStore "+profileStore.getSpecificProfile(MainApp.gs(R.string.tuneprofile_name)));
- //ATCOMPIL               MainApp.bus().post(new EventProfileStoreChanged());
+// TODO: check line below modified by philoul (but I don't understand this line) => need to be verify...
+//                RxBus.INSTANCE.send(new EventProfileStoreChanged());
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }

@@ -22,8 +22,9 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 
-//ATCOMPIL import butterknife.BindView;
-//ATCOMPIL import butterknife.OnClick;
+//2 unknown imports disabled by philoul to build AAPS
+//import butterknife.BindView;
+//import butterknife.OnClick;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -39,6 +40,7 @@ import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by Rumen Georgiev on 1/29/2018.
+ * Rebase with current dev by philoul on 03/02/2020
  */
 
 public class TuneProfileFragment extends Fragment implements View.OnClickListener {
@@ -49,7 +51,8 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
     }
 
     Button runTuneNowButton;
-//ATCOMPIL    @BindView(R.id.tune_profileswitch)
+// disabled by philoul to build AAPS
+//    @BindView(R.id.tune_profileswitch)
     Button tuneProfileSwitch;
     TextView warningView;
     TextView resultView;
@@ -80,16 +83,18 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
         return null;
     }
 
-//ATCOMPIL    @OnClick(R.id.nsprofile_profileswitch)
+// disabled by philoul to build AAPS
+// @OnClick(R.id.nsprofile_profileswitch)
     public void onClickProfileSwitch() {
         String name = MainApp.gs(R.string.tuneprofile_name);
         ProfileStore store = NSProfilePlugin.getPlugin().getProfile();
         if (store != null) {
             Profile profile = store.getSpecificProfile(name);
             if (profile != null) {
-//ATCOMPIL                 OKDialog.showConfirmation(getActivity(), MainApp.gs(R.string.activate_profile) + ": " + name + " ?", () ->
-//ATCOMPIL                         NewNSTreatmentDialog.doProfileSwitch(store, name, 0, 100, 0)
-//ATCOMPIL                 );
+// todo Philoul activate profile switch once AT is Ok (to update to be compatible with local profiles)
+//                 OKDialog.showConfirmation(getActivity(), MainApp.gs(R.string.activate_profile) + ": " + name + " ?", () ->
+//                         NewNSTreatmentDialog.doProfileSwitch(store, name, 0, 100, 0)
+//                 );
             }
         }
     }
@@ -143,9 +148,10 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
 //                newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
 //                newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
 
-//ATCOMPIL                 OKDialog.showConfirmation(getActivity(), MainApp.gs(R.string.activate_profile) + ": " + name + " ?", () ->
-//ATCOMPIL                         NewNSTreatmentDialog.doProfileSwitch(store, name, 0, 100, 0)
-//ATCOMPIL                 );
+// todo Philoul activate profile switch once AT is Ok (to update to be compatible with local profiles)
+//                 OKDialog.showConfirmation(getActivity(), MainApp.gs(R.string.activate_profile) + ": " + name + " ?", () ->
+//                         NewNSTreatmentDialog.doProfileSwitch(store, name, 0, 100, 0)
+//                 );
             } else
                 log.debug("ProfileStore is null!");
         }
@@ -153,7 +159,8 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
         //updateGUI();
     }
 
-//ATCOMPIL    @Override
+    // disabled by philoul to build AAPS
+    //@Override
     protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)

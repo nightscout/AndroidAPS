@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.Loop.LoopFragment">
+    tools:context="info.nightscout.androidaps.plugins.TuneProfile.TuneProfileFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
                     android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
-                    android:text="Last run"
+                    android:text="@string/autotune_last_run"
                     android:textSize="14sp" />
 
                 <TextView
@@ -70,7 +70,7 @@
                     android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
-                    android:text="Warning"
+                    android:text="@string/autotune_warning"
                     android:textSize="14sp" />
 
                 <TextView
@@ -115,7 +115,7 @@
                     android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
-                    android:text="Result"
+                    android:text="@string/autotune_result"
                     android:textSize="14sp" />
 
                 <TextView
@@ -161,7 +161,7 @@
                     android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
-                    android:text="Tune days"
+                    android:text="@string/autotune_tune_days"
                     android:textSize="14sp" />
 
                 <TextView
@@ -203,16 +203,16 @@
 
             <Button
                 android:id="@+id/tune_run"
-                style="@style/Widget.AppCompat.Button.Colored"
+                style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/run_autotune" />
             <Button
                 android:id="@+id/tune_profileswitch"
-                style="@style/Widget.AppCompat.Button.Colored"
+                style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Switch" />
+                android:text="@string/switch_autotune" />
 
         </LinearLayout>
 
