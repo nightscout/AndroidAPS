@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.sensitivity
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import info.TestBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -21,7 +23,7 @@ class AbstractSensitivityPluginTest : TestBase() {
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
 
-    private inner class SensitivityTestClass(pluginDescription: PluginDescription, aapsLogger: AAPSLogger, resourceHelper: ResourceHelper, sp: SP) : AbstractSensitivityPlugin(pluginDescription, aapsLogger, resourceHelper, sp) {
+    private inner class SensitivityTestClass(pluginDescription: PluginDescription, aapsLogger: AAPSLogger, resourceHelper: ResourceHelper, sp: SP) : AbstractSensitivityPlugin(pluginDescription, HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, resourceHelper, sp) {
 
         override fun detectSensitivity(plugin: IobCobCalculatorPlugin, fromTime: Long, toTime: Long): AutosensResult {
             return AutosensResult()
