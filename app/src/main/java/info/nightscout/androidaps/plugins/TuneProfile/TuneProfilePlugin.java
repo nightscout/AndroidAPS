@@ -119,6 +119,7 @@ public class TuneProfilePlugin extends PluginBase {
                 .fragmentClass(TuneProfileFragment.class.getName())
                 .pluginName(R.string.autotune)
                 .shortName(R.string.autotune_shortname)
+                .preferencesId(R.xml.pref_tuneprofile)
         );
     }
 
@@ -296,8 +297,8 @@ public class TuneProfilePlugin extends PluginBase {
         // sort treatments
         log.debug("NSService should receive "+new Date(from)+" to "+new Date(to));
         //starting variable at 0
-        //TODO: Add this to preferences
-        boolean categorize_uam_as_basal = false;
+        //TODO: philoul Check if line below is ok
+        boolean categorize_uam_as_basal = SP.getBoolean("categorize_uam_as_basal", false);
         List<BgReading> sgv = new ArrayList<BgReading>();
         CSFGlucoseData = new ArrayList<BGDatum>();
         ISFGlucoseData = new ArrayList<BGDatum>();

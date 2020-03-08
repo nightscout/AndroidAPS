@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="tuneprofileplugin"
+        android:title="@string/autotune_settings">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="autotune_auto"
+            android:summary="@string/autotune_auto_summary"
+            android:title="@string/autotune_auto_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="categorize_uam_as_basal"
+            android:summary="@string/autotune_categorize_uam_as_basal_summary"
+            android:title="@string/autotune_categorize_uam_as_basal_title" />
+
+        <EditTextPreference
+            android:defaultValue="5"
+            android:inputType="number"
+            android:key="autotune_default_tune_days"
+            android:summary="@string/autotune_default_tune_days_summary"
+            android:title="@string/autotune_default_tune_days_title" />
+
+    </PreferenceCategory>
+</PreferenceScreen>
