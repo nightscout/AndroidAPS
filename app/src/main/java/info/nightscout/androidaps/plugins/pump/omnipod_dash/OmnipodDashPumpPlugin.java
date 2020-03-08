@@ -72,7 +72,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
         displayConnectionMessages = false;
 
-        OmnipodUtil.setOmnipodPodType(OmnipodPodType.Dash);
+        //OmnipodUtil.setOmnipodPodType(OmnipodPodType.Dash);
 
         if (omnipodCommunicationManager == null) {
             omnipodCommunicationManager = OmnipodDashCommunicationManager.getInstance();

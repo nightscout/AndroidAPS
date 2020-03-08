@@ -14,6 +14,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
@@ -339,7 +340,12 @@ class OmnipodFragment : Fragment() {
     fun updateGUI() {
         val plugin = OmnipodPumpPlugin.getPlugin()
         val pumpStatus = OmnipodUtil.getPumpStatus()
-        val pumpType = OmnipodUtil.getPumpType()
+        var pumpType = OmnipodUtil.getPumpType()
+
+        if (pumpType==null) {
+            LOG.warn("PumpType was not set, reseting to Omnipod.")
+            pumpType = PumpType.Insulet_Omnipod;
+        }
 
         setDeviceStatus()
 

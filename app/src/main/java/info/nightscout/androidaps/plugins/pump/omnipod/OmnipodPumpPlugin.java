@@ -54,6 +54,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.pod
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
@@ -134,8 +135,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 //        }
 
 //        // TODO ccc
-//        OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
-//        OmnipodUtil.setPlugin(this);
+
+
 
         serviceConnection = new ServiceConnection() {
 
@@ -168,6 +169,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                                 } else {
                                     omnipodCommunicationManager.setPumpStatus(pumpStatusLocal);
                                 }
+
+                                OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
+                                OmnipodUtil.setPlugin(OmnipodPumpPlugin.this);
 
                                 omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager, plugin, pumpStatusLocal);
                                 break;
