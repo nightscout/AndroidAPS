@@ -557,9 +557,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 pumpState = PumpDriverState.Initialized;
             }
 
-            triggerUIChange();
-            RxBus.INSTANCE.send(new EventRefreshOverview("Omnipod Pump"));
-
             getPodPumpStatus();
 
         } else {
@@ -568,9 +565,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod);
         }
 
-
-        setRefreshButtonEnabled(true);
-
+        finishAction("Omnipod Pump");
 
         if (!sentIdToFirebase) {
             Bundle params = new Bundle();
