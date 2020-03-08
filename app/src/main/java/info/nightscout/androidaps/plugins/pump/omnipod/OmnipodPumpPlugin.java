@@ -490,7 +490,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         //getPodPumpStatusObject().driverState = OmnipodDriverState.Initalized_PodAvailable;
         //driverState = OmnipodDriverState.Initalized_PodAvailable;
-        //OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAvailable);
+        OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAvailable);
         // we would probably need to read Basal Profile here too
     }
 
