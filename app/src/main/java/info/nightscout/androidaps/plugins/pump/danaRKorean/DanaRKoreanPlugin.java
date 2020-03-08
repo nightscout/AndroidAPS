@@ -170,7 +170,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.carbTime, t);
-            PumpEnactResult result = new PumpEnactResult();
+            PumpEnactResult result = new PumpEnactResult(getInjector());
             result.success = connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep;
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = detailedBolusInfo.carbs;
@@ -184,7 +184,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false);
             return result;
         } else {
-            PumpEnactResult result = new PumpEnactResult();
+            PumpEnactResult result = new PumpEnactResult(getInjector());
             result.success = false;
             result.bolusDelivered = 0d;
             result.carbsDelivered = 0d;
@@ -202,7 +202,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         //if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
         //    connect("setTempBasalAbsolute old data");
         //}
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
 
         absoluteRate = constraintChecker.applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
@@ -339,7 +339,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         if (treatmentsPlugin.isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
             return cancelExtendedBolus();
         }
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         result.success = true;
         result.enacted = false;
         result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
@@ -353,7 +353,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     }
 
     private PumpEnactResult cancelRealTempBasal() {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         TemporaryBasal runningTB = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis());
         if (runningTB != null) {
             sExecutionService.tempBasalStop();

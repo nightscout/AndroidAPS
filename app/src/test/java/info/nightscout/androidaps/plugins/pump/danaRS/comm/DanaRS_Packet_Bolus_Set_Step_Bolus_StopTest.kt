@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction

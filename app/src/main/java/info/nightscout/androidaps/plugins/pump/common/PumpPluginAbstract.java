@@ -410,7 +410,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
                 // neither carbs nor bolus requested
                 if (isLoggingEnabled())
                     LOG.error("deliverTreatment: Invalid input");
-                return new PumpEnactResult().success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
+                return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
                         .comment(MainApp.gs(R.string.danar_invalidinput));
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
@@ -431,7 +431,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
                 if (isLoggingEnabled())
                     LOG.debug("deliverTreatment: Carb only treatment.");
 
-                return new PumpEnactResult().success(true).enacted(true).bolusDelivered(0d)
+                return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
                         .carbsDelivered(detailedBolusInfo.carbs).comment(MainApp.gs(R.string.virtualpump_resultok));
             }
         } finally {
@@ -452,8 +452,8 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     protected abstract void triggerUIChange();
 
 
-    public static PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
-        return new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(resourceId));
+    public PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
+        return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(MainApp.gs(resourceId));
     }
 
 }

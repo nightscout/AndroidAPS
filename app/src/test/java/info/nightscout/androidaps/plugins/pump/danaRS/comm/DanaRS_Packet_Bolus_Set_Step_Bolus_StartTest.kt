@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import android.content.Context
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -47,7 +49,7 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_StartTest : DanaRSTestBase() {
 
     @Before
     fun mock() {
-        danaRSPlugin = DanaRSPlugin(aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump)
+        danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump)
         Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
     }
 }

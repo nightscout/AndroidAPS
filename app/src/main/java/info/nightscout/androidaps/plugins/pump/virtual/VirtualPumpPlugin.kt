@@ -132,7 +132,7 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun loadTDDs(): PumpEnactResult { //no result, could read DB in the future?
-        return PumpEnactResult()
+        return PumpEnactResult(injector)
     }
 
     override fun getCustomActions(): List<CustomAction>? {
@@ -179,7 +179,7 @@ class VirtualPumpPlugin @Inject constructor(
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         lastDataTime = System.currentTimeMillis()
         // Do nothing here. we are using ConfigBuilderPlugin.getPlugin().getActiveProfile().getProfile();
-        val result = PumpEnactResult()
+        val result = PumpEnactResult(injector)
         result.success = true
         val notification = Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60)
         rxBus.send(EventNewNotification(notification))
@@ -207,7 +207,7 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        val result = PumpEnactResult()
+        val result = PumpEnactResult(injector)
         result.success = true
         result.bolusDelivered = detailedBolusInfo.insulin
         result.carbsDelivered = detailedBolusInfo.carbs
@@ -242,7 +242,7 @@ class VirtualPumpPlugin @Inject constructor(
             .absolute(absoluteRate)
             .duration(durationInMinutes)
             .source(Source.USER)
-        val result = PumpEnactResult()
+        val result = PumpEnactResult(injector)
         result.success = true
         result.enacted = true
         result.isTempCancel = false
@@ -262,7 +262,7 @@ class VirtualPumpPlugin @Inject constructor(
             .percent(percent)
             .duration(durationInMinutes)
             .source(Source.USER)
-        val result = PumpEnactResult()
+        val result = PumpEnactResult(injector)
         result.success = true
         result.enacted = true
         result.percent = percent
@@ -299,7 +299,7 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun cancelTempBasal(force: Boolean): PumpEnactResult {
-        val result = PumpEnactResult()
+        val result = PumpEnactResult(injector)
         result.success = true
         result.isTempCancel = true
         result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
@@ -316,7 +316,7 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
-        val result = PumpEnactResult()
+        val result = PumpEnactResult(injector)
         if (treatmentsPlugin.isInHistoryExtendedBoluslInProgress) {
             val exStop = ExtendedBolus(System.currentTimeMillis())
             exStop.source = Source.USER

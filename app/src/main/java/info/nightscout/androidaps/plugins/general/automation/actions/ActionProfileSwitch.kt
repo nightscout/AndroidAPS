@@ -34,27 +34,27 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         //Check for uninitialized profileName
         if (inputProfileName.value == "") {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile not initialized")
-            callback.result(PumpEnactResult().success(false).comment(R.string.error_field_must_not_be_empty))?.run()
+            callback.result(PumpEnactResult(injector).success(false).comment(R.string.error_field_must_not_be_empty))?.run()
             return
         }
         if (profileFunction.getProfile() == null) {
             aapsLogger.error(LTag.AUTOMATION, "ProfileFunctions not initialized")
-            callback.result(PumpEnactResult().success(false).comment(R.string.noprofile))?.run()
+            callback.result(PumpEnactResult(injector).success(false).comment(R.string.noprofile))?.run()
             return
         }
         if (inputProfileName.value == activeProfileName) {
             aapsLogger.debug(LTag.AUTOMATION, "Profile is already switched")
-            callback.result(PumpEnactResult().success(true).comment(R.string.alreadyset))?.run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadyset))?.run()
             return
         }
         val profileStore = activePlugin.activeProfileInterface.profile ?: return
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile does not exist! - ${inputProfileName.value}")
-            callback.result(PumpEnactResult().success(false).comment(R.string.notexists))?.run()
+            callback.result(PumpEnactResult(injector).success(false).comment(R.string.notexists))?.run()
             return
         }
         activePlugin.activeTreatments.doProfileSwitch(profileStore, inputProfileName.value, 0, 100, 0, DateUtil.now())
-        callback.result(PumpEnactResult().success(true).comment(R.string.ok))?.run()
+        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }
 
     override fun generateDialog(root: LinearLayout) {

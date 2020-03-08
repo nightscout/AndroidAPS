@@ -8,6 +8,7 @@ import android.os.SystemClock;
 import javax.inject.Inject;
 
 import dagger.android.DaggerService;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -86,6 +87,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class DanaRSService extends DaggerService {
+    @Inject HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
     @Inject RxBusWrapper rxBus;
     @Inject SP sp;
@@ -260,7 +262,7 @@ public class DanaRSService extends DaggerService {
     public PumpEnactResult loadEvents() {
 
         if (!danaRSPlugin.isInitialized()) {
-            PumpEnactResult result = new PumpEnactResult().success(false);
+            PumpEnactResult result = new PumpEnactResult(injector).success(false);
             result.comment = "pump not initialized";
             return result;
         }
@@ -285,13 +287,13 @@ public class DanaRSService extends DaggerService {
             lastHistoryFetched = 0;
         aapsLogger.debug(LTag.PUMPCOMM, "Events loaded");
         danaRPump.setLastConnection(System.currentTimeMillis());
-        return new PumpEnactResult().success(true);
+        return new PumpEnactResult(injector).success(true);
     }
 
 
     public PumpEnactResult setUserSettings() {
         bleComm.sendMessage(new DanaRS_Packet_Option_Get_User_Option(aapsLogger, danaRPump));
-        return new PumpEnactResult().success(true);
+        return new PumpEnactResult(injector).success(true);
     }
 
 
@@ -485,7 +487,7 @@ public class DanaRSService extends DaggerService {
     }
 
     public PumpEnactResult loadHistory(byte type) {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(injector);
         if (!isConnected()) return result;
         DanaRS_Packet_History_ msg = null;
         switch (type) {

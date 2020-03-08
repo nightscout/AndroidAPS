@@ -29,7 +29,6 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInf
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.danaR.AbstractDanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
-import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStartWithSpeed;
 import info.nightscout.androidaps.plugins.pump.danaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -185,7 +184,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, DateUtil.now() + T.mins(carbTime).msecs(), t);
-            PumpEnactResult result = new PumpEnactResult();
+            PumpEnactResult result = new PumpEnactResult(getInjector());
             result.success = connectionOK && Math.abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep;
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = detailedBolusInfo.carbs;
@@ -197,7 +196,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             // remove carbs because it's get from history separately
             return result;
         } else {
-            PumpEnactResult result = new PumpEnactResult();
+            PumpEnactResult result = new PumpEnactResult(getInjector());
             result.success = false;
             result.bolusDelivered = 0d;
             result.carbsDelivered = 0d;
@@ -225,7 +224,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         //    connect("setTempBasalAbsolute old data");
         //}
 
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
 
         absoluteRate = constraintChecker.applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
 
@@ -296,7 +295,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         DanaRPump pump = danaRPump;
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
             result.isTempCancel = false;
@@ -348,7 +347,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     private PumpEnactResult setHighTempBasalPercent(Integer percent) {
         DanaRPump pump = danaRPump;
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         boolean connectionOK = sExecutionService.highTempBasal(percent);
         if (connectionOK && pump.isTempBasalInProgress() && pump.getTempBasalPercent() == percent) {
             result.enacted = true;
@@ -370,7 +369,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult cancelTempBasal(boolean force) {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         TemporaryBasal runningTB = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis());
         if (runningTB != null) {
             sExecutionService.tempBasalStop();

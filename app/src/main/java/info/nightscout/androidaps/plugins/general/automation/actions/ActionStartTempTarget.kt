@@ -41,7 +41,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun doAction(callback: Callback) {
         activePlugin.activeTreatments.addToHistoryTempTarget(tt())
-        callback.result(PumpEnactResult().success(true).comment(R.string.ok))?.run()
+        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }
 
     override fun generateDialog(root: LinearLayout) {

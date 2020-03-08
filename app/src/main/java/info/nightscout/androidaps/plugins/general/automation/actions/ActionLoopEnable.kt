@@ -28,9 +28,9 @@ class ActionLoopEnable(injector: HasAndroidInjector) : Action(injector) {
             loopPlugin.setPluginEnabled(PluginType.LOOP, true)
             configBuilderPlugin.storeSettings("ActionLoopEnable")
             rxBus.send(EventRefreshOverview("ActionLoopEnable"))
-            callback.result(PumpEnactResult().success(true).comment(R.string.ok))?.run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
         } else {
-            callback.result(PumpEnactResult().success(true).comment(R.string.alreadyenabled))?.run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadyenabled))?.run()
         }
     }
 

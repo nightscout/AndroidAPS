@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.utils.DecimalFormatter;
@@ -12,8 +13,8 @@ import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class PumpEnactResult {
-    @Inject AAPSLogger aapsLogger;
-    @Inject ResourceHelper resourceHelper;
+    @Inject public AAPSLogger aapsLogger;
+    @Inject public ResourceHelper resourceHelper;
 
     public boolean success = false;    // request was processed successfully (but possible no change was needed)
     public boolean enacted = false;    // request was processed successfully and change has been made
@@ -30,6 +31,10 @@ public class PumpEnactResult {
     public double carbsDelivered = 0d; // real value of delivered carbs
 
     public boolean queued = false;
+
+    public PumpEnactResult(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
+    }
 
     public PumpEnactResult success(boolean success) {
         this.success = success;
@@ -191,9 +196,5 @@ public class PumpEnactResult {
             aapsLogger.error("Unhandled exception", e);
         }
         return result;
-    }
-
-    public static PumpEnactResult error(String message) {
-        return new PumpEnactResult().enacted(false).success(false).comment(message);
     }
 }

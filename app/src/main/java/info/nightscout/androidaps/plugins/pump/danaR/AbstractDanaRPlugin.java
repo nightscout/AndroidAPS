@@ -95,7 +95,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     // Pump interface
     @NonNull @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
 
         if (sExecutionService == null) {
             log.error("setNewBasalProfile sExecutionService is null");
@@ -180,7 +180,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         DanaRPump pump = danaRPump;
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
             result.isTempCancel = false;
@@ -235,7 +235,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);
 
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         ExtendedBolus runningEB = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
         if (runningEB != null && Math.abs(runningEB.insulin - insulin) < getPumpDescription().extendedBolusStep) {
             result.enacted = false;
@@ -273,7 +273,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult cancelExtendedBolus() {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         ExtendedBolus runningEB = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
         if (runningEB != null) {
             sExecutionService.extendedBolusStop();

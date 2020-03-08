@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.danaRS
 
 import android.content.Context
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import info.AAPSMocker
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -74,6 +76,6 @@ class DanaRSPluginTest : DanaRSTestBase() {
         Mockito.`when`(resourceHelper.gs(eq(R.string.limitingpercentrate), anyObject(), anyObject())).thenReturn("limitingpercentrate")
 
         rxBus = RxBusWrapper()
-        danaRSPlugin = DanaRSPlugin(aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump)
+        danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump)
     }
 }

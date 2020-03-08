@@ -96,7 +96,7 @@ class CommandQueue @Inject constructor(
     var performing: Command? = null
 
     private fun executingNowError(): PumpEnactResult =
-        PumpEnactResult().success(false).enacted(false).comment(resourceHelper.gs(R.string.executingrightnow))
+        PumpEnactResult(injector).success(false).enacted(false).comment(resourceHelper.gs(R.string.executingrightnow))
 
     override fun isRunning(type: CommandType): Boolean = performing?.commandType == type
 
@@ -251,7 +251,7 @@ class CommandQueue @Inject constructor(
     @Synchronized
     override fun cancelAllBoluses() {
         if (!isRunning(CommandType.BOLUS)) {
-            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult().success(true).enacted(false)))
+            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult(injector).success(true).enacted(false)))
         }
         removeAll(CommandType.BOLUS)
         removeAll(CommandType.SMB_BOLUS)
@@ -335,13 +335,13 @@ class CommandQueue @Inject constructor(
     override fun setProfile(profile: Profile, callback: Callback?): Boolean {
         if (isThisProfileSet(profile)) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set")
-            callback?.result(PumpEnactResult().success(true).enacted(false))?.run()
+            callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
             return false
         }
         if (!MainApp.isEngineeringModeOrRelease()) {
             val notification = Notification(Notification.NOT_ENG_MODE_OR_RELEASE, resourceHelper.gs(R.string.not_eng_mode_or_release), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
-            callback?.result(PumpEnactResult().success(false).enacted(false).comment(resourceHelper.gs(R.string.not_eng_mode_or_release)))?.run()
+            callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(resourceHelper.gs(R.string.not_eng_mode_or_release)))?.run()
             return false
         }
         // Compare with pump limits
@@ -350,7 +350,7 @@ class CommandQueue @Inject constructor(
             if (basalValue.value < activePlugin.get().activePump.pumpDescription.basalMinimumRate) {
                 val notification = Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, resourceHelper.gs(R.string.basalvaluebelowminimum), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
-                callback?.result(PumpEnactResult().success(false).enacted(false).comment(resourceHelper.gs(R.string.basalvaluebelowminimum)))?.run()
+                callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(resourceHelper.gs(R.string.basalvaluebelowminimum)))?.run()
                 return false
             }
         }

@@ -67,7 +67,7 @@ class DanaRS_Packet_Notify_Delivery_Rate_DisplayTest : DanaRSTestBase() {
 
     @Before
     fun mock() {
-        danaRSPlugin = DanaRSPlugin(aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump)
+        danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump)
         danaRSPlugin.bolusingTreatment = Treatment(treatmentInjector)
     }
 }

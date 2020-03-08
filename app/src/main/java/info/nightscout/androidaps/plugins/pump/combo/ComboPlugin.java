@@ -171,7 +171,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     @Override protected void onStart() {
         super.onStart();
         ruffyScripter = new RuffyScripter(MainApp.instance());
-        OPERATION_NOT_SUPPORTED = new PumpEnactResult()
+        OPERATION_NOT_SUPPORTED = new PumpEnactResult(getInjector())
                 .success(false).enacted(false).comment(MainApp.gs(R.string.combo_pump_unsupported_operation));
     }
 
@@ -263,7 +263,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             log.error("setNewBasalProfile not initialized");
             Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.gs(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
             RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
-            return new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.pumpNotInitializedProfileNotSet));
+            return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(MainApp.gs(R.string.pumpNotInitializedProfileNotSet));
         }
 
         BasalProfile requestedBasalProfile = convertProfileToComboProfile(profile);
@@ -271,12 +271,12 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             //dismiss previously "FAILED" overview notifications
             RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             RxBus.Companion.getINSTANCE().send(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
-            return new PumpEnactResult().success(true).enacted(false);
+            return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }
 
         CommandResult stateResult = runCommand(null, 1, ruffyScripter::readPumpState);
         if (stateResult.state.unsafeUsageDetected == PumpState.UNSUPPORTED_BASAL_RATE_PROFILE) {
-            return new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.combo_force_disabled_notification));
+            return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(MainApp.gs(R.string.combo_force_disabled_notification));
         }
 
         CommandResult setResult = runCommand(MainApp.gs(R.string.combo_activity_setting_basal_profile), 2,
@@ -284,7 +284,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         if (!setResult.success) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
-            return new PumpEnactResult().success(false).enacted(false).comment(MainApp.gs(R.string.failedupdatebasalprofile));
+            return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(MainApp.gs(R.string.failedupdatebasalprofile));
         }
 
         pump.basalProfile = requestedBasalProfile;
@@ -295,7 +295,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         //issue success notification
         Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
         RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
-        return new PumpEnactResult().success(true).enacted(true);
+        return new PumpEnactResult(getInjector()).success(true).enacted(true);
     }
 
     @Override
@@ -493,7 +493,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
                 // neither carbs nor bolus requested
                 log.error("deliverTreatment: Invalid input");
-                return new PumpEnactResult().success(false).enacted(false)
+                return new PumpEnactResult(getInjector()).success(false).enacted(false)
                         .bolusDelivered(0d).carbsDelivered(0d)
                         .comment(MainApp.gs(R.string.danar_invalidinput));
             } else if (detailedBolusInfo.insulin > 0) {
@@ -509,7 +509,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 bolusingEvent.setPercent(100);
                 RxBus.Companion.getINSTANCE().send(bolusingEvent);
 
-                return new PumpEnactResult().success(true).enacted(true)
+                return new PumpEnactResult(getInjector()).success(true).enacted(true)
                         .bolusDelivered(0d).carbsDelivered(detailedBolusInfo.carbs)
                         .comment(MainApp.gs(R.string.virtualpump_resultok));
             }
@@ -527,16 +527,16 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             // check pump is ready and all pump bolus records are known
             CommandResult stateResult = runCommand(null, 2, () -> ruffyScripter.readQuickInfo(1));
             if (!stateResult.success) {
-                return new PumpEnactResult().success(false).enacted(false)
+                return new PumpEnactResult(getInjector()).success(false).enacted(false)
                         .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
             }
             if (stateResult.reservoirLevel != -1 && stateResult.reservoirLevel - 0.5 < detailedBolusInfo.insulin) {
-                return new PumpEnactResult().success(false).enacted(false)
+                return new PumpEnactResult(getInjector()).success(false).enacted(false)
                         .comment(MainApp.gs(R.string.combo_reservoir_level_insufficient_for_bolus));
             }
             // the commands above ensured a connection was made, which updated this field
             if (pumpHistoryChanged) {
-                return new PumpEnactResult().success(false).enacted(false)
+                return new PumpEnactResult(getInjector()).success(false).enacted(false)
                         .comment(MainApp.gs(R.string.combo_bolus_rejected_due_to_pump_history_change));
             }
 
@@ -550,7 +550,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                     && previousBolus.timestamp + 60 * 1000 > System.currentTimeMillis()) {
                 if (L.isEnabled(L.PUMP))
                     log.debug("Bolus request rejected, same bolus was successfully delivered very recently");
-                return new PumpEnactResult().success(false).enacted(false)
+                return new PumpEnactResult(getInjector()).success(false).enacted(false)
                         .comment(MainApp.gs(R.string.bolus_frequency_exceeded));
             }
 
@@ -563,10 +563,10 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             while (previousBolus.timestamp == timeCheckResult.state.pumpTime
                     && maxWaitTimeout > System.currentTimeMillis()) {
                 if (cancelBolus) {
-                    return new PumpEnactResult().success(true).enacted(false);
+                    return new PumpEnactResult(getInjector()).success(true).enacted(false);
                 }
                 if (!timeCheckResult.success) {
-                    return new PumpEnactResult().success(false).enacted(false)
+                    return new PumpEnactResult(getInjector()).success(false).enacted(false)
                             .comment(MainApp.gs(R.string.combo_error_no_connection_no_bolus_delivered));
                 }
                 if (L.isEnabled(L.PUMP))
@@ -582,7 +582,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             }
 
             if (cancelBolus) {
-                return new PumpEnactResult().success(true).enacted(false);
+                return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
 
             Treatment treatment = new Treatment();
@@ -603,7 +603,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             // (reads 2 records to update `recentBoluses` further down)
             CommandResult postBolusStateResult = runCommand(null, 3, () -> ruffyScripter.readQuickInfo(2));
             if (!postBolusStateResult.success) {
-                return new PumpEnactResult().success(false).enacted(false)
+                return new PumpEnactResult(getInjector()).success(false).enacted(false)
                         .comment(MainApp.gs(R.string.combo_error_bolus_verification_failed));
             }
             Bolus lastPumpBolus = postBolusStateResult.history != null && !postBolusStateResult.history.bolusHistory.isEmpty()
@@ -613,9 +613,9 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             // no bolus delivered?
             if (lastPumpBolus == null || lastPumpBolus.equals(previousBolus)) {
                 if (cancelBolus) {
-                    return new PumpEnactResult().success(true).enacted(false);
+                    return new PumpEnactResult(getInjector()).success(true).enacted(false);
                 } else {
-                    return new PumpEnactResult()
+                    return new PumpEnactResult(getInjector())
                             .success(false)
                             .enacted(false)
                             .comment(MainApp.gs(R.string.combo_error_no_bolus_delivered));
@@ -624,7 +624,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
             // at least some insulin delivered, so add it to treatments
             if (!addBolusToTreatments(detailedBolusInfo, lastPumpBolus))
-                return new PumpEnactResult().success(false).enacted(true)
+                return new PumpEnactResult(getInjector()).success(false).enacted(true)
                         .comment(MainApp.gs(R.string.combo_error_updating_treatment_record));
 
             // check pump bolus record has a sane timestamp
@@ -641,16 +641,16 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             // only a partial bolus was delivered
             if (Math.abs(lastPumpBolus.amount - detailedBolusInfo.insulin) > 0.01) {
                 if (cancelBolus) {
-                    return new PumpEnactResult().success(true).enacted(true);
+                    return new PumpEnactResult(getInjector()).success(true).enacted(true);
                 }
-                return new PumpEnactResult().success(false).enacted(true)
+                return new PumpEnactResult(getInjector()).success(false).enacted(true)
                         .comment(MainApp.gs(R.string.combo_error_partial_bolus_delivered,
                                 lastPumpBolus.amount, detailedBolusInfo.insulin));
             }
 
             // full bolus was delivered successfully
             incrementBolusCount();
-            return new PumpEnactResult()
+            return new PumpEnactResult(getInjector())
                     .success(true)
                     .enacted(lastPumpBolus.amount > 0)
                     .bolusDelivered(lastPumpBolus.amount)
@@ -748,7 +748,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             log.debug("setTempBasalPercent called with " + percent + "% for " + durationInMinutes + "min");
 
         if (pumpHistoryChanged && percent > 110) {
-            return new PumpEnactResult().success(false).enacted(false)
+            return new PumpEnactResult(getInjector()).success(false).enacted(false)
                     .comment(MainApp.gs(R.string.combo_high_temp_rejected_due_to_pump_history_changes));
         }
 
@@ -776,7 +776,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         CommandResult commandResult = runCommand(MainApp.gs(R.string.combo_pump_action_setting_tbr, percent, durationInMinutes),
                 3, () -> ruffyScripter.setTbr(finalAdjustedPercent, durationInMinutes));
         if (!commandResult.success) {
-            return new PumpEnactResult().success(false).enacted(false);
+            return new PumpEnactResult(getInjector()).success(false).enacted(false);
         }
 
         PumpState state = commandResult.state;
@@ -793,7 +793,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         }
 
         incrementTbrCount();
-        return new PumpEnactResult().success(true).enacted(true).isPercent(true)
+        return new PumpEnactResult(getInjector()).success(true).enacted(true).isPercent(true)
                 .percent(state.tbrPercent).duration(state.tbrRemainingDuration);
     }
 
@@ -818,16 +818,16 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         if (enforceNew) {
             CommandResult stateResult = runCommand(MainApp.gs(R.string.combo_pump_action_refreshing), 2, ruffyScripter::readPumpState);
             if (!stateResult.success) {
-                return new PumpEnactResult().success(false).enacted(false);
+                return new PumpEnactResult(getInjector()).success(false).enacted(false);
             }
             if (!stateResult.state.tbrActive) {
-                return new PumpEnactResult().success(true).enacted(false);
+                return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
             if (L.isEnabled(L.PUMP))
                 log.debug("cancelTempBasal: hard-cancelling TBR since force requested");
             CommandResult cancelResult = runCommand(MainApp.gs(R.string.combo_pump_action_cancelling_tbr), 2, ruffyScripter::cancelTbr);
             if (!cancelResult.success) {
-                return new PumpEnactResult().success(false).enacted(false);
+                return new PumpEnactResult(getInjector()).success(false).enacted(false);
             }
             if (!cancelResult.state.tbrActive) {
                 TemporaryBasal tempBasal = new TemporaryBasal()
@@ -835,19 +835,19 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                         .duration(0)
                         .source(Source.USER);
                 TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
-                return new PumpEnactResult().isTempCancel(true).success(true).enacted(true);
+                return new PumpEnactResult(getInjector()).isTempCancel(true).success(true).enacted(true);
             } else {
-                return new PumpEnactResult().success(false).enacted(false);
+                return new PumpEnactResult(getInjector()).success(false).enacted(false);
             }
         } else if (activeTemp == null) {
-            return new PumpEnactResult().success(true).enacted(false);
+            return new PumpEnactResult(getInjector()).success(true).enacted(false);
         } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15) {
             // Let fake neutral temp keep run (see below)
             // Note that since this runs on the queue a connection is opened regardless, but this
             // case doesn't occur all that often, so it's not worth optimizing (1.3k SetTBR vs 4 cancelTBR).
             if (L.isEnabled(L.PUMP))
                 log.debug("cancelTempBasal: skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.");
-            return new PumpEnactResult().success(true).enacted(true)
+            return new PumpEnactResult(getInjector()).success(true).enacted(true)
                     .comment("cancelTempBasal skipping changing tbr since it already is at "
                             + activeTemp.percentRate + "% and running for another "
                             + activeTemp.getPlannedRemainingMinutes() + " mins.");
@@ -1355,7 +1355,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
     @NonNull @Override
     public PumpEnactResult loadTDDs() {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         result.success = readHistory(new PumpHistoryRequest().tddHistory(PumpHistoryRequest.FULL));
         if (result.success) {
             List<Tdd> tdds = pump.tddHistory;

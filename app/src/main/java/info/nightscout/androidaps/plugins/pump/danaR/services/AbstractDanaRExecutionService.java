@@ -17,13 +17,18 @@ import java.io.IOException;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 import dagger.android.DaggerService;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
@@ -51,7 +56,8 @@ import info.nightscout.androidaps.utils.ToastUtils;
  */
 
 public abstract class AbstractDanaRExecutionService extends DaggerService {
-    protected Logger log = StacktraceLoggerWrapper.getLogger(L.PUMP);
+    @Inject HasAndroidInjector injector;
+    @Inject AAPSLogger aapsLogger;
 
     protected String mDevName;
 
@@ -102,8 +108,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-                if (L.isEnabled(L.PUMP))
-                    log.debug("Device was disconnected " + device.getName());//Device was disconnected
+                aapsLogger.debug(LTag.PUMP, "Device was disconnected " + device.getName());//Device was disconnected
                 if (mBTDevice != null && mBTDevice.getName() != null && mBTDevice.getName().equals(device.getName())) {
                     if (mSerialIOThread != null) {
                         mSerialIOThread.disconnect("BT disconnection broadcast");
@@ -164,7 +169,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                     try {
                         mRfcommSocket = mBTDevice.createRfcommSocketToServiceRecord(SPP_UUID);
                     } catch (IOException e) {
-                        log.error("Error creating socket: ", e);
+                        aapsLogger.error("Error creating socket: ", e);
                     }
                     break;
                 }
@@ -178,8 +183,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     }
 
     public void bolusStop() {
-        if (L.isEnabled(L.PUMP))
-            log.debug("bolusStop >>>>> @ " + (mBolusingTreatment == null ? "" : mBolusingTreatment.insulin));
+        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ " + (mBolusingTreatment == null ? "" : mBolusingTreatment.insulin));
         MsgBolusStop stop = new MsgBolusStop();
         stop.forced = true;
         if (isConnected()) {
@@ -194,7 +198,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     }
 
     public PumpEnactResult loadHistory(byte type) {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(injector);
         if (!isConnected()) return result;
         MessageBase msg = null;
         switch (type) {

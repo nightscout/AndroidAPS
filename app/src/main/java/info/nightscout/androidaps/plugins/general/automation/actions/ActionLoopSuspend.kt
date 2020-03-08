@@ -32,9 +32,9 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
         if (!loopPlugin.isSuspended) {
             loopPlugin.suspendLoop(minutes.getMinutes())
             rxBus.send(EventRefreshOverview("ActionLoopSuspend"))
-            callback.result(PumpEnactResult().success(true).comment(R.string.ok))?.run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
         } else {
-            callback.result(PumpEnactResult().success(true).comment(R.string.alreadysuspended))?.run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadysuspended))?.run()
         }
     }
 

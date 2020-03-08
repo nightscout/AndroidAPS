@@ -408,7 +408,7 @@ public class LoopPlugin extends PluginBase {
                 if (resultAfterConstraints.isChangeRequested()
                         && !commandQueue.bolusInQueue()
                         && !commandQueue.isRunning(Command.CommandType.BOLUS)) {
-                    final PumpEnactResult waiting = new PumpEnactResult();
+                    final PumpEnactResult waiting = new PumpEnactResult(getInjector());
                     waiting.queued = true;
                     if (resultAfterConstraints.tempBasalRequested)
                         lastRun.tbrSetByPump = waiting;
@@ -532,7 +532,7 @@ public class LoopPlugin extends PluginBase {
 
         if (!request.tempBasalRequested) {
             if (callback != null) {
-                callback.result(new PumpEnactResult().enacted(false).success(true).comment(resourceHelper.gs(R.string.nochangerequested))).run();
+                callback.result(new PumpEnactResult(getInjector()).enacted(false).success(true).comment(resourceHelper.gs(R.string.nochangerequested))).run();
             }
             return;
         }
@@ -540,14 +540,14 @@ public class LoopPlugin extends PluginBase {
         PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
         if (pump == null) {
             if (callback != null)
-                callback.result(new PumpEnactResult().enacted(false).success(false).comment(resourceHelper.gs(R.string.nopumpselected))).run();
+                callback.result(new PumpEnactResult(getInjector()).enacted(false).success(false).comment(resourceHelper.gs(R.string.nopumpselected))).run();
             return;
         }
 
         if (!pump.isInitialized()) {
             getAapsLogger().debug(LTag.APS, "applyAPSRequest: " + resourceHelper.gs(R.string.pumpNotInitialized));
             if (callback != null) {
-                callback.result(new PumpEnactResult().comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
+                callback.result(new PumpEnactResult(getInjector()).comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
             }
             return;
         }
@@ -555,7 +555,7 @@ public class LoopPlugin extends PluginBase {
         if (pump.isSuspended()) {
             getAapsLogger().debug(LTag.APS, "applyAPSRequest: " + resourceHelper.gs(R.string.pumpsuspended));
             if (callback != null) {
-                callback.result(new PumpEnactResult().comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
+                callback.result(new PumpEnactResult(getInjector()).comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
             }
             return;
         }
@@ -572,7 +572,7 @@ public class LoopPlugin extends PluginBase {
                 } else {
                     getAapsLogger().debug(LTag.APS, "applyAPSRequest: Basal set correctly");
                     if (callback != null) {
-                        callback.result(new PumpEnactResult().percent(request.percent).duration(0)
+                        callback.result(new PumpEnactResult(getInjector()).percent(request.percent).duration(0)
                                 .enacted(false).success(true).comment(resourceHelper.gs(R.string.basal_set_correctly))).run();
                     }
                 }
@@ -582,7 +582,7 @@ public class LoopPlugin extends PluginBase {
                     && request.percent == activeTemp.percentRate) {
                 getAapsLogger().debug(LTag.APS, "applyAPSRequest: Temp basal set correctly");
                 if (callback != null) {
-                    callback.result(new PumpEnactResult().percent(request.percent)
+                    callback.result(new PumpEnactResult(getInjector()).percent(request.percent)
                             .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
                             .comment(resourceHelper.gs(R.string.let_temp_basal_run))).run();
                 }
@@ -598,7 +598,7 @@ public class LoopPlugin extends PluginBase {
                 } else {
                     getAapsLogger().debug(LTag.APS, "applyAPSRequest: Basal set correctly");
                     if (callback != null) {
-                        callback.result(new PumpEnactResult().absolute(request.rate).duration(0)
+                        callback.result(new PumpEnactResult(getInjector()).absolute(request.rate).duration(0)
                                 .enacted(false).success(true).comment(resourceHelper.gs(R.string.basal_set_correctly))).run();
                     }
                 }
@@ -608,7 +608,7 @@ public class LoopPlugin extends PluginBase {
                     && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
                 getAapsLogger().debug(LTag.APS, "applyAPSRequest: Temp basal set correctly");
                 if (callback != null) {
-                    callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
+                    callback.result(new PumpEnactResult(getInjector()).absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
                             .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
                             .comment(resourceHelper.gs(R.string.let_temp_basal_run))).run();
                 }
@@ -627,7 +627,7 @@ public class LoopPlugin extends PluginBase {
         PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
         if (pump == null) {
             if (callback != null)
-                callback.result(new PumpEnactResult().enacted(false).success(false).comment(resourceHelper.gs(R.string.nopumpselected))).run();
+                callback.result(new PumpEnactResult(getInjector()).enacted(false).success(false).comment(resourceHelper.gs(R.string.nopumpselected))).run();
             return;
         }
 
@@ -635,7 +635,7 @@ public class LoopPlugin extends PluginBase {
         if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
             getAapsLogger().debug(LTag.APS, "SMB requested but still in 3 min interval");
             if (callback != null) {
-                callback.result(new PumpEnactResult()
+                callback.result(new PumpEnactResult(getInjector())
                         .comment(resourceHelper.gs(R.string.smb_frequency_exceeded))
                         .enacted(false).success(false)).run();
             }
@@ -645,7 +645,7 @@ public class LoopPlugin extends PluginBase {
         if (!pump.isInitialized()) {
             getAapsLogger().debug(LTag.APS, "applySMBRequest: " + resourceHelper.gs(R.string.pumpNotInitialized));
             if (callback != null) {
-                callback.result(new PumpEnactResult().comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
+                callback.result(new PumpEnactResult(getInjector()).comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
             }
             return;
         }
@@ -653,7 +653,7 @@ public class LoopPlugin extends PluginBase {
         if (pump.isSuspended()) {
             getAapsLogger().debug(LTag.APS, "applySMBRequest: " + resourceHelper.gs(R.string.pumpsuspended));
             if (callback != null) {
-                callback.result(new PumpEnactResult().comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
+                callback.result(new PumpEnactResult(getInjector()).comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
             }
             return;
         }

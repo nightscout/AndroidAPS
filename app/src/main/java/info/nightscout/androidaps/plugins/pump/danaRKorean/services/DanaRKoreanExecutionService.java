@@ -24,7 +24,7 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
@@ -106,8 +106,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    if (L.isEnabled(L.PUMP))
-                        log.debug("EventAppExit received");
+                    aapsLogger.debug(LTag.PUMP, "EventAppExit received");
 
                     if (mSerialIOThread != null)
                         mSerialIOThread.disconnect("Application exit");
@@ -147,7 +146,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             } catch (IOException e) {
                 //log.error("Unhandled exception", e);
                 if (e.getMessage().contains("socket closed")) {
-                    log.error("Unhandled exception", e);
+                    aapsLogger.error("Unhandled exception", e);
                 }
             }
 
@@ -221,16 +220,14 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                     return;
                 }
                 long timeDiff = (danaRPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
-                if (L.isEnabled(L.PUMP))
-                    log.debug("Pump time difference: " + timeDiff + " seconds");
+                aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");
                 if (Math.abs(timeDiff) > 10) {
                     waitForWholeMinute(); // Dana can set only whole minute
                     // add 10sec to be sure we are over minute (will be cutted off anyway)
                     mSerialIOThread.sendMessage(new MsgSetTime(new Date(DateUtil.now() + T.secs(10).msecs())));
                     mSerialIOThread.sendMessage(new MsgSettingPumpTime(aapsLogger, danaRPump));
                     timeDiff = (danaRPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
-                    if (L.isEnabled(L.PUMP))
-                        log.debug("Pump time difference: " + timeDiff + " seconds");
+                    aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");
                 }
                 danaRPump.setLastSettingsRead(now);
             }
@@ -239,8 +236,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             rxBus.send(new EventInitializationChanged());
             //NSUpload.uploadDeviceStatus();
             if (danaRPump.getDailyTotalUnits() > danaRPump.getMaxDailyTotalUnits() * Constants.dailyLimitWarning) {
-                if (L.isEnabled(L.PUMP))
-                    log.debug("Approaching daily limit: " + danaRPump.getDailyTotalUnits() + "/" + danaRPump.getMaxDailyTotalUnits());
+                aapsLogger.debug(LTag.PUMP, "Approaching daily limit: " + danaRPump.getDailyTotalUnits() + "/" + danaRPump.getMaxDailyTotalUnits());
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, resourceHelper.gs(R.string.approachingdailylimit), Notification.URGENT);
                     rxBus.send(new EventNewNotification(reportFail));
@@ -249,7 +245,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 }
             }
         } catch (Exception e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -325,8 +321,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
                     stop.stopped = true;
                     stop.forced = true;
-                    if (L.isEnabled(L.PUMP))
-                        log.debug("Communication stopped");
+                    aapsLogger.debug(LTag.PUMP, "Communication stopped");
                 }
             }
             SystemClock.sleep(300);

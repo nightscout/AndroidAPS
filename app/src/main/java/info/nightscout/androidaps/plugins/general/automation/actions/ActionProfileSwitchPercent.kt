@@ -38,7 +38,7 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
 
     override fun doAction(callback: Callback) {
         activePlugin.activeTreatments.doProfileSwitch(duration.value, pct.value.toInt(), 0)
-        callback.result(PumpEnactResult().success(true).comment(R.string.ok))?.run()
+        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }
 
     override fun generateDialog(root: LinearLayout) {
