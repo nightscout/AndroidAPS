@@ -1,15 +1,17 @@
 package info.nightscout.androidaps.interfaces
 
 import android.os.SystemClock
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 abstract class PumpPluginBase(
     pluginDescription: PluginDescription,
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     val commandQueue: CommandQueueProvider
-) : PluginBase(pluginDescription, aapsLogger, resourceHelper) {
+) : PluginBase(pluginDescription, aapsLogger, resourceHelper, injector) {
 
     override fun onStart() {
         super.onStart()

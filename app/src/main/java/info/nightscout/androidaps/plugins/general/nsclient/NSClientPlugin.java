@@ -15,7 +15,6 @@ import androidx.preference.PreferenceScreen;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -73,10 +73,11 @@ public class NSClientPlugin extends PluginBase {
 
     public NSClientService nsClientService = null;
 
-    private NsClientReceiverDelegate  nsClientReceiverDelegate = new NsClientReceiverDelegate();
+    private NsClientReceiverDelegate nsClientReceiverDelegate = new NsClientReceiverDelegate();
 
     @Inject
     public NSClientPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper
@@ -88,7 +89,7 @@ public class NSClientPlugin extends PluginBase {
                         .shortName(R.string.nsclientinternal_shortname)
                         .preferencesId(R.xml.pref_nsclientinternal)
                         .description(R.string.description_ns_client),
-                aapsLogger, resourceHelper
+                aapsLogger, resourceHelper, injector
         );
 
         this.aapsLogger = aapsLogger;

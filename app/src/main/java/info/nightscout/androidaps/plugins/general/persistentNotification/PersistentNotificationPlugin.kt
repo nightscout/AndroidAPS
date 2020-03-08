@@ -9,6 +9,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
 import androidx.core.app.TaskStackBuilder
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.MainApp
@@ -35,6 +36,7 @@ import javax.inject.Singleton
 
 @Singleton
 class PersistentNotificationPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     private var profileFunction: ProfileFunction,
@@ -52,7 +54,7 @@ class PersistentNotificationPlugin @Inject constructor(
     .alwaysEnabled(true)
     .showInList(false)
     .description(R.string.description_persistent_notification),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ) {
 
     // For Android Auto

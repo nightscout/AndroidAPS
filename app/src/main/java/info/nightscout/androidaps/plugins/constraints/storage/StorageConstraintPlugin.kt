@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.constraints.storage
 
 import android.os.Environment
 import android.os.StatFs
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraint
@@ -21,6 +22,7 @@ import javax.inject.Singleton
 
 @Singleton
 open class StorageConstraintPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     private val rxBus: RxBusWrapper
@@ -30,14 +32,14 @@ open class StorageConstraintPlugin @Inject constructor(
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.storage),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ), ConstraintsInterface {
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val diskFree = availableInternalMemorySize
         aapsLogger.debug(LTag.CONSTRAINTS, "Internal storage free (Mb):$diskFree")
         if (diskFree < Constants.MINIMUM_FREE_SPACE) {
-            value[false, resourceHelper.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE)] = this
+            value[aapsLogger, false, resourceHelper.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE)] = this
             val notification = Notification(Notification.DISKFULL, resourceHelper.gs(R.string.diskfull, Constants.MINIMUM_FREE_SPACE), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
         } else {

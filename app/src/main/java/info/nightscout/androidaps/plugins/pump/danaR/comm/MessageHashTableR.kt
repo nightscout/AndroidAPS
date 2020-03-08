@@ -5,6 +5,7 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
@@ -18,6 +19,7 @@ class MessageHashTableR @Inject constructor(
     aapsLogger: AAPSLogger,
     rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
+    constraintChecker: ConstraintChecker,
     danaRPump: DanaRPump,
     danaRPlugin: DanaRPlugin,
     danaRKoreanPlugin: DanaRKoreanPlugin,
@@ -30,8 +32,8 @@ class MessageHashTableR @Inject constructor(
 
     init {
         put(MsgBolusStop())                 // 0x0101 CMD_MEALINS_STOP
-        put(MsgBolusStart())                // 0x0102 CMD_MEALINS_START_DATA
-        put(MsgBolusStartWithSpeed())       // 0x0104 CMD_MEALINS_START_DATA_SPEED
+        put(MsgBolusStart(aapsLogger, constraintChecker, danaRPump, 0.0))                // 0x0102 CMD_MEALINS_START_DATA
+        put(MsgBolusStartWithSpeed(aapsLogger, constraintChecker, danaRPump, 0.0, 0))       // 0x0104 CMD_MEALINS_START_DATA_SPEED
         put(MsgBolusProgress())             // 0x0202 CMD_PUMP_THIS_REMAINDER_MEAL_INS
         put(MsgStatusProfile(aapsLogger, danaRPump))             // 0x0204 CMD_PUMP_CALCULATION_SETTING
         put(MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin))           // 0x0205 CMD_PUMP_EXERCISE_MODE
@@ -47,7 +49,7 @@ class MessageHashTableR @Inject constructor(
         put(MsgSetCarbsEntry())             // 0x0402 CMD_PUMPSET_HIS_S
         put(MsgSetTempBasalStop())          // 0x0403 CMD_PUMPSET_EXERCISE_STOP
         put(MsgSetExtendedBolusStop())      // 0x0406 CMD_PUMPSET_EXPANS_INS_STOP
-        put(MsgSetExtendedBolusStart())     // 0x0407 CMD_PUMPSET_EXPANS_INS_S
+        put(MsgSetExtendedBolusStart(aapsLogger, constraintChecker, 0.0, 0))     // 0x0407 CMD_PUMPSET_EXPANS_INS_S
         put(MsgError())                     // 0x0601 CMD_PUMPOWAY_SYSTEM_STATUS
         put(MsgPCCommStart())               // 0x3001 CMD_CONNECT
         put(MsgPCCommStop())                // 0x3002 CMD_DISCONNECT

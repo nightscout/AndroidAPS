@@ -18,6 +18,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -99,6 +100,7 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
 
     @Inject
     public DanaRSPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             Context context,
@@ -117,7 +119,7 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
                         .shortName(R.string.danarspump_shortname)
                         .preferencesId(R.xml.pref_danars)
                         .description(R.string.description_pump_dana_rs),
-                aapsLogger, resourceHelper, commandQueue
+                injector, aapsLogger, resourceHelper, commandQueue
         );
         this.context = context;
         this.rxBus = rxBus;
@@ -257,15 +259,15 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
     @NonNull
     @Override
     public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, @NonNull Profile profile) {
-        absoluteRate.setIfSmaller(danaRPump.getMaxBasal(), resourceHelper.gs(R.string.limitingbasalratio, danaRPump.getMaxBasal(), resourceHelper.gs(R.string.pumplimit)), this);
+        absoluteRate.setIfSmaller(getAapsLogger(), danaRPump.getMaxBasal(), resourceHelper.gs(R.string.limitingbasalratio, danaRPump.getMaxBasal(), resourceHelper.gs(R.string.pumplimit)), this);
         return absoluteRate;
     }
 
     @NonNull
     @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, @NonNull Profile profile) {
-        percentRate.setIfGreater(0, resourceHelper.gs(R.string.limitingpercentrate, 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
-        percentRate.setIfSmaller(getPumpDescription().maxTempPercent, resourceHelper.gs(R.string.limitingpercentrate, getPumpDescription().maxTempPercent, resourceHelper.gs(R.string.pumplimit)), this);
+        percentRate.setIfGreater(getAapsLogger(), 0, resourceHelper.gs(R.string.limitingpercentrate, 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
+        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().maxTempPercent, resourceHelper.gs(R.string.limitingpercentrate, getPumpDescription().maxTempPercent, resourceHelper.gs(R.string.pumplimit)), this);
 
         return percentRate;
     }
@@ -274,7 +276,7 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
     @NonNull
     @Override
     public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        insulin.setIfSmaller(danaRPump.getMaxBolus(), resourceHelper.gs(R.string.limitingbolus, danaRPump.getMaxBolus(), resourceHelper.gs(R.string.pumplimit)), this);
+        insulin.setIfSmaller(getAapsLogger(), danaRPump.getMaxBolus(), resourceHelper.gs(R.string.limitingbolus, danaRPump.getMaxBolus(), resourceHelper.gs(R.string.pumplimit)), this);
         return insulin;
     }
 

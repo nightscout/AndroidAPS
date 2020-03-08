@@ -10,6 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -37,6 +38,7 @@ public class SensitivityOref0Plugin extends AbstractSensitivityPlugin {
 
     @Inject
     public SensitivityOref0Plugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             ResourceHelper resourceHelper,
             SP sp,
@@ -48,7 +50,7 @@ public class SensitivityOref0Plugin extends AbstractSensitivityPlugin {
                         .shortName(R.string.sensitivity_shortname)
                         .preferencesId(R.xml.pref_absorption_oref0)
                         .description(R.string.description_sensitivity_oref0),
-                aapsLogger, resourceHelper, sp
+                injector, aapsLogger, resourceHelper, sp
         );
         this.profileFunction = profileFunction;
     }

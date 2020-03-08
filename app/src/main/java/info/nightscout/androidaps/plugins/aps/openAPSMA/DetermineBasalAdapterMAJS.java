@@ -15,7 +15,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -33,7 +35,8 @@ import info.nightscout.androidaps.utils.SP;
 
 public class DetermineBasalAdapterMAJS {
 
-    private final AAPSLogger aapsLogger;
+    private HasAndroidInjector injector;
+    @Inject AAPSLogger aapsLogger;
     private ScriptReader mScriptReader;
     private JSONObject mProfile;
     private JSONObject mGlucoseStatus;
@@ -47,9 +50,10 @@ public class DetermineBasalAdapterMAJS {
     private String storedProfile = null;
     private String storedMeal_data = null;
 
-    DetermineBasalAdapterMAJS(ScriptReader scriptReader, AAPSLogger aapsLogger) {
+    DetermineBasalAdapterMAJS(ScriptReader scriptReader, HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
         mScriptReader = scriptReader;
-        this.aapsLogger = aapsLogger;
+        this.injector = injector;
     }
 
     @Nullable
@@ -105,7 +109,7 @@ public class DetermineBasalAdapterMAJS {
                 if (L.isEnabled(L.APS))
                     aapsLogger.debug(LTag.APS, "Result: " + result);
                 try {
-                    determineBasalResultMA = new DetermineBasalResultMA(jsResult, new JSONObject(result), aapsLogger);
+                    determineBasalResultMA = new DetermineBasalResultMA(injector, jsResult, new JSONObject(result));
                 } catch (JSONException e) {
                     aapsLogger.error(LTag.APS, "Unhandled exception", e);
                 }

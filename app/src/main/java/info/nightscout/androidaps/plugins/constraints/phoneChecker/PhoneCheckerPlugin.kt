@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.constraints.phoneChecker
 import android.content.Context
 import android.os.Build
 import com.scottyab.rootbeer.RootBeer
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ConstraintsInterface
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -15,6 +16,7 @@ import javax.inject.Singleton
 
 @Singleton
 class PhoneCheckerPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     private val context: Context
@@ -24,7 +26,7 @@ class PhoneCheckerPlugin @Inject constructor(
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.phonechecker),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ), ConstraintsInterface {
 
     var phoneRooted: Boolean = false

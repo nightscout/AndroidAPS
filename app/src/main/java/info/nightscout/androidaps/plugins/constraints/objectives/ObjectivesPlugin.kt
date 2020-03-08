@@ -25,7 +25,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ObjectivesPlugin @Inject constructor(
-    private val injector: HasAndroidInjector,
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     private val configBuilderPlugin: ConfigBuilderPlugin,
@@ -39,7 +39,7 @@ class ObjectivesPlugin @Inject constructor(
     .pluginName(R.string.objectives)
     .shortName(R.string.objectives_shortname)
     .description(R.string.description_objectives),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ), ConstraintsInterface {
 
     var objectives: MutableList<Objective> = ArrayList()
@@ -151,37 +151,37 @@ class ObjectivesPlugin @Inject constructor(
      */
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[FIRST_OBJECTIVE].isStarted)
-            value.set(false, resourceHelper.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, FIRST_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[MAXIOB_ZERO_CL_OBJECTIVE].isStarted)
-            value.set(false, resourceHelper.gs(R.string.objectivenotstarted, MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[AUTOSENS_OBJECTIVE].isStarted)
-            value.set(false, resourceHelper.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, AUTOSENS_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isAMAModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[AMA_OBJECTIVE].isStarted)
-            value.set(false, resourceHelper.gs(R.string.objectivenotstarted, AMA_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, AMA_OBJECTIVE + 1), this)
         return value
     }
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[SMB_OBJECTIVE].isStarted)
-            value.set(false, resourceHelper.gs(R.string.objectivenotstarted, SMB_OBJECTIVE + 1), this)
+            value.set(aapsLogger, false, resourceHelper.gs(R.string.objectivenotstarted, SMB_OBJECTIVE + 1), this)
         return value
     }
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (objectives[MAXIOB_ZERO_CL_OBJECTIVE].isStarted && !objectives[MAXIOB_ZERO_CL_OBJECTIVE].isAccomplished)
-            maxIob.set(0.0, resourceHelper.gs(R.string.objectivenotfinished, MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
+            maxIob.set(aapsLogger, 0.0, resourceHelper.gs(R.string.objectivenotfinished, MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
         return maxIob
     }
 }

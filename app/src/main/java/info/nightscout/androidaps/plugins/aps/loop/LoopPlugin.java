@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Lazy;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -73,6 +74,7 @@ import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class LoopPlugin extends PluginBase {
+    private final HasAndroidInjector injector;
     private final SP sp;
     private final RxBusWrapper rxBus;
     private final ConstraintChecker constraintChecker;
@@ -114,6 +116,7 @@ public class LoopPlugin extends PluginBase {
 
     @Inject
     public LoopPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             SP sp,
@@ -135,8 +138,9 @@ public class LoopPlugin extends PluginBase {
                         .shortName(R.string.loop_shortname)
                         .preferencesId(R.xml.pref_loop)
                         .description(R.string.description_loop),
-                aapsLogger, resourceHelper
+                aapsLogger, resourceHelper, injector
         );
+        this.injector = injector;
         this.sp = sp;
         this.rxBus = rxBus;
         this.constraintChecker = constraintChecker;
@@ -311,7 +315,7 @@ public class LoopPlugin extends PluginBase {
             Constraint<Boolean> loopEnabled = constraintChecker.isLoopInvocationAllowed();
 
             if (!loopEnabled.value()) {
-                String message = resourceHelper.gs(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
+                String message = resourceHelper.gs(R.string.loopdisabled) + "\n" + loopEnabled.getReasons(getAapsLogger());
                 getAapsLogger().debug(LTag.APS, message);
                 rxBus.send(new EventLoopSetLastRunGui(message));
                 return;
@@ -355,7 +359,7 @@ public class LoopPlugin extends PluginBase {
             result.percent = (int) (result.rate / profile.getBasal() * 100);
 
             // check rate for constrais
-            final APSResult resultAfterConstraints = result.clone();
+            final APSResult resultAfterConstraints = result.newAndClone(injector);
             resultAfterConstraints.rateConstraint = new Constraint<>(resultAfterConstraints.rate);
             resultAfterConstraints.rate = constraintChecker.applyBasalConstraints(resultAfterConstraints.rateConstraint, profile).value();
 

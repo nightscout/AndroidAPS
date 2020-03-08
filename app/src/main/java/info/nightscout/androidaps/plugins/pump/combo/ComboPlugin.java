@@ -7,7 +7,6 @@ import androidx.annotation.Nullable;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,6 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -138,6 +138,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
     @Inject
     public ComboPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             MainApp maiApp,
@@ -154,7 +155,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                         .pluginName(R.string.combopump)
                         .shortName(R.string.combopump_shortname)
                         .description(R.string.description_pump_combo),
-                aapsLogger, resourceHelper, commandQueue
+                injector, aapsLogger, resourceHelper, commandQueue
         );
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
@@ -1391,14 +1392,14 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     @Override
     public Constraint<Boolean> isLoopInvocationAllowed(Constraint<Boolean> value) {
         if (!validBasalRateProfileSelectedOnPump)
-            value.set(false, MainApp.gs(R.string.novalidbasalrate), this);
+            value.set(getAapsLogger(), false, MainApp.gs(R.string.novalidbasalrate), this);
         return value;
     }
 
     @Override
     public Constraint<Double> applyMaxIOBConstraints(Constraint<Double> maxIob) {
         if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis())
-            maxIob.setIfSmaller(0d, String.format(MainApp.gs(R.string.limitingmaxiob), 0d, MainApp.gs(R.string.unsafeusage)), this);
+            maxIob.setIfSmaller(getAapsLogger(), 0d, String.format(MainApp.gs(R.string.limitingmaxiob), 0d, MainApp.gs(R.string.unsafeusage)), this);
         return maxIob;
     }
 

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -71,9 +72,9 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     protected boolean displayConnectionMessages = false;
 
 
-    protected PumpPluginAbstract(PluginDescription pluginDescription, PumpType pumpType, ResourceHelper resourceHelper, AAPSLogger aapsLogger, CommandQueueProvider commandQueue) {
+    protected PumpPluginAbstract(PluginDescription pluginDescription, PumpType pumpType, HasAndroidInjector injector, ResourceHelper resourceHelper, AAPSLogger aapsLogger, CommandQueueProvider commandQueue) {
 
-        super(pluginDescription, aapsLogger, resourceHelper, commandQueue);
+        super(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue);
 
         pumpDescription.setPumpDescription(pumpType);
 

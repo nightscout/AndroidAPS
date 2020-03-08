@@ -7,6 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -36,6 +37,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
 
     @Inject
     public SensitivityWeightedAveragePlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             ResourceHelper resourceHelper,
             SP sp,
@@ -47,7 +49,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
                         .shortName(R.string.sensitivity_shortname)
                         .preferencesId(R.xml.pref_absorption_aaps)
                         .description(R.string.description_sensitivity_weighted_average),
-                aapsLogger, resourceHelper, sp
+                injector, aapsLogger, resourceHelper, sp
         );
         this.sp = sp;
         this.resourceHelper = resourceHelper;

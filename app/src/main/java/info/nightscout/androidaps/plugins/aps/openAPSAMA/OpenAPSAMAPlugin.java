@@ -5,6 +5,7 @@ import org.json.JSONException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -58,6 +59,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
 
     @Inject
     public OpenAPSAMAPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             ConstraintChecker constraintChecker,
@@ -75,7 +77,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
                         .shortName(R.string.oaps_shortname)
                         .preferencesId(R.xml.pref_openapsama)
                         .description(R.string.description_ama),
-                aapsLogger, resourceHelper
+                aapsLogger, resourceHelper, injector
         );
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
@@ -119,7 +121,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         aapsLogger.debug(LTag.APS, "invoke from " + initiator + " tempBasalFallback: " + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterAMAJS determineBasalAdapterAMAJS;
-        determineBasalAdapterAMAJS = new DetermineBasalAdapterAMAJS(new ScriptReader(mainApp), aapsLogger);
+        determineBasalAdapterAMAJS = new DetermineBasalAdapterAMAJS(new ScriptReader(mainApp), getInjector());
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         Profile profile = profileFunction.getProfile();

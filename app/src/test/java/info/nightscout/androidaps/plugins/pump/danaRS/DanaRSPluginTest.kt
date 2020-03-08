@@ -47,8 +47,8 @@ class DanaRSPluginTest : DanaRSTestBase() {
         val c = Constraint(Constants.REALLYHIGHBASALRATE)
         danaRSPlugin.applyBasalConstraints(c, AAPSMocker.getValidProfile())
         Assert.assertEquals(java.lang.Double.valueOf(0.8), c.value(), 0.0001)
-        Assert.assertEquals("DanaRS: limitingbasalratio", c.reasons)
-        Assert.assertEquals("DanaRS: limitingbasalratio", c.mostLimitedReasons)
+        Assert.assertEquals("DanaRS: limitingbasalratio", c.getReasons(aapsLogger))
+        Assert.assertEquals("DanaRS: limitingbasalratio", c.getMostLimitedReasons(aapsLogger))
     }
 
     @Test
@@ -59,8 +59,8 @@ class DanaRSPluginTest : DanaRSTestBase() {
         val c = Constraint(Constants.REALLYHIGHPERCENTBASALRATE)
         danaRSPlugin.applyBasalPercentConstraints(c, AAPSMocker.getValidProfile())
         Assert.assertEquals(200, c.value())
-        Assert.assertEquals("DanaRS: limitingpercentrate", c.reasons)
-        Assert.assertEquals("DanaRS: limitingpercentrate", c.mostLimitedReasons)
+        Assert.assertEquals("DanaRS: limitingpercentrate", c.getReasons(aapsLogger))
+        Assert.assertEquals("DanaRS: limitingpercentrate", c.getMostLimitedReasons(aapsLogger))
     }
 
     @Before

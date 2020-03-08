@@ -9,6 +9,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -37,6 +38,7 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
 
     @Inject
     public SensitivityAAPSPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             ResourceHelper resourceHelper,
             SP sp
@@ -47,7 +49,7 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
                         .shortName(R.string.sensitivity_shortname)
                         .preferencesId(R.xml.pref_absorption_aaps)
                         .description(R.string.description_sensitivity_aaps),
-                aapsLogger, resourceHelper, sp
+                injector, aapsLogger, resourceHelper, sp
         );
         this.sp = sp;
     }

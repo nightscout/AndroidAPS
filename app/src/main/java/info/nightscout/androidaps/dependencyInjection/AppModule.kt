@@ -7,7 +7,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.data.ProfileStore
 import info.nightscout.androidaps.data.PumpEnactResult
@@ -15,9 +14,13 @@ import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.AAPSLoggerDebug
 import info.nightscout.androidaps.logging.AAPSLoggerProduction
+import info.nightscout.androidaps.plugins.aps.loop.APSResult
+import info.nightscout.androidaps.plugins.aps.openAPSAMA.DetermineBasalResultAMA
+import info.nightscout.androidaps.plugins.aps.openAPSMA.DetermineBasalResultMA
 import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
@@ -81,13 +84,21 @@ open class AppModule {
 
         @ContributesAndroidInjector fun pumpEnactResultInjector(): PumpEnactResult
 
+        @ContributesAndroidInjector fun apsResultInjector(): APSResult
+        @ContributesAndroidInjector fun determineBasalResultSMBInjector(): DetermineBasalResultSMB
+        @ContributesAndroidInjector fun determineBasalResultMAInjector(): DetermineBasalResultMA
+        @ContributesAndroidInjector fun determineBasalResultAMAInjector(): DetermineBasalResultAMA
+        @ContributesAndroidInjector fun determineBasalAdapterSMBJSInjector(): DetermineBasalAdapterSMBJS
+
         @ContributesAndroidInjector fun commandQueueInjector(): CommandQueue
         @ContributesAndroidInjector fun commandBolusInjector(): CommandBolus
+
         @ContributesAndroidInjector
         fun commandCancelExtendedBolusInjector(): CommandCancelExtendedBolus
 
         @ContributesAndroidInjector fun commandCancelTempBasalInjector(): CommandCancelTempBasal
         @ContributesAndroidInjector fun commandExtendedBolusInjector(): CommandExtendedBolus
+
         @ContributesAndroidInjector
         fun commandInsightSetTBROverNotificationInjector(): CommandInsightSetTBROverNotification
 
@@ -123,6 +134,7 @@ open class AppModule {
         @ContributesAndroidInjector fun triggerIobInjector(): TriggerIob
         @ContributesAndroidInjector fun triggerLocationInjector(): TriggerLocation
         @ContributesAndroidInjector fun triggerProfilePercentInjector(): TriggerProfilePercent
+
         @ContributesAndroidInjector
         fun triggerPumpLastConnectionInjector(): TriggerPumpLastConnection
 
@@ -139,6 +151,7 @@ open class AppModule {
         @ContributesAndroidInjector fun actionLoopSuspendInjector(): ActionLoopSuspend
         @ContributesAndroidInjector fun actionNotificationInjector(): ActionNotification
         @ContributesAndroidInjector fun actionProfileSwitchInjector(): ActionProfileSwitch
+
         @ContributesAndroidInjector
         fun actionProfileSwitchPercentInjector(): ActionProfileSwitchPercent
 

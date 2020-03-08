@@ -16,6 +16,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -98,13 +99,15 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private final ProfileIntervals<ProfileSwitch> profiles = new ProfileIntervals<>();
 
     @Inject
-    public TreatmentsPlugin(AAPSLogger aapsLogger,
-                            RxBusWrapper rxBus,
-                            ResourceHelper resourceHelper,
-                            MainApp mainApp,
-                            SP sp,
-                            ProfileFunction profileFunction,
-                            ConfigBuilderPlugin configBuilderPlugin
+    public TreatmentsPlugin(
+            HasAndroidInjector injector,
+            AAPSLogger aapsLogger,
+            RxBusWrapper rxBus,
+            ResourceHelper resourceHelper,
+            MainApp mainApp,
+            SP sp,
+            ProfileFunction profileFunction,
+            ConfigBuilderPlugin configBuilderPlugin
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.TREATMENT)
@@ -113,8 +116,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                         .shortName(R.string.treatments_shortname)
                         .alwaysEnabled(true)
                         .description(R.string.description_treatments),
-                aapsLogger,
-                resourceHelper
+                aapsLogger, resourceHelper, injector
         );
         this.resourceHelper = resourceHelper;
         this.mainApp = mainApp;

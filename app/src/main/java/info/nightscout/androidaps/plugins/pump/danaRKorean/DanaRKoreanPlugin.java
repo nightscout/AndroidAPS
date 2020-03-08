@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -30,7 +31,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.danaR.AbstractDanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
-import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStart;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.services.DanaRKoreanExecutionService;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -55,6 +55,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     @Inject
     public DanaRKoreanPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             DanaRPump danaRPump,
@@ -66,7 +67,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             CommandQueueProvider commandQueue
 
     ) {
-        super(danaRPump, resourceHelper, aapsLogger, commandQueue);
+        super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue);
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.mainApp = maiApp;
@@ -174,7 +175,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = detailedBolusInfo.carbs;
             if (!result.success)
-                result.comment = resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, MsgBolusStart.errorCode);
+                result.comment = resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaRPump.getMessageStartErrorCode());
             else
                 result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);

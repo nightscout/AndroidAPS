@@ -11,7 +11,6 @@ class MsgSettingBasal_k(
     private val aapsLogger: AAPSLogger,
     private val danaRPump: DanaRPump,
     private val danaRKoreanPlugin: DanaRKoreanPlugin
-
 ) : MessageBase() {
 
     init {

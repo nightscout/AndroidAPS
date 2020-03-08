@@ -180,14 +180,6 @@ public class AAPSMocker {
         when(ConfigBuilderPlugin.getPlugin()).thenReturn(configBuilderPlugin);
     }
 
-    public static ConstraintChecker mockConstraintsChecker() {
-        PowerMockito.mockStatic(ConstraintChecker.class);
-        constraintChecker = mock(ConstraintChecker.class);
-        when(ConstraintChecker.getInstance())
-                .thenReturn(constraintChecker);
-        return constraintChecker;
-    }
-
     public static void mockSP() {
         PowerMockito.mockStatic(SP.class);
         when(SP.getLong(anyInt(), anyLong())).thenReturn(0L);

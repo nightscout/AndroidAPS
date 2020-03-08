@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -28,7 +29,6 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStartWithSpeed;
 import info.nightscout.androidaps.plugins.pump.danaR.services.DanaRExecutionService;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -53,6 +53,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     @Inject
     public DanaRPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             MainApp maiApp,
@@ -63,7 +64,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             CommandQueueProvider commandQueue,
             DanaRPump danaRPump
     ) {
-        super(danaRPump, resourceHelper, aapsLogger, commandQueue);
+        super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue);
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.mainApp = maiApp;
@@ -171,7 +172,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = detailedBolusInfo.carbs;
             if (!result.success)
-                result.comment = String.format(resourceHelper.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, MsgBolusStartWithSpeed.errorCode);
+                result.comment = String.format(resourceHelper.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, danaRPump.getMessageStartErrorCode());
             else
                 result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
@@ -293,7 +294,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2); // *2 because of halfhours
 
             // What is current rate of extended bolusing in u/h?
-            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Extended bolus in progress: " + (activeExtended != null) + " rate: " + danaRPump.getExtendedBolusAbsoluteRate()+ "U/h duration remaining: " + danaRPump.getExtendedBolusRemainingMinutes() + "min");
+            aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Extended bolus in progress: " + (activeExtended != null) + " rate: " + danaRPump.getExtendedBolusAbsoluteRate() + "U/h duration remaining: " + danaRPump.getExtendedBolusRemainingMinutes() + "min");
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Rate to set: " + extendedRateToSet + "U/h");
 
             // Compare with extended rate in progress

@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +26,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
@@ -130,6 +130,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Inject
     public MedtronicPumpPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             MainApp maiApp,
@@ -148,7 +149,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         .shortName(R.string.medtronic_name_short) //
                         .preferencesId(R.xml.pref_medtronic).description(R.string.description_pump_medtronic), //
                 PumpType.Medtronic_522_722, // we default to most basic model, correct model from config is loaded later
-                resourceHelper, aapsLogger, commandQueue
+                injector, resourceHelper, aapsLogger, commandQueue
 
         );
         this.plugin = this;

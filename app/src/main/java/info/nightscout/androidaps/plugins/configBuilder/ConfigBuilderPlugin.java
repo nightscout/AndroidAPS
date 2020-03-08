@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Lazy;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppInitialized;
@@ -105,6 +106,7 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
             Lazy<TreatmentsPlugin> treatmentsPlugin,
             Lazy<SensitivityOref0Plugin> sensitivityOref0Plugin,
             Lazy<SensitivityOref1Plugin> sensitivityOref1Plugin,
+            HasAndroidInjector injector,
             SP sp,
             RxBusWrapper rxBus,
             AAPSLogger aapsLogger,
@@ -121,7 +123,7 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
                         .pluginName(R.string.configbuilder)
                         .shortName(R.string.configbuilder_shortname)
                         .description(R.string.description_config_builder),
-                aapsLogger, resourceHelper
+                aapsLogger, resourceHelper, injector
         );
         this.insulinOrefRapidActingPlugin = insulinOrefRapidActingPlugin;
         this.localProfilePlugin = localProfilePlugin;

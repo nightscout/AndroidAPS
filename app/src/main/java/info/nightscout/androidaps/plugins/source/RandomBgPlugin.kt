@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.source
 
 import android.content.Intent
 import android.os.Handler
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.BgReading
@@ -24,6 +25,7 @@ import kotlin.math.sin
 
 @Singleton
 class RandomBgPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
     private var virtualPumpPlugin: VirtualPumpPlugin
@@ -33,8 +35,7 @@ class RandomBgPlugin @Inject constructor(
     .pluginName(R.string.randombg)
     .shortName(R.string.randombg_short)
     .description(R.string.description_source_randombg),
-    aapsLogger,
-    resourceHelper
+    aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
     private val loopHandler = Handler()

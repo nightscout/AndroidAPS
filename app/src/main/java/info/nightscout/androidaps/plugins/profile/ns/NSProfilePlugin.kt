@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.profile.ns
 
 import android.content.Intent
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileStore
@@ -22,6 +23,7 @@ import javax.inject.Singleton
 
 @Singleton
 class NSProfilePlugin @Inject constructor(
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
@@ -35,7 +37,7 @@ class NSProfilePlugin @Inject constructor(
     .alwaysVisible(Config.NSCLIENT)
     .showInList(!Config.NSCLIENT)
     .description(R.string.description_profile_nightscout),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ), ProfileInterface {
 
     private var profile: ProfileStore? = null
@@ -47,6 +49,7 @@ class NSProfilePlugin @Inject constructor(
 
     fun handleNewData(intent: Intent) {
         val bundles = intent.extras ?: return
+
         @Suppress("SpellCheckingInspection")
         val activeProfile = bundles.getString("activeprofile")
         val profileString = bundles.getString("profile")

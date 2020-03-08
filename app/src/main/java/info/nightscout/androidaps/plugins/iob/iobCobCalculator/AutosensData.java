@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -13,8 +10,8 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
@@ -28,8 +25,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class AutosensData implements DataPointWithLabelInterface {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.AUTOSENS);
 
+    @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
     @Inject SensitivityWeightedAveragePlugin sensitivityWeightedAveragePlugin;
@@ -60,8 +57,7 @@ public class AutosensData implements DataPointWithLabelInterface {
                 double sens = profile.getIsfMgdl(t.date);
                 double ic = profile.getIc(t.date);
                 min5minCarbImpact = t.carbs / (maxAbsorptionHours * 60 / 5) * sens / ic;
-                if (L.isEnabled(L.AUTOSENS))
-                    log.debug("Min 5m carbs impact for " + carbs + "g @" + DateUtil.dateAndTimeString(t.date) + " for " + maxAbsorptionHours + "h calculated to " + min5minCarbImpact + " ISF: " + sens + " IC: " + ic);
+                aapsLogger.debug(LTag.AUTOSENS, "Min 5m carbs impact for " + carbs + "g @" + DateUtil.dateAndTimeString(t.date) + " for " + maxAbsorptionHours + "h calculated to " + min5minCarbImpact + " ISF: " + sens + " IC: " + ic);
             } else {
                 min5minCarbImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact);
             }
@@ -139,8 +135,7 @@ public class AutosensData implements DataPointWithLabelInterface {
                 activeCarbsList.remove(i--);
                 if (c.remaining > 0)
                     cob -= c.remaining;
-                if (L.isEnabled(L.AUTOSENS))
-                    log.debug("Removing carbs at " + DateUtil.dateAndTimeString(toTime) + " after " + maxAbsorptionHours + "h > " + c.toString());
+                aapsLogger.debug(LTag.AUTOSENS, "Removing carbs at " + DateUtil.dateAndTimeString(toTime) + " after " + maxAbsorptionHours + "h > " + c.toString());
             }
         }
     }

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.overview
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventRefreshOverview
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -20,6 +21,7 @@ import javax.inject.Singleton
 
 @Singleton
 class OverviewPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     private val notificationStore: NotificationStore,
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBusWrapper,
@@ -33,7 +35,8 @@ class OverviewPlugin @Inject constructor(
     .pluginName(R.string.overview)
     .shortName(R.string.overview_shortname)
     .preferencesId(R.xml.pref_overview)
-    .description(R.string.description_overview), aapsLogger, resourceHelper
+    .description(R.string.description_overview),
+    aapsLogger, resourceHelper, injector
 ) {
 
     private var disposable: CompositeDisposable = CompositeDisposable()

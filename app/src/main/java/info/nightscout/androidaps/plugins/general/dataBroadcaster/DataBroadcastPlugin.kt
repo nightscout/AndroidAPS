@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.os.Bundle
 import dagger.Lazy
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.IobTotal
@@ -41,6 +42,7 @@ import javax.inject.Singleton
 
 @Singleton
 class DataBroadcastPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     private val context: Context,
@@ -59,7 +61,7 @@ class DataBroadcastPlugin @Inject constructor(
     .alwaysEnabled(true)
     .neverVisible(true)
     .showInList(false),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ) {
 
     private val disposable = CompositeDisposable()

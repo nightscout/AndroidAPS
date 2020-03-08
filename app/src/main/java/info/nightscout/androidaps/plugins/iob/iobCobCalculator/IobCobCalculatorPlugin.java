@@ -110,7 +110,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                         .showInList(false)
                         .neverVisible(true)
                         .alwaysEnabled(true),
-                aapsLogger, resourceHelper
+                aapsLogger, resourceHelper, injector
         );
         this.plugin = this;
         this.injector = injector;

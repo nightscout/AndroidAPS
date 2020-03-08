@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.sensitivity
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -12,8 +13,17 @@ import info.nightscout.androidaps.utils.Round
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import kotlin.math.max
+import kotlin.math.min
 
-abstract class AbstractSensitivityPlugin(pluginDescription: PluginDescription, aapsLogger: AAPSLogger, resourceHelper: ResourceHelper, val sp: SP) : PluginBase(pluginDescription, aapsLogger, resourceHelper), SensitivityInterface {
+abstract class AbstractSensitivityPlugin(
+    pluginDescription: PluginDescription,
+    injector: HasAndroidInjector,
+    aapsLogger: AAPSLogger,
+    resourceHelper:
+    ResourceHelper,
+    val sp: SP
+) : PluginBase(pluginDescription, aapsLogger, resourceHelper, injector), SensitivityInterface {
 
     abstract override fun detectSensitivity(plugin: IobCobCalculatorPlugin, fromTime: Long, toTime: Long): AutosensResult
 
@@ -25,19 +35,19 @@ abstract class AbstractSensitivityPlugin(pluginDescription: PluginDescription, a
             SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")))
     }
 
-    fun fillResult(ratio: Double, carbsAbsorbed: Double, pastSensitivity: String,
-                   ratioLimit: String, sensResult: String, deviationsArraySize: Int,
+    fun fillResult(ratioParam: Double, carbsAbsorbed: Double, pastSensitivity: String,
+                   ratioLimitParam: String, sensResult: String, deviationsArraySize: Int,
                    ratioMin: Double, ratioMax: Double): AutosensResult {
-        var ratio = ratio
-        var ratioLimit = ratioLimit
+        var ratio = ratioParam
+        var ratioLimit = ratioLimitParam
         val rawRatio = ratio
-        ratio = Math.max(ratio, ratioMin)
-        ratio = Math.min(ratio, ratioMax)
+        ratio = max(ratio, ratioMin)
+        ratio = min(ratio, ratioMax)
 
         //If not-excluded data <= MIN_HOURS -> don't do Autosens
         //If not-excluded data >= MIN_HOURS_FULL_AUTOSENS -> full Autosens
         //Between MIN_HOURS and MIN_HOURS_FULL_AUTOSENS: gradually increase autosens
-        val autosensContrib = (Math.min(Math.max(SensitivityInterface.MIN_HOURS, deviationsArraySize / 12.0),
+        val autosensContrib = (min(max(SensitivityInterface.MIN_HOURS, deviationsArraySize / 12.0),
             SensitivityInterface.MIN_HOURS_FULL_AUTOSENS) - SensitivityInterface.MIN_HOURS) / (SensitivityInterface.MIN_HOURS_FULL_AUTOSENS - SensitivityInterface.MIN_HOURS)
         ratio = autosensContrib * (ratio - 1) + 1
         if (autosensContrib != 1.0) {

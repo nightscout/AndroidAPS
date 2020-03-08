@@ -7,6 +7,7 @@ import android.text.TextUtils
 import androidx.preference.EditTextPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -46,6 +47,7 @@ import javax.inject.Singleton
 
 @Singleton
 class SmsCommunicatorPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     private val sp: SP,
@@ -64,7 +66,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     .shortName(R.string.smscommunicator_shortname)
     .preferencesId(R.xml.pref_smscommunicator)
     .description(R.string.description_sms_communicator),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ) {
 
     private val disposable = CompositeDisposable()

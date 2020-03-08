@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.Spanned
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventNetworkChange
@@ -41,6 +42,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TidepoolPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     private val rxBus: RxBusWrapper,
@@ -56,7 +58,7 @@ class TidepoolPlugin @Inject constructor(
     .fragmentClass(TidepoolFragment::class.qualifiedName)
     .preferencesId(R.xml.pref_tidepool)
     .description(R.string.description_tidepool),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ) {
 
     private var disposable: CompositeDisposable = CompositeDisposable()

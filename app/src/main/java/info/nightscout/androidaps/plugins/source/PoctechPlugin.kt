@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.source
 
 import android.content.Intent
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -22,6 +23,7 @@ import javax.inject.Singleton
 
 @Singleton
 class PoctechPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val sp: SP
@@ -31,8 +33,7 @@ class PoctechPlugin @Inject constructor(
     .pluginName(R.string.poctech)
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_poctech),
-    aapsLogger,
-    resourceHelper
+    aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
     override fun advancedFilteringSupported(): Boolean {

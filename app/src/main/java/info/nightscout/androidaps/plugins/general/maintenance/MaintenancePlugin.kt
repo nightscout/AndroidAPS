@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.maintenance
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.MainApp
@@ -23,6 +24,7 @@ import javax.inject.Singleton
 
 @Singleton
 class MaintenancePlugin @Inject constructor(
+    injector: HasAndroidInjector,
     private val mainApp: MainApp,
     resourceHelper: ResourceHelper,
     private val sp: SP,
@@ -37,7 +39,7 @@ class MaintenancePlugin @Inject constructor(
     .shortName(R.string.maintenance_shortname)
     .preferencesId(R.xml.pref_maintenance)
     .description(R.string.description_maintenance),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ) {
 
     fun sendLogs() {

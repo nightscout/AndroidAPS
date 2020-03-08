@@ -2,6 +2,7 @@ package info.nightscout.androidaps.interfaces
 
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -12,7 +13,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 abstract class PluginBase(
     val pluginDescription: PluginDescription,
     val aapsLogger: AAPSLogger,
-    val resourceHelper: ResourceHelper
+    val resourceHelper: ResourceHelper,
+    val injector: HasAndroidInjector
 ) {
 
     enum class State {

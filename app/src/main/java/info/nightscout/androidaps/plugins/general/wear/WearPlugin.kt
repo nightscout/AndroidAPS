@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.general.wear
 
 import android.content.Intent
 import dagger.Lazy
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.*
@@ -26,6 +27,7 @@ import javax.inject.Singleton
 
 @Singleton
 class WearPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     private val sp: SP,
@@ -41,7 +43,7 @@ class WearPlugin @Inject constructor(
     .shortName(R.string.wear_shortname)
     .preferencesId(R.xml.pref_wear)
     .description(R.string.description_wear),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ) {
 
     private val disposable = CompositeDisposable()

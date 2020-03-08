@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.insulin
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Iob
 import info.nightscout.androidaps.interfaces.InsulinInterface
@@ -21,6 +22,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
  *
  */
 abstract class InsulinOrefBasePlugin(
+    injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     val profileFunction: ProfileFunction,
     val rxBus: RxBusWrapper, aapsLogger: AAPSLogger
@@ -29,7 +31,7 @@ abstract class InsulinOrefBasePlugin(
     .fragmentClass(InsulinFragment::class.java.name)
     .shortName(R.string.insulin_shortname)
     .visibleByDefault(false),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ), InsulinInterface {
 
     private var lastWarned: Long = 0

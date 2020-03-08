@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
@@ -127,6 +128,7 @@ import io.reactivex.schedulers.Schedulers;
 import static info.nightscout.androidaps.utils.DateUtil.now;
 
 public class OverviewFragment extends DaggerFragment implements View.OnClickListener, View.OnLongClickListener {
+    @Inject HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
     @Inject RxBusWrapper rxBus;
@@ -1400,7 +1402,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 if (Config.APS)
                     apsResult = loopPlugin.lastRun.constraintsProcessed;
                 else
-                    apsResult = NSDeviceStatus.getAPSResult();
+                    apsResult = NSDeviceStatus.getAPSResult(injector);
                 int predHours = (int) (Math.ceil(apsResult.getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
                 predHours = Math.min(2, predHours);
                 predHours = Math.max(0, predHours);

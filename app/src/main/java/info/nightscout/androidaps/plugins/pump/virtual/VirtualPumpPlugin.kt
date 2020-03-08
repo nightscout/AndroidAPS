@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.virtual
 
 import android.os.SystemClock
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
@@ -41,6 +42,7 @@ import kotlin.math.min
 
 @Singleton
 class VirtualPumpPlugin @Inject constructor(
+    injector:HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private var fabricPrivacy: FabricPrivacy,
@@ -57,7 +59,7 @@ class VirtualPumpPlugin @Inject constructor(
     .preferencesId(R.xml.pref_virtualpump)
     .neverVisible(Config.NSCLIENT)
     .description(R.string.description_pump_virtual),
-    aapsLogger, resourceHelper, commandQueue
+    injector, aapsLogger, resourceHelper, commandQueue
 ), PumpInterface {
 
 

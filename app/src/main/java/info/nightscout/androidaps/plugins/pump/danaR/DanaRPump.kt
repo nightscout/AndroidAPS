@@ -113,6 +113,9 @@ class DanaRPump @Inject constructor(
         return if (units == UNITS_MGDL) Constants.MGDL else Constants.MMOL
     }
 
+    // last start bolus erroCode
+    var messageStartErrorCode: Int = 0
+
     fun createConvertedProfile(): ProfileStore? {
         pumpProfiles?.let {
             val json = JSONObject()

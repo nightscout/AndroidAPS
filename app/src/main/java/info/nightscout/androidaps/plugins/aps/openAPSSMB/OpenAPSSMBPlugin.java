@@ -6,6 +6,7 @@ import org.json.JSONException;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -45,6 +46,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @Singleton
 public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, ConstraintsInterface {
+    private final HasAndroidInjector injector;
     private final ConstraintChecker constraintChecker;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
@@ -62,6 +64,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
 
     @Inject
     public OpenAPSSMBPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             ConstraintChecker constraintChecker,
@@ -79,9 +82,9 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
                         .shortName(R.string.smb_shortname)
                         .preferencesId(R.xml.pref_openapssmb)
                         .description(R.string.description_smb),
-                aapsLogger, resourceHelper
+                aapsLogger, resourceHelper, injector
         );
-
+        this.injector = injector;
         this.constraintChecker = constraintChecker;
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
@@ -123,7 +126,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         getAapsLogger().debug(LTag.APS, "invoke from " + initiator + " tempBasalFallback: " + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterSMBJS determineBasalAdapterSMBJS;
-        determineBasalAdapterSMBJS = new DetermineBasalAdapterSMBJS(new ScriptReader(mainApp), getAapsLogger());
+        determineBasalAdapterSMBJS = new DetermineBasalAdapterSMBJS(new ScriptReader(mainApp), injector);
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         Profile profile = profileFunction.getProfile();
@@ -303,7 +306,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
     @NotNull
     @Override
     public Constraint<Boolean> isSuperBolusEnabled(Constraint<Boolean> value) {
-        value.set(false);
+        value.set(getAapsLogger(), false);
         return value;
     }
 

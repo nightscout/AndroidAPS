@@ -19,7 +19,7 @@ import javax.inject.Singleton
 
 @Singleton
 class DstHelperPlugin @Inject constructor(
-    private var injector: HasAndroidInjector,
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private var rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
@@ -32,7 +32,7 @@ class DstHelperPlugin @Inject constructor(
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.dst_plugin_name),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ), ConstraintsInterface {
 
     companion object {
@@ -75,7 +75,7 @@ class DstHelperPlugin @Inject constructor(
             } else {
                 aapsLogger.debug(LTag.CONSTRAINTS, "Loop already suspended")
             }
-            value.set(false, "DST in last 3 hours.", this)
+            value.set(aapsLogger, false, "DST in last 3 hours.", this)
         }
         return value
     }

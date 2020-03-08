@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -55,6 +56,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @Inject
     public DanaRv2Plugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             MainApp maiApp,
@@ -66,7 +68,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             CommandQueueProvider commandQueue
 
     ) {
-        super(danaRPump, resourceHelper, aapsLogger, commandQueue);
+        super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue);
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.mainApp = maiApp;
@@ -188,7 +190,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = detailedBolusInfo.carbs;
             if (!result.success)
-                result.comment = String.format(resourceHelper.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, MsgBolusStartWithSpeed.errorCode);
+                result.comment = String.format(resourceHelper.gs(R.string.boluserrorcode), detailedBolusInfo.insulin, t.insulin, danaRPump.getMessageStartErrorCode());
             else
                 result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);

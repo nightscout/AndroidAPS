@@ -2,6 +2,7 @@ package info.nightscout.androidaps.utils.stats
 
 import android.text.Spanned
 import android.util.LongSparseArray
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.TDD
@@ -21,6 +22,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 
 class TddCalculator @Inject constructor(
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
@@ -28,7 +30,7 @@ class TddCalculator @Inject constructor(
     val sp: SP,
     val configBuilderPlugin: ConfigBuilderPlugin,
     val profileFunction: ProfileFunction
-) : TreatmentsPlugin(aapsLogger, rxBus, resourceHelper, mainApp, sp, profileFunction, configBuilderPlugin) {
+) : TreatmentsPlugin(injector, aapsLogger, rxBus, resourceHelper, mainApp, sp, profileFunction, configBuilderPlugin) {
 
     init {
         service = TreatmentService() // plugin is not started

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.actions
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -11,7 +12,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ActionsPlugin @Inject constructor(aapsLogger: AAPSLogger, resourceHelper: ResourceHelper
+class ActionsPlugin @Inject constructor(
+    injector: HasAndroidInjector,
+    aapsLogger: AAPSLogger,
+    resourceHelper: ResourceHelper
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(ActionsFragment::class.qualifiedName)
@@ -20,5 +24,5 @@ class ActionsPlugin @Inject constructor(aapsLogger: AAPSLogger, resourceHelper: 
     .pluginName(R.string.actions)
     .shortName(R.string.actions_shortname)
     .description(R.string.description_actions),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 )

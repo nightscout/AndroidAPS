@@ -5,13 +5,13 @@ import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -49,6 +49,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
 
     @Inject
     public MDIPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
@@ -58,7 +59,7 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
                         .mainType(PluginType.PUMP)
                         .pluginName(R.string.mdi)
                         .description(R.string.description_pump_mdi),
-                aapsLogger, resourceHelper, commandQueue
+                injector, aapsLogger, resourceHelper, commandQueue
         );
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.5d;

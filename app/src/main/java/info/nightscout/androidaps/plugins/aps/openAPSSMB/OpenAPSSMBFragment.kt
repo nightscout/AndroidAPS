@@ -95,7 +95,7 @@ class OpenAPSSMBFragment : DaggerFragment() {
             openapsma_mealdata.text = JSONFormatter.format(determineBasalAdapterSMBJS.mealDataParam)
             openapsma_scriptdebugdata.text = determineBasalAdapterSMBJS.scriptDebug
             openAPSSMBPlugin.lastAPSResult?.inputConstraints?.let {
-                openapsma_constraints.text = it.reasons
+                openapsma_constraints.text = it.getReasons(aapsLogger)
             }
         }
         if (openAPSSMBPlugin.lastAPSRun != 0L) {

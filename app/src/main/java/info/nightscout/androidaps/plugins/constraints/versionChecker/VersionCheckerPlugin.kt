@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.constraints.versionChecker
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraint
@@ -21,6 +22,7 @@ import kotlin.math.roundToInt
 
 @Singleton
 class VersionCheckerPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     private val sp: SP,
     resourceHelper: ResourceHelper,
     private val versionCheckerUtils: VersionCheckerUtils,
@@ -32,7 +34,7 @@ class VersionCheckerPlugin @Inject constructor(
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.versionChecker),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ), ConstraintsInterface {
 
     enum class GracePeriod(val warning: Long, val old: Long, val veryOld: Long) {
@@ -56,7 +58,7 @@ class VersionCheckerPlugin @Inject constructor(
         checkWarning()
         versionCheckerUtils.triggerCheckVersion()
         return if (isOldVersion(gracePeriod.veryOld.daysToMillis()))
-            value.set(false, resourceHelper.gs(R.string.very_old_version), this)
+            value.set(aapsLogger,false, resourceHelper.gs(R.string.very_old_version), this)
         else
             value
     }
@@ -90,7 +92,7 @@ class VersionCheckerPlugin @Inject constructor(
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
         if (isOldVersion(gracePeriod.old.daysToMillis()))
-            maxIob.set(0.toDouble(), resourceHelper.gs(R.string.old_version), this)
+            maxIob.set(aapsLogger, 0.0, resourceHelper.gs(R.string.old_version), this)
         else
             maxIob
 

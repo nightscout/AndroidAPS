@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -49,14 +50,19 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     @Inject ActivePluginProvider activePlugin;
 
     @Inject
-    public SafetyPlugin(AAPSLogger aapsLogger, ResourceHelper resourceHelper) {
+    public SafetyPlugin(
+            HasAndroidInjector injector,
+            AAPSLogger aapsLogger,
+            ResourceHelper resourceHelper
+    ) {
         super(new PluginDescription()
-                .mainType(PluginType.CONSTRAINTS)
-                .neverVisible(true)
-                .alwaysEnabled(true)
-                .showInList(false)
-                .pluginName(R.string.safety)
-                .preferencesId(R.xml.pref_safety), aapsLogger, resourceHelper
+                        .mainType(PluginType.CONSTRAINTS)
+                        .neverVisible(true)
+                        .alwaysEnabled(true)
+                        .showInList(false)
+                        .pluginName(R.string.safety)
+                        .preferencesId(R.xml.pref_safety),
+                aapsLogger, resourceHelper, injector
         );
     }
 
@@ -66,7 +72,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     @NonNull @Override
     public Constraint<Boolean> isLoopInvocationAllowed(@NonNull Constraint<Boolean> value) {
         if (!activePlugin.getActivePumpPlugin().getPumpDescription().isTempBasalCapable)
-            value.set(false, resourceHelper.gs(R.string.pumpisnottempbasalcapable), this);
+            value.set(getAapsLogger(), false, resourceHelper.gs(R.string.pumpisnottempbasalcapable), this);
         return value;
     }
 
@@ -74,18 +80,18 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     public Constraint<Boolean> isClosedLoopAllowed(@NonNull Constraint<Boolean> value) {
         String mode = sp.getString(R.string.key_aps_mode, "open");
         if (!mode.equals("closed"))
-            value.set(false, resourceHelper.gs(R.string.closedmodedisabledinpreferences), this);
+            value.set(getAapsLogger(), false, resourceHelper.gs(R.string.closedmodedisabledinpreferences), this);
 
         if (!MainApp.isEngineeringModeOrRelease()) {
             if (value.value()) {
                 Notification n = new Notification(Notification.TOAST_ALARM, resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL);
                 rxBus.send(new EventNewNotification(n));
             }
-            value.set(false, resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch), this);
+            value.set(getAapsLogger(), false, resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch), this);
         }
         PumpInterface pump = activePlugin.getActivePumpPlugin();
         if (pump != null && !pump.isFakingTempsByExtendedBoluses() && TreatmentsPlugin.getPlugin().isInHistoryExtendedBoluslInProgress()) {
-            value.set(false, MainApp.gs(R.string.closed_loop_disabled_with_eb), this);
+            value.set(getAapsLogger(), false, MainApp.gs(R.string.closed_loop_disabled_with_eb), this);
         }
         return value;
     }
@@ -94,7 +100,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     public Constraint<Boolean> isAutosensModeEnabled(@NonNull Constraint<Boolean> value) {
         boolean enabled = sp.getBoolean(R.string.key_openapsama_useautosens, false);
         if (!enabled)
-            value.set(false, resourceHelper.gs(R.string.autosensdisabledinpreferences), this);
+            value.set(getAapsLogger(), false, resourceHelper.gs(R.string.autosensdisabledinpreferences), this);
         return value;
     }
 
@@ -102,10 +108,10 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     public Constraint<Boolean> isSMBModeEnabled(@NonNull Constraint<Boolean> value) {
         boolean enabled = sp.getBoolean(R.string.key_use_smb, false);
         if (!enabled)
-            value.set(false, resourceHelper.gs(R.string.smbdisabledinpreferences), this);
+            value.set(getAapsLogger(), false, resourceHelper.gs(R.string.smbdisabledinpreferences), this);
         Constraint<Boolean> closedLoop = constraintChecker.isClosedLoopAllowed();
         if (!closedLoop.value())
-            value.set(false, resourceHelper.gs(R.string.smbnotallowedinopenloopmode), this);
+            value.set(getAapsLogger(), false, resourceHelper.gs(R.string.smbnotallowedinopenloopmode), this);
         return value;
     }
 
@@ -113,10 +119,10 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     public Constraint<Boolean> isUAMEnabled(@NonNull Constraint<Boolean> value) {
         boolean enabled = sp.getBoolean(R.string.key_use_uam, false);
         if (!enabled)
-            value.set(false, resourceHelper.gs(R.string.uamdisabledinpreferences), this);
+            value.set(getAapsLogger(), false, resourceHelper.gs(R.string.uamdisabledinpreferences), this);
         boolean oref1Enabled = sensitivityOref1Plugin.isEnabled(PluginType.SENSITIVITY);
         if (!oref1Enabled)
-            value.set(false, resourceHelper.gs(R.string.uamdisabledoref1notselected), this);
+            value.set(getAapsLogger(), false, resourceHelper.gs(R.string.uamdisabledoref1notselected), this);
         return value;
     }
 
@@ -126,7 +132,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         if (bgSource != null) {
             if (!bgSource.advancedFilteringSupported())
-                value.set(false, resourceHelper.gs(R.string.smbalwaysdisabled), this);
+                value.set(getAapsLogger(), false, resourceHelper.gs(R.string.smbalwaysdisabled), this);
         }
         return value;
     }
@@ -134,7 +140,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     @NonNull @Override
     public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, @NonNull Profile profile) {
 
-        absoluteRate.setIfGreater(0d, String.format(resourceHelper.gs(R.string.limitingbasalratio), 0d, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
+        absoluteRate.setIfGreater(getAapsLogger(), 0d, String.format(resourceHelper.gs(R.string.limitingbasalratio), 0d, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
 
         if (Config.APS) {
             double maxBasal = sp.getDouble(R.string.key_openapsma_max_basal, 1d);
@@ -142,30 +148,30 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
                 maxBasal = profile.getMaxDailyBasal();
                 absoluteRate.addReason(resourceHelper.gs(R.string.increasingmaxbasal), this);
             }
-            absoluteRate.setIfSmaller(maxBasal, String.format(resourceHelper.gs(R.string.limitingbasalratio), maxBasal, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
+            absoluteRate.setIfSmaller(getAapsLogger(), maxBasal, String.format(resourceHelper.gs(R.string.limitingbasalratio), maxBasal, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
 
             // Check percentRate but absolute rate too, because we know real current basal in pump
             Double maxBasalMult = sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4d);
             double maxFromBasalMult = Math.floor(maxBasalMult * profile.getBasal() * 100) / 100;
-            absoluteRate.setIfSmaller(maxFromBasalMult, String.format(resourceHelper.gs(R.string.limitingbasalratio), maxFromBasalMult, resourceHelper.gs(R.string.maxbasalmultiplier)), this);
+            absoluteRate.setIfSmaller(getAapsLogger(), maxFromBasalMult, String.format(resourceHelper.gs(R.string.limitingbasalratio), maxFromBasalMult, resourceHelper.gs(R.string.maxbasalmultiplier)), this);
 
             Double maxBasalFromDaily = sp.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3d);
             double maxFromDaily = Math.floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100;
-            absoluteRate.setIfSmaller(maxFromDaily, String.format(resourceHelper.gs(R.string.limitingbasalratio), maxFromDaily, resourceHelper.gs(R.string.maxdailybasalmultiplier)), this);
+            absoluteRate.setIfSmaller(getAapsLogger(), maxFromDaily, String.format(resourceHelper.gs(R.string.limitingbasalratio), maxFromDaily, resourceHelper.gs(R.string.maxdailybasalmultiplier)), this);
         }
 
-        absoluteRate.setIfSmaller(HardLimits.maxBasal(), String.format(resourceHelper.gs(R.string.limitingbasalratio), HardLimits.maxBasal(), resourceHelper.gs(R.string.hardlimit)), this);
+        absoluteRate.setIfSmaller(getAapsLogger(), HardLimits.maxBasal(), String.format(resourceHelper.gs(R.string.limitingbasalratio), HardLimits.maxBasal(), resourceHelper.gs(R.string.hardlimit)), this);
 
         PumpInterface pump = activePlugin.getActivePumpPlugin();
         // check for pump max
         if (pump != null && pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
             double pumpLimit = pump.getPumpDescription().pumpType.getTbrSettings().getMaxDose();
-            absoluteRate.setIfSmaller(pumpLimit, String.format(resourceHelper.gs(R.string.limitingbasalratio), pumpLimit, resourceHelper.gs(R.string.pumplimit)), this);
+            absoluteRate.setIfSmaller(getAapsLogger(), pumpLimit, String.format(resourceHelper.gs(R.string.limitingbasalratio), pumpLimit, resourceHelper.gs(R.string.pumplimit)), this);
         }
 
         // do rounding
         if (pump != null && pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
-            absoluteRate.set(Round.roundTo(absoluteRate.value(), pump.getPumpDescription().tempAbsoluteStep));
+            absoluteRate.set(getAapsLogger(), Round.roundTo(absoluteRate.value(), pump.getPumpDescription().tempAbsoluteStep));
         }
         return absoluteRate;
     }
@@ -192,11 +198,11 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
                 percentRateAfterConst = Round.floorTo((double) percentRateAfterConst, (double) pump.getPumpDescription().tempPercentStep).intValue();
         }
 
-        percentRate.set(percentRateAfterConst, String.format(resourceHelper.gs(R.string.limitingpercentrate), percentRateAfterConst, resourceHelper.gs(R.string.pumplimit)), this);
+        percentRate.set(getAapsLogger(), percentRateAfterConst, String.format(resourceHelper.gs(R.string.limitingpercentrate), percentRateAfterConst, resourceHelper.gs(R.string.pumplimit)), this);
 
         if (pump != null && pump.getPumpDescription().tempBasalStyle == PumpDescription.PERCENT) {
             double pumpLimit = pump.getPumpDescription().pumpType.getTbrSettings().getMaxDose();
-            percentRate.setIfSmaller((int) pumpLimit, String.format(resourceHelper.gs(R.string.limitingbasalratio), pumpLimit, resourceHelper.gs(R.string.pumplimit)), this);
+            percentRate.setIfSmaller(getAapsLogger(), (int) pumpLimit, String.format(resourceHelper.gs(R.string.limitingbasalratio), pumpLimit, resourceHelper.gs(R.string.pumplimit)), this);
         }
 
         return percentRate;
@@ -204,44 +210,44 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
     @NonNull @Override
     public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        insulin.setIfGreater(0d, String.format(resourceHelper.gs(R.string.limitingbolus), 0d, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
+        insulin.setIfGreater(getAapsLogger(), 0d, String.format(resourceHelper.gs(R.string.limitingbolus), 0d, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
 
         Double maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3d);
-        insulin.setIfSmaller(maxBolus, String.format(resourceHelper.gs(R.string.limitingbolus), maxBolus, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
+        insulin.setIfSmaller(getAapsLogger(), maxBolus, String.format(resourceHelper.gs(R.string.limitingbolus), maxBolus, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
 
-        insulin.setIfSmaller(HardLimits.maxBolus(), String.format(resourceHelper.gs(R.string.limitingbolus), HardLimits.maxBolus(), resourceHelper.gs(R.string.hardlimit)), this);
+        insulin.setIfSmaller(getAapsLogger(), HardLimits.maxBolus(), String.format(resourceHelper.gs(R.string.limitingbolus), HardLimits.maxBolus(), resourceHelper.gs(R.string.hardlimit)), this);
 
         PumpInterface pump = activePlugin.getActivePumpPlugin();
         if (pump != null) {
             double rounded = pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulin.value());
-            insulin.setIfDifferent(rounded, resourceHelper.gs(R.string.pumplimit), this);
+            insulin.setIfDifferent(getAapsLogger(), rounded, resourceHelper.gs(R.string.pumplimit), this);
         }
         return insulin;
     }
 
     @NonNull @Override
     public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
-        insulin.setIfGreater(0d, String.format(resourceHelper.gs(R.string.limitingextendedbolus), 0d, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
+        insulin.setIfGreater(getAapsLogger(), 0d, String.format(resourceHelper.gs(R.string.limitingextendedbolus), 0d, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
 
         Double maxBolus = sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3d);
-        insulin.setIfSmaller(maxBolus, String.format(resourceHelper.gs(R.string.limitingextendedbolus), maxBolus, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
+        insulin.setIfSmaller(getAapsLogger(), maxBolus, String.format(resourceHelper.gs(R.string.limitingextendedbolus), maxBolus, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
 
-        insulin.setIfSmaller(HardLimits.maxBolus(), String.format(resourceHelper.gs(R.string.limitingextendedbolus), HardLimits.maxBolus(), resourceHelper.gs(R.string.hardlimit)), this);
+        insulin.setIfSmaller(getAapsLogger(), HardLimits.maxBolus(), String.format(resourceHelper.gs(R.string.limitingextendedbolus), HardLimits.maxBolus(), resourceHelper.gs(R.string.hardlimit)), this);
 
         PumpInterface pump = activePlugin.getActivePumpPlugin();
         if (pump != null) {
             double rounded = pump.getPumpDescription().pumpType.determineCorrectExtendedBolusSize(insulin.value());
-            insulin.setIfDifferent(rounded, resourceHelper.gs(R.string.pumplimit), this);
+            insulin.setIfDifferent(getAapsLogger(), rounded, resourceHelper.gs(R.string.pumplimit), this);
         }
         return insulin;
     }
 
     @NonNull @Override
     public Constraint<Integer> applyCarbsConstraints(Constraint<Integer> carbs) {
-        carbs.setIfGreater(0, String.format(resourceHelper.gs(R.string.limitingcarbs), 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
+        carbs.setIfGreater(getAapsLogger(), 0, String.format(resourceHelper.gs(R.string.limitingcarbs), 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
 
         Integer maxCarbs = sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48);
-        carbs.setIfSmaller(maxCarbs, String.format(resourceHelper.gs(R.string.limitingcarbs), maxCarbs, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
+        carbs.setIfSmaller(getAapsLogger(), maxCarbs, String.format(resourceHelper.gs(R.string.limitingcarbs), maxCarbs, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
 
         return carbs;
     }
@@ -253,14 +259,14 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
             maxIobPref = sp.getDouble(R.string.key_openapssmb_max_iob, 3d);
         else
             maxIobPref = sp.getDouble(R.string.key_openapsma_max_iob, 1.5d);
-        maxIob.setIfSmaller(maxIobPref, String.format(resourceHelper.gs(R.string.limitingiob), maxIobPref, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
+        maxIob.setIfSmaller(getAapsLogger(), maxIobPref, String.format(resourceHelper.gs(R.string.limitingiob), maxIobPref, resourceHelper.gs(R.string.maxvalueinpreferences)), this);
 
         if (openAPSMAPlugin.isEnabled(PluginType.APS))
-            maxIob.setIfSmaller(HardLimits.maxIobAMA(), String.format(resourceHelper.gs(R.string.limitingiob), HardLimits.maxIobAMA(), resourceHelper.gs(R.string.hardlimit)), this);
+            maxIob.setIfSmaller(getAapsLogger(), HardLimits.maxIobAMA(), String.format(resourceHelper.gs(R.string.limitingiob), HardLimits.maxIobAMA(), resourceHelper.gs(R.string.hardlimit)), this);
         if (openAPSAMAPlugin.isEnabled(PluginType.APS))
-            maxIob.setIfSmaller(HardLimits.maxIobAMA(), String.format(resourceHelper.gs(R.string.limitingiob), HardLimits.maxIobAMA(), resourceHelper.gs(R.string.hardlimit)), this);
+            maxIob.setIfSmaller(getAapsLogger(), HardLimits.maxIobAMA(), String.format(resourceHelper.gs(R.string.limitingiob), HardLimits.maxIobAMA(), resourceHelper.gs(R.string.hardlimit)), this);
         if (openAPSSMBPlugin.isEnabled(PluginType.APS))
-            maxIob.setIfSmaller(HardLimits.maxIobSMB(), String.format(resourceHelper.gs(R.string.limitingiob), HardLimits.maxIobSMB(), resourceHelper.gs(R.string.hardlimit)), this);
+            maxIob.setIfSmaller(getAapsLogger(), HardLimits.maxIobSMB(), String.format(resourceHelper.gs(R.string.limitingiob), HardLimits.maxIobSMB(), resourceHelper.gs(R.string.hardlimit)), this);
         return maxIob;
     }
 
