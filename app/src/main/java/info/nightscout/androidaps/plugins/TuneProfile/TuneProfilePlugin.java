@@ -112,7 +112,6 @@ public class TuneProfilePlugin extends PluginBase {
         return tuneProfilePlugin;
     }
 
-    // TODO: philoul here add ".preferencesId(R.xml.pref_tuneprofile)" and xml file for settings
     public TuneProfilePlugin() throws IOException {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
