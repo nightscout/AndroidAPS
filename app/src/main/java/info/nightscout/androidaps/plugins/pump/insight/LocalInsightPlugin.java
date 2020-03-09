@@ -257,6 +257,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager notificationManager = (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationChannel channel = new NotificationChannel(ALERT_CHANNEL_ID, MainApp.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH);
+            channel.setSound(null, null);
             notificationManager.createNotificationChannel(channel);
         }
     }
@@ -661,9 +662,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     cancelBolusMessage.setBolusID(bolusID);
                     connectionService.requestMessage(cancelBolusMessage).await();
                     bolusCancelled = true;
+                    confirmAlert(AlertType.WARNING_38);
                     alertService.ignore(null);
                 }
-                confirmAlert(AlertType.WARNING_38);
             } catch (AppLayerErrorException e) {
                 log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             } catch (InsightException e) {

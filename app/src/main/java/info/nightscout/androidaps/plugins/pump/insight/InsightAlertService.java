@@ -129,8 +129,8 @@ public class InsightAlertService extends Service implements InsightConnectionSer
     private void queryActiveAlert() {
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                Alert alert = connectionService.requestMessage(new GetActiveAlertMessage()).await().getAlert();
                 synchronized ($alertLock) {
+                    Alert alert = connectionService.requestMessage(new GetActiveAlertMessage()).await().getAlert();
                     if (alert == null || (alert.getAlertType() == ignoreType && System.currentTimeMillis() - ignoreTimestamp < 10000)) {
                         if (connectionRequested) {
                             connectionService.withdrawConnectionRequest(this);
