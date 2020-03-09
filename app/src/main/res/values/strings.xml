@@ -1698,5 +1698,6 @@
     <string name="loop_smbexecution_time_label">SMB execution time</string>
     <string name="loop_tbrrequest_time_label">Temp basal request time</string>
     <string name="loop_tbrexecution_time_label">Temp basal execution time</string>
+    <string name="insight_alert_notification_channel">Insight Pump Alerts</string>
 
 </resources>

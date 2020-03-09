@@ -1,9 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.insight;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -132,6 +135,8 @@ import info.nightscout.androidaps.utils.SP;
 
 public class LocalInsightPlugin extends PluginBase implements PumpInterface, ConstraintsInterface, InsightConnectionService.StateCallback {
 
+    public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
+
     private static LocalInsightPlugin instance = null;
 
     private Logger log = LoggerFactory.getLogger(L.PUMP);
@@ -245,6 +250,15 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         super.onStart();
         MainApp.instance().bindService(new Intent(MainApp.instance(), InsightConnectionService.class), serviceConnection, Context.BIND_AUTO_CREATE);
         MainApp.instance().bindService(new Intent(MainApp.instance(), InsightAlertService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        createNotificationChannel();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel = new NotificationChannel(ALERT_CHANNEL_ID, MainApp.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override
@@ -647,6 +661,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     cancelBolusMessage.setBolusID(bolusID);
                     connectionService.requestMessage(cancelBolusMessage).await();
                     bolusCancelled = true;
+                    alertService.ignore(null);
                 }
                 confirmAlert(AlertType.WARNING_38);
             } catch (AppLayerErrorException e) {
