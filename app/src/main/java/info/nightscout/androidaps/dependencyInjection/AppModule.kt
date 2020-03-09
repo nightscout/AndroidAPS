@@ -30,6 +30,7 @@ import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.elements.*
 import info.nightscout.androidaps.plugins.general.automation.triggers.*
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
+import info.nightscout.androidaps.plugins.general.smsCommunicator.AuthRequest
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Thread
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
@@ -193,6 +194,8 @@ open class AppModule {
         @ContributesAndroidInjector fun loggerCallbackInjector(): LoggerCallback
         @ContributesAndroidInjector fun loggerBolusWizard(): BolusWizard
         @ContributesAndroidInjector fun loggerQuickWizardEntry(): QuickWizardEntry
+
+        @ContributesAndroidInjector fun authRequestInjector(): AuthRequest
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
