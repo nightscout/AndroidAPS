@@ -237,7 +237,7 @@ public class InsightAlertService extends Service implements InsightConnectionSer
                     stopAlerting();
                     showNotification(alert);
                     SnoozeAlertMessage snoozeAlertMessage = new SnoozeAlertMessage();
-                    snoozeAlertMessage.setAlertID(alertLiveData.getValue().getAlertId());
+                    snoozeAlertMessage.setAlertID(alert.getAlertId());
                     connectionService.requestMessage(snoozeAlertMessage).await();
                 }
             } catch (AppLayerErrorException e) {
@@ -262,7 +262,7 @@ public class InsightAlertService extends Service implements InsightConnectionSer
                     alertLiveData.postValue(null);
                     dismissNotification();
                     ConfirmAlertMessage confirmAlertMessage = new ConfirmAlertMessage();
-                    confirmAlertMessage.setAlertID(alertLiveData.getValue().getAlertId());
+                    confirmAlertMessage.setAlertID(alert.getAlertId());
                     connectionService.requestMessage(confirmAlertMessage).await();
                     this.alert = null;
                 }
