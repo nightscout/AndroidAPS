@@ -165,6 +165,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     TextView activeProfileView;
     TextView iobView;
     TextView cobView;
+    TextView cobRequiredView;
     TextView apsModeView;
     TextView tempTargetView;
     TextView pumpStatusView;
@@ -277,6 +278,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
 
         iobView = (TextView) view.findViewById(R.id.overview_iob);
         cobView = (TextView) view.findViewById(R.id.overview_cob);
+        cobRequiredView = (TextView) view.findViewById(R.id.overview_cob_required);
+
         apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
         tempTargetView = (TextView) view.findViewById(R.id.overview_temptarget);
 
@@ -1329,6 +1332,17 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                     cobText += "(" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")";
             }
             cobView.setText(cobText);
+        }
+
+        if (cobRequiredView != null) {
+            if (loopPlugin.lastRun != null && loopPlugin.lastRun.constraintsProcessed != null
+                    && loopPlugin.lastRun.constraintsProcessed.carbsReq > 0) {
+                cobRequiredView.setVisibility(View.VISIBLE);
+                String carbsRequiredString = String.format(resourceHelper.gs(R.string.overview_carbs_required), loopPlugin.lastRun.constraintsProcessed.carbsReq, loopPlugin.lastRun.constraintsProcessed.carbsReqWithin);
+                cobRequiredView.setText(carbsRequiredString);
+            } else {
+                cobRequiredView.setVisibility(View.GONE);
+            }
         }
 
         if (statuslightsLayout != null)

@@ -1710,5 +1710,7 @@
     <string name="loop_smbexecution_time_label">SMB execution time</string>
     <string name="loop_tbrrequest_time_label">Temp basal request time</string>
     <string name="loop_tbrexecution_time_label">Temp basal execution time</string>
+    <string name="cob_required">(20g needed in 45min)</string>
+    <string name="overview_carbs_required">(%dg needed in %dmin)</string>
 
 </resources>

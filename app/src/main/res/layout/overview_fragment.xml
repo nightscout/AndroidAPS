@@ -266,6 +266,18 @@
                     app:layout_constraintBottom_toBottomOf="@+id/overview_cob_label"
                     app:layout_constraintStart_toEndOf="@+id/overview_cob_colon" />
 
+                <TextView
+                    android:id="@+id/overview_cob_required"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/cob_required"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/cobAlert"
+                    app:layout_constraintBottom_toBottomOf="@+id/overview_cob_label"
+                    app:layout_constraintStart_toEndOf="@+id/overview_cob" />
+
                 <!-- right side basal -->
                 <TextView
                     android:id="@+id/overview_basebasal_label"
