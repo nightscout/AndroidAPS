@@ -37,6 +37,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
     companion object {
         @JvmField
         var bolusEnded = false
+
         @JvmField
         var stopPressed = false
     }
@@ -67,6 +68,9 @@ class BolusProgressDialog : DaggerDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            amount = it.getDouble("amount")
+        }
         overview_bolusprogress_title.text = resourceHelper.gs(R.string.overview_bolusprogress_goingtodeliver, amount)
         overview_bolusprogress_stop.setOnClickListener {
             aapsLogger.debug(LTag.UI, "Stop bolus delivery button pressed")
@@ -145,6 +149,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("state", state)
+        outState.putDouble("amount", amount)
     }
 
     private fun scheduleDismiss() {

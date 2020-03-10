@@ -531,7 +531,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 nextValue = profile.getBasalValues()[i + 1];
             if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds)
                 return false;
-            if (Math.abs(profileBlock.getBasalAmount() - basalValue.value) > (basalValue.value > 5 ? 0.05 : 0.005))
+            if (Math.abs(profileBlock.getBasalAmount() - basalValue.value) > (basalValue.value > 5 ? 0.051 : 0.0051))
                 return false;
         }
         return true;
@@ -595,6 +595,15 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 detailedBolusInfo.date = insightBolusID.timestamp;
                 detailedBolusInfo.source = Source.PUMP;
                 detailedBolusInfo.pumpId = insightBolusID.id;
+                if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.carbTime != 0) {
+                    DetailedBolusInfo carbInfo = new DetailedBolusInfo();
+                    carbInfo.carbs = detailedBolusInfo.carbs;
+                    carbInfo.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60L * 1000L;
+                    carbInfo.source = Source.USER;
+                    TreatmentsPlugin.getPlugin().addToHistoryTreatment(carbInfo, false);
+                    detailedBolusInfo.carbTime = 0;
+                    detailedBolusInfo.carbs = 0;
+                }
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
                 while (true) {
                     synchronized ($bolusLock) {
@@ -952,6 +961,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     @NonNull @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
         long now = System.currentTimeMillis();
+        if (connectionService == null) return null;
         if (System.currentTimeMillis() - connectionService.getLastConnected() > (60 * 60 * 1000)) {
             return null;
         }
