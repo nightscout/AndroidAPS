@@ -409,7 +409,9 @@ public class LoopPlugin extends PluginBase {
             if (closedLoopEnabled.value()) {
 
                 if (allowNotification) {
-                    if (resultAfterConstraints.isCarbsRequired() && carbsSuggestionsSuspendedUntil < System.currentTimeMillis()) {
+                    if (resultAfterConstraints.isCarbsRequired()
+                            && resultAfterConstraints.carbsReq >= sp.getInt(R.string.key_smb_enable_carbs_suggestions_threshold, 0)
+                            && carbsSuggestionsSuspendedUntil < System.currentTimeMillis()) {
 
                         Intent intentAction5m = new Intent(context, CarbSuggestionReceiver.class);
                         intentAction5m.putExtra("ignoreDuration",5);

@@ -36,8 +36,7 @@ public class DetermineBasalResultSMB extends APSResult {
             //if (result.has("insulinReq")) insulinReq = result.getDouble("insulinReq");
 
             if (SP.getBoolean(R.string.key_smb_enable_carbs_suggestions, false)) {
-                if (result.has("carbsReq") && result.getInt("carbsReq") >= SP.getInt(R.string.key_smb_enable_carbs_suggestions_threshold, 0))
-                    carbsReq = result.getInt("carbsReq");
+                if (result.has("carbsReq")) carbsReq = result.getInt("carbsReq");
                 if (result.has("carbsReqWithin")) carbsReqWithin = result.getInt("carbsReqWithin");
             }
 
