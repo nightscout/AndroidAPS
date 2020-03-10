@@ -83,4 +83,24 @@ public class Alert {
     public double getCartridgeAmount() {
         return cartridgeAmount;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Alert alert = (Alert) o;
+
+        if (alertId != alert.alertId) return false;
+        if (tbrAmount != alert.tbrAmount) return false;
+        if (tbrDuration != alert.tbrDuration) return false;
+        if (Double.compare(alert.programmedBolusAmount, programmedBolusAmount) != 0)
+            return false;
+        if (Double.compare(alert.deliveredBolusAmount, deliveredBolusAmount) != 0)
+            return false;
+        if (Double.compare(alert.cartridgeAmount, cartridgeAmount) != 0) return false;
+        if (alertCategory != alert.alertCategory) return false;
+        if (alertType != alert.alertType) return false;
+        return alertStatus == alert.alertStatus;
+    }
 }
