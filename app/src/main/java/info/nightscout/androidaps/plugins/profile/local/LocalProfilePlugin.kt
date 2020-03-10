@@ -428,7 +428,7 @@ class LocalProfilePlugin @Inject constructor(
             aapsLogger.error("Unhandled exception", e)
         }
 
-        return ProfileStore(json)
+        return ProfileStore(injector, json)
     }
 
     override fun getProfile(): ProfileStore? {

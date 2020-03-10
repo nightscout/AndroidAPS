@@ -35,6 +35,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * Created by mike on 09.06.2016.
  */
 public class APSResult {
+    @Inject HasAndroidInjector injector;
     @Inject public AAPSLogger aapsLogger;
     @Inject ConstraintChecker constraintChecker;
     @Inject SP sp;

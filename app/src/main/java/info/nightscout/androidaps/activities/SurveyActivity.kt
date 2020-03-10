@@ -30,6 +30,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var tirCalculator: TirCalculator
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activityMonitor: ActivityMonitor
+    @Inject lateinit var defaultProfile: DefaultProfile
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +62,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
                 ToastUtils.showToastInUiThread(this, R.string.invalidweight)
                 return@setOnClickListener
             }
-            val profile = DefaultProfile().profile(age, tdd, weight, profileFunction.getUnits())
+            val profile = defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
             val args = Bundle()
             args.putLong("time", DateUtil.now())
             args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)

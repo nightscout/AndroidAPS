@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -58,6 +59,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class WatchUpdaterService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    @Inject public HasAndroidInjector injector;
     @Inject public AAPSLogger aapsLogger;
     @Inject public WearPlugin wearPlugin;
     @Inject public ResourceHelper resourceHelper;
@@ -274,7 +276,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         BgReading lastBG = iobCobCalculatorPlugin.lastBg();
         // Log.d(TAG, logPrefix + "LastBg=" + lastBG);
         if (lastBG != null) {
-            GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+            GlucoseStatus glucoseStatus = new GlucoseStatus(injector).getGlucoseStatusData();
 
             if (googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) {
                 googleApiConnect();
@@ -380,7 +382,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         if (last_bg == null) return;
 
         List<BgReading> graph_bgs = MainApp.getDbHelper().getBgreadingsDataFromTime(startTime, true);
-        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData(true);
+        GlucoseStatus glucoseStatus = new GlucoseStatus(injector).getGlucoseStatusData(true);
 
         if (!graph_bgs.isEmpty()) {
             DataMap entries = dataMapSingleBG(last_bg, glucoseStatus);

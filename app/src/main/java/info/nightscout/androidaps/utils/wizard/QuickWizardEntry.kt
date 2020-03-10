@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils.wizard
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
@@ -21,6 +22,7 @@ import javax.inject.Inject
 
 class QuickWizardEntry @Inject constructor(private val mainApp: MainApp) {
 
+    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
@@ -107,7 +109,7 @@ class QuickWizardEntry @Inject constructor(private val mainApp: MainApp) {
         }
         if (loopPlugin.isEnabled(loopPlugin.getType()) && loopPlugin.isSuperBolus) superBolus = false
         // Trend
-        val glucoseStatus = GlucoseStatus.getGlucoseStatusData()
+        val glucoseStatus = GlucoseStatus(injector).getGlucoseStatusData()
         var trend = false
         if (useTrend() == YES) {
             trend = true

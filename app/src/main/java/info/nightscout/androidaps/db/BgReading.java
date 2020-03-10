@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -28,10 +29,10 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)
 public class BgReading implements DataPointWithLabelInterface {
-    @Inject AAPSLogger aapsLogger;
-    @Inject DefaultValueHelper defaultValueHelper;
-    @Inject ProfileFunction profileFunction;
-    @Inject ResourceHelper resourceHelper;
+    @Inject public AAPSLogger aapsLogger;
+    @Inject public DefaultValueHelper defaultValueHelper;
+    @Inject public ProfileFunction profileFunction;
+    @Inject public ResourceHelper resourceHelper;
 
     @DatabaseField(id = true)
     public long date;
@@ -58,7 +59,7 @@ public class BgReading implements DataPointWithLabelInterface {
     public boolean isZTPrediction = false; // true when drawing predictions as bg points (ZT)
 
     public BgReading() {
-        MainApp.instance().androidInjector().inject(this); // TODO it will be removed by new database
+        MainApp.instance().androidInjector().inject(this);
     }
 
     public BgReading(NSSgv sgv) {

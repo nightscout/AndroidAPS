@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.data
 
 import androidx.collection.ArrayMap
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONException
@@ -8,8 +9,12 @@ import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 
-class ProfileStore(val data: JSONObject) {
+class ProfileStore(val injector: HasAndroidInjector, val data: JSONObject) {
     @Inject lateinit var aapsLogger: AAPSLogger
+
+    init {
+        injector.androidInjector().inject(this)
+    }
 
     private val cachedObjects = ArrayMap<String, Profile>()
 
@@ -49,7 +54,7 @@ class ProfileStore(val data: JSONObject) {
                     JsonHelper.safeGetJSONObject(store, profileName, null)?.let { profileObject ->
                         // take units from profile and if N/A from store
                         JsonHelper.safeGetStringAllowNull(profileObject, "units", JsonHelper.safeGetString(data, "units"))?.let { units ->
-                            profile = Profile(profileObject, units)
+                            profile = Profile(injector, profileObject, units)
                             cachedObjects[profileName] = profile
                         }
                     }

@@ -52,7 +52,7 @@ open class DefaultValueHelper @Inject constructor(
     fun determineEatingSoonTT(): Double {
         val units = profileFunction.getUnits()
         var value = sp.getDouble(R.string.key_eatingsoon_target, getDefaultEatingSoonTT(units))
-        value = Profile.toCurrentUnits(value)
+        value = Profile.toCurrentUnits(profileFunction, value)
         return if (value > 0) value else getDefaultEatingSoonTT(units)
     }
 
@@ -69,7 +69,7 @@ open class DefaultValueHelper @Inject constructor(
     fun determineActivityTT(): Double {
         val units = profileFunction.getUnits()
         var value = sp.getDouble(R.string.key_activity_target, getDefaultActivityTT(units))
-        value = Profile.toCurrentUnits(value)
+        value = Profile.toCurrentUnits(profileFunction, value)
         return if (value > 0) value else getDefaultActivityTT(units)
     }
 
@@ -86,7 +86,7 @@ open class DefaultValueHelper @Inject constructor(
     fun determineHypoTT(): Double {
         val units = profileFunction.getUnits()
         var value = sp.getDouble(R.string.key_hypo_target, getDefaultHypoTT(units))
-        value = Profile.toCurrentUnits(value)
+        value = Profile.toCurrentUnits(profileFunction, value)
         return if (value > 0) value else getDefaultHypoTT(units)
     }
 
@@ -101,14 +101,14 @@ open class DefaultValueHelper @Inject constructor(
     fun determineHighLine(): Double {
         var highLineSetting = sp.getDouble(R.string.key_high_mark, bgTargetHigh)
         if (highLineSetting < 1) highLineSetting = Constants.HIGHMARK
-        highLineSetting = Profile.toCurrentUnits(highLineSetting)
+        highLineSetting = Profile.toCurrentUnits(profileFunction, highLineSetting)
         return highLineSetting
     }
 
     fun determineLowLine(): Double {
         var lowLineSetting = sp.getDouble(R.string.key_low_mark, bgTargetLow)
         if (lowLineSetting < 1) lowLineSetting = Constants.LOWMARK
-        lowLineSetting = Profile.toCurrentUnits(lowLineSetting)
+        lowLineSetting = Profile.toCurrentUnits(profileFunction, lowLineSetting)
         return lowLineSetting
     }
 }

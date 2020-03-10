@@ -46,7 +46,6 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @Singleton
 public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, ConstraintsInterface {
-    private final HasAndroidInjector injector;
     private final ConstraintChecker constraintChecker;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
@@ -84,7 +83,6 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
                         .description(R.string.description_smb),
                 aapsLogger, resourceHelper, injector
         );
-        this.injector = injector;
         this.constraintChecker = constraintChecker;
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
@@ -126,9 +124,9 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         getAapsLogger().debug(LTag.APS, "invoke from " + initiator + " tempBasalFallback: " + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterSMBJS determineBasalAdapterSMBJS;
-        determineBasalAdapterSMBJS = new DetermineBasalAdapterSMBJS(new ScriptReader(mainApp), injector);
+        determineBasalAdapterSMBJS = new DetermineBasalAdapterSMBJS(new ScriptReader(mainApp), getInjector());
 
-        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+        GlucoseStatus glucoseStatus = new GlucoseStatus(getInjector()).getGlucoseStatusData();
         Profile profile = profileFunction.getProfile();
         PumpInterface pump = activePlugin.getActivePump();
 

@@ -6,6 +6,7 @@ import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.MidnightTime
@@ -16,7 +17,8 @@ import javax.inject.Singleton
 
 @Singleton
 class TirCalculator @Inject constructor(
-    private val resourceHelper: ResourceHelper
+    private val resourceHelper: ResourceHelper,
+    private val profileFunction: ProfileFunction
 ){
     fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
         if (lowMgdl < 39) throw RuntimeException("Low below 39")
@@ -75,10 +77,10 @@ class TirCalculator @Inject constructor(
         return HtmlHelper.fromHtml(
             "<br><b>" + resourceHelper.gs(R.string.tir) + ":</b><br>" +
                 toText(resourceHelper, tir7) +
-                "<br><b>" + resourceHelper.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(lowTirMgdl) + "-" + Profile.toCurrentUnitsString(highTirMgdl) + "):</b><br>" +
+                "<br><b>" + resourceHelper.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(profileFunction, lowTirMgdl) + "-" + Profile.toCurrentUnitsString(profileFunction, highTirMgdl) + "):</b><br>" +
                 averageTir7.toText(resourceHelper, tir7.size()) + "<br>" +
                 averageTir30.toText(resourceHelper, tir30.size()) +
-                "<br><b>" + resourceHelper.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(lowTitMgdl) + "-" + Profile.toCurrentUnitsString(highTitMgdl) + "):</b><br>" +
+                "<br><b>" + resourceHelper.gs(R.string.average) + " (" + Profile.toCurrentUnitsString(profileFunction, lowTitMgdl) + "-" + Profile.toCurrentUnitsString(profileFunction, highTitMgdl) + "):</b><br>" +
                 averageTit7.toText(resourceHelper, tit7.size()) + "<br>" +
                 averageTit30.toText(resourceHelper, tit30.size())
         )

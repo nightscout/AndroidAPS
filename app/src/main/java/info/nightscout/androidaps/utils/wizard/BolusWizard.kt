@@ -39,6 +39,7 @@ class BolusWizard @Inject constructor(
     injector: HasAndroidInjector
 ) {
 
+    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
@@ -170,7 +171,7 @@ class BolusWizard @Inject constructor(
         }
 
         // Insulin from 15 min trend
-        glucoseStatus = GlucoseStatus.getGlucoseStatusData()
+        glucoseStatus = GlucoseStatus(injector).getGlucoseStatusData()
         glucoseStatus?.let {
             if (useTrend) {
                 trend = it.short_avgdelta

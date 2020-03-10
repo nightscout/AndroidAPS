@@ -125,7 +125,7 @@ class DataBroadcastPlugin @Inject constructor(
 
     private fun bgStatus(bundle: Bundle) {
         val lastBG: BgReading = iobCobCalculatorPlugin.lastBg() ?: return
-        val glucoseStatus = GlucoseStatus.getGlucoseStatusData() ?: return
+        val glucoseStatus = GlucoseStatus(injector).getGlucoseStatusData() ?: return
 
         bundle.putDouble("glucoseMgdl", lastBG.value)   // last BG in mgdl
         bundle.putLong("glucoseTimeStamp", lastBG.date) // timestamp

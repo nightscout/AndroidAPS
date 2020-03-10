@@ -1072,7 +1072,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             arrowView.setText(lastBG.directionToSymbol());
             bgView.setTextColor(color);
             arrowView.setTextColor(color);
-            GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+            GlucoseStatus glucoseStatus = new GlucoseStatus(injector).getGlucoseStatusData();
             if (glucoseStatus != null) {
                 if (deltaView != null)
                     deltaView.setText("Δ " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);

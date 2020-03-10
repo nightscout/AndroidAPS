@@ -53,7 +53,7 @@ class NSProfilePlugin @Inject constructor(
         @Suppress("SpellCheckingInspection")
         val activeProfile = bundles.getString("activeprofile")
         val profileString = bundles.getString("profile")
-        profile = ProfileStore(JSONObject(profileString))
+        profile = ProfileStore(injector, JSONObject(profileString))
         storeNSProfile()
         if (isEnabled()) {
             rxBus.send(EventProfileStoreChanged())
@@ -72,7 +72,7 @@ class NSProfilePlugin @Inject constructor(
         val profileString = sp.getStringOrNull("profile", null)
         if (profileString != null) {
             aapsLogger.debug(LTag.PROFILE, "Loaded profile: $profileString")
-            profile = ProfileStore(JSONObject(profileString))
+            profile = ProfileStore(injector, JSONObject(profileString))
         } else {
             aapsLogger.debug(LTag.PROFILE, "Stored profile not found")
             // force restart of nsclient to fetch profile

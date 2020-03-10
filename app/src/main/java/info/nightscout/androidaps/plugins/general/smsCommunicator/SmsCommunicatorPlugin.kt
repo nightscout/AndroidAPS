@@ -70,8 +70,8 @@ class SmsCommunicatorPlugin @Inject constructor(
 ) {
 
     private val disposable = CompositeDisposable()
-    private var allowedNumbers: MutableList<String> = ArrayList()
-    private var messageToConfirm: AuthRequest? = null
+    var allowedNumbers: MutableList<String> = ArrayList()
+    var messageToConfirm: AuthRequest? = null
     var lastRemoteBolusTime: Long = 0
     var messages = ArrayList<Sms>()
 
@@ -159,7 +159,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-    private fun isCommand(command: String, number: String): Boolean {
+    fun isCommand(command: String, number: String): Boolean {
         var found = false
         commands.forEach { (k, _) ->
             if (k == command) found = true
@@ -167,7 +167,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         return found || messageToConfirm?.requester?.phoneNumber == number
     }
 
-    private fun isAllowedNumber(number: String): Boolean {
+    fun isAllowedNumber(number: String): Boolean {
         for (num in allowedNumbers) {
             if (num == number) return true
         }
@@ -184,7 +184,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         }
     }
 
-    private fun processSms(receivedSms: Sms) {
+    fun processSms(receivedSms: Sms) {
         if (!isEnabled(PluginType.GENERAL)) {
             aapsLogger.debug(LTag.SMS, "Ignoring SMS. Plugin disabled.")
             return
@@ -284,7 +284,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             val agoMin = (agoMsec / 60.0 / 1000.0).toInt()
             reply = resourceHelper.gs(R.string.sms_lastbg) + " " + lastBG.valueToUnitsToString(units) + " " + String.format(resourceHelper.gs(R.string.sms_minago), agoMin) + ", "
         }
-        val glucoseStatus = GlucoseStatus.getGlucoseStatusData()
+        val glucoseStatus = GlucoseStatus(injector).getGlucoseStatusData()
         if (glucoseStatus != null) reply += resourceHelper.gs(R.string.sms_delta) + " " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", "
         activePlugin.activeTreatments.updateTotalIOBTreatments()
         val bolusIob = activePlugin.activeTreatments.lastCalculationTreatments.round()
@@ -612,7 +612,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                 if (result.success) {
                                     var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_extendedset), aDouble, duration)
                                     if (Config.APS) replyText += "\n" + resourceHelper.gs(R.string.loopsuspended)
-                                    replyText += "\n" + activePlugin.activePump.shortStatus(true)
+                                    replyText += "\n" + activePlugin.activePumpPlugin?.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                 } else {
                                     var replyText = resourceHelper.gs(R.string.smscommunicator_extendedfailed)
@@ -784,7 +784,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     var ttDuration = sp.getInt(keyDuration, defaultTargetDuration)
                     ttDuration = if (ttDuration > 0) ttDuration else defaultTargetDuration
                     var tt = sp.getDouble(keyTarget, if (units == Constants.MMOL) defaultTargetMMOL else defaultTargetMGDL)
-                    tt = Profile.toCurrentUnits(tt)
+                    tt = Profile.toCurrentUnits(profileFunction, tt)
                     tt = if (tt > 0) tt else if (units == Constants.MMOL) defaultTargetMMOL else defaultTargetMGDL
                     val tempTarget = TempTarget()
                         .date(System.currentTimeMillis())

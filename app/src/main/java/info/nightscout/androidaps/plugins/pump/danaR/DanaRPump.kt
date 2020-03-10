@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
@@ -20,11 +21,13 @@ import javax.inject.Singleton
 @Singleton
 class DanaRPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val sp: SP
+    private val sp: SP,
+    private val injector: HasAndroidInjector
 ) {
 
     var lastConnection: Long = 0
     var lastSettingsRead: Long = 0
+
     // Info
     var serialNumber = ""
     var shippingDate: Long = 0
@@ -38,6 +41,7 @@ class DanaRPump @Inject constructor(
     var isConfigUD = false
     var isExtendedBolusEnabled = false
     var isEasyModeEnabled = false
+
     // Status
     var pumpSuspended = false
     var calculatorEnabled = false
@@ -68,6 +72,7 @@ class DanaRPump @Inject constructor(
     var extendedBolusStart: Long = 0
     var extendedBolusRemainingMinutes = 0
     var extendedBolusDeliveredSoFar = 0.0 //RS only = 0.0
+
     // Profile
     var units = 0
     var easyBasalMode = 0
@@ -86,13 +91,17 @@ class DanaRPump @Inject constructor(
     var nightCIR = 0
     var nightCF = 0.0
     var activeProfile = 0
+
     //var pumpProfiles = arrayOf<Array<Double>>()
-    var pumpProfiles : Array<Array<Double>>? = null
+    var pumpProfiles: Array<Array<Double>>? = null
+
     //Limits
     var maxBolus = 0.0
     var maxBasal = 0.0
+
     // DanaRS specific
     var rsPassword = ""
+
     // User settings
     var timeDisplayType = 0
     var buttonScrollOnOff = 0
@@ -106,6 +115,7 @@ class DanaRPump @Inject constructor(
     var refillAmount = 0
     var userOptionsFrompump: ByteArray? = null
     var initialBolusAmount = 0.0
+
     // Bolus settings
     var bolusCalculationOption = 0
     var missedBolusConfig = 0
@@ -166,13 +176,13 @@ class DanaRPump @Inject constructor(
             } catch (e: Exception) {
                 return null
             }
-            return ProfileStore(json)
+            return ProfileStore(injector, json)
         }
         return null
     }
 
     fun buildDanaRProfileRecord(nsProfile: Profile): Array<Double> {
-        val record = Array(24){ 0.0}
+        val record = Array(24) { 0.0 }
         for (hour in 0..23) {
             //Some values get truncated to the next lower one.
             // -> round them to two decimals and make sure we are a small delta larger (that will get truncated)
@@ -199,6 +209,7 @@ class DanaRPump @Inject constructor(
         const val DELIVERY_BASAL = 0x04
         const val DELIVERY_EXT_BOLUS = 0x08
         const val PROFILE_PREFIX = "DanaR-"
+
         // v2 history entries
         const val TEMPSTART = 1
         const val TEMPSTOP = 2

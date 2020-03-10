@@ -30,7 +30,6 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -40,6 +39,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import dagger.android.support.DaggerDialogFragment;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -69,6 +69,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+    @Inject HasAndroidInjector injector;
     @Inject DefaultValueHelper defaultValueHelper;
     @Inject ProfileFunction profileFunction;
     @Inject ResourceHelper resourceHelper;
@@ -193,7 +194,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
                     profileSpinner.setSelection(p);
             }
         }
-        final Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profileFunction.getUnits());
+        final Double bg = Profile.fromMgdlToUnits(new GlucoseStatus(injector).getGlucoseStatusData() != null ? new GlucoseStatus(injector).getGlucoseStatusData().glucose : 0d, profileFunction.getUnits());
 
         // temp target
         final List<String> reasonList = Lists.newArrayList(
@@ -278,7 +279,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
         }
 
         sensorRadioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            double bg1 = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profileFunction.getUnits());
+            double bg1 = Profile.fromMgdlToUnits(new GlucoseStatus(injector).getGlucoseStatusData() != null ? new GlucoseStatus(injector).getGlucoseStatusData().glucose : 0d, profileFunction.getUnits());
             if (savedInstanceState != null && savedInstanceState.getDouble("editBg") != bg1) {
                 editBg.setValue(savedInstanceState.getDouble("editBg"));
             } else {

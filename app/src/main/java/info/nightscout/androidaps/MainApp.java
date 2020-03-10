@@ -33,6 +33,7 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent;
@@ -132,6 +133,7 @@ public class MainApp extends DaggerApplication {
     private int ONGOING_NOTIFICATION_ID = 4711; // TODO: move to OngoingNotificationProvider (and dagger)
     private Notification notification; // TODO: move to OngoingNotificationProvider (and dagger)
 
+    @Inject public HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
     @Inject ActivityMonitor activityMonitor;
     @Inject FabricPrivacy fabricPrivacy;

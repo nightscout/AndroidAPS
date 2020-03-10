@@ -8,6 +8,7 @@ import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.ProfileStore
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.BgReading
@@ -32,6 +33,7 @@ import info.nightscout.androidaps.plugins.general.automation.triggers.*
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.general.smsCommunicator.AuthRequest
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Thread
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
 import info.nightscout.androidaps.plugins.treatments.Treatment
@@ -89,7 +91,8 @@ open class AppModule {
         @ContributesAndroidInjector fun determineBasalResultSMBInjector(): DetermineBasalResultSMB
         @ContributesAndroidInjector fun determineBasalResultMAInjector(): DetermineBasalResultMA
         @ContributesAndroidInjector fun determineBasalResultAMAInjector(): DetermineBasalResultAMA
-        @ContributesAndroidInjector fun determineBasalAdapterSMBJSInjector(): DetermineBasalAdapterSMBJS
+        @ContributesAndroidInjector
+        fun determineBasalAdapterSMBJSInjector(): DetermineBasalAdapterSMBJS
 
         @ContributesAndroidInjector fun commandQueueInjector(): CommandQueue
         @ContributesAndroidInjector fun commandBolusInjector(): CommandBolus
@@ -196,6 +199,9 @@ open class AppModule {
         @ContributesAndroidInjector fun loggerQuickWizardEntry(): QuickWizardEntry
 
         @ContributesAndroidInjector fun authRequestInjector(): AuthRequest
+
+        @ContributesAndroidInjector fun profileInjector(): Profile
+        @ContributesAndroidInjector fun glucoseStatusInjector(): GlucoseStatus
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector

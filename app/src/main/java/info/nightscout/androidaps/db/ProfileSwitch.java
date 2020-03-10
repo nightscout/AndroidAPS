@@ -10,7 +10,6 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
@@ -97,7 +96,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     public Profile getProfileObject() {
         if (profile == null)
             try {
-                profile = new Profile(new JSONObject(profileJson), percentage, timeshift);
+                profile = new Profile(MainApp.instance().injector, new JSONObject(profileJson), percentage, timeshift);
             } catch (Exception e) {
                 log.error("Unhandled exception", e);
                 log.error("Unhandled exception", profileJson);

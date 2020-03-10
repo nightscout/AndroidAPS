@@ -64,7 +64,7 @@ public class SWEditNumberWithUnits extends SWItem {
         layout.addView(l);
 
         double initValue = SP.getDouble(preferenceId, init);
-        initValue = Profile.toCurrentUnits(initValue);
+        initValue = Profile.toCurrentUnits(ProfileFunctions.getSystemUnits(), initValue);
 
         NumberPicker numberPicker = new NumberPicker(context);
         if (ProfileFunctions.getSystemUnits().equals(Constants.MMOL))

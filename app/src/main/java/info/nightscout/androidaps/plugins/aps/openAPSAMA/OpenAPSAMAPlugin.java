@@ -123,7 +123,7 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         DetermineBasalAdapterAMAJS determineBasalAdapterAMAJS;
         determineBasalAdapterAMAJS = new DetermineBasalAdapterAMAJS(new ScriptReader(mainApp), getInjector());
 
-        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+        GlucoseStatus glucoseStatus = new GlucoseStatus(getInjector()).getGlucoseStatusData();
         Profile profile = profileFunction.getProfile();
         PumpInterface pump = activePlugin.getActivePump();
 

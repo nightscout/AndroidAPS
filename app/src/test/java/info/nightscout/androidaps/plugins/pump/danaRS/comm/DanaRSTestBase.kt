@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.HasAndroidInjector
 import info.TestBase
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
@@ -11,6 +12,7 @@ open class DanaRSTestBase : TestBase() {
 
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var sp: SP
+    @Mock lateinit var injector: HasAndroidInjector
 
     lateinit var danaRPump: DanaRPump
 
@@ -43,6 +45,6 @@ open class DanaRSTestBase : TestBase() {
 
     @Before
     fun setup() {
-        danaRPump = DanaRPump(aapsLogger, sp)
+        danaRPump = DanaRPump(aapsLogger, sp, injector)
     }
 }

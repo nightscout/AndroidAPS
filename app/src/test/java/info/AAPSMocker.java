@@ -238,43 +238,43 @@ public class AAPSMocker {
 
     }
 
-    public static Profile getValidProfile() {
-        try {
-            if (profile == null)
-                profile = new Profile(new JSONObject(validProfile), Constants.MGDL);
-        } catch (JSONException ignored) {
-        }
-        return profile;
-    }
-
-    public static ProfileStore getValidProfileStore() {
-        try {
-            if (profileStore == null) {
-                JSONObject json = new JSONObject();
-                JSONObject store = new JSONObject();
-                JSONObject profile = new JSONObject(validProfile);
-
-                json.put("defaultProfile", TESTPROFILENAME);
-                json.put("store", store);
-                store.put(TESTPROFILENAME, profile);
-                profileStore = new ProfileStore(json);
+    /*
+        public static Profile getValidProfile() {
+            try {
+                if (profile == null)
+                    profile = new Profile(new JSONObject(validProfile), Constants.MGDL);
+            } catch (JSONException ignored) {
             }
-        } catch (JSONException ignored) {
-            Assert.fail("getValidProfileStore() failed");
+            return profile;
         }
-        return profileStore;
-    }
+        public static ProfileStore getValidProfileStore() {
+            try {
+                if (profileStore == null) {
+                    JSONObject json = new JSONObject();
+                    JSONObject store = new JSONObject();
+                    JSONObject profile = new JSONObject(validProfile);
 
-    public static void mockProfileFunctions() {
-        PowerMockito.mockStatic(ProfileFunctions.class);
-        profileFunctions = PowerMockito.mock(ProfileFunctions.class);
-        PowerMockito.when(ProfileFunctions.getSystemUnits()).thenReturn(Constants.MGDL);
-        PowerMockito.when(ProfileFunctions.getInstance()).thenReturn(profileFunctions);
-        profile = getValidProfile();
-        PowerMockito.when(ProfileFunctions.getInstance().getProfile()).thenReturn(profile);
-        PowerMockito.when(ProfileFunctions.getInstance().getProfileName()).thenReturn(TESTPROFILENAME);
-    }
+                    json.put("defaultProfile", TESTPROFILENAME);
+                    json.put("store", store);
+                    store.put(TESTPROFILENAME, profile);
+                    profileStore = new ProfileStore(json);
+                }
+            } catch (JSONException ignored) {
+                Assert.fail("getValidProfileStore() failed");
+            }
+            return profileStore;
+        }
 
+        public static void mockProfileFunctions() {
+            PowerMockito.mockStatic(ProfileFunctions.class);
+            profileFunctions = PowerMockito.mock(ProfileFunctions.class);
+            PowerMockito.when(ProfileFunctions.getSystemUnits()).thenReturn(Constants.MGDL);
+            PowerMockito.when(ProfileFunctions.getInstance()).thenReturn(profileFunctions);
+            profile = getValidProfile();
+            PowerMockito.when(ProfileFunctions.getInstance().getProfile()).thenReturn(profile);
+            PowerMockito.when(ProfileFunctions.getInstance().getProfileName()).thenReturn(TESTPROFILENAME);
+        }
+    */
     public static IobCobCalculatorPlugin mockIobCobCalculatorPlugin() {
         PowerMockito.mockStatic(IobCobCalculatorPlugin.class);
         IobCobCalculatorPlugin iobCobCalculatorPlugin = PowerMockito.mock(IobCobCalculatorPlugin.class);

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -19,6 +20,7 @@ import org.json.JSONObject
 import javax.inject.Inject
 
 class ProfileViewerDialog : DaggerDialogFragment() {
+    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
 
@@ -71,7 +73,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
 
             Mode.CUSTOM_PROFILE  -> {
-                profile = Profile(JSONObject(customProfileJson), customProfileUnits)
+                profile = Profile(injector, JSONObject(customProfileJson), customProfileUnits)
                 profileName = customProfileName
                 date = ""
                 profileview_datelayout.visibility = View.GONE
