@@ -1,9 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.insight;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -149,6 +152,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private final SP sp;
     private final CommandQueueProvider commandQueue;
 
+    public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
+
     private Logger log = StacktraceLoggerWrapper.getLogger(L.PUMP);
 
     private PumpDescription pumpDescription;
@@ -274,6 +279,16 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         super.onStart();
         MainApp.instance().bindService(new Intent(MainApp.instance(), InsightConnectionService.class), serviceConnection, Context.BIND_AUTO_CREATE);
         MainApp.instance().bindService(new Intent(MainApp.instance(), InsightAlertService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        createNotificationChannel();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel = new NotificationChannel(ALERT_CHANNEL_ID, MainApp.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH);
+            channel.setSound(null, null);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override
@@ -671,8 +686,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     cancelBolusMessage.setBolusID(bolusID);
                     connectionService.requestMessage(cancelBolusMessage).await();
                     bolusCancelled = true;
+                    confirmAlert(AlertType.WARNING_38);
+                    alertService.ignore(null);
                 }
-                confirmAlert(AlertType.WARNING_38);
             } catch (AppLayerErrorException e) {
                 log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             } catch (InsightException e) {
