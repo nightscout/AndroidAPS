@@ -44,11 +44,12 @@ object DetailedBolusInfoStorage {
         // If not found, use last record if amount is the same
         if (store.size > 0) {
             val d = store[store.size - 1]
-            if (abs(d.insulin - bolus) < 0.01)
+            if (abs(d.insulin - bolus) < 0.01) {
                 if (L.isEnabled(L.PUMP))
                     log.debug("Using LAST & removing bolus info: $d")
-            store.removeAt(store.size - 1)
-            return d
+                store.removeAt(store.size - 1)
+                return d
+            }
         }
         //Not found
         if (L.isEnabled(L.PUMP))
