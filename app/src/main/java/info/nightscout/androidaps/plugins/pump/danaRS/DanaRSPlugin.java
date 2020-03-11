@@ -79,6 +79,7 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
     private final RxBusWrapper rxBus;
     private final CommandQueueProvider commandQueue;
     private final DanaRPump danaRPump;
+    private final DetailedBolusInfoStorage detailedBolusInfoStorage;
 
     private static DanaRSService danaRSService;
 
@@ -110,7 +111,8 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
             TreatmentsPlugin treatmentsPlugin,
             SP sp,
             CommandQueueProvider commandQueue,
-            DanaRPump danaRPump
+            DanaRPump danaRPump,
+            DetailedBolusInfoStorage detailedBolusInfoStorage
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
@@ -130,6 +132,7 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
         this.sp = sp;
         this.commandQueue = commandQueue;
         this.danaRPump = danaRPump;
+        this.detailedBolusInfoStorage = detailedBolusInfoStorage;
 
         pumpDescription.setPumpDescription(PumpType.DanaRS);
     }
@@ -406,7 +409,7 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
             if (carbTime == 0) carbTime--; // better set 1 min back to prevents clash with insulin
             detailedBolusInfo.carbTime = 0;
 
-            DetailedBolusInfoStorage.INSTANCE.add(detailedBolusInfo); // will be picked up on reading history
+            detailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
 
             Treatment t = new Treatment();
             t.isSMB = detailedBolusInfo.isSMB;

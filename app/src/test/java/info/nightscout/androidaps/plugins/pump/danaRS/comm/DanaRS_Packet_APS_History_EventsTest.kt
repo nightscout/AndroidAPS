@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -14,18 +15,19 @@ import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(RxBusWrapper::class)
+@PrepareForTest(RxBusWrapper::class, DetailedBolusInfoStorage::class)
 class DanaRS_Packet_APS_History_EventsTest : DanaRSTestBase() {
 
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var danaRSPlugin: DanaRSPlugin
+    @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
 
     @Test fun runTest() {
         val now = DateUtil.now()
 
-        val testPacket = DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, now)
+        val testPacket = DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, now)
         // test getRequestedParams
         val returnedValues = testPacket.requestParams
         val expectedValues = getCalender(now)

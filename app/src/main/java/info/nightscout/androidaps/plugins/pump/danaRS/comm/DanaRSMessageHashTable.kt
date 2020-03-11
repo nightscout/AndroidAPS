@@ -4,6 +4,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -19,7 +20,8 @@ class DanaRSMessageHashTable @Inject constructor(
     danaRPump: DanaRPump,
     danaRSPlugin: DanaRSPlugin,
     activePlugin: ActivePluginProvider,
-    constraintChecker: ConstraintChecker
+    constraintChecker: ConstraintChecker,
+    detailedBolusInfoStorage: DetailedBolusInfoStorage
 ) {
 
     var messages: HashMap<Int, DanaRS_Packet> = HashMap()
@@ -97,7 +99,7 @@ class DanaRSMessageHashTable @Inject constructor(
         put(DanaRS_Packet_History_Temporary(aapsLogger, rxBus))
         // APS
         put(DanaRS_Packet_APS_Basal_Set_Temporary_Basal(aapsLogger, 0))
-        put(DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, 0))
+        put(DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, 0))
         put(DanaRS_Packet_APS_Set_Event_History(aapsLogger, 0, 0, 0, 0))
     }
 }

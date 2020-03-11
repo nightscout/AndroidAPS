@@ -36,6 +36,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaR.SerialIOThread;
@@ -77,6 +78,7 @@ import info.nightscout.androidaps.plugins.pump.danaRv2.comm.MsgSetHistoryEntry_v
 import info.nightscout.androidaps.plugins.pump.danaRv2.comm.MsgStatusBolusExtended_v2;
 import info.nightscout.androidaps.plugins.pump.danaRv2.comm.MsgStatusTempBasal_v2;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -101,6 +103,8 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject CommandQueueProvider commandQueue;
     @Inject Context context;
     @Inject MessageHashTableRv2 messageHashTableRv2;
+    @Inject DetailedBolusInfoStorage detailedBolusInfoStorage;
+    @Inject TreatmentsPlugin treatmentsPlugin;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -491,16 +495,16 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected())
             return new PumpEnactResult(injector).success(false);
         SystemClock.sleep(300);
-        MsgHistoryEvents_v2 msg = new MsgHistoryEvents_v2(lastHistoryFetched);
+        MsgHistoryEvents_v2 msg = new MsgHistoryEvents_v2(aapsLogger, resourceHelper, detailedBolusInfoStorage, danaRv2Plugin, rxBus, treatmentsPlugin, lastHistoryFetched);
         aapsLogger.debug(LTag.PUMP, "Loading event history from: " + DateUtil.dateAndTimeString(lastHistoryFetched));
 
         mSerialIOThread.sendMessage(msg);
-        while (!msg.done && mRfcommSocket.isConnected()) {
+        while (!danaRv2Plugin.eventsLoadingDone && mRfcommSocket.isConnected()) {
             SystemClock.sleep(100);
         }
         SystemClock.sleep(200);
-        if (MsgHistoryEvents_v2.lastEventTimeLoaded != 0)
-            lastHistoryFetched = MsgHistoryEvents_v2.lastEventTimeLoaded - T.mins(1).msecs();
+        if (danaRv2Plugin.lastEventTimeLoaded != 0)
+            lastHistoryFetched = danaRv2Plugin.lastEventTimeLoaded - T.mins(1).msecs();
         else
             lastHistoryFetched = 0;
         danaRPump.setLastConnection(System.currentTimeMillis());

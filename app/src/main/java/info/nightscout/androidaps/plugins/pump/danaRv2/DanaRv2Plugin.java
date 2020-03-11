@@ -52,6 +52,11 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     private final ConstraintChecker constraintChecker;
     private final TreatmentsPlugin treatmentsPlugin;
     private final SP sp;
+    private final DetailedBolusInfoStorage detailedBolusInfoStorage;
+
+
+    public long lastEventTimeLoaded = 0;
+    public boolean eventsLoadingDone = false;
 
     @Inject
     public DanaRv2Plugin(
@@ -64,8 +69,8 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             ConstraintChecker constraintChecker,
             TreatmentsPlugin treatmentsPlugin,
             SP sp,
-            CommandQueueProvider commandQueue
-
+            CommandQueueProvider commandQueue,
+            DetailedBolusInfoStorage detailedBolusInfoStorage
     ) {
         super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue);
         this.aapsLogger = aapsLogger;
@@ -75,6 +80,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         this.constraintChecker = constraintChecker;
         this.treatmentsPlugin = treatmentsPlugin;
         this.sp = sp;
+        this.detailedBolusInfoStorage = detailedBolusInfoStorage;
         getPluginDescription().description(R.string.description_pump_dana_r_v2);
 
         useExtendedBoluses = false;
@@ -177,7 +183,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             if (carbTime == 0) carbTime--; // better set 1 man back to prevent clash with insulin
             detailedBolusInfo.carbTime = 0;
 
-            DetailedBolusInfoStorage.INSTANCE.add(detailedBolusInfo); // will be picked up on reading history
+            detailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
 
             Treatment t = new Treatment();
             t.isSMB = detailedBolusInfo.isSMB;

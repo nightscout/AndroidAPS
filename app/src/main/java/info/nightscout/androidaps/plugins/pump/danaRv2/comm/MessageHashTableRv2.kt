@@ -6,11 +6,13 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaR.comm.*
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
 import javax.inject.Inject
@@ -28,7 +30,9 @@ class MessageHashTableRv2 @Inject constructor(
     danaRv2Plugin: DanaRv2Plugin,
     configBuilderPlugin: ConfigBuilderPlugin,
     commandQueue: CommandQueueProvider,
-    activePlugin: ActivePluginProvider
+    activePlugin: ActivePluginProvider,
+    detailedBolusInfoStorage: DetailedBolusInfoStorage,
+    treatmentsPlugin: TreatmentsPlugin
 ) : MessageHashTableBase {
 
     var messages: HashMap<Int, MessageBase> = HashMap()
@@ -87,7 +91,7 @@ class MessageHashTableRv2 @Inject constructor(
         put(MsgCheckValue_v2(aapsLogger, rxBus, resourceHelper, danaRPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue))        // 0xF0F1 CMD_PUMP_CHECK_VALUE
         put(MsgStatusAPS_v2(aapsLogger, danaRPump))              // 0xE001 CMD_PUMPSTATUS_APS
         put(MsgSetAPSTempBasalStart_v2())   // 0xE002 CMD_PUMPSET_APSTEMP
-        put(MsgHistoryEvents_v2())          // 0xE003 CMD_GET_HISTORY
+        put(MsgHistoryEvents_v2(aapsLogger, resourceHelper, detailedBolusInfoStorage, danaRv2Plugin, rxBus, treatmentsPlugin))          // 0xE003 CMD_GET_HISTORY
         put(MsgSetHistoryEntry_v2())        // 0xE004 CMD_SET_HISTORY_ENTRY
     }
 
