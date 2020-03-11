@@ -8,20 +8,24 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.powermock.modules.junit4.PowerMockRunner
 
-class GlimpPluginTest : TestBase() {
-    private lateinit var glimpPlugin: GlimpPlugin
+@RunWith(PowerMockRunner::class)
+class XdripPluginTest : TestBase() {
+
+    private lateinit var xdripPlugin: XdripPlugin
 
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
 
     @Before
     fun setup() {
-        glimpPlugin = GlimpPlugin(HasAndroidInjector { AndroidInjector { } }, resourceHelper, aapsLogger)
+        xdripPlugin = XdripPlugin(HasAndroidInjector { AndroidInjector { } }, resourceHelper, aapsLogger)
     }
 
     @Test fun advancedFilteringSupported() {
-        Assert.assertEquals(false, glimpPlugin.advancedFilteringSupported())
+        Assert.assertEquals(false, xdripPlugin.advancedFilteringSupported())
     }
 }
