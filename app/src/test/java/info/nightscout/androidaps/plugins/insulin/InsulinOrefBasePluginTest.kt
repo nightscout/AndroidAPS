@@ -26,12 +26,13 @@ class InsulinOrefBasePluginTest {
     var shortDiaNotificationSend = false
 
     inner class InsulinBaseTest(
+        injector: HasAndroidInjector,
         resourceHelper: ResourceHelper,
         profileFunction: ProfileFunction,
         rxBus: RxBusWrapper,
         aapsLogger: AAPSLogger
     ) : InsulinOrefBasePlugin(
-        resourceHelper, profileFunction, rxBus, aapsLogger
+        injector, resourceHelper, profileFunction, rxBus, aapsLogger
     ) {
 
         override fun sendShortDiaNotification(dia: Double) {
@@ -61,7 +62,7 @@ class InsulinOrefBasePluginTest {
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
-    private var treatmentInjector: HasAndroidInjector = HasAndroidInjector {
+    private var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
             if (it is Treatment) {
                 it.defaultValueHelper = defaultValueHelper
@@ -74,7 +75,7 @@ class InsulinOrefBasePluginTest {
 
     @Before
     fun setUp() {
-        sut = InsulinBaseTest(resourceHelper, profileFunction, rxBus, aapsLogger)
+        sut = InsulinBaseTest(injector, resourceHelper, profileFunction, rxBus, aapsLogger)
     }
 
     @Test
@@ -94,7 +95,7 @@ class InsulinOrefBasePluginTest {
 
     @Test
     fun testIobCalcForTreatment() {
-        val treatment = Treatment(treatmentInjector) //TODO: this should be a separate sut. I'd prefer a separate class.
+        val treatment = Treatment(injector) //TODO: this should be a separate sut. I'd prefer a separate class.
         val expected = Iob()
         Assert.assertEquals(expected, sut.iobCalcForTreatment(treatment, 0, 0.0))
         testPeak = 30

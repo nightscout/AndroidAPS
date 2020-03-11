@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.insulin
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.InsulinInterface
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -28,9 +30,14 @@ class InsulinOrefUltraRapidActingPluginTest {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var aapsLogger: AAPSLogger
 
+    private var injector: HasAndroidInjector = HasAndroidInjector {
+        AndroidInjector {
+        }
+    }
+
     @Before
     fun setup() {
-        sut = InsulinOrefUltraRapidActingPlugin(resourceHelper, profileFunction, rxBus, aapsLogger)
+        sut = InsulinOrefUltraRapidActingPlugin(injector, resourceHelper, profileFunction, rxBus, aapsLogger)
     }
 
     @Test
