@@ -19,8 +19,6 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.logging.L.isEnabled
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -33,6 +31,7 @@ import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.queue.commands.Command.CommandType
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -87,7 +86,8 @@ class CommandQueue @Inject constructor(
     val constraintChecker: ConstraintChecker,
     val profileFunction: ProfileFunction,
     val activePlugin: Lazy<ActivePluginProvider>,
-    val mainApp: MainApp
+    val context: Context,
+    val sp: SP
 ) : CommandQueueProvider {
 
     private val queue = LinkedList<Command>()
@@ -161,7 +161,7 @@ class CommandQueue @Inject constructor(
             SystemClock.sleep(500)
         }
         if (thread == null || thread!!.state == Thread.State.TERMINATED) {
-            thread = QueueThread(this)
+            thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin.get(), resourceHelper, sp)
             thread!!.start()
             aapsLogger.debug(LTag.PUMPQUEUE, "Starting new thread")
         } else {
@@ -171,7 +171,7 @@ class CommandQueue @Inject constructor(
 
     override fun independentConnect(reason: String, callback: Callback?) {
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
-        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, activePlugin, mainApp)
+        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp)
         tempCommandQueue.readStatus(reason, callback)
     }
 
@@ -470,26 +470,24 @@ class CommandQueue @Inject constructor(
         return if (current != null) {
             val result = activePump.isThisProfileSet(profile)
             if (!result) {
-                if (isEnabled(L.PUMPQUEUE)) {
-                    aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: $current")
-                    aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $profile")
-                }
+                aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: $current")
+                aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $profile")
             }
             result
         } else true
     }
 
-    private fun showBolusProgressDialog(insulin: Double, context: Context?) {
-        if (context != null) {
+    private fun showBolusProgressDialog(insulin: Double, ctx: Context?) {
+        if (ctx != null) {
             val bolusProgressDialog = BolusProgressDialog()
             bolusProgressDialog.setInsulin(insulin)
-            bolusProgressDialog.show((context as AppCompatActivity).supportFragmentManager, "BolusProgress")
+            bolusProgressDialog.show((ctx as AppCompatActivity).supportFragmentManager, "BolusProgress")
         } else {
             val i = Intent()
             i.putExtra("insulin", insulin)
-            i.setClass(mainApp, BolusProgressHelperActivity::class.java)
+            i.setClass(context, BolusProgressHelperActivity::class.java)
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            mainApp.startActivity(i)
+            context.startActivity(i)
         }
     }
 }
