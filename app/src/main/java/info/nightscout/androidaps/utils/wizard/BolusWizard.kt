@@ -36,10 +36,9 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 class BolusWizard @Inject constructor(
-    injector: HasAndroidInjector
+    val injector: HasAndroidInjector
 ) {
 
-    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBusWrapper
