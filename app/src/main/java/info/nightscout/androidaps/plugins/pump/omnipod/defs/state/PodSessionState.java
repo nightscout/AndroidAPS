@@ -252,7 +252,9 @@ public class PodSessionState extends PodState {
 
     private void handleUpdates() {
         Gson gson = OmnipodUtil.getGsonInstance();
-        SP.putString(OmnipodConst.Prefs.PodState, gson.toJson(this));
+        String gsonValue = gson.toJson(this);
+        LOG.info("PodSessionState-SP: Saved Session State to SharedPreferences: " + gsonValue);
+        SP.putString(OmnipodConst.Prefs.PodState, gsonValue);
         if (stateChangedHandler != null) {
             stateChangedHandler.handle(this);
         }

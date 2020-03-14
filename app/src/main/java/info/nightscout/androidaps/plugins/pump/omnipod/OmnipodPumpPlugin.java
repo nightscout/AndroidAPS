@@ -543,6 +543,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         } else {
             String podState = SP.getString(OmnipodConst.Prefs.PodState, null);
 
+            LOG.info("PodSessionState-SP: loaded from SharedPreferences: " + podState);
+
             if (podState != null) {
                 podSessionState = OmnipodUtil.getGsonInstance().fromJson(podState, PodSessionState.class);
                 OmnipodUtil.setPodSessionState(podSessionState);
@@ -553,14 +555,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         if (podSessionState != null) {
             LOG.debug("PodSessionState (saved): " + podSessionState);
 
-            // TODO handle if session state too old
-
-            // TODO load session
-
             if (!isRefresh) {
                 pumpState = PumpDriverState.Initialized;
             }
 
+            // TODO handle if session state too old
             getPodPumpStatus();
 
         } else {
