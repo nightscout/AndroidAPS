@@ -120,6 +120,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
                 try {
                     Gson gson = OmnipodUtil.getGsonInstance();
                     String storedPodState = SP.getString(OmnipodConst.Prefs.PodState, null);
+                    LOG.info("PodSessionState-SP: loaded from SharedPreferences: " + storedPodState);
                     podState = gson.fromJson(storedPodState, PodSessionState.class);
                     OmnipodUtil.setPodSessionState(podState);
                 } catch (Exception ex) {
