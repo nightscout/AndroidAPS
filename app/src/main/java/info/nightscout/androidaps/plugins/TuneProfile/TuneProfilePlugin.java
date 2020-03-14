@@ -449,12 +449,8 @@ public class TuneProfilePlugin extends PluginBase {
         String type = "";
         // main for loop
         List<Treatment> fullHistory = new ArrayList<Treatment>();//IOBInputs.history; TODO: get treatments with IOB
-        double glucoseDatumAvgDelta = 0d;
-        double glucoseDatumDelta = 0d;
         for (int i=bucketedData.size()-5; i > 0; --i) {
             BGDatum glucoseDatum = bucketedData.get(i);
-            glucoseDatumAvgDelta = 0d;
-            glucoseDatumDelta = 0d;
             //log.debug(glucoseDatum);
             Date BGDate = new Date(glucoseDatum.date);
             long BGTime = BGDate.getTime();
@@ -1326,6 +1322,8 @@ public class TuneProfilePlugin extends PluginBase {
         if(daysBack < 1){
             return "Sorry I cannot do it for less than 1 day!";
         } else {
+            //todo: philoul I think we should remain as close as possible to OAPS code, only one call of categorizeBGDatums with all data
+            // I don't understand today why here these is a loop for each day...
             for (int i = daysBack; i > 0; i--) {
 //                tunedBasalsInit();
                 long timeBack = (i-1) * 24 * 60 * 60 * 1000L;
