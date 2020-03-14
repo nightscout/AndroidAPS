@@ -27,6 +27,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.OKDialog
 import info.nightscout.androidaps.utils.SingleClickButton
+import info.nightscout.androidaps.utils.build.BuildHelper
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -49,6 +50,7 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var buildHelper: BuildHelper
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -191,7 +193,7 @@ class ActionsFragment : DaggerFragment() {
         actions_tddstats.visibility = (pump != null || profile == null).toVisibility()
         if (pump == null) return
 
-        val basalProfileEnabled = MainApp.isEngineeringModeOrRelease() && pump.pumpDescription.isSetBasalProfileCapable
+        val basalProfileEnabled = buildHelper.isEngineeringModeOrRelease() && pump.pumpDescription.isSetBasalProfileCapable
 
         actions_profileswitch?.visibility = if (!basalProfileEnabled || !pump.isInitialized || pump.isSuspended) View.GONE else View.VISIBLE
 

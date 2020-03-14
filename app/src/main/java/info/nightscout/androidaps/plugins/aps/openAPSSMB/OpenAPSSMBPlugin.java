@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.aps.openAPSSMB;
 
+import android.content.Context;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 
@@ -7,7 +9,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
@@ -49,11 +50,12 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
     private final ConstraintChecker constraintChecker;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
-    private final MainApp mainApp;
+    private final Context context;
     private final RxBusWrapper rxBus;
     private final ActivePluginProvider activePlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
+    private final HardLimits hardLimits;
 
     // last values
     DetermineBasalAdapterSMBJS lastDetermineBasalAdapterSMBJS = null;
@@ -69,10 +71,11 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             ConstraintChecker constraintChecker,
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
-            MainApp mainApp,
+            Context context,
             ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
-            IobCobCalculatorPlugin iobCobCalculatorPlugin
+            IobCobCalculatorPlugin iobCobCalculatorPlugin,
+            HardLimits hardLimits
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.APS)
@@ -87,10 +90,11 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
         this.rxBus = rxBus;
-        this.mainApp = mainApp;
+        this.context = context;
         this.activePlugin = activePlugin;
         this.treatmentsPlugin = treatmentsPlugin;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
+        this.hardLimits = hardLimits;
     }
 
     @Override
@@ -124,7 +128,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         getAapsLogger().debug(LTag.APS, "invoke from " + initiator + " tempBasalFallback: " + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterSMBJS determineBasalAdapterSMBJS;
-        determineBasalAdapterSMBJS = new DetermineBasalAdapterSMBJS(new ScriptReader(mainApp), getInjector());
+        determineBasalAdapterSMBJS = new DetermineBasalAdapterSMBJS(new ScriptReader(context), getInjector());
 
         GlucoseStatus glucoseStatus = new GlucoseStatus(getInjector()).getGlucoseStatusData();
         Profile profile = profileFunction.getProfile();
@@ -176,29 +180,29 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         inputConstraints.copyReasons(maxIOBAllowedConstraint);
         double maxIob = maxIOBAllowedConstraint.value();
 
-        minBg = verifyHardLimits(minBg, "minBg", HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]);
-        maxBg = verifyHardLimits(maxBg, "maxBg", HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]);
-        targetBg = verifyHardLimits(targetBg, "targetBg", HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1]);
+        minBg = verifyHardLimits(minBg, "minBg", hardLimits.getVERY_HARD_LIMIT_MIN_BG()[0], hardLimits.getVERY_HARD_LIMIT_MIN_BG()[1]);
+        maxBg = verifyHardLimits(maxBg, "maxBg", hardLimits.getVERY_HARD_LIMIT_MAX_BG()[0], hardLimits.getVERY_HARD_LIMIT_MAX_BG()[1]);
+        targetBg = verifyHardLimits(targetBg, "targetBg", hardLimits.getVERY_HARD_LIMIT_TARGET_BG()[0], hardLimits.getVERY_HARD_LIMIT_TARGET_BG()[1]);
 
         boolean isTempTarget = false;
         TempTarget tempTarget = treatmentsPlugin.getTempTargetFromHistory(System.currentTimeMillis());
         if (tempTarget != null) {
             isTempTarget = true;
-            minBg = verifyHardLimits(tempTarget.low, "minBg", HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]);
-            maxBg = verifyHardLimits(tempTarget.high, "maxBg", HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]);
-            targetBg = verifyHardLimits(tempTarget.target(), "targetBg", HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1]);
+            minBg = verifyHardLimits(tempTarget.low, "minBg", hardLimits.getVERY_HARD_LIMIT_TEMP_MIN_BG()[0], hardLimits.getVERY_HARD_LIMIT_TEMP_MIN_BG()[1]);
+            maxBg = verifyHardLimits(tempTarget.high, "maxBg", hardLimits.getVERY_HARD_LIMIT_TEMP_MAX_BG()[0], hardLimits.getVERY_HARD_LIMIT_TEMP_MAX_BG()[1]);
+            targetBg = verifyHardLimits(tempTarget.target(), "targetBg", hardLimits.getVERY_HARD_LIMIT_TEMP_TARGET_BG()[0], hardLimits.getVERY_HARD_LIMIT_TEMP_TARGET_BG()[1]);
         }
 
 
-        if (!checkOnlyHardLimits(profile.getDia(), "dia", HardLimits.MINDIA, HardLimits.MAXDIA))
+        if (!checkOnlyHardLimits(profile.getDia(), "dia", hardLimits.getMINDIA(), hardLimits.getMAXDIA()))
             return;
-        if (!checkOnlyHardLimits(profile.getIcTimeFromMidnight(Profile.secondsFromMidnight()), "carbratio", HardLimits.MINIC, HardLimits.MAXIC))
+        if (!checkOnlyHardLimits(profile.getIcTimeFromMidnight(Profile.secondsFromMidnight()), "carbratio", hardLimits.getMINIC(), hardLimits.getMAXIC()))
             return;
-        if (!checkOnlyHardLimits(profile.getIsfMgdl(), "sens", HardLimits.MINISF, HardLimits.MAXISF))
+        if (!checkOnlyHardLimits(profile.getIsfMgdl(), "sens", hardLimits.getMINISF(), hardLimits.getMAXISF()))
             return;
-        if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.02, HardLimits.maxBasal()))
+        if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.02, hardLimits.maxBasal()))
             return;
-        if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, HardLimits.maxBasal()))
+        if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, hardLimits.maxBasal()))
             return;
 
         startPart = System.currentTimeMillis();
@@ -296,7 +300,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             msg += String.format(resourceHelper.gs(R.string.valuelimitedto), value, newvalue);
             getAapsLogger().error(LTag.APS, msg);
             NSUpload.uploadError(msg);
-            ToastUtils.showToastInUiThread(mainApp, msg, R.raw.error);
+            ToastUtils.showToastInUiThread(context, msg, R.raw.error);
         }
         return newvalue;
     }

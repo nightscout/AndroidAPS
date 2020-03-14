@@ -77,6 +77,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
     @Inject SP sp;
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
+    @Inject HardLimits hardLimits;
 
     private static Logger log = StacktraceLoggerWrapper.getLogger(NewNSTreatmentDialog.class);
 
@@ -342,7 +343,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
             }
         };
 
-        Double maxAbsolute = HardLimits.maxBasal();
+        Double maxAbsolute = hardLimits.maxBasal();
         if (profile != null)
             maxAbsolute = constraintChecker.getMaxBasalAllowed(profile).value();
         editAbsolute = view.findViewById(R.id.careportal_newnstreatment_absoluteinput);

@@ -104,7 +104,6 @@ class SmsCommunicatorPluginTest : TestBase() {
         val mainApp = AAPSMocker.mockMainApp()
         `when`(mainApp.androidInjector()).thenReturn(injector.androidInjector())
 
-        Locale.setDefault(Locale.ENGLISH)
         rxBus = RxBusWrapper()
         val reading = BgReading()
         reading.value = 100.0

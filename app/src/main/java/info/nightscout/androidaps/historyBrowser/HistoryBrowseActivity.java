@@ -23,7 +23,6 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.data.Profile;
@@ -42,6 +41,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.build.BuildHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -56,6 +56,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
     @Inject DefaultValueHelper defaultValueHelper;
     @Inject IobCobStaticCalculatorPlugin iobCobStaticCalculatorPlugin;
     @Inject ConfigBuilderPlugin configBuilderPlugin;
+    @Inject BuildHelper buildHelper;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -441,7 +442,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
             item.setChecked(showActSec);
 
 
-            if (MainApp.devBranch) {
+            if (buildHelper.isDev()) {
                 item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
                 title = item.getTitle();
                 if (titleMaxChars < title.length()) titleMaxChars = title.length();

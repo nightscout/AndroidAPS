@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -27,9 +27,8 @@ public class Objective0 extends Objective {
     @Inject NSClientPlugin nsClientPlugin;
     @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
-    public Objective0() {
-        super("config", R.string.objectives_0_objective, R.string.objectives_0_gate);
-        MainApp.instance().androidInjector().inject(this); // TODO inject or pass itno constructor once AutomationPlugin is prepared for Dagger
+    public Objective0(HasAndroidInjector injector) {
+        super(injector, "config", R.string.objectives_0_objective, R.string.objectives_0_gate);
     }
 
     @Override

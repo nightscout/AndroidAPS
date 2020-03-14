@@ -46,12 +46,9 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private final AAPSLogger aapsLogger;
-    private final RxBusWrapper rxBus;
     private final MainApp mainApp;
     private final ResourceHelper resourceHelper;
     private final ConstraintChecker constraintChecker;
-    private final TreatmentsPlugin treatmentsPlugin;
-    private final SP sp;
     private final DetailedBolusInfoStorage detailedBolusInfoStorage;
 
 
@@ -72,14 +69,11 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             CommandQueueProvider commandQueue,
             DetailedBolusInfoStorage detailedBolusInfoStorage
     ) {
-        super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue);
+        super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue, rxBus, treatmentsPlugin, sp);
         this.aapsLogger = aapsLogger;
-        this.rxBus = rxBus;
         this.mainApp = maiApp;
         this.resourceHelper = resourceHelper;
         this.constraintChecker = constraintChecker;
-        this.treatmentsPlugin = treatmentsPlugin;
-        this.sp = sp;
         this.detailedBolusInfoStorage = detailedBolusInfoStorage;
         getPluginDescription().description(R.string.description_pump_dana_r_v2);
 

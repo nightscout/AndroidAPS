@@ -129,9 +129,6 @@ public class MainApp extends DaggerApplication {
     static DataReceiver dataReceiver = new DataReceiver();
     TimeDateOrTZChangeReceiver timeDateOrTZChangeReceiver;
 
-    public static boolean devBranch;
-    public static boolean engineeringMode;
-
     private String CHANNEL_ID = "AndroidAPS-Ongoing"; // TODO: move to OngoingNotificationProvider (and dagger)
     private int ONGOING_NOTIFICATION_ID = 4711; // TODO: move to OngoingNotificationProvider (and dagger)
     private Notification notification; // TODO: move to OngoingNotificationProvider (and dagger)
@@ -237,12 +234,6 @@ public class MainApp extends DaggerApplication {
         log.info("Version: " + BuildConfig.VERSION_NAME);
         log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
         log.info("Remote: " + BuildConfig.REMOTE);
-
-        String extFilesDir = LoggerUtils.getLogDirectory();
-        File engineeringModeSemaphore = new File(extFilesDir, "engineering_mode");
-
-        engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
-        devBranch = BuildConfig.VERSION.contains("-") || BuildConfig.VERSION.matches(".*[a-zA-Z]+.*");
 
         registerLocalBroadcastReceiver();
 
@@ -465,16 +456,6 @@ public class MainApp extends DaggerApplication {
             log.error("pluginsList=null");
         }
         return newList;
-    }
-
-    public static boolean isEngineeringModeOrRelease() {
-        if (!Config.APS)
-            return true;
-        return engineeringMode || !devBranch;
-    }
-
-    public static boolean isDev() {
-        return devBranch;
     }
 
     // global Notification has been moved to MainApp because PersistentNotificationPlugin is initialized too late

@@ -13,6 +13,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
+import info.nightscout.androidaps.utils.build.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.io.*
@@ -29,7 +30,8 @@ class MaintenancePlugin @Inject constructor(
     resourceHelper: ResourceHelper,
     private val sp: SP,
     private val nsSettingsStatus: NSSettingsStatus,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val buildHelper: BuildHelper
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(MaintenanceFragment::class.java.name)
@@ -171,7 +173,7 @@ class MaintenancePlugin @Inject constructor(
         builder.append("Remote: " + BuildConfig.REMOTE + System.lineSeparator())
         builder.append("Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + System.lineSeparator())
         builder.append(resourceHelper.gs(R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.nightscoutVersionName + System.lineSeparator())
-        if (MainApp.engineeringMode) builder.append(resourceHelper.gs(R.string.engineering_mode_enabled))
+        if (buildHelper.isEngineeringMode()) builder.append(resourceHelper.gs(R.string.engineering_mode_enabled))
         return sendMail(attachmentUri, recipient, subject, builder.toString())
     }
 

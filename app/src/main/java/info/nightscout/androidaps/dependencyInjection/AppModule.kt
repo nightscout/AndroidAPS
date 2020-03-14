@@ -118,12 +118,17 @@ open class AppModule {
         @ContributesAndroidInjector fun commandTempBasalPercentInjector(): CommandTempBasalPercent
         @ContributesAndroidInjector fun commandSetUserSettingsInjector(): CommandSetUserSettings
 
+        @ContributesAndroidInjector fun objectiveInjector(): Objective
         @ContributesAndroidInjector fun objective0Injector(): Objective0
         @ContributesAndroidInjector fun objective1Injector(): Objective1
         @ContributesAndroidInjector fun objective2Injector(): Objective2
         @ContributesAndroidInjector fun objective3Injector(): Objective3
+        @ContributesAndroidInjector fun objective4Injector(): Objective4
         @ContributesAndroidInjector fun objective5Injector(): Objective5
         @ContributesAndroidInjector fun objective6Injector(): Objective6
+        @ContributesAndroidInjector fun objective7Injector(): Objective7
+        @ContributesAndroidInjector fun objective8Injector(): Objective8
+        @ContributesAndroidInjector fun objective9Injector(): Objective9
 
         @ContributesAndroidInjector fun automationEventInjector(): AutomationEvent
 

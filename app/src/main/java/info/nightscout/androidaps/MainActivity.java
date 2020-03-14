@@ -61,6 +61,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.PasswordProtection;
+import info.nightscout.androidaps.utils.build.BuildHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -82,6 +83,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
     @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
     @Inject LoopPlugin loopPlugin;
     @Inject NSSettingsStatus nsSettingsStatus;
+    @Inject BuildHelper buildHelper;
 
 
     @Override
@@ -316,7 +318,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
                 message += "Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + "\n";
                 message += resourceHelper.gs(R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.getNightscoutVersionName();
-                if (MainApp.engineeringMode)
+                if (buildHelper.isEngineeringMode())
                     message += "\n" + resourceHelper.gs(R.string.engineering_mode_enabled);
                 message += resourceHelper.gs(R.string.about_link_urls);
                 final SpannableString messageSpanned = new SpannableString(message);

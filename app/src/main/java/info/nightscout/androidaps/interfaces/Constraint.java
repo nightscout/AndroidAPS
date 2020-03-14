@@ -106,7 +106,7 @@ public class Constraint<T extends Comparable> {
         return sb.toString();
     }
 
-    private List<String> getReasonList() {
+    public List<String> getReasonList() {
         return reasons;
     }
 

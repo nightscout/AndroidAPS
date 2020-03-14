@@ -3,9 +3,9 @@ package info.nightscout.androidaps.plugins.pump.combo
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.AAPSMocker
 import info.TestBase
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
@@ -25,6 +25,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
+import org.mockito.Mockito.`when`
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
@@ -39,7 +40,6 @@ class ComboPluginTest : TestBase() {
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Mock lateinit var mainApp: MainApp
     @Mock lateinit var sp: SP
 
     val injector = HasAndroidInjector {
@@ -49,7 +49,13 @@ class ComboPluginTest : TestBase() {
 
     private lateinit var comboPlugin: ComboPlugin
 
-    @Test @Throws(Exception::class)
+    @Before
+    fun prepareMocks() {
+        `when`(resourceHelper.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
+        comboPlugin = ComboPlugin(injector, aapsLogger, RxBusWrapper(), resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue)
+    }
+
+    @Test
     fun invalidBasalRateOnComboPumpShouldLimitLoopInvocation() {
         comboPlugin.setPluginEnabled(PluginType.PUMP, true)
         comboPlugin.setValidBasalRateProfileSelectedOnPump(false)
@@ -60,7 +66,7 @@ class ComboPluginTest : TestBase() {
         comboPlugin.setPluginEnabled(PluginType.PUMP, false)
     }
 
-    @Test @Throws(Exception::class)
+    @Test
     fun calculateFakePumpTimestamp() {
         val now = System.currentTimeMillis()
         val pumpTimestamp = now - now % 1000
@@ -78,13 +84,5 @@ class ComboPluginTest : TestBase() {
         val bolus = Bolus(pumpTimestamp, 0.2, true)
         val calculatedTimestamp = comboPlugin.calculateFakeBolusDate(bolus)
         Assert.assertEquals(calculatedTimestamp, calculatedTimestamp - calculatedTimestamp % 1000)
-    }
-
-    @Before @Throws(Exception::class) fun prepareMocks() {
-        AAPSMocker.mockMainApp()
-        AAPSMocker.mockConfigBuilder()
-        AAPSMocker.mockStrings()
-        AAPSMocker.mockCommandQueue()
-        comboPlugin = ComboPlugin(injector, aapsLogger, RxBusWrapper(), mainApp, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue)
     }
 }

@@ -91,7 +91,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
@@ -116,6 +115,7 @@ import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.SingleClickButton;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.ToastUtils;
+import info.nightscout.androidaps.utils.build.BuildHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.wizard.BolusWizard;
@@ -148,6 +148,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     @Inject NotificationStore notificationStore;
     @Inject ActionStringHandler actionStringHandler;
     @Inject QuickWizard quickWizard;
+    @Inject BuildHelper buildHelper;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -567,7 +568,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             item.setCheckable(true);
             item.setChecked(sp.getBoolean("showactivitysecondary", true));
 
-            if (MainApp.devBranch) {
+            if (buildHelper.isDev()) {
                 item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
                 title = item.getTitle();
                 if (titleMaxChars < title.length()) titleMaxChars = title.length();
@@ -1492,7 +1493,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 secondGraphData.addRatio(fromTime, now, useRatioForScale, 1d);
             if (sp.getBoolean("showactivitysecondary", true))
                 secondGraphData.addActivity(fromTime, endTime, useIAForScale, 0.8d);
-            if (sp.getBoolean("showdevslope", false) && MainApp.devBranch)
+            if (sp.getBoolean("showdevslope", false) && buildHelper.isDev())
                 secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1d);
 
             // **** NOW line ****

@@ -46,12 +46,9 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private final AAPSLogger aapsLogger;
-    private final RxBusWrapper rxBus;
     private final MainApp mainApp;
     private final ResourceHelper resourceHelper;
     private final ConstraintChecker constraintChecker;
-    private final TreatmentsPlugin treatmentsPlugin;
-    private final SP sp;
 
     @Inject
     public DanaRKoreanPlugin(
@@ -67,14 +64,11 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             CommandQueueProvider commandQueue
 
     ) {
-        super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue);
+        super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue, rxBus, treatmentsPlugin, sp);
         this.aapsLogger = aapsLogger;
-        this.rxBus = rxBus;
         this.mainApp = maiApp;
         this.resourceHelper = resourceHelper;
         this.constraintChecker = constraintChecker;
-        this.treatmentsPlugin = treatmentsPlugin;
-        this.sp = sp;
         getPluginDescription().description(R.string.description_pump_dana_r_korean);
 
         useExtendedBoluses = sp.getBoolean(R.string.key_danar_useextended, false);

@@ -57,7 +57,7 @@ class ObjectivesPlugin @Inject constructor(
         const val SMB_OBJECTIVE = 9
     }
 
-    override fun onStart() {
+    public override fun onStart() {
         super.onStart()
         convertSP()
         setupObjectives()
@@ -90,16 +90,16 @@ class ObjectivesPlugin @Inject constructor(
 
     private fun setupObjectives() {
         objectives.clear()
-        objectives.add(Objective0())
-        objectives.add(Objective1())
-        objectives.add(Objective2())
-        objectives.add(Objective3())
-        objectives.add(Objective4())
+        objectives.add(Objective0(injector))
+        objectives.add(Objective1(injector))
+        objectives.add(Objective2(injector))
+        objectives.add(Objective3(injector))
+        objectives.add(Objective4(injector))
         objectives.add(Objective5(injector))
-        objectives.add(Objective6())
-        objectives.add(Objective7())
-        objectives.add(Objective8())
-        objectives.add(Objective9())
+        objectives.add(Objective6(injector))
+        objectives.add(Objective7(injector))
+        objectives.add(Objective8(injector))
+        objectives.add(Objective9(injector))
     }
 
     fun reset() {

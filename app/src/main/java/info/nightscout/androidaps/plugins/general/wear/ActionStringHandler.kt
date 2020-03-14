@@ -65,7 +65,8 @@ class ActionStringHandler @Inject constructor(
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
     private val danaRv2Plugin: DanaRv2Plugin,
     private val danaRSPlugin: DanaRSPlugin,
-    private val danaRPump: DanaRPump
+    private val danaRPump: DanaRPump,
+    private val hardLimits: HardLimits
 ) {
 
     private val TIMEOUT = 65 * 1000
@@ -131,11 +132,11 @@ class ActionStringHandler @Inject constructor(
                     low *= Constants.MMOLL_TO_MGDL
                     high *= Constants.MMOLL_TO_MGDL
                 }
-                if (low < HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
+                if (low < hardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > hardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
                     sendError("Min-BG out of range!")
                     return
                 }
-                if (high < HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
+                if (high < hardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > hardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
                     sendError("Max-BG out of range!")
                     return
                 }

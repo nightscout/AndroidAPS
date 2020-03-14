@@ -7,7 +7,6 @@ import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import dagger.Lazy
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
@@ -30,6 +29,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.queue.commands.Command.CommandType
 import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.build.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -87,7 +87,8 @@ class CommandQueue @Inject constructor(
     val profileFunction: ProfileFunction,
     val activePlugin: Lazy<ActivePluginProvider>,
     val context: Context,
-    val sp: SP
+    val sp: SP,
+    private val buildHelper: BuildHelper
 ) : CommandQueueProvider {
 
     private val queue = LinkedList<Command>()
@@ -171,7 +172,7 @@ class CommandQueue @Inject constructor(
 
     override fun independentConnect(reason: String, callback: Callback?) {
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
-        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp)
+        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper)
         tempCommandQueue.readStatus(reason, callback)
     }
 
@@ -338,7 +339,7 @@ class CommandQueue @Inject constructor(
             callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
             return false
         }
-        if (!MainApp.isEngineeringModeOrRelease()) {
+        if (!buildHelper.isEngineeringModeOrRelease()) {
             val notification = Notification(Notification.NOT_ENG_MODE_OR_RELEASE, resourceHelper.gs(R.string.not_eng_mode_or_release), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
             callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(resourceHelper.gs(R.string.not_eng_mode_or_release)))?.run()

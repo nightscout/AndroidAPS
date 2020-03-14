@@ -72,12 +72,17 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectCommandTempBasalPercent(commandTempBasalPercent: CommandTempBasalPercent)
     fun injectCommandSetUserSettings(commandSetUserSettings: CommandSetUserSettings)
 
+    fun injectObjective(objective: Objective)
     fun injectObjective0(objective0: Objective0)
     fun injectObjective1(objective1: Objective1)
     fun injectObjective2(objective2: Objective2)
     fun injectObjective3(objective3: Objective3)
+    fun injectObjective3(objective4: Objective4)
     fun injectObjective5(objective5: Objective5)
     fun injectObjective6(objective6: Objective6)
+    fun injectObjective6(objective7: Objective7)
+    fun injectObjective6(objective8: Objective8)
+    fun injectObjective6(objective9: Objective9)
 
     fun injectAutomationEvent(automationEvent: AutomationEvent)
 
