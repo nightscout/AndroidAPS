@@ -43,7 +43,6 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
@@ -440,7 +439,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
         if (tb1 != null) {
             tb_before = beginBasalValue;
-            Profile profileTB = ProfileFunctions.getInstance().getProfile(runningTime);
+            Profile profileTB = profileFunction.getProfile(runningTime);
             if (profileTB != null) {
                 tb_amount = tb1.tempBasalConvertedToAbsolute(runningTime, profileTB);
                 tb_start = runningTime;
