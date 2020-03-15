@@ -15,7 +15,7 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
-    private var ssid = InputString(injector)
+    var ssid = InputString(injector)
     var comparator = Comparator(injector)
 
     constructor(injector: HasAndroidInjector, ssid: String, compare: Comparator.Compare) : this(injector) {
@@ -26,6 +26,16 @@ class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
     constructor(injector: HasAndroidInjector, triggerWifiSsid: TriggerWifiSsid) : this(injector) {
         this.ssid = InputString(injector, triggerWifiSsid.ssid.value)
         comparator = Comparator(injector, triggerWifiSsid.comparator.value)
+    }
+
+    fun setValue(ssid: String): TriggerWifiSsid {
+        this.ssid.value = ssid
+        return this
+    }
+
+    fun comparator(comparator: Comparator.Compare): TriggerWifiSsid {
+        this.comparator.value = comparator
+        return this
     }
 
     override fun shouldRun(): Boolean {

@@ -16,8 +16,8 @@ import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import org.json.JSONObject
 
 class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector) {
-    private var minutesAgo = InputDuration(injector)
-    private var comparator = Comparator(injector)
+    var minutesAgo = InputDuration(injector)
+    var comparator = Comparator(injector)
 
     constructor(injector: HasAndroidInjector, value: Int, unit: InputDuration.TimeUnit, compare: Comparator.Compare) : this(injector) {
         minutesAgo = InputDuration(injector, value, unit)
@@ -27,6 +27,16 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
     constructor(injector: HasAndroidInjector, triggerPumpLastConnection: TriggerPumpLastConnection) : this(injector) {
         minutesAgo = InputDuration(injector, triggerPumpLastConnection.minutesAgo.value, triggerPumpLastConnection.minutesAgo.unit)
         comparator = Comparator(injector, triggerPumpLastConnection.comparator.value)
+    }
+
+    fun setValue(value: Int): TriggerPumpLastConnection {
+        minutesAgo.value = value
+        return this
+    }
+
+    fun comparator(comparator: Comparator.Compare): TriggerPumpLastConnection {
+        this.comparator.value = comparator
+        return this
     }
 
     override fun shouldRun(): Boolean {

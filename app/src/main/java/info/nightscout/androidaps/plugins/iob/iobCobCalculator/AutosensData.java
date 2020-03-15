@@ -33,7 +33,7 @@ public class AutosensData implements DataPointWithLabelInterface {
     @Inject SensitivityAAPSPlugin sensitivityAAPSPlugin;
     @Inject ProfileFunction profileFunction;
 
-    AutosensData(HasAndroidInjector injector) {
+    public AutosensData(HasAndroidInjector injector) {
         injector.androidInjector().inject(this);
     }
 

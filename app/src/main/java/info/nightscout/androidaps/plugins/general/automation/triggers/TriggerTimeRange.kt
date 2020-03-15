@@ -31,6 +31,12 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
         range.end = triggerTimeRange.range.end
     }
 
+    fun period(start: Int, end:Int) : TriggerTimeRange {
+        this.range.start = start
+        this.range.end = end
+        return this
+    }
+
     override fun shouldRun(): Boolean {
         val currentMinSinceMidnight = getMinSinceMidnight(DateUtil.now())
         var doRun = false
@@ -46,8 +52,8 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun toJSON(): String {
         val data = JSONObject()
-            .put("start", getMinSinceMidnight(range.start.toLong()))
-            .put("end", getMinSinceMidnight(range.end.toLong()))
+            .put("start", range.start)
+            .put("end", range.end)
         return JSONObject()
             .put("type", this::class.java.name)
             .put("data", data)

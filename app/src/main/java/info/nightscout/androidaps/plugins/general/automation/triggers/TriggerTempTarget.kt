@@ -5,6 +5,7 @@ import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.general.automation.elements.ComparatorExists
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
@@ -20,6 +21,11 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
 
     constructor(injector: HasAndroidInjector, triggerTempTarget: TriggerTempTarget) : this(injector) {
         comparator = ComparatorExists(injector, triggerTempTarget.comparator.value)
+    }
+
+    fun comparator(comparator: ComparatorExists.Compare): TriggerTempTarget {
+        this.comparator.value = comparator
+        return this
     }
 
     override fun shouldRun(): Boolean {

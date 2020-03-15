@@ -24,6 +24,11 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
         this.time.value = triggerTime.time.value
     }
 
+    fun runAt(time: Long): TriggerTime {
+        this.time.value = time
+        return this
+    }
+
     override fun shouldRun(): Boolean {
         val now = DateUtil.now()
         if (now >= time.value && now - time.value < T.mins(5).msecs()) {

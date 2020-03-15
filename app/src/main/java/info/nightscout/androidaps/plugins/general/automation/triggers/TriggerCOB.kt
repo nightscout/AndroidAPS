@@ -18,12 +18,22 @@ import java.text.DecimalFormat
 class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
     private val minValue = 0
     private val maxValue = sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48)
-    private var cob: InputDouble = InputDouble(injector, 0.0, minValue.toDouble(), maxValue.toDouble(), 1.0, DecimalFormat("1"))
+    var cob: InputDouble = InputDouble(injector, 0.0, minValue.toDouble(), maxValue.toDouble(), 1.0, DecimalFormat("1"))
     var comparator: Comparator = Comparator(injector)
 
     private constructor(injector: HasAndroidInjector, triggerCOB: TriggerCOB) : this(injector) {
         cob = InputDouble(injector, triggerCOB.cob)
         comparator = Comparator(injector, triggerCOB.comparator.value)
+    }
+
+    fun setValue(value:Double) : TriggerCOB {
+        cob.value = value
+        return this
+    }
+
+    fun comparator(comparator: Comparator.Compare) : TriggerCOB {
+        this.comparator.value = comparator
+        return this
     }
 
     override fun shouldRun(): Boolean {

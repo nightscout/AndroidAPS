@@ -17,7 +17,7 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
-    private var bg = InputBg(injector)
+    var bg = InputBg(injector)
     var comparator = Comparator(injector)
 
     constructor(injector: HasAndroidInjector, value: Double, units: String, compare: Comparator.Compare) : this(injector) {
@@ -28,6 +28,21 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
     constructor(injector: HasAndroidInjector, triggerBg: TriggerBg) : this(injector) {
         bg = InputBg(injector, triggerBg.bg.value, triggerBg.bg.units)
         comparator = Comparator(injector, triggerBg.comparator.value)
+    }
+
+    fun setUnits(units: String): TriggerBg {
+        bg.units = units
+        return this
+    }
+
+    fun setValue(value: Double): TriggerBg {
+        bg.value = value
+        return this
+    }
+
+    fun comparator(comparator: Comparator.Compare): TriggerBg {
+        this.comparator.value = comparator
+        return this
     }
 
     override fun shouldRun(): Boolean {
