@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
@@ -46,7 +45,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private final AAPSLogger aapsLogger;
-    private final MainApp mainApp;
+    private final Context context;
     private final ResourceHelper resourceHelper;
     private final ConstraintChecker constraintChecker;
 
@@ -56,7 +55,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             DanaRPump danaRPump,
-            MainApp maiApp,
+            Context context,
             ResourceHelper resourceHelper,
             ConstraintChecker constraintChecker,
             TreatmentsPlugin treatmentsPlugin,
@@ -66,7 +65,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
     ) {
         super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue, rxBus, treatmentsPlugin, sp);
         this.aapsLogger = aapsLogger;
-        this.mainApp = maiApp;
+        this.context = context;
         this.resourceHelper = resourceHelper;
         this.constraintChecker = constraintChecker;
         getPluginDescription().description(R.string.description_pump_dana_r_korean);
@@ -77,8 +76,8 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
 
     @Override
     protected void onStart() {
-        Intent intent = new Intent(mainApp, DanaRKoreanExecutionService.class);
-        mainApp.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        Intent intent = new Intent(context, DanaRKoreanExecutionService.class);
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
@@ -96,14 +95,14 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> mainApp.unbindService(mConnection), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> context.unbindService(mConnection), exception -> FabricPrivacy.getInstance().logException(exception))
         );
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        mainApp.unbindService(mConnection);
+        context.unbindService(mConnection);
         disposable.clear();
         super.onStop();
     }
