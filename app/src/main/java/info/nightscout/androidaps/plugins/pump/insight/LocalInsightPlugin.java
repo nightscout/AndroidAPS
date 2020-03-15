@@ -56,7 +56,7 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -151,6 +151,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private final TreatmentsPlugin treatmentsPlugin;
     private final SP sp;
     private final CommandQueueProvider commandQueue;
+    private final ProfileFunction profileFunction;
 
     public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
 
@@ -209,8 +210,9 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             ResourceHelper resourceHelper,
             ConstraintChecker constraintChecker,
             TreatmentsPlugin treatmentsPlugin,
-            info.nightscout.androidaps.utils.sharedPreferences.SP sp,
-            CommandQueueProvider commandQueue
+            SP sp,
+            CommandQueueProvider commandQueue,
+            ProfileFunction profileFunction
     ) {
         super(new PluginDescription()
                         .pluginName(R.string.insight_local)
@@ -229,6 +231,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         this.treatmentsPlugin = treatmentsPlugin;
         this.sp = sp;
         this.commandQueue = commandQueue;
+        this.profileFunction = profileFunction;
 
         pumpDescription = new PumpDescription();
         pumpDescription.setPumpDescription(PumpType.AccuChekInsightBluetooth);
@@ -990,7 +993,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             status.put("timestamp", DateUtil.toISOString(connectionService.getLastConnected()));
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
-                extended.put("ActiveProfile", ProfileFunctions.getInstance().getProfileName());
+                extended.put("ActiveProfile", profileFunction.getProfileName());
             } catch (Exception e) {
             }
             TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
@@ -1416,7 +1419,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             extendedBolus.durationInMinutes = event.getDuration();
             extendedBolus.insulin = event.getExtendedAmount();
             extendedBolus.pumpId = bolusID.id;
-            if (ProfileFunctions.getInstance().getProfile(extendedBolus.date) != null)
+            if (profileFunction.getProfile(extendedBolus.date) != null)
                 TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
         }
     }
@@ -1459,7 +1462,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 extendedBolus.durationInMinutes = event.getDuration();
                 extendedBolus.insulin = event.getExtendedAmount();
                 extendedBolus.pumpId = bolusID.id;
-                if (ProfileFunctions.getInstance().getProfile(extendedBolus.date) != null)
+                if (profileFunction.getProfile(extendedBolus.date) != null)
                     TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
             }
         }
