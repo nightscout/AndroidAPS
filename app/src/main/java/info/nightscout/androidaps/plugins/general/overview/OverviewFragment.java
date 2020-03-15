@@ -90,7 +90,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
@@ -788,7 +787,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 pvd.show(manager, "ProfileViewDialog");
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.eatingsoon))) {
             aapsLogger.debug("USER ENTRY: TEMP TARGET EATING SOON");
-            double target = Profile.toMgdl(defaultValueHelper.determineEatingSoonTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(defaultValueHelper.determineEatingSoonTT(), profileFunction.getUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(System.currentTimeMillis())
                     .duration(defaultValueHelper.determineEatingSoonTTDuration())
@@ -799,7 +798,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             treatmentsPlugin.addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.activity))) {
             aapsLogger.debug("USER ENTRY: TEMP TARGET ACTIVITY");
-            double target = Profile.toMgdl(defaultValueHelper.determineActivityTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(defaultValueHelper.determineActivityTT(), profileFunction.getUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
                     .duration(defaultValueHelper.determineActivityTTDuration())
@@ -810,7 +809,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             treatmentsPlugin.addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.hypo))) {
             aapsLogger.debug("USER ENTRY: TEMP TARGET HYPO");
-            double target = Profile.toMgdl(defaultValueHelper.determineHypoTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(defaultValueHelper.determineHypoTT(), profileFunction.getUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
                     .duration(defaultValueHelper.determineHypoTTDuration())
@@ -1057,7 +1056,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         if (profile == null) return;
         final String profileName = profileFunction.getProfileName();
 
-        final String units = ProfileFunctions.getSystemUnits();
+        final String units = profileFunction.getUnits();
         final double lowLine = defaultValueHelper.determineLowLine();
         final double highLine = defaultValueHelper.determineHighLine();
 
@@ -1135,7 +1134,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         if (tempTarget != null) {
             tempTargetView.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning));
             tempTargetView.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning));
-            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end()));
+            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper));
         } else {
             tempTargetView.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault));
             tempTargetView.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault));
@@ -1204,7 +1203,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         if (activeTemp != null) {
             baseBasalView.setTextColor(resourceHelper.gc(R.color.basal));
         } else {
-            baseBasalView.setTextColor(MainApp.gc(R.color.defaulttextcolor));
+            baseBasalView.setTextColor(resourceHelper.gc(R.color.defaulttextcolor));
         }
 
 
