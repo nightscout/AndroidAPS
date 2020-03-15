@@ -46,7 +46,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -1277,7 +1276,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
 
             JSONObject extendedJson = new JSONObject();
             extendedJson.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
-            extendedJson.put("ActiveProfile", ProfileFunctions.getInstance().getProfileName());
+            extendedJson.put("ActiveProfile", profileFunction.getProfileName());
             PumpState ps = pump.state;
             if (ps.tbrActive) {
                 extendedJson.put("TempBasalAbsoluteRate", ps.basalRate);
