@@ -28,7 +28,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.SP;
@@ -37,6 +37,8 @@ public class DetermineBasalAdapterMAJS {
 
     private HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
+    @Inject ProfileFunction profileFunction;
+
     private ScriptReader mScriptReader;
     private JSONObject mProfile;
     private JSONObject mGlucoseStatus;
@@ -180,7 +182,7 @@ public class DetermineBasalAdapterMAJS {
 
         mProfile.put("current_basal", basalRate);
 
-        if (ProfileFunctions.getSystemUnits().equals(Constants.MMOL)) {
+        if (profileFunction.getUnits().equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
         }
 

@@ -32,7 +32,7 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -44,6 +44,7 @@ public class DetermineBasalAdapterSMBJS {
     @Inject AAPSLogger aapsLogger;
     @Inject ConstraintChecker constraintChecker;
     @Inject SP sp;
+    @Inject ProfileFunction profileFunction;
 
     private ScriptReader mScriptReader;
     private JSONObject mProfile;
@@ -276,7 +277,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("temptargetSet", tempTargetSet);
         mProfile.put("autosens_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")));
 
-        if (ProfileFunctions.getSystemUnits().equals(Constants.MMOL)) {
+        if (profileFunction.getUnits().equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
         }
 
