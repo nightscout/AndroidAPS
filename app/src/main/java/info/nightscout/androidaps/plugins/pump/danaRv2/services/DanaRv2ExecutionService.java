@@ -31,7 +31,7 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -105,6 +105,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject MessageHashTableRv2 messageHashTableRv2;
     @Inject DetailedBolusInfoStorage detailedBolusInfoStorage;
     @Inject TreatmentsPlugin treatmentsPlugin;
+    @Inject ProfileFunction profileFunction;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -213,7 +214,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
             danaRPump.setLastConnection(System.currentTimeMillis());
 
-            Profile profile = ProfileFunctions.getInstance().getProfile();
+            Profile profile = profileFunction.getProfile();
             PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
             if (profile != null && Math.abs(danaRPump.getCurrentBasal() - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)));
