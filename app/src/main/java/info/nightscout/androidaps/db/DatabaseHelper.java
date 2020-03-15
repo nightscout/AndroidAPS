@@ -18,7 +18,6 @@ import com.j256.ormlite.table.TableUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,8 +31,6 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.data.OverlappingIntervals;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -54,7 +51,6 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightBolusID;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightHistoryOffset;
@@ -519,7 +515,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // ------------- DbRequests handling -------------------
 
     public void create(DbRequest dbr) throws SQLException {
-            getDaoDbRequest().create(dbr);
+        getDaoDbRequest().create(dbr);
     }
 
     public int delete(DbRequest dbr) {
@@ -798,31 +794,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             historyList = new ArrayList<>();
         }
         return historyList;
-    }
-
-    public void updateDanaRHistoryRecordId(JSONObject trJson) {
-        try {
-            QueryBuilder<DanaRHistoryRecord, String> queryBuilder = getDaoDanaRHistory().queryBuilder();
-            Where where = queryBuilder.where();
-            where.ge("bytes", trJson.get(DanaRNSHistorySync.DANARSIGNATURE));
-            PreparedQuery<DanaRHistoryRecord> preparedQuery = queryBuilder.prepare();
-            List<DanaRHistoryRecord> list = getDaoDanaRHistory().query(preparedQuery);
-            if (list.size() == 0) {
-                // Record does not exists. Ignore
-            } else if (list.size() == 1) {
-                DanaRHistoryRecord record = list.get(0);
-                if (record._id == null || !record._id.equals(trJson.getString("_id"))) {
-                    if (L.isEnabled(L.DATABASE))
-                        log.debug("Updating _id in DanaR history database: " + trJson.getString("_id"));
-                    record._id = trJson.getString("_id");
-                    getDaoDanaRHistory().update(record);
-                } else {
-                    // already set
-                }
-            }
-        } catch (SQLException | JSONException e) {
-            log.error("Unhandled exception: " + trJson.toString(), e);
-        }
     }
 
     // ------------ TemporaryBasal handling ---------------
