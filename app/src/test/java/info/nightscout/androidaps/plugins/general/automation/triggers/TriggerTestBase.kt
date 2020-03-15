@@ -8,6 +8,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.automation.elements.InputBg
+import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -51,6 +52,9 @@ open class TriggerTestBase : TestBase() {
             if (it is GlucoseStatus) {
                 it.aapsLogger = aapsLogger
                 it.iobCobCalculatorPlugin = iobCobCalculatorPlugin
+            }
+            if (it is StaticLabel) {
+                it.resourceHelper = resourceHelper
             }
         }
     }
