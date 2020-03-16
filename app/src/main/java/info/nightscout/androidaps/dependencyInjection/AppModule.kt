@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
@@ -212,7 +213,7 @@ open class AppModule {
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
 
         @Binds
-        fun bindActivePluginProvider(configBuilderPlugin: ConfigBuilderPlugin): ActivePluginProvider
+        fun bindActivePluginProvider(pluginStore: PluginStore): ActivePluginProvider
 
         @Binds fun commandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
 

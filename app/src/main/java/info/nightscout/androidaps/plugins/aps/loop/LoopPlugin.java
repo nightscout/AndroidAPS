@@ -39,6 +39,7 @@ import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -53,7 +54,6 @@ import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -82,7 +82,7 @@ public class LoopPlugin extends PluginBase {
     private final ProfileFunction profileFunction;
     private final Context context;
     private final CommandQueueProvider commandQueue;
-    private final ConfigBuilderPlugin configBuilderPlugin;
+    private final ActivePluginProvider activePlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final VirtualPumpPlugin virtualPumpPlugin;
     private final Lazy<ActionStringHandler> actionStringHandler;
@@ -125,7 +125,7 @@ public class LoopPlugin extends PluginBase {
             ProfileFunction profileFunction,
             Context context,
             CommandQueueProvider commandQueue,
-            ConfigBuilderPlugin configBuilderPlugin,
+            ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
             VirtualPumpPlugin virtualPumpPlugin,
             Lazy<ActionStringHandler> actionStringHandler, // TODO Adrian use RxBus instead of Lazy
@@ -147,7 +147,7 @@ public class LoopPlugin extends PluginBase {
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
         this.context = context;
-        this.configBuilderPlugin = configBuilderPlugin;
+        this.activePlugin = activePlugin;
         this.commandQueue = commandQueue;
         this.treatmentsPlugin = treatmentsPlugin;
         this.virtualPumpPlugin = virtualPumpPlugin;
@@ -214,8 +214,13 @@ public class LoopPlugin extends PluginBase {
 
     @Override
     public boolean specialEnableCondition() {
-        PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
-        return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        try {
+            PumpInterface pump = activePlugin.getActivePump();
+            return pump.getPumpDescription().isTempBasalCapable;
+        } catch (Exception ignored) {
+            // may fail during initialization
+            return true;
+        }
     }
 
     public long suspendedTo() {
@@ -320,9 +325,7 @@ public class LoopPlugin extends PluginBase {
                 rxBus.send(new EventLoopSetLastRunGui(message));
                 return;
             }
-            final PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
-            if (pump == null)
-                return;
+            final PumpInterface pump = activePlugin.getActivePump();
             APSResult result = null;
 
             if (!isEnabled(PluginType.LOOP))
@@ -340,8 +343,8 @@ public class LoopPlugin extends PluginBase {
             // Check if pump info is loaded
             if (pump.getBaseBasalRate() < 0.01d) return;
 
-            APSInterface usedAPS = configBuilderPlugin.getActiveAPS();
-            if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginType.APS)) {
+            APSInterface usedAPS = activePlugin.getActiveAPS();
+            if (((PluginBase) usedAPS).isEnabled(PluginType.APS)) {
                 usedAPS.invoke(initiator, tempBasalFallback);
                 result = usedAPS.getLastAPSResult();
             }
@@ -537,12 +540,7 @@ public class LoopPlugin extends PluginBase {
             return;
         }
 
-        PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
-        if (pump == null) {
-            if (callback != null)
-                callback.result(new PumpEnactResult(getInjector()).enacted(false).success(false).comment(resourceHelper.gs(R.string.nopumpselected))).run();
-            return;
-        }
+        PumpInterface pump = activePlugin.getActivePump();
 
         if (!pump.isInitialized()) {
             getAapsLogger().debug(LTag.APS, "applyAPSRequest: " + resourceHelper.gs(R.string.pumpNotInitialized));
@@ -624,12 +622,7 @@ public class LoopPlugin extends PluginBase {
             return;
         }
 
-        PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
-        if (pump == null) {
-            if (callback != null)
-                callback.result(new PumpEnactResult(getInjector()).enacted(false).success(false).comment(resourceHelper.gs(R.string.nopumpselected))).run();
-            return;
-        }
+        PumpInterface pump = activePlugin.getActivePump();
 
         long lastBolusTime = treatmentsPlugin.getLastBolusTime();
         if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
@@ -673,9 +666,7 @@ public class LoopPlugin extends PluginBase {
     }
 
     public void disconnectPump(int durationInMinutes, Profile profile) {
-        PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
-        if (pump == null)
-            return;
+        PumpInterface pump = activePlugin.getActivePump();
 
         disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
 

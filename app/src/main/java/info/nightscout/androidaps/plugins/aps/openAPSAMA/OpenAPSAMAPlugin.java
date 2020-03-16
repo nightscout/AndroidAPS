@@ -96,18 +96,19 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
 
     @Override
     public boolean specialEnableCondition() {
-        // main fail during init
-        if (activePlugin != null) {
-            PumpInterface pump = activePlugin.getActivePumpPlugin();
-            return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        try {
+            PumpInterface pump = activePlugin.getActivePump();
+            return pump.getPumpDescription().isTempBasalCapable;
+        } catch (Exception ignored) {
+            // may fail during initialization
+            return true;
         }
-        return true;
     }
 
     @Override
     public boolean specialShowInListCondition() {
-        PumpInterface pump = activePlugin.getActivePumpPlugin();
-        return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        PumpInterface pump = activePlugin.getActivePump();
+        return pump.getPumpDescription().isTempBasalCapable;
     }
 
     @Override
@@ -134,12 +135,6 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         if (profile == null) {
             rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.noprofileselected)));
             aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.noprofileselected));
-            return;
-        }
-
-        if (pump == null) {
-            rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.nopumpselected)));
-            aapsLogger.debug(LTag.APS, resourceHelper.gs(R.string.nopumpselected));
             return;
         }
 

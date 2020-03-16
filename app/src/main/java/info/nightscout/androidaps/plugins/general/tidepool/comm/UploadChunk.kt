@@ -5,22 +5,18 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Intervals
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.db.TemporaryBasal
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.tidepool.elements.*
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.utils.GsonInstance
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,12 +29,10 @@ class UploadChunk @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val profileFunction: ProfileFunction,
     private val treatmentsPlugin: TreatmentsPlugin,
-    private val configBuilderPlugin: ConfigBuilderPlugin
+    private val activePlugin: ActivePluginProvider
 ) {
 
     private val MAX_UPLOAD_SIZE = T.days(7).msecs() // don't change this
-
-    private val log = StacktraceLoggerWrapper.getLogger(L.TIDEPOOL)
 
     fun getNext(session: Session?): String? {
         if (session == null)
@@ -49,7 +43,7 @@ class UploadChunk @Inject constructor(
 
         val result = get(session.start, session.end)
         if (result.length < 3) {
-            if (L.isEnabled(L.TIDEPOOL)) log.debug("No records in this time period, setting start to best end time")
+            aapsLogger.debug(LTag.TIDEPOOL, "No records in this time period, setting start to best end time")
             setLastEnd(Math.max(session.end, getOldestRecordTimeStamp()))
         }
         return result
@@ -57,13 +51,13 @@ class UploadChunk @Inject constructor(
 
     operator fun get(start: Long, end: Long): String {
 
-        if (L.isEnabled(L.TIDEPOOL)) log.debug("Syncing data between: " + DateUtil.dateAndTimeString(start) + " -> " + DateUtil.dateAndTimeString(end))
+        aapsLogger.debug(LTag.TIDEPOOL, "Syncing data between: " + DateUtil.dateAndTimeString(start) + " -> " + DateUtil.dateAndTimeString(end))
         if (end <= start) {
-            if (L.isEnabled(L.TIDEPOOL)) log.debug("End is <= start: " + DateUtil.dateAndTimeString(start) + " " + DateUtil.dateAndTimeString(end))
+            aapsLogger.debug(LTag.TIDEPOOL, "End is <= start: " + DateUtil.dateAndTimeString(start) + " " + DateUtil.dateAndTimeString(end))
             return ""
         }
         if (end - start > MAX_UPLOAD_SIZE) {
-            if (L.isEnabled(L.TIDEPOOL)) log.debug("More than max range - rejecting")
+            aapsLogger.debug(LTag.TIDEPOOL, "More than max range - rejecting")
             return ""
         }
 
@@ -162,8 +156,7 @@ class UploadChunk @Inject constructor(
     }
 
     fun newInstanceOrNull(ps: ProfileSwitch): ProfileElement? = try {
-        ProfileElement(ps, configBuilderPlugin.activePumpPlugin?.serialNumber()
-            ?: InstanceId.instanceId())
+        ProfileElement(ps, activePlugin.activePump.serialNumber())
     } catch (e: Throwable) {
         null
     }

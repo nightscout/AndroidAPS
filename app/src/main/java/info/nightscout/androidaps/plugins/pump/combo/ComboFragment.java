@@ -106,7 +106,7 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
         switch (view.getId()) {
             case R.id.combo_refresh_button:
                 refreshButton.setEnabled(false);
-                ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("User request", new Callback() {
+                commandQueue.readStatus("User request", new Callback() {
                     @Override
                     public void run() {
                         runOnUiThread(() -> refreshButton.setEnabled(true));

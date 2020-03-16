@@ -239,8 +239,8 @@ public class Profile {
 
         if (isValid) {
             // Check for hours alignment
-            PumpInterface pump = activePlugin.getActivePumpPlugin();
-            if (pump != null && !pump.getPumpDescription().is30minBasalRatesCapable) {
+            PumpInterface pump = activePlugin.getActivePump();
+            if (!pump.getPumpDescription().is30minBasalRatesCapable) {
                 for (int index = 0; index < basal_v.size(); index++) {
                     long secondsFromMidnight = basal_v.keyAt(index);
                     if (notify && secondsFromMidnight % 3600 != 0) {
@@ -253,24 +253,17 @@ public class Profile {
             }
 
             // Check for minimal basal value
-            if (pump != null) {
-                PumpDescription description = pump.getPumpDescription();
-                for (int i = 0; i < basal_v.size(); i++) {
-                    if (basal_v.valueAt(i) < description.basalMinimumRate) {
-                        basal_v.setValueAt(i, description.basalMinimumRate);
-                        if (notify)
-                            sendBelowMinimumNotification(from);
-                    } else if (basal_v.valueAt(i) > description.basalMaximumRate) {
-                        basal_v.setValueAt(i, description.basalMaximumRate);
-                        if (notify)
-                            sendAboveMaximumNotification(from);
-                    }
+            PumpDescription description = pump.getPumpDescription();
+            for (int i = 0; i < basal_v.size(); i++) {
+                if (basal_v.valueAt(i) < description.basalMinimumRate) {
+                    basal_v.setValueAt(i, description.basalMinimumRate);
+                    if (notify)
+                        sendBelowMinimumNotification(from);
+                } else if (basal_v.valueAt(i) > description.basalMaximumRate) {
+                    basal_v.setValueAt(i, description.basalMaximumRate);
+                    if (notify)
+                        sendAboveMaximumNotification(from);
                 }
-            } else {
-                // if pump not available (at start)
-                // do not store converted array
-                basal_v = null;
-                isValidated = false;
             }
 
         }

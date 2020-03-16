@@ -16,7 +16,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.commands.Command
-import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.build.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -32,7 +32,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class, ToastUtils::class, Context::class, TreatmentsPlugin::class)
+@PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class, ToastUtils::class, Context::class, TreatmentsPlugin::class, FabricPrivacy::class)
 class CommandQueueTest : TestBase() {
 
     @Mock lateinit var aapsLogger: AAPSLogger
@@ -45,6 +45,7 @@ class CommandQueueTest : TestBase() {
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var sp: SP
+    @Mock lateinit var fabricPrivacy: FabricPrivacy
 
     private val buildHelper = BuildHelper()
 
@@ -63,7 +64,7 @@ class CommandQueueTest : TestBase() {
 
     @Before
     fun prepareMock() {
-        commandQueue = CommandQueue(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, buildHelper)
+        commandQueue = CommandQueue(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, buildHelper, fabricPrivacy)
 
         val pumpDescription = PumpDescription()
         pumpDescription.basalMinimumRate = 0.1
@@ -86,105 +87,106 @@ class CommandQueueTest : TestBase() {
         val percentageConstraint = Constraint(0)
         `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
     }
-/*
-    @Test
-    fun doTests() {
 
-        // start with empty queue
-        Assert.assertEquals(0, commandQueue.size())
+    /*
+        @Test
+        fun doTests() {
 
-        // add bolus command
-        commandQueue.bolus(DetailedBolusInfo(), null)
-        Assert.assertEquals(1, commandQueue.size())
+            // start with empty queue
+            Assert.assertEquals(0, commandQueue.size())
 
-        // add READSTATUS
-        commandQueue.readStatus("anyString", null)
-        Assert.assertEquals(2, commandQueue.size())
+            // add bolus command
+            commandQueue.bolus(DetailedBolusInfo(), null)
+            Assert.assertEquals(1, commandQueue.size())
 
-        // adding another bolus should remove the first one (size still == 2)
-        commandQueue.bolus(DetailedBolusInfo(), null)
-        Assert.assertEquals(2, commandQueue.size())
+            // add READSTATUS
+            commandQueue.readStatus("anyString", null)
+            Assert.assertEquals(2, commandQueue.size())
 
-        // clear the queue should reset size
-        commandQueue.clear()
-        Assert.assertEquals(0, commandQueue.size())
+            // adding another bolus should remove the first one (size still == 2)
+            commandQueue.bolus(DetailedBolusInfo(), null)
+            Assert.assertEquals(2, commandQueue.size())
 
-        // add tempbasal
-        commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, null)
-        Assert.assertEquals(1, commandQueue.size())
+            // clear the queue should reset size
+            commandQueue.clear()
+            Assert.assertEquals(0, commandQueue.size())
 
-        // add tempbasal percent. it should replace previous TEMPBASAL
-        commandQueue.tempBasalPercent(0, 30, true, validProfile, null)
-        Assert.assertEquals(1, commandQueue.size())
+            // add tempbasal
+            commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, null)
+            Assert.assertEquals(1, commandQueue.size())
 
-        // add extended bolus
-        commandQueue.extendedBolus(1.0, 30, null)
-        Assert.assertEquals(2, commandQueue.size())
+            // add tempbasal percent. it should replace previous TEMPBASAL
+            commandQueue.tempBasalPercent(0, 30, true, validProfile, null)
+            Assert.assertEquals(1, commandQueue.size())
 
-        // add cancel temp basal should remove previous 2 temp basal setting
-        commandQueue.extendedBolus(1.0, 30, null)
-        Assert.assertEquals(2, commandQueue.size())
+            // add extended bolus
+            commandQueue.extendedBolus(1.0, 30, null)
+            Assert.assertEquals(2, commandQueue.size())
 
-        // cancel extended bolus should replace previous extended
-        commandQueue.extendedBolus(1.0, 30, null)
-        Assert.assertEquals(2, commandQueue.size())
+            // add cancel temp basal should remove previous 2 temp basal setting
+            commandQueue.extendedBolus(1.0, 30, null)
+            Assert.assertEquals(2, commandQueue.size())
 
-        // add setProfile
-        // TODO: this crash the test
-//        commandQueue.setProfile(validProfile, null)
-//        Assert.assertEquals(3, commandQueue.size())
+            // cancel extended bolus should replace previous extended
+            commandQueue.extendedBolus(1.0, 30, null)
+            Assert.assertEquals(2, commandQueue.size())
 
-        // add loadHistory
-        commandQueue.loadHistory(0.toByte(), null)
-        Assert.assertEquals(3, commandQueue.size())
+            // add setProfile
+            // TODO: this crash the test
+    //        commandQueue.setProfile(validProfile, null)
+    //        Assert.assertEquals(3, commandQueue.size())
 
-        // add loadEvents
-        commandQueue.loadEvents(null)
-        Assert.assertEquals(4, commandQueue.size())
-        commandQueue.clear()
-        commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, null)
-        commandQueue.pickup()
-        Assert.assertEquals(0, commandQueue.size())
-        Assert.assertNotNull(commandQueue.performing)
-        Assert.assertEquals(Command.CommandType.TEMPBASAL, commandQueue.performing?.commandType)
-        commandQueue.resetPerforming()
-        Assert.assertNull(commandQueue.performing)
-    }
+            // add loadHistory
+            commandQueue.loadHistory(0.toByte(), null)
+            Assert.assertEquals(3, commandQueue.size())
 
-    @Test
-    fun callingCancelAllBolusesClearsQueue() {
-        // given
-        Assert.assertEquals(0, commandQueue.size())
-        val smb = DetailedBolusInfo()
-        smb.lastKnownBolusTime = DateUtil.now()
-        smb.isSMB = true
-        commandQueue.bolus(smb, null)
-        commandQueue.bolus(DetailedBolusInfo(), null)
-        Assert.assertEquals(2, commandQueue.size())
+            // add loadEvents
+            commandQueue.loadEvents(null)
+            Assert.assertEquals(4, commandQueue.size())
+            commandQueue.clear()
+            commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, null)
+            commandQueue.pickup()
+            Assert.assertEquals(0, commandQueue.size())
+            Assert.assertNotNull(commandQueue.performing)
+            Assert.assertEquals(Command.CommandType.TEMPBASAL, commandQueue.performing?.commandType)
+            commandQueue.resetPerforming()
+            Assert.assertNull(commandQueue.performing)
+        }
 
-        // when
-        commandQueue.cancelAllBoluses()
+        @Test
+        fun callingCancelAllBolusesClearsQueue() {
+            // given
+            Assert.assertEquals(0, commandQueue.size())
+            val smb = DetailedBolusInfo()
+            smb.lastKnownBolusTime = DateUtil.now()
+            smb.isSMB = true
+            commandQueue.bolus(smb, null)
+            commandQueue.bolus(DetailedBolusInfo(), null)
+            Assert.assertEquals(2, commandQueue.size())
 
-        // then
-        Assert.assertEquals(0, commandQueue.size())
-    }
+            // when
+            commandQueue.cancelAllBoluses()
 
-    @Test
-    fun smbIsRejectedIfABolusIsQueued() {
-        // given
-        Assert.assertEquals(0, commandQueue.size())
+            // then
+            Assert.assertEquals(0, commandQueue.size())
+        }
 
-        // when
-        commandQueue.bolus(DetailedBolusInfo(), null)
-        val smb = DetailedBolusInfo()
-        smb.isSMB = true
-        val queued: Boolean = commandQueue.bolus(smb, null)
+        @Test
+        fun smbIsRejectedIfABolusIsQueued() {
+            // given
+            Assert.assertEquals(0, commandQueue.size())
 
-        // then
-        Assert.assertFalse(queued)
-        Assert.assertEquals(commandQueue.size(), 1)
-    }
-*/
+            // when
+            commandQueue.bolus(DetailedBolusInfo(), null)
+            val smb = DetailedBolusInfo()
+            smb.isSMB = true
+            val queued: Boolean = commandQueue.bolus(smb, null)
+
+            // then
+            Assert.assertFalse(queued)
+            Assert.assertEquals(commandQueue.size(), 1)
+        }
+    */
     @Test
     fun smbIsRejectedIfLastKnownBolusIsOutdated() {
         // given

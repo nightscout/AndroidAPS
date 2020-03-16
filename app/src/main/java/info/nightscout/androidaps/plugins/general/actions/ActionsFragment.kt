@@ -181,17 +181,16 @@ class ActionsFragment : DaggerFragment() {
             else View.GONE
 
         val profile = profileFunction.getProfile()
-        val pump = activePlugin.activePumpPlugin
+        val pump = activePlugin.activePump
 
         actions_temptarget?.visibility = (profile != null).toVisibility()
-        actions_canceltempbasal.visibility = (pump != null || profile == null).toVisibility()
-        actions_settempbasal.visibility = (pump != null || profile == null).toVisibility()
-        actions_fill.visibility = (pump != null || profile == null).toVisibility()
-        actions_extendedbolus.visibility = (pump != null || profile == null).toVisibility()
-        actions_extendedbolus_cancel.visibility = (pump != null || profile == null).toVisibility()
-        actions_historybrowser.visibility = (pump != null || profile == null).toVisibility()
-        actions_tddstats.visibility = (pump != null || profile == null).toVisibility()
-        if (pump == null) return
+        actions_canceltempbasal.visibility = (profile == null).toVisibility()
+        actions_settempbasal.visibility = (profile == null).toVisibility()
+        actions_fill.visibility = (profile == null).toVisibility()
+        actions_extendedbolus.visibility = (profile == null).toVisibility()
+        actions_extendedbolus_cancel.visibility = (profile == null).toVisibility()
+        actions_historybrowser.visibility = (profile == null).toVisibility()
+        actions_tddstats.visibility = (profile == null).toVisibility()
 
         val basalProfileEnabled = buildHelper.isEngineeringModeOrRelease() && pump.pumpDescription.isSetBasalProfileCapable
 
@@ -240,7 +239,7 @@ class ActionsFragment : DaggerFragment() {
     }
 
     private fun checkPumpCustomActions() {
-        val activePump = activePlugin.activePumpPlugin ?: return
+        val activePump = activePlugin.activePump
         val customActions = activePump.customActions ?: return
         removePumpCustomActions()
 

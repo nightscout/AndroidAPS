@@ -6,10 +6,10 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.TDD
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -28,9 +28,9 @@ class TddCalculator @Inject constructor(
     resourceHelper: ResourceHelper,
     val mainApp: MainApp,
     val sp: SP,
-    val configBuilderPlugin: ConfigBuilderPlugin,
+    val activePlugin: ActivePluginProvider,
     val profileFunction: ProfileFunction
-) : TreatmentsPlugin(injector, aapsLogger, rxBus, resourceHelper, mainApp, sp, profileFunction, configBuilderPlugin) {
+) : TreatmentsPlugin(injector, aapsLogger, rxBus, resourceHelper, mainApp, sp, profileFunction, activePlugin) {
 
     init {
         service = TreatmentService() // plugin is not started

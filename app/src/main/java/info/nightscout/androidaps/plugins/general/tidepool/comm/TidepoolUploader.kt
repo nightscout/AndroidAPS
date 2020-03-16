@@ -6,10 +6,10 @@ import android.os.SystemClock
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolStatus
 import info.nightscout.androidaps.plugins.general.tidepool.messages.AuthReplyMessage
 import info.nightscout.androidaps.plugins.general.tidepool.messages.AuthRequestMessage
@@ -17,7 +17,6 @@ import info.nightscout.androidaps.plugins.general.tidepool.messages.DatasetReply
 import info.nightscout.androidaps.plugins.general.tidepool.messages.OpenDatasetRequestMessage
 import info.nightscout.androidaps.plugins.general.tidepool.messages.UploadReplyMessage
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.InstanceId
 import info.nightscout.androidaps.utils.OKDialog
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -39,7 +38,7 @@ class TidepoolUploader @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
     private val uploadChunk: UploadChunk,
-    private val configBuilderPlugin: ConfigBuilderPlugin
+    private val activePlugin: ActivePluginProvider
 ) {
 
     private var wl: PowerManager.WakeLock? = null
@@ -151,8 +150,7 @@ class TidepoolUploader @Inject constructor(
                 if (session.datasetReply == null) {
                     rxBus.send(EventTidepoolStatus(("Creating new dataset")))
                     val call = session.service.openDataSet(session.token!!, session.authReply!!.userid!!,
-                        OpenDatasetRequestMessage((configBuilderPlugin.activePumpPlugin?.serialNumber()
-                            ?: InstanceId.instanceId())).getBody())
+                        OpenDatasetRequestMessage(activePlugin.activePump.serialNumber()).getBody())
                     call.enqueue(TidepoolCallback<DatasetReplyMessage>(rxBus, session, "Open New Dataset", {
                         connectionStatus = ConnectionStatus.CONNECTED
                         rxBus.send(EventTidepoolStatus(("New dataset OK")))

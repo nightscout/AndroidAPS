@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -26,7 +26,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var activePlugin: ActivePluginProvider
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -53,7 +53,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         // profile
         context?.let { context ->
-            val profileStore = configBuilderPlugin.activeProfileInterface.profile
+            val profileStore = activePlugin.activeProfileInterface.profile
                 ?: return
             val profileList = profileStore.getProfileList()
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
@@ -79,7 +79,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val profileStore = configBuilderPlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileInterface.profile
             ?: return false
 
         val actions: LinkedList<String> = LinkedList()

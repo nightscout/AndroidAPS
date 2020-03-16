@@ -243,8 +243,7 @@ class SWDefinition @Inject constructor(
                     }, null)
                 }
             }
-            .visibility { activePlugin.activeBgSource != null && (activePlugin.activeBgSource as PluginBase).preferencesId > 0 })
-        .validator { activePlugin.activeBgSource != null }
+            .visibility { (activePlugin.activeBgSource as PluginBase).preferencesId > 0 })
     private val screenProfile = SWScreen(R.string.configbuilder_profile)
         .skippable(false)
         .add(SWInfotext()
@@ -265,7 +264,7 @@ class SWDefinition @Inject constructor(
         .skippable(false)
         .add(SWFragment(this)
             .add(LocalProfileFragment()))
-        .validator { localProfilePlugin.getProfile()?.getDefaultProfile()?.isValid("StartupWizard") == true }
+        .validator { localProfilePlugin.profile?.getDefaultProfile()?.isValid("StartupWizard") == true }
         .visibility { localProfilePlugin.isEnabled(PluginType.PROFILE) }
     private val screenProfileSwitch = SWScreen(R.string.careportal_profileswitch)
         .skippable(false)
@@ -285,22 +284,19 @@ class SWDefinition @Inject constructor(
         .add(SWButton()
             .text(R.string.pumpsetup)
             .action {
-                val plugin = activePlugin.activePump as PluginBase?
-                if (plugin != null) {
-                    PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", Runnable {
-                        val i = Intent(activity, PreferencesActivity::class.java)
-                        i.putExtra("id", plugin.preferencesId)
-                        activity!!.startActivity(i)
-                    }, null)
-                }
+                val plugin = activePlugin.activePump as PluginBase
+                PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", Runnable {
+                    val i = Intent(activity, PreferencesActivity::class.java)
+                    i.putExtra("id", plugin.preferencesId)
+                    activity!!.startActivity(i)
+                }, null)
             }
-            .visibility { activePlugin.activePumpPlugin != null && (activePlugin.activePump as PluginBase?)!!.preferencesId > 0 })
+            .visibility { (activePlugin.activePump as PluginBase).preferencesId > 0 })
         .add(SWButton()
             .text(R.string.readstatus)
-            .action { commandQueue.readStatus("Clicked connect to pump", null) }
-            .visibility { activePlugin.activePumpPlugin != null })
+            .action { commandQueue.readStatus("Clicked connect to pump", null) })
         .add(SWEventListener(resourceHelper, rxBus, EventPumpStatusChanged::class.java))
-        .validator { activePlugin.activePumpPlugin != null && activePlugin.getActivePumpPlugin()!!.isInitialized() }
+        .validator { activePlugin.activePump.isInitialized }
     private val screenAps = SWScreen(R.string.configbuilder_aps)
         .skippable(false)
         .add(SWInfotext()
@@ -324,8 +320,7 @@ class SWDefinition @Inject constructor(
                     }, null)
                 }
             }
-            .visibility { activePlugin.activeAPS != null && (activePlugin.activeAPS as PluginBase?)!!.preferencesId > 0 })
-        .validator { activePlugin.activeAPS != null }
+            .visibility { (activePlugin.activeAPS as PluginBase).preferencesId > 0 })
         .visibility { Config.APS }
     private val screenApsMode = SWScreen(R.string.apsmode_title)
         .skippable(false)
@@ -386,11 +381,11 @@ class SWDefinition @Inject constructor(
         .validator { objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].isStarted }
         .visibility { !objectivesPlugin.objectives[ObjectivesPlugin.FIRST_OBJECTIVE].isStarted && Config.APS }
 
-    private fun SWDefinitionFull() { // List all the screens here
+    private fun swDefinitionFull() { // List all the screens here
         add(screenSetupWizard)
             .add(screenLanguage)
             .add(screenEula)
-            .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimalization
+            .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
             .add(screenPermissionBt)
             .add(screenPermissionStore)
             .add(screenImport)
@@ -412,11 +407,11 @@ class SWDefinition @Inject constructor(
             .add(getScreenObjectives)
     }
 
-    private fun SWDefinitionPumpControl() { // List all the screens here
+    private fun swDefinitionPumpControl() { // List all the screens here
         add(screenSetupWizard)
             .add(screenLanguage)
             .add(screenEula)
-            .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimalization
+            .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
             .add(screenPermissionBt)
             .add(screenPermissionStore)
             .add(screenImport)
@@ -434,11 +429,11 @@ class SWDefinition @Inject constructor(
             .add(screenSensitivity)
     }
 
-    private fun SWDefinitionNSClient() { // List all the screens here
+    private fun swDefinitionNSClient() { // List all the screens here
         add(screenSetupWizard)
             .add(screenLanguage)
             .add(screenEula)
-            .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimalization
+            .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
             .add(screenPermissionStore)
             .add(screenImport)
             .add(screenUnits)
@@ -451,6 +446,6 @@ class SWDefinition @Inject constructor(
     }
 
     init {
-        if (Config.APS) SWDefinitionFull() else if (Config.PUMPCONTROL) SWDefinitionPumpControl() else if (Config.NSCLIENT) SWDefinitionNSClient()
+        if (Config.APS) swDefinitionFull() else if (Config.PUMPCONTROL) swDefinitionPumpControl() else if (Config.NSCLIENT) swDefinitionNSClient()
     }
 }

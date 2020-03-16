@@ -5,19 +5,23 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
-import info.nightscout.androidaps.MainApp
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.utils.LocaleHelper
 import info.nightscout.androidaps.utils.PasswordProtection
+import javax.inject.Inject
 
-class SingleFragmentActivity : AppCompatActivity() {
+class SingleFragmentActivity : DaggerAppCompatActivity() {
+    @Inject lateinit var pluginStore: PluginStore
+
     private var plugin: PluginBase? = null
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_single_fragment)
-        plugin = MainApp.getPluginsList()[intent.getIntExtra("plugin", -1)]
+        plugin = pluginStore.plugins[intent.getIntExtra("plugin", -1)]
         title = plugin?.name
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)

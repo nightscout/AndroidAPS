@@ -39,6 +39,7 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -50,6 +51,7 @@ import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.constraints.dstHelper.DstHelperPlugin;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
@@ -124,8 +126,6 @@ public class MainApp extends DaggerApplication {
 
     static DatabaseHelper sDatabaseHelper = null;
 
-    static ArrayList<PluginBase> pluginsList = new ArrayList<>();
-
     static DataReceiver dataReceiver = new DataReceiver();
     TimeDateOrTZChangeReceiver timeDateOrTZChangeReceiver;
 
@@ -133,6 +133,7 @@ public class MainApp extends DaggerApplication {
     private int ONGOING_NOTIFICATION_ID = 4711; // TODO: move to OngoingNotificationProvider (and dagger)
     private Notification notification; // TODO: move to OngoingNotificationProvider (and dagger)
 
+    @Inject PluginStore pluginStore;
     @Inject public HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
     @Inject ActivityMonitor activityMonitor;
@@ -241,61 +242,61 @@ public class MainApp extends DaggerApplication {
         versionCheckersUtils.triggerCheckVersion();
 
         // Register all tabs in app here
-        pluginsList.add(overviewPlugin);
-        pluginsList.add(iobCobCalculatorPlugin);
-        if (!Config.NSCLIENT) pluginsList.add(actionsPlugin);
-        pluginsList.add(insulinOrefRapidActingPlugin);
-        pluginsList.add(insulinOrefUltraRapidActingPlugin);
-        pluginsList.add(insulinOrefFreePeakPlugin);
-        pluginsList.add(sensitivityOref0Plugin);
-        pluginsList.add(sensitivityAAPSPlugin);
-        pluginsList.add(sensitivityWeightedAveragePlugin);
-        pluginsList.add(sensitivityOref1Plugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(danaRPlugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(danaRKoreanPlugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(danaRv2Plugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(danaRSPlugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(localInsightPlugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(comboPlugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(medtronicPumpPlugin);
-        if (!Config.NSCLIENT) pluginsList.add(mdiPlugin);
-        if (!Config.NSCLIENT) pluginsList.add(virtualPumpPlugin);
-        if (Config.NSCLIENT) pluginsList.add(careportalPlugin);
-        if (Config.APS) pluginsList.add(loopPlugin);
-        if (Config.APS) pluginsList.add(openAPSMAPlugin);
-        if (Config.APS) pluginsList.add(openAPSAMAPlugin);
-        if (Config.APS) pluginsList.add(openAPSSMBPlugin);
-        pluginsList.add(nsProfilePlugin);
-        if (!Config.NSCLIENT) pluginsList.add(localProfilePlugin);
-        pluginsList.add(treatmentsPlugin);
-        if (!Config.NSCLIENT) pluginsList.add(safetyPlugin);
-        if (!Config.NSCLIENT) pluginsList.add(versionCheckerPlugin);
-        if (Config.APS) pluginsList.add(storageConstraintPlugin);
-        if (Config.APS) pluginsList.add(signatureVerifierPlugin);
-        if (Config.APS) pluginsList.add(objectivesPlugin);
-        pluginsList.add(xdripPlugin);
-        pluginsList.add(nSClientSourcePlugin);
-        pluginsList.add(mM640GPlugin);
-        pluginsList.add(glimpPlugin);
-        pluginsList.add(dexcomPlugin);
-        pluginsList.add(poctechPlugin);
-        pluginsList.add(tomatoPlugin);
-        pluginsList.add(eversensePlugin);
-        pluginsList.add(randomBgPlugin);
-        if (!Config.NSCLIENT) pluginsList.add(smsCommunicatorPlugin);
-        pluginsList.add(foodPlugin);
+        pluginStore.add(overviewPlugin);
+        pluginStore.add(iobCobCalculatorPlugin);
+        if (!Config.NSCLIENT) pluginStore.add(actionsPlugin);
+        pluginStore.add(insulinOrefRapidActingPlugin);
+        pluginStore.add(insulinOrefUltraRapidActingPlugin);
+        pluginStore.add(insulinOrefFreePeakPlugin);
+        pluginStore.add(sensitivityOref0Plugin);
+        pluginStore.add(sensitivityAAPSPlugin);
+        pluginStore.add(sensitivityWeightedAveragePlugin);
+        pluginStore.add(sensitivityOref1Plugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(danaRPlugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(danaRKoreanPlugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(danaRv2Plugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(danaRSPlugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(localInsightPlugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(comboPlugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(medtronicPumpPlugin);
+        if (!Config.NSCLIENT) pluginStore.add(mdiPlugin);
+        if (!Config.NSCLIENT) pluginStore.add(virtualPumpPlugin);
+        if (Config.NSCLIENT) pluginStore.add(careportalPlugin);
+        if (Config.APS) pluginStore.add(loopPlugin);
+        if (Config.APS) pluginStore.add(openAPSMAPlugin);
+        if (Config.APS) pluginStore.add(openAPSAMAPlugin);
+        if (Config.APS) pluginStore.add(openAPSSMBPlugin);
+        pluginStore.add(nsProfilePlugin);
+        if (!Config.NSCLIENT) pluginStore.add(localProfilePlugin);
+        pluginStore.add(treatmentsPlugin);
+        if (!Config.NSCLIENT) pluginStore.add(safetyPlugin);
+        if (!Config.NSCLIENT) pluginStore.add(versionCheckerPlugin);
+        if (Config.APS) pluginStore.add(storageConstraintPlugin);
+        if (Config.APS) pluginStore.add(signatureVerifierPlugin);
+        if (Config.APS) pluginStore.add(objectivesPlugin);
+        pluginStore.add(xdripPlugin);
+        pluginStore.add(nSClientSourcePlugin);
+        pluginStore.add(mM640GPlugin);
+        pluginStore.add(glimpPlugin);
+        pluginStore.add(dexcomPlugin);
+        pluginStore.add(poctechPlugin);
+        pluginStore.add(tomatoPlugin);
+        pluginStore.add(eversensePlugin);
+        pluginStore.add(randomBgPlugin);
+        if (!Config.NSCLIENT) pluginStore.add(smsCommunicatorPlugin);
+        pluginStore.add(foodPlugin);
 
-        pluginsList.add(wearPlugin);
-        pluginsList.add(statusLinePlugin);
-        pluginsList.add(persistentNotificationPlugin);
-        pluginsList.add(nsClientPlugin);
+        pluginStore.add(wearPlugin);
+        pluginStore.add(statusLinePlugin);
+        pluginStore.add(persistentNotificationPlugin);
+        pluginStore.add(nsClientPlugin);
 //            if (engineeringMode) pluginsList.add(tidepoolPlugin);
-        pluginsList.add(maintenancePlugin);
-        pluginsList.add(automationPlugin);
-        pluginsList.add(dstHelperPlugin);
-        pluginsList.add(dataBroadcastPlugin);
+        pluginStore.add(maintenancePlugin);
+        pluginStore.add(automationPlugin);
+        pluginStore.add(dstHelperPlugin);
+        pluginStore.add(dataBroadcastPlugin);
 
-        pluginsList.add(configBuilderPlugin);
+        pluginStore.add(configBuilderPlugin);
 
         configBuilderPlugin.initialize();
 
@@ -394,68 +395,6 @@ public class MainApp extends DaggerApplication {
 
     public FirebaseAnalytics getFirebaseAnalytics() {
         return firebaseAnalytics;
-    }
-
-    public static ArrayList<PluginBase> getPluginsList() {
-        return pluginsList;
-    }
-
-    public static ArrayList<PluginBase> getSpecificPluginsList(PluginType type) {
-        ArrayList<PluginBase> newList = new ArrayList<>();
-
-        if (pluginsList != null) {
-            for (PluginBase p : pluginsList) {
-                if (p.getType() == type)
-                    newList.add(p);
-            }
-        } else {
-            log.error("pluginsList=null");
-        }
-        return newList;
-    }
-
-    public static ArrayList<PluginBase> getSpecificPluginsVisibleInList(PluginType type) {
-        ArrayList<PluginBase> newList = new ArrayList<>();
-
-        if (pluginsList != null) {
-            for (PluginBase p : pluginsList) {
-                if (p.getType() == type)
-                    if (p.showInList(type))
-                        newList.add(p);
-            }
-        } else {
-            log.error("pluginsList=null");
-        }
-        return newList;
-    }
-
-    public ArrayList<PluginBase> getSpecificPluginsListByInterface(Class interfaceClass) {
-        ArrayList<PluginBase> newList = new ArrayList<>();
-
-        if (pluginsList != null) {
-            for (PluginBase p : pluginsList) {
-                if (p.getClass() != ConfigBuilderPlugin.class && interfaceClass.isAssignableFrom(p.getClass()))
-                    newList.add(p);
-            }
-        } else {
-            log.error("pluginsList=null");
-        }
-        return newList;
-    }
-
-    public static ArrayList<PluginBase> getSpecificPluginsVisibleInListByInterface(Class interfaceClass, PluginType type) {
-        ArrayList<PluginBase> newList = new ArrayList<>();
-
-        if (pluginsList != null) {
-            for (PluginBase p : pluginsList) {
-                if (p.getClass() != ConfigBuilderPlugin.class && interfaceClass.isAssignableFrom(p.getClass()))
-                    if (p.showInList(type))
-                        newList.add(p);
-            }
-        } else {
-            log.error("pluginsList=null");
-        }
-        return newList;
     }
 
     // global Notification has been moved to MainApp because PersistentNotificationPlugin is initialized too late

@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.plugins.treatments.Treatment
@@ -26,7 +26,7 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_StopTest : DanaRSTestBase() {
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var danaRSPlugin: DanaRSPlugin
 
     private var treatmentInjector: HasAndroidInjector = HasAndroidInjector {
@@ -35,7 +35,7 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_StopTest : DanaRSTestBase() {
                 it.defaultValueHelper = defaultValueHelper
                 it.resourceHelper = resourceHelper
                 it.profileFunction = profileFunction
-                it.configBuilderPlugin = configBuilderPlugin
+                it.activePlugin = activePlugin
             }
         }
     }

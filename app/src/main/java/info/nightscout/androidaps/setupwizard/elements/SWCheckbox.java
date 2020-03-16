@@ -15,6 +15,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -54,7 +55,7 @@ public class SWCheckbox extends SWItem {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 ArrayList<PluginBase> pluginsInCategory;
-                pluginsInCategory = MainApp.getSpecificPluginsList(PluginType.PUMP);
+                pluginsInCategory = PluginStore.Companion.getInstance().getSpecificPluginsList(PluginType.PUMP);
                 PluginBase found = null;
                 for (PluginBase p : pluginsInCategory) {
                     if (p.isEnabled(PluginType.PUMP) && found == null) {

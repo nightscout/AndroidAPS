@@ -27,7 +27,7 @@ class ActionLoopDisableTest : ActionsTestBase() {
         `when`(virtualPumpPlugin.specialEnableCondition()).thenReturn(true)
         val pumpDescription = PumpDescription().apply { isTempBasalCapable = true }
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
-        `when`(configBuilderPlugin.activePump).thenReturn(virtualPumpPlugin)
+        `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(resourceHelper.gs(R.string.disableloop)).thenReturn("Disable loop")
         `when`(resourceHelper.gs(R.string.alreadydisabled)).thenReturn("Disable loop")
 

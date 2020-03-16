@@ -2,7 +2,7 @@ package info.nightscout.androidaps.utils;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
 
 /**
  * Created by mike on 11.07.2016.
@@ -46,13 +46,13 @@ public class DecimalFormatter {
     }
 
     public static String toPumpSupportedBolus(double value) {
-        return ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep <= 0.051
+        return PluginStore.Companion.getInstance().getActivePump().getPumpDescription().bolusStep <= 0.051
                 ? to2Decimal(value)
                 : to1Decimal(value);
     }
 
     public static DecimalFormat pumpSupportedBolusFormat() {
-        return ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep <= 0.051
+        return PluginStore.Companion.getInstance().getActivePump().getPumpDescription().bolusStep <= 0.051
                 ? new DecimalFormat("0.00")
                 : new DecimalFormat("0.0");
     }

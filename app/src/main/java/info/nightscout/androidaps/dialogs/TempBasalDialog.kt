@@ -53,7 +53,7 @@ class TempBasalDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val pumpDescription = activePlugin.activePumpPlugin?.pumpDescription ?: return
+        val pumpDescription = activePlugin.activePump.pumpDescription
         val profile = profileFunction.getProfile() ?: return
 
         val maxTempPercent = pumpDescription.maxTempPercent.toDouble()

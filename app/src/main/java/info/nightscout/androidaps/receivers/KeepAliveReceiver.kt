@@ -100,7 +100,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         var shouldUploadStatus = false
         if (Config.NSCLIENT) return
         if (Config.PUMPCONTROL) shouldUploadStatus = true
-        if (usedAPS == null || !loopPlugin.isEnabled() || iobCobCalculatorPlugin.actualBg() == null)
+        if (!loopPlugin.isEnabled() || iobCobCalculatorPlugin.actualBg() == null)
             shouldUploadStatus = true
         else if (DateUtil.isOlderThan(usedAPS.lastAPSRun, 5)) shouldUploadStatus = true
         if (DateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY) && shouldUploadStatus) {
@@ -110,7 +110,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     }
 
     private fun checkPump() {
-        val pump = activePlugin.activePumpPlugin ?: return
+        val pump = activePlugin.activePump
         val profile = profileFunction.getProfile() ?: return
         val lastConnection = pump.lastDataTime()
         val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis()

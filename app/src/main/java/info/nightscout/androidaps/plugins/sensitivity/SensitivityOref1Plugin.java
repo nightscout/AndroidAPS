@@ -19,7 +19,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
@@ -33,12 +33,15 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
 
+    private ProfileFunction profileFunction;
+
     @Inject
     public SensitivityOref1Plugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             ResourceHelper resourceHelper,
-            SP sp
+            SP sp,
+            ProfileFunction profileFunction
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.SENSITIVITY)
@@ -49,6 +52,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
                         .description(R.string.description_sensitivity_oref1),
                 injector, aapsLogger, resourceHelper, sp
         );
+        this.profileFunction = profileFunction;
     }
 
     @Override
@@ -57,7 +61,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         // dependency, this should be avoided
         LongSparseArray<AutosensData> autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable();
 
-        Profile profile = ProfileFunctions.getInstance().getProfile();
+        Profile profile = profileFunction.getProfile();
 
         if (profile == null) {
             getAapsLogger().error("No profile");

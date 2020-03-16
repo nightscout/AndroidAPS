@@ -21,7 +21,7 @@ class ActionLoopSuspendTest : ActionsTestBase() {
     fun setup() {
 
         `when`(virtualPumpPlugin.specialEnableCondition()).thenReturn(true)
-        `when`(configBuilderPlugin.activePump).thenReturn(virtualPumpPlugin)
+        `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(resourceHelper.gs(R.string.suspendloop)).thenReturn("Suspend loop")
         `when`(resourceHelper.gs(ArgumentMatchers.eq(R.string.suspendloopforXmin), ArgumentMatchers.anyInt())).thenReturn("Suspend loop for %d min")
 

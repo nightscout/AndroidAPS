@@ -38,7 +38,8 @@ class DexcomPlugin @Inject constructor(
     .pluginName(R.string.dexcom_app_patched)
     .shortName(R.string.dexcom_short)
     .preferencesId(R.xml.pref_bgsourcedexcom)
-    .description(R.string.description_source_dexcom),
+    .description(R.string.description_source_dexcom)
+    .setDefault(),
     aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 

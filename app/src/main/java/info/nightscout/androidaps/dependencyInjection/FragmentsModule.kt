@@ -28,6 +28,7 @@ import info.nightscout.androidaps.plugins.general.overview.OverviewFragment
 import info.nightscout.androidaps.plugins.general.overview.dialogs.EditQuickWizardDialog
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorFragment
 import info.nightscout.androidaps.plugins.general.tidepool.TidepoolFragment
+import info.nightscout.androidaps.plugins.insulin.InsulinFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
 import info.nightscout.androidaps.plugins.pump.combo.ComboFragment
@@ -57,6 +58,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesDanaRFragment(): DanaRFragment
     @ContributesAndroidInjector abstract fun contributesFoodFragment(): FoodFragment
+    @ContributesAndroidInjector abstract fun contributesInsulinFragment(): InsulinFragment
     @ContributesAndroidInjector abstract fun contributesLocalProfileFragment(): LocalProfileFragment
     @ContributesAndroidInjector abstract fun contributesObjectivesFragment(): ObjectivesFragment
     @ContributesAndroidInjector abstract fun contributesOpenAPSAMAFragment(): OpenAPSAMAFragment

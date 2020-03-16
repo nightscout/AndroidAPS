@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.services;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
@@ -10,7 +11,6 @@ import javax.inject.Inject;
 import dagger.android.DaggerService;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.Profile;
@@ -26,7 +26,6 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -95,8 +94,7 @@ public class DanaRSService extends DaggerService {
     @Inject ResourceHelper resourceHelper;
     @Inject ProfileFunction profileFunction;
     @Inject CommandQueueProvider commandQueue;
-    @Inject MainApp mainApp;
-    @Inject ConfigBuilderPlugin configBuilderPlugin;
+    @Inject Context context;
     @Inject DanaRSPlugin danaRSPlugin;
     @Inject DanaRPump danaRPump;
     @Inject DanaRSMessageHashTable danaRSMessageHashTable;
@@ -175,7 +173,7 @@ public class DanaRSService extends DaggerService {
             danaRPump.setLastConnection(System.currentTimeMillis());
 
             Profile profile = profileFunction.getProfile();
-            PumpInterface pump = configBuilderPlugin.getActivePump();
+            PumpInterface pump = activePlugin.getActivePump();
             if (profile != null && Math.abs(danaRPump.getCurrentBasal() - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)));
                 bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate(aapsLogger, rxBus, resourceHelper, danaRPump)); // basal profile, basalStep, maxBasal
@@ -215,12 +213,12 @@ public class DanaRSService extends DaggerService {
                 if (Math.abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: " + timeDiff + " seconds - large difference");
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    Intent i = new Intent(mainApp, ErrorHelperActivity.class);
+                    Intent i = new Intent(context, ErrorHelperActivity.class);
                     i.putExtra("soundid", R.raw.error);
                     i.putExtra("status", resourceHelper.gs(R.string.largetimediff));
                     i.putExtra("title", resourceHelper.gs(R.string.largetimedifftitle));
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mainApp.startActivity(i);
+                    context.startActivity(i);
 
                     //deinitialize pump
                     danaRPump.setLastConnection(0);

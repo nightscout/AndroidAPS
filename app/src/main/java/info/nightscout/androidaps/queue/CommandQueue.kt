@@ -9,11 +9,14 @@ import dagger.Lazy
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
+import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventBolusRequested
+import info.nightscout.androidaps.events.EventNewBasalProfile
+import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
@@ -28,10 +31,13 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.queue.commands.Command.CommandType
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.build.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -88,13 +94,42 @@ class CommandQueue @Inject constructor(
     val activePlugin: Lazy<ActivePluginProvider>,
     val context: Context,
     val sp: SP,
-    private val buildHelper: BuildHelper
+    private val buildHelper: BuildHelper,
+    val fabricPrivacy: FabricPrivacy
 ) : CommandQueueProvider {
+
+    private val disposable = CompositeDisposable()
 
     private val queue = LinkedList<Command>()
     private var thread: QueueThread? = null
 
     var performing: Command? = null
+
+    init {
+        disposable.add(rxBus
+            .toObservable(EventProfileNeedsUpdate::class.java)
+            .observeOn(Schedulers.io())
+            .subscribe({
+                aapsLogger.debug(LTag.PROFILE, "onProfileSwitch")
+                profileFunction.getProfile()?.let {
+                    setProfile(it, object : Callback() {
+                        override fun run() {
+                            if (!result.success) {
+                                val i = Intent(context, ErrorHelperActivity::class.java)
+                                i.putExtra("soundid", R.raw.boluserror)
+                                i.putExtra("status", result.comment)
+                                i.putExtra("title", resourceHelper.gs(R.string.failedupdatebasalprofile))
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                context.startActivity(i)
+                            }
+                            if (result.enacted) rxBus.send(EventNewBasalProfile())
+                        }
+                    })
+                }
+            }) { exception: Throwable -> fabricPrivacy.logException(exception) }
+        )
+
+    }
 
     private fun executingNowError(): PumpEnactResult =
         PumpEnactResult(injector).success(false).enacted(false).comment(resourceHelper.gs(R.string.executingrightnow))
@@ -172,7 +207,7 @@ class CommandQueue @Inject constructor(
 
     override fun independentConnect(reason: String, callback: Callback?) {
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
-        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper)
+        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, fabricPrivacy)
         tempCommandQueue.readStatus(reason, callback)
     }
 

@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.configBuilder;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -9,35 +8,26 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
-import info.nightscout.androidaps.events.EventNewBasalProfile;
-import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class ProfileFunctions implements ProfileFunction {
     private static Logger log = StacktraceLoggerWrapper.getLogger(L.PROFILE);
-    private CompositeDisposable disposable = new CompositeDisposable();
 
     private static ProfileFunctions profileFunctions = null;
 
@@ -46,36 +36,6 @@ public class ProfileFunctions implements ProfileFunction {
         if (profileFunctions == null)
             profileFunctions = new ProfileFunctions();
         return profileFunctions;
-    }
-
-    static {
-        ProfileFunctions.getInstance(); // register to bus at start
-    }
-
-    private ProfileFunctions() {
-        disposable.add(RxBus.Companion.getINSTANCE()
-                .toObservable(EventProfileNeedsUpdate.class)
-                .observeOn(Schedulers.io())
-                .subscribe(event -> {
-                    if (L.isEnabled(L.PROFILE))
-                        log.debug("onProfileSwitch");
-                    ConfigBuilderPlugin.getPlugin().getCommandQueue().setProfile(getProfile(), new Callback() {
-                        @Override
-                        public void run() {
-                            if (!result.success) {
-                                Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
-                                i.putExtra("soundid", R.raw.boluserror);
-                                i.putExtra("status", result.comment);
-                                i.putExtra("title", MainApp.gs(R.string.failedupdatebasalprofile));
-                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                MainApp.instance().startActivity(i);
-                            }
-                            if (result.enacted)
-                                RxBus.Companion.getINSTANCE().send(new EventNewBasalProfile());
-                        }
-                    });
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
-        );
     }
 
     @NotNull
@@ -98,7 +58,7 @@ public class ProfileFunctions implements ProfileFunction {
         String profileName = MainApp.gs(R.string.noprofileselected);
 
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
-        ProfileInterface activeProfile = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
+        ProfileInterface activeProfile = PluginStore.Companion.getInstance().getActiveProfileInterface();
 
         ProfileSwitch profileSwitch = activeTreatments.getProfileSwitchFromHistory(time);
         if (profileSwitch != null) {
@@ -145,7 +105,7 @@ public class ProfileFunctions implements ProfileFunction {
     @Nullable
     public Profile getProfile(long time) {
         TreatmentsInterface activeTreatments = TreatmentsPlugin.getPlugin();
-        ProfileInterface activeProfile = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
+        ProfileInterface activeProfile = PluginStore.Companion.getInstance().getActiveProfileInterface();
 
         //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
         ProfileSwitch profileSwitch = activeTreatments.getProfileSwitchFromHistory(time);
@@ -177,7 +137,7 @@ public class ProfileFunctions implements ProfileFunction {
         profileSwitch.source = Source.USER;
         profileSwitch.profileName = profileName;
         profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).getData().toString();
-        profileSwitch.profilePlugin = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getClass().getName();
+        profileSwitch.profilePlugin = PluginStore.Companion.getInstance().getActiveProfileInterface().getClass().getName();
         profileSwitch.durationInMinutes = duration;
         profileSwitch.isCPP = percentage != 100 || timeShift != 0;
         profileSwitch.timeshift = timeShift;

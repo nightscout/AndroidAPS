@@ -44,7 +44,8 @@ class LocalProfilePlugin @Inject constructor(
     .enableByDefault(true)
     .pluginName(R.string.localprofile)
     .shortName(R.string.localprofile_shortname)
-    .description(R.string.description_profile_local),
+    .description(R.string.description_profile_local)
+    .setDefault(),
     aapsLogger, resourceHelper, injector
 ), ProfileInterface {
 

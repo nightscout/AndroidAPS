@@ -42,7 +42,7 @@ class DstHelperPlugin @Inject constructor(
 
     //Return false if time to DST change happened in the last 3 hours.
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        val pump = activePlugin.activePumpPlugin ?: return value
+        val pump = activePlugin.activePump
         if (pump.canHandleDST()) {
             aapsLogger.debug(LTag.CONSTRAINTS, "Pump can handle DST")
             return value

@@ -49,6 +49,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
@@ -75,7 +76,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
     @Inject ResourceHelper resourceHelper;
     @Inject ConstraintChecker constraintChecker;
     @Inject SP sp;
-    @Inject ConfigBuilderPlugin configBuilderPlugin;
+    @Inject ActivePluginProvider activePlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject HardLimits hardLimits;
 
@@ -178,7 +179,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
 
         // profile
         profile = profileFunction.getProfile();
-        profileStore = configBuilderPlugin.getActiveProfileInterface().getProfile();
+        profileStore = activePlugin.getActiveProfileInterface().getProfile();
         if (profileStore == null) {
             if (options.eventType == R.id.careportal_profileswitch) {
                 log.error("Profile switch called but plugin doesn't contain valid profile");

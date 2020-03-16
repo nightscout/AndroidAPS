@@ -9,8 +9,8 @@ import androidx.fragment.app.FragmentTransaction
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventExtendedBolusChange
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.treatments.fragments.*
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.plusAssign
@@ -24,13 +24,10 @@ class TreatmentsFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
 
     private val disposable = CompositeDisposable()
-
-    @Inject
-    lateinit var configBuilderPlugin: ConfigBuilderPlugin
-    @Inject
-    lateinit var treatmentsPlugin: TreatmentsPlugin
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -103,8 +100,7 @@ class TreatmentsFragment : DaggerFragment() {
     }
 
     private fun updateGui() {
-        if (configBuilderPlugin.activePumpPlugin?.pumpDescription?.isExtendedBolusCapable == true
-            || treatmentsPlugin.extendedBolusesFromHistory.size() > 0)
+        if (activePlugin.activePump.pumpDescription.isExtendedBolusCapable || treatmentsPlugin.extendedBolusesFromHistory.size() > 0)
             treatments_extendedboluses?.visibility = View.VISIBLE
         else
             treatments_extendedboluses?.visibility = View.GONE

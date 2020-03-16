@@ -7,11 +7,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.interfaces.ConstraintsInterface
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
@@ -28,7 +24,7 @@ class ObjectivesPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
-    private val configBuilderPlugin: ConfigBuilderPlugin,
+    private val activePlugin: ActivePluginProvider,
     private val sp: SP
 
 ) : PluginBase(PluginDescription()
@@ -64,8 +60,7 @@ class ObjectivesPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-        val pump = configBuilderPlugin.activePumpPlugin
-        return pump == null || pump.pumpDescription.isTempBasalCapable
+        return activePlugin.activePump.pumpDescription.isTempBasalCapable
     }
 
     // convert 2.3 SP version

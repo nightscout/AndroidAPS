@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.sensitivity;
 
+import androidx.annotation.NonNull;
 import androidx.collection.LongSparseArray;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
@@ -35,13 +36,16 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
 
     private SP sp;
+    private ProfileFunction profileFunction;
+    private ResourceHelper resourceHelper;
 
     @Inject
     public SensitivityAAPSPlugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             ResourceHelper resourceHelper,
-            SP sp
+            SP sp,
+            ProfileFunction profileFunction
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.SENSITIVITY)
@@ -52,20 +56,21 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
                 injector, aapsLogger, resourceHelper, sp
         );
         this.sp = sp;
+        this.profileFunction = profileFunction;
     }
 
-    @Override
+    @NonNull @Override
     public AutosensResult detectSensitivity(IobCobCalculatorPlugin iobCobCalculatorPlugin, long fromTime, long toTime) {
         LongSparseArray<AutosensData> autosensDataTable = iobCobCalculatorPlugin.getAutosensDataTable();
 
         String age = sp.getString(R.string.key_age, "");
         int defaultHours = 24;
-        if (age.equals(MainApp.gs(R.string.key_adult))) defaultHours = 24;
-        if (age.equals(MainApp.gs(R.string.key_teenage))) defaultHours = 4;
-        if (age.equals(MainApp.gs(R.string.key_child))) defaultHours = 4;
+        if (age.equals(resourceHelper.gs(R.string.key_adult))) defaultHours = 24;
+        if (age.equals(resourceHelper.gs(R.string.key_teenage))) defaultHours = 4;
+        if (age.equals(resourceHelper.gs(R.string.key_child))) defaultHours = 4;
         int hoursForDetection = sp.getInt(R.string.key_openapsama_autosens_period, defaultHours);
 
-        Profile profile = ProfileFunctions.getInstance().getProfile();
+        Profile profile = profileFunction.getProfile();
 
         if (profile == null) {
             getAapsLogger().error("No profile");

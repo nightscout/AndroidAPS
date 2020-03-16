@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.historyBrowser
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
@@ -21,13 +21,13 @@ class IobCobStaticCalculatorPlugin @Inject constructor(
     sp: SP,
     resourceHelper: ResourceHelper,
     profileFunction: ProfileFunction,
-    configBuilderPlugin: ConfigBuilderPlugin,
+    activePlugin: ActivePluginProvider,
     treatmentsPlugin: TreatmentsPlugin,
     sensitivityOref1Plugin: SensitivityOref1Plugin,
     sensitivityAAPSPlugin: SensitivityAAPSPlugin,
     sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
 ) : IobCobCalculatorPlugin(injector, aapsLogger, rxBus, sp, resourceHelper, profileFunction,
-    configBuilderPlugin, treatmentsPlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin) {
+    activePlugin, treatmentsPlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin) {
 
     override fun onStart() { // do not attach to rxbus
     }

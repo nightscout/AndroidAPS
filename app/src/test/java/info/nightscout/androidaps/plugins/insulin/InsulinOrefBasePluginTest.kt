@@ -3,9 +3,9 @@ package info.nightscout.androidaps.plugins.insulin
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.Iob
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.Companion.MIN_DIA
 import info.nightscout.androidaps.plugins.treatments.Treatment
@@ -60,7 +60,7 @@ class InsulinOrefBasePluginTest {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var aapsLogger: AAPSLogger
-    @Mock lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Mock lateinit var activePlugin: ActivePluginProvider
 
     private var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -68,7 +68,7 @@ class InsulinOrefBasePluginTest {
                 it.defaultValueHelper = defaultValueHelper
                 it.resourceHelper = resourceHelper
                 it.profileFunction = profileFunction
-                it.configBuilderPlugin = configBuilderPlugin
+                it.activePlugin = activePlugin
             }
         }
     }

@@ -22,7 +22,6 @@ import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBasalRate;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBolus;
@@ -32,6 +31,7 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
 import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -40,6 +40,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class LocalInsightFragment extends DaggerFragment implements View.OnClickListener {
     @Inject LocalInsightPlugin localInsightPlugin;
+    @Inject CommandQueue commandQueue;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -110,10 +111,10 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                 switch (localInsightPlugin.getOperatingMode()) {
                     case PAUSED:
                     case STOPPED:
-                        ConfigBuilderPlugin.getPlugin().getCommandQueue().startPump(operatingModeCallback);
+                        commandQueue.startPump(operatingModeCallback);
                         break;
                     case STARTED:
-                        ConfigBuilderPlugin.getPlugin().getCommandQueue().stopPump(operatingModeCallback);
+                        commandQueue.stopPump(operatingModeCallback);
                 }
             }
         } else if (v == tbrOverNotification) {
@@ -129,8 +130,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                         });
                     }
                 };
-                ConfigBuilderPlugin.getPlugin().getCommandQueue()
-                        .setTBROverNotification(tbrOverNotificationCallback, !notificationBlock.isEnabled());
+                commandQueue.setTBROverNotification(tbrOverNotificationCallback, !notificationBlock.isEnabled());
             }
         } else if (v == refresh) {
             refresh.setEnabled(false);
@@ -143,7 +143,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                     });
                 }
             };
-            ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("InsightRefreshButton", refreshCallback);
+            commandQueue.readStatus("InsightRefreshButton", refreshCallback);
         }
     }
 

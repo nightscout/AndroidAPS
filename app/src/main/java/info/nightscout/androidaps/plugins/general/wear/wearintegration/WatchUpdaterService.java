@@ -37,11 +37,11 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
@@ -66,7 +66,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public ProfileFunction profileFunction;
     @Inject public DefaultValueHelper defaultValueHelper;
     @Inject public NSDeviceStatus nsDeviceStatus;
-    @Inject public ConfigBuilderPlugin configBuilderPlugin;
+    @Inject public ActivePluginProvider activePlugin;
     @Inject public LoopPlugin loopPlugin;
     @Inject public IobCobCalculatorPlugin iobCobCalculatorPlugin;
     @Inject public TreatmentsPlugin treatmentsPlugin;
@@ -267,7 +267,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     }
 
     private void cancelBolus() {
-        configBuilderPlugin.getActivePump().stopBolusDelivering();
+        activePlugin.getActivePump().stopBolusDelivering();
     }
 
     private void sendData() {

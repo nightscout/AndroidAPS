@@ -94,7 +94,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
      **/
     @NonNull @Override
     public Constraint<Boolean> isLoopInvocationAllowed(@NonNull Constraint<Boolean> value) {
-        if (!activePlugin.getActivePumpPlugin().getPumpDescription().isTempBasalCapable)
+        if (!activePlugin.getActivePump().getPumpDescription().isTempBasalCapable)
             value.set(getAapsLogger(), false, getResourceHelper().gs(R.string.pumpisnottempbasalcapable), this);
         return value;
     }
@@ -112,8 +112,8 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
             }
             value.set(getAapsLogger(), false, getResourceHelper().gs(R.string.closed_loop_disabled_on_dev_branch), this);
         }
-        PumpInterface pump = activePlugin.getActivePumpPlugin();
-        if (pump != null && !pump.isFakingTempsByExtendedBoluses() && treatmentsPlugin.isInHistoryExtendedBoluslInProgress()) {
+        PumpInterface pump = activePlugin.getActivePump();
+        if (!pump.isFakingTempsByExtendedBoluses() && treatmentsPlugin.isInHistoryExtendedBoluslInProgress()) {
             value.set(getAapsLogger(), false, getResourceHelper().gs(R.string.closed_loop_disabled_with_eb), this);
         }
         return value;
@@ -153,10 +153,8 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     public Constraint<Boolean> isAdvancedFilteringEnabled(@NonNull Constraint<Boolean> value) {
         BgSourceInterface bgSource = activePlugin.getActiveBgSource();
 
-        if (bgSource != null) {
-            if (!bgSource.advancedFilteringSupported())
-                value.set(getAapsLogger(), false, getResourceHelper().gs(R.string.smbalwaysdisabled), this);
-        }
+        if (!bgSource.advancedFilteringSupported())
+            value.set(getAapsLogger(), false, getResourceHelper().gs(R.string.smbalwaysdisabled), this);
         return value;
     }
 
@@ -185,15 +183,15 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         absoluteRate.setIfSmaller(getAapsLogger(), hardLimits.maxBasal(), String.format(getResourceHelper().gs(R.string.limitingbasalratio), hardLimits.maxBasal(), getResourceHelper().gs(R.string.hardlimit)), this);
 
-        PumpInterface pump = activePlugin.getActivePumpPlugin();
+        PumpInterface pump = activePlugin.getActivePump();
         // check for pump max
-        if (pump != null && pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
+        if (pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
             double pumpLimit = pump.getPumpDescription().pumpType.getTbrSettings().getMaxDose();
             absoluteRate.setIfSmaller(getAapsLogger(), pumpLimit, String.format(getResourceHelper().gs(R.string.limitingbasalratio), pumpLimit, getResourceHelper().gs(R.string.pumplimit)), this);
         }
 
         // do rounding
-        if (pump != null && pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
+        if (pump.getPumpDescription().tempBasalStyle == PumpDescription.ABSOLUTE) {
             absoluteRate.set(getAapsLogger(), Round.roundTo(absoluteRate.value(), pump.getPumpDescription().tempAbsoluteStep));
         }
         return absoluteRate;
@@ -211,19 +209,17 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         applyBasalConstraints(absoluteConstraint, profile);
         percentRate.copyReasons(absoluteConstraint);
 
-        PumpInterface pump = activePlugin.getActivePumpPlugin();
+        PumpInterface pump = activePlugin.getActivePump();
 
         int percentRateAfterConst = Double.valueOf(absoluteConstraint.value() / currentBasal * 100).intValue();
-        if (pump != null) {
-            if (percentRateAfterConst < 100)
-                percentRateAfterConst = Round.ceilTo((double) percentRateAfterConst, (double) pump.getPumpDescription().tempPercentStep).intValue();
-            else
-                percentRateAfterConst = Round.floorTo((double) percentRateAfterConst, (double) pump.getPumpDescription().tempPercentStep).intValue();
-        }
+        if (percentRateAfterConst < 100)
+            percentRateAfterConst = Round.ceilTo((double) percentRateAfterConst, (double) pump.getPumpDescription().tempPercentStep).intValue();
+        else
+            percentRateAfterConst = Round.floorTo((double) percentRateAfterConst, (double) pump.getPumpDescription().tempPercentStep).intValue();
 
         percentRate.set(getAapsLogger(), percentRateAfterConst, String.format(getResourceHelper().gs(R.string.limitingpercentrate), percentRateAfterConst, getResourceHelper().gs(R.string.pumplimit)), this);
 
-        if (pump != null && pump.getPumpDescription().tempBasalStyle == PumpDescription.PERCENT) {
+        if (pump.getPumpDescription().tempBasalStyle == PumpDescription.PERCENT) {
             double pumpLimit = pump.getPumpDescription().pumpType.getTbrSettings().getMaxDose();
             percentRate.setIfSmaller(getAapsLogger(), (int) pumpLimit, String.format(getResourceHelper().gs(R.string.limitingbasalratio), pumpLimit, getResourceHelper().gs(R.string.pumplimit)), this);
         }
@@ -240,11 +236,9 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         insulin.setIfSmaller(getAapsLogger(), hardLimits.maxBolus(), String.format(getResourceHelper().gs(R.string.limitingbolus), hardLimits.maxBolus(), getResourceHelper().gs(R.string.hardlimit)), this);
 
-        PumpInterface pump = activePlugin.getActivePumpPlugin();
-        if (pump != null) {
-            double rounded = pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulin.value());
-            insulin.setIfDifferent(getAapsLogger(), rounded, getResourceHelper().gs(R.string.pumplimit), this);
-        }
+        PumpInterface pump = activePlugin.getActivePump();
+        double rounded = pump.getPumpDescription().pumpType.determineCorrectBolusSize(insulin.value());
+        insulin.setIfDifferent(getAapsLogger(), rounded, getResourceHelper().gs(R.string.pumplimit), this);
         return insulin;
     }
 
@@ -257,11 +251,9 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
 
         insulin.setIfSmaller(getAapsLogger(), hardLimits.maxBolus(), String.format(getResourceHelper().gs(R.string.limitingextendedbolus), hardLimits.maxBolus(), getResourceHelper().gs(R.string.hardlimit)), this);
 
-        PumpInterface pump = activePlugin.getActivePumpPlugin();
-        if (pump != null) {
-            double rounded = pump.getPumpDescription().pumpType.determineCorrectExtendedBolusSize(insulin.value());
-            insulin.setIfDifferent(getAapsLogger(), rounded, getResourceHelper().gs(R.string.pumplimit), this);
-        }
+        PumpInterface pump = activePlugin.getActivePump();
+        double rounded = pump.getPumpDescription().pumpType.determineCorrectExtendedBolusSize(insulin.value());
+        insulin.setIfDifferent(getAapsLogger(), rounded, getResourceHelper().gs(R.string.pumplimit), this);
         return insulin;
     }
 

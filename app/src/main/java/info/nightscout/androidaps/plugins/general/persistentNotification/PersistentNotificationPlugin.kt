@@ -129,7 +129,7 @@ class PersistentNotificationPlugin @Inject constructor(
     }
 
     private fun updateNotification() {
-        val pump = activePlugins.activePumpPlugin ?: return
+        val pump = activePlugins.activePump
         var line1: String?
         var line2: String? = null
         var line3: String? = null

@@ -4,8 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 
 import javax.inject.Inject;
@@ -13,7 +11,6 @@ import javax.inject.Singleton;
 
 import dagger.Lazy;
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
@@ -48,14 +45,15 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * Created by mike on 05.08.2016.
  */
 @Singleton
-public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvider {
+public class ConfigBuilderPlugin extends PluginBase {
     private static ConfigBuilderPlugin configBuilderPlugin;
+
+    private final ActivePluginProvider activePlugin;
     private final SP sp;
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final CommandQueueProvider commandQueue;
-    private final NSProfilePlugin nsProfilePlugin;
 
     /**
      * @deprecated Use dagger to get an instance
@@ -75,22 +73,6 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
         return configBuilderPlugin;
     }
 
-    private BgSourceInterface activeBgSource;
-    private PumpInterface activePump;
-    private ProfileInterface activeProfile;
-    private APSInterface activeAPS;
-    private InsulinInterface activeInsulin;
-    private SensitivityInterface activeSensitivity;
-    private Lazy<TreatmentsPlugin> treatmentsPlugin;
-    private Lazy<SensitivityOref0Plugin> sensitivityOref0Plugin;
-    private Lazy<SensitivityOref1Plugin> sensitivityOref1Plugin;
-
-    private ArrayList<PluginBase> pluginList;
-
-    private final Lazy<InsulinOrefRapidActingPlugin> insulinOrefRapidActingPlugin;
-    private final Lazy<LocalProfilePlugin> localProfilePlugin;
-    private final Lazy<VirtualPumpPlugin> virtualPumpPlugin;
-
     /*
      * Written by Adrian:
      * The ConfigBuilderPlugin.getPlugin() method is used at 333 places throughout the app.
@@ -100,19 +82,13 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
      * */
     @Inject
     public ConfigBuilderPlugin(
-            Lazy<InsulinOrefRapidActingPlugin> insulinOrefRapidActingPlugin,
-            Lazy<LocalProfilePlugin> localProfilePlugin,
-            Lazy<VirtualPumpPlugin> virtualPumpPlugin,
-            Lazy<TreatmentsPlugin> treatmentsPlugin,
-            Lazy<SensitivityOref0Plugin> sensitivityOref0Plugin,
-            Lazy<SensitivityOref1Plugin> sensitivityOref1Plugin,
+            ActivePluginProvider activePlugin,
             HasAndroidInjector injector,
             SP sp,
             RxBusWrapper rxBus,
             AAPSLogger aapsLogger,
             ResourceHelper resourceHelper,
-            CommandQueueProvider commandQueue,
-            NSProfilePlugin nsProfilePlugin
+            CommandQueueProvider commandQueue
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
@@ -125,31 +101,25 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
                         .description(R.string.description_config_builder),
                 aapsLogger, resourceHelper, injector
         );
-        this.insulinOrefRapidActingPlugin = insulinOrefRapidActingPlugin;
-        this.localProfilePlugin = localProfilePlugin;
-        this.virtualPumpPlugin = virtualPumpPlugin;
-        this.treatmentsPlugin = treatmentsPlugin;
-        this.sensitivityOref0Plugin = sensitivityOref0Plugin;
-        this.sensitivityOref1Plugin = sensitivityOref1Plugin;
+        this.activePlugin = activePlugin;
         this.sp = sp;
         this.rxBus = rxBus;
         this.aapsLogger = aapsLogger;
         this.resourceHelper = resourceHelper;
         this.commandQueue = commandQueue;
-        this.nsProfilePlugin = nsProfilePlugin;
         configBuilderPlugin = this;  // TODO: only while transitioning to Dagger
     }
 
     public void initialize() {
-        pluginList = MainApp.getPluginsList();
         upgradeSettings();
+        ((PluginStore) activePlugin).loadDefaults();
         loadSettings();
         setAlwaysEnabledPluginsEnabled();
         rxBus.send(new EventAppInitialized());
     }
 
     private void setAlwaysEnabledPluginsEnabled() {
-        for (PluginBase plugin : pluginList) {
+        for (PluginBase plugin : activePlugin.getPluginsList()) {
             if (plugin.getPluginDescription().alwaysEnabled)
                 plugin.setPluginEnabled(plugin.getType(), true);
         }
@@ -157,22 +127,21 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
     }
 
     public void storeSettings(String from) {
-        if (pluginList != null) {
-            getAapsLogger().debug(LTag.CONFIGBUILDER, "Storing settings from: " + from);
+        activePlugin.getPluginsList();
+        getAapsLogger().debug(LTag.CONFIGBUILDER, "Storing settings from: " + from);
 
-            verifySelectionInCategories();
+        activePlugin.verifySelectionInCategories();
 
-            for (PluginBase p : pluginList) {
-                PluginType type = p.getType();
-                if (p.getPluginDescription().alwaysEnabled && p.getPluginDescription().alwaysVisible)
-                    continue;
-                if (p.getPluginDescription().alwaysEnabled && p.getPluginDescription().neverVisible)
-                    continue;
-                savePref(p, type, true);
-                if (type == PluginType.PUMP) {
-                    if (p instanceof ProfileInterface) { // Store state of optional Profile interface
-                        savePref(p, PluginType.PROFILE, false);
-                    }
+        for (PluginBase p : activePlugin.getPluginsList()) {
+            PluginType type = p.getType();
+            if (p.getPluginDescription().alwaysEnabled && p.getPluginDescription().alwaysVisible)
+                continue;
+            if (p.getPluginDescription().alwaysEnabled && p.getPluginDescription().neverVisible)
+                continue;
+            savePref(p, type, true);
+            if (type == PluginType.PUMP) {
+                if (p instanceof ProfileInterface) { // Store state of optional Profile interface
+                    savePref(p, PluginType.PROFILE, false);
                 }
             }
         }
@@ -191,7 +160,7 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
 
     private void loadSettings() {
         getAapsLogger().debug(LTag.CONFIGBUILDER, "Loading stored settings");
-        for (PluginBase p : pluginList) {
+        for (PluginBase p : activePlugin.getPluginsList()) {
             PluginType type = p.getType();
             loadPref(p, type, true);
             if (p.getType() == PluginType.PUMP) {
@@ -200,7 +169,7 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
                 }
             }
         }
-        verifySelectionInCategories();
+        activePlugin.verifySelectionInCategories();
     }
 
     private void loadPref(PluginBase p, PluginType type, boolean loadVisible) {
@@ -227,7 +196,7 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
         if (!sp.contains("ConfigBuilder_1_NSProfilePlugin_Enabled"))
             return;
         getAapsLogger().debug(LTag.CONFIGBUILDER, "Upgrading stored settings");
-        for (PluginBase p : pluginList) {
+        for (PluginBase p : activePlugin.getPluginsList()) {
             getAapsLogger().debug(LTag.CONFIGBUILDER, "Processing " + p.getName());
             for (int type = 1; type < 11; type++) {
                 PluginType newType;
@@ -276,69 +245,13 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
                 sp.remove(settingVisible);
                 if (newType == p.getType()) {
                     savePref(p, newType, true);
-                } else if (p.getType() == PluginType.PUMP && p instanceof ProfileInterface) {
-                    savePref(p, PluginType.PROFILE, false);
                 }
             }
         }
     }
 
-    @Override
-    @Nullable
-    public BgSourceInterface getActiveBgSource() {
-        return activeBgSource;
-    }
-
-    @Override
-    @NotNull
-    public ProfileInterface getActiveProfileInterface() {
-        if (activeProfile != null) return activeProfile;
-        else return localProfilePlugin.get();
-    }
-
-    @Override
-    @NotNull
-    public InsulinInterface getActiveInsulin() {
-        if (activeInsulin == null)
-            return insulinOrefRapidActingPlugin.get();
-        return activeInsulin;
-    }
-
-    @Override
-    @Nullable
-    public APSInterface getActiveAPS() {
-        return activeAPS;
-    }
-
-    @Override
-    @NotNull
-    public PumpInterface getActivePump() {
-        if (activePump == null)
-            throw new IllegalStateException("No pump selected");
-        return activePump;
-    }
-
-    @Override
-    @Nullable
-    public PumpInterface getActivePumpPlugin() {
-        return activePump;
-    }
-
-    @Override
-    @NotNull
-    public SensitivityInterface getActiveSensitivity() {
-        if (activeSensitivity == null)
-            return sensitivityOref1Plugin.get();
-        else
-            return activeSensitivity;
-    }
-
-    @NonNull @Override public TreatmentsInterface getActiveTreatments() {
-        return treatmentsPlugin.get();
-    }
-
     public void logPluginStatus() {
-        for (PluginBase p : pluginList) {
+        for (PluginBase p : activePlugin.getPluginsList()) {
             getAapsLogger().debug(LTag.CONFIGBUILDER, p.getName() + ":" +
                     (p.isEnabled(PluginType.GENERAL) ? " GENERAL" : "") +
                     (p.isEnabled(PluginType.TREATMENT) ? " TREATMENT" : "") +
@@ -352,120 +265,6 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
                     (p.isEnabled(PluginType.INSULIN) ? " INSULIN" : "")
             );
         }
-    }
-
-    private void verifySelectionInCategories() {
-        ArrayList<PluginBase> pluginsInCategory;
-
-        // PluginType.APS
-        activeAPS = this.determineActivePlugin(APSInterface.class, PluginType.APS);
-
-        // PluginType.INSULIN
-        pluginsInCategory = MainApp.getSpecificPluginsList(PluginType.INSULIN);
-        activeInsulin = (InsulinInterface) getTheOneEnabledInArray(pluginsInCategory, PluginType.INSULIN);
-        if (activeInsulin == null) {
-            activeInsulin = insulinOrefRapidActingPlugin.get();
-            insulinOrefRapidActingPlugin.get().setPluginEnabled(PluginType.INSULIN, true);
-            getAapsLogger().debug(LTag.CONFIGBUILDER, "Defaulting InsulinOrefRapidActingPlugin");
-        }
-        this.setFragmentVisiblities(((PluginBase) activeInsulin).getName(), pluginsInCategory, PluginType.INSULIN);
-
-        // PluginType.SENSITIVITY
-        pluginsInCategory = MainApp.getSpecificPluginsList(PluginType.SENSITIVITY);
-        activeSensitivity = (SensitivityInterface) getTheOneEnabledInArray(pluginsInCategory, PluginType.SENSITIVITY);
-        if (activeSensitivity == null) {
-            activeSensitivity = sensitivityOref0Plugin.get();
-            sensitivityOref0Plugin.get().setPluginEnabled(PluginType.SENSITIVITY, true);
-            getAapsLogger().debug(LTag.CONFIGBUILDER, "Defaulting SensitivityOref0Plugin");
-        }
-        this.setFragmentVisiblities(((PluginBase) activeSensitivity).getName(), pluginsInCategory, PluginType.SENSITIVITY);
-
-        // PluginType.PROFILE
-        activeProfile = this.determineActivePlugin(ProfileInterface.class, PluginType.PROFILE);
-
-        // PluginType.BGSOURCE
-        activeBgSource = this.determineActivePlugin(BgSourceInterface.class, PluginType.BGSOURCE);
-
-        // PluginType.PUMP
-        pluginsInCategory = MainApp.getSpecificPluginsList(PluginType.PUMP);
-        activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory, PluginType.PUMP);
-        if (activePump == null) {
-            activePump = virtualPumpPlugin.get();
-            virtualPumpPlugin.get().setPluginEnabled(PluginType.PUMP, true);
-            getAapsLogger().debug(LTag.CONFIGBUILDER, "Defaulting VirtualPumpPlugin");
-        }
-        this.setFragmentVisiblities(((PluginBase) activePump).getName(), pluginsInCategory, PluginType.PUMP);
-
-        // PluginType.TREATMENT
-    }
-
-    /**
-     * disables the visibility for all fragments of Plugins with the given PluginType
-     * which are not equally named to the Plugin implementing the given Plugin Interface.
-     *
-     * @param pluginInterface
-     * @param pluginType
-     * @param <T>
-     * @return
-     */
-    private <T> T determineActivePlugin(Class<T> pluginInterface, PluginType pluginType) {
-        ArrayList<PluginBase> pluginsInCategory;
-        pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(pluginInterface);
-
-        return this.determineActivePlugin(pluginsInCategory, pluginType);
-    }
-
-    /**
-     * disables the visibility for all fragments of Plugins in the given pluginsInCategory
-     * with the given PluginType which are not equally named to the Plugin implementing the
-     * given Plugin Interface.
-     * <p>
-     * TODO we are casting an interface to PluginBase, which seems to be rather odd, since
-     * TODO the interface is not implementing PluginBase (this is just avoiding errors through
-     * TODO conventions.
-     *
-     * @param pluginsInCategory
-     * @param pluginType
-     * @param <T>
-     * @return
-     */
-    private <T> T determineActivePlugin(ArrayList<PluginBase> pluginsInCategory,
-                                        PluginType pluginType) {
-        T activePlugin = (T) getTheOneEnabledInArray(pluginsInCategory, pluginType);
-
-        if (activePlugin != null) {
-            this.setFragmentVisiblities(((PluginBase) activePlugin).getName(),
-                    pluginsInCategory, pluginType);
-        }
-
-        return activePlugin;
-    }
-
-    private void setFragmentVisiblities(String activePluginName, ArrayList<PluginBase> pluginsInCategory,
-                                        PluginType pluginType) {
-        getAapsLogger().debug(LTag.CONFIGBUILDER, "Selected interface: " + activePluginName);
-        for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(activePluginName)) {
-                p.setFragmentVisible(pluginType, false);
-            }
-        }
-    }
-
-    @Nullable
-    private PluginBase getTheOneEnabledInArray(ArrayList<PluginBase> pluginsInCategory, PluginType type) {
-        PluginBase found = null;
-        for (PluginBase p : pluginsInCategory) {
-            if (p.isEnabled(type) && found == null) {
-                found = p;
-            } else if (p.isEnabled(type)) {
-                // set others disabled
-                p.setPluginEnabled(type, false);
-            }
-        }
-        // If none enabled, enable first one
-        //if (found == null && pluginsInCategory.size() > 0)
-        //    found = pluginsInCategory.get(0);
-        return found;
     }
 
     // Ask when switching to physical pump plugin
@@ -513,23 +312,25 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
                 break;
             // Single selection allowed
             case INSULIN:
-                pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(InsulinInterface.class);
+                pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(InsulinInterface.class);
                 break;
             case SENSITIVITY:
-                pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(SensitivityInterface.class);
+                pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(SensitivityInterface.class);
                 break;
             case APS:
-                pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(APSInterface.class);
+                pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APSInterface.class);
                 break;
             case PROFILE:
-                pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(ProfileInterface.class);
+                pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileInterface.class);
                 break;
             case BGSOURCE:
-                pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(BgSourceInterface.class);
+                pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSourceInterface.class);
                 break;
             case TREATMENT:
+                pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(TreatmentsInterface.class);
+                break;
             case PUMP:
-                pluginsInCategory = MainApp.instance().getSpecificPluginsListByInterface(PumpInterface.class);
+                pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(PumpInterface.class);
                 break;
         }
         if (pluginsInCategory != null) {
@@ -544,16 +345,7 @@ public class ConfigBuilderPlugin extends PluginBase implements ActivePluginProvi
                     }
                 }
             } else { // enable first plugin in list
-                if (type == PluginType.PUMP)
-                    virtualPumpPlugin.get().setPluginEnabled(type, true);
-                else if (type == PluginType.INSULIN)
-                    insulinOrefRapidActingPlugin.get().setPluginEnabled(type, true);
-                else if (type == PluginType.SENSITIVITY)
-                    sensitivityOref0Plugin.get().setPluginEnabled(type, true);
-                else if (type == PluginType.PROFILE)
-                    nsProfilePlugin.setPluginEnabled(type, true);
-                else
-                    pluginsInCategory.get(0).setPluginEnabled(type, true);
+                pluginsInCategory.get(0).setPluginEnabled(type, true);
             }
         }
     }

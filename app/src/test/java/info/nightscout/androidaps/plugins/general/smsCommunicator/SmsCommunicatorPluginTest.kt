@@ -167,7 +167,7 @@ class SmsCommunicatorPluginTest : TestBase() {
             null
         }.`when`(commandQueue).extendedBolus(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.any(Callback::class.java))
 
-        `when`(activePlugin.activePumpPlugin).thenReturn(virtualPumpPlugin)
+        `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(activePlugin.activeTreatments).thenReturn(treatmentsPlugin)
 
         `when`(virtualPumpPlugin.shortStatus(ArgumentMatchers.anyBoolean())).thenReturn("Virtual Pump")

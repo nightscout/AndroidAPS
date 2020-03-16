@@ -60,6 +60,8 @@ abstract class PluginBase(
         return pluginDescription.fragmentClass != null
     }
 
+    fun isDefault() = pluginDescription.defaultPlugin
+
     /**
      * So far plugin can have it's main type + ConstraintInterface + ProfileInterface
      * ConstraintInterface is enabled if main plugin is enabled

@@ -29,13 +29,13 @@ import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
@@ -61,7 +61,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
-    private final ConfigBuilderPlugin configBuilderPlugin;
+    private final ActivePluginProvider activePlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final SensitivityOref1Plugin sensitivityOref1Plugin;
     private final SensitivityAAPSPlugin sensitivityAAPSPlugin;
@@ -98,7 +98,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
             SP sp,
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
-            ConfigBuilderPlugin configBuilderPlugin,
+            ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
             SensitivityOref1Plugin sensitivityOref1Plugin,
             SensitivityAAPSPlugin sensitivityAAPSPlugin,
@@ -118,7 +118,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
-        this.configBuilderPlugin = configBuilderPlugin;
+        this.activePlugin = activePlugin;
         this.treatmentsPlugin = treatmentsPlugin;
         this.sensitivityOref1Plugin = sensitivityOref1Plugin;
         this.sensitivityAAPSPlugin = sensitivityAAPSPlugin;
@@ -766,7 +766,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
 
     AutosensResult detectSensitivityWithLock(long fromTime, long toTime) {
         synchronized (dataLock) {
-            return configBuilderPlugin.getActiveSensitivity().detectSensitivity(this, fromTime, toTime);
+            return activePlugin.getActiveSensitivity().detectSensitivity(this, fromTime, toTime);
         }
     }
 

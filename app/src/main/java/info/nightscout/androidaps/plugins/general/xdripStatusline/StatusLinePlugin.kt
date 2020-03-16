@@ -117,7 +117,6 @@ class StatusLinePlugin @Inject constructor(
 
     private fun buildStatusString(profile: Profile): String {
         var status = ""
-        if (activePlugin.activePumpPlugin == null) return ""
         if (!loopPlugin.isEnabled(PluginType.LOOP)) {
             status += resourceHelper.gs(R.string.disabledloop) + "\n"
             lastLoopStatus = false

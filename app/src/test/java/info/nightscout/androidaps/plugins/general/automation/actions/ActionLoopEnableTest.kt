@@ -26,7 +26,7 @@ class ActionLoopEnableTest : ActionsTestBase() {
         `when`(virtualPumpPlugin.specialEnableCondition()).thenReturn(true)
         val pumpDescription = PumpDescription().apply { isTempBasalCapable = true }
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
-        `when`(configBuilderPlugin.activePump).thenReturn(virtualPumpPlugin)
+        `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(resourceHelper.gs(R.string.enableloop)).thenReturn("Enable loop")
         `when`(resourceHelper.gs(R.string.alreadyenabled)).thenReturn("Already enabled")
 

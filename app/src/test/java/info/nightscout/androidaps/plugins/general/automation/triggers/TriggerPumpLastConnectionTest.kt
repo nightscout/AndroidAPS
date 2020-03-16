@@ -34,7 +34,7 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
     fun shouldRunTest() {
 //        System.currentTimeMillis() is always 0
 //        and so is every last connection time
-        PowerMockito.`when`(activePlugin.activePumpPlugin).thenReturn(virtualPumpPlugin)
+        PowerMockito.`when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         Assert.assertEquals(0L, virtualPumpPlugin.lastDataTime())
         PowerMockito.`when`(DateUtil.now()).thenReturn(now + 10 * 60 * 1000) // set current time to now + 10 min
         var t = TriggerPumpLastConnection(injector).setValue(110).comparator(Comparator.Compare.IS_EQUAL)

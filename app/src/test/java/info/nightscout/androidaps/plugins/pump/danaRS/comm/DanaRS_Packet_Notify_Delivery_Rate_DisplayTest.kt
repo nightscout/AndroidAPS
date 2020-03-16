@@ -3,9 +3,9 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
@@ -31,7 +31,7 @@ class DanaRS_Packet_Notify_Delivery_Rate_DisplayTest : DanaRSTestBase() {
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var commandQueue: CommandQueueProvider
@@ -47,7 +47,7 @@ class DanaRS_Packet_Notify_Delivery_Rate_DisplayTest : DanaRSTestBase() {
                 it.defaultValueHelper = defaultValueHelper
                 it.resourceHelper = resourceHelper
                 it.profileFunction = profileFunction
-                it.configBuilderPlugin = configBuilderPlugin
+                it.activePlugin = activePlugin
             }
         }
     }

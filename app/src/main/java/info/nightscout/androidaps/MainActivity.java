@@ -37,7 +37,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
-import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.activities.PreferencesActivity;
 import info.nightscout.androidaps.activities.SingleFragmentActivity;
@@ -45,6 +44,8 @@ import info.nightscout.androidaps.activities.StatsActivity;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
+import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -84,6 +85,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
     @Inject LoopPlugin loopPlugin;
     @Inject NSSettingsStatus nsSettingsStatus;
     @Inject BuildHelper buildHelper;
+    @Inject ActivePluginProvider activePlugin;
 
 
     @Override
@@ -205,14 +207,14 @@ public class MainActivity extends NoSplashAppCompatActivity {
         navigationView.setNavigationItemSelectedListener(menuItem -> true);
         Menu menu = navigationView.getMenu();
         menu.clear();
-        for (PluginBase p : MainApp.getPluginsList()) {
+        for (PluginBase p : activePlugin.getPluginsList()) {
             pageAdapter.registerNewFragment(p);
             if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.getPluginDescription().getType()) && !p.getPluginDescription().neverVisible) {
                 MenuItem menuItem = menu.add(p.getName());
                 menuItem.setCheckable(true);
                 menuItem.setOnMenuItemClickListener(item -> {
                     Intent intent = new Intent(this, SingleFragmentActivity.class);
-                    intent.putExtra("plugin", MainApp.getPluginsList().indexOf(p));
+                    intent.putExtra("plugin", activePlugin.getPluginsList().indexOf(p));
                     startActivity(intent);
                     ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
                     return true;

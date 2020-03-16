@@ -58,7 +58,8 @@ class VirtualPumpPlugin @Inject constructor(
     .shortName(R.string.virtualpump_shortname)
     .preferencesId(R.xml.pref_virtualpump)
     .neverVisible(Config.NSCLIENT)
-    .description(R.string.description_pump_virtual),
+    .description(R.string.description_pump_virtual)
+    .setDefault(),
     injector, aapsLogger, resourceHelper, commandQueue
 ), PumpInterface {
 

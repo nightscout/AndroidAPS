@@ -18,11 +18,11 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -55,7 +55,7 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
     private var wizard: BolusWizard? = null
@@ -109,7 +109,7 @@ class WizardDialog : DaggerDialogFragment() {
             ?: 0.0, 0.0, 500.0, 0.1, DecimalFormat("0.0"), false, ok, textWatcher)
         treatments_wizard_carbs_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carbs_input")
             ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, ok, textWatcher)
-        val bolusStep = configBuilderPlugin.activePump.pumpDescription.bolusStep
+        val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
         treatments_wizard_correction_input.setParams(savedInstanceState?.getDouble("treatments_wizard_correction_input")
             ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
         treatments_wizard_carb_time_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carb_time_input")
@@ -212,7 +212,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun initDialog() {
         val profile = profileFunction.getProfile()
-        val profileStore = configBuilderPlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileInterface.profile
 
         if (profile == null || profileStore == null) {
             ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.noprofile))
@@ -260,7 +260,7 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private fun calculateInsulin() {
-        val profileStore = configBuilderPlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileInterface.profile
         if (treatments_wizard_profile.selectedItem == null || profileStore == null)
             return  // not initialized yet
         var profileName = treatments_wizard_profile.selectedItem.toString()

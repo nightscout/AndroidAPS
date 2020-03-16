@@ -77,6 +77,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -105,6 +106,7 @@ import info.nightscout.androidaps.plugins.source.DexcomPlugin;
 import info.nightscout.androidaps.plugins.source.XdripPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
@@ -140,6 +142,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     @Inject NSDeviceStatus nsDeviceStatus;
     @Inject LoopPlugin loopPlugin;
     @Inject ConfigBuilderPlugin configBuilderPlugin;
+    @Inject ActivePluginProvider activePlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
     @Inject DexcomPlugin dexcomPlugin;
@@ -148,6 +151,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     @Inject ActionStringHandler actionStringHandler;
     @Inject QuickWizard quickWizard;
     @Inject BuildHelper buildHelper;
+    @Inject CommandQueue commandQueue;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -625,7 +629,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v == apsModeView) {
             final PumpDescription pumpDescription =
-                    configBuilderPlugin.getActivePump().getPumpDescription();
+                    activePlugin.getActivePump().getPumpDescription();
             if (!profileFunction.isProfileValid("ContexMenuCreation"))
                 return;
             menu.setHeaderTitle(resourceHelper.gs(R.string.loop));
@@ -656,7 +660,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         } else if (v == activeProfileView) {
             menu.setHeaderTitle(resourceHelper.gs(R.string.profile));
             menu.add(resourceHelper.gs(R.string.danar_viewprofile));
-            if (configBuilderPlugin.getActiveProfileInterface() != null && configBuilderPlugin.getActiveProfileInterface().getProfile() != null) {
+            activePlugin.getActiveProfileInterface();
+            if (activePlugin.getActiveProfileInterface().getProfile() != null) {
                 menu.add(resourceHelper.gs(R.string.careportal_profileswitch));
             }
         } else if (v == tempTargetView) {
@@ -692,7 +697,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             loopPlugin.setFragmentVisible(PluginType.LOOP, false);
             configBuilderPlugin.storeSettings("DisablingLoop");
             updateGUI("suspendmenu");
-            configBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+            commandQueue.cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -715,7 +720,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             aapsLogger.debug("USER ENTRY: RESUME");
             loopPlugin.suspendTo(0L);
             updateGUI("suspendmenu");
-            configBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+            commandQueue.cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -898,8 +903,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 new CarbsDialog().show(manager, "Overview");
                 break;
             case R.id.overview_pumpstatus:
-                if (configBuilderPlugin.getActivePump().isSuspended() || !configBuilderPlugin.getActivePump().isInitialized())
-                    configBuilderPlugin.getCommandQueue().readStatus("RefreshClicked", null);
+                if (activePlugin.getActivePump().isSuspended() || !activePlugin.getActivePump().isInitialized())
+                    commandQueue.readStatus("RefreshClicked", null);
                 break;
         }
 
@@ -953,7 +958,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         final BgReading actualBg = iobCobCalculatorPlugin.actualBg();
         final Profile profile = profileFunction.getProfile();
         final String profileName = profileFunction.getProfileName();
-        final PumpInterface pump = configBuilderPlugin.getActivePump();
+        final PumpInterface pump = activePlugin.getActivePump();
 
         final QuickWizardEntry quickWizardEntry = quickWizard.getActive();
         if (quickWizardEntry != null && actualBg != null && profile != null) {
@@ -1050,7 +1055,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         BgReading actualBG = iobCobCalculatorPlugin.actualBg();
         BgReading lastBG = iobCobCalculatorPlugin.lastBg();
 
-        final PumpInterface pump = configBuilderPlugin.getActivePump();
+        final PumpInterface pump = activePlugin.getActivePump();
 
         final Profile profile = profileFunction.getProfile();
         if (profile == null) return;
@@ -1134,7 +1139,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         if (tempTarget != null) {
             tempTargetView.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning));
             tempTargetView.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning));
-            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper));
+            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end()));
         } else {
             tempTargetView.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault));
             tempTargetView.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault));
@@ -1193,11 +1198,11 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         }
         baseBasalView.setText(basalText);
         baseBasalView.setOnClickListener(v -> {
-            String fullText = MainApp.gs(R.string.pump_basebasalrate_label) + ": " + MainApp.gs(R.string.pump_basebasalrate, profile.getBasal()) + "\n";
+            String fullText = resourceHelper.gs(R.string.pump_basebasalrate_label) + ": " + resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal()) + "\n";
             if (activeTemp != null) {
-                fullText += MainApp.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
+                fullText += resourceHelper.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
             }
-            OKDialog.show(getActivity(), MainApp.gs(R.string.basal), fullText);
+            OKDialog.show(getActivity(), resourceHelper.gs(R.string.basal), fullText);
         });
 
         if (activeTemp != null) {
@@ -1215,7 +1220,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             extendedBolusView.setText(extendedBolusText);
             extendedBolusView.setOnClickListener(v -> {
                 if (extendedBolus != null)
-                    OKDialog.show(getActivity(), MainApp.gs(R.string.extended_bolus), extendedBolus.toString());
+                    OKDialog.show(getActivity(), resourceHelper.gs(R.string.extended_bolus), extendedBolus.toString());
             });
         }
 
@@ -1244,7 +1249,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         // **** Various treatment buttons ****
         if (carbsButton != null) {
             if (sp.getBoolean(R.string.key_show_carbs_button, true)
-                    && (!configBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo ||
+                    && (!activePlugin.getActivePump().getPumpDescription().storesCarbInfo ||
                     (pump.isInitialized() && !pump.isSuspended()))) {
                 carbsButton.setVisibility(View.VISIBLE);
             } else {

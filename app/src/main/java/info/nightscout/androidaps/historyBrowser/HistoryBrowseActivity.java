@@ -27,11 +27,11 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventCustomCalculationFinished;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
@@ -55,7 +55,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
     @Inject ProfileFunction profileFunction;
     @Inject DefaultValueHelper defaultValueHelper;
     @Inject IobCobStaticCalculatorPlugin iobCobStaticCalculatorPlugin;
-    @Inject ConfigBuilderPlugin configBuilderPlugin;
+    @Inject ActivePluginProvider activePlugin;
     @Inject BuildHelper buildHelper;
 
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -227,7 +227,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
         if (noProfile == null || buttonDate == null || buttonZoom == null || bgGraph == null || iobGraph == null || seekBar == null)
             return;
 
-        final PumpInterface pump = configBuilderPlugin.getActivePump();
+        final PumpInterface pump = activePlugin.getActivePump();
         final Profile profile = profileFunction.getProfile();
 
         if (profile == null) {

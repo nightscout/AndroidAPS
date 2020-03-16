@@ -49,6 +49,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
@@ -1724,30 +1725,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (trJson.has("profileJson"))
                 profileSwitch.profileJson = trJson.getString("profileJson");
             else {
-                ProfileInterface profileInterface = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
-                if (profileInterface != null) {
-                    ProfileStore store = profileInterface.getProfile();
-                    if (store != null) {
-                        Profile profile = store.getSpecificProfile(profileSwitch.profileName);
-                        if (profile != null) {
-                            profileSwitch.profileJson = profile.getData().toString();
-                            if (L.isEnabled(L.DATABASE))
-                                log.debug("Profile switch prefilled with JSON from local store");
-                            // Update data in NS
-                            NSUpload.updateProfileSwitch(profileSwitch);
-                        } else {
-                            if (L.isEnabled(L.DATABASE))
-                                log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
-                            return;
-                        }
+                ProfileInterface profileInterface = PluginStore.Companion.getInstance().getActiveProfileInterface();
+                ProfileStore store = profileInterface.getProfile();
+                if (store != null) {
+                    Profile profile = store.getSpecificProfile(profileSwitch.profileName);
+                    if (profile != null) {
+                        profileSwitch.profileJson = profile.getData().toString();
+                        if (L.isEnabled(L.DATABASE))
+                            log.debug("Profile switch prefilled with JSON from local store");
+                        // Update data in NS
+                        NSUpload.updateProfileSwitch(profileSwitch);
                     } else {
                         if (L.isEnabled(L.DATABASE))
-                            log.debug("Store for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                            log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
                         return;
                     }
                 } else {
                     if (L.isEnabled(L.DATABASE))
-                        log.debug("No active profile interface. Ignoring: " + trJson.toString());
+                        log.debug("Store for profile switch doesn't exist. Ignoring: " + trJson.toString());
                     return;
                 }
             }

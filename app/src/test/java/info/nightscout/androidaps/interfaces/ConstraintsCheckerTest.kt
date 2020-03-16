@@ -55,7 +55,6 @@ class ConstraintsCheckerTest : TestBase() {
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var sp: SP
-    @Mock lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var commandQueue: CommandQueueProvider
@@ -64,7 +63,6 @@ class ConstraintsCheckerTest : TestBase() {
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
-    @Mock lateinit var mainApp: MainApp
 
     val rxBus = RxBusWrapper()
     private var buildHelper = BuildHelper()
@@ -121,15 +119,15 @@ class ConstraintsCheckerTest : TestBase() {
 
         //SafetyPlugin
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
-        constraintChecker = ConstraintChecker(mainApp)
+        constraintChecker = ConstraintChecker(activePlugin)
 
         danaRPump = DanaRPump(aapsLogger, sp, injector)
         hardLimits = HardLimits(aapsLogger, sp, resourceHelper, context)
-        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, configBuilderPlugin, sp)
+        objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp)
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, treatmentsPlugin, sp, commandQueue, danaRPump)
         danaRSPlugin = DanaRSPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump, detailedBolusInfoStorage)
-        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, treatmentsPlugin, sp, commandQueue)
+        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, treatmentsPlugin, sp, commandQueue, profileFunction)
         openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits)
         openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits)
         openAPSMAPlugin = OpenAPSMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits)
@@ -142,7 +140,7 @@ class ConstraintsCheckerTest : TestBase() {
         constraintsPluginsList.add(danaRSPlugin)
         constraintsPluginsList.add(insightPlugin)
         constraintsPluginsList.add(openAPSSMBPlugin)
-        `when`(mainApp.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)).thenReturn(constraintsPluginsList)
+        `when`(activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)).thenReturn(constraintsPluginsList)
         objectivesPlugin.onStart()
     }
 
@@ -150,7 +148,6 @@ class ConstraintsCheckerTest : TestBase() {
     @Test
     fun isLoopInvocationAllowedTest() {
         `when`(activePlugin.activePump).thenReturn(comboPlugin)
-        `when`(activePlugin.activePumpPlugin).thenReturn(comboPlugin)
         comboPlugin.setPluginEnabled(PluginType.PUMP, true)
         comboPlugin.setValidBasalRateProfileSelectedOnPump(false)
         val c = constraintChecker.isLoopInvocationAllowed()
@@ -231,6 +228,7 @@ class ConstraintsCheckerTest : TestBase() {
     // applyBasalConstraints tests
     @Test
     fun basalRateShouldBeLimited() {
+        `when`(activePlugin.activePump).thenReturn(danaRPlugin)
         // DanaR, RS
         danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
@@ -257,6 +255,7 @@ class ConstraintsCheckerTest : TestBase() {
 
     @Test
     fun percentBasalRateShouldBeLimited() {
+        `when`(activePlugin.activePump).thenReturn(danaRPlugin)
         // DanaR, RS
         danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
@@ -277,13 +276,15 @@ class ConstraintsCheckerTest : TestBase() {
         // Apply all limits
         val i = constraintChecker.getMaxBasalPercentAllowed(validProfile)
         Assert.assertEquals(100, i.value())
-        Assert.assertEquals(8, i.reasonList.size) // 6x Safety & RS & R
+        Assert.assertEquals(9, i.reasonList.size) // 7x Safety & RS & R
         Assert.assertEquals("Safety: Limiting max percent rate to 100% because of pump limit", i.getMostLimitedReasons(aapsLogger))
     }
 
     // applyBolusConstraints tests
     @Test
     fun bolusAmountShouldBeLimited() {
+        `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
+        `when`(virtualPumpPlugin.pumpDescription).thenReturn(PumpDescription())
         // DanaR, RS
         danaRPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)

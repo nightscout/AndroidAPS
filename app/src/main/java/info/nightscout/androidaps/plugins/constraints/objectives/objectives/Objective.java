@@ -19,16 +19,16 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public abstract class Objective {
     @Inject public SP sp;
+    @Inject ResourceHelper resourceHelper;
 
     private String spName;
-    @StringRes
-    private int objective;
-    @StringRes
-    private int gate;
+    @StringRes private int objective;
+    @StringRes private int gate;
     private long startedOn;
     private long accomplishedOn;
     List<Task> tasks = new ArrayList<>();
@@ -187,9 +187,9 @@ public abstract class Objective {
             int days = (int) Math.floor((double) duration / T.days(1).msecs());
             int hours = (int) Math.floor((double) duration / T.hours(1).msecs());
             int minutes = (int) Math.floor((double) duration / T.mins(1).msecs());
-            if (days > 0) return MainApp.gq(R.plurals.objective_days, days, days);
-            else if (hours > 0) return MainApp.gq(R.plurals.objective_hours, hours, hours);
-            else return MainApp.gq(R.plurals.objective_minutes, minutes, minutes);
+            if (days > 0) return resourceHelper.gq(R.plurals.objective_days, days, days);
+            else if (hours > 0) return resourceHelper.gq(R.plurals.objective_hours, hours, hours);
+            else return resourceHelper.gq(R.plurals.objective_minutes, minutes, minutes);
         }
     }
 

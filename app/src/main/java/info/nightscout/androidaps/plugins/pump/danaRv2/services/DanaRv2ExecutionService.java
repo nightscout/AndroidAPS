@@ -24,6 +24,7 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -83,7 +84,7 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import io.reactivex.disposables.CompositeDisposable;
@@ -99,6 +100,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject DanaRPlugin danaRPlugin;
     @Inject DanaRKoreanPlugin danaRKoreanPlugin;
     @Inject DanaRv2Plugin danaRv2Plugin;
+    @Inject ActivePluginProvider activePlugin;
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject CommandQueueProvider commandQueue;
     @Inject Context context;
@@ -106,6 +108,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject DetailedBolusInfoStorage detailedBolusInfoStorage;
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject ProfileFunction profileFunction;
+    @Inject SP sp;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -215,7 +218,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             danaRPump.setLastConnection(System.currentTimeMillis());
 
             Profile profile = profileFunction.getProfile();
-            PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+            PumpInterface pump = activePlugin.getActivePump();
             if (profile != null && Math.abs(danaRPump.getCurrentBasal() - profile.getBasal()) >= pump.getPumpDescription().basalStep) {
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingBasal(aapsLogger, danaRPump, danaRPlugin));
@@ -385,7 +388,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.startingbolus)));
         mBolusingTreatment = t;
-        final int preferencesSpeed = SP.getInt(R.string.key_danars_bolusspeed, 0);
+        final int preferencesSpeed = sp.getInt(R.string.key_danars_bolusspeed, 0);
         MessageBase start;
         if (preferencesSpeed == 0)
             start = new MsgBolusStart(aapsLogger, constraintChecker, danaRPump, amount);
@@ -447,7 +450,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             SystemClock.sleep(1000);
         }
         // do not call loadEvents() directly, reconnection may be needed
-        ConfigBuilderPlugin.getPlugin().getCommandQueue().loadEvents(new Callback() {
+        commandQueue.loadEvents(new Callback() {
             @Override
             public void run() {
                 // load last bolus status

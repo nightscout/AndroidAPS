@@ -77,7 +77,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
 
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
-        val pumpDescription = activePlugin.activePumpPlugin?.pumpDescription ?: return
+        val pumpDescription = activePlugin.activePump.pumpDescription
         overview_treatment_carbs.setParams(savedInstanceState?.getDouble("overview_treatment_carbs")
             ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, ok, textWatcher)
         overview_treatment_insulin.setParams(savedInstanceState?.getDouble("overview_treatment_insulin")
@@ -85,8 +85,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val pumpDescription = activePlugin.activePumpPlugin?.pumpDescription
-            ?: return false
+        val pumpDescription = activePlugin.activePump.pumpDescription
         val insulin = SafeParse.stringToDouble(overview_treatment_insulin.text)
         val carbs = SafeParse.stringToInt(overview_treatment_carbs.text)
         val recordOnlyChecked = overview_treatment_record_only.isChecked

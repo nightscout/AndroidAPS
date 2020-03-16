@@ -94,7 +94,7 @@ class LocalProfileFragment : DaggerFragment() {
     }
 
     fun build() {
-        val pumpDescription = activePlugin.activePumpPlugin?.pumpDescription ?: return
+        val pumpDescription = activePlugin.activePump.pumpDescription
         val units = if (localProfilePlugin.currentProfile().mgdl) Constants.MGDL else Constants.MMOL
 
         localprofile_name.removeTextChangedListener(textWatch)

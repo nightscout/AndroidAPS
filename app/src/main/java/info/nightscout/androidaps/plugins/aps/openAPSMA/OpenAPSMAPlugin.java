@@ -92,18 +92,19 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
 
     @Override
     public boolean specialEnableCondition() {
-        // main fail during init
-        if (activePlugin != null) {
-            PumpInterface pump = activePlugin.getActivePumpPlugin();
-            return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        try {
+            PumpInterface pump = activePlugin.getActivePump();
+            return pump.getPumpDescription().isTempBasalCapable;
+        } catch (Exception ignored) {
+            // may fail during initialization
+            return true;
         }
-        return true;
     }
 
     @Override
     public boolean specialShowInListCondition() {
-        PumpInterface pump = activePlugin.getActivePumpPlugin();
-        return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        PumpInterface pump = activePlugin.getActivePump();
+        return pump.getPumpDescription().isTempBasalCapable;
     }
 
     @Override
@@ -125,17 +126,11 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
 
         GlucoseStatus glucoseStatus = new GlucoseStatus(getInjector()).getGlucoseStatusData();
         Profile profile = profileFunction.getProfile();
-        PumpInterface pump = activePlugin.getActivePumpPlugin();
+        PumpInterface pump = activePlugin.getActivePump();
 
         if (profile == null) {
             rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.noprofileselected)));
             getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.noprofileselected));
-            return;
-        }
-
-        if (pump == null) {
-            rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.nopumpselected)));
-            getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.nopumpselected));
             return;
         }
 
