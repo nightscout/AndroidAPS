@@ -38,6 +38,7 @@ public class DetermineBasalAdapterMAJS {
     private HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
     @Inject ProfileFunction profileFunction;
+    @Inject TreatmentsPlugin treatmentsPlugin;
 
     private ScriptReader mScriptReader;
     private JSONObject mProfile;
@@ -187,7 +188,7 @@ public class DetermineBasalAdapterMAJS {
         }
 
         long now = System.currentTimeMillis();
-        TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
+        TemporaryBasal tb = treatmentsPlugin.getTempBasalFromHistory(now);
 
         mCurrentTemp = new JSONObject();
         mCurrentTemp.put("duration", tb != null ? tb.getPlannedRemainingMinutes() : 0);

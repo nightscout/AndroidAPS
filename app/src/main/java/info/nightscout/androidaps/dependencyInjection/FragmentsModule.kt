@@ -41,6 +41,7 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsFragment
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsBolusFragment
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsCareportalFragment
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsProfileSwitchFragment
+import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTempTargetFragment
 
 @Module
 @Suppress("unused")
@@ -53,6 +54,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment
     @ContributesAndroidInjector abstract fun contributesCareportalFragment(): CareportalFragment
     @ContributesAndroidInjector abstract fun contributesComboFragment(): ComboFragment
+
     @ContributesAndroidInjector
     abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
 
@@ -71,6 +73,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesMedtronicFragment(): MedtronicFragment
     @ContributesAndroidInjector abstract fun contributesNSProfileFragment(): NSProfileFragment
     @ContributesAndroidInjector abstract fun contributesNSClientFragment(): NSClientFragment
+
     @ContributesAndroidInjector
     abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
 
@@ -78,6 +81,8 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesTreatmentsFragment(): TreatmentsFragment
     @ContributesAndroidInjector
     abstract fun contributesTreatmentsBolusFragment(): TreatmentsBolusFragment
+    @ContributesAndroidInjector
+    abstract fun contributesTreatmentsTempTargetFragment(): TreatmentsTempTargetFragment
 
     @ContributesAndroidInjector
     abstract fun contributesTreatmentsCareportalFragment(): TreatmentsCareportalFragment
@@ -94,6 +99,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesEditActionDialog(): EditActionDialog
     @ContributesAndroidInjector abstract fun contributesEditEventDialog(): EditEventDialog
     @ContributesAndroidInjector abstract fun contributesEditTriggerDialog(): EditTriggerDialog
+
     @ContributesAndroidInjector
     abstract fun contributesEditQuickWizardDialog(): EditQuickWizardDialog
 

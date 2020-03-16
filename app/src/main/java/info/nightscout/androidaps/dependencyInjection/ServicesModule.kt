@@ -5,6 +5,7 @@ import dagger.android.ContributesAndroidInjector
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService
 import info.nightscout.androidaps.plugins.general.persistentNotification.DummyService
 import info.nightscout.androidaps.plugins.general.wear.wearintegration.WatchUpdaterService
+import info.nightscout.androidaps.plugins.pump.danaR.services.AbstractDanaRExecutionService
 import info.nightscout.androidaps.plugins.pump.danaR.services.DanaRExecutionService
 import info.nightscout.androidaps.plugins.pump.danaRKorean.services.DanaRKoreanExecutionService
 import info.nightscout.androidaps.plugins.pump.danaRS.services.DanaRSService
@@ -17,6 +18,7 @@ import info.nightscout.androidaps.services.LocationService
 @Suppress("unused")
 abstract class ServicesModule {
 
+    @ContributesAndroidInjector abstract fun contributesAbstractDanaRExecutionService(): AbstractDanaRExecutionService
     @ContributesAndroidInjector abstract fun contributesAlarmSoundService(): AlarmSoundService
     @ContributesAndroidInjector abstract fun contributesDataService(): DataService
     @ContributesAndroidInjector abstract fun contributesDummyService(): DummyService

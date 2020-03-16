@@ -5,19 +5,16 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.AAPSMocker
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRSTestBase
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Before
@@ -30,7 +27,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, RxBusWrapper::class, L::class, SP::class, MainApp::class, DetailedBolusInfoStorage::class)
+@PrepareForTest(ConstraintChecker::class, RxBusWrapper::class, DetailedBolusInfoStorage::class)
 class DanaRSPluginTest : DanaRSTestBase() {
 
     @Mock lateinit var context: Context

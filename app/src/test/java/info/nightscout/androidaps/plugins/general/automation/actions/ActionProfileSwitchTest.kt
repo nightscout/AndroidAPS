@@ -1,19 +1,9 @@
 package info.nightscout.androidaps.plugins.general.automation.actions
 
-import com.google.common.base.Optional
-import info.AAPSMocker
-import info.SPMocker
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.db.ProfileSwitch
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.automation.elements.InputProfileName
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
-import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.SP
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -24,8 +14,6 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyString
-import org.mockito.invocation.InvocationOnMock
-import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 

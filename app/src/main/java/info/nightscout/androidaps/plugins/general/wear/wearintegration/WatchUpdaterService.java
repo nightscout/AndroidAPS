@@ -512,7 +512,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 }
             }
         } else {
-            tb2 = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now); //use "now" to express current situation
+            tb2 = treatmentsPlugin.getTempBasalFromHistory(now); //use "now" to express current situation
             if (tb2 != null) {
                 //onset at the end
                 Profile profileTB = profileFunction.getProfile(runningTime);

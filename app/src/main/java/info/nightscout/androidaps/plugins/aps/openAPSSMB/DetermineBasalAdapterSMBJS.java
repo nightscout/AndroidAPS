@@ -45,6 +45,7 @@ public class DetermineBasalAdapterSMBJS {
     @Inject ConstraintChecker constraintChecker;
     @Inject SP sp;
     @Inject ProfileFunction profileFunction;
+    @Inject TreatmentsPlugin treatmentsPlugin;
 
     private ScriptReader mScriptReader;
     private JSONObject mProfile;
@@ -283,7 +284,7 @@ public class DetermineBasalAdapterSMBJS {
 
 
         long now = System.currentTimeMillis();
-        TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
+        TemporaryBasal tb = treatmentsPlugin.getTempBasalFromHistory(now);
 
         mCurrentTemp = new JSONObject();
         mCurrentTemp.put("temp", "absolute");
@@ -291,7 +292,7 @@ public class DetermineBasalAdapterSMBJS {
         mCurrentTemp.put("rate", tb != null ? tb.tempBasalConvertedToAbsolute(now, profile) : 0d);
 
         // as we have non default temps longer than 30 mintues
-        TemporaryBasal tempBasal = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal tempBasal = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis());
         if (tempBasal != null) {
             mCurrentTemp.put("minutesrunning", tempBasal.getRealDuration());
         }

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 
 import java.util.List;
 
@@ -13,7 +12,6 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
@@ -25,8 +23,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
@@ -43,8 +40,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
  */
 @Singleton
 public class MDIPlugin extends PumpPluginBase implements PumpInterface {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(MDIPlugin.class);
 
+    private TreatmentsPlugin treatmentsPlugin;
     private PumpDescription pumpDescription = new PumpDescription();
 
     @Inject
@@ -53,7 +50,8 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
-            CommandQueueProvider commandQueue
+            CommandQueueProvider commandQueue,
+            TreatmentsPlugin treatmentsPlugin
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
@@ -61,6 +59,8 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
                         .description(R.string.description_pump_mdi),
                 injector, aapsLogger, resourceHelper, commandQueue
         );
+        this.treatmentsPlugin = treatmentsPlugin;
+
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.5d;
 
@@ -171,8 +171,8 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
         result.success = true;
         result.bolusDelivered = detailedBolusInfo.insulin;
         result.carbsDelivered = detailedBolusInfo.carbs;
-        result.comment = MainApp.gs(R.string.virtualpump_resultok);
-        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
+        result.comment = getResourceHelper().gs(R.string.virtualpump_resultok);
+        treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false);
         return result;
     }
 
@@ -184,9 +184,8 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         result.success = false;
-        result.comment = MainApp.gs(R.string.pumperror);
-        if (L.isEnabled(L.PUMPCOMM))
-            log.debug("Setting temp basal absolute: " + result);
+        result.comment = getResourceHelper().gs(R.string.pumperror);
+        getAapsLogger().debug(LTag.PUMPBTCOMM, "Setting temp basal absolute: " + result);
         return result;
     }
 
@@ -194,9 +193,8 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         result.success = false;
-        result.comment = MainApp.gs(R.string.pumperror);
-        if (L.isEnabled(L.PUMPCOMM))
-            log.debug("Settings temp basal percent: " + result);
+        result.comment = getResourceHelper().gs(R.string.pumperror);
+        getAapsLogger().debug(LTag.PUMPBTCOMM, "Settings temp basal percent: " + result);
         return result;
     }
 
@@ -204,9 +202,8 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         result.success = false;
-        result.comment = MainApp.gs(R.string.pumperror);
-        if (L.isEnabled(L.PUMPCOMM))
-            log.debug("Setting extended bolus: " + result);
+        result.comment = getResourceHelper().gs(R.string.pumperror);
+        getAapsLogger().debug(LTag.PUMPBTCOMM, "Setting extended bolus: " + result);
         return result;
     }
 
@@ -214,9 +211,8 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     public PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         result.success = false;
-        result.comment = MainApp.gs(R.string.pumperror);
-        if (L.isEnabled(L.PUMPCOMM))
-            log.debug("Cancel temp basal: " + result);
+        result.comment = getResourceHelper().gs(R.string.pumperror);
+        getAapsLogger().debug(LTag.PUMPBTCOMM, "Cancel temp basal: " + result);
         return result;
     }
 
@@ -224,9 +220,8 @@ public class MDIPlugin extends PumpPluginBase implements PumpInterface {
     public PumpEnactResult cancelExtendedBolus() {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         result.success = false;
-        result.comment = MainApp.gs(R.string.pumperror);
-        if (L.isEnabled(L.PUMPCOMM))
-            log.debug("Canceling extended bolus: " + result);
+        result.comment = getResourceHelper().gs(R.string.pumperror);
+        getAapsLogger().debug(LTag.PUMPBTCOMM, "Canceling extended bolus: " + result);
         return result;
     }
 

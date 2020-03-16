@@ -24,12 +24,15 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientR
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.OKDialog;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class NSClientFragment extends DaggerFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     @Inject NSClientPlugin nsClientPlugin;
+    @Inject SP sp;
+    @Inject ResourceHelper resourceHelper;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -135,7 +138,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
                 FabricPrivacy.getInstance().logCustom("NSClientPause");
                 break;
             case R.id.nsclientinternal_autoscroll:
-                SP.putBoolean(R.string.key_nsclientinternal_autoscroll, isChecked);
+                sp.putBoolean(R.string.key_nsclientinternal_autoscroll, isChecked);
                 nsClientPlugin.autoscroll = isChecked;
                 updateGui();
                 break;
@@ -144,13 +147,13 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
 
     protected void updateGui() {
         nsClientPlugin.updateLog();
-        pausedCheckbox.setChecked(SP.getBoolean(R.string.key_nsclientinternal_paused, false));
+        pausedCheckbox.setChecked(sp.getBoolean(R.string.key_nsclientinternal_paused, false));
         logTextView.setText(nsClientPlugin.textLog);
         if (nsClientPlugin.autoscroll) {
             logScrollview.fullScroll(ScrollView.FOCUS_DOWN);
         }
         urlTextView.setText(nsClientPlugin.url());
-        Spanned queuetext = Html.fromHtml(MainApp.gs(R.string.queue) + " <b>" + UploadQueue.size() + "</b>");
+        Spanned queuetext = Html.fromHtml(resourceHelper.gs(R.string.queue) + " <b>" + UploadQueue.size() + "</b>");
         queueTextView.setText(queuetext);
         statusTextView.setText(nsClientPlugin.status);
     }

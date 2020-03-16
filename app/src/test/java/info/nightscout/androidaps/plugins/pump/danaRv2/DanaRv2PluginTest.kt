@@ -15,7 +15,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Before
 import org.junit.Test
@@ -26,7 +25,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, SP::class, DetailedBolusInfoStorage::class)
+@PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class)
 class DanaRv2PluginTest : TestBase() {
 
     @Mock lateinit var aapsLogger: AAPSLogger

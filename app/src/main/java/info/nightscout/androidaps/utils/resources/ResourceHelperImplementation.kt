@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.utils.resources
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,32 +11,31 @@ import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.Config
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import javax.inject.Inject
 
 /**
  * Created by adrian on 2019-12-23.
  */
-class ResourceHelperImplementation @Inject constructor(private val mainApp: MainApp) : ResourceHelper {
+class ResourceHelperImplementation @Inject constructor(private val context: Context) : ResourceHelper {
 
-    override fun gs(@StringRes id: Int): String = mainApp.getString(id)
+    override fun gs(@StringRes id: Int): String = context.getString(id)
 
-    override fun gs(@StringRes id: Int, vararg args: Any?): String = mainApp.getString(id, *args)
+    override fun gs(@StringRes id: Int, vararg args: Any?): String = context.getString(id, *args)
 
     override fun gq(@PluralsRes id: Int, quantity: Int, vararg args: Any?): String =
-        mainApp.resources.getQuantityString(id, quantity, *args)
+        context.resources.getQuantityString(id, quantity, *args)
 
-    override fun gc(@ColorRes id: Int): Int = ContextCompat.getColor(mainApp, id)
+    override fun gc(@ColorRes id: Int): Int = ContextCompat.getColor(context, id)
 
-    override fun gb(@BoolRes id :Int) : Boolean = mainApp.resources.getBoolean(id)
+    override fun gb(@BoolRes id :Int) : Boolean = context.resources.getBoolean(id)
 
     @SuppressLint("ResourceType")
     override fun gcs(@ColorRes id: Int): String =
         gs(id).replace("#ff", "#")
 
     override fun openRawResourceFd(id: Int): AssetFileDescriptor =
-        mainApp.resources.openRawResourceFd(id)
+        context.resources.openRawResourceFd(id)
 
     override fun getIcon(): Int {
         return when {
@@ -54,10 +54,10 @@ class ResourceHelperImplementation @Inject constructor(private val mainApp: Main
     }
 
     override fun decodeResource(id: Int): Bitmap =
-        BitmapFactory.decodeResource(mainApp.resources, id)
+        BitmapFactory.decodeResource(context.resources, id)
 
     override fun dpToPx(dp: Int): Int {
-        val scale = mainApp.resources.displayMetrics.density
+        val scale = context.resources.displayMetrics.density
         return (dp * scale + 0.5f).toInt()
     }
 }

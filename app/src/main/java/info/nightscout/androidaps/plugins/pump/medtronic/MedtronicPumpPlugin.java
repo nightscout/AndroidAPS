@@ -905,7 +905,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 detailedBolusInfo.date = now;
                 detailedBolusInfo.deliverAt = now; // not sure about that one
 
-                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
+                treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
                 getMDTPumpStatus().reservoirRemainingUnits -= detailedBolusInfo.insulin;
@@ -1082,7 +1082,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     .absolute(absoluteRate) //
                     .source(Source.USER);
 
-            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStart);
+            treatmentsPlugin.addToHistoryTempBasal(tempStart);
 
             incrementStatistics(MedtronicConst.Statistics.TBRsSet);
 
@@ -1437,7 +1437,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     .duration(0) //
                     .source(Source.USER);
 
-            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
+            treatmentsPlugin.addToHistoryTempBasal(tempBasal);
 
             return new PumpEnactResult(getInjector()).success(true).enacted(true) //
                     .isTempCancel(true);

@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.MainApp
-import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.utils.SP
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

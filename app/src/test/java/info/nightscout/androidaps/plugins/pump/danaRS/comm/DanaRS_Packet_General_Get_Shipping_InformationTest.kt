@@ -1,16 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.MainApp
-import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.utils.SP
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(MainApp::class, SP::class, L::class)
 class DanaRS_Packet_General_Get_Shipping_InformationTest : DanaRSTestBase() {
 
     @Test fun runTest() {

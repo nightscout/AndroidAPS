@@ -11,7 +11,6 @@ import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
 import androidx.annotation.ColorRes;
-import androidx.annotation.PluralsRes;
 import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
@@ -25,11 +24,6 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -39,20 +33,15 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.constraints.dstHelper.DstHelperPlugin;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
@@ -65,7 +54,6 @@ import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.general.dataBroadcaster.DataBroadcastPlugin;
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin;
-import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -112,12 +100,11 @@ import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.ActivityMonitor;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
-import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.fabric.sdk.android.Fabric;
 
 public class MainApp extends DaggerApplication {
-    static Logger log = StacktraceLoggerWrapper.getLogger(L.CORE);
 
     static MainApp sInstance;
     private static Resources sResources;
@@ -126,7 +113,7 @@ public class MainApp extends DaggerApplication {
 
     static DatabaseHelper sDatabaseHelper = null;
 
-    static DataReceiver dataReceiver = new DataReceiver();
+    DataReceiver dataReceiver = new DataReceiver();
     TimeDateOrTZChangeReceiver timeDateOrTZChangeReceiver;
 
     private String CHANNEL_ID = "AndroidAPS-Ongoing"; // TODO: move to OngoingNotificationProvider (and dagger)
@@ -140,6 +127,8 @@ public class MainApp extends DaggerApplication {
     @Inject FabricPrivacy fabricPrivacy;
     @Inject ResourceHelper resourceHelper;
     @Inject VersionCheckerUtils versionCheckersUtils;
+    @Inject SP sp;
+    @Inject ProfileFunction profileFunction;
 
     @Inject ActionsPlugin actionsPlugin;
     @Inject AutomationPlugin automationPlugin;
@@ -200,7 +189,7 @@ public class MainApp extends DaggerApplication {
     public void onCreate() {
         super.onCreate();
 
-        log.debug("onCreate");
+        aapsLogger.debug("onCreate");
         sInstance = this;
         sResources = getResources();
         LocaleHelper.INSTANCE.update(this);
@@ -222,7 +211,7 @@ public class MainApp extends DaggerApplication {
                 Fabric.with(this, new Crashlytics());
             }
         } catch (Exception e) {
-            log.error("Error with Fabric init! " + e);
+            aapsLogger.error("Error with Fabric init! " + e);
         }
 
         registerActivityLifecycleCallbacks(activityMonitor);
@@ -232,9 +221,9 @@ public class MainApp extends DaggerApplication {
 
         JodaTimeAndroid.init(this);
 
-        log.info("Version: " + BuildConfig.VERSION_NAME);
-        log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
-        log.info("Remote: " + BuildConfig.REMOTE);
+        aapsLogger.debug("Version: " + BuildConfig.VERSION_NAME);
+        aapsLogger.debug("BuildVersion: " + BuildConfig.BUILDVERSION);
+        aapsLogger.debug("Remote: " + BuildConfig.REMOTE);
 
         registerLocalBroadcastReceiver();
 
@@ -311,23 +300,23 @@ public class MainApp extends DaggerApplication {
 
         // guarantee that the unreachable threshold is at least 30 and of type String
         // Added in 1.57 at 21.01.2018
-        int unreachable_threshold = SP.getInt(R.string.key_pump_unreachable_threshold, 30);
-        SP.remove(R.string.key_pump_unreachable_threshold);
+        int unreachable_threshold = sp.getInt(R.string.key_pump_unreachable_threshold, 30);
+        sp.remove(R.string.key_pump_unreachable_threshold);
         if (unreachable_threshold < 30) unreachable_threshold = 30;
-        SP.putString(R.string.key_pump_unreachable_threshold, Integer.toString(unreachable_threshold));
+        sp.putString(R.string.key_pump_unreachable_threshold, Integer.toString(unreachable_threshold));
 
         // 2.5 -> 2.6
-        if (!SP.contains(R.string.key_units)) {
+        if (!sp.contains(R.string.key_units)) {
             String newUnits = Constants.MGDL;
-            Profile p = ProfileFunctions.getInstance().getProfile();
+            Profile p = profileFunction.getProfile();
             if (p != null && p.getData() != null && p.getData().has("units")) {
                 try {
                     newUnits = p.getData().getString("units");
                 } catch (JSONException e) {
-                    log.error("Unhandled exception", e);
+                    aapsLogger.error("Unhandled exception", e);
                 }
             }
-            SP.putString(R.string.key_units, newUnits);
+            sp.putString(R.string.key_units, newUnits);
         }
     }
 
@@ -355,7 +344,7 @@ public class MainApp extends DaggerApplication {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION );
+        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         registerReceiver(new NetworkChangeReceiver(), intentFilter);
     }
 
@@ -367,11 +356,6 @@ public class MainApp extends DaggerApplication {
     @Deprecated
     public static String gs(@StringRes int id, Object... args) {
         return sResources.getString(id, args);
-    }
-
-    @Deprecated
-    public static String gq(@PluralsRes int id, int quantity, Object... args) {
-        return sResources.getQuantityString(id, quantity, args);
     }
 
     @Deprecated
@@ -444,16 +428,4 @@ public class MainApp extends DaggerApplication {
         keepAliveManager.cancelAlarm(this);
         super.onTerminate();
     }
-
-    @Deprecated
-    public static int dpToPx(int dp) {
-        float scale = sResources.getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
-    }
-
-    @Deprecated
-    public ResourceHelper getResourceHelper() {
-        return resourceHelper;
-    }
-
 }

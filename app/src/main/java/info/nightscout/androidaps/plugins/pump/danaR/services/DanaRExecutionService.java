@@ -73,8 +73,8 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -92,6 +92,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
     @Inject MessageHashTableR messageHashTableR;
     @Inject ActivePluginProvider activePlugin;
     @Inject ProfileFunction profileFunction;
+    @Inject SP sp;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -311,7 +312,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         if (BolusProgressDialog.stopPressed) return false;
 
         mBolusingTreatment = t;
-        int preferencesSpeed = SP.getInt(R.string.key_danars_bolusspeed, 0);
+        int preferencesSpeed = sp.getInt(R.string.key_danars_bolusspeed, 0);
         MessageBase start;
         if (preferencesSpeed == 0)
             start = new MsgBolusStart(aapsLogger, constraintChecker, danaRPump, amount);
