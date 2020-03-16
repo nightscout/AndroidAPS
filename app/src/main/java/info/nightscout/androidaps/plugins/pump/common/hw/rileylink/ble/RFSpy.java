@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -113,6 +114,12 @@ public class RFSpy {
             LOG.error("getVersion failed with code: " + result.resultCode);
             return "(null)";
         }
+    }
+
+    public boolean isRileyLinkStillAvailable() {
+        RileyLinkFirmwareVersion firmwareVersion = getFirmwareVersion();
+
+        return (firmwareVersion!= RileyLinkFirmwareVersion.UnknownVersion);
     }
 
 

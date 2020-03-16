@@ -1,8 +1,9 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.exception;
+package info.nightscout.androidaps.plugins.pump.omnipod.comm.exception;
 
 import java.util.Locale;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 
 public class IllegalResponseException extends OmnipodException {
     private final String actualClass;

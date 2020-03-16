@@ -9,7 +9,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.RateEntry;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommandInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommandInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 public class TempBasalExtraCommand extends MessageBlock {

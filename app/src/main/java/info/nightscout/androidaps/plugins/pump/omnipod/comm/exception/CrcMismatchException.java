@@ -1,6 +1,8 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.exception;
+package info.nightscout.androidaps.plugins.pump.omnipod.comm.exception;
 
 import java.util.Locale;
+
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 
 public class CrcMismatchException extends OmnipodException {
     private final int expected;

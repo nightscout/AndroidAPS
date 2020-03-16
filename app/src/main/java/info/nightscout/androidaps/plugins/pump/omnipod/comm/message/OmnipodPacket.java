@@ -3,8 +3,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.message;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.CrcMismatchException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalPacketTypeException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CrcMismatchException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPacketTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmniCRC;
 
 /**

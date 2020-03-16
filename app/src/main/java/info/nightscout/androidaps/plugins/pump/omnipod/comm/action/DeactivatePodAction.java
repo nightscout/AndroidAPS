@@ -7,8 +7,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.Deac
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodFaultException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.ActionInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodFaultException;
 
 public class DeactivatePodAction implements OmnipodAction<StatusResponse> {
     private final PodSessionState podState;

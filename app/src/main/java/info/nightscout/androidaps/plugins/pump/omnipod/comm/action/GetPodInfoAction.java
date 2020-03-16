@@ -5,7 +5,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.GetS
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.ActionInitializationException;
 
 public class GetPodInfoAction implements OmnipodAction<PodInfoResponse> {
     private final PodSessionState podState;

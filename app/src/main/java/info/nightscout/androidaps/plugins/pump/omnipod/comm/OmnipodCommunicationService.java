@@ -28,15 +28,15 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodState;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommunicationException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalPacketTypeException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalResponseException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceOutOfSyncException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.NonceResyncException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.NotEnoughDataException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommunicationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPacketTypeException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalResponseException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceOutOfSyncException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceResyncException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NotEnoughDataException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodFaultException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.PodReturnedErrorResponseException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodFaultException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodReturnedErrorResponseException;
 
 /**
  * Created by andy on 6/29/18.

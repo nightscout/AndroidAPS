@@ -494,7 +494,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         //getPodPumpStatusObject().driverState = OmnipodDriverState.Initalized_PodAvailable;
         //driverState = OmnipodDriverState.Initalized_PodAvailable;
-        OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAvailable);
+        OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAttached);
         // we would probably need to read Basal Profile here too
     }
 
@@ -948,7 +948,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         if (isLoggingEnabled())
             LOG.warn(getLogPrefix() + "Time, Date and/or TimeZone changed. [changeType={}, eventHandlingEnabled={}]", timeChangeType.name(), pumpStatusLocal.timeChangeEventEnabled);
 
-        if (OmnipodUtil.getDriverState() == OmnipodDriverState.Initalized_PodAvailable) {
+        if (OmnipodUtil.getDriverState() == OmnipodDriverState.Initalized_PodAttached) {
             if (pumpStatusLocal.timeChangeEventEnabled) {
                 LOG.info(getLogPrefix() + "Time,and/or TimeZone changed event received and will be consumed by driver.");
                 this.hasTimeDateOrTimeZoneChanged = true;

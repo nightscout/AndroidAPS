@@ -9,8 +9,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Sta
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalSetupProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.ActionInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSetupProgressException;
 
 public class InsertCannulaAction implements OmnipodAction<StatusResponse> {
     private static final Logger LOG = LoggerFactory.getLogger(InsertCannulaAction.class);

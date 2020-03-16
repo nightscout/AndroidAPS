@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages;
 import com.atech.android.library.wizardpager.defs.action.AbstractCancelAction;
 import com.atech.android.library.wizardpager.defs.action.FinishActionInterface;
 
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity;
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.defs.PodActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState;
@@ -36,8 +37,15 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
 
     @Override
     public void execute() {
-        OmnipodUtil.setDriverState(actionType==PodActionType.InitPod ?
-                OmnipodDriverState.Initalized_PodAvailable : OmnipodDriverState.Initalized_NoPod);
+        if (actionType==PodActionType.InitPod) {
+            if (OmnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED)) {
+                OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodInitializing);
+            } else {
+                OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAttached);
+            }
+        } else {
+            OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod);
+        }
 
         podManagementActivity.refreshButtons();
     }

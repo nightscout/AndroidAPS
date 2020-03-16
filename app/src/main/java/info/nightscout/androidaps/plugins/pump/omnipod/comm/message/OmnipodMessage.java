@@ -7,9 +7,9 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.GetStatusCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.CrcMismatchException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.MessageDecodingException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.NotEnoughDataException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CrcMismatchException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.MessageDecodingException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NotEnoughDataException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmniCRC;
 
 public class OmnipodMessage {

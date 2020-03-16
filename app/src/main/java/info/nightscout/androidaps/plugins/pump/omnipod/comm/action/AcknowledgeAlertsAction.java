@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Sta
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.ActionInitializationException;
 
 public class AcknowledgeAlertsAction implements OmnipodAction<StatusResponse> {
     private final PodSessionState podState;

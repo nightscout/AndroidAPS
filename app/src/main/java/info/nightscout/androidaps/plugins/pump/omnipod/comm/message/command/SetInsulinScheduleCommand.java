@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedu
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BolusDeliverySchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.DeliverySchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.TempBasalDeliverySchedule;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.CommandInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommandInitializationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 public class SetInsulinScheduleCommand extends NonceResyncableMessageBlock {

@@ -63,7 +63,7 @@ public class RFSpyReader {
             LOG.trace(ThreadUtil.sig() + "Entering poll at t==" + SystemClock.uptimeMillis() + ", timeout is " + timeout_ms
                 + " mDataQueue size is " + mDataQueue.size());
 
-        if (mDataQueue.isEmpty())
+        if (mDataQueue.isEmpty()) {
             try {
                 // block until timeout or data available.
                 // returns null if timeout.
@@ -71,7 +71,7 @@ public class RFSpyReader {
                 if (dataFromQueue != null) {
                     if (isLogEnabled())
                         LOG.debug("Got data [" + ByteUtil.shortHexString(dataFromQueue) + "] at t=="
-                            + SystemClock.uptimeMillis());
+                                + SystemClock.uptimeMillis());
                 } else {
                     if (isLogEnabled())
                         LOG.debug("Got data [null] at t==" + SystemClock.uptimeMillis());
@@ -80,6 +80,8 @@ public class RFSpyReader {
             } catch (InterruptedException e) {
                 LOG.error("poll: Interrupted waiting for data");
             }
+        }
+
         return null;
     }
 

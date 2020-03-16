@@ -1,4 +1,6 @@
-package info.nightscout.androidaps.plugins.pump.omnipod.exception;
+package info.nightscout.androidaps.plugins.pump.omnipod.comm.exception;
+
+import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 
 public class MessageDecodingException extends OmnipodException {
     public MessageDecodingException(String message) {

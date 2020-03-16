@@ -234,7 +234,13 @@ class OmnipodFragment : Fragment() {
             omnipod_pod_status.text = MainApp.gs(R.string.omnipod_pod_no_pod_connected)
             pumpStatus.podAvailable = false
             pumpStatus.podNumber == null
-        } else {
+        } else if (driverState == OmnipodDriverState.Initalized_PodInitializing) {
+            omnipod_pod_address.text = pumpStatus.podSessionState.address.toString()
+            omnipod_pod_expiry.text = "-"
+            omnipod_pod_status.text = OmnipodUtil.getPodSessionState().getSetupProgress().name
+            pumpStatus.podAvailable = false
+            pumpStatus.podNumber == pumpStatus.podSessionState.address.toString()
+        }else {
             pumpStatus.podLotNumber = "" + pumpStatus.podSessionState.lot
             pumpStatus.podAvailable = true
             omnipod_pod_address.text = pumpStatus.podSessionState.address.toString()

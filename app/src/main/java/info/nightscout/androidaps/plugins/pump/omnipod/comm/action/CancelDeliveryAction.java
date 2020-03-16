@@ -12,7 +12,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Sta
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.ActionInitializationException;
 
 public class CancelDeliveryAction implements OmnipodAction<StatusResponse> {
     private final PodSessionState podState;

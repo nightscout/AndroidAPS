@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.SetI
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BolusDeliverySchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.ActionInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.ActionInitializationException;
 
 public class BolusAction implements OmnipodAction<StatusResponse> {
     private final PodSessionState podState;

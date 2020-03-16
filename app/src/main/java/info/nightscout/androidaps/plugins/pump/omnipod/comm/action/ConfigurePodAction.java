@@ -12,9 +12,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalPacketTypeException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalPodProgressException;
-import info.nightscout.androidaps.plugins.pump.omnipod.exception.IllegalSetupProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPacketTypeException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPodProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSetupProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 public class ConfigurePodAction implements OmnipodAction<VersionResponse> {
