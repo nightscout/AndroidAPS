@@ -37,9 +37,17 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var localAlertUtils: LocalAlertUtils
 
-    private var lastReadStatus: Long = 0
-    private var lastRun: Long = 0
-    private var lastIobUpload: Long = 0
+
+    companion object {
+        private val KEEP_ALIVE_MILLISECONDS = T.mins(5).msecs()
+        private val STATUS_UPDATE_FREQUENCY = T.mins(15).msecs()
+        private val IOB_UPDATE_FREQUENCY = T.mins(5).msecs()
+
+        private var lastReadStatus: Long = 0
+        private var lastRun: Long = 0
+        private var lastIobUpload: Long = 0
+
+    }
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
@@ -83,13 +91,6 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.cancel(sender)
         }
-    }
-
-    companion object {
-        private val KEEP_ALIVE_MILLISECONDS = T.mins(5).msecs()
-        private val STATUS_UPDATE_FREQUENCY = T.mins(15).msecs()
-        private val IOB_UPDATE_FREQUENCY = T.mins(5).msecs()
-
     }
 
     // Usually deviceStatus is uploaded through LoopPlugin after every loop cycle.

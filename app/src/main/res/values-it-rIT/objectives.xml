@@ -35,7 +35,7 @@
     <string name="objectives_useloop">Visualizza il contenuto del plugin Loop</string>
     <string name="objectives_usescale">Usa la funzione di ridimensionamento premendo a lungo sul grafico delle glicemie</string>
     <string name="objectives_button_enter">Entra</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se prima eri un utente OpenAPS e il tuo NS ha almeno 3 mesi di dati in loop, puoi inviare un\'e-mail a objectives@androidaps.org con il tuo indirizzo NS e richiedere il codice per ignorare il resto degli obiettivi. Inserisci il codice ottenuto dagli sviluppatori</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se hai almeno 3 mesi di esperienza in loop chiuso con altri sistemi potresti beneficiare di un codice per saltare gli obiettivi. Guarda https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives per i dettagli.</string>
     <string name="codeaccepted">Codice accettato</string>
     <string name="codeinvalid">Codice non valido</string>
     <string name="objectives_exam_objective">Dai prova della tua conoscenza</string>
