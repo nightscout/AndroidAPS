@@ -149,7 +149,7 @@ public class IobCobOref1Thread extends Thread {
                     if (L.isEnabled(L.AUTOSENS))
                         log.debug("Processing calculation thread: " + from + " (" + i + "/" + bucketed_data.size() + ")");
 
-                    double sens = Profile.toMgdl(profile.getIsf(bgTime), profile.getUnits());
+                    double sens = profile.getIsfMgdl(bgTime);
 
                     AutosensData autosensData = new AutosensData();
                     autosensData.time = bgTime;
@@ -237,11 +237,11 @@ public class IobCobOref1Thread extends Thread {
                         }
                     }
 
-                    List<Treatment> recentTreatments = TreatmentsPlugin.getPlugin().getTreatments5MinBackFromHistory(bgTime);
-                    for (int ir = 0; ir < recentTreatments.size(); ir++) {
-                        autosensData.carbsFromBolus += recentTreatments.get(ir).carbs;
-                        autosensData.activeCarbsList.add(new AutosensData.CarbsInPast(recentTreatments.get(ir)));
-                        autosensData.pastSensitivity += "[" + DecimalFormatter.to0Decimal(recentTreatments.get(ir).carbs) + "g]";
+                    List<Treatment> recentCarbTreatments = TreatmentsPlugin.getPlugin().getCarbTreatments5MinBackFromHistory(bgTime);
+                    for (Treatment recentCarbTreatment : recentCarbTreatments) {
+                        autosensData.carbsFromBolus += recentCarbTreatment.carbs;
+                        autosensData.activeCarbsList.add(new AutosensData.CarbsInPast(recentCarbTreatment));
+                        autosensData.pastSensitivity += "[" + DecimalFormatter.to0Decimal(recentCarbTreatment.carbs) + "g]";
                     }
 
 

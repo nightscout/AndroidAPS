@@ -14,8 +14,12 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ActionStopTempTarget extends Action {
+    private static final Logger log = LoggerFactory.getLogger(ActionStopTempTarget.class);
+
     String reason = "";
     private TempTarget tempTarget;
 
@@ -54,7 +58,7 @@ public class ActionStopTempTarget extends Action {
             data.put("reason", reason);
             o.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -65,7 +69,7 @@ public class ActionStopTempTarget extends Action {
             JSONObject d = new JSONObject(data);
             reason = JsonHelper.safeGetString(d, "reason");
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }

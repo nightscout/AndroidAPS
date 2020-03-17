@@ -9,6 +9,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.RequestDexcomPermissionActivity
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.db.CareportalEvent
+import info.nightscout.androidaps.db.Source
+import info.nightscout.androidaps.dialogs.CareDialog
 import info.nightscout.androidaps.interfaces.BgSourceInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -17,6 +19,7 @@ import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.SP
+import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
 import org.slf4j.LoggerFactory
 
@@ -51,7 +54,7 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
     }
 
     fun findDexcomPackageName(): String? {
-        val packageManager = MainApp.instance().packageManager;
+        val packageManager = MainApp.instance().packageManager
         for (packageInfo in packageManager.getInstalledPackages(0)) {
             if (PACKAGE_NAMES.contains(packageInfo.packageName)) return packageInfo.packageName
         }
@@ -64,43 +67,66 @@ object SourceDexcomPlugin : PluginBase(PluginDescription()
             val sensorType = intent.getStringExtra("sensorType") ?: ""
             val glucoseValues = intent.getBundleExtra("glucoseValues")
             for (i in 0 until glucoseValues.size()) {
-                val glucoseValue = glucoseValues.getBundle(i.toString())
-                val bgReading = BgReading()
-                bgReading.value = glucoseValue!!.getInt("glucoseValue").toDouble()
-                bgReading.direction = glucoseValue.getString("trendArrow")
-                bgReading.date = glucoseValue.getLong("timestamp") * 1000
-                bgReading.raw = 0.0
-                if (MainApp.getDbHelper().createIfNotExists(bgReading, "Dexcom$sensorType")) {
-                    if (SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                        NSUpload.uploadBg(bgReading, "AndroidAPS-Dexcom$sensorType")
-                    }
-                    if (SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                        NSUpload.sendToXdrip(bgReading)
+                glucoseValues.getBundle(i.toString())?.let { glucoseValue ->
+                    val bgReading = BgReading()
+                    bgReading.value = glucoseValue.getInt("glucoseValue").toDouble()
+                    bgReading.direction = glucoseValue.getString("trendArrow")
+                    bgReading.date = glucoseValue.getLong("timestamp") * 1000
+                    bgReading.raw = 0.0
+                    if (MainApp.getDbHelper().createIfNotExists(bgReading, "Dexcom$sensorType")) {
+                        if (SP.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
+                            NSUpload.uploadBg(bgReading, "AndroidAPS-Dexcom$sensorType")
+                        }
+                        if (SP.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
+                            NSUpload.sendToXdrip(bgReading)
+                        }
                     }
                 }
             }
             val meters = intent.getBundleExtra("meters")
             for (i in 0 until meters.size()) {
                 val meter = meters.getBundle(i.toString())
-                val timestamp = meter!!.getLong("timestamp") * 1000
-                if (MainApp.getDbHelper().getCareportalEventFromTimestamp(timestamp) != null) continue
-                val jsonObject = JSONObject()
-                jsonObject.put("enteredBy", "AndroidAPS-Dexcom$sensorType")
-                jsonObject.put("created_at", DateUtil.toISOString(timestamp))
-                jsonObject.put("eventType", CareportalEvent.BGCHECK)
-                jsonObject.put("glucoseType", "Finger")
-                jsonObject.put("glucose", meter.getInt("meterValue"))
-                jsonObject.put("units", Constants.MGDL)
-                NSUpload.uploadCareportalEntryToNS(jsonObject)
+                meter?.let {
+                    val timestamp = it.getLong("timestamp") * 1000
+                    val now = DateUtil.now()
+                    if (timestamp > now - T.months(1).msecs() && timestamp < now)
+                        if (MainApp.getDbHelper().getCareportalEventFromTimestamp(timestamp) == null) {
+                            val jsonObject = JSONObject()
+                            jsonObject.put("enteredBy", "AndroidAPS-Dexcom$sensorType")
+                            jsonObject.put("created_at", DateUtil.toISOString(timestamp))
+                            jsonObject.put("eventType", CareportalEvent.BGCHECK)
+                            jsonObject.put("glucoseType", "Finger")
+                            jsonObject.put("glucose", meter.getInt("meterValue"))
+                            jsonObject.put("units", Constants.MGDL)
+
+                            val careportalEvent = CareportalEvent()
+                            careportalEvent.date = timestamp
+                            careportalEvent.source = Source.USER
+                            careportalEvent.eventType = CareportalEvent.BGCHECK
+                            careportalEvent.json = jsonObject.toString()
+                            MainApp.getDbHelper().createOrUpdate(careportalEvent)
+                            NSUpload.uploadCareportalEntryToNS(jsonObject)
+                        }
+                }
             }
             if (SP.getBoolean(R.string.key_dexcom_lognssensorchange, false) && intent.hasExtra("sensorInsertionTime")) {
-                val sensorInsertionTime = intent.extras!!.getLong("sensorInsertionTime") * 1000
-                if (MainApp.getDbHelper().getCareportalEventFromTimestamp(sensorInsertionTime) == null) {
-                    val jsonObject = JSONObject()
-                    jsonObject.put("enteredBy", "AndroidAPS-Dexcom$sensorType")
-                    jsonObject.put("created_at", DateUtil.toISOString(sensorInsertionTime))
-                    jsonObject.put("eventType", CareportalEvent.SENSORCHANGE)
-                    NSUpload.uploadCareportalEntryToNS(jsonObject)
+                intent.extras?.let {
+                    val sensorInsertionTime = it.getLong("sensorInsertionTime") * 1000
+                    val now = DateUtil.now()
+                    if (sensorInsertionTime > now - T.months(1).msecs() && sensorInsertionTime < now)
+                        if (MainApp.getDbHelper().getCareportalEventFromTimestamp(sensorInsertionTime) == null) {
+                            val jsonObject = JSONObject()
+                            jsonObject.put("enteredBy", "AndroidAPS-Dexcom$sensorType")
+                            jsonObject.put("created_at", DateUtil.toISOString(sensorInsertionTime))
+                            jsonObject.put("eventType", CareportalEvent.SENSORCHANGE)
+                            val careportalEvent = CareportalEvent()
+                            careportalEvent.date = sensorInsertionTime
+                            careportalEvent.source = Source.USER
+                            careportalEvent.eventType = CareportalEvent.SENSORCHANGE
+                            careportalEvent.json = jsonObject.toString()
+                            MainApp.getDbHelper().createOrUpdate(careportalEvent)
+                            NSUpload.uploadCareportalEntryToNS(jsonObject)
+                        }
                 }
             }
         } catch (e: Exception) {

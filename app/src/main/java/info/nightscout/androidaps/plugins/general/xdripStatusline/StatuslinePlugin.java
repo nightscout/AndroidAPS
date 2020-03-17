@@ -204,7 +204,7 @@ public class StatuslinePlugin extends PluginBase {
 
         // BGI
         if (mPrefs.getBoolean("xdripstatus_showbgi", true)) {
-            double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
+            double bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), ProfileFunctions.getSystemUnits());
             status += " " + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to2Decimal(bgi);
         }
 

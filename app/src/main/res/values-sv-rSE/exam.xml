@@ -164,4 +164,7 @@
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">Annan medicinering</string>
+    <string name="other_medication_text">AAPS sänker basalen för att höja glukosmängden i blodet. Mediciner av typen SGLT2-hämmare (glifloziner) kan motverka eller förhindra den väntade glukoshöjningen vilket kan leda till akut insulinbrist och ketoacidos (DKA). 
+\nVanliga märken som finns på marknaden: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\n
+Jag lovar härmed att inte ta sådana läkemedel medan jag använder AAPS eller kommer att pausa loopen innan jag tar dessa läkemedel.</string>
 </resources>

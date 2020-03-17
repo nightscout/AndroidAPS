@@ -2,7 +2,11 @@ package info.nightscout.androidaps.plugins.configBuilder
 
 import android.content.Intent
 import android.view.View
-import android.widget.*
+import android.widget.CheckBox
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.TextView
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.events.EventRebuildTabs
@@ -10,6 +14,7 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.utils.PasswordProtection
+import info.nightscout.androidaps.utils.toVisibility
 
 class PluginViewHolder internal constructor(private val fragment: ConfigBuilderFragment,
                                             private val pluginType: PluginType,
@@ -56,8 +61,8 @@ class PluginViewHolder internal constructor(private val fragment: ConfigBuilderF
     }
 
     fun update() {
-        enabledExclusive.visibility = if (areMultipleSelectionsAllowed(pluginType)) View.GONE else View.VISIBLE
-        enabledInclusive.visibility = if (areMultipleSelectionsAllowed(pluginType)) View.VISIBLE else View.GONE
+        enabledExclusive.visibility = areMultipleSelectionsAllowed(pluginType).not().toVisibility()
+        enabledInclusive.visibility = areMultipleSelectionsAllowed(pluginType).toVisibility()
         enabledExclusive.isChecked = plugin.isEnabled(pluginType)
         enabledInclusive.isChecked = plugin.isEnabled(pluginType)
         enabledInclusive.isEnabled = !plugin.pluginDescription.alwaysEnabled
@@ -70,7 +75,7 @@ class PluginViewHolder internal constructor(private val fragment: ConfigBuilderF
             pluginDescription.text = plugin.description
         }
         pluginPreferences.visibility = if (plugin.preferencesId == -1 || !plugin.isEnabled(pluginType)) View.INVISIBLE else View.VISIBLE
-        pluginVisibility.visibility = if (plugin.hasFragment()) View.VISIBLE else View.INVISIBLE
+        pluginVisibility.visibility = plugin.hasFragment().toVisibility()
         pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
         pluginVisibility.isChecked = plugin.isFragmentVisible
     }

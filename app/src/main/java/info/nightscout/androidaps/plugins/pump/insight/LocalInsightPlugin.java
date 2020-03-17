@@ -1,9 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.insight;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -132,6 +135,8 @@ import info.nightscout.androidaps.utils.SP;
 
 public class LocalInsightPlugin extends PluginBase implements PumpInterface, ConstraintsInterface, InsightConnectionService.StateCallback {
 
+    public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
+
     private static LocalInsightPlugin instance = null;
 
     private Logger log = LoggerFactory.getLogger(L.PUMP);
@@ -245,6 +250,16 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
         super.onStart();
         MainApp.instance().bindService(new Intent(MainApp.instance(), InsightConnectionService.class), serviceConnection, Context.BIND_AUTO_CREATE);
         MainApp.instance().bindService(new Intent(MainApp.instance(), InsightAlertService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        createNotificationChannel();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel = new NotificationChannel(ALERT_CHANNEL_ID, MainApp.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH);
+            channel.setSound(null, null);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override
@@ -507,7 +522,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 nextValue = profile.getBasalValues()[i + 1];
             if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds)
                 return false;
-            if (Math.abs(profileBlock.getBasalAmount() - basalValue.value) > (basalValue.value > 5 ? 0.05 : 0.005))
+            if (Math.abs(profileBlock.getBasalAmount() - basalValue.value) > (basalValue.value > 5 ? 0.051 : 0.0051))
                 return false;
         }
         return true;
@@ -571,6 +586,15 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                 detailedBolusInfo.date = insightBolusID.timestamp;
                 detailedBolusInfo.source = Source.PUMP;
                 detailedBolusInfo.pumpId = insightBolusID.id;
+                if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.carbTime != 0) {
+                    DetailedBolusInfo carbInfo = new DetailedBolusInfo();
+                    carbInfo.carbs = detailedBolusInfo.carbs;
+                    carbInfo.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60L * 1000L;
+                    carbInfo.source = Source.USER;
+                    TreatmentsPlugin.getPlugin().addToHistoryTreatment(carbInfo, false);
+                    detailedBolusInfo.carbTime = 0;
+                    detailedBolusInfo.carbs = 0;
+                }
                 TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
                 while (true) {
                     synchronized ($bolusLock) {
@@ -638,8 +662,9 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
                     cancelBolusMessage.setBolusID(bolusID);
                     connectionService.requestMessage(cancelBolusMessage).await();
                     bolusCancelled = true;
+                    confirmAlert(AlertType.WARNING_38);
+                    alertService.ignore(null);
                 }
-                confirmAlert(AlertType.WARNING_38);
             } catch (AppLayerErrorException e) {
                 log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             } catch (InsightException e) {
@@ -928,6 +953,7 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
     @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
         long now = System.currentTimeMillis();
+        if (connectionService == null) return null;
         if (System.currentTimeMillis() - connectionService.getLastConnected() > (60 * 60 * 1000)) {
             return null;
         }
@@ -1524,9 +1550,15 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             data.put("created_at", DateUtil.toISOString(date));
             data.put("eventType", CareportalEvent.NOTE);
             data.put("notes", note);
+            CareportalEvent careportalEvent = new CareportalEvent();
+            careportalEvent.date = date;
+            careportalEvent.source = Source.USER;
+            careportalEvent.eventType = CareportalEvent.NOTE;
+            careportalEvent.json = data.toString();
+            MainApp.getDbHelper().createOrUpdate(careportalEvent);
             NSUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -1552,9 +1584,15 @@ public class LocalInsightPlugin extends PluginBase implements PumpInterface, Con
             if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
             data.put("created_at", DateUtil.toISOString(date));
             data.put("eventType", event);
+            CareportalEvent careportalEvent = new CareportalEvent();
+            careportalEvent.date = date;
+            careportalEvent.source = Source.USER;
+            careportalEvent.eventType = event;
+            careportalEvent.json = data.toString();
+            MainApp.getDbHelper().createOrUpdate(careportalEvent);
             NSUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 

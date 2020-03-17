@@ -3,6 +3,7 @@ package info.nightscout.androidaps.db;
 import android.content.Context;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+
 import androidx.annotation.Nullable;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -32,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.data.OverlappingIntervals;
+import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
@@ -192,15 +193,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public int getNewVersion() {
         return newVersion;
     }
-
-    /**
-     * Close the database connections and clear any cached DAOs.
-     */
-    @Override
-    public void close() {
-        super.close();
-    }
-
 
     public long size(String database) {
         return DatabaseUtils.queryNumEntries(getReadableDatabase(), database);
@@ -558,12 +550,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // ------------- DbRequests handling -------------------
 
-    public void create(DbRequest dbr) {
-        try {
+    public void create(DbRequest dbr) throws SQLException {
             getDaoDbRequest().create(dbr);
-        } catch (SQLException e) {
-            log.error("Unhandled exception", e);
-        }
     }
 
     public int delete(DbRequest dbr) {
@@ -772,8 +760,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TempTarget tempTarget = new TempTarget()
                     .date(trJson.getLong("mills"))
                     .duration(JsonHelper.safeGetInt(trJson, "duration"))
-                    .low(Profile.toMgdl(trJson.getDouble("targetBottom"), units))
-                    .high(Profile.toMgdl(trJson.getDouble("targetTop"), units))
+                    .low(Profile.toMgdl(JsonHelper.safeGetDouble(trJson, "targetBottom"), units))
+                    .high(Profile.toMgdl(JsonHelper.safeGetDouble(trJson, "targetTop"), units))
                     .reason(JsonHelper.safeGetString(trJson, "reason", ""))
                     ._id(trJson.getString("_id"))
                     .source(Source.NIGHTSCOUT);
@@ -1425,7 +1413,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
             queryBuilder.orderBy("date", false);
             Where where = queryBuilder.where();
-            where.eq("eventType", event);
+            where.eq("eventType", event).and().isNotNull("json");
             queryBuilder.limit(1L);
             PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
             careportalEvents = getDaoCareportalEvents().query(preparedQuery);
@@ -1445,10 +1433,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
             queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.ge("date", mills);
+            where.ge("date", mills).and().isNotNull("json").and().isNotNull("eventType");
             PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
             careportalEvents = getDaoCareportalEvents().query(preparedQuery);
-            preprocessOpenAPSOfflineEvents(careportalEvents);
+            careportalEvents = preprocessOpenAPSOfflineEvents(careportalEvents);
             return careportalEvents;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
@@ -1462,10 +1450,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
             queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.between("date", start, end);
+            where.between("date", start, end).and().isNotNull("json").and().isNotNull("eventType");
             PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
             careportalEvents = getDaoCareportalEvents().query(preparedQuery);
-            preprocessOpenAPSOfflineEvents(careportalEvents);
+            careportalEvents = preprocessOpenAPSOfflineEvents(careportalEvents);
             return careportalEvents;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
@@ -1473,14 +1461,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<>();
     }
 
-    public void preprocessOpenAPSOfflineEvents(List<CareportalEvent> list) {
-        OverlappingIntervals offlineEvents = new OverlappingIntervals();
+    public List<CareportalEvent> preprocessOpenAPSOfflineEvents(List<CareportalEvent> list) {
+        NonOverlappingIntervals offlineEvents = new NonOverlappingIntervals();
+        List<CareportalEvent> other = new ArrayList<>();
         for (int i = 0; i < list.size(); i++) {
             CareportalEvent event = list.get(i);
-            if (!event.eventType.equals(CareportalEvent.OPENAPSOFFLINE)) continue;
-            offlineEvents.add(event);
+            if (event.eventType.equals(CareportalEvent.OPENAPSOFFLINE)) offlineEvents.add(event);
+            else other.add(event);
         }
-
+        other.addAll(offlineEvents.getList());
+        return other;
     }
 
     public List<CareportalEvent> getCareportalEventsFromTime(long mills, String type, boolean ascending) {
@@ -1489,10 +1479,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
             queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.ge("date", mills).and().eq("eventType", type);
+            where.ge("date", mills).and().eq("eventType", type).and().isNotNull("json");
             PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
             careportalEvents = getDaoCareportalEvents().query(preparedQuery);
-            preprocessOpenAPSOfflineEvents(careportalEvents);
+            careportalEvents = preprocessOpenAPSOfflineEvents(careportalEvents);
             return careportalEvents;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
@@ -1505,9 +1495,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             List<CareportalEvent> careportalEvents;
             QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
             queryBuilder.orderBy("date", ascending);
+            Where where = queryBuilder.where();
+            where.isNotNull("json").and().isNotNull("eventType");
             PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
             careportalEvents = getDaoCareportalEvents().query(preparedQuery);
-            preprocessOpenAPSOfflineEvents(careportalEvents);
+            careportalEvents = preprocessOpenAPSOfflineEvents(careportalEvents);
             return careportalEvents;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
@@ -1592,20 +1584,50 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // ---------------- ProfileSwitch handling ---------------
 
-    public List<ProfileSwitch> getProfileSwitchData(boolean ascending) {
+    public List<ProfileSwitch> getProfileSwitchData(long from, boolean ascending) {
         try {
             Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
             List<ProfileSwitch> profileSwitches;
             QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
             queryBuilder.orderBy("date", ascending);
             queryBuilder.limit(100L);
+            Where where = queryBuilder.where();
+            where.ge("date", from);
             PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
             profileSwitches = daoProfileSwitch.query(preparedQuery);
+            //add last one without duration
+            ProfileSwitch last = getLastProfileSwitchWithoutDuration();
+            if (last != null) {
+                if (!profileSwitches.contains(last))
+                    profileSwitches.add(last);
+            }
             return profileSwitches;
         } catch (SQLException e) {
             log.error("Unhandled exception", e);
         }
         return new ArrayList<>();
+    }
+
+    @Nullable
+    private ProfileSwitch getLastProfileSwitchWithoutDuration() {
+        try {
+            Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
+            List<ProfileSwitch> profileSwitches;
+            QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
+            queryBuilder.orderBy("date", false);
+            queryBuilder.limit(1L);
+            Where where = queryBuilder.where();
+            where.eq("durationInMinutes", 0);
+            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
+            profileSwitches = daoProfileSwitch.query(preparedQuery);
+            if (profileSwitches.size() > 0)
+                return profileSwitches.get(0);
+            else
+                return null;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return null;
     }
 
     public List<ProfileSwitch> getProfileSwitchEventsFromTime(long mills, boolean ascending) {

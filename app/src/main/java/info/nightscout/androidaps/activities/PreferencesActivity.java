@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.activities;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -9,27 +10,31 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
-import android.text.TextUtils;
+
+import java.util.Arrays;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
-import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
-import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin;
-import info.nightscout.androidaps.plugins.general.tidepool.comm.TidepoolUploader;
-import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
+import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
+import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
+import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
+import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin;
+import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
+import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
+import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
@@ -42,14 +47,11 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
-import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin;
-import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
-import info.nightscout.androidaps.plugins.general.xdripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.plugins.source.SourceDexcomPlugin;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
-import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
+import info.nightscout.androidaps.utils.SafeParse;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     MyPreferenceFragment myPreferenceFragment;
@@ -67,20 +69,52 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void attachBaseContext(Context newBase) {
+        super.attachBaseContext(LocaleHelper.INSTANCE.wrap(newBase));
+    }
+
+    @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         RxBus.INSTANCE.send(new EventPreferenceChange(key));
-        if (key.equals("language")) {
+        if (key.equals(MainApp.gs(R.string.key_language))) {
             RxBus.INSTANCE.send(new EventRebuildTabs(true));
             //recreate() does not update language so better close settings
             finish();
         }
-        if (key.equals("short_tabtitles")) {
+        if (key.equals(MainApp.gs(R.string.key_short_tabtitles))) {
             RxBus.INSTANCE.send(new EventRebuildTabs());
         }
-        if (key.equals(MainApp.gs(R.string.key_openapsama_useautosens)) && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
-            OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity), MainApp.gs(R.string.sensitivity_warning), null);
+        if (key.equals(MainApp.gs(R.string.key_units))) {
+            recreate();
+            return;
         }
-        updatePrefSummary(myPreferenceFragment.getPreference(key));
+        if (key.equals(MainApp.gs(R.string.key_openapsama_useautosens)) && SP.getBoolean(R.string.key_openapsama_useautosens, false)) {
+            OKDialog.show(this, MainApp.gs(R.string.configbuilder_sensitivity), MainApp.gs(R.string.sensitivity_warning));
+        }
+        updatePrefSummary(myPreferenceFragment.findPreference(key));
+    }
+
+    private static void adjustUnitDependentPrefs(Preference pref) {
+        // convert preferences values to current units
+        String[] unitDependent = new String[]{
+                MainApp.gs(R.string.key_hypo_target),
+                MainApp.gs(R.string.key_activity_target),
+                MainApp.gs(R.string.key_eatingsoon_target),
+                MainApp.gs(R.string.key_high_mark),
+                MainApp.gs(R.string.key_low_mark)
+        };
+        if (Arrays.asList(unitDependent).contains(pref.getKey())) {
+            EditTextPreference editTextPref = (EditTextPreference) pref;
+            String converted = Profile.toCurrentUnitsString(SafeParse.stringToDouble(editTextPref.getText()));
+            editTextPref.setSummary(converted);
+            editTextPref.setText(converted);
+        }
     }
 
     private static void updatePrefSummary(Preference pref) {
@@ -92,15 +126,17 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             EditTextPreference editTextPref = (EditTextPreference) pref;
             if (pref.getKey().contains("password") || pref.getKey().contains("secret")) {
                 pref.setSummary("******");
-            } else if (pref.getKey().equals(MainApp.gs(R.string.key_danars_name))) {
-                pref.setSummary(SP.getString(R.string.key_danars_name, ""));
             } else if (editTextPref.getText() != null) {
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
-            } else if (pref.getKey().contains("smscommunicator_allowednumbers") && (editTextPref.getText() == null || TextUtils.isEmpty(editTextPref.getText().trim()))) {
-                pref.setSummary(MainApp.gs(R.string.smscommunicator_allowednumbers_summary));
+            } else {
+                for (PluginBase plugin : MainApp.getPluginsList()) {
+                    plugin.updatePreferenceSummary(pref);
+                }
             }
         }
+        if (pref != null)
+            adjustUnitDependentPrefs(pref);
     }
 
     public static void initSummary(Preference p) {
@@ -143,8 +179,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 if (!Config.NSCLIENT) {
                     addPreferencesFromResource(R.xml.pref_password);
                 }
+                addPreferencesFromResource(R.xml.pref_general);
                 addPreferencesFromResource(R.xml.pref_age);
-                addPreferencesFromResource(R.xml.pref_language);
 
                 addPreferencesFromResource(R.xml.pref_overview);
 
@@ -188,7 +224,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
                 addPreferencesFromResourceIfEnabled(NSClientPlugin.getPlugin(), PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(TidepoolPlugin.INSTANCE, PluginType.GENERAL);
-                addPreferencesFromResourceIfEnabled(SmsCommunicatorPlugin.getPlugin(), PluginType.GENERAL);
+                addPreferencesFromResourceIfEnabled(SmsCommunicatorPlugin.INSTANCE, PluginType.GENERAL);
                 addPreferencesFromResourceIfEnabled(AutomationPlugin.INSTANCE, PluginType.GENERAL);
 
                 addPreferencesFromResource(R.xml.pref_others);
@@ -198,36 +234,17 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResourceIfEnabled(StatuslinePlugin.getPlugin(), PluginType.GENERAL);
             }
 
-            if (Config.NSCLIENT) {
-                PreferenceScreen scrnAdvancedSettings = (PreferenceScreen) findPreference(getString(R.string.key_advancedsettings));
-                if (scrnAdvancedSettings != null) {
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_warning)));
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_res_critical)));
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_bat_warning)));
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_statuslights_bat_critical)));
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_show_statuslights)));
-                    scrnAdvancedSettings.removePreference(getPreference(getString(R.string.key_show_statuslights_extended)));
-                }
-            }
-
             initSummary(getPreferenceScreen());
 
-            final Preference tidepoolTestLogin = findPreference(MainApp.gs(R.string.key_tidepool_test_login));
-            if (tidepoolTestLogin != null)
-                tidepoolTestLogin.setOnPreferenceClickListener(preference -> {
-                    TidepoolUploader.INSTANCE.testLogin(getActivity());
-                    return false;
-                });
+            for (PluginBase plugin : MainApp.getPluginsList()) {
+                plugin.preprocessPreferences(this);
+            }
         }
 
         @Override
         public void onSaveInstanceState(Bundle outState) {
             super.onSaveInstanceState(outState);
             outState.putInt("id", id);
-        }
-
-        public Preference getPreference(String key) {
-            return findPreference(key);
         }
     }
 }

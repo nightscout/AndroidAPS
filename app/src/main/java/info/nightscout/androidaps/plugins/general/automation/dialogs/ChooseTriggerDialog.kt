@@ -5,17 +5,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
-import androidx.fragment.app.DialogFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import kotlinx.android.synthetic.main.automation_dialog_choose_trigger.*
-import kotlinx.android.synthetic.main.okcancel.*
 
-class ChooseTriggerDialog : DialogFragment() {
+class ChooseTriggerDialog : DialogFragmentWithDate() {
 
     private var checkedIndex = -1
-
     private var clickListener: OnClickListener? = null
 
     interface OnClickListener {
@@ -29,7 +27,7 @@ class ChooseTriggerDialog : DialogFragment() {
             checkedIndex = bundle.getInt("checkedIndex")
         }
 
-        dialog?.setCanceledOnTouchOutside(false)
+        onCreateViewGeneral()
         return inflater.inflate(R.layout.automation_dialog_choose_trigger, container, false)
     }
 
@@ -45,30 +43,22 @@ class ChooseTriggerDialog : DialogFragment() {
 
         if (checkedIndex != -1)
             (automation_chooseTriggerRadioGroup.getChildAt(checkedIndex) as RadioButton).isChecked = true
-
-        // OK button
-        ok.setOnClickListener {
-            dismiss()
-            instantiateTrigger()?.let {
-                clickListener?.onClick(it)
-            }
-        }
-
-        // Cancel button
-        cancel.setOnClickListener { dismiss() }
     }
 
-    override fun onStart() {
-        super.onStart()
-        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    override fun submit(): Boolean {
+        instantiateTrigger()?.let {
+            clickListener?.onClick(it)
+        }
+        return true
     }
 
     fun setOnClickListener(clickListener: OnClickListener) {
         this.clickListener = clickListener
     }
 
-    override fun onSaveInstanceState(bundle: Bundle) {
-        bundle.putInt("checkedIndex", determineCheckedIndex())
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        savedInstanceState.putInt("checkedIndex", determineCheckedIndex())
     }
 
     private fun instantiateTrigger(): Trigger? {
@@ -92,5 +82,4 @@ class ChooseTriggerDialog : DialogFragment() {
         }
         return -1
     }
-
 }

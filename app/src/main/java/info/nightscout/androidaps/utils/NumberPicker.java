@@ -86,6 +86,7 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
 
     public NumberPicker(Context context) {
         super(context, null);
+        this.initialize(context);
     }
 
     public NumberPicker(Context context, AttributeSet attrs) {
@@ -94,9 +95,13 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         this.initialize(context);
     }
 
+    protected void inflate(Context context) {
+        LayoutInflater.from(context).inflate(R.layout.number_picker_layout, this, true);
+    }
+
     private void initialize(Context context) {
         // set layout view
-        LayoutInflater.from(context).inflate(R.layout.number_picker_layout, this, true);
+        inflate(context);
 
         // init ui components
         minusButton = findViewById(R.id.decrement);
@@ -147,6 +152,11 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
                 }
             }
         });
+    }
+
+    @Override
+    public void setTag(Object tag) {
+        editText.setTag(tag);
     }
 
     public void setOnValueChangedListener(OnValueChangedListener onValueChangedListener) {

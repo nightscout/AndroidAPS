@@ -16,6 +16,7 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
 import info.nightscout.androidaps.interaction.utils.SafeParse;
@@ -70,7 +71,7 @@ public class FillActivity extends ViewSelectorActivity {
                     def = SafeParse.stringToDouble(editInsulin.editText.getText().toString());
                 }
                 editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 30d, 0.1d, new DecimalFormat("#0.0"), false);
-                setLabelToPlusMinusView(view, "insulin");
+                setLabelToPlusMinusView(view, aaps.gs(R.string.action_insulin));
                 container.addView(view);
                 return view;
             } else {

@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.preference.Preference;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -32,7 +34,6 @@ import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
@@ -68,7 +69,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by mike on 03.09.2017.
  */
 
-public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface, ProfileInterface {
+public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface {
     private Logger log = LoggerFactory.getLogger(L.PUMP);
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -108,6 +109,14 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
             NSProfilePlugin.getPlugin().setPluginEnabled(PluginType.PROFILE, true);
             NSProfilePlugin.getPlugin().setFragmentVisible(PluginType.PROFILE, true);
         }
+    }
+
+    @Override
+    public void updatePreferenceSummary(@NotNull Preference pref) {
+        super.updatePreferenceSummary(pref);
+
+        if (pref.getKey().equals(MainApp.gs(R.string.key_danars_name)))
+            pref.setSummary(SP.getString(R.string.key_danars_name, ""));
     }
 
     @Override
@@ -265,26 +274,6 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         return applyBolusConstraints(insulin);
     }
 
-    // Profile interface
-
-    @Nullable
-    @Override
-    public ProfileStore getProfile() {
-        if (DanaRPump.getInstance().lastSettingsRead == 0)
-            return null; // no info now
-        return DanaRPump.getInstance().createConvertedProfile();
-    }
-
-    @Override
-    public String getUnits() {
-        return DanaRPump.getInstance().getUnits();
-    }
-
-    @Override
-    public String getProfileName() {
-        return DanaRPump.getInstance().createConvertedProfileName();
-    }
-
     // Pump interface
 
     @Override
@@ -349,8 +338,7 @@ public class DanaRSPlugin extends PluginBase implements PumpInterface, DanaRInte
         int basalIncrement = pump.basal48Enable ? 30 * 60 : 60 * 60;
         for (int h = 0; h < basalValues; h++) {
             Double pumpValue = pump.pumpProfiles[pump.activeProfile][h];
-            Double profileValue = profile.getBasalTimeFromMidnight((Integer) (h * basalIncrement));
-            if (profileValue == null) return true;
+            Double profileValue = profile.getBasalTimeFromMidnight(h * basalIncrement);
             if (Math.abs(pumpValue - profileValue) > getPumpDescription().basalStep) {
                 if (L.isEnabled(L.PUMP))
                     log.debug("Diff found. Hour: " + h + " Pump: " + pumpValue + " Profile: " + profileValue);

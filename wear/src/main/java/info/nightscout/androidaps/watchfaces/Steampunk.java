@@ -10,7 +10,7 @@ import android.view.animation.RotateAnimation;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
-
+import info.nightscout.androidaps.interaction.utils.SafeParse;
 /**
  * Created by andrew-warrington on 01/12/2017.
  */
@@ -83,24 +83,24 @@ public class Steampunk extends BaseWatchFace {
             }
         }
 
-        if (!sSgv.equals("---")) {
+        if (!rawData.sSgv.equals("---")) {
 
             float rotationAngle = 0f;                                           //by default, show ? on the dial (? is at 0 degrees on the dial)
 
-            if (!sUnits.equals("-")) {
+            if (!rawData.sUnits.equals("-")) {
 
                 //ensure the glucose dial is the correct units
-                if (sUnits.equals("mmol")) {
+                if (rawData.sUnits.equals("mmol")) {
                     mGlucoseDial.setImageResource(R.drawable.steampunk_dial_mmol);
                 } else {
                     mGlucoseDial.setImageResource(R.drawable.steampunk_dial_mgdl);
                 }
 
                 //convert the Sgv to degrees of rotation
-                if (sUnits.equals("mmol")) {
-                    rotationAngle = Float.valueOf(sSgv) * 18f;  //convert to mg/dL, which is equivalent to degrees
+                if (rawData.sUnits.equals("mmol")) {
+                    rotationAngle = Float.valueOf(rawData.sSgv) * 18f;  //convert to mg/dL, which is equivalent to degrees
                 } else {
-                    rotationAngle = Float.valueOf(sSgv);       //if glucose a value is received, use it to determine the amount of rotation of the dial.
+                    rotationAngle = Float.valueOf(rawData.sSgv);       //if glucose a value is received, use it to determine the amount of rotation of the dial.
                 }
 
             }
@@ -122,36 +122,53 @@ public class Steampunk extends BaseWatchFace {
 
         //set the delta gauge and rotate the delta pointer
         float deltaIsNegative = 1f;         //by default go clockwise
-        if (!sAvgDelta.equals("--")) {      //if a legitimate delta value is received, then...
-            if (sAvgDelta.substring(0,1).equals("-")) deltaIsNegative = -1f;  //if the delta is negative, go counter-clockwise
-
+        if (!rawData.sAvgDelta.equals("--")) {      //if a legitimate delta value is received, then...
+            if (rawData.sAvgDelta.substring(0,1).equals("-")) deltaIsNegative = -1f;  //if the delta is negative, go counter-clockwise
+            Float AbssAvgDelta = SafeParse.stringToFloat(rawData.sAvgDelta.substring(1)) ;   //get rid of the sign so it can be converted to float.
+            String autogranularity = "0" ;                                                   //autogranularity off
             //ensure the delta gauge is the right units and granularity
-            if (!sUnits.equals("-")) {
-                if (sUnits.equals("mmol")) {
-                    if (sharedPrefs.getString("delta_granularity", "2").equals("1")) {  //low
+            if (!rawData.sUnits.equals("-")) {
+                if (rawData.sUnits.equals("mmol")) {
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("4")) {  //Auto granularity
+                        autogranularity = "1";                                                  // low (init)
+                        if (AbssAvgDelta < 0.3 ) {
+                            autogranularity = "3" ;                                             // high if below 0.3 mmol/l
+                        } else if (AbssAvgDelta < 0.5) {
+                            autogranularity = "2" ;                                             // medium if below 0.5 mmol/l
+                        }
+                    }
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("1") || autogranularity.equals("1")) {  //low
                         mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_10);
-                        deltaRotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 30f);   //get rid of the sign so it can be converted to float.
+                        deltaRotationAngle = (AbssAvgDelta * 30f);
                     }
-                    if (sharedPrefs.getString("delta_granularity", "2").equals("2")) {  //medium
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("2") || autogranularity.equals("2")) {  //medium
                         mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_05);
-                        deltaRotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 60f);   //get rid of the sign so it can be converted to float.
+                        deltaRotationAngle = (AbssAvgDelta * 60f);
                     }
-                    if (sharedPrefs.getString("delta_granularity", "2").equals("3")) {  //high
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("3") || autogranularity.equals("3")) {  //high
                         mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_03);
-                        deltaRotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 100f);   //get rid of the sign so it can be converted to float.
+                        deltaRotationAngle = (AbssAvgDelta * 100f);
                     }
                 } else {
-                    if (sharedPrefs.getString("delta_granularity", "2").equals("1")) {  //low
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("4")) {  //Auto granularity
+                        autogranularity = "1";                                                  // low (init)
+                        if (AbssAvgDelta < 5 ) {
+                            autogranularity = "3" ;                                             // high if below 5 mg/dl
+                        } else if (AbssAvgDelta < 10) {
+                            autogranularity = "2" ;                                             // medium if below 10 mg/dl
+                        }
+                    }
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("1") || autogranularity.equals("1")) {  //low
                         mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_20);
-                        deltaRotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 1.5f);   //get rid of the sign so it can be converted to float.
+                        deltaRotationAngle = (AbssAvgDelta * 1.5f);
                     }
-                    if (sharedPrefs.getString("delta_granularity", "2").equals("2")) {  //medium
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("2") || autogranularity.equals("2")) {  //medium
                         mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_10);
-                        deltaRotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 3f);   //get rid of the sign so it can be converted to float.
+                        deltaRotationAngle = (AbssAvgDelta * 3f);
                     }
-                    if (sharedPrefs.getString("delta_granularity", "2").equals("3")) {  //high
+                    if (sharedPrefs.getString("delta_granularity", "2").equals("3") || autogranularity.equals("3")) {  //high
                         mLinearLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_5);
-                        deltaRotationAngle = (Float.valueOf(sAvgDelta.substring(1)) * 6f);   //get rid of the sign so it can be converted to float.
+                        deltaRotationAngle = (AbssAvgDelta * 6f);
                     }
                 }
             }
@@ -213,7 +230,7 @@ public class Steampunk extends BaseWatchFace {
         //top row. large font unless text too big (i.e. detailedIOB)
         mCOB2.setTextSize(fontLarge);
         mBasalRate.setTextSize(fontLarge);
-        if (sIOB2.length() < 7) {
+        if (rawData.sIOB2.length() < 7) {
             mIOB2.setTextSize(fontLarge);
         } else {
             mIOB2.setTextSize(fontSmall);

@@ -37,6 +37,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -107,6 +108,8 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.configbuilder_insulin)).thenReturn("Insulin");
         when(MainApp.gs(R.string.bolusdelivering)).thenReturn("Delivering 0.0U");
         when(MainApp.gs(R.string.profile_per_unit)).thenReturn("/U");
+        when(MainApp.gs(R.string.shortday)).thenReturn("d");
+        when(MainApp.gs(R.string.shorthour)).thenReturn("h");
         when(MainApp.gs(R.string.profile_carbs_per_unit)).thenReturn("g/U");
         when(MainApp.gs(R.string.profile_ins_units_per_hour)).thenReturn("U/h");
         when(MainApp.gs(R.string.sms_wrongcode)).thenReturn("Wrong code. Command cancelled.");
@@ -114,6 +117,13 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.sms_lastbg)).thenReturn("Last BG:");
         when(MainApp.gs(R.string.sms_minago)).thenReturn("%1$dmin ago");
         when(MainApp.gs(R.string.smscommunicator_remotecommandnotallowed)).thenReturn("Remote command is not allowed");
+        when(MainApp.gs(R.string.smscommunicator_stopsmswithcode)).thenReturn("To disable the SMS Remote Service reply with code %1$s.\\n\\nKeep in mind that you\\'ll able to reactivate it directly from the AAPS master smartphone only.");
+        when(MainApp.gs(R.string.smscommunicator_mealbolusreplywithcode)).thenReturn("To deliver meal bolus %1$.2fU reply with code %2$s.");
+        when(MainApp.gs(R.string.smscommunicator_temptargetwithcode)).thenReturn("To set the Temp Target %1$s reply with code %2$s");
+        when(MainApp.gs(R.string.smscommunicator_temptargetcancel)).thenReturn("To cancel Temp Target reply with code %1$s");
+        when(MainApp.gs(R.string.smscommunicator_stoppedsms)).thenReturn("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.");
+        when(MainApp.gs(R.string.smscommunicator_tt_set)).thenReturn("Target %1$s for %2$d minutes set successfully");
+        when(MainApp.gs(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully");
         when(MainApp.gs(R.string.loopsuspendedfor)).thenReturn("Suspended (%1$d m)");
         when(MainApp.gs(R.string.smscommunicator_loopisdisabled)).thenReturn("Loop is disabled");
         when(MainApp.gs(R.string.smscommunicator_loopisenabled)).thenReturn("Loop is enabled");
@@ -155,6 +165,11 @@ public class AAPSMocker {
         when(MainApp.gs(R.string.pumpNotInitialized)).thenReturn("Pump not initialized!");
         when(MainApp.gs(R.string.increasingmaxbasal)).thenReturn("Increasing max basal value because setting is lower than your max basal in profile");
         when(MainApp.gs(R.string.overview_bolusprogress_delivered)).thenReturn("Delivered");
+        when(MainApp.gs(R.string.smscommunicator_mealbolusreplywithcode)).thenReturn("To deliver meal bolus %1$.2fU reply with code %2$s");
+        when(MainApp.gs(R.string.smscommunicator_mealbolusdelivered)).thenReturn("Meal Bolus %1$.2fU delivered successfully");
+        when(MainApp.gs(R.string.smscommunicator_mealbolusdelivered_tt)).thenReturn("Target %1$s for %2$d minutes");
+        when(MainApp.gs(R.string.smscommunicator_carbsreplywithcode)).thenReturn("To enter %1$dg at %2$s reply with code %3$s");
+        when(MainApp.gs(R.string.smscommunicator_carbsset)).thenReturn("Carbs %1$dg entered successfully");
     }
 
     public static MainApp mockMainApp() {
@@ -183,6 +198,7 @@ public class AAPSMocker {
         when(SP.getLong(anyInt(), anyLong())).thenReturn(0L);
         when(SP.getBoolean(anyInt(), anyBoolean())).thenReturn(false);
         when(SP.getInt(anyInt(), anyInt())).thenReturn(0);
+        when(SP.getString(anyInt(), anyString())).thenReturn("");
     }
 
     public static void mockL() {
@@ -265,10 +281,10 @@ public class AAPSMocker {
     public static void mockProfileFunctions() {
         PowerMockito.mockStatic(ProfileFunctions.class);
         profileFunctions = PowerMockito.mock(ProfileFunctions.class);
+        PowerMockito.when(ProfileFunctions.getSystemUnits()).thenReturn(Constants.MGDL);
         PowerMockito.when(ProfileFunctions.getInstance()).thenReturn(profileFunctions);
         profile = getValidProfile();
         PowerMockito.when(ProfileFunctions.getInstance().getProfile()).thenReturn(profile);
-        PowerMockito.when(ProfileFunctions.getInstance().getProfileUnits()).thenReturn(Constants.MGDL);
         PowerMockito.when(ProfileFunctions.getInstance().getProfileName()).thenReturn(TESTPROFILENAME);
     }
 

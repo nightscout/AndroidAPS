@@ -1,11 +1,9 @@
 package info.nightscout.androidaps.utils;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,20 +23,10 @@ import info.nightscout.androidaps.services.Intents;
 public class XdripCalibrations {
     private static Logger log = LoggerFactory.getLogger(XdripCalibrations.class);
 
-    public static void confirmAndSendCalibration(final Double bg, Context parentContext) {
+    public static void confirmAndSendCalibration(final Double bg, final Context parentContext) {
         if (parentContext != null) {
             String confirmMessage = String.format(MainApp.gs(R.string.send_calibration), bg);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
-            builder.setTitle(MainApp.gs(R.string.confirmation));
-            builder.setMessage(confirmMessage);
-            builder.setPositiveButton(MainApp.gs(R.string.ok), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    sendIntent(bg);
-                }
-            });
-            builder.setNegativeButton(MainApp.gs(R.string.cancel), null);
-            builder.show();
+            OKDialog.showConfirmation(parentContext, confirmMessage, () -> sendIntent(bg));
         }
     }
 
@@ -46,7 +34,7 @@ public class XdripCalibrations {
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();
         bundle.putDouble("glucose_number", bg);
-        bundle.putString("units", ProfileFunctions.getInstance().getProfileUnits().equals(Constants.MGDL) ? "mgdl" : "mmol");
+        bundle.putString("units", ProfileFunctions.getSystemUnits().equals(Constants.MGDL) ? "mgdl" : "mmol");
         bundle.putLong("timestamp", System.currentTimeMillis());
         Intent intent = new Intent(Intents.ACTION_REMOTE_CALIBRATION);
         intent.putExtras(bundle);

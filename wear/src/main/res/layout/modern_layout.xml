@@ -35,7 +35,7 @@
             android:textSize="18sp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="no status"
+            android:text="@string/activity_no_status"
             android:layout_gravity="center"
             android:layout_marginTop="-5dp" />
 

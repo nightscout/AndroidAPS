@@ -19,6 +19,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputButton;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputDouble;
+import info.nightscout.androidaps.plugins.general.automation.elements.InputLocationMode;
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString;
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement;
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder;
@@ -28,12 +29,17 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.T;
 
+import static info.nightscout.androidaps.plugins.general.automation.elements.InputLocationMode.Mode.*;
+
 public class TriggerLocation extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
 
     InputDouble latitude = new InputDouble(0d, -90d, +90d, 0.000001d, new DecimalFormat("0.000000"));
     InputDouble longitude = new InputDouble(0d, -180d, +180d, 0.000001d, new DecimalFormat("0.000000"));
     InputDouble distance = new InputDouble(200d, 0, 100000, 10d, new DecimalFormat("0"));
+    InputLocationMode modeSelected = new InputLocationMode();
+    InputLocationMode.Mode lastMode = INSIDE;
+
     InputString name = new InputString();
 
     private Runnable buttonAction = () -> {
@@ -54,13 +60,16 @@ public class TriggerLocation extends Trigger {
         latitude = new InputDouble(triggerLocation.latitude);
         longitude = new InputDouble(triggerLocation.longitude);
         distance = new InputDouble(triggerLocation.distance);
+        modeSelected = new InputLocationMode(triggerLocation.modeSelected);
+        if (modeSelected.getValue() == GOING_OUT)
+            lastMode = OUTSIDE;
         lastRun = triggerLocation.lastRun;
         name = triggerLocation.name;
     }
 
     @Override
     public synchronized boolean shouldRun() {
-        Location location = LocationService.getLastLocation();
+        Location location = this.getCurrentLocation();
         if (location == null)
             return false;
 
@@ -72,11 +81,20 @@ public class TriggerLocation extends Trigger {
         a.setLongitude(longitude.getValue());
         double calculatedDistance = location.distanceTo(a);
 
-        if (calculatedDistance < distance.getValue()) {
+//        log.debug("Moded(current/last/wanted): "+(currentMode(calculatedDistance))+"/"+lastMode+"/"+modeSelected.getValue());
+//        log.debug("Distance: "+calculatedDistance + "("+distance.getValue()+")");
+
+        if ((modeSelected.getValue() == INSIDE) && (calculatedDistance <= distance.getValue()) ||
+                ((modeSelected.getValue() == OUTSIDE) && (calculatedDistance > distance.getValue())) ||
+                ((modeSelected.getValue() == GOING_IN) && (calculatedDistance <= distance.getValue()) && (lastMode == OUTSIDE)) ||
+                ((modeSelected.getValue() == GOING_OUT) && (calculatedDistance > distance.getValue()) && (lastMode == INSIDE))
+            ) {
             if (L.isEnabled(L.AUTOMATION))
                 log.debug("Ready for execution: " + friendlyDescription());
+            lastMode = currentMode(calculatedDistance);
             return true;
         }
+        lastMode = currentMode(calculatedDistance); // current mode will be last mode for the next check
         return false;
     }
 
@@ -90,10 +108,11 @@ public class TriggerLocation extends Trigger {
             data.put("longitude", longitude.getValue());
             data.put("distance", distance.getValue());
             data.put("name", name.getValue());
+            data.put("mode", modeSelected.getValue());
             data.put("lastRun", lastRun);
             o.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -106,9 +125,12 @@ public class TriggerLocation extends Trigger {
             longitude.setValue(JsonHelper.safeGetDouble(d, "longitude"));
             distance.setValue(JsonHelper.safeGetDouble(d, "distance"));
             name.setValue(JsonHelper.safeGetString(d, "name"));
-            lastRun = JsonHelper.safeGetLong(d, "lastRun");
+            modeSelected.setValue(InputLocationMode.Mode.valueOf(JsonHelper.safeGetString(d, "mode")));
+            if (modeSelected.getValue() == GOING_OUT)
+                lastMode = OUTSIDE;
+            lastRun = DateUtil.now(); // set lastRun to now to give the service 5 mins to get the location properly
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }
@@ -120,7 +142,7 @@ public class TriggerLocation extends Trigger {
 
     @Override
     public String friendlyDescription() {
-        return MainApp.gs(R.string.locationis, name.getValue());
+        return MainApp.gs(R.string.locationis, MainApp.gs(modeSelected.getValue().getStringRes()), " " + name.getValue());
     }
 
     @Override
@@ -154,6 +176,11 @@ public class TriggerLocation extends Trigger {
         return this;
     }
 
+    TriggerLocation setMode(InputLocationMode.Mode value) {
+        modeSelected.setValue(value);
+        return this;
+    }
+
     @Override
     public void generateDialog(LinearLayout root, FragmentManager fragmentManager) {
         new LayoutBuilder()
@@ -162,7 +189,21 @@ public class TriggerLocation extends Trigger {
                 .add(new LabelWithElement(MainApp.gs(R.string.latitude_short), "", latitude))
                 .add(new LabelWithElement(MainApp.gs(R.string.longitude_short), "", longitude))
                 .add(new LabelWithElement(MainApp.gs(R.string.distance_short), "", distance))
+                .add(new LabelWithElement(MainApp.gs(R.string.location_mode), "", modeSelected))
                 .add(new InputButton(MainApp.gs(R.string.currentlocation), buttonAction), LocationService.getLastLocation() != null)
                 .build(root);
     }
+
+    // Method to return the actual mode based on the current distance
+    InputLocationMode.Mode currentMode(double currentDistance){
+        if ( currentDistance <= this.distance.getValue() )
+            return INSIDE;
+        else
+            return OUTSIDE;
+    }
+
+    static Location getCurrentLocation(){
+        return LocationService.getLastLocation();
+    }
+
 }

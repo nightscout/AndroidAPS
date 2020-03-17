@@ -47,7 +47,7 @@
     <string name="objectives_useloop">Display content of Loop plugin</string>
     <string name="objectives_usescale">Use scale function by long-pressing BG chart</string>
     <string name="objectives_button_enter">Enter</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Enter code obtained from developers to bypass the rest of objectives</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">If you have at least 3 month of closed loop experience with other systems you might qualify for a code to skip objectives. See https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for details.</string>
     <string name="codeaccepted">Code accepted</string>
     <string name="codeinvalid">Code invalid</string>
     <string name="objectives_exam_objective">Prove your knowledge</string>
@@ -57,10 +57,10 @@
     <string name="unfinshed_button">Next unfinished</string>
     <string name="requestcode">Request code: %1$s</string>
     <string name="objectives_hint">(check all correct answers)</string>
-    <string name="disconnectpump_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
+    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Not connected to the internet</string>
     <string name="failedretrievetime">Failed retrieve time</string>
     <string name="requirementnotmet">Objective requirements not met</string>

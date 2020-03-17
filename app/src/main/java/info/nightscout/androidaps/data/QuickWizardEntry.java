@@ -11,6 +11,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
@@ -74,7 +75,7 @@ public class QuickWizardEntry {
         //BG
         double bg = 0;
         if (lastBG != null && useBG() == YES) {
-            bg = lastBG.valueToUnits(profile.getUnits());
+            bg = lastBG.valueToUnits(ProfileFunctions.getSystemUnits());
         }
 
         // COB
@@ -124,7 +125,8 @@ public class QuickWizardEntry {
             trend = true;
         }
 
-        return new BolusWizard(profile, profileName, tempTarget, carbs(), cob, bg, 0d, 100, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, "QuickWizard");
+        double percentage = SP.getDouble(R.string.key_boluswizard_percentage, 100.0);
+        return new BolusWizard(profile, profileName, tempTarget, carbs(), cob, bg, 0d, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, "QuickWizard");
     }
 
     public String buttonText() {

@@ -56,7 +56,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
     ChangeMaxBasal(0x2c, "Change Max Basal", PumpHistoryEntryGroup.Configuration), //
     BolusWizardEnabled(0x2d, "Bolus Wizard Enabled", PumpHistoryEntryGroup.Configuration), // V3 ?
-    /**/EventUnknown_MM512_0x2e(0x2e, "Unknown Event 0x2e", PumpHistoryEntryGroup.Unknown), //
+    /**/EventUnknown_MM512_0x2e(0x2e, "Unknown Event 0x2e", PumpHistoryEntryGroup.Unknown, 2, 5, 100), //
     BolusWizard512(0x2f, "Bolus Wizard (512)", PumpHistoryEntryGroup.Bolus, 2, 5, 12), //
     UnabsorbedInsulin512(0x30, "Unabsorbed Insulin (512)", PumpHistoryEntryGroup.Statistic, 5, 0, 0), // FIXME
     ChangeBGReminderOffset(0x31, "Change BG Reminder Offset", PumpHistoryEntryGroup.Configuration), //

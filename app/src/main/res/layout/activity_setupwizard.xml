@@ -13,6 +13,7 @@
         android:orientation="horizontal">
 
         <ImageButton
+            android:id="@+id/sw_exit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -29,6 +30,7 @@
             android:layout_marginStart="10dp"
             android:layout_weight="1"
             android:text="@string/exit"
+            android:onClick="exitPressed"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"
             android:textStyle="bold" />
     </LinearLayout>

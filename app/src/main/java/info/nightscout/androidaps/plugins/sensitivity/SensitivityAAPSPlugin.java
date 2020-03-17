@@ -137,7 +137,7 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
         Double[] deviations = new Double[deviationsArray.size()];
         deviations = deviationsArray.toArray(deviations);
 
-        double sens = profile.getIsf();
+        double sens = profile.getIsfMgdl();
 
         String ratioLimit = "";
         String sensResult = "";
@@ -148,7 +148,7 @@ public class SensitivityAAPSPlugin extends AbstractSensitivityPlugin {
         Arrays.sort(deviations);
 
         double percentile = IobCobCalculatorPlugin.percentile(deviations, 0.50);
-        double basalOff = percentile * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
+        double basalOff = percentile * (60 / 5) / sens;
         double ratio = 1 + (basalOff / profile.getMaxDailyBasal());
 
         if (percentile < 0) { // sensitive

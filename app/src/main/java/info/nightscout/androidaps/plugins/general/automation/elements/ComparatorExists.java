@@ -54,7 +54,7 @@ public class ComparatorExists extends Element {
     @Override
     public void addToLayout(LinearLayout root) {
         Spinner spinner = new Spinner(root.getContext());
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(root.getContext(), android.R.layout.simple_spinner_item, Compare.labels());
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(root.getContext(), R.layout.spinner_centered, Compare.labels());
         spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerArrayAdapter);
         LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams(

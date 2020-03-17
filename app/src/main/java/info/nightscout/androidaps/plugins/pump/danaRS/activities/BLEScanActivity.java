@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -24,22 +25,20 @@ import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSDeviceCh
 import info.nightscout.androidaps.utils.SP;
 
 public class BLEScanActivity extends NoSplashAppCompatActivity {
-    private ListView listView = null;
     private ListAdapter mListAdapter = null;
     private ArrayList<BluetoothDeviceItem> mDevices = new ArrayList<>();
 
-    private BluetoothAdapter mBluetoothAdapter = null;
     private BluetoothLeScanner mBluetoothLeScanner = null;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.danars_blescanner_activity);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mListAdapter = new ListAdapter();
 
-        listView = (ListView) findViewById(R.id.danars_blescanner_listview);
+        ListView listView = findViewById(R.id.danars_blescanner_listview);
         listView.setEmptyView(findViewById(R.id.danars_blescanner_nodevice));
         listView.setAdapter(mListAdapter);
 
@@ -50,8 +49,9 @@ public class BLEScanActivity extends NoSplashAppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter != null) {
+            if (!mBluetoothAdapter.isEnabled()) mBluetoothAdapter.enable();
             mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
 
             if (mBluetoothLeScanner == null) {
@@ -89,11 +89,7 @@ public class BLEScanActivity extends NoSplashAppCompatActivity {
         }
 
         mDevices.add(item);
-        new Handler().post(new Runnable() {
-            public void run() {
-                mListAdapter.notifyDataSetChanged();
-            }
-        });
+        new Handler().post(() -> mListAdapter.notifyDataSetChanged());
     }
 
     private ScanCallback mBleScanCallback = new ScanCallback() {
@@ -134,19 +130,19 @@ public class BLEScanActivity extends NoSplashAppCompatActivity {
             }
 
             BluetoothDeviceItem item = getItem(i);
-            holder.setData(i, item);
+            holder.setData(item);
             return v;
         }
 
         private class ViewHolder implements View.OnClickListener {
             private BluetoothDeviceItem item = null;
 
-            private TextView mName = null;
-            private TextView mAddress = null;
+            private TextView mName;
+            private TextView mAddress;
 
-            public ViewHolder(View v) {
-                mName = (TextView) v.findViewById(R.id.ble_name);
-                mAddress = (TextView) v.findViewById(R.id.ble_address);
+            ViewHolder(View v) {
+                mName = v.findViewById(R.id.ble_name);
+                mAddress = v.findViewById(R.id.ble_address);
 
                 v.setOnClickListener(ViewHolder.this);
             }
@@ -160,7 +156,7 @@ public class BLEScanActivity extends NoSplashAppCompatActivity {
                 finish();
             }
 
-            public void setData(int pos, BluetoothDeviceItem data) {
+            public void setData(BluetoothDeviceItem data) {
                 if (data != null) {
                     try {
                         String tTitle = data.device.getName();
@@ -174,7 +170,7 @@ public class BLEScanActivity extends NoSplashAppCompatActivity {
                         mAddress.setText(data.device.getAddress());
 
                         item = data;
-                    } catch (Exception e) {
+                    } catch (Exception ignored) {
                     }
                 }
             }
@@ -185,14 +181,14 @@ public class BLEScanActivity extends NoSplashAppCompatActivity {
     private class BluetoothDeviceItem {
         private BluetoothDevice device;
 
-        public BluetoothDeviceItem(BluetoothDevice device) {
+        BluetoothDeviceItem(BluetoothDevice device) {
             super();
             this.device = device;
         }
 
         @Override
         public boolean equals(Object o) {
-            if (device == null || o == null || !(o instanceof BluetoothDeviceItem)) {
+            if (device == null || !(o instanceof BluetoothDeviceItem)) {
                 return false;
             }
             BluetoothDeviceItem checkItem = (BluetoothDeviceItem) o;
@@ -202,7 +198,7 @@ public class BLEScanActivity extends NoSplashAppCompatActivity {
             return stringEquals(device.getAddress(), checkItem.device.getAddress());
         }
 
-        public boolean stringEquals(String arg1, String arg2) {
+        boolean stringEquals(String arg1, String arg2) {
             try {
                 return arg1.equals(arg2);
             } catch (Exception e) {

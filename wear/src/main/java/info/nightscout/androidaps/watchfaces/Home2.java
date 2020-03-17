@@ -2,6 +2,7 @@ package info.nightscout.androidaps.watchfaces;
 
 import android.content.Intent;
 import android.graphics.Color;
+import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.view.LayoutInflater;
@@ -64,7 +65,14 @@ public class Home2 extends BaseWatchFace {
     }
 
     protected void setColorDark() {
-        mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_statusView));
+        @ColorInt final int dividerTxtColor = dividerMatchesBg ?
+                ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor) : Color.BLACK;
+        @ColorInt final int dividerBatteryOkColor = ContextCompat.getColor(getApplicationContext(),
+                dividerMatchesBg ? R.color.dark_midColor : R.color.dark_uploaderBattery);
+        @ColorInt final int dividerBgColor = ContextCompat.getColor(getApplicationContext(),
+                dividerMatchesBg ? R.color.dark_background : R.color.dark_statusView);
+
+        mLinearLayout.setBackgroundColor(dividerBgColor);
         mLinearLayout2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
         mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
         mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
@@ -78,13 +86,13 @@ public class Home2 extends BaseWatchFace {
 
         setTextSizes();
 
-        if (sgvLevel == 1) {
+        if (rawData.sgvLevel == 1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
-        } else if (sgvLevel == 0) {
+        } else if (rawData.sgvLevel == 0) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        } else if (sgvLevel == -1) {
+        } else if (rawData.sgvLevel == -1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
             mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
         }
@@ -95,16 +103,16 @@ public class Home2 extends BaseWatchFace {
             mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_TimestampOld));
         }
 
-        if (batteryLevel == 1) {
-            mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBattery));
+        if (rawData.batteryLevel == 1) {
+            mUploaderBattery.setTextColor(dividerBatteryOkColor);
         } else {
             mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBatteryEmpty));
         }
-        mRigBattery.setTextColor(Color.BLACK);
-        mDelta.setTextColor(Color.BLACK);
-        mAvgDelta.setTextColor(Color.BLACK);
-        mBasalRate.setTextColor(Color.BLACK);
-        mBgi.setTextColor(Color.BLACK);
+        mRigBattery.setTextColor(dividerTxtColor);
+        mDelta.setTextColor(dividerTxtColor);
+        mAvgDelta.setTextColor(dividerTxtColor);
+        mBasalRate.setTextColor(dividerTxtColor);
+        mBgi.setTextColor(dividerTxtColor);
 
         if (loopLevel == 1) {
             mLoop.setBackgroundResource(R.drawable.loop_green_25);
@@ -125,7 +133,12 @@ public class Home2 extends BaseWatchFace {
     }
 
     protected void setColorLowRes() {
-        mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_statusView));
+        @ColorInt final int dividerTxtColor = dividerMatchesBg ?
+                ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor) : Color.BLACK;
+        @ColorInt final int dividerBgColor = ContextCompat.getColor(getApplicationContext(),
+                dividerMatchesBg ? R.color.dark_background : R.color.dark_statusView);
+
+        mLinearLayout.setBackgroundColor(dividerBgColor);
         mLinearLayout2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
         mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
         mLoop.setBackgroundResource(R.drawable.loop_grey_25);
@@ -133,12 +146,12 @@ public class Home2 extends BaseWatchFace {
         mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
         mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
         mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_Timestamp));
-        mDelta.setTextColor(Color.BLACK);
-        mAvgDelta.setTextColor(Color.BLACK);
-        mRigBattery.setTextColor(Color.BLACK);
-        mUploaderBattery.setTextColor(Color.BLACK);
-        mBasalRate.setTextColor(Color.BLACK);
-        mBgi.setTextColor(Color.BLACK);
+        mDelta.setTextColor(dividerTxtColor);
+        mAvgDelta.setTextColor(dividerTxtColor);
+        mRigBattery.setTextColor(dividerTxtColor);
+        mUploaderBattery.setTextColor(dividerTxtColor);
+        mBasalRate.setTextColor(dividerTxtColor);
+        mBgi.setTextColor(dividerTxtColor);
         mIOB1.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
         mIOB2.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
         mCOB1.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
@@ -162,7 +175,13 @@ public class Home2 extends BaseWatchFace {
     protected void setColorBright() {
 
         if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
-            mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_stripe_background));
+
+            @ColorInt final int dividerTxtColor = dividerMatchesBg ?  Color.BLACK :
+                    ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
+            @ColorInt final int dividerBgColor = ContextCompat.getColor(getApplicationContext(),
+                    dividerMatchesBg ? R.color.light_background : R.color.light_stripe_background);
+
+            mLinearLayout.setBackgroundColor(dividerBgColor);
             mLinearLayout2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_background));
             mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_background));
             mTime.setTextColor(Color.BLACK);
@@ -176,13 +195,13 @@ public class Home2 extends BaseWatchFace {
 
             setTextSizes();
 
-            if (sgvLevel == 1) {
+            if (rawData.sgvLevel == 1) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
-            } else if (sgvLevel == 0) {
+            } else if (rawData.sgvLevel == 0) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
-            } else if (sgvLevel == -1) {
+            } else if (rawData.sgvLevel == -1) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
                 mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
             }
@@ -193,16 +212,16 @@ public class Home2 extends BaseWatchFace {
                 mTimestamp.setTextColor(Color.RED);
             }
 
-            if (batteryLevel == 1) {
-                mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+            if (rawData.batteryLevel == 1) {
+                mUploaderBattery.setTextColor(dividerTxtColor);
             } else {
                 mUploaderBattery.setTextColor(Color.RED);
             }
-            mRigBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-            mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-            mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-            mBasalRate.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-            mBgi.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+            mRigBattery.setTextColor(dividerTxtColor);
+            mDelta.setTextColor(dividerTxtColor);
+            mAvgDelta.setTextColor(dividerTxtColor);
+            mBasalRate.setTextColor(dividerTxtColor);
+            mBgi.setTextColor(dividerTxtColor);
 
             if (loopLevel == 1) {
                 mLoop.setBackgroundResource(R.drawable.loop_green_25);
@@ -229,7 +248,7 @@ public class Home2 extends BaseWatchFace {
 
         if (mIOB1 != null && mIOB2 != null) {
 
-            if (detailedIOB) {
+            if (rawData.detailedIOB) {
                 mIOB1.setTextSize(14);
                 mIOB2.setTextSize(10);
             } else {

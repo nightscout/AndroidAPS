@@ -14,9 +14,9 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.OKDialog
 import info.nightscout.androidaps.utils.SP
 import info.nightscout.androidaps.utils.T
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
 import org.slf4j.LoggerFactory
 import retrofit2.Retrofit
@@ -43,7 +43,7 @@ object TidepoolUploader {
 
     val PUMPTYPE = "Tandem"
 
-    var connectionStatus: ConnectionStatus = TidepoolUploader.ConnectionStatus.DISCONNECTED
+    var connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
 
     fun getRetrofitInstance(): Retrofit? {
         if (retrofit == null) {
@@ -75,7 +75,7 @@ object TidepoolUploader {
         retrofit = null
         if (L.isEnabled(L.TIDEPOOL))
             log.debug("Instance reset")
-        connectionStatus = TidepoolUploader.ConnectionStatus.DISCONNECTED
+        connectionStatus = ConnectionStatus.DISCONNECTED
     }
 
     @Synchronized
@@ -116,13 +116,13 @@ object TidepoolUploader {
             val call = session.service?.getLogin(it)
 
             call?.enqueue(TidepoolCallback<AuthReplyMessage>(session, "Login", {
-                OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Successfully logged into Tidepool.", null)
+                OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Successfully logged into Tidepool.")
             }, {
-                OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Failed to log into Tidepool.\nCheck that your user name and password are correct.", null)
+                OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Failed to log into Tidepool.\nCheck that your user name and password are correct.")
             }))
 
         }
-                ?: OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly", null)
+                ?: OKDialog.show(rootContext, MainApp.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly")
 
     }
 
@@ -197,7 +197,7 @@ object TidepoolUploader {
                 }
 
                 else -> {
-                    val body = RequestBody.create(MediaType.parse("application/json"), chunk)
+                    val body = chunk.toRequestBody("application/json".toMediaTypeOrNull())
 
                     RxBus.send(EventTidepoolStatus(("Uploading")))
                     if (session.service != null && session.token != null && session.datasetReply != null) {
@@ -231,11 +231,11 @@ object TidepoolUploader {
             extendWakeLock(60000)
             val call = session!!.service?.deleteDataSet(session!!.token!!, session!!.datasetReply!!.id!!)
             call?.enqueue(TidepoolCallback(session!!, "Delete Dataset", {
-                connectionStatus = TidepoolUploader.ConnectionStatus.DISCONNECTED
+                connectionStatus = ConnectionStatus.DISCONNECTED
                 RxBus.send(EventTidepoolStatus(("Dataset removed OK")))
                 releaseWakeLock()
             }, {
-                connectionStatus = TidepoolUploader.ConnectionStatus.DISCONNECTED
+                connectionStatus = ConnectionStatus.DISCONNECTED
                 RxBus.send(EventTidepoolStatus(("Dataset remove FAILED")))
                 releaseWakeLock()
             }))
@@ -255,11 +255,11 @@ object TidepoolUploader {
             extendWakeLock(60000)
             val call = session.service?.deleteAllData(token, userid)
             call?.enqueue(TidepoolCallback(session, "Delete all data", {
-                connectionStatus = TidepoolUploader.ConnectionStatus.DISCONNECTED
+                connectionStatus = ConnectionStatus.DISCONNECTED
                 RxBus.send(EventTidepoolStatus(("All data removed OK")))
                 releaseWakeLock()
             }, {
-                connectionStatus = TidepoolUploader.ConnectionStatus.DISCONNECTED
+                connectionStatus = ConnectionStatus.DISCONNECTED
                 RxBus.send(EventTidepoolStatus(("All data remove FAILED")))
                 releaseWakeLock()
             }))

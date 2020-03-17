@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:paddingTop="5dp"
+    android:textAppearance="?android:attr/textAppearanceSmall">
+
+    <Spinner
+        android:id="@+id/timelistedit_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="10dp"
+        android:minWidth="80dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <info.nightscout.androidaps.utils.NumberPickerVertical
+            android:id="@+id/timelistedit_edit1"
+            android:layout_width="60dp"
+            android:layout_height="100dp"
+            android:layout_marginRight="5dp" />
+
+        <info.nightscout.androidaps.utils.NumberPickerVertical
+            android:id="@+id/timelistedit_edit2"
+            android:layout_width="60dp"
+            android:layout_height="100dp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/timelistedit_add"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/add" />
+
+    <ImageView
+        android:id="@+id/timelistedit_remove"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/remove" />
+</LinearLayout>

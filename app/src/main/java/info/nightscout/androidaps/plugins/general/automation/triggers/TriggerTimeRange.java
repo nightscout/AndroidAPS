@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.general.automation.triggers;
 
-import android.app.Activity;
 import android.graphics.Typeface;
 import android.text.format.DateFormat;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.common.base.Optional;
@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
 import info.nightscout.androidaps.MainApp;
@@ -33,14 +32,14 @@ import info.nightscout.androidaps.utils.T;
 
 public class TriggerTimeRange extends Trigger {
     private static Logger log = LoggerFactory.getLogger(L.AUTOMATION);
-    
+
     // in minutes since midnight 60 means 1AM
     private int start;
     private int end;
     long timeZoneOffset = DateUtil.getTimeZoneOffsetMs();
 
     public TriggerTimeRange() {
-        
+
         start = getMinSinceMidnight(DateUtil.now());
         end = getMinSinceMidnight(DateUtil.now());
     }
@@ -60,11 +59,11 @@ public class TriggerTimeRange extends Trigger {
             return false;
 
         boolean doRun = false;
-        if ( start < end && start < currentMinSinceMidnight && currentMinSinceMidnight < end)
+        if (start < end && start < currentMinSinceMidnight && currentMinSinceMidnight < end)
             doRun = true;
 
-        // handle cases like 10PM to 6AM
-        else if ( start > end && (start < currentMinSinceMidnight || currentMinSinceMidnight < end))
+            // handle cases like 10PM to 6AM
+        else if (start > end && (start < currentMinSinceMidnight || currentMinSinceMidnight < end))
             doRun = true;
 
         if (doRun) {
@@ -93,7 +92,7 @@ public class TriggerTimeRange extends Trigger {
             object.put("type", TriggerTimeRange.class.getName());
             object.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         log.debug(object.toString());
         return object.toString();
@@ -108,7 +107,7 @@ public class TriggerTimeRange extends Trigger {
             start = JsonHelper.safeGetInt(o, "start");
             end = JsonHelper.safeGetInt(o, "end");
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }
@@ -129,8 +128,8 @@ public class TriggerTimeRange extends Trigger {
     }
 
     TriggerTimeRange period(int start, int end) {
-        this.start = getMinSinceMidnight(start*60000);
-        this.end = getMinSinceMidnight(end*60000);
+        this.start = getMinSinceMidnight(start * 60000);
+        this.end = getMinSinceMidnight(end * 60000);
         return this;
     }
 
@@ -145,23 +144,23 @@ public class TriggerTimeRange extends Trigger {
     }
 
     long toMilis(long minutesSinceMidnight) {
-        return minutesSinceMidnight*60*1000;
+        return minutesSinceMidnight * 60 * 1000;
     }
 
     public int getMinSinceMidnight(long time) {
         // if passed argument is smaller than 1440 ( 24 h * 60 min ) that value is already converted
-        if (0 < time && time < 1441)
+        if (0 <= time && time < 1441)
             return (int) time;
         Calendar calendar = DateUtil.gregorianCalendar();
         calendar.setTimeInMillis(time);
         return (calendar.get(Calendar.HOUR_OF_DAY) * 60) + calendar.get(Calendar.MINUTE);
     }
 
-    int getStart(){
+    int getStart() {
         return start;
     }
 
-    int getEnd(){
+    int getEnd() {
         return end;
     }
 
@@ -170,8 +169,8 @@ public class TriggerTimeRange extends Trigger {
         TextView label = new TextView(root.getContext());
         TextView startButton = new TextView(root.getContext());
         TextView endButton = new TextView(root.getContext());
-        log.debug("Start is: " + start );
-        log.debug("End is: " + end );
+        log.debug("Start is: " + start);
+        log.debug("End is: " + end);
         startButton.setText(DateUtil.timeString(toMilis(start) - timeZoneOffset));
         endButton.setText(MainApp.gs(R.string.and) + " " + DateUtil.timeString(toMilis(end) - timeZoneOffset));
 
@@ -193,9 +192,9 @@ public class TriggerTimeRange extends Trigger {
             );
             tpd.setThemeDark(true);
             tpd.dismissOnPause(true);
-            Activity a = scanForActivity(root.getContext());
+            AppCompatActivity a = scanForActivity(root.getContext());
             if (a != null)
-                tpd.show(a.getFragmentManager(), "TimePickerDialog");
+                tpd.show(a.getSupportFragmentManager(), "TimePickerDialog");
         });
         endButton.setOnClickListener(view -> {
             GregorianCalendar calendar = new GregorianCalendar();
@@ -213,9 +212,9 @@ public class TriggerTimeRange extends Trigger {
             );
             tpd.setThemeDark(true);
             tpd.dismissOnPause(true);
-            Activity a = scanForActivity(root.getContext());
+            AppCompatActivity a = scanForActivity(root.getContext());
             if (a != null)
-                tpd.show(a.getFragmentManager(), "TimePickerDialog");
+                tpd.show(a.getSupportFragmentManager(), "TimePickerDialog");
         });
 
         int px = MainApp.dpToPx(10);

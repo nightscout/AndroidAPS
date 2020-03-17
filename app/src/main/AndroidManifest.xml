@@ -23,6 +23,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="com.dexcom.cgm.EXTERNAL_PERMISSION" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
@@ -51,12 +52,11 @@
         </activity>
         <activity android:name=".activities.PreferencesActivity" />
         <activity
-            android:name=".plugins.general.overview.dialogs.BolusProgressHelperActivity"
+            android:name=".activities.BolusProgressHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
-            android:name=".plugins.general.overview.dialogs.ErrorHelperActivity"
+            android:name=".activities.ErrorHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity android:name=".activities.AgreementActivity" />
         <activity android:name=".plugins.pump.danaR.activities.DanaRHistoryActivity" />
         <activity android:name=".plugins.pump.danaR.activities.DanaRUserOptionsActivity" />
         <activity android:name=".activities.TDDStatsActivity" />
@@ -76,6 +76,8 @@
         </activity>
         <activity android:name=".plugins.pump.danaRS.activities.PairingHelperActivity" />
         <activity android:name=".activities.HistoryBrowseActivity" />
+        <activity android:name=".activities.SurveyActivity" />
+        <activity android:name=".activities.StatsActivity" />
 
         <!-- Receive new BG readings from other local apps -->
         <receiver
@@ -114,29 +116,11 @@
 
         <!-- Auto start -->
         <receiver
-            android:name=".plugins.general.nsclient.receivers.AutoStartReceiver"
+            android:name=".receivers.AutoStartReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
-        <!-- NSClient -->
-         <receiver
-            android:name=".plugins.general.nsclient.receivers.DBAccessReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="info.nightscout.client.DBACCESS" />
-            </intent-filter>
-        </receiver>
-
-        <!-- Network change local receiver -->
-        <receiver android:name=".receivers.NetworkChangeReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
             </intent-filter>
         </receiver>
 
@@ -273,6 +257,8 @@
         <activity
             android:name=".plugins.pump.insight.activities.InsightAlertActivity"
             android:label="@string/pump_alert"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
             android:theme="@style/InsightAlertDialog" />
         <activity
             android:name=".plugins.pump.insight.activities.InsightPairingInformationActivity"

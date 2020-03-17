@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.PreferencesActivity;
@@ -22,21 +23,18 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
-import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
-import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
+import info.nightscout.androidaps.dialogs.ProfileSwitchDialog;
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
-import info.nightscout.androidaps.plugins.profile.simple.SimpleProfileFragment;
-import info.nightscout.androidaps.plugins.profile.simple.SimpleProfilePlugin;
 import info.nightscout.androidaps.setupwizard.elements.SWBreak;
 import info.nightscout.androidaps.setupwizard.elements.SWButton;
+import info.nightscout.androidaps.setupwizard.elements.SWEditNumberWithUnits;
 import info.nightscout.androidaps.setupwizard.elements.SWEditString;
 import info.nightscout.androidaps.setupwizard.elements.SWEditUrl;
 import info.nightscout.androidaps.setupwizard.elements.SWFragment;
@@ -49,6 +47,8 @@ import info.nightscout.androidaps.utils.AndroidPermission;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.PasswordProtection;
 import info.nightscout.androidaps.utils.SP;
+
+import static info.nightscout.androidaps.utils.EspressoTestHelperKt.isRunningTest;
 
 public class SWDefinition {
     private AppCompatActivity activity;
@@ -67,7 +67,7 @@ public class SWDefinition {
     }
 
     private SWDefinition add(SWScreen newScreen) {
-        screens.add(newScreen);
+        if (newScreen != null) screens.add(newScreen);
         return this;
     }
 
@@ -109,6 +109,28 @@ public class SWDefinition {
                     }))
             .visibility(() -> !SP.getBoolean(R.string.key_i_understand, false))
             .validator(() -> SP.getBoolean(R.string.key_i_understand, false));
+
+    private SWScreen screenUnits = new SWScreen(R.string.units)
+            .skippable(false)
+            .add(new SWRadioButton()
+                    .option(R.array.unitsArray, R.array.unitsValues)
+                    .preferenceId(R.string.key_units).label(R.string.units)
+                    .comment(R.string.setupwizard_units_prompt))
+            .validator(() -> SP.contains(R.string.key_units));
+
+    private SWScreen displaySettings = new SWScreen(R.string.wear_display_settings)
+            .skippable(false)
+            .add(new SWEditNumberWithUnits(Constants.LOWMARK * Constants.MGDL_TO_MMOLL, 3d, 8d)
+                    .preferenceId(R.string.key_low_mark)
+                    .updateDelay(5)
+                    .label(R.string.low_mark)
+                    .comment(R.string.low_mark_comment))
+            .add(new SWBreak())
+            .add(new SWEditNumberWithUnits(Constants.HIGHMARK * Constants.MGDL_TO_MMOLL, 5d, 20d)
+                    .preferenceId(R.string.key_high_mark)
+                    .updateDelay(5)
+                    .label(R.string.high_mark)
+                    .comment(R.string.high_mark_comment));
 
     private SWScreen screenPermissionBattery = new SWScreen(R.string.permission)
             .skippable(false)
@@ -270,28 +292,17 @@ public class SWDefinition {
             .skippable(false)
             .add(new SWFragment(this)
                     .add(new LocalProfileFragment()))
-            .validator(() -> LocalProfilePlugin.getPlugin().getProfile() != null && LocalProfilePlugin.getPlugin().getProfile().getDefaultProfile() != null && LocalProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid("StartupWizard"))
-            .visibility(() -> LocalProfilePlugin.getPlugin().isEnabled(PluginType.PROFILE));
+            .validator(() -> LocalProfilePlugin.INSTANCE.getProfile() != null && LocalProfilePlugin.INSTANCE.getProfile().getDefaultProfile() != null && LocalProfilePlugin.INSTANCE.getProfile().getDefaultProfile().isValid("StartupWizard"))
+            .visibility(() -> LocalProfilePlugin.INSTANCE.isEnabled(PluginType.PROFILE));
 
-    private SWScreen screenSimpleProfile = new SWScreen(R.string.simpleprofile)
-            .skippable(false)
-            .add(new SWFragment(this)
-                    .add(new SimpleProfileFragment()))
-            .validator(() -> SimpleProfilePlugin.getPlugin().getProfile() != null && SimpleProfilePlugin.getPlugin().getProfile().getDefaultProfile() != null && SimpleProfilePlugin.getPlugin().getProfile().getDefaultProfile().isValid("StartupWizard"))
-            .visibility(() -> SimpleProfilePlugin.getPlugin().isEnabled(PluginType.PROFILE));
-
-    private SWScreen screenProfileSwitch = new SWScreen(R.string.profileswitch)
+    private SWScreen screenProfileSwitch = new SWScreen(R.string.careportal_profileswitch)
             .skippable(false)
             .add(new SWInfotext()
                     .label(R.string.profileswitch_ismissing))
             .add(new SWButton()
-                    .text(R.string.profileswitch)
+                    .text(R.string.doprofileswitch)
                     .action(() -> {
-                        NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                        final OptionsToShow profileSwitch = CareportalFragment.PROFILESWITCHDIRECT;
-                        profileSwitch.executeProfileSwitch = true;
-                        newDialog.setOptions(profileSwitch, R.string.careportal_profileswitch);
-                        newDialog.show(getActivity().getSupportFragmentManager(), "NewNSTreatmentDialog");
+                        new ProfileSwitchDialog().show(getActivity().getSupportFragmentManager(), "SetupWizard");
                     }))
             .validator(() -> ProfileFunctions.getInstance().getProfile() != null)
             .visibility(() -> ProfileFunctions.getInstance().getProfile() == null);
@@ -417,10 +428,12 @@ public class SWDefinition {
         add(screenSetupWizard)
                 .add(screenLanguage)
                 .add(screenEula)
-                .add(screenPermissionBattery)
+                .add(isRunningTest() ? null : screenPermissionBattery) // cannot mock ask battery optimalization
                 .add(screenPermissionBt)
                 .add(screenPermissionStore)
                 .add(screenImport)
+                .add(screenUnits)
+                .add(displaySettings)
                 .add(screenNsClient)
                 .add(screenAge)
                 .add(screenInsulin)
@@ -428,7 +441,6 @@ public class SWDefinition {
                 .add(screenProfile)
                 .add(screenNsProfile)
                 .add(screenLocalProfile)
-                .add(screenSimpleProfile)
                 .add(screenProfileSwitch)
                 .add(screenPump)
                 .add(screenAps)
@@ -444,10 +456,12 @@ public class SWDefinition {
         add(screenSetupWizard)
                 .add(screenLanguage)
                 .add(screenEula)
-                .add(screenPermissionBattery)
+                .add(isRunningTest() ? null : screenPermissionBattery) // cannot mock ask battery optimalization
                 .add(screenPermissionBt)
                 .add(screenPermissionStore)
                 .add(screenImport)
+                .add(screenUnits)
+                .add(displaySettings)
                 .add(screenNsClient)
                 .add(screenAge)
                 .add(screenInsulin)
@@ -455,7 +469,6 @@ public class SWDefinition {
                 .add(screenProfile)
                 .add(screenNsProfile)
                 .add(screenLocalProfile)
-                .add(screenSimpleProfile)
                 .add(screenProfileSwitch)
                 .add(screenPump)
                 .add(screenSensitivity)
@@ -467,9 +480,11 @@ public class SWDefinition {
         add(screenSetupWizard)
                 .add(screenLanguage)
                 .add(screenEula)
-                .add(screenPermissionBattery)
+                .add(isRunningTest() ? null : screenPermissionBattery) // cannot mock ask battery optimalization
                 .add(screenPermissionStore)
                 .add(screenImport)
+                .add(screenUnits)
+                .add(displaySettings)
                 .add(screenNsClient)
                 .add(screenBgSource)
                 .add(screenAge)
@@ -477,5 +492,4 @@ public class SWDefinition {
                 .add(screenSensitivity)
         ;
     }
-
 }

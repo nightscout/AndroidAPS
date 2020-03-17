@@ -19,6 +19,15 @@
         app:showAsAction="never"
         android:title="@string/nav_setupwizard" />
     <item
+        android:id="@+id/nav_stats"
+        app:showAsAction="never"
+        android:title="@string/statistics" />
+<!--    <item
+        android:id="@+id/nav_survey"
+        app:showAsAction="never"
+        android:title="@string/nav_survey" />
+-->
+    <item
         android:id="@+id/nav_about"
         app:showAsAction="never"
         android:title="@string/nav_about" />

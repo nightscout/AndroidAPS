@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".plugins.general.overview.OverviewFragment">
+
+    <ScrollView
+        android:id="@+id/overview_toppart_scrollbar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/overview_notifications"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/overview_looplayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/overview_looplayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/overview_pumpstatuslayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/overview_notifications">
+
+                <TextView
+                    android:id="@+id/overview_apsmode"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:text="@string/openloop"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/overview_activeprofile"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <TextView
+                    android:id="@+id/overview_activeprofile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:text="@string/profile"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/overview_temptarget"
+                    app:layout_constraintStart_toEndOf="@+id/overview_apsmode"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/overview_temptarget"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:text="@string/temptargetshort"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/mdtp_white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/overview_activeprofile"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/overview_pumpstatuslayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/bg_tbr_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/overview_looplayout">
+
+                <TextView
+                    android:id="@+id/overview_pumpstatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:text="@string/initializing"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/bg_tbr_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/overview_statuslights"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/overview_pumpstatuslayout">
+
+                <TextView
+                    android:id="@+id/overview_bg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="00.0"
+                    android:textSize="42sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/overview_arrow"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/overview_arrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:paddingStart="-2dp"
+                    android:paddingEnd="0dp"
+                    android:text="→"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/overview_bg_guideline"
+                    app:layout_constraintStart_toEndOf="@+id/overview_bg"
+                    app:layout_constraintTop_toTopOf="@+id/overview_bg" />
+
+                <TextView
+                    android:id="@+id/overview_hor_space"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="                    "
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@+id/overview_bg_guideline"
+                    app:layout_constraintStart_toEndOf="@+id/overview_arrow"
+                    app:layout_constraintTop_toTopOf="@+id/overview_bg" />
+
+
+                <TextView
+                    android:id="@+id/overview_timeago"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 min ago"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@+id/overview_delta"
+                    app:layout_constraintEnd_toEndOf="@+id/overview_arrow"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_bg" />
+
+                <TextView
+                    android:id="@+id/overview_delta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="delta 15m: 0.3"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toTopOf="@+id/overview_avgdelta"
+                    app:layout_constraintEnd_toEndOf="@+id/overview_arrow"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_timeago" />
+
+                <TextView
+                    android:id="@+id/overview_avgdelta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="delta 40m: 0.3"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="@+id/overview_arrow"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_delta" />
+
+
+                <!-- right side -->
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/overview_bg_guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/overview_iob_label"
+                    app:layout_constraintGuide_percent="0.40"
+                    app:layout_constraintStart_toEndOf="@+id/overview_hor_space"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- right side IOB -->
+                <TextView
+                    android:id="@+id/overview_iob_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/iob"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/overview_cob_label"
+                    app:layout_constraintStart_toEndOf="@+id/overview_bg_guideline"
+                    app:layout_constraintTop_toBottomOf="parent" />
+
+                <TextView
+                    android:id="@+id/overview_iob_colon"
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/overview_iob_label"
+                    app:layout_constraintTop_toTopOf="@+id/overview_iob_label" />
+
+                <TextView
+                    android:id="@+id/overview_iob"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/iob"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/overview_iob_label"
+                    app:layout_constraintStart_toEndOf="@+id/overview_iob_colon" />
+
+                <!-- right side COB -->
+                <TextView
+                    android:id="@+id/overview_cob_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cob"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/overview_basebasal_label"
+                    app:layout_constraintStart_toEndOf="@+id/overview_bg_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_iob_label" />
+
+                <TextView
+                    android:id="@+id/overview_cob_colon"
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/overview_cob_label"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_iob_label" />
+
+                <TextView
+                    android:id="@+id/overview_cob"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/cob"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/overview_cob_label"
+                    app:layout_constraintStart_toEndOf="@+id/overview_cob_colon" />
+
+                <!-- right side basal -->
+                <TextView
+                    android:id="@+id/overview_basebasal_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/basal_short"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/overview_extendedbolus_label"
+                    app:layout_constraintStart_toEndOf="@+id/overview_bg_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_cob_label" />
+
+                <TextView
+                    android:id="@+id/overview_basebasal_colon"
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/overview_basebasal_label"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_cob_label" />
+
+                <TextView
+                    android:id="@+id/overview_basebasal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="0.50U/h @17:35 1/30min"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/overview_basebasal_label"
+                    app:layout_constraintStart_toEndOf="@+id/overview_basebasal_colon" />
+
+                <!-- right side extended  -->
+                <TextView
+                    android:id="@+id/overview_extendedbolus_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/extended_bolus_short"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/overview_sensitivity_label"
+                    app:layout_constraintStart_toEndOf="@+id/overview_bg_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_basebasal_label" />
+
+                <TextView
+                    android:id="@+id/overview_extendedbolus_colon"
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/overview_extendedbolus_label"
+                    app:layout_constraintStart_toEndOf="@+id/overview_extendedbolus_label" />
+
+                <TextView
+                    android:id="@+id/overview_extendedbolus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="0.50U/h @17:35 1/30min"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/overview_extendedbolus_label"
+                    app:layout_constraintStart_toEndOf="@+id/overview_extendedbolus_colon" />
+
+                <!-- right side AS  -->
+                <TextView
+                    android:id="@+id/overview_sensitivity_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sensitivity_short"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/overview_bg_guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/overview_extendedbolus_label" />
+
+                <TextView
+                    android:id="@+id/overview_sensitivity_colon"
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:text=":"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/overview_sensitivity_label"
+                    app:layout_constraintStart_toEndOf="@+id/overview_sensitivity_label" />
+
+                <TextView
+                    android:id="@+id/overview_sensitivity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="100%"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/overview_sensitivity_label"
+                    app:layout_constraintStart_toEndOf="@+id/overview_sensitivity_colon" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/overview_statuslights"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/overview_bggraph"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/bg_tbr_layout">
+
+                <TextView
+                    android:id="@+id/overview_canulaage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/overview_insulinage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/overview_reservoirlevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/overview_sensorage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/overview_batterylevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text=""
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/overview_bggraph"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                app:layout_constraintBottom_toTopOf="@+id/overview_iobgraph"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/overview_statuslights" />
+
+            <ImageButton
+                android:id="@+id/overview_chartMenuButton"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:contentDescription="@string/chartmenu"
+                app:layout_constraintEnd_toEndOf="@+id/overview_bggraph"
+                app:layout_constraintTop_toTopOf="@+id/overview_bggraph"
+                app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
+
+            <TextView
+                android:id="@+id/overview_iobcalculationprogess"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text=""
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/overview_bggraph"
+                app:layout_constraintEnd_toEndOf="@+id/overview_bggraph"
+                app:layout_constraintStart_toStartOf="@+id/overview_bggraph"
+                app:layout_constraintTop_toTopOf="@+id/overview_bggraph" />
+
+
+            <com.jjoe64.graphview.GraphView
+                android:id="@+id/overview_iobgraph"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                app:layout_constraintBottom_toTopOf="@+id/overview_accepttempbutton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/overview_bggraph" />
+
+            <info.nightscout.androidaps.utils.SingleClickButton
+                android:id="@+id/overview_accepttempbutton"
+                style="?android:attr/buttonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="@string/setbasalquestion"
+                android:textColor="@color/colorAcceptTempButton"
+                app:layout_constraintBottom_toTopOf="@id/overview_buttons_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/overview_iobgraph"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/overview_buttons_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="0dp"
+                android:paddingEnd="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/overview_accepttempbutton">
+
+                <info.nightscout.androidaps.utils.SingleClickButton
+                    android:id="@+id/overview_treatmentbutton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:drawableTop="@drawable/icon_insulin_carbs"
+                    android:text="@string/overview_treatment_label"
+                    android:textColor="@color/colorTreatmentButton"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+                <info.nightscout.androidaps.utils.SingleClickButton
+                    android:id="@+id/overview_insulinbutton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:drawableTop="@drawable/icon_bolus"
+                    android:text="@string/overview_insulin_label"
+                    android:textColor="@color/colorInsulinButton"
+                    android:textSize="10sp" />
+
+                <info.nightscout.androidaps.utils.SingleClickButton
+                    android:id="@+id/overview_carbsbutton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:drawableTop="@drawable/icon_cp_bolus_carbs"
+                    android:text="@string/overview_carbs_label"
+                    android:textColor="@color/colorCarbsButton"
+                    android:textSize="10sp" />
+
+                <info.nightscout.androidaps.utils.SingleClickButton
+                    android:id="@+id/overview_wizardbutton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:drawableTop="@drawable/icon_calculator"
+                    android:text="@string/overview_calculator_label"
+                    android:textColor="@color/colorCalculatorButton"
+                    android:textSize="10sp" />
+
+                <info.nightscout.androidaps.utils.SingleClickButton
+                    android:id="@+id/overview_calibrationbutton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:drawableTop="@drawable/icon_calibration"
+                    android:text="@string/overview_calibration"
+                    android:textColor="@color/colorCalibrationButton"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+                <info.nightscout.androidaps.utils.SingleClickButton
+                    android:id="@+id/overview_cgmbutton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:drawableTop="@drawable/icon_xdrip"
+                    android:text="@string/overview_cgm"
+                    android:textColor="@color/colorCalibrationButton"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+                <info.nightscout.androidaps.utils.SingleClickButton
+                    android:id="@+id/overview_quickwizardbutton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginEnd="-4dp"
+                    android:layout_weight="0.5"
+                    android:drawableTop="@drawable/icon_quickwizard"
+                    android:text="@string/quickwizard"
+                    android:textColor="@color/colorQuickWizardButton"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

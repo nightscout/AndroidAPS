@@ -74,7 +74,7 @@ public class TriggerTempTarget extends Trigger {
             data.put("comparator", comparator.getValue().toString());
             o.put("data", data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return o.toString();
     }
@@ -86,14 +86,14 @@ public class TriggerTempTarget extends Trigger {
             lastRun = JsonHelper.safeGetLong(d, "lastRun");
             comparator.setValue(ComparatorExists.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")));
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return this;
     }
 
     @Override
     public int friendlyName() {
-        return R.string.temptarget;
+        return R.string.careportal_temporarytarget;
     }
 
     @Override
@@ -124,7 +124,7 @@ public class TriggerTempTarget extends Trigger {
     @Override
     public void generateDialog(LinearLayout root, FragmentManager fragmentManager) {
         new LayoutBuilder()
-                .add(new StaticLabel(R.string.temptarget))
+                .add(new StaticLabel(R.string.careportal_temporarytarget))
                 .add(comparator)
                 .build(root);
     }

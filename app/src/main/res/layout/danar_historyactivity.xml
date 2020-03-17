@@ -3,74 +3,91 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".plugins.pump.danaR.activities.DanaRHistoryActivity">
 
 
-    <LinearLayout
-        android:id="@+id/danar_historytop"
+    <RelativeLayout
+        android:id="@+id/danar_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:background="@color/activity_title_background"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/danar_history"
+            android:src="@drawable/icon_danarhistory" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/danar_history"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/spacer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/danar_header"
+        android:orientation="horizontal"
+        android:padding="5dp" />
+
+    <LinearLayout
+        android:id="@+id/danar_history_spinner_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spacer"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="20dp"
-            android:text="Type:"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="20dp"
+            android:text="@string/careportal_newnstreatment_eventtype"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <Spinner
-            android:id="@+id/danar_historytype"
+            android:id="@+id/danar_history_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/pillborder"
-            android:gravity="center_horizontal"
-            android:text="DanaR History" />
-
+            android:layout_marginEnd="20dp" />
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/danar_historystatus"
+        android:id="@+id/danar_history_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/danar_historytop"
+        android:layout_below="@id/danar_history_spinner_layout"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/danar_history_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/danar_historybuttons"
-        android:layout_below="@+id/danar_historystatus" />
+        android:layout_height="match_parent"
+        android:layout_above="@id/danar_history_reload"
+        android:layout_below="@+id/danar_history_status" />
 
-    <LinearLayout
-        android:id="@+id/danar_historybuttons"
+    <Button
+        android:id="@+id/danar_history_reload"
+        style="@style/Widget.AppCompat.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/danar_historyreload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/danar_historyreload" />
-
-    </LinearLayout>
+        android:drawableStart="@drawable/icon_actions_refill"
+        android:text="@string/danar_historyreload" />
 
 </RelativeLayout>

@@ -7,6 +7,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.T;
 
@@ -36,6 +37,11 @@ public class Objective3 extends Objective {
                     return SP.getInt(R.string.key_ObjectivesmanualEnacts, 0) + " / " + MANUAL_ENACTS_NEEDED;
             }
         });
+    }
+
+    @Override
+    public boolean specialActionEnabled() {
+        return NSClientPlugin.getPlugin().nsClientService.isConnected && NSClientPlugin.getPlugin().nsClientService.hasWriteAuth;
     }
 
     @Override

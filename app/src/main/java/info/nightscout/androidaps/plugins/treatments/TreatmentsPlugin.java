@@ -45,7 +45,7 @@ import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
-import info.nightscout.androidaps.plugins.general.overview.dialogs.ErrorHelperActivity;
+import info.nightscout.androidaps.activities.ErrorHelperActivity;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData;
@@ -103,11 +103,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     protected void onStart() {
-        initializeTempBasalData();
-        initializeTreatmentData();
-        initializeExtendedBolusData();
-        initializeTempTargetData();
-        initializeProfileSwitchData();
+        initializeData(range());
         super.onStart();
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventReloadTreatmentData.class)
@@ -115,8 +111,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 .subscribe(event -> {
                             if (L.isEnabled(L.DATATREATMENTS))
                                 log.debug("EventReloadTreatmentData");
-                            initializeTreatmentData();
-                            initializeExtendedBolusData();
+                            initializeTreatmentData(range());
+                            initializeExtendedBolusData(range());
                             updateTotalIOBTreatments();
                             RxBus.INSTANCE.send(event.getNext());
                         },
@@ -125,13 +121,13 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventReloadProfileSwitchData.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> initializeProfileSwitchData(),
+                .subscribe(event -> initializeProfileSwitchData(range()),
                         FabricPrivacy::logException
                 ));
         disposable.add(RxBus.INSTANCE
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> initializeTempTargetData(),
+                .subscribe(event -> initializeTempTargetData(range()),
                         FabricPrivacy::logException
                 ));
         disposable.add(RxBus.INSTANCE
@@ -140,7 +136,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 .subscribe(event -> {
                             if (L.isEnabled(L.DATATREATMENTS))
                                 log.debug("EventReloadTempBasalData");
-                            initializeTempBasalData();
+                            initializeTempBasalData(range());
                             updateTotalIOBTempBasals();
                         },
                         FabricPrivacy::logException
@@ -157,61 +153,61 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         return this.service;
     }
 
-    private void initializeTreatmentData() {
+    private long range() {
+        double dia = Constants.defaultDIA;
+        if (ConfigBuilderPlugin.getPlugin() != null && ProfileFunctions.getInstance().getProfile() != null)
+            dia = ProfileFunctions.getInstance().getProfile().getDia();
+        return  (long) (60 * 60 * 1000L * (24 + dia));
+    }
+
+    public void initializeData(long range) {
+        initializeTempBasalData(range);
+        initializeTreatmentData(range);
+        initializeExtendedBolusData(range);
+        initializeTempTargetData(range);
+        initializeProfileSwitchData(range);
+    }
+
+    private void initializeTreatmentData(long range) {
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeTreatmentData");
-        double dia = Constants.defaultDIA;
-        if (ConfigBuilderPlugin.getPlugin() != null && ProfileFunctions.getInstance().getProfile() != null)
-            dia = ProfileFunctions.getInstance().getProfile().getDia();
-        long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
         synchronized (treatments) {
             treatments.clear();
-            treatments.addAll(getService().getTreatmentDataFromTime(fromMills, false));
+            treatments.addAll(getService().getTreatmentDataFromTime(DateUtil.now() - range, false));
         }
     }
 
-    private void initializeTempBasalData() {
+    private void initializeTempBasalData(long range) {
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeTempBasalData");
-        double dia = Constants.defaultDIA;
-        if (ConfigBuilderPlugin.getPlugin() != null && ProfileFunctions.getInstance().getProfile() != null)
-            dia = ProfileFunctions.getInstance().getProfile().getDia();
-        long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
-
         synchronized (tempBasals) {
-            tempBasals.reset().add(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(fromMills, false));
+            tempBasals.reset().add(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(DateUtil.now() - range, false));
         }
 
     }
 
-    private void initializeExtendedBolusData() {
+    private void initializeExtendedBolusData(long range) {
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeExtendedBolusData");
-        double dia = Constants.defaultDIA;
-        if (ConfigBuilderPlugin.getPlugin() != null && ProfileFunctions.getInstance().getProfile() != null)
-            dia = ProfileFunctions.getInstance().getProfile().getDia();
-        long fromMills = (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia));
-
         synchronized (extendedBoluses) {
-            extendedBoluses.reset().add(MainApp.getDbHelper().getExtendedBolusDataFromTime(fromMills, false));
+            extendedBoluses.reset().add(MainApp.getDbHelper().getExtendedBolusDataFromTime(DateUtil.now() - range, false));
         }
 
     }
 
-    private void initializeTempTargetData() {
+    private void initializeTempTargetData(long range) {
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeTempTargetData");
         synchronized (tempTargets) {
-            long fromMills = System.currentTimeMillis() - 60 * 60 * 1000L * 24;
-            tempTargets.reset().add(MainApp.getDbHelper().getTemptargetsDataFromTime(fromMills, false));
+            tempTargets.reset().add(MainApp.getDbHelper().getTemptargetsDataFromTime(DateUtil.now() - range, false));
         }
     }
 
-    private void initializeProfileSwitchData() {
+    private void initializeProfileSwitchData(long range) {
         if (L.isEnabled(L.DATATREATMENTS))
             log.debug("initializeProfileSwitchData");
         synchronized (profiles) {
-            profiles.reset().add(MainApp.getDbHelper().getProfileSwitchData(false));
+            profiles.reset().add(MainApp.getDbHelper().getProfileSwitchData(DateUtil.now() - range, false));
         }
     }
 
@@ -261,7 +257,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
         if (!pumpInterface.isFakingTempsByExtendedBoluses())
             synchronized (extendedBoluses) {
-                for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
+                for (int pos = 0; pos < extendedBoluses.size(); pos++) {
                     ExtendedBolus e = extendedBoluses.get(pos);
                     if (e.date > time) continue;
                     IobTotal calc = e.iobCalc(time);
@@ -349,7 +345,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         long time = System.currentTimeMillis();
         synchronized (treatments) {
             if (MedtronicHistoryData.doubleBolusDebug)
-                log.debug("DoubleBolusDebug: AllTreatmentsInDb: {}", MedtronicUtil.getGsonInstance().toJson(treatments));
+                log.debug("DoubleBolusDebug: AllTreatmentsInDb: {}", MedtronicUtil.getGsonInstanceCore().toJson(treatments));
 
             for (Treatment t : treatments) {
                 if (t.date <= time && t.date >= fromTimestamp)
@@ -357,7 +353,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             }
 
             if (MedtronicHistoryData.doubleBolusDebug)
-                log.debug("DoubleBolusDebug: FilteredTreatments: AfterTime={}, Items={}", fromTimestamp, MedtronicUtil.getGsonInstance().toJson(in5minback));
+                log.debug("DoubleBolusDebug: FilteredTreatments: AfterTime={}, Items={}", fromTimestamp, MedtronicUtil.getGsonInstanceCore().toJson(in5minback));
 
             return in5minback;
         }
@@ -365,11 +361,10 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
 
     @Override
-    public List<Treatment> getTreatments5MinBackFromHistory(long time) {
+    public List<Treatment> getCarbTreatments5MinBackFromHistory(long time) {
         List<Treatment> in5minback = new ArrayList<>();
         synchronized (treatments) {
-            for (Integer pos = 0; pos < treatments.size(); pos++) {
-                Treatment t = treatments.get(pos);
+            for (Treatment t : treatments) {
                 if (!t.isValid)
                     continue;
                 if (t.date <= time && t.date > time - 5 * 60 * 1000 && t.carbs > 0)
