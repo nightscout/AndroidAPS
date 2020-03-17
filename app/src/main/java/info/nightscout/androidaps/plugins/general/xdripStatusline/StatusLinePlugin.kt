@@ -139,11 +139,11 @@ class StatusLinePlugin @Inject constructor(
                 + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
                 + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")")
         }
-        if (!sp.getBoolean(R.string.key_xdripstatus_showbgi, false)) {
-            return status
+        if (sp.getBoolean(R.string.key_xdripstatus_showbgi, true)) {
+            val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.isfMgdl, profileFunction.getUnits())
+            status += " " + (if (bgi >= 0) "+" else "") + DecimalFormatter.to2Decimal(bgi)
         }
-        val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.isfMgdl, profileFunction.getUnits())
-        status += " " + (if (bgi >= 0) "+" else "") + DecimalFormatter.to2Decimal(bgi)
+        // COB
         status += " " + iobCobCalculatorPlugin.getCobInfo(false, "StatusLinePlugin").generateCOBString()
         return status
     }

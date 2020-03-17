@@ -340,7 +340,7 @@
     <string name="smscommunicator_tempbasalfailed">Spuštění dočasného bazálu selhalo</string>
     <string name="smscommunicator_extendedfailed">Spuštění prodlouženého bolusu selhalo</string>
     <string name="smscommunicator_basalstopreplywithcode">Na zastavení dočasného bazálu odpovězte SMS s kódem %1$s</string>
-    <string name="smscommunicator_extendedstopreplywithcode">Na zastavení prodlouženého bolusu odpovězte SMS s kódem %1$s</string>
+    <string name="smscommunicator_extendedstopreplywithcode">Pro zastavení prodlouženého bolusu odpovězte SMS s kódem %1$s</string>
     <string name="smscommunicator_tempbasalcanceled">Dočasný bazál zastaven</string>
     <string name="smscommunicator_extendedcanceled">Prodloužený bolus zastaven</string>
     <string name="smscommunicator_tempbasalcancelfailed">Rušení dočasného bazálu selhalo</string>
@@ -1443,8 +1443,8 @@
     <string name="alreadyset">Již nastaveno</string>
     <string name="message">Zpráva</string>
     <string name="clearqueueconfirm">Vymazat frontu? Všechna data ve frontě budou ztracena!</string>
-    <string name="ebstopsloop">Použití funkce rozloženého bolusu zastaví uzavřenou smyčku po dobu trvání rozloženého bolusu. Opravdu to chcete?</string>
-    <string name="closed_loop_disabled_with_eb">Uzavřená smyčka je zastavena kvůli běžícímu rozloženému bolusu</string>
+    <string name="ebstopsloop">Použití funkce prodlouženého bolusu zastaví uzavřenou smyčku po dobu trvání prodlouženého bolusu. Opravdu to chcete?</string>
+    <string name="closed_loop_disabled_with_eb">Uzavřená smyčka je zastavena kvůli běžícímu prodlouženému bolusu</string>
     <string name="extended_bolus_short">EB</string>
     <string name="phonechecker">PhoneChecker</string>
     <string name="chartmenu">Možnosti grafu</string>
@@ -1453,4 +1453,5 @@
     <string name="loop_smbexecution_time_label">Čas provedení SMB</string>
     <string name="loop_tbrrequest_time_label">Čas požadavku dočasného bazálu</string>
     <string name="loop_tbrexecution_time_label">Čas provedení dočasného bazálu</string>
+    <string name="insight_alert_notification_channel">Upozornění pumpy Insight</string>
 </resources>

@@ -175,7 +175,7 @@
     <string name="careportal_announcement">Annuncio</string>
     <string name="careportal_note">Nota</string>
     <string name="careportal_question">Domanda</string>
-    <string name="careportal_exercise">Esercizio</string>
+    <string name="careportal_exercise">Esercizio fisico</string>
     <string name="careportal_pumpsitechange">Cambio posizione cannula</string>
     <string name="careportal_cgmsensorinsert">Inserimento sensore</string>
     <string name="careportal_cgmsensorstart">Avvio Sensore</string>
@@ -1453,4 +1453,5 @@
     <string name="loop_smbexecution_time_label">Esecuzione SMB (momento)</string>
     <string name="loop_tbrrequest_time_label">Richiesta basale temporanea (momento)</string>
     <string name="loop_tbrexecution_time_label">Esecuzione basale temporanea (momento)</string>
+    <string name="insight_alert_notification_channel">Avvisi micro Insight</string>
 </resources>
