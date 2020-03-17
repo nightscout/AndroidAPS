@@ -7,8 +7,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 
-import info.AAPSMocker;
-import info.SPMocker;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
@@ -29,11 +27,11 @@ public class BasalProfileUTest {
     // MainApp mainApp = new MainApp();
     @Before
     public void initMocking() {
-        AAPSMocker.mockMainApp();
-        AAPSMocker.mockStrings();
-        AAPSMocker.mockDatabaseHelper();
+//        AAPSMocker.mockMainApp();
+//        AAPSMocker.mockStrings();
+//        AAPSMocker.mockDatabaseHelper();
 
-        SPMocker.prepareMock();
+//        SPMocker.prepareMock();
 
         PowerMockito.mockStatic(DateUtil.class);
         when(DateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs());

@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 import android.location.Location
 import com.google.common.base.Optional
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.automation.elements.InputLocationMode
 import info.nightscout.androidaps.services.LocationService
 import info.nightscout.androidaps.utils.DateUtil
@@ -19,7 +18,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ProfileFunctions::class, DateUtil::class, LocationService::class)
+@PrepareForTest(DateUtil::class, LocationService::class)
 class TriggerLocationTest : TriggerTestBase() {
 
     var now = 1514766900000L
@@ -30,7 +29,6 @@ class TriggerLocationTest : TriggerTestBase() {
         `when`(DateUtil.now()).thenReturn(now)
         PowerMockito.spy(LocationService::class.java)
         `when`(locationDataContainer.lastLocation).thenReturn(mockedLocation())
-//        MockitoAnnotations.initMocks(this)
     }
 
     @Test fun copyConstructorTest() {

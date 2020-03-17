@@ -1139,7 +1139,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         if (tempTarget != null) {
             tempTargetView.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning));
             tempTargetView.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning));
-            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end()));
+            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper));
         } else {
             tempTargetView.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault));
             tempTargetView.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault));
@@ -1239,7 +1239,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false);
-            text += " " + DecimalFormatter.toPumpSupportedBolus(wizard.getCalculatedTotalInsulin()) + "U";
+            text += " " + DecimalFormatter.toPumpSupportedBolus(wizard.getCalculatedTotalInsulin(), pump) + "U";
             quickWizardButton.setText(text);
             if (wizard.getCalculatedTotalInsulin() <= 0)
                 quickWizardButton.setVisibility(View.GONE);

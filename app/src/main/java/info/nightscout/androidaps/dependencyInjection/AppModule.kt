@@ -59,8 +59,8 @@ open class AppModule {
 
     @Provides
     @Singleton
-    fun provideProfileFunction(sp: SP): ProfileFunction {
-        return ProfileFunctionImplementation(sp)
+    fun provideProfileFunction(aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePluginProvider): ProfileFunction {
+        return ProfileFunctionImplementation(aapsLogger, sp, resourceHelper, activePlugin)
     }
 
     @Provides
@@ -92,6 +92,7 @@ open class AppModule {
         @ContributesAndroidInjector fun determineBasalResultSMBInjector(): DetermineBasalResultSMB
         @ContributesAndroidInjector fun determineBasalResultMAInjector(): DetermineBasalResultMA
         @ContributesAndroidInjector fun determineBasalResultAMAInjector(): DetermineBasalResultAMA
+
         @ContributesAndroidInjector
         fun determineBasalAdapterSMBJSInjector(): DetermineBasalAdapterSMBJS
 

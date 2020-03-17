@@ -39,7 +39,7 @@ public class APSResult {
     @Inject public AAPSLogger aapsLogger;
     @Inject ConstraintChecker constraintChecker;
     @Inject SP sp;
-    @Inject ActivePluginProvider activePluginProvider;
+    @Inject ActivePluginProvider activePlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject ProfileFunction profileFunction;
     @Inject ResourceHelper resourceHelper;
@@ -101,7 +101,7 @@ public class APSResult {
 
     @Override
     public String toString() {
-        final PumpInterface pump = activePluginProvider.getActivePump();
+        final PumpInterface pump = activePlugin.getActivePump();
         if (isChangeRequested()) {
             String ret;
             // rate
@@ -120,7 +120,7 @@ public class APSResult {
 
             // smb
             if (smb != 0)
-                ret += ("SMB: " + DecimalFormatter.toPumpSupportedBolus(smb) + " U\n");
+                ret += ("SMB: " + DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.getActivePump()) + " U\n");
 
             // reason
             ret += resourceHelper.gs(R.string.reason) + ": " + reason;
@@ -130,7 +130,7 @@ public class APSResult {
     }
 
     public Spanned toSpanned() {
-        final PumpInterface pump = activePluginProvider.getActivePump();
+        final PumpInterface pump = activePlugin.getActivePump();
         if (isChangeRequested()) {
             String ret;
             // rate
@@ -149,7 +149,7 @@ public class APSResult {
 
             // smb
             if (smb != 0)
-                ret += ("<b>" + "SMB" + "</b>: " + DecimalFormatter.toPumpSupportedBolus(smb) + " U<br>");
+                ret += ("<b>" + "SMB" + "</b>: " + DecimalFormatter.toPumpSupportedBolus(smb, activePlugin.getActivePump()) + " U<br>");
 
             // reason
             ret += "<b>" + resourceHelper.gs(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;");
@@ -314,7 +314,7 @@ public class APSResult {
 
         long now = System.currentTimeMillis();
         TemporaryBasal activeTemp = treatmentsPlugin.getTempBasalFromHistory(now);
-        PumpInterface pump = activePluginProvider.getActivePump();
+        PumpInterface pump = activePlugin.getActivePump();
         Profile profile = profileFunction.getProfile();
 
         if (profile == null) {

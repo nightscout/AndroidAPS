@@ -2,7 +2,6 @@ package info.nightscout.androidaps.db
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.AAPSMocker
 import info.TestBase
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -21,6 +20,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
@@ -48,7 +48,7 @@ class BgReadingTest : TestBase() {
 
     @Test
     fun valueToUnits() {
-        val bgReading = BgReading()
+        val bgReading = BgReading(injector)
         bgReading.value = 18.0
         Assert.assertEquals(18.0, bgReading.valueToUnits(Constants.MGDL) * 1, 0.01)
         Assert.assertEquals(1.0, bgReading.valueToUnits(Constants.MMOL) * 1, 0.01)
@@ -56,7 +56,7 @@ class BgReadingTest : TestBase() {
 
     @Test
     fun directionToSymbol() {
-        val bgReading = BgReading()
+        val bgReading = BgReading(injector)
         bgReading.direction = "DoubleDown"
         Assert.assertEquals("\u21ca", bgReading.directionToSymbol())
         bgReading.direction = "SingleDown"
@@ -76,7 +76,7 @@ class BgReadingTest : TestBase() {
     }
 
     @Test fun dateTest() {
-        val bgReading = BgReading()
+        val bgReading = BgReading(injector)
         val now = System.currentTimeMillis()
         bgReading.date = now
         val nowDate = Date(now)
@@ -85,14 +85,17 @@ class BgReadingTest : TestBase() {
     }
 
     @Test fun valueTest() {
-        val bgReading = BgReading()
+        val bgReading = BgReading(injector)
         val valueToSet = 81.0 // 4.5 mmol
         Assert.assertEquals(81.0, bgReading.value(valueToSet).value, 0.01)
     }
 
     @Test fun copyFromTest() {
-        val bgReading = BgReading()
-        val copy = BgReading()
+        val databaseHelper = Mockito.mock(DatabaseHelper::class.java)
+        `when`(MainApp.getDbHelper()).thenReturn(databaseHelper)
+        setReadings(72, 0)
+        val bgReading = BgReading(injector)
+        val copy = BgReading(injector)
         bgReading.value = 81.0
         val now = System.currentTimeMillis()
         bgReading.date = now
@@ -105,21 +108,22 @@ class BgReadingTest : TestBase() {
 
     @Test
     fun isEqualTest() {
-        val bgReading = BgReading()
-        val copy = BgReading()
+        val bgReading = BgReading(injector)
+        val copy = BgReading(injector)
         bgReading.value = 81.0
         val now = System.currentTimeMillis()
         bgReading.date = now
         copy.date = now
         copy.copyFrom(bgReading)
         Assert.assertTrue(copy.isEqual(bgReading))
-        Assert.assertFalse(copy.isEqual(BgReading()))
+        Assert.assertFalse(copy.isEqual(BgReading(injector)))
     }
 
     @Test fun calculateDirection() {
-        val bgReading = BgReading()
+        val bgReading = BgReading(injector)
         val bgReadingsList: List<BgReading>? = null
-        AAPSMocker.mockDatabaseHelper()
+        val databaseHelper = Mockito.mock(DatabaseHelper::class.java)
+        `when`(MainApp.getDbHelper()).thenReturn(databaseHelper)
         `when`(MainApp.getDbHelper().getAllBgreadingsDataFromTime(ArgumentMatchers.anyLong(), ArgumentMatchers.anyBoolean())).thenReturn(bgReadingsList)
         Assert.assertEquals("NONE", bgReading.calculateDirection())
         setReadings(72, 0)
@@ -140,19 +144,19 @@ class BgReadingTest : TestBase() {
 
     @Before
     fun prepareMock() {
-        val mainApp = AAPSMocker.mockMainApp()
-        AAPSMocker.mockApplicationContext()
-        AAPSMocker.mockSP()
-        AAPSMocker.mockL()
-        AAPSMocker.mockDatabaseHelper()
-        `when`(mainApp.androidInjector()).thenReturn(injector.androidInjector())
+        val mainApp = PowerMockito.mockStatic(MainApp::class.java)
+//        AAPSMocker.mockApplicationContext()
+//        AAPSMocker.mockSP()
+//        AAPSMocker.mockL()
+//        AAPSMocker.mockDatabaseHelper()
+//        `when`(mainApp.androidInjector()).thenReturn(injector.androidInjector())
     }
 
     fun setReadings(current_value: Int, previous_value: Int) {
-        val now = BgReading()
+        val now = BgReading(injector)
         now.value = current_value.toDouble()
         now.date = System.currentTimeMillis()
-        val previous = BgReading()
+        val previous = BgReading(injector)
         previous.value = previous_value.toDouble()
         previous.date = System.currentTimeMillis() - 6 * 60 * 1000L
         val bgReadings: MutableList<BgReading> = mutableListOf()

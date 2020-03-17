@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import com.google.common.base.Optional
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -18,7 +17,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ProfileFunctions::class, DateUtil::class, TreatmentsPlugin::class)
+@PrepareForTest(DateUtil::class, TreatmentsPlugin::class)
 class TriggerBolusAgoTest : TriggerTestBase() {
 
     var now = 1514766900000L

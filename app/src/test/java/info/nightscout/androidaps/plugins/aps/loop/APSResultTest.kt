@@ -49,7 +49,7 @@ class APSResultTest : TestBase() {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraintChecker
                 it.sp = sp
-                it.activePluginProvider = activePluginProvider
+                it.activePlugin = activePluginProvider
                 it.treatmentsPlugin = treatmentsPlugin
                 it.profileFunction = profileFunction
                 it.resourceHelper = resourceHelper
@@ -170,7 +170,7 @@ class APSResultTest : TestBase() {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraintChecker
                 it.sp = sp
-                it.activePluginProvider = activePluginProvider
+                it.activePlugin = activePluginProvider
                 it.treatmentsPlugin = treatmentsPlugin
                 it.profileFunction = profileFunction
                 it.resourceHelper = resourceHelper
@@ -187,7 +187,7 @@ class APSResultTest : TestBase() {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraintChecker
                 it.sp = sp
-                it.activePluginProvider = activePluginProvider
+                it.activePlugin = activePluginProvider
                 it.treatmentsPlugin = treatmentsPlugin
                 it.profileFunction = profileFunction
                 it.resourceHelper = resourceHelper

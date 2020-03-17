@@ -58,11 +58,11 @@ class FillDialog : DialogFragmentWithDate() {
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
         fill_insulinamount.setParams(savedInstanceState?.getDouble("fill_insulin_amount")
-            ?: 0.0, 0.0, maxInsulin, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), true, ok)
+            ?: 0.0, 0.0, maxInsulin, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), true, ok)
         val amount1 = sp.getDouble("fill_button1", 0.3)
         if (amount1 > 0) {
             fill_preset_button1.visibility = View.VISIBLE
-            fill_preset_button1.text = DecimalFormatter.toPumpSupportedBolus(amount1) // + "U");
+            fill_preset_button1.text = DecimalFormatter.toPumpSupportedBolus(amount1, activePlugin.activePump) // + "U");
             fill_preset_button1.setOnClickListener { fill_insulinamount.value = amount1 }
         } else {
             fill_preset_button1.visibility = View.GONE
@@ -70,7 +70,7 @@ class FillDialog : DialogFragmentWithDate() {
         val amount2 = sp.getDouble("fill_button2", 0.0)
         if (amount2 > 0) {
             fill_preset_button2.visibility = View.VISIBLE
-            fill_preset_button2.text = DecimalFormatter.toPumpSupportedBolus(amount2) // + "U");
+            fill_preset_button2.text = DecimalFormatter.toPumpSupportedBolus(amount2, activePlugin.activePump) // + "U");
             fill_preset_button2.setOnClickListener { fill_insulinamount.value = amount2 }
         } else {
             fill_preset_button2.visibility = View.GONE
@@ -78,7 +78,7 @@ class FillDialog : DialogFragmentWithDate() {
         val amount3 = sp.getDouble("fill_button3", 0.0)
         if (amount3 > 0) {
             fill_preset_button3.visibility = View.VISIBLE
-            fill_preset_button3.text = DecimalFormatter.toPumpSupportedBolus(amount3) // + "U");
+            fill_preset_button3.text = DecimalFormatter.toPumpSupportedBolus(amount3, activePlugin.activePump) // + "U");
             fill_preset_button3.setOnClickListener { fill_insulinamount.value = amount3 }
         } else {
             fill_preset_button3.visibility = View.GONE
@@ -94,7 +94,7 @@ class FillDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0) {
             actions.add(resourceHelper.gs(R.string.fillwarning))
             actions.add("")
-            actions.add(resourceHelper.gs(R.string.bolus) + ": " + "<font color='" + resourceHelper.gc(R.color.colorInsulinButton) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + resourceHelper.gs(R.string.insulin_unit_shortname) + "</font>")
+            actions.add(resourceHelper.gs(R.string.bolus) + ": " + "<font color='" + resourceHelper.gc(R.color.colorInsulinButton) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump) + resourceHelper.gs(R.string.insulin_unit_shortname) + "</font>")
             if (abs(insulinAfterConstraints - insulin) > 0.01)
                 actions.add(resourceHelper.gs(R.string.bolusconstraintappliedwarning, resourceHelper.gc(R.color.warning), insulin, insulinAfterConstraints))
         }

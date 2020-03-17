@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.general.smsCommunicator
 import android.telephony.SmsManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.AAPSMocker
 import info.TestBase
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
@@ -53,7 +52,6 @@ import java.util.*
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(ConstraintChecker::class, FabricPrivacy::class, VirtualPumpPlugin::class, XdripCalibrations::class, SmsManager::class, RxBusWrapper::class, CommandQueue::class, LocalProfilePlugin::class, DateUtil::class, IobCobCalculatorPlugin::class, MainApp::class)
-//@PrepareForTest(L::class, SP::class, resourceHelper::class, DateUtil::class, ProfileFunctions::class, TreatmentsPlugin::class, IobCobCalculatorPlugin::class, CommandQueue::class, ConfigBuilderPlugin::class, NSUpload::class, ProfileInterface::class, LocalProfilePlugin::class, VirtualPumpPlugin::class, LoopPlugin::class)
 class SmsCommunicatorPluginTest : TestBase() {
 
     @Mock lateinit var aapsLogger: AAPSLogger
@@ -101,11 +99,8 @@ class SmsCommunicatorPluginTest : TestBase() {
     private var hasBeenRun = false
 
     @Before fun prepareTests() {
-        val mainApp = AAPSMocker.mockMainApp()
-        `when`(mainApp.androidInjector()).thenReturn(injector.androidInjector())
-
         rxBus = RxBusWrapper()
-        val reading = BgReading()
+        val reading = BgReading(injector)
         reading.value = 100.0
         val bgList: MutableList<BgReading> = ArrayList()
         bgList.add(reading)

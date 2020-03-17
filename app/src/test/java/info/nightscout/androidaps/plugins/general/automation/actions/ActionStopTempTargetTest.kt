@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.automation.actions
 
-import info.AAPSMocker
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.queue.Callback
@@ -21,7 +20,6 @@ class ActionStopTempTargetTest : ActionsTestBase() {
 
     @Before
     fun setup() {
-        AAPSMocker.mockMainApp()
         `when`(resourceHelper.gs(R.string.stoptemptarget)).thenReturn("Stop temp target")
 
         sut = ActionStopTempTarget(injector)

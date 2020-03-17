@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 
 import com.google.common.base.Optional
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.automation.elements.Comparator
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -20,7 +19,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ProfileFunctions::class, DateUtil::class, IobCobCalculatorPlugin::class)
+@PrepareForTest(DateUtil::class, IobCobCalculatorPlugin::class)
 class TriggerAutosensValueTest : TriggerTestBase() {
 
     var now = 1514766900000L

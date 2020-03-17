@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.general.automation.actions
 
-import info.AAPSMocker
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -13,6 +12,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
@@ -24,7 +24,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
 
     @Before
     fun setup() {
-        AAPSMocker.mockMainApp()
+        PowerMockito.mockStatic(MainApp::class.java)
         `when`(resourceHelper.gs(R.string.starttemptarget)).thenReturn("Start temp target")
 
         sut = ActionStartTempTarget(injector)

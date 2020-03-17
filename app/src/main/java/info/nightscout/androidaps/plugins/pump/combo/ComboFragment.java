@@ -222,7 +222,7 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
                 } else if (bolusMinAgo < 60) {
                     ago = DateUtil.minAgo(bolus.timestamp);
                 } else {
-                    ago = DateUtil.hourAgo(bolus.timestamp);
+                    ago = DateUtil.hourAgo(bolus.timestamp, resourceHelper);
                 }
                 lastBolusView.setText(resourceHelper.gs(R.string.combo_last_bolus, bolus.amount, unit, ago));
             } else {

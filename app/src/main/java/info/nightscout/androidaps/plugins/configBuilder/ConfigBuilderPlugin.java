@@ -53,17 +53,17 @@ public class ConfigBuilderPlugin extends PluginBase {
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
-    private final CommandQueueProvider commandQueue;
+    private final ProfileFunction profileFunction;
 
     /**
      * @deprecated Use dagger to get an instance
      */
 
     @Deprecated
-    public CommandQueueProvider getCommandQueue() {
-        if (commandQueue == null)
-            throw new IllegalStateException("Accessing commandQueue before first instantiation");
-        return commandQueue;
+    public ProfileFunction getProfileFunction() {
+        if (profileFunction == null)
+            throw new IllegalStateException("Accessing profileFunction before first instantiation");
+        return profileFunction;
     }
 
     @Deprecated
@@ -88,7 +88,7 @@ public class ConfigBuilderPlugin extends PluginBase {
             RxBusWrapper rxBus,
             AAPSLogger aapsLogger,
             ResourceHelper resourceHelper,
-            CommandQueueProvider commandQueue
+            ProfileFunction profileFunction
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
@@ -106,7 +106,7 @@ public class ConfigBuilderPlugin extends PluginBase {
         this.rxBus = rxBus;
         this.aapsLogger = aapsLogger;
         this.resourceHelper = resourceHelper;
-        this.commandQueue = commandQueue;
+        this.profileFunction = profileFunction;
         configBuilderPlugin = this;  // TODO: only while transitioning to Dagger
     }
 

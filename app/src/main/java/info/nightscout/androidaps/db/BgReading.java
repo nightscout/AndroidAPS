@@ -62,6 +62,10 @@ public class BgReading implements DataPointWithLabelInterface {
         MainApp.instance().androidInjector().inject(this);
     }
 
+    public BgReading(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
+    }
+
     public BgReading(NSSgv sgv) {
         date = sgv.getMills();
         value = sgv.getMgdl();

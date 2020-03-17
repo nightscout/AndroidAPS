@@ -1,18 +1,15 @@
 package info.nightscout.androidaps.plugins.general.automation.elements
 
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerTestBase
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.`when`
-import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ProfileFunctions::class)
 class InputBgTest : TriggerTestBase() {
 
     @Test

@@ -35,6 +35,7 @@ open class TestBase {
     @Before
     fun setupLocale() {
         Locale.setDefault(Locale.ENGLISH)
+        System.setProperty("disableFirebase", "true")
     }
 
     // Workaround for Kotlin nullability.

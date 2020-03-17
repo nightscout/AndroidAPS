@@ -111,7 +111,7 @@ class WizardDialog : DaggerDialogFragment() {
             ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, ok, textWatcher)
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
         treatments_wizard_correction_input.setParams(savedInstanceState?.getDouble("treatments_wizard_correction_input")
-            ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
+            ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, ok, textWatcher)
         treatments_wizard_carb_time_input.setParams(savedInstanceState?.getDouble("treatments_wizard_carb_time_input")
             ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
         initDialog()
