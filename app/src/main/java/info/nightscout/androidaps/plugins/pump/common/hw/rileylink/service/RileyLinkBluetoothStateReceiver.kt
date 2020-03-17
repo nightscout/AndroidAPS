@@ -5,17 +5,19 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import javax.inject.Inject
 
-class RileyLinkBluetoothStateReceiver : BroadcastReceiver() {
+class RileyLinkBluetoothStateReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePluginProvider
 
     override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
         val action = intent.action
         if (action != null) {
             val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR)
