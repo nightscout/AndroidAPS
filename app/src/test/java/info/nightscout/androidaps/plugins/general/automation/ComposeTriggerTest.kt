@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.TestBase
+import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.plugins.general.automation.triggers.Trigger
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerConnector
 import info.nightscout.androidaps.plugins.general.automation.triggers.TriggerDummy

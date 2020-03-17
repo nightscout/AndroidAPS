@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.aps.loop
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.TestBase
+import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint

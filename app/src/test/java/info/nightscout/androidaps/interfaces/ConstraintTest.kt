@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interfaces
 
-import info.TestBase
+import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.utils.sharedPreferences.SP

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.utils
 
-import info.TestBase
+import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert

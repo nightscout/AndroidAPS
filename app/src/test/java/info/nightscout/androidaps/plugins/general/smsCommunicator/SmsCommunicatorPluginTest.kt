@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.general.smsCommunicator
 import android.telephony.SmsManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.TestBase
+import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R

@@ -3,7 +3,7 @@ package info.nightscout.androidaps.utils.wizard
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.TestBase
+import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.Profile

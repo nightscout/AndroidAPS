@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.general.automation.elements
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.TestBase
+import info.nightscout.androidaps.TestBase
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

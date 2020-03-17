@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.sensitivity
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.TestBase
+import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult

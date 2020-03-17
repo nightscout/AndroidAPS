@@ -1,8 +1,7 @@
-package info
+package info.nightscout.androidaps
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.ProfileStore
 import org.json.JSONObject

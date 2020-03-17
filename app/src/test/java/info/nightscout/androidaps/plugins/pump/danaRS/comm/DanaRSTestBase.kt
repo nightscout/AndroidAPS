@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import dagger.android.HasAndroidInjector
-import info.TestBase
+import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.utils.sharedPreferences.SP
