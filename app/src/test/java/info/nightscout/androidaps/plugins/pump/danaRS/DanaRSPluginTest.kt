@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.danaRS
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.AAPSMocker
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
@@ -67,10 +66,6 @@ class DanaRSPluginTest : DanaRSTestBase() {
 
     @Before
     fun prepareMocks() {
-        AAPSMocker.mockMainApp() // TODO remove
-        AAPSMocker.mockSP()
-        AAPSMocker.mockL()
-        AAPSMocker.mockStrings()
         Mockito.`when`(sp.getString(R.string.key_danars_address, "")).thenReturn("")
         Mockito.`when`(resourceHelper.gs(eq(R.string.limitingbasalratio), anyObject(), anyObject())).thenReturn("limitingbasalratio")
         Mockito.`when`(resourceHelper.gs(eq(R.string.limitingpercentrate), anyObject(), anyObject())).thenReturn("limitingpercentrate")
