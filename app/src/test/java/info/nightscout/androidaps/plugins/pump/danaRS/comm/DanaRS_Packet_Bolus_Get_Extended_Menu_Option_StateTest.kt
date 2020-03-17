@@ -12,8 +12,6 @@ class DanaRS_Packet_Bolus_Get_Extended_Menu_Option_StateTest : DanaRSTestBase() 
 
     @Test fun runTest() {
         val packet = DanaRS_Packet_Bolus_Get_Extended_Menu_Option_State(aapsLogger, danaRPump)
-        // test params
-        val testparams = packet.requestParams
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
         packet.handleMessage(createArray(34, 0.toByte()))

@@ -12,8 +12,6 @@ class DanaRS_Packet_Bolus_Get_Calculation_InformationTest : DanaRSTestBase() {
 
     @Test fun runTest() {
         val packet = DanaRS_Packet_Bolus_Get_Calculation_Information(aapsLogger, danaRPump)
-        // test params
-        val testparams = packet.requestParams
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
         packet.handleMessage(createArray(24, 0.toByte()))

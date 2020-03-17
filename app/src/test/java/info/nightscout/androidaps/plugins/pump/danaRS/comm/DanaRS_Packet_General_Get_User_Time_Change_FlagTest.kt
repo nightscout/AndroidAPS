@@ -12,14 +12,11 @@ class DanaRS_Packet_General_Get_User_Time_Change_FlagTest : DanaRSTestBase() {
 
     @Test fun runTest() {
         var packet = DanaRS_Packet_General_Get_User_Time_Change_Flag(aapsLogger)
-        // test params
-        val testparams = packet.requestParams
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
-// test for the length message
+        // test for the length message
         packet.handleMessage(createArray(1, 0.toByte()))
         Assert.assertEquals(true, packet.failed)
-        // everything ok :)
         packet = DanaRS_Packet_General_Get_User_Time_Change_Flag(aapsLogger)
         packet.handleMessage(createArray(18, 0.toByte()))
         Assert.assertEquals(false, packet.failed)

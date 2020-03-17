@@ -12,8 +12,6 @@ class DanaRS_Packet_Etc_Keep_ConnectionTest : DanaRSTestBase() {
 
     @Test fun runTest() {
         val packet = DanaRS_Packet_Etc_Keep_Connection(aapsLogger)
-        // test params
-        val testparams = packet.requestParams
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
         packet.handleMessage(byteArrayOf(0.toByte(), 0.toByte(), 0.toByte()))

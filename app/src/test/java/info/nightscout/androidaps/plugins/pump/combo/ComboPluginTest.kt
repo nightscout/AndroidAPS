@@ -41,6 +41,7 @@ class ComboPluginTest : TestBase() {
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var sp: SP
+    @Mock lateinit var context: Context
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -52,7 +53,7 @@ class ComboPluginTest : TestBase() {
     @Before
     fun prepareMocks() {
         `when`(resourceHelper.gs(R.string.novalidbasalrate)).thenReturn("No valid basal rate read from pump")
-        comboPlugin = ComboPlugin(injector, aapsLogger, RxBusWrapper(), resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue)
+        comboPlugin = ComboPlugin(injector, aapsLogger, RxBusWrapper(), resourceHelper, profileFunction, treatmentsPlugin, sp, commandQueue, context)
     }
 
     @Test

@@ -30,7 +30,7 @@ import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.HardLimits
-import info.nightscout.androidaps.utils.build.BuildHelper
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
@@ -124,10 +124,10 @@ class ConstraintsCheckerTest : TestBase() {
         danaRPump = DanaRPump(aapsLogger, sp, injector)
         hardLimits = HardLimits(aapsLogger, sp, resourceHelper, context)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp)
-        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue)
+        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, profileFunction, treatmentsPlugin, sp, commandQueue, context)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, treatmentsPlugin, sp, commandQueue, danaRPump)
         danaRSPlugin = DanaRSPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump, detailedBolusInfoStorage)
-        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, treatmentsPlugin, sp, commandQueue, profileFunction)
+        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, treatmentsPlugin, sp, commandQueue, profileFunction, context)
         openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits)
         openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits)
         openAPSMAPlugin = OpenAPSMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits)

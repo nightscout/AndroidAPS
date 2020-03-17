@@ -12,14 +12,11 @@ class DanaRS_Packet_General_Initial_Screen_InformationTest : DanaRSTestBase() {
 
     @Test fun runTest() {
         var packet = DanaRS_Packet_General_Initial_Screen_Information(aapsLogger, danaRPump)
-        // test params
-        val testparams = packet.requestParams
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
-// test for the length message
+        // test for the length message
         packet.handleMessage(createArray(1, 0.toByte()))
         Assert.assertEquals(true, packet.failed)
-        // everything ok :)
         packet = DanaRS_Packet_General_Initial_Screen_Information(aapsLogger, danaRPump)
         packet.handleMessage(createArray(17, 1.toByte()))
         Assert.assertEquals(false, packet.failed)

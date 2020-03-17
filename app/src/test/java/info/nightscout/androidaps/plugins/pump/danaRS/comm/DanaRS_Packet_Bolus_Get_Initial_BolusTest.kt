@@ -12,15 +12,11 @@ class DanaRS_Packet_Bolus_Get_Initial_BolusTest : DanaRSTestBase() {
 
     @Test fun runTest() {
         val packet = DanaRS_Packet_Bolus_Get_Initial_Bolus(aapsLogger)
-        // test params
-        val testparams = packet.requestParams
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
         packet.handleMessage(createArray(34, 0.toByte()))
         // should fail only if all the initialbolusses are 0
-//        DanaRPump testPump = DanaRPump.getInstance();
         Assert.assertEquals(false, !packet.failed)
-        //        assertEquals(false, packet.failed);
         packet.handleMessage(createArray(34, 1.toByte()))
         Assert.assertEquals(true, !packet.failed)
         Assert.assertEquals("BOLUS__GET_BOLUS_RATE", packet.friendlyName)

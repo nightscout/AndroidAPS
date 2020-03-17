@@ -12,11 +12,8 @@ class DanaRS_Packet_General_Delivery_StatusTest : DanaRSTestBase() {
 
     @Test fun runTest() {
         val packet = DanaRS_Packet_General_Delivery_Status(aapsLogger)
-        // test params
-        val testparams = packet.requestParams
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
-// everything ok :)
         packet.handleMessage(createArray(15, 0.toByte()))
         Assert.assertEquals(false, packet.failed)
         packet.handleMessage(createArray(15, 161.toByte()))
