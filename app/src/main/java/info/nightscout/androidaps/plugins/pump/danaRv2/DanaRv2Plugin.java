@@ -275,7 +275,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
                 result = setTempBasalPercent(percentRate, durationInMinutes, profile, enforceNew);
             } else {
                 // use special APS temp basal call ... 100+/15min .... 100-/30min
-                result = setHighTempBasalPercent(percentRate);
+                result = setHighTempBasalPercent(percentRate, durationInMinutes);
             }
             if (!result.success) {
                 aapsLogger.error("setTempBasalAbsolute: Failed to set hightemp basal");
@@ -344,10 +344,10 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         return result;
     }
 
-    private PumpEnactResult setHighTempBasalPercent(Integer percent) {
+    private PumpEnactResult setHighTempBasalPercent(Integer percent, int durationInMinutes) {
         DanaRPump pump = danaRPump;
         PumpEnactResult result = new PumpEnactResult(getInjector());
-        boolean connectionOK = sExecutionService.highTempBasal(percent);
+        boolean connectionOK = sExecutionService.highTempBasal(percent, durationInMinutes);
         if (connectionOK && pump.isTempBasalInProgress() && pump.getTempBasalPercent() == percent) {
             result.enacted = true;
             result.success = true;

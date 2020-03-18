@@ -42,10 +42,8 @@ import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaR.SerialIOThread;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
-import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusProgress;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStart;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStartWithSpeed;
-import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStop;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgSetActivateBasalProfile;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgSetBasalProfile;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgSetCarbsEntry;
@@ -84,9 +82,9 @@ import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -259,7 +257,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 } else {
                     waitForWholeMinute(); // Dana can set only whole minute
                     // add 10sec to be sure we are over minute (will be cutted off anyway)
-                    mSerialIOThread.sendMessage(new MsgSetTime(new Date(DateUtil.now() + T.secs(10).msecs())));
+                    mSerialIOThread.sendMessage(new MsgSetTime(aapsLogger, new Date(DateUtil.now() + T.secs(10).msecs())));
                     mSerialIOThread.sendMessage(new MsgSettingPumpTime(aapsLogger, danaRPump));
                     timeDiff = (danaRPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");
@@ -306,26 +304,26 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         if (danaRPump.isTempBasalInProgress()) {
             rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)));
-            mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
+            mSerialIOThread.sendMessage(new MsgSetTempBasalStop(aapsLogger));
             SystemClock.sleep(500);
         }
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)));
-        mSerialIOThread.sendMessage(new MsgSetTempBasalStart(percent, durationInHours));
+        mSerialIOThread.sendMessage(new MsgSetTempBasalStart(aapsLogger, percent, durationInHours));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal_v2(aapsLogger, danaRPump));
         loadEvents();
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }
 
-    public boolean highTempBasal(int percent) {
+    public boolean highTempBasal(int percent, int durationInMinutes) {
         if (!isConnected()) return false;
         if (danaRPump.isTempBasalInProgress()) {
             rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)));
-            mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
+            mSerialIOThread.sendMessage(new MsgSetTempBasalStop(aapsLogger));
             SystemClock.sleep(500);
         }
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)));
-        mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart_v2(percent));
+        mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart_v2(aapsLogger, percent, durationInMinutes == 15, durationInMinutes == 30));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal_v2(aapsLogger, danaRPump));
         loadEvents();
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
@@ -341,11 +339,11 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         if (danaRPump.isTempBasalInProgress()) {
             rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)));
-            mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
+            mSerialIOThread.sendMessage(new MsgSetTempBasalStop(aapsLogger));
             SystemClock.sleep(500);
         }
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)));
-        mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart_v2(percent, durationInMinutes == 15, durationInMinutes == 30));
+        mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart_v2(aapsLogger, percent, durationInMinutes == 15, durationInMinutes == 30));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal_v2(aapsLogger, danaRPump));
         loadEvents();
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
@@ -355,7 +353,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     public boolean tempBasalStop() {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)));
-        mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
+        mSerialIOThread.sendMessage(new MsgSetTempBasalStop(aapsLogger));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal_v2(aapsLogger, danaRPump));
         loadEvents();
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
@@ -375,7 +373,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     public boolean extendedBolusStop() {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingextendedbolus)));
-        mSerialIOThread.sendMessage(new MsgSetExtendedBolusStop());
+        mSerialIOThread.sendMessage(new MsgSetExtendedBolusStop(aapsLogger));
         mSerialIOThread.sendMessage(new MsgStatusBolusExtended_v2(aapsLogger, danaRPump));
         loadEvents();
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
@@ -394,31 +392,33 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             start = new MsgBolusStart(aapsLogger, constraintChecker, danaRPump, amount);
         else
             start = new MsgBolusStartWithSpeed(aapsLogger, constraintChecker, danaRPump, amount, preferencesSpeed);
-        MsgBolusStop stop = new MsgBolusStop(amount, t);
+        danaRPump.setBolusStopped(false);
+        danaRPump.setBolusStopForced(false);
 
         if (carbs > 0) {
-            MsgSetCarbsEntry msg = new MsgSetCarbsEntry(carbtime, carbs);
+            MsgSetCarbsEntry msg = new MsgSetCarbsEntry(aapsLogger, carbtime, carbs);
             mSerialIOThread.sendMessage(msg);
-            MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(DanaRPump.CARBS, carbtime, carbs, 0);
+            MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(aapsLogger, DanaRPump.CARBS, carbtime, carbs, 0);
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
             lastHistoryFetched = Math.min(lastHistoryFetched, carbtime - T.mins(1).msecs());
         }
 
         final long bolusStart = System.currentTimeMillis();
         if (amount > 0) {
-            MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
+            danaRPump.setBolusingTreatment(t);
+            danaRPump.setBolusAmountToBeDelivered(amount);
 
-            if (!stop.stopped) {
+            if (!danaRPump.getBolusStopped()) {
                 mSerialIOThread.sendMessage(start);
             } else {
                 t.insulin = 0d;
                 return false;
             }
-            while (!stop.stopped && !start.failed) {
+            while (!danaRPump.getBolusStopped() && !start.failed) {
                 SystemClock.sleep(100);
-                if ((System.currentTimeMillis() - progress.lastReceive) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
-                    stop.stopped = true;
-                    stop.forced = true;
+                if ((System.currentTimeMillis() - danaRPump.getBolusProgressLastTimeStamp()) > 15 * 1000L) { // if i didn't receive status for more than 15 sec expecting broken comm
+                    danaRPump.setBolusStopped(true);
+                    danaRPump.setBolusStopForced(true);
                     aapsLogger.error("Communication stopped");
                 }
             }
@@ -463,26 +463,11 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         return !start.failed;
     }
 
-    public void bolusStop() {
-        aapsLogger.debug(LTag.PUMP, "bolusStop >>>>> @ " + (mBolusingTreatment == null ? "" : mBolusingTreatment.insulin));
-        MsgBolusStop stop = new MsgBolusStop();
-        stop.forced = true;
-        if (isConnected()) {
-            mSerialIOThread.sendMessage(stop);
-            while (!stop.stopped) {
-                mSerialIOThread.sendMessage(stop);
-                SystemClock.sleep(200);
-            }
-        } else {
-            stop.stopped = true;
-        }
-    }
-
     public boolean carbsEntry(int amount, long time) {
         if (!isConnected()) return false;
-        MsgSetCarbsEntry msg = new MsgSetCarbsEntry(time, amount);
+        MsgSetCarbsEntry msg = new MsgSetCarbsEntry(aapsLogger, time, amount);
         mSerialIOThread.sendMessage(msg);
-        MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(DanaRPump.CARBS, time, amount, 0);
+        MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(aapsLogger, DanaRPump.CARBS, time, amount, 0);
         mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
         lastHistoryFetched = Math.min(lastHistoryFetched, time - T.mins(1).msecs());
         return true;
@@ -519,9 +504,9 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.updatingbasalrates)));
         Double[] basal = danaRPump.buildDanaRProfileRecord(profile);
-        MsgSetBasalProfile msgSet = new MsgSetBasalProfile((byte) 0, basal);
+        MsgSetBasalProfile msgSet = new MsgSetBasalProfile(aapsLogger, rxBus, resourceHelper, (byte) 0, basal);
         mSerialIOThread.sendMessage(msgSet);
-        MsgSetActivateBasalProfile msgActivate = new MsgSetActivateBasalProfile((byte) 0);
+        MsgSetActivateBasalProfile msgActivate = new MsgSetActivateBasalProfile(aapsLogger, (byte) 0);
         mSerialIOThread.sendMessage(msgActivate);
         danaRPump.setLastSettingsRead(0); // force read full settings
         getPumpStatus();

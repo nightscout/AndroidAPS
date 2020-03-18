@@ -92,7 +92,7 @@ public class MessageBase {
     }
 
     public String getMessageName() {
-        return MessageOriginalNames.getName(getCommand());
+        return MessageOriginalNames.INSTANCE.getName(getCommand());
     }
 
     public void handleMessage(byte[] bytes) {

@@ -7,6 +7,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.ProfileStore
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
@@ -123,8 +124,15 @@ class DanaRPump @Inject constructor(
         return if (units == UNITS_MGDL) Constants.MGDL else Constants.MMOL
     }
 
+    // DanaR,Rv2,RK specific flags
     // last start bolus erroCode
     var messageStartErrorCode: Int = 0
+    var historyDoneReceived: Boolean = false
+    var bolusingTreatment: Treatment? = null // actually delivered treatment
+    var bolusAmountToBeDelivered = 0.0 // amount to be delivered
+    var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
+    var bolusStopped = false // bolus finished
+    var bolusStopForced = false // bolus forced to stop by user
 
     fun createConvertedProfile(): ProfileStore? {
         pumpProfiles?.let {
