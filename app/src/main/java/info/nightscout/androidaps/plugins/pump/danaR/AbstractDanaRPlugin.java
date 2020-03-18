@@ -52,7 +52,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     protected boolean useExtendedBoluses = false;
 
-    public PumpDescription pumpDescription = new PumpDescription();
+    protected PumpDescription pumpDescription = new PumpDescription();
     protected DanaRPump danaRPump;
     protected ConstraintChecker constraintChecker;
     protected RxBusWrapper rxBus;
