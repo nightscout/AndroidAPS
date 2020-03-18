@@ -11,8 +11,8 @@ class MsgSetAPSTempBasalStart_v2(
     thirtyMinutes: Boolean
 ) : MessageBase() {
 
-    private val PARAM30MIN = 160
-    private val PARAM15MIN = 150
+    val PARAM30MIN = 160
+    val PARAM15MIN = 150
 
     init {
         SetCommand(0xE002)

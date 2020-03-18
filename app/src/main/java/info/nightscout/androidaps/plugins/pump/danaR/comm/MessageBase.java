@@ -24,7 +24,7 @@ import info.nightscout.androidaps.utils.CRC;
 
 public class MessageBase {
     private static Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
-    protected byte[] buffer = new byte[512];
+    public byte[] buffer = new byte[512];
     private int position = 6;
 
     public boolean received = false;

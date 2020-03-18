@@ -35,6 +35,7 @@ class MsgInitConnStatusOption(
         //val lowReservoirAlarmBoundary = intFromBuff(bytes, 7, 1)
         //int none = intFromBuff(bytes, 8, 1);
         if (bytes.size >= 21) {
+            failed = false
             danaRPump.password = intFromBuff(bytes, 9, 2) xor 0x3463
             aapsLogger.debug(LTag.PUMPCOMM, "Pump password: " + danaRPump.password)
         } else {

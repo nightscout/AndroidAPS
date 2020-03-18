@@ -27,6 +27,7 @@ class MsgInitConnStatusBolus(
             failed = true
             return
         }
+        failed = false
         val bolusConfig = intFromBuff(bytes, 0, 1)
         danaRPump.isExtendedBolusEnabled = bolusConfig and 0x01 != 0
         danaRPump.bolusStep = intFromBuff(bytes, 1, 1) / 100.0
