@@ -57,6 +57,7 @@ class MsgHistoryEvents_v2 constructor(
             danaRv2Plugin.eventsLoadingDone = true
             return
         }
+        danaRv2Plugin.eventsLoadingDone = false
         val datetime = dateTimeSecFromBuff(bytes, 1) // 6 bytes
         val param1 = intFromBuff(bytes, 7, 2)
         val param2 = intFromBuff(bytes, 9, 2)

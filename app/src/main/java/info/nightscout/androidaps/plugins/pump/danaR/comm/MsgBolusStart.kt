@@ -28,6 +28,7 @@ class MsgBolusStart(
             failed = true
             aapsLogger.debug(LTag.PUMPBTCOMM, "Messsage response: $errorCode FAILED!!")
         } else {
+            failed = false
             aapsLogger.debug(LTag.PUMPBTCOMM, "Messsage response: $errorCode OK")
         }
         danaRPump.messageStartErrorCode = errorCode
