@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.general.maintenance
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Config
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -26,7 +26,7 @@ import javax.inject.Singleton
 @Singleton
 class MaintenancePlugin @Inject constructor(
     injector: HasAndroidInjector,
-    private val mainApp: MainApp,
+    private val context: Context,
     resourceHelper: ResourceHelper,
     private val sp: SP,
     private val nsSettingsStatus: NSSettingsStatus,
@@ -49,14 +49,14 @@ class MaintenancePlugin @Inject constructor(
         val amount = sp.getInt(R.string.key_maintenance_logs_amount, 2)
         val logDirectory = LoggerUtils.getLogDirectory()
         val logs = getLogFiles(logDirectory, amount)
-        val zipDir = mainApp.getExternalFilesDir("exports")
+        val zipDir = context.getExternalFilesDir("exports")
         val zipFile = File(zipDir, constructName())
         aapsLogger.debug("zipFile: ${zipFile.absolutePath}")
         val zip = zipLogs(zipFile, logs)
-        val attachmentUri = FileProvider.getUriForFile(mainApp, BuildConfig.APPLICATION_ID + ".fileprovider", zip)
+        val attachmentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", zip)
         val emailIntent: Intent = this.sendMail(attachmentUri, recipient, "Log Export")
         aapsLogger.debug("sending emailIntent")
-        mainApp.startActivity(emailIntent)
+        context.startActivity(emailIntent)
     }
 
     //todo replace this with a call on startup of the application, specifically to remove
@@ -108,7 +108,7 @@ class MaintenancePlugin @Inject constructor(
         }
         Arrays.sort(files) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
         val result = listOf(*files)
-        var toIndex = amount + 1
+        var toIndex = amount
         if (toIndex > result.size) {
             toIndex = result.size
         }

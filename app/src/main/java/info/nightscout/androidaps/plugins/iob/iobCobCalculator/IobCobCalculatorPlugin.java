@@ -342,7 +342,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 long timeDiffToNew = newer.date - currentTime;
 
                 double currentBg = newer.value - (double) timeDiffToNew / (newer.date - older.date) * bgDelta;
-                BgReading newBgreading = new BgReading();
+                BgReading newBgreading = new BgReading(injector);
                 newBgreading.date = currentTime;
                 newBgreading.value = Math.round(currentBg);
                 bucketed_data.add(newBgreading);
@@ -382,7 +382,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 while (elapsed_minutes > 5) {
                     nextbgTime = lastbgTime - 5 * 60 * 1000;
                     j++;
-                    BgReading newBgreading = new BgReading();
+                    BgReading newBgreading = new BgReading(injector);
                     newBgreading.date = nextbgTime;
                     double gapDelta = bgReadings.get(i).value - lastbg;
                     //console.error(gapDelta, lastbg, elapsed_minutes);
@@ -397,14 +397,14 @@ public class IobCobCalculatorPlugin extends PluginBase {
                     lastbgTime = nextbgTime;
                 }
                 j++;
-                BgReading newBgreading = new BgReading();
+                BgReading newBgreading = new BgReading(injector);
                 newBgreading.value = bgReadings.get(i).value;
                 newBgreading.date = bgTime;
                 bucketed_data.add(newBgreading);
                 getAapsLogger().debug(LTag.AUTOSENS, "Adding. bgTime: " + DateUtil.toISOString(bgTime) + " lastbgTime: " + DateUtil.toISOString(lastbgTime) + " " + newBgreading.toString());
             } else if (Math.abs(elapsed_minutes) > 2) {
                 j++;
-                BgReading newBgreading = new BgReading();
+                BgReading newBgreading = new BgReading(injector);
                 newBgreading.value = bgReadings.get(i).value;
                 newBgreading.date = bgTime;
                 bucketed_data.add(newBgreading);
