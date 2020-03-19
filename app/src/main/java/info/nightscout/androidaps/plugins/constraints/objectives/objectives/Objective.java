@@ -24,7 +24,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public abstract class Objective {
     @Inject public SP sp;
-    @Inject ResourceHelper resourceHelper;
+    @Inject public ResourceHelper resourceHelper;
 
     private String spName;
     @StringRes private int objective;
