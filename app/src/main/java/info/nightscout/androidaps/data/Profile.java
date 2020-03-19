@@ -35,6 +35,7 @@ public class Profile {
     @Inject public ActivePluginProvider activePlugin;
     @Inject public ResourceHelper resourceHelper;
     @Inject public RxBusWrapper rxBus;
+    @Inject public FabricPrivacy fabricPrivacy;
 
     private HasAndroidInjector injector;
 
@@ -85,7 +86,7 @@ public class Profile {
             if (units != null)
                 this.units = units;
             else {
-                FabricPrivacy.getInstance().log("Profile failover failed too");
+                fabricPrivacy.log("Profile failover failed too");
                 this.units = Constants.MGDL;
             }
         }
@@ -199,7 +200,7 @@ public class Profile {
             } catch (Exception e) {
                 aapsLogger.error("Unhandled exception", e);
                 aapsLogger.error(json.toString());
-                FabricPrivacy.getInstance().logException(e);
+                fabricPrivacy.logException(e);
             }
         }
 

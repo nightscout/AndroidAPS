@@ -9,16 +9,20 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
 import org.junit.Before
 import org.mockito.Mock
+import org.powermock.core.classloader.annotations.PrepareForTest
 
+@PrepareForTest(FabricPrivacy::class)
 open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var activePluginProvider: ActivePluginProvider
     @Mock lateinit var resourceHelper: ResourceHelper
-    @Mock lateinit var treatmentsPlugin :TreatmentsPlugin
+    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Mock lateinit var fabricPrivacy: FabricPrivacy
 
     val rxBus = RxBusWrapper()
 
@@ -29,6 +33,7 @@ open class TestBaseWithProfile : TestBase() {
                 it.activePlugin = activePluginProvider
                 it.resourceHelper = resourceHelper
                 it.rxBus = rxBus
+                it.fabricPrivacy = fabricPrivacy
             }
             if (it is ProfileSwitch) {
                 it.treatmentsPlugin = treatmentsPlugin
@@ -39,7 +44,7 @@ open class TestBaseWithProfile : TestBase() {
         }
     }
 
-    lateinit var validProfileJSON : String
+    lateinit var validProfileJSON: String
     lateinit var validProfile: Profile
     val TESTPROFILENAME = "someProfile"
 

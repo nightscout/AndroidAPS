@@ -42,7 +42,6 @@ class CommandQueueTest : TestBaseWithProfile() {
     @Mock lateinit var context: Context
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var sp: SP
-    @Mock lateinit var fabricPrivacy: FabricPrivacy
 
     private val buildHelper = BuildHelper()
 

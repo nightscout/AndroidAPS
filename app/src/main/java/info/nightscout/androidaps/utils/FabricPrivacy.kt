@@ -39,6 +39,7 @@ class FabricPrivacy @Inject constructor(
         private lateinit var instance: FabricPrivacy
 
         @JvmStatic
+        @Deprecated("use dagger")
         fun getInstance(): FabricPrivacy = instance
     }
 
