@@ -8,7 +8,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,8 +22,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 class DanaRS_Packet_Bolus_Set_Step_Bolus_StopTest : DanaRSTestBase() {
 
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
-    @Mock lateinit var rxBus: RxBusWrapper
-    @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var danaRSPlugin: DanaRSPlugin

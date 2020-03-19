@@ -117,7 +117,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
             }
 
             // reset deviations after profile switch
-            if (ProfileSwitch.isEvent5minBack(profileSwitches, autosensData.time, true)) {
+            if (ProfileSwitch.isEvent5minBack(getAapsLogger(), profileSwitches, autosensData.time, true)) {
                 data.clear();
                 pastSensitivity += "(PROFILESWITCH)";
             }

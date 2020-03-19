@@ -12,6 +12,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.ProfileStore
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -59,8 +60,8 @@ open class AppModule {
 
     @Provides
     @Singleton
-    fun provideProfileFunction(aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePluginProvider): ProfileFunction {
-        return ProfileFunctionImplementation(aapsLogger, sp, resourceHelper, activePlugin)
+    fun provideProfileFunction(injector: HasAndroidInjector, aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePluginProvider): ProfileFunction {
+        return ProfileFunctionImplementation(injector, aapsLogger, sp, resourceHelper, activePlugin)
     }
 
     @Provides
@@ -198,6 +199,7 @@ open class AppModule {
 
         @ContributesAndroidInjector fun bgReadingInjector(): BgReading
         @ContributesAndroidInjector fun treatmentInjector(): Treatment
+        @ContributesAndroidInjector fun profileSwitchInjector(): ProfileSwitch
 
         @ContributesAndroidInjector fun notificationWithActionInjector(): NotificationWithAction
 

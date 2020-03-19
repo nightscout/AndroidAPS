@@ -9,6 +9,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.ProfileStore
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.DetermineBasalResultAMA
 import info.nightscout.androidaps.plugins.aps.openAPSMA.DetermineBasalResultMA
@@ -144,6 +145,7 @@ interface AppComponent : AndroidInjector<MainApp> {
 
     fun injectTreatment(treatment: Treatment)
     fun injectBgReading(bgReading: BgReading)
+    fun injectProfileSwitch(profileSwitch: ProfileSwitch)
 
     fun injectNotification(notificationWithAction: NotificationWithAction)
 

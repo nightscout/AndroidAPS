@@ -3,19 +3,16 @@ package info.nightscout.androidaps.plugins.pump.danaRv2
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,18 +23,14 @@ import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class)
-class DanaRv2PluginTest : TestBase() {
+class DanaRv2PluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var context: Context
-    @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var sp: info.nightscout.androidaps.utils.sharedPreferences.SP
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
 
-    val rxBus = RxBusWrapper()
     lateinit var danaRPump: DanaRPump
 
     private lateinit var danaRv2Plugin: DanaRv2Plugin

@@ -50,6 +50,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
@@ -71,6 +72,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     @Inject HasAndroidInjector injector;
+    @Inject AAPSLogger aapsLogger;
     @Inject DefaultValueHelper defaultValueHelper;
     @Inject ProfileFunction profileFunction;
     @Inject ResourceHelper resourceHelper;
@@ -79,8 +81,6 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
     @Inject ActivePluginProvider activePlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject HardLimits hardLimits;
-
-    private static Logger log = StacktraceLoggerWrapper.getLogger(NewNSTreatmentDialog.class);
 
     private static OptionsToShow options;
     private static @StringRes int event;
@@ -182,7 +182,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
         profileStore = activePlugin.getActiveProfileInterface().getProfile();
         if (profileStore == null) {
             if (options.eventType == R.id.careportal_profileswitch) {
-                log.error("Profile switch called but plugin doesn't contain valid profile");
+                aapsLogger.error("Profile switch called but plugin doesn't contain valid profile");
             }
         } else {
             ArrayList<CharSequence> profileList;
@@ -604,7 +604,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
                 data.put("relative", enteredInsulin * (100 - SafeParse.stringToDouble(editSplit.getText())) / 100 / SafeParse.stringToDouble(editDuration.getText()) * 60);
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return data;
     }
@@ -715,25 +715,9 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
 
     private void confirmNSTreatmentCreation() {
         final JSONObject data = gatherData();
-        OKDialog.showConfirmation(getContext(), Translator.translate(JsonHelper.safeGetString(data, "eventType", resourceHelper.gs(R.string.overview_treatment_label))), buildConfirmText(data), () -> createNSTreatment(data));
+        OKDialog.showConfirmation(getContext(), Translator.translate(JsonHelper.safeGetString(data, "eventType", resourceHelper.gs(R.string.overview_treatment_label))), buildConfirmText(data), () -> NSUpload.createNSTreatment(data, profileStore, profileFunction, eventTime.getTime()));
     }
 
-
-    void createNSTreatment(JSONObject data) {
-        if (JsonHelper.safeGetString(data, "eventType", "").equals(CareportalEvent.PROFILESWITCH)) {
-            ProfileSwitch profileSwitch = profileFunction.prepareProfileSwitch(
-                    profileStore,
-                    JsonHelper.safeGetString(data, "profile"),
-                    JsonHelper.safeGetInt(data, "duration"),
-                    JsonHelper.safeGetInt(data, "percentage"),
-                    JsonHelper.safeGetInt(data, "timeshift"),
-                    eventTime.getTime()
-            );
-            NSUpload.uploadProfileSwitch(profileSwitch);
-        } else {
-            NSUpload.uploadCareportalEntryToNS(data);
-        }
-    }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {

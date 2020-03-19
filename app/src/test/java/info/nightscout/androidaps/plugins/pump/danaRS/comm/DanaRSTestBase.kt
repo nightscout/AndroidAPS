@@ -1,16 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
 import org.mockito.Mock
 
-open class DanaRSTestBase : TestBase() {
+open class DanaRSTestBase : TestBaseWithProfile() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var sp: SP
     @Mock lateinit var injector: HasAndroidInjector
 

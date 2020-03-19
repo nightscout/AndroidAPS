@@ -8,9 +8,9 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
+import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRSTestBase
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -24,7 +24,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class)
-class MessageHashTable_rv2Test : DanaRSTestBase() {
+class MessageHashTable_rv2Test : DanaRTestBase() {
 
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var resourceHelper: ResourceHelper

@@ -4,7 +4,7 @@ import android.content.Context
 import dagger.Lazy
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
@@ -33,23 +33,18 @@ import java.util.*
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class, ToastUtils::class, Context::class, TreatmentsPlugin::class, FabricPrivacy::class)
-class CommandQueueTest : TestBase() {
+class CommandQueueTest : TestBaseWithProfile() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
-    @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var lazyActivePlugin: Lazy<ActivePluginProvider>
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var context: Context
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var sp: SP
     @Mock lateinit var fabricPrivacy: FabricPrivacy
 
     private val buildHelper = BuildHelper()
-
-    val rxBus = RxBusWrapper()
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -63,7 +58,7 @@ class CommandQueueTest : TestBase() {
     lateinit var commandQueue: CommandQueue
 
     @Before
-    fun prepareMock() {
+    fun prepare() {
         commandQueue = CommandQueue(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, lazyActivePlugin, context, sp, buildHelper, fabricPrivacy)
 
         val pumpDescription = PumpDescription()

@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.configBuilder
 
 import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -21,6 +22,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ProfileFunctionImplementation @Inject constructor(
+    private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val resourceHelper: ResourceHelper,
@@ -99,7 +101,7 @@ class ProfileFunctionImplementation @Inject constructor(
     override fun prepareProfileSwitch(profileStore: ProfileStore, profileName: String, duration: Int, percentage: Int, timeShift: Int, date: Long): ProfileSwitch {
         val profile = profileStore.getSpecificProfile(profileName)
             ?: throw InvalidParameterSpecException(profileName)
-        val profileSwitch = ProfileSwitch()
+        val profileSwitch = ProfileSwitch(injector)
         profileSwitch.date = date
         profileSwitch.source = Source.USER
         profileSwitch.profileName = profileName

@@ -5,8 +5,8 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRSTestBase
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
@@ -18,7 +18,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(DanaRKoreanPlugin::class, DanaRPlugin::class, DanaRv2Plugin::class)
-class MsgCheckValue_v2Test : DanaRSTestBase() {
+class MsgCheckValue_v2Test : DanaRTestBase() {
 
     val rxBus = RxBusWrapper()
     @Mock lateinit var resourceHelper: ResourceHelper

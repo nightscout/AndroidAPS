@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.aps.loop
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
@@ -28,16 +29,13 @@ import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class)
-class APSResultTest : TestBase() {
+class APSResultTest : TestBaseWithProfile() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var sp: SP
-    @Mock lateinit var activePluginProvider: ActivePluginProvider
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
+
     private var closedLoopEnabled = Constraint(false)
     private val pumpDescription = PumpDescription()
 
@@ -199,7 +197,7 @@ class APSResultTest : TestBase() {
     }
 
     @Before
-    fun prepareMock() {
+    fun prepare() {
         `when`(constraintChecker.isClosedLoopAllowed()).thenReturn(closedLoopEnabled)
         `when`(activePluginProvider.activePump).thenReturn(virtualPumpPlugin)
         `when`(sp.getDouble(ArgumentMatchers.anyInt(), ArgumentMatchers.anyDouble())).thenReturn(30.0)

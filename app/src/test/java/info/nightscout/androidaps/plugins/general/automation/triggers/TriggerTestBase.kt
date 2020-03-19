@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.automation.triggers
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -19,14 +20,11 @@ import org.mockito.Mock
 import org.powermock.core.classloader.annotations.PrepareForTest
 
 @PrepareForTest(LastLocationDataContainer::class)
-open class TriggerTestBase : TestBase() {
+open class TriggerTestBase : TestBaseWithProfile() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
-    @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var sp: SP
     @Mock lateinit var locationDataContainer: LastLocationDataContainer
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 

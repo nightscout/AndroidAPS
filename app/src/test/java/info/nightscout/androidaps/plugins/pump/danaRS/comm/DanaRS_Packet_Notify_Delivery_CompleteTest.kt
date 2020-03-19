@@ -4,12 +4,10 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,8 +23,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 class DanaRS_Packet_Notify_Delivery_CompleteTest : DanaRSTestBase() {
 
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
-    @Mock lateinit var rxBus: RxBusWrapper
-    @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var danaRSPlugin: DanaRSPlugin
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePlugin: ActivePluginProvider

@@ -3,13 +3,10 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm
 import com.cozmo.danar.util.BleCommandUtil
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -22,8 +19,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class)
 class DanaRSMessageHashTableTest : DanaRSTestBase() {
 
-    @Mock lateinit var rxBus: RxBusWrapper
-    @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var danaRSPlugin: DanaRSPlugin
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var constraintChecker: ConstraintChecker

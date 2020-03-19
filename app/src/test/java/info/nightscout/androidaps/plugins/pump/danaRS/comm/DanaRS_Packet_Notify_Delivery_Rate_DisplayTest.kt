@@ -13,7 +13,6 @@ import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -29,13 +28,10 @@ import org.powermock.modules.junit4.PowerMockRunner
 class DanaRS_Packet_Notify_Delivery_Rate_DisplayTest : DanaRSTestBase() {
 
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
-    @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePlugin: ActivePluginProvider
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var commandQueue: CommandQueueProvider
-    @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var context: Context
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
 

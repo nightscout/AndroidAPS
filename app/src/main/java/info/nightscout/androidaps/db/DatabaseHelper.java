@@ -1710,7 +1710,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void createProfileSwitchFromJsonIfNotExists(JSONObject trJson) {
         try {
-            ProfileSwitch profileSwitch = new ProfileSwitch();
+            ProfileSwitch profileSwitch = new ProfileSwitch(MainApp.instance().injector);
             profileSwitch.date = trJson.getLong("mills");
             if (trJson.has("duration"))
                 profileSwitch.durationInMinutes = trJson.getInt("duration");

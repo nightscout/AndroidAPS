@@ -25,6 +25,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DbRequest;
@@ -39,9 +40,11 @@ import info.nightscout.androidaps.plugins.aps.loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.utils.BatteryLevel;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -461,6 +464,22 @@ public class NSUpload {
             log.error("Unhandled exception", e);
         }
 
+    }
+
+    public static void createNSTreatment(JSONObject data, ProfileStore profileStore, ProfileFunction profileFunction, long eventTime) {
+        if (JsonHelper.safeGetString(data, "eventType", "").equals(CareportalEvent.PROFILESWITCH)) {
+            ProfileSwitch profileSwitch = profileFunction.prepareProfileSwitch(
+                    profileStore,
+                    JsonHelper.safeGetString(data, "profile"),
+                    JsonHelper.safeGetInt(data, "duration"),
+                    JsonHelper.safeGetInt(data, "percentage"),
+                    JsonHelper.safeGetInt(data, "timeshift"),
+                    eventTime
+            );
+            uploadProfileSwitch(profileSwitch);
+        } else {
+            uploadCareportalEntryToNS(data);
+        }
     }
 
     public static boolean isIdValid(String _id) {

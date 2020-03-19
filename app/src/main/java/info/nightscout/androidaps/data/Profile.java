@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -30,10 +31,10 @@ import info.nightscout.androidaps.utils.MidnightTime;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class Profile {
-    @Inject AAPSLogger aapsLogger;
-    @Inject ActivePluginProvider activePlugin;
-    @Inject ResourceHelper resourceHelper;
-    @Inject RxBusWrapper rxBus;
+    @Inject public AAPSLogger aapsLogger;
+    @Inject public ActivePluginProvider activePlugin;
+    @Inject public ResourceHelper resourceHelper;
+    @Inject public RxBusWrapper rxBus;
 
     private HasAndroidInjector injector;
 
@@ -57,6 +58,11 @@ public class Profile {
 
     protected boolean isValid;
     protected boolean isValidated;
+
+    // Default constructor for DB
+    public Profile() {
+        MainApp.instance().injector.androidInjector().inject(this);
+    }
 
     protected Profile(HasAndroidInjector injector) {
         injector.androidInjector().inject(this);

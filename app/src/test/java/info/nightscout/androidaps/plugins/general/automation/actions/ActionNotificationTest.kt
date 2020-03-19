@@ -1,14 +1,22 @@
 package info.nightscout.androidaps.plugins.general.automation.actions
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.elements.InputString
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.queue.Callback
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
+import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.powermock.api.mockito.PowerMockito
@@ -16,14 +24,31 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(NSUpload::class)
-class ActionNotificationTest : ActionsTestBase() {
+@PrepareForTest(NSUpload::class, RxBusWrapper::class)
+class ActionNotificationTest : TestBase() {
+
+    @Mock lateinit var aapsLogger: AAPSLogger
+    @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var rxBus: RxBusWrapper
 
     private lateinit var sut: ActionNotification
+    var injector: HasAndroidInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is ActionNotification) {
+                it.resourceHelper = resourceHelper
+                it.rxBus = rxBus
+            }
+            if (it is PumpEnactResult) {
+                it.aapsLogger = aapsLogger
+                it.resourceHelper = resourceHelper
+            }
+        }
+    }
 
     @Before
     fun setup() {
         PowerMockito.mockStatic(NSUpload::class.java)
+        `when`(resourceHelper.gs(R.string.ok)).thenReturn("OK")
         `when`(resourceHelper.gs(R.string.notification)).thenReturn("Notification")
         `when`(resourceHelper.gs(ArgumentMatchers.eq(R.string.notification_message), ArgumentMatchers.anyString())).thenReturn("Notification: %s")
 

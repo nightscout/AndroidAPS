@@ -3,9 +3,9 @@ package info.nightscout.androidaps.interfaces
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin
@@ -48,15 +48,12 @@ import java.util.*
  */
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(MainApp::class, ConfigBuilderPlugin::class, ConstraintChecker::class, SP::class, Context::class, OpenAPSMAPlugin::class, OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class, TreatmentsPlugin::class, TreatmentService::class, VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, GlimpPlugin::class)
-class ConstraintsCheckerTest : TestBase() {
+class ConstraintsCheckerTest : TestBaseWithProfile() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
-    @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var sp: SP
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var context: Context
@@ -64,7 +61,6 @@ class ConstraintsCheckerTest : TestBase() {
     @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
 
-    val rxBus = RxBusWrapper()
     private var buildHelper = BuildHelper()
     lateinit var danaRPump: DanaRPump
 
@@ -89,7 +85,7 @@ class ConstraintsCheckerTest : TestBase() {
     }
 
     @Before
-    fun prepareMock() {
+    fun prepare() {
         `when`(resourceHelper.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
         `when`(resourceHelper.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
         `when`(resourceHelper.gs(R.string.objectivenotstarted)).thenReturn("Objective %d not started")

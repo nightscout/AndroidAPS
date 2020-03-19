@@ -3,10 +3,10 @@ package info.nightscout.androidaps.plugins.general.smsCommunicator
 import android.telephony.SmsManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.data.IobTotal
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.BgReading
@@ -14,7 +14,6 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -33,7 +32,6 @@ import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.XdripCalibrations
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -52,13 +50,10 @@ import java.util.*
 
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(ConstraintChecker::class, FabricPrivacy::class, VirtualPumpPlugin::class, XdripCalibrations::class, SmsManager::class, RxBusWrapper::class, CommandQueue::class, LocalProfilePlugin::class, DateUtil::class, IobCobCalculatorPlugin::class, MainApp::class)
-class SmsCommunicatorPluginTest : TestBase() {
+class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
-    @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var constraintChecker: ConstraintChecker
-    lateinit var rxBus: RxBusWrapper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var activePlugin: ActivePluginProvider
@@ -68,7 +63,6 @@ class SmsCommunicatorPluginTest : TestBase() {
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var localProfilePlugin: LocalProfilePlugin
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var treatmentService: TreatmentService
 
     var injector: HasAndroidInjector = HasAndroidInjector {
@@ -99,7 +93,6 @@ class SmsCommunicatorPluginTest : TestBase() {
     private var hasBeenRun = false
 
     @Before fun prepareTests() {
-        rxBus = RxBusWrapper()
         val reading = BgReading(injector)
         reading.value = 100.0
         val bgList: MutableList<BgReading> = ArrayList()

@@ -1,12 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
@@ -14,8 +12,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 @RunWith(PowerMockRunner::class)
 @PrepareForTest(NSUpload::class)
 class DanaRS_Packet_Notify_AlarmTest : DanaRSTestBase() {
-
-    @Mock lateinit var resourceHelper: ResourceHelper
 
     @Test fun runTest() {
         val packet = DanaRS_Packet_Notify_Alarm(aapsLogger, resourceHelper)

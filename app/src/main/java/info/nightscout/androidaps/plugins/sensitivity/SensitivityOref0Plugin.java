@@ -107,7 +107,7 @@ public class SensitivityOref0Plugin extends AbstractSensitivityPlugin {
             }
 
             // reset deviations after profile switch
-            if (ProfileSwitch.isEvent5minBack(profileSwitches, autosensData.time, true)) {
+            if (ProfileSwitch.isEvent5minBack(getAapsLogger(), profileSwitches, autosensData.time, true)) {
                 deviationsArray.clear();
                 pastSensitivity += "(PROFILESWITCH)";
             }

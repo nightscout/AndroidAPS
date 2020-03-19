@@ -14,7 +14,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRSTestBase
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -30,15 +29,12 @@ import org.powermock.modules.junit4.PowerMockRunner
 class DanaRSPluginTest : DanaRSTestBase() {
 
     @Mock lateinit var context: Context
-    @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
 
     private lateinit var danaRSPlugin: DanaRSPlugin
-    lateinit var rxBus: RxBusWrapper
 
     @Test
     fun basalRateShouldBeLimited() {
@@ -70,7 +66,6 @@ class DanaRSPluginTest : DanaRSTestBase() {
         Mockito.`when`(resourceHelper.gs(eq(R.string.limitingbasalratio), anyObject(), anyObject())).thenReturn("limitingbasalratio")
         Mockito.`when`(resourceHelper.gs(eq(R.string.limitingpercentrate), anyObject(), anyObject())).thenReturn("limitingpercentrate")
 
-        rxBus = RxBusWrapper()
         danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump, detailedBolusInfoStorage)
     }
 }

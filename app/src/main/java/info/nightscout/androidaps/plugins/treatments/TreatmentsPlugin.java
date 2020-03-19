@@ -731,7 +731,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public void doProfileSwitch(final int duration, final int percentage, final int timeShift) {
         ProfileSwitch profileSwitch = treatmentsPlugin.getProfileSwitchFromHistory(System.currentTimeMillis());
         if (profileSwitch != null) {
-            profileSwitch = new ProfileSwitch();
+            profileSwitch = new ProfileSwitch(getInjector());
             profileSwitch.date = System.currentTimeMillis();
             profileSwitch.source = Source.USER;
             profileSwitch.profileName = profileFunction.getProfileName(System.currentTimeMillis(), false, false);
