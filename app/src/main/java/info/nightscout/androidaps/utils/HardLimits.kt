@@ -46,7 +46,11 @@ class HardLimits @Inject constructor(
     private fun loadAge(): Int {
         val sp_age = sp.getString(R.string.key_age, "")
         val age: Int
-        age = if (sp_age == resourceHelper.gs(R.string.key_child)) CHILD else if (sp_age == resourceHelper.gs(R.string.key_teenage)) TEENAGE else if (sp_age == resourceHelper.gs(R.string.key_adult)) ADULT else if (sp_age == resourceHelper.gs(R.string.key_resistantadult)) RESISTANTADULT else ADULT
+        age = if (sp_age == resourceHelper.gs(R.string.key_child)) CHILD
+        else if (sp_age == resourceHelper.gs(R.string.key_teenage)) TEENAGE
+        else if (sp_age == resourceHelper.gs(R.string.key_adult)) ADULT
+        else if (sp_age == resourceHelper.gs(R.string.key_resistantadult)) RESISTANTADULT
+        else ADULT
         return age
     }
 

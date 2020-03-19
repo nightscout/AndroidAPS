@@ -42,7 +42,7 @@ import kotlin.math.min
 
 @Singleton
 class VirtualPumpPlugin @Inject constructor(
-    injector:HasAndroidInjector,
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private var fabricPrivacy: FabricPrivacy,
@@ -66,6 +66,7 @@ class VirtualPumpPlugin @Inject constructor(
 
     companion object {
         private lateinit var virtualPumpPlugin: VirtualPumpPlugin
+
         @Deprecated("Use dagger to get an instance")
         fun getPlugin(): VirtualPumpPlugin {
             checkNotNull(virtualPumpPlugin) { "Accessing VirtualPumpPlugin before first instantiation" }
