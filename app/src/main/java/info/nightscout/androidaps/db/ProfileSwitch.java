@@ -16,6 +16,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
@@ -73,6 +74,11 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     @Inject public AAPSLogger aapsLogger;
     @Inject public RxBusWrapper rxBus;
     @Inject public ResourceHelper resourceHelper;
+
+    public ProfileSwitch() {
+        this.injector = MainApp.instance().injector;
+        injector.androidInjector().inject(this);
+    }
 
     public ProfileSwitch(HasAndroidInjector injector) {
         injector.androidInjector().inject(this);
