@@ -1720,8 +1720,7 @@
     <string name="smscommunicator_otp_name">User name for Authenticator</string>
     <string name="smscommunicator_otp_name_summary">User name displayed along with generated OTP on Authenticator App</string>
 
-    <string name="smscomunicator_tab_log_label">Operations Log</string>
-    <string name="smscomunicator_tab_otp_label">Authenticator</string>
+    <string name="smscomunicator_tab_otp_label">Authenticator setup</string>
 
     <string name="smscommunicator_otp_verify_label">OTP to check:</string>
     <string name="smscommunicator_otp_reset_btn">Reset Authenticators</string>
@@ -1734,7 +1733,7 @@
     <string name="smscommunicator_otp_step3_test_header">3. Test One-Time-Password</string>
     <string name="smscommunicator_otp_reset_header">Reset Authenticators</string>
 
-    <string name="smscommunicator_otp_install_info">On each follower phone install Authenticator app that support RFC 6238 TOTP tokens. Popular free apps are:\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_install_info">On each follower phone install Authenticator app that support RFC 6238 TOTP tokens. Popular free apps are:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_provisioning_warning">DO NOT SHARE this code online!\nUse it only to setup Authenticator App on follower phones.</string>
     <string name="smscommunicator_otp_reset_warning">By reseting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
 </resources>

@@ -1,17 +1,14 @@
-package info.nightscout.androidaps.plugins.general.smsCommunicator.fragments
+package info.nightscout.androidaps.plugins.general.smsCommunicator.activities
 
-import android.app.Activity
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.google.common.primitives.Ints.min
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
-import dagger.android.support.DaggerFragment
+import dagger.android.DaggerActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
@@ -21,27 +18,23 @@ import info.nightscout.androidaps.utils.OneTimePassword
 import info.nightscout.androidaps.utils.OneTimePasswordValidationResult
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import kotlinx.android.synthetic.main.smscommunicator_fragment_otp.*
+import kotlinx.android.synthetic.main.activity_smscommunicator_otp.*
 import net.glxn.qrgen.android.QRCode
 import javax.inject.Inject
 
-class SmsCommunicatorOtpFragment : DaggerFragment() {
+class SmsCommunicatorOtpActivity : DaggerActivity() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var otp: OneTimePassword
     @Inject lateinit var resourceHelper: ResourceHelper
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.smscommunicator_fragment_otp, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_smscommunicator_otp)
 
         smscommunicator_otp_verify_edit.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
+            override fun afterTextChanged(s: Editable) {
                 if (s != null) {
                     val checkResult = otp.checkOTP(s.toString())
 
@@ -65,26 +58,21 @@ class SmsCommunicatorOtpFragment : DaggerFragment() {
                 }
             }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
         actions_smscommunicator_otp_reset.setOnClickListener {
-            if (this.activity != null) {
-                OKDialog.showConfirmation(this.activity!!,
-                    resourceHelper.gs(R.string.smscommunicator_otp_reset_title),
-                    resourceHelper.gs(R.string.smscommunicator_otp_reset_prompt),
-                    Runnable {
-                        otp.ensureKey(true)
-                        updateGui()
-                        ToastUtils.showToastInUiThread(this.context, R.string.smscommunicator_otp_reset_successful)
-                    })
-            }
+            OKDialog.showConfirmation(this,
+                resourceHelper.gs(R.string.smscommunicator_otp_reset_title),
+                resourceHelper.gs(R.string.smscommunicator_otp_reset_prompt),
+                Runnable {
+                    otp.ensureKey(true)
+                    updateGui()
+                    ToastUtils.showToastInUiThread(this, R.string.smscommunicator_otp_reset_successful)
+                })
         }
-
     }
 
     @Synchronized

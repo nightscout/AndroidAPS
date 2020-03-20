@@ -4,48 +4,15 @@
     android:layout_height="match_parent"
     tools:context=".plugins.general.smsCommunicator.SmsCommunicatorFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-        <com.google.android.flexbox.FlexboxLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/defaultbackground"
-            app:alignContent="stretch"
-            app:alignItems="stretch"
-            app:flexDirection="row"
-            app:flexWrap="wrap"
-            app:justifyContent="center">
-
-            <TextView
-                android:id="@+id/smscomunicator_tab_log"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical|center_horizontal"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="@string/smscomunicator_tab_log_label" />
-
-            <TextView
-                android:id="@+id/smscomunicator_tab_otp"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:gravity="center_vertical|center_horizontal"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="@string/smscomunicator_tab_otp_label" />
-
-        </com.google.android.flexbox.FlexboxLayout>
-
-        <FrameLayout
-            android:id="@+id/smscomunicator_fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
+        <TextView
+            android:id="@+id/smscommunicator_log"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text=""/>
+    </ScrollView>
 
 </FrameLayout>

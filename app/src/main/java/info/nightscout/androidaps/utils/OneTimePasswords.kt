@@ -40,7 +40,7 @@ class OneTimePassword @Inject constructor(
      * If OTP Authenticator support is enabled by user
      */
     fun isEnabled(): Boolean {
-        return sp.getBoolean(R.string.key_smscommunicator_otp_enabled, false);
+        return sp.getBoolean(R.string.key_smscommunicator_otp_enabled, true);
     }
 
     /**

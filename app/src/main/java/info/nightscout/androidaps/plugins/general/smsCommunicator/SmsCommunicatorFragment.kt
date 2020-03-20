@@ -4,78 +4,75 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.general.smsCommunicator.fragments.SmsCommunicatorLogFragment
-import info.nightscout.androidaps.plugins.general.smsCommunicator.fragments.SmsCommunicatorOtpFragment
+import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.OneTimePassword
-import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.extensions.plusAssign
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.smscommunicator_fragment.*
+import java.util.*
 import javax.inject.Inject
+import kotlin.math.max
 
 class SmsCommunicatorFragment : DaggerFragment() {
+    @Inject lateinit var fabricPrivacy : FabricPrivacy
     @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var otp: OneTimePassword
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
 
+    private val disposable = CompositeDisposable()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.smscommunicator_fragment, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        smscomunicator_tab_log.setOnClickListener {
-            setFragment(SmsCommunicatorLogFragment())
-            setBackgroundColorOnSelected(it)
-        }
-        smscomunicator_tab_otp.setOnClickListener {
-            setFragment(SmsCommunicatorOtpFragment())
-            setBackgroundColorOnSelected(it)
-        }
-
-        setFragment(SmsCommunicatorLogFragment())
-        setBackgroundColorOnSelected(smscomunicator_tab_log)
-    }
-
     @Synchronized
     override fun onResume() {
         super.onResume()
+        disposable += rxBus
+            .toObservable(EventSmsCommunicatorUpdateGui::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGui() }) { fabricPrivacy.logException(it) }
         updateGui()
     }
 
+    @Synchronized
+    override fun onPause() {
+        super.onPause()
+        disposable.clear()
+    }
+
     fun updateGui() {
-        if (otp.isEnabled()) {
-            smscomunicator_tab_otp.visibility = View.VISIBLE
-        } else {
-            if (smscomunicator_tab_otp.visibility != View.GONE) {
-                setFragment(SmsCommunicatorLogFragment())
-                setBackgroundColorOnSelected(smscomunicator_tab_log)
-                smscomunicator_tab_otp.visibility = View.GONE
+        class CustomComparator : Comparator<Sms> {
+            override fun compare(object1: Sms, object2: Sms): Int {
+                return (object1.date - object2.date).toInt()
             }
         }
-    }
+        Collections.sort(smsCommunicatorPlugin.messages, CustomComparator())
+        val messagesToShow = 40
+        val start = max(0, smsCommunicatorPlugin.messages.size - messagesToShow)
+        var logText = ""
+        for (x in start until smsCommunicatorPlugin.messages.size) {
+            val sms = smsCommunicatorPlugin.messages[x]
+            when {
+                sms.ignored  -> {
+                    logText += DateUtil.timeString(sms.date) + " &lt;&lt;&lt; " + "░ " + sms.phoneNumber + " <b>" + sms.text + "</b><br>"
+                }
 
-    private fun setFragment(selectedFragment: Fragment) {
-        val ft = childFragmentManager.beginTransaction()
-        ft.replace(R.id.smscomunicator_fragment_container, selectedFragment)
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-        ft.addToBackStack(null)
-        ft.commit()
-    }
+                sms.received -> {
+                    logText += DateUtil.timeString(sms.date) + " &lt;&lt;&lt; " + (if (sms.processed) "● " else "○ ") + sms.phoneNumber + " <b>" + sms.text + "</b><br>"
+                }
 
-    private fun setBackgroundColorOnSelected(selected: View) {
-        smscomunicator_tab_log.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        smscomunicator_tab_otp.setBackgroundColor(resourceHelper.gc(R.color.defaultbackground))
-        selected.setBackgroundColor(resourceHelper.gc(R.color.tabBgColorSelected))
+                sms.sent     -> {
+                    logText += DateUtil.timeString(sms.date) + " &gt;&gt;&gt; " + (if (sms.processed) "● " else "○ ") + sms.phoneNumber + " <b>" + sms.text + "</b><br>"
+                }
+            }
+        }
+        smscommunicator_log?.text = HtmlHelper.fromHtml(logText)
     }
-
 }
