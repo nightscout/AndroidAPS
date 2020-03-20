@@ -272,6 +272,13 @@
             android:label="@string/pairing_information"
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.RequestDexcomPermissionActivity" />
+        <activity android:name=".plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <!-- Medtronic service and activities -->
         <service

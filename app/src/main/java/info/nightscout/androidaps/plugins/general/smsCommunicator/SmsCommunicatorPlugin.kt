@@ -28,6 +28,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientR
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
+import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -58,7 +59,8 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val activePlugin: ActivePluginProvider,
     private val commandQueue: CommandQueueProvider,
     private val loopPlugin: LoopPlugin,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private var otp: OneTimePassword
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(SmsCommunicatorFragment::class.java.name)
@@ -898,6 +900,12 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun generatePasscode(): String {
+
+        if (otp.isEnabled()) {
+            // this not realy generate password - rather info to use Authenticator TOTP instead
+            return resourceHelper.gs(R.string.smscommunicator_code_from_authenticator_for, otp.name())
+        }
+
         val startChar1 = 'A'.toInt() // on iphone 1st char is uppercase :)
         var passCode = Character.toString((startChar1 + Math.random() * ('z' - 'a' + 1)).toChar())
         val startChar2: Int = if (Math.random() > 0.5) 'a'.toInt() else 'A'.toInt()

@@ -6,6 +6,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
+import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
@@ -19,6 +21,7 @@ class AuthRequest internal constructor(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var otp : OneTimePassword
 
     private val date = DateUtil.now()
     private var processed = false
@@ -28,12 +31,20 @@ class AuthRequest internal constructor(
         smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, requestText))
     }
 
+    private fun codeIsValid(toValidate: String) : Boolean {
+        return if (otp.isEnabled()) {
+            otp.checkOTP(toValidate) == OneTimePasswordValidationResult.OK
+        } else {
+            confirmCode == toValidate
+        }
+    }
+
     fun action(codeReceived: String) {
         if (processed) {
             aapsLogger.debug(LTag.SMS, "Already processed")
             return
         }
-        if (confirmCode != codeReceived) {
+        if (!codeIsValid(codeReceived)) {
             processed = true
             aapsLogger.debug(LTag.SMS, "Wrong code")
             smsCommunicatorPlugin.sendSMS(Sms(requester.phoneNumber, resourceHelper.gs(R.string.sms_wrongcode)))

@@ -4,7 +4,6 @@ import android.telephony.SmsManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.data.IobTotal
@@ -15,23 +14,18 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.profile.local.LocalProfilePlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentService
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.CommandQueue
-import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.T
-import info.nightscout.androidaps.utils.XdripCalibrations
+import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -49,7 +43,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, FabricPrivacy::class, VirtualPumpPlugin::class, XdripCalibrations::class, SmsManager::class, RxBusWrapper::class, CommandQueue::class, LocalProfilePlugin::class, DateUtil::class, IobCobCalculatorPlugin::class, MainApp::class)
+@PrepareForTest(ConstraintChecker::class, FabricPrivacy::class, VirtualPumpPlugin::class, XdripCalibrations::class, SmsManager::class, CommandQueue::class, LocalProfilePlugin::class, DateUtil::class, IobCobCalculatorPlugin::class, OneTimePassword::class)
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
@@ -63,6 +57,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var localProfilePlugin: LocalProfilePlugin
     @Mock lateinit var treatmentService: TreatmentService
+    @Mock lateinit var otp: OneTimePassword
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -80,6 +75,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
                 it.aapsLogger = aapsLogger
                 it.smsCommunicatorPlugin = smsCommunicatorPlugin
                 it.resourceHelper = resourceHelper
+                it.otp = otp
             }
             if (it is GlucoseStatus) {
                 it.aapsLogger = aapsLogger
@@ -109,7 +105,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(SmsManager.getDefault()).thenReturn(smsManager)
         `when`(sp.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678")
 
-        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculatorPlugin)
+        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculatorPlugin, otp)
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)

@@ -282,6 +282,9 @@ dependencies {
 
     implementation 'com.github.DavidProdinger:weekdays-selector:1.1.0'
 
+    implementation 'com.github.kenglxn.QRGen:android:2.6.0'
+    implementation 'com.eatthepath:java-otp:0.2.0'
+
     testImplementation "junit:junit:4.12"
     testImplementation "org.json:json:20190722"
     testImplementation "org.mockito:mockito-core:2.8.47"

@@ -17,6 +17,7 @@
     <string name="error_mustbe4digitnumber">Must be 4 digit number</string>
     <string name="error_mustbe6digitnumber">Must be 6 digit number</string>
     <string name="error_not_a_minimum_length">Not a minimum length</string>
+    <string name="error_pin_not_valid">Pin should be 3 to 6 digits, not same or in series</string>
 
     <string name="fourdigitnumber" translatable="false">^\\d{4}</string>
 

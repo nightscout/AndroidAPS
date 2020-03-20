@@ -117,6 +117,7 @@ class DefaultEditTextValidator : EditTextValidator {
             EditTextValidator.TEST_EMAIL               -> toAdd = EmailValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_email_address_not_valid) else testErrorString)
             EditTextValidator.TEST_PHONE               -> toAdd = PhoneValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_phone_not_valid) else testErrorString)
             EditTextValidator.TEST_MULTI_PHONE         -> toAdd = MultiPhoneValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_phone_not_valid) else testErrorString)
+            EditTextValidator.TEST_PIN_STRENGTH        -> toAdd = PinStrengthValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_pin_not_valid) else testErrorString)
             EditTextValidator.TEST_DOMAINNAME          -> toAdd = DomainValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_domain_not_valid) else testErrorString)
             EditTextValidator.TEST_IPADDRESS           -> toAdd = IpAddressValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_ip_not_valid) else testErrorString)
             EditTextValidator.TEST_WEBURL              -> toAdd = WebUrlValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_url_not_valid) else testErrorString)

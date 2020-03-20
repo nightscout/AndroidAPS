@@ -23,6 +23,7 @@
             <enum name="httpsUrl" value="17" />
             <enum name="minLength" value="18" />
             <enum name="multiPhone" value="19" />
+            <enum name="pinStrength" value="20" />
         </attr>
         <attr name="testErrorString" format="string" />
         <attr name="emptyErrorString" format="string" />

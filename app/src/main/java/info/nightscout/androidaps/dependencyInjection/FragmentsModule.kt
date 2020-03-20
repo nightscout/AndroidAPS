@@ -74,9 +74,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesMedtronicFragment(): MedtronicFragment
     @ContributesAndroidInjector abstract fun contributesNSProfileFragment(): NSProfileFragment
     @ContributesAndroidInjector abstract fun contributesNSClientFragment(): NSClientFragment
-
-    @ContributesAndroidInjector
-    abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
+    @ContributesAndroidInjector abstract fun contributesSmsCommunicatorFragment(): SmsCommunicatorFragment
 
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsFragment(): TreatmentsFragment
