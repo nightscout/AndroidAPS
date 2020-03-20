@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
@@ -16,18 +17,19 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 
 object OKDialog {
+    @SuppressLint("InflateParams")
     @JvmStatic
     @JvmOverloads
     fun show(context: Context, title: String, message: String, runnable: Runnable? = null) {
         var notEmptytitle = title
-        if (notEmptytitle.isEmpty()) notEmptytitle = MainApp.gs(R.string.message)
+        if (notEmptytitle.isEmpty()) notEmptytitle = context.getString(R.string.message)
         val titleLayout = LayoutInflater.from(context).inflate(R.layout.dialog_alert_custom, null)
         (titleLayout.findViewById<View>(R.id.alertdialog_title) as TextView).text = notEmptytitle
         (titleLayout.findViewById<View>(R.id.alertdialog_icon) as ImageView).setImageResource(R.drawable.ic_check_while_48dp)
         AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
             .setCustomTitle(titleLayout)
             .setMessage(message)
-            .setPositiveButton(MainApp.gs(R.string.ok)) { dialog: DialogInterface, _: Int ->
+            .setPositiveButton(context.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 SystemClock.sleep(100)
                 runOnUiThread(runnable)
@@ -41,18 +43,19 @@ object OKDialog {
         theRunnable?.let { mainHandler.post(it) }
     }
 
+    @SuppressLint("InflateParams")
     @JvmStatic
     @JvmOverloads
     fun show(activity: Activity, title: String, message: Spanned, runnable: Runnable? = null) {
         var notEmptytitle = title
-        if (notEmptytitle.isEmpty()) notEmptytitle = MainApp.gs(R.string.message)
+        if (notEmptytitle.isEmpty()) notEmptytitle = activity.getString(R.string.message)
         val titleLayout = activity.layoutInflater.inflate(R.layout.dialog_alert_custom, null)
         (titleLayout.findViewById<View>(R.id.alertdialog_title) as TextView).text = notEmptytitle
         (titleLayout.findViewById<View>(R.id.alertdialog_icon) as ImageView).setImageResource(R.drawable.ic_check_while_48dp)
         AlertDialog.Builder(ContextThemeWrapper(activity, R.style.AppTheme))
             .setCustomTitle(titleLayout)
             .setMessage(message)
-            .setPositiveButton(MainApp.gs(R.string.ok)) { dialog: DialogInterface, _: Int ->
+            .setPositiveButton(activity.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 SystemClock.sleep(100)
                 runnable?.let { activity.runOnUiThread(it) }
@@ -63,14 +66,15 @@ object OKDialog {
 
     @JvmStatic
     fun showConfirmation(activity: Activity, message: String, ok: Runnable?) {
-        showConfirmation(activity, MainApp.gs(R.string.confirmation), message, ok, null)
+        showConfirmation(activity, activity.getString(R.string.confirmation), message, ok, null)
     }
 
     @JvmStatic
     fun showConfirmation(activity: Activity, message: Spanned, ok: Runnable?) {
-        showConfirmation(activity, MainApp.gs(R.string.confirmation), message, ok, null)
+        showConfirmation(activity, activity.getString(R.string.confirmation), message, ok, null)
     }
 
+    @SuppressLint("InflateParams")
     @JvmStatic
     @JvmOverloads
     fun showConfirmation(activity: Activity, title: String, message: Spanned, ok: Runnable?, cancel: Runnable? = null) {
@@ -95,6 +99,7 @@ object OKDialog {
             .setCanceledOnTouchOutside(false)
     }
 
+    @SuppressLint("InflateParams")
     @JvmStatic
     fun showConfirmation(activity: Activity, title: String, message: String, ok: Runnable?, cancel: Runnable? = null) {
         val titleLayout = activity.layoutInflater.inflate(R.layout.dialog_alert_custom, null)
@@ -120,9 +125,10 @@ object OKDialog {
     @JvmStatic
     @JvmOverloads
     fun showConfirmation(context: Context, message: Spanned, ok: Runnable?, cancel: Runnable? = null) {
-        showConfirmation(context, MainApp.gs(R.string.confirmation), message, ok, cancel)
+        showConfirmation(context, context.getString(R.string.confirmation), message, ok, cancel)
     }
 
+    @SuppressLint("InflateParams")
     @JvmStatic
     @JvmOverloads
     fun showConfirmation(context: Context, title: String, message: Spanned, ok: Runnable?, cancel: Runnable? = null) {
@@ -150,9 +156,10 @@ object OKDialog {
     @JvmStatic
     @JvmOverloads
     fun showConfirmation(context: Context, message: String, ok: Runnable?, cancel: Runnable? = null) {
-        showConfirmation(context, MainApp.gs(R.string.confirmation), message, ok, cancel)
+        showConfirmation(context, context.getString(R.string.confirmation), message, ok, cancel)
     }
 
+    @SuppressLint("InflateParams")
     @JvmStatic
     @JvmOverloads
     fun showConfirmation(context: Context, title: String, message: String, ok: Runnable?, cancel: Runnable? = null) {
@@ -176,6 +183,7 @@ object OKDialog {
             .setCanceledOnTouchOutside(false)
     }
 
+    @SuppressLint("InflateParams")
     @JvmStatic
     @JvmOverloads
     fun showConfirmation(context: Context, title: String, message: String, ok: DialogInterface.OnClickListener?, cancel: DialogInterface.OnClickListener? = null) {

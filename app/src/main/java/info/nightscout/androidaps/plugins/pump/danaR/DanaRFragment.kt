@@ -164,7 +164,7 @@ class DanaRFragment : DaggerFragment() {
             val agoHours = agoMsec.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
-                danar_lastbolus.text = DateUtil.timeString(pump.lastBolusTime) + " " + DateUtil.sinceString(pump.lastBolusTime) + " " + resourceHelper.gs(R.string.formatinsulinunits, pump.lastBolusAmount)
+                danar_lastbolus.text = DateUtil.timeString(pump.lastBolusTime) + " " + DateUtil.sinceString(pump.lastBolusTime, resourceHelper) + " " + resourceHelper.gs(R.string.formatinsulinunits, pump.lastBolusAmount)
             else
                 danar_lastbolus.text = ""
         }

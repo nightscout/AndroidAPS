@@ -15,7 +15,7 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
-    private var insulin = InputInsulin(injector)
+    var insulin = InputInsulin(injector)
     var comparator: Comparator = Comparator(injector)
 
     constructor(injector: HasAndroidInjector, triggerIob: TriggerIob) : this(injector) {
@@ -23,12 +23,20 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
         comparator = Comparator(injector, triggerIob.comparator.value)
     }
 
-    val value: Double = 0.0
+    fun setValue(value: Double): TriggerIob {
+        insulin.value = value
+        return this
+    }
+
+    fun comparator(comparator: Comparator.Compare): TriggerIob {
+        this.comparator.value = comparator
+        return this
+    }
 
     override fun shouldRun(): Boolean {
         val profile = profileFunction.getProfile() ?: return false
         val iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(DateUtil.now(), profile)
-        if (comparator.value.check(iob.iob, value)) {
+        if (comparator.value.check(iob.iob, insulin.value)) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
@@ -38,7 +46,7 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
 
     @Synchronized override fun toJSON(): String {
         val data = JSONObject()
-            .put("insulin", value)
+            .put("insulin", insulin.value)
             .put("comparator", comparator.value.toString())
         return JSONObject()
             .put("type", this::class.java.name)
@@ -56,7 +64,7 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyName(): Int = R.string.iob
 
     override fun friendlyDescription(): String =
-        resourceHelper.gs(R.string.iobcompared, resourceHelper.gs(comparator.value.stringRes), value)
+        resourceHelper.gs(R.string.iobcompared, resourceHelper.gs(comparator.value.stringRes), insulin.value)
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_keyboard_capslock)
 

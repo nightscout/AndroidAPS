@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.Lazy;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -38,6 +39,7 @@ import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -52,7 +54,6 @@ import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -73,14 +74,15 @@ import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class LoopPlugin extends PluginBase {
+    private final HasAndroidInjector injector;
     private final SP sp;
     private final RxBusWrapper rxBus;
     private final ConstraintChecker constraintChecker;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
-    private final MainApp mainApp;
+    private final Context context;
     private final CommandQueueProvider commandQueue;
-    private final ConfigBuilderPlugin configBuilderPlugin;
+    private final ActivePluginProvider activePlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final VirtualPumpPlugin virtualPumpPlugin;
     private final Lazy<ActionStringHandler> actionStringHandler;
@@ -114,15 +116,16 @@ public class LoopPlugin extends PluginBase {
 
     @Inject
     public LoopPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             SP sp,
             ConstraintChecker constraintChecker,
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
-            MainApp mainApp,
+            Context context,
             CommandQueueProvider commandQueue,
-            ConfigBuilderPlugin configBuilderPlugin,
+            ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
             VirtualPumpPlugin virtualPumpPlugin,
             Lazy<ActionStringHandler> actionStringHandler, // TODO Adrian use RxBus instead of Lazy
@@ -135,15 +138,16 @@ public class LoopPlugin extends PluginBase {
                         .shortName(R.string.loop_shortname)
                         .preferencesId(R.xml.pref_loop)
                         .description(R.string.description_loop),
-                aapsLogger, resourceHelper
+                aapsLogger, resourceHelper, injector
         );
+        this.injector = injector;
         this.sp = sp;
         this.rxBus = rxBus;
         this.constraintChecker = constraintChecker;
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
-        this.mainApp = mainApp;
-        this.configBuilderPlugin = configBuilderPlugin;
+        this.context = context;
+        this.activePlugin = activePlugin;
         this.commandQueue = commandQueue;
         this.treatmentsPlugin = treatmentsPlugin;
         this.virtualPumpPlugin = virtualPumpPlugin;
@@ -194,7 +198,7 @@ public class LoopPlugin extends PluginBase {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             NotificationManager mNotificationManager =
-                    (NotificationManager) mainApp.getSystemService(Context.NOTIFICATION_SERVICE);
+                    (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             @SuppressLint("WrongConstant") NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
                     CHANNEL_ID,
                     NotificationManager.IMPORTANCE_HIGH);
@@ -210,8 +214,13 @@ public class LoopPlugin extends PluginBase {
 
     @Override
     public boolean specialEnableCondition() {
-        PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
-        return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        try {
+            PumpInterface pump = activePlugin.getActivePump();
+            return pump.getPumpDescription().isTempBasalCapable;
+        } catch (Exception ignored) {
+            // may fail during initialization
+            return true;
+        }
     }
 
     public long suspendedTo() {
@@ -311,14 +320,12 @@ public class LoopPlugin extends PluginBase {
             Constraint<Boolean> loopEnabled = constraintChecker.isLoopInvocationAllowed();
 
             if (!loopEnabled.value()) {
-                String message = resourceHelper.gs(R.string.loopdisabled) + "\n" + loopEnabled.getReasons();
+                String message = resourceHelper.gs(R.string.loopdisabled) + "\n" + loopEnabled.getReasons(getAapsLogger());
                 getAapsLogger().debug(LTag.APS, message);
                 rxBus.send(new EventLoopSetLastRunGui(message));
                 return;
             }
-            final PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
-            if (pump == null)
-                return;
+            final PumpInterface pump = activePlugin.getActivePump();
             APSResult result = null;
 
             if (!isEnabled(PluginType.LOOP))
@@ -336,8 +343,8 @@ public class LoopPlugin extends PluginBase {
             // Check if pump info is loaded
             if (pump.getBaseBasalRate() < 0.01d) return;
 
-            APSInterface usedAPS = configBuilderPlugin.getActiveAPS();
-            if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginType.APS)) {
+            APSInterface usedAPS = activePlugin.getActiveAPS();
+            if (((PluginBase) usedAPS).isEnabled(PluginType.APS)) {
                 usedAPS.invoke(initiator, tempBasalFallback);
                 result = usedAPS.getLastAPSResult();
             }
@@ -355,7 +362,7 @@ public class LoopPlugin extends PluginBase {
             result.percent = (int) (result.rate / profile.getBasal() * 100);
 
             // check rate for constrais
-            final APSResult resultAfterConstraints = result.clone();
+            final APSResult resultAfterConstraints = result.newAndClone(injector);
             resultAfterConstraints.rateConstraint = new Constraint<>(resultAfterConstraints.rate);
             resultAfterConstraints.rate = constraintChecker.applyBasalConstraints(resultAfterConstraints.rateConstraint, profile).value();
 
@@ -404,7 +411,7 @@ public class LoopPlugin extends PluginBase {
                 if (resultAfterConstraints.isChangeRequested()
                         && !commandQueue.bolusInQueue()
                         && !commandQueue.isRunning(Command.CommandType.BOLUS)) {
-                    final PumpEnactResult waiting = new PumpEnactResult();
+                    final PumpEnactResult waiting = new PumpEnactResult(getInjector());
                     waiting.queued = true;
                     if (resultAfterConstraints.tempBasalRequested)
                         lastRun.tbrSetByPump = waiting;
@@ -448,7 +455,7 @@ public class LoopPlugin extends PluginBase {
             } else {
                 if (resultAfterConstraints.isChangeRequested() && allowNotification) {
                     NotificationCompat.Builder builder =
-                            new NotificationCompat.Builder(mainApp, CHANNEL_ID);
+                            new NotificationCompat.Builder(context, CHANNEL_ID);
                     builder.setSmallIcon(R.drawable.notif_icon)
                             .setContentTitle(resourceHelper.gs(R.string.openloop_newsuggestion))
                             .setContentText(resultAfterConstraints.toString())
@@ -461,13 +468,13 @@ public class LoopPlugin extends PluginBase {
                     }
 
                     // Creates an explicit intent for an Activity in your app
-                    Intent resultIntent = new Intent(mainApp, MainActivity.class);
+                    Intent resultIntent = new Intent(context, MainActivity.class);
 
                     // The stack builder object will contain an artificial back stack for the
                     // started Activity.
                     // This ensures that navigating backward from the Activity leads out of
                     // your application to the Home screen.
-                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(mainApp);
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
                     stackBuilder.addParentStack(MainActivity.class);
                     // Adds the Intent that starts the Activity to the top of the stack
                     stackBuilder.addNextIntent(resultIntent);
@@ -476,7 +483,7 @@ public class LoopPlugin extends PluginBase {
                     builder.setContentIntent(resultPendingIntent);
                     builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
                     NotificationManager mNotificationManager =
-                            (NotificationManager) mainApp.getSystemService(Context.NOTIFICATION_SERVICE);
+                            (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                     // mId allows you to update the notification later on.
                     mNotificationManager.notify(Constants.notificationID, builder.build());
                     rxBus.send(new EventNewOpenLoopNotification());
@@ -486,7 +493,7 @@ public class LoopPlugin extends PluginBase {
                 } else if (allowNotification) {
                     // dismiss notifications
                     NotificationManager notificationManager =
-                            (NotificationManager) mainApp.getSystemService(Context.NOTIFICATION_SERVICE);
+                            (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                     notificationManager.cancel(Constants.notificationID);
                     actionStringHandler.get().handleInitiate("cancelChangeRequest");
                 }
@@ -528,22 +535,17 @@ public class LoopPlugin extends PluginBase {
 
         if (!request.tempBasalRequested) {
             if (callback != null) {
-                callback.result(new PumpEnactResult().enacted(false).success(true).comment(resourceHelper.gs(R.string.nochangerequested))).run();
+                callback.result(new PumpEnactResult(getInjector()).enacted(false).success(true).comment(resourceHelper.gs(R.string.nochangerequested))).run();
             }
             return;
         }
 
-        PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
-        if (pump == null) {
-            if (callback != null)
-                callback.result(new PumpEnactResult().enacted(false).success(false).comment(resourceHelper.gs(R.string.nopumpselected))).run();
-            return;
-        }
+        PumpInterface pump = activePlugin.getActivePump();
 
         if (!pump.isInitialized()) {
             getAapsLogger().debug(LTag.APS, "applyAPSRequest: " + resourceHelper.gs(R.string.pumpNotInitialized));
             if (callback != null) {
-                callback.result(new PumpEnactResult().comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
+                callback.result(new PumpEnactResult(getInjector()).comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
             }
             return;
         }
@@ -551,7 +553,7 @@ public class LoopPlugin extends PluginBase {
         if (pump.isSuspended()) {
             getAapsLogger().debug(LTag.APS, "applyAPSRequest: " + resourceHelper.gs(R.string.pumpsuspended));
             if (callback != null) {
-                callback.result(new PumpEnactResult().comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
+                callback.result(new PumpEnactResult(getInjector()).comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
             }
             return;
         }
@@ -568,7 +570,7 @@ public class LoopPlugin extends PluginBase {
                 } else {
                     getAapsLogger().debug(LTag.APS, "applyAPSRequest: Basal set correctly");
                     if (callback != null) {
-                        callback.result(new PumpEnactResult().percent(request.percent).duration(0)
+                        callback.result(new PumpEnactResult(getInjector()).percent(request.percent).duration(0)
                                 .enacted(false).success(true).comment(resourceHelper.gs(R.string.basal_set_correctly))).run();
                     }
                 }
@@ -578,7 +580,7 @@ public class LoopPlugin extends PluginBase {
                     && request.percent == activeTemp.percentRate) {
                 getAapsLogger().debug(LTag.APS, "applyAPSRequest: Temp basal set correctly");
                 if (callback != null) {
-                    callback.result(new PumpEnactResult().percent(request.percent)
+                    callback.result(new PumpEnactResult(getInjector()).percent(request.percent)
                             .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
                             .comment(resourceHelper.gs(R.string.let_temp_basal_run))).run();
                 }
@@ -594,7 +596,7 @@ public class LoopPlugin extends PluginBase {
                 } else {
                     getAapsLogger().debug(LTag.APS, "applyAPSRequest: Basal set correctly");
                     if (callback != null) {
-                        callback.result(new PumpEnactResult().absolute(request.rate).duration(0)
+                        callback.result(new PumpEnactResult(getInjector()).absolute(request.rate).duration(0)
                                 .enacted(false).success(true).comment(resourceHelper.gs(R.string.basal_set_correctly))).run();
                     }
                 }
@@ -604,7 +606,7 @@ public class LoopPlugin extends PluginBase {
                     && Math.abs(request.rate - activeTemp.tempBasalConvertedToAbsolute(now, profile)) < pump.getPumpDescription().basalStep) {
                 getAapsLogger().debug(LTag.APS, "applyAPSRequest: Temp basal set correctly");
                 if (callback != null) {
-                    callback.result(new PumpEnactResult().absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
+                    callback.result(new PumpEnactResult(getInjector()).absolute(activeTemp.tempBasalConvertedToAbsolute(now, profile))
                             .enacted(false).success(true).duration(activeTemp.getPlannedRemainingMinutes())
                             .comment(resourceHelper.gs(R.string.let_temp_basal_run))).run();
                 }
@@ -620,18 +622,13 @@ public class LoopPlugin extends PluginBase {
             return;
         }
 
-        PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
-        if (pump == null) {
-            if (callback != null)
-                callback.result(new PumpEnactResult().enacted(false).success(false).comment(resourceHelper.gs(R.string.nopumpselected))).run();
-            return;
-        }
+        PumpInterface pump = activePlugin.getActivePump();
 
         long lastBolusTime = treatmentsPlugin.getLastBolusTime();
         if (lastBolusTime != 0 && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
             getAapsLogger().debug(LTag.APS, "SMB requested but still in 3 min interval");
             if (callback != null) {
-                callback.result(new PumpEnactResult()
+                callback.result(new PumpEnactResult(getInjector())
                         .comment(resourceHelper.gs(R.string.smb_frequency_exceeded))
                         .enacted(false).success(false)).run();
             }
@@ -641,7 +638,7 @@ public class LoopPlugin extends PluginBase {
         if (!pump.isInitialized()) {
             getAapsLogger().debug(LTag.APS, "applySMBRequest: " + resourceHelper.gs(R.string.pumpNotInitialized));
             if (callback != null) {
-                callback.result(new PumpEnactResult().comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
+                callback.result(new PumpEnactResult(getInjector()).comment(resourceHelper.gs(R.string.pumpNotInitialized)).enacted(false).success(false)).run();
             }
             return;
         }
@@ -649,7 +646,7 @@ public class LoopPlugin extends PluginBase {
         if (pump.isSuspended()) {
             getAapsLogger().debug(LTag.APS, "applySMBRequest: " + resourceHelper.gs(R.string.pumpsuspended));
             if (callback != null) {
-                callback.result(new PumpEnactResult().comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
+                callback.result(new PumpEnactResult(getInjector()).comment(resourceHelper.gs(R.string.pumpsuspended)).enacted(false).success(false)).run();
             }
             return;
         }
@@ -669,9 +666,7 @@ public class LoopPlugin extends PluginBase {
     }
 
     public void disconnectPump(int durationInMinutes, Profile profile) {
-        PumpInterface pump = configBuilderPlugin.getActivePumpPlugin();
-        if (pump == null)
-            return;
+        PumpInterface pump = activePlugin.getActivePump();
 
         disconnectTo(System.currentTimeMillis() + durationInMinutes * 60 * 1000L);
 
@@ -680,12 +675,12 @@ public class LoopPlugin extends PluginBase {
                 @Override
                 public void run() {
                     if (!result.success) {
-                        Intent i = new Intent(mainApp, ErrorHelperActivity.class);
+                        Intent i = new Intent(context, ErrorHelperActivity.class);
                         i.putExtra("soundid", R.raw.boluserror);
                         i.putExtra("status", result.comment);
                         i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror));
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mainApp.startActivity(i);
+                        context.startActivity(i);
                     }
                 }
             });
@@ -694,12 +689,12 @@ public class LoopPlugin extends PluginBase {
                 @Override
                 public void run() {
                     if (!result.success) {
-                        Intent i = new Intent(mainApp, ErrorHelperActivity.class);
+                        Intent i = new Intent(context, ErrorHelperActivity.class);
                         i.putExtra("soundid", R.raw.boluserror);
                         i.putExtra("status", result.comment);
                         i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror));
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mainApp.startActivity(i);
+                        context.startActivity(i);
                     }
                 }
             });
@@ -710,12 +705,12 @@ public class LoopPlugin extends PluginBase {
                 @Override
                 public void run() {
                     if (!result.success) {
-                        Intent i = new Intent(mainApp, ErrorHelperActivity.class);
+                        Intent i = new Intent(context, ErrorHelperActivity.class);
                         i.putExtra("soundid", R.raw.boluserror);
                         i.putExtra("status", result.comment);
                         i.putExtra("title", resourceHelper.gs(R.string.extendedbolusdeliveryerror));
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        mainApp.startActivity(i);
+                        context.startActivity(i);
                     }
                 }
             });
@@ -729,12 +724,12 @@ public class LoopPlugin extends PluginBase {
             @Override
             public void run() {
                 if (!result.success) {
-                    Intent i = new Intent(mainApp, ErrorHelperActivity.class);
+                    Intent i = new Intent(context, ErrorHelperActivity.class);
                     i.putExtra("soundid", R.raw.boluserror);
                     i.putExtra("status", result.comment);
                     i.putExtra("title", resourceHelper.gs(R.string.tempbasaldeliveryerror));
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mainApp.startActivity(i);
+                    context.startActivity(i);
                 }
             }
         });

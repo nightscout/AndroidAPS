@@ -65,7 +65,9 @@ class ActionStringHandler @Inject constructor(
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
     private val danaRv2Plugin: DanaRv2Plugin,
     private val danaRSPlugin: DanaRSPlugin,
-    private val danaRPump: DanaRPump
+    private val danaRPump: DanaRPump,
+    private val hardLimits: HardLimits,
+    private val carbsGenerator: CarbsGenerator
 ) {
 
     private val TIMEOUT = 65 * 1000
@@ -131,11 +133,11 @@ class ActionStringHandler @Inject constructor(
                     low *= Constants.MMOLL_TO_MGDL
                     high *= Constants.MMOLL_TO_MGDL
                 }
-                if (low < HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
+                if (low < hardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > hardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
                     sendError("Min-BG out of range!")
                     return
                 }
-                if (high < HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
+                if (high < hardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > hardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
                     sendError("Max-BG out of range!")
                     return
                 }
@@ -239,36 +241,35 @@ class ActionStringHandler @Inject constructor(
                 rAction = actionString
             }
         } else if ("tddstats" == act[0]) {
-            val activePump = activePlugin.activePumpPlugin
-            if (activePump != null) { // check if DB up to date
-                val dummies: MutableList<TDD> = LinkedList()
-                val historyList = getTDDList(dummies)
-                if (isOldData(historyList)) {
-                    rTitle = "TDD"
-                    rAction = "statusmessage"
-                    rMessage = "OLD DATA - "
-                    //if pump is not busy: try to fetch data
-                    if (activePump.isBusy) {
-                        rMessage += resourceHelper.gs(R.string.pumpbusy)
-                    } else {
-                        rMessage += "trying to fetch data from pump."
-                        commandQueue.loadTDDs(object : Callback() {
-                            override fun run() {
-                                val dummies1: MutableList<TDD> = LinkedList()
-                                val historyList1 = getTDDList(dummies1)
-                                if (isOldData(historyList1)) {
-                                    sendStatusMessage("TDD: Still old data! Cannot load from pump.\n" + generateTDDMessage(historyList1, dummies1))
-                                } else {
-                                    sendStatusMessage(generateTDDMessage(historyList1, dummies1))
-                                }
+            val activePump = activePlugin.activePump
+            // check if DB up to date
+            val dummies: MutableList<TDD> = LinkedList()
+            val historyList = getTDDList(dummies)
+            if (isOldData(historyList)) {
+                rTitle = "TDD"
+                rAction = "statusmessage"
+                rMessage = "OLD DATA - "
+                //if pump is not busy: try to fetch data
+                if (activePump.isBusy) {
+                    rMessage += resourceHelper.gs(R.string.pumpbusy)
+                } else {
+                    rMessage += "trying to fetch data from pump."
+                    commandQueue.loadTDDs(object : Callback() {
+                        override fun run() {
+                            val dummies1: MutableList<TDD> = LinkedList()
+                            val historyList1 = getTDDList(dummies1)
+                            if (isOldData(historyList1)) {
+                                sendStatusMessage("TDD: Still old data! Cannot load from pump.\n" + generateTDDMessage(historyList1, dummies1))
+                            } else {
+                                sendStatusMessage(generateTDDMessage(historyList1, dummies1))
                             }
-                        })
-                    }
-                } else { // if up to date: prepare, send (check if CPP is activated -> add CPP stats)
-                    rTitle = "TDD"
-                    rAction = "statusmessage"
-                    rMessage = generateTDDMessage(historyList, dummies)
+                        }
+                    })
                 }
+            } else { // if up to date: prepare, send (check if CPP is activated -> add CPP stats)
+                rTitle = "TDD"
+                rAction = "statusmessage"
+                rMessage = generateTDDMessage(historyList, dummies)
             }
         } else if ("ecarbs" == act[0]) { ////////////////////////////////////////////// ECARBS
             val carbs = SafeParse.stringToInt(act[1])
@@ -315,13 +316,13 @@ class ActionStringHandler @Inject constructor(
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
         var message = ""
         val refTDD = profile.baseBasalSum() * 2
-        val pump = activePlugin.activePumpPlugin
+        val pump = activePlugin.activePump
         if (df.format(Date(historyList[0].date)) == df.format(Date())) {
             val tdd = historyList[0].getTotal()
             historyList.removeAt(0)
             message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n"
             message += "\n"
-        } else if (pump != null && pump is DanaRPlugin) {
+        } else if (pump is DanaRPlugin) {
             val tdd = danaRPump.dailyTotalUnits
             message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n"
             message += "\n"
@@ -359,7 +360,7 @@ class ActionStringHandler @Inject constructor(
     }
 
     private fun isOldData(historyList: List<TDD>): Boolean {
-        val activePump = activePlugin.activePumpPlugin ?: return false
+        val activePump = activePlugin.activePump
         val startsYesterday = activePump === danaRPlugin || activePump === danaRSPlugin || activePump === danaRv2Plugin || activePump === danaRKoreanPlugin || activePump === localInsightPlugin
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
         return historyList.size < 3 || df.format(Date(historyList[0].date)) != df.format(Date(System.currentTimeMillis() - if (startsYesterday) 1000 * 60 * 60 * 24 else 0))
@@ -390,7 +391,7 @@ class ActionStringHandler @Inject constructor(
     }
 
     private val pumpStatus: String
-        get() = activePlugin.activePumpPlugin?.shortStatus(false) ?: ""
+        get() = activePlugin.activePump.shortStatus(false)
 
     // decide if enabled/disabled closed/open; what Plugin as APS?
     private val loopStatus: String
@@ -404,7 +405,7 @@ class ActionStringHandler @Inject constructor(
                     "OPEN LOOP\n"
                 }
                 val aps = activePlugin.activeAPS
-                ret += "APS: " + if (aps == null) "NO APS SELECTED!" else (aps as PluginBase).name
+                ret += "APS: " + (aps as PluginBase).name
                 if (loopPlugin.lastRun != null) {
                     if (loopPlugin.lastRun.lastAPSRun != null) ret += "\nLast Run: " + DateUtil.timeString(loopPlugin.lastRun.lastAPSRun)
                     if (loopPlugin.lastRun.lastTBREnact != 0L) ret += "\nLast Enact: " + DateUtil.timeString(loopPlugin.lastRun.lastTBREnact)
@@ -441,9 +442,7 @@ class ActionStringHandler @Inject constructor(
             var ret = ""
             if (!Config.APS)
                 return "Only apply in APS mode!"
-            if (activePlugin.activePumpPlugin == null)
-                return resourceHelper.gs((R.string.nopumpselected))
-            val usedAPS = activePlugin.activeAPS ?: return "No active APS :(!"
+            val usedAPS = activePlugin.activeAPS
             val result = usedAPS.lastAPSResult ?: return "Last result not available!"
             ret += if (!result.isChangeRequested) {
                 resourceHelper.gs(R.string.nochangerequested) + "\n"
@@ -518,9 +517,9 @@ class ActionStringHandler @Inject constructor(
     private fun doECarbs(carbs: Int, time: Long, duration: Int) {
         if (carbs > 0) {
             if (duration == 0) {
-                CarbsGenerator.createCarb(carbs, time, CareportalEvent.CARBCORRECTION, "watch")
+                carbsGenerator.createCarb(carbs, time, CareportalEvent.CARBCORRECTION, "watch")
             } else {
-                CarbsGenerator.generateCarbs(carbs, time, duration, "watch eCarbs")
+                carbsGenerator.generateCarbs(carbs, time, duration, "watch eCarbs")
             }
         }
     }
@@ -586,7 +585,7 @@ class ActionStringHandler @Inject constructor(
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.carbs = carbs.toDouble()
         detailedBolusInfo.source = Source.USER
-        val storesCarbs = activePlugin.activePumpPlugin?.pumpDescription?.storesCarbInfo ?: return
+        val storesCarbs = activePlugin.activePump.pumpDescription.storesCarbInfo
         if (detailedBolusInfo.insulin > 0 || storesCarbs) {
             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                 override fun run() {

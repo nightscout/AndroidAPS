@@ -9,17 +9,16 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate;
 
 public class SWPlugin extends SWItem {
@@ -53,7 +52,7 @@ public class SWPlugin extends SWItem {
         radioGroup = new RadioGroup(context);
         radioGroup.clearCheck();
 
-        ArrayList<PluginBase> pluginsInCategory = MainApp.getSpecificPluginsList(pType);
+        ArrayList<PluginBase> pluginsInCategory = PluginStore.Companion.getInstance().getSpecificPluginsList(pType);
 
         radioGroup.setOrientation(LinearLayout.VERTICAL);
         radioGroup.setVisibility(View.VISIBLE);

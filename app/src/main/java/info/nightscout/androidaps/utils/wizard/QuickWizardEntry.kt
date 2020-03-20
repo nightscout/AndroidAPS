@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.utils.wizard
 
-import info.nightscout.androidaps.MainApp
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.BgReading
@@ -19,7 +19,7 @@ import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 
-class QuickWizardEntry @Inject constructor(private val mainApp: MainApp) {
+class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjector) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
@@ -39,7 +39,7 @@ class QuickWizardEntry @Inject constructor(private val mainApp: MainApp) {
     }
 
     init {
-        mainApp.androidInjector().inject(this)
+        injector.androidInjector().inject(this)
         val emptyData = "{\"buttonText\":\"\",\"carbs\":0,\"validFrom\":0,\"validTo\":86340}"
         try {
             storage = JSONObject(emptyData)
@@ -107,7 +107,7 @@ class QuickWizardEntry @Inject constructor(private val mainApp: MainApp) {
         }
         if (loopPlugin.isEnabled(loopPlugin.getType()) && loopPlugin.isSuperBolus) superBolus = false
         // Trend
-        val glucoseStatus = GlucoseStatus.getGlucoseStatusData()
+        val glucoseStatus = GlucoseStatus(injector).getGlucoseStatusData()
         var trend = false
         if (useTrend() == YES) {
             trend = true
@@ -117,7 +117,7 @@ class QuickWizardEntry @Inject constructor(private val mainApp: MainApp) {
             trend = true
         }
         val percentage = sp.getDouble(R.string.key_boluswizard_percentage, 100.0)
-        return BolusWizard(mainApp).doCalc(profile, profileName, tempTarget, carbs(), cob, bg, 0.0, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, "QuickWizard")
+        return BolusWizard(injector).doCalc(profile, profileName, tempTarget, carbs(), cob, bg, 0.0, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, "QuickWizard")
     }
 
     fun buttonText(): String = safeGetString(storage, "buttonText", "")

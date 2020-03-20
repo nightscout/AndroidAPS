@@ -64,7 +64,6 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
             }
         }
         if (sp.getBoolean(R.string.key_ns_upload_only, false)) profileswitch_refreshfromnightscout.visibility = View.GONE
-
     }
 
     @Synchronized

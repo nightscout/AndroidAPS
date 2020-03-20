@@ -297,7 +297,7 @@ class MedtronicFragment : DaggerFragment() {
             } else if (bolusMinAgo < 60) {
                 ago = DateUtil.minAgo(pumpStatus.lastBolusTime.time)
             } else {
-                ago = DateUtil.hourAgo(pumpStatus.lastBolusTime.time)
+                ago = DateUtil.hourAgo(pumpStatus.lastBolusTime.time, resourceHelper)
             }
             medtronic_lastbolus.text = resourceHelper.gs(R.string.combo_last_bolus, bolus, unit, ago)
         } else {

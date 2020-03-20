@@ -17,7 +17,7 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
-    private var bg = InputBg(injector)
+    var bg = InputBg(injector)
     var comparator = Comparator(injector)
 
     constructor(injector: HasAndroidInjector, value: Double, units: String, compare: Comparator.Compare) : this(injector) {
@@ -30,8 +30,23 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
         comparator = Comparator(injector, triggerBg.comparator.value)
     }
 
+    fun setUnits(units: String): TriggerBg {
+        bg.units = units
+        return this
+    }
+
+    fun setValue(value: Double): TriggerBg {
+        bg.value = value
+        return this
+    }
+
+    fun comparator(comparator: Comparator.Compare): TriggerBg {
+        this.comparator.value = comparator
+        return this
+    }
+
     override fun shouldRun(): Boolean {
-        val glucoseStatus = GlucoseStatus.getGlucoseStatusData()
+        val glucoseStatus = GlucoseStatus(injector).getGlucoseStatusData()
         if (glucoseStatus == null && comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

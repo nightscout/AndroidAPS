@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
@@ -23,9 +23,8 @@ public class Objective3 extends Objective {
     private final int MANUAL_ENACTS_NEEDED = 20;
 
     @Inject
-    public Objective3() {
-        super("openloop", R.string.objectives_openloop_objective, R.string.objectives_openloop_gate);
-        MainApp.instance().androidInjector().inject(this); // TODO inject or pass itno constructor once AutomationPlugin is prepared for Dagger
+    public Objective3(HasAndroidInjector injector) {
+        super(injector, "openloop", R.string.objectives_openloop_objective, R.string.objectives_openloop_gate);
         hasSpecialInput = true;
     }
 

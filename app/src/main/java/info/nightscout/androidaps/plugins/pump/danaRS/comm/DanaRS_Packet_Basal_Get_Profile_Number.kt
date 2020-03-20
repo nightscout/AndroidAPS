@@ -16,9 +16,7 @@ class DanaRS_Packet_Basal_Get_Profile_Number(
     }
 
     override fun handleMessage(data: ByteArray) {
-        val dataIndex = DATA_START
-        val dataSize = 1
-        danaRPump.activeProfile = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaRPump.activeProfile = byteArrayToInt(getBytes(data, DATA_START, 1))
         aapsLogger.debug(LTag.PUMPCOMM, "Active profile: " + danaRPump.activeProfile)
     }
 

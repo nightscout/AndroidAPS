@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter
 import com.google.common.base.Joiner
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -26,7 +26,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var activePlugin: ActivePluginProvider
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -53,7 +53,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
         // profile
         context?.let { context ->
-            val profileStore = configBuilderPlugin.activeProfileInterface.profile
+            val profileStore = activePlugin.activeProfileInterface.profile
                 ?: return
             val profileList = profileStore.getProfileList()
             val adapter = ArrayAdapter(context, R.layout.spinner_centered, profileList)
@@ -79,13 +79,13 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val profileStore = configBuilderPlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileInterface.profile
             ?: return false
 
         val actions: LinkedList<String> = LinkedList()
-        val duration = overview_profileswitch_duration.value
+        val duration = overview_profileswitch_duration.value.toInt()
         if (duration > 0)
-            actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_hours, duration))
+            actions.add(resourceHelper.gs(R.string.duration) + ": " + resourceHelper.gs(R.string.format_mins, duration))
         val profile = overview_profileswitch_profile.selectedItem.toString()
         actions.add(resourceHelper.gs(R.string.profile) + ": " + profile)
         val percent = overview_profileswitch_percentage.value.toInt()
@@ -103,7 +103,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                 aapsLogger.debug("USER ENTRY: PROFILE SWITCH $profile percent: $percent timeshift: $timeShift duration: $duration")
-                treatmentsPlugin.doProfileSwitch(profileStore, profile, duration.toInt(), percent, timeShift, eventTime)
+                treatmentsPlugin.doProfileSwitch(profileStore, profile, duration, percent, timeShift, eventTime)
             })
         }
         return true

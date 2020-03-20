@@ -27,7 +27,7 @@ class DanaRS_Packet_Notify_Delivery_Complete(
         val deliveredInsulin = byteArrayToInt(getBytes(data, DATA_START, 2)) / 100.0
         danaRSPlugin.bolusingTreatment.insulin = deliveredInsulin
         val bolusingEvent = EventOverviewBolusProgress
-        bolusingEvent.status = String.format(resourceHelper.gs(R.string.bolusdelivering), deliveredInsulin)
+        bolusingEvent.status = resourceHelper.gs(R.string.bolusdelivering, deliveredInsulin)
         bolusingEvent.t = danaRSPlugin.bolusingTreatment
         bolusingEvent.percent = min((deliveredInsulin / danaRSPlugin.bolusAmountToBeDelivered * 100).toInt(), 100)
         danaRSPlugin.bolusDone = true

@@ -7,7 +7,7 @@ import androidx.arch.core.util.Function
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.CareportalEvent
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.utils.DecimalFormatter
@@ -22,7 +22,7 @@ class StatusLightHandler @Inject constructor(
     private val nsSettingsStatus: NSSettingsStatus,
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
-    private val configBuilderPlugin: ConfigBuilderPlugin
+    private val activePlugin: ActivePluginProvider
 ) {
 
     /**
@@ -30,7 +30,7 @@ class StatusLightHandler @Inject constructor(
      */
     fun statusLight(cageView: TextView?, iAgeView: TextView?, reservoirView: TextView?,
                     sageView: TextView?, batteryView: TextView?) {
-        val pump = configBuilderPlugin.activePumpPlugin ?: return
+        val pump = activePlugin.activePump
         applyStatusLight("cage", CareportalEvent.SITECHANGE, cageView, "CAN", 48, 72)
         applyStatusLight("iage", CareportalEvent.INSULINCHANGE, iAgeView, "INS", 72, 96)
         val reservoirLevel = if (pump.isInitialized) pump.reservoirLevel else (-1).toDouble()
@@ -92,7 +92,7 @@ class StatusLightHandler @Inject constructor(
     fun extendedStatusLight(cageView: TextView, iAgeView: TextView,
                             reservoirView: TextView, sageView: TextView,
                             batteryView: TextView) {
-        val pump = configBuilderPlugin.activePumpPlugin ?: return
+        val pump = activePlugin.activePump
         handleAge("cage", CareportalEvent.SITECHANGE, cageView, "CAN ",
             48, 72)
         handleAge("iage", CareportalEvent.INSULINCHANGE, iAgeView, "INS ",

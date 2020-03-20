@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.profile.ns
 
 import android.content.Intent
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.ProfileStore
@@ -22,6 +23,7 @@ import javax.inject.Singleton
 
 @Singleton
 class NSProfilePlugin @Inject constructor(
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
@@ -35,7 +37,7 @@ class NSProfilePlugin @Inject constructor(
     .alwaysVisible(Config.NSCLIENT)
     .showInList(!Config.NSCLIENT)
     .description(R.string.description_profile_nightscout),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ), ProfileInterface {
 
     private var profile: ProfileStore? = null
@@ -47,10 +49,11 @@ class NSProfilePlugin @Inject constructor(
 
     fun handleNewData(intent: Intent) {
         val bundles = intent.extras ?: return
+
         @Suppress("SpellCheckingInspection")
         val activeProfile = bundles.getString("activeprofile")
         val profileString = bundles.getString("profile")
-        profile = ProfileStore(JSONObject(profileString))
+        profile = ProfileStore(injector, JSONObject(profileString))
         storeNSProfile()
         if (isEnabled()) {
             rxBus.send(EventProfileStoreChanged())
@@ -69,7 +72,7 @@ class NSProfilePlugin @Inject constructor(
         val profileString = sp.getStringOrNull("profile", null)
         if (profileString != null) {
             aapsLogger.debug(LTag.PROFILE, "Loaded profile: $profileString")
-            profile = ProfileStore(JSONObject(profileString))
+            profile = ProfileStore(injector, JSONObject(profileString))
         } else {
             aapsLogger.debug(LTag.PROFILE, "Stored profile not found")
             // force restart of nsclient to fetch profile

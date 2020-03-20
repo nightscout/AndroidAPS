@@ -42,6 +42,7 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesRileyLinkStatusActivity(): RileyLinkStatusActivity
     @ContributesAndroidInjector abstract fun contributesRileyLinkBLEScanActivity(): RileyLinkBLEScanActivity
     @ContributesAndroidInjector abstract fun contributesSetupWizardActivity(): SetupWizardActivity
+    @ContributesAndroidInjector abstract fun contributesSingleFragmentActivity(): SingleFragmentActivity
     @ContributesAndroidInjector abstract fun contributesStatsActivity(): StatsActivity
     @ContributesAndroidInjector abstract fun contributesSurveyActivity(): SurveyActivity
     @ContributesAndroidInjector abstract fun contributesTDDStatsActivity(): TDDStatsActivity

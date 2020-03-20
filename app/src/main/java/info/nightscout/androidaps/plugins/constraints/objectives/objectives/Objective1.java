@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin;
@@ -15,9 +15,8 @@ public class Objective1 extends Objective {
     @Inject ActionsPlugin actionsPlugin;
 
     @Inject
-    public Objective1() {
-        super("usage", R.string.objectives_usage_objective, R.string.objectives_usage_gate);
-        MainApp.instance().androidInjector().inject(this); // TODO inject or pass itno constructor once ActionsPlugin is prepared for Dagger
+    public Objective1(HasAndroidInjector injector) {
+        super(injector, "usage", R.string.objectives_usage_objective, R.string.objectives_usage_gate);
     }
 
     @Override

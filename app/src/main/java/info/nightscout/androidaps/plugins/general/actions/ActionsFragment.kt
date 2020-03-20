@@ -18,7 +18,7 @@ import info.nightscout.androidaps.events.*
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
@@ -27,6 +27,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.OKDialog
 import info.nightscout.androidaps.utils.SingleClickButton
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -35,11 +36,11 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.actions_fragment.*
 import kotlinx.android.synthetic.main.careportal_stats_fragment.*
-import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 
 class ActionsFragment : DaggerFragment() {
+    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
@@ -49,7 +50,7 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var commandQueue: CommandQueueProvider
-    private val log = LoggerFactory.getLogger(L.CORE)
+    @Inject lateinit var buildHelper: BuildHelper
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -80,7 +81,7 @@ class ActionsFragment : DaggerFragment() {
         }
         actions_extendedbolus_cancel.setOnClickListener {
             if (activePlugin.activeTreatments.isInHistoryExtendedBoluslInProgress) {
-                log.debug("USER ENTRY: CANCEL EXTENDED BOLUS")
+                aapsLogger.debug("USER ENTRY: CANCEL EXTENDED BOLUS")
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -100,7 +101,7 @@ class ActionsFragment : DaggerFragment() {
         }
         actions_canceltempbasal.setOnClickListener {
             if (activePlugin.activeTreatments.isTempBasalInProgress) {
-                log.debug("USER ENTRY: CANCEL TEMP BASAL")
+                aapsLogger.debug("USER ENTRY: CANCEL TEMP BASAL")
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
@@ -180,19 +181,18 @@ class ActionsFragment : DaggerFragment() {
             else View.GONE
 
         val profile = profileFunction.getProfile()
-        val pump = activePlugin.activePumpPlugin
+        val pump = activePlugin.activePump
 
         actions_temptarget?.visibility = (profile != null).toVisibility()
-        actions_canceltempbasal.visibility = (pump != null || profile == null).toVisibility()
-        actions_settempbasal.visibility = (pump != null || profile == null).toVisibility()
-        actions_fill.visibility = (pump != null || profile == null).toVisibility()
-        actions_extendedbolus.visibility = (pump != null || profile == null).toVisibility()
-        actions_extendedbolus_cancel.visibility = (pump != null || profile == null).toVisibility()
-        actions_historybrowser.visibility = (pump != null || profile == null).toVisibility()
-        actions_tddstats.visibility = (pump != null || profile == null).toVisibility()
-        if (pump == null) return
+        actions_canceltempbasal.visibility = (profile == null).toVisibility()
+        actions_settempbasal.visibility = (profile == null).toVisibility()
+        actions_fill.visibility = (profile == null).toVisibility()
+        actions_extendedbolus.visibility = (profile == null).toVisibility()
+        actions_extendedbolus_cancel.visibility = (profile == null).toVisibility()
+        actions_historybrowser.visibility = (profile == null).toVisibility()
+        actions_tddstats.visibility = (profile == null).toVisibility()
 
-        val basalProfileEnabled = MainApp.isEngineeringModeOrRelease() && pump.pumpDescription.isSetBasalProfileCapable
+        val basalProfileEnabled = buildHelper.isEngineeringModeOrRelease() && pump.pumpDescription.isSetBasalProfileCapable
 
         actions_profileswitch?.visibility = if (!basalProfileEnabled || !pump.isInitialized || pump.isSuspended) View.GONE else View.VISIBLE
 
@@ -239,7 +239,7 @@ class ActionsFragment : DaggerFragment() {
     }
 
     private fun checkPumpCustomActions() {
-        val activePump = activePlugin.activePumpPlugin ?: return
+        val activePump = activePlugin.activePump
         val customActions = activePump.customActions ?: return
         removePumpCustomActions()
 

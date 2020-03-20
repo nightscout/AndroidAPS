@@ -20,7 +20,7 @@ class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
     private val maxValue = (sp.getDouble(R.string.key_openapsama_autosens_max, 1.2) * 100).toInt()
     private val step = 1.0
     private val decimalFormat = DecimalFormat("1")
-    private var autosens: InputDouble = InputDouble(injector, 100.0, minValue.toDouble(), maxValue.toDouble(), step, decimalFormat)
+    var autosens: InputDouble = InputDouble(injector, 100.0, minValue.toDouble(), maxValue.toDouble(), step, decimalFormat)
 
     var comparator: Comparator = Comparator(injector)
 

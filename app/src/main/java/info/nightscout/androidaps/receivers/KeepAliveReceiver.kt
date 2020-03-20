@@ -37,9 +37,17 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var localAlertUtils: LocalAlertUtils
 
-    private var lastReadStatus: Long = 0
-    private var lastRun: Long = 0
-    private var lastIobUpload: Long = 0
+
+    companion object {
+        private val KEEP_ALIVE_MILLISECONDS = T.mins(5).msecs()
+        private val STATUS_UPDATE_FREQUENCY = T.mins(15).msecs()
+        private val IOB_UPDATE_FREQUENCY = T.mins(5).msecs()
+
+        private var lastReadStatus: Long = 0
+        private var lastRun: Long = 0
+        private var lastIobUpload: Long = 0
+
+    }
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
@@ -85,13 +93,6 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         }
     }
 
-    companion object {
-        private val KEEP_ALIVE_MILLISECONDS = T.mins(5).msecs()
-        private val STATUS_UPDATE_FREQUENCY = T.mins(15).msecs()
-        private val IOB_UPDATE_FREQUENCY = T.mins(5).msecs()
-
-    }
-
     // Usually deviceStatus is uploaded through LoopPlugin after every loop cycle.
     // if there is no BG available, we have to upload anyway to have correct
     // IOB displayed in NS
@@ -100,7 +101,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         var shouldUploadStatus = false
         if (Config.NSCLIENT) return
         if (Config.PUMPCONTROL) shouldUploadStatus = true
-        if (usedAPS == null || !loopPlugin.isEnabled() || iobCobCalculatorPlugin.actualBg() == null)
+        if (!loopPlugin.isEnabled() || iobCobCalculatorPlugin.actualBg() == null)
             shouldUploadStatus = true
         else if (DateUtil.isOlderThan(usedAPS.lastAPSRun, 5)) shouldUploadStatus = true
         if (DateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY) && shouldUploadStatus) {
@@ -110,7 +111,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     }
 
     private fun checkPump() {
-        val pump = activePlugin.activePumpPlugin ?: return
+        val pump = activePlugin.activePump
         val profile = profileFunction.getProfile() ?: return
         val lastConnection = pump.lastDataTime()
         val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < System.currentTimeMillis()

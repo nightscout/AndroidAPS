@@ -107,7 +107,7 @@ class TreatmentsCareportalFragment : DaggerFragment() {
             val careportalEvent = careportalEventList[position]
             holder.ns.visibility = if (NSUpload.isIdValid(careportalEvent._id)) View.VISIBLE else View.GONE
             holder.date.text = DateUtil.dateAndTimeString(careportalEvent.date)
-            holder.duration.text = if (careportalEvent.durationInMsec() == 0L) "" else DateUtil.niceTimeScalar(careportalEvent.durationInMsec())
+            holder.duration.text = if (careportalEvent.durationInMsec() == 0L) "" else DateUtil.niceTimeScalar(careportalEvent.durationInMsec(), resourceHelper)
             holder.note.text = careportalEvent.notes
             holder.type.text = Translator.translate(careportalEvent.eventType)
             holder.remove.tag = careportalEvent

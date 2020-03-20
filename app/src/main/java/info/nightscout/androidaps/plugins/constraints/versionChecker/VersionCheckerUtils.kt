@@ -19,17 +19,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class VersionCheckerUtils @Inject constructor() {
-
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var sp: SP
-    @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var rxBus: RxBusWrapper
-    @Inject lateinit var mainApp: MainApp
+class VersionCheckerUtils @Inject constructor(
+    val aapsLogger: AAPSLogger,
+    val sp: SP,
+    val resourceHelper: ResourceHelper,
+    val rxBus: RxBusWrapper,
+    val context: Context
+) {
 
     // check network connection
     fun isConnected(): Boolean {
-        val connMgr = mainApp.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return connMgr.activeNetworkInfo?.isConnected ?: false
     }
 
@@ -112,8 +112,6 @@ class VersionCheckerUtils @Inject constructor() {
             sp.putLong(R.string.key_last_versionchecker_warning, now)
         }
     }
-
-
 
     private fun String?.toNumberList() =
         this?.numericVersionPart().takeIf { !it.isNullOrBlank() }?.split(".")?.map { it.toInt() }

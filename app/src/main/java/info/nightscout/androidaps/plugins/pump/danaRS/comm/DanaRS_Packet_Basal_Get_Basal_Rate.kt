@@ -27,7 +27,7 @@ class DanaRS_Packet_Basal_Get_Basal_Rate(
     override fun handleMessage(data: ByteArray) {
         var dataIndex = DATA_START
         var dataSize = 2
-        danaRPump.maxBasal = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
+        danaRPump.maxBasal = byteArrayToInt(getBytes(data, DATA_START, dataSize)) / 100.0
         dataIndex += dataSize
         dataSize = 1
         danaRPump.basalStep = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0

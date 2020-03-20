@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm
 import com.cozmo.danar.util.BleCommandUtil
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.logging.L.isEnabled
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -39,11 +37,9 @@ class DanaRS_Packet_General_Get_Pump_Check(
         dataIndex += dataSize
         dataSize = 1
         danaRPump.productCode = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        if (isEnabled(L.PUMPCOMM)) {
-            aapsLogger.debug(LTag.PUMPCOMM, "Model: " + String.format("%02X ", danaRPump.model))
-            aapsLogger.debug(LTag.PUMPCOMM, "Protocol: " + String.format("%02X ", danaRPump.protocol))
-            aapsLogger.debug(LTag.PUMPCOMM, "Product Code: " + String.format("%02X ", danaRPump.productCode))
-        }
+        aapsLogger.debug(LTag.PUMPCOMM, "Model: " + String.format("%02X ", danaRPump.model))
+        aapsLogger.debug(LTag.PUMPCOMM, "Protocol: " + String.format("%02X ", danaRPump.protocol))
+        aapsLogger.debug(LTag.PUMPCOMM, "Product Code: " + String.format("%02X ", danaRPump.productCode))
         if (danaRPump.productCode < 2) {
             rxBus.send(EventNewNotification(Notification(Notification.UNSUPPORTED_FIRMWARE, resourceHelper.gs(R.string.unsupportedfirmware), Notification.URGENT)))
         }

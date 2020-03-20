@@ -27,12 +27,10 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
-    <style name="InsightAlertDialog" parent="Theme.AppCompat.Dialog">
+    <style name="InsightAlertDialog" parent="Theme.AppCompat.Dialog.MinWidth">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowMinWidthMajor">96%</item>
-        <item name="android:windowMinWidthMinor">96%</item>
     </style>
 
     <style name="Theme.AppCompat.NoTitle" parent="Theme.AppCompat.NoActionBar">

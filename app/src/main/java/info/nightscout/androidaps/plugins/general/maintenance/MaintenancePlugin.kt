@@ -1,17 +1,19 @@
 package info.nightscout.androidaps.plugins.general.maintenance
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Config
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.io.*
@@ -23,11 +25,13 @@ import javax.inject.Singleton
 
 @Singleton
 class MaintenancePlugin @Inject constructor(
-    private val mainApp: MainApp,
+    injector: HasAndroidInjector,
+    private val context: Context,
     resourceHelper: ResourceHelper,
     private val sp: SP,
     private val nsSettingsStatus: NSSettingsStatus,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val buildHelper: BuildHelper
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(MaintenanceFragment::class.java.name)
@@ -37,7 +41,7 @@ class MaintenancePlugin @Inject constructor(
     .shortName(R.string.maintenance_shortname)
     .preferencesId(R.xml.pref_maintenance)
     .description(R.string.description_maintenance),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ) {
 
     fun sendLogs() {
@@ -45,14 +49,14 @@ class MaintenancePlugin @Inject constructor(
         val amount = sp.getInt(R.string.key_maintenance_logs_amount, 2)
         val logDirectory = LoggerUtils.getLogDirectory()
         val logs = getLogFiles(logDirectory, amount)
-        val zipDir = mainApp.getExternalFilesDir("exports")
+        val zipDir = context.getExternalFilesDir("exports")
         val zipFile = File(zipDir, constructName())
         aapsLogger.debug("zipFile: ${zipFile.absolutePath}")
         val zip = zipLogs(zipFile, logs)
-        val attachmentUri = FileProvider.getUriForFile(mainApp, BuildConfig.APPLICATION_ID + ".fileprovider", zip)
+        val attachmentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".fileprovider", zip)
         val emailIntent: Intent = this.sendMail(attachmentUri, recipient, "Log Export")
         aapsLogger.debug("sending emailIntent")
-        mainApp.startActivity(emailIntent)
+        context.startActivity(emailIntent)
     }
 
     //todo replace this with a call on startup of the application, specifically to remove
@@ -104,7 +108,7 @@ class MaintenancePlugin @Inject constructor(
         }
         Arrays.sort(files) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
         val result = listOf(*files)
-        var toIndex = amount + 1
+        var toIndex = amount
         if (toIndex > result.size) {
             toIndex = result.size
         }
@@ -169,7 +173,7 @@ class MaintenancePlugin @Inject constructor(
         builder.append("Remote: " + BuildConfig.REMOTE + System.lineSeparator())
         builder.append("Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + System.lineSeparator())
         builder.append(resourceHelper.gs(R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.nightscoutVersionName + System.lineSeparator())
-        if (MainApp.engineeringMode) builder.append(resourceHelper.gs(R.string.engineering_mode_enabled))
+        if (buildHelper.isEngineeringMode()) builder.append(resourceHelper.gs(R.string.engineering_mode_enabled))
         return sendMail(attachmentUri, recipient, subject, builder.toString())
     }
 

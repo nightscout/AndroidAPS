@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.insulin
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.InsulinInterface
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -14,10 +15,11 @@ import javax.inject.Singleton
  */
 @Singleton
 class InsulinOrefUltraRapidActingPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     profileFunction: ProfileFunction,
     rxBus: RxBusWrapper, aapsLogger: AAPSLogger
-) : InsulinOrefBasePlugin(resourceHelper, profileFunction, rxBus, aapsLogger) {
+) : InsulinOrefBasePlugin(injector, resourceHelper, profileFunction, rxBus, aapsLogger) {
 
 
     override fun getId(): Int = InsulinInterface.OREF_ULTRA_RAPID_ACTING

@@ -28,6 +28,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -36,13 +37,12 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin;
@@ -58,6 +58,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class WatchUpdaterService extends WearableListenerService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+    @Inject public HasAndroidInjector injector;
     @Inject public AAPSLogger aapsLogger;
     @Inject public WearPlugin wearPlugin;
     @Inject public ResourceHelper resourceHelper;
@@ -65,7 +66,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     @Inject public ProfileFunction profileFunction;
     @Inject public DefaultValueHelper defaultValueHelper;
     @Inject public NSDeviceStatus nsDeviceStatus;
-    @Inject public ConfigBuilderPlugin configBuilderPlugin;
+    @Inject public ActivePluginProvider activePlugin;
     @Inject public LoopPlugin loopPlugin;
     @Inject public IobCobCalculatorPlugin iobCobCalculatorPlugin;
     @Inject public TreatmentsPlugin treatmentsPlugin;
@@ -266,7 +267,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
     }
 
     private void cancelBolus() {
-        configBuilderPlugin.getActivePump().stopBolusDelivering();
+        activePlugin.getActivePump().stopBolusDelivering();
     }
 
     private void sendData() {
@@ -274,7 +275,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         BgReading lastBG = iobCobCalculatorPlugin.lastBg();
         // Log.d(TAG, logPrefix + "LastBg=" + lastBG);
         if (lastBG != null) {
-            GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+            GlucoseStatus glucoseStatus = new GlucoseStatus(injector).getGlucoseStatusData();
 
             if (googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) {
                 googleApiConnect();
@@ -380,7 +381,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
         if (last_bg == null) return;
 
         List<BgReading> graph_bgs = MainApp.getDbHelper().getBgreadingsDataFromTime(startTime, true);
-        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData(true);
+        GlucoseStatus glucoseStatus = new GlucoseStatus(injector).getGlucoseStatusData(true);
 
         if (!graph_bgs.isEmpty()) {
             DataMap entries = dataMapSingleBG(last_bg, glucoseStatus);
@@ -438,7 +439,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
         if (tb1 != null) {
             tb_before = beginBasalValue;
-            Profile profileTB = ProfileFunctions.getInstance().getProfile(runningTime);
+            Profile profileTB = profileFunction.getProfile(runningTime);
             if (profileTB != null) {
                 tb_amount = tb1.tempBasalConvertedToAbsolute(runningTime, profileTB);
                 tb_start = runningTime;
@@ -511,7 +512,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
                 }
             }
         } else {
-            tb2 = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now); //use "now" to express current situation
+            tb2 = treatmentsPlugin.getTempBasalFromHistory(now); //use "now" to express current situation
             if (tb2 != null) {
                 //onset at the end
                 Profile profileTB = profileFunction.getProfile(runningTime);

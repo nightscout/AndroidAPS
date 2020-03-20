@@ -38,7 +38,8 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin;
+    @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    @Inject lateinit var carbsGenerator: CarbsGenerator
 
     companion object {
         private const val FAV1_DEFAULT = 5
@@ -227,10 +228,10 @@ class CarbsDialog : DialogFragmentWithDate() {
                     if (carbsAfterConstraints > 0) {
                         if (duration == 0) {
                             aapsLogger.debug("USER ENTRY: CARBS $carbsAfterConstraints time: $time")
-                            CarbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes)
+                            carbsGenerator.createCarb(carbsAfterConstraints, time, CareportalEvent.CARBCORRECTION, notes)
                         } else {
                             aapsLogger.debug("USER ENTRY: CARBS $carbsAfterConstraints time: $time duration: $duration")
-                            CarbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
+                            carbsGenerator.generateCarbs(carbsAfterConstraints, time, duration, notes)
                             NSUpload.uploadEvent(CareportalEvent.NOTE, DateUtil.now() - 2000, resourceHelper.gs(R.string.generated_ecarbs_note, carbsAfterConstraints, duration, timeOffset))
                         }
                     }

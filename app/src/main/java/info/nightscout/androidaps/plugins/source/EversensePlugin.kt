@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.source
 
 import android.content.Intent
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -26,6 +27,7 @@ import javax.inject.Singleton
 
 @Singleton
 class EversensePlugin @Inject constructor(
+    injector: HasAndroidInjector,
     private val sp: SP,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger
@@ -36,8 +38,7 @@ class EversensePlugin @Inject constructor(
     .shortName(R.string.eversense_shortname)
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_eversense),
-    aapsLogger,
-    resourceHelper
+    aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
     override fun advancedFilteringSupported(): Boolean {

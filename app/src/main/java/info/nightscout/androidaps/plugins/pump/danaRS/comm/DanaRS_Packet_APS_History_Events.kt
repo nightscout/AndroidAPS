@@ -11,7 +11,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage.findDetailedBolusInfo
+import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -24,6 +24,7 @@ open class DanaRS_Packet_APS_History_Events(
     private val resourceHelper: ResourceHelper,
     private val activePlugin: ActivePluginProvider,
     private val danaRSPlugin: DanaRSPlugin,
+    private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private var from: Long
 ) : DanaRS_Packet() {
 
@@ -107,7 +108,7 @@ open class DanaRS_Packet_APS_History_Events(
             }
 
             DanaRPump.BOLUS             -> {
-                val detailedBolusInfo = findDetailedBolusInfo(datetime, param1 / 100.0)
+                val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
                     ?: DetailedBolusInfo()
                 detailedBolusInfo.date = datetime
                 detailedBolusInfo.source = Source.PUMP
@@ -119,7 +120,7 @@ open class DanaRS_Packet_APS_History_Events(
             }
 
             DanaRPump.DUALBOLUS         -> {
-                val detailedBolusInfo = findDetailedBolusInfo(datetime, param1 / 100.0)
+                val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
                     ?: DetailedBolusInfo()
                 detailedBolusInfo.date = datetime
                 detailedBolusInfo.source = Source.PUMP

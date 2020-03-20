@@ -2,20 +2,12 @@ package info.nightscout.androidaps.utils;
 
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Calendar;
-import java.util.Date;
-
-import info.AAPSMocker;
-import info.nightscout.androidaps.MainApp;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by mike on 20.11.2017.
@@ -60,6 +52,7 @@ public class MidnightTimeTest {
         MidnightTime.resetCache();
         Assert.assertEquals(0, MidnightTime.times.size());
     }
+
     @Test
     public void log() {
         long now = DateUtil.now();

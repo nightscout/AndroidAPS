@@ -34,6 +34,7 @@ class ConfigBuilderFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var activePlugin: ActivePluginProvider
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private val pluginViewHolders = ArrayList<PluginViewHolder>()
@@ -80,16 +81,16 @@ class ConfigBuilderFragment : DaggerFragment() {
     @Synchronized
     private fun updateGUI() {
         configbuilder_categories.removeAllViews()
-        createViewsForPlugins(R.string.configbuilder_profile, R.string.configbuilder_profile_description, PluginType.PROFILE, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface::class.java, PluginType.PROFILE))
-        createViewsForPlugins(R.string.configbuilder_insulin, R.string.configbuilder_insulin_description, PluginType.INSULIN, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface::class.java, PluginType.INSULIN))
-        createViewsForPlugins(R.string.configbuilder_bgsource, R.string.configbuilder_bgsource_description, PluginType.BGSOURCE, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface::class.java, PluginType.BGSOURCE))
-        createViewsForPlugins(R.string.configbuilder_pump, R.string.configbuilder_pump_description, PluginType.PUMP, MainApp.getSpecificPluginsVisibleInList(PluginType.PUMP))
-        createViewsForPlugins(R.string.configbuilder_sensitivity, R.string.configbuilder_sensitivity_description, PluginType.SENSITIVITY, MainApp.getSpecificPluginsVisibleInListByInterface(SensitivityInterface::class.java, PluginType.SENSITIVITY))
-        createViewsForPlugins(R.string.configbuilder_aps, R.string.configbuilder_aps_description, PluginType.APS, MainApp.getSpecificPluginsVisibleInList(PluginType.APS))
-        createViewsForPlugins(R.string.configbuilder_loop, R.string.configbuilder_loop_description, PluginType.LOOP, MainApp.getSpecificPluginsVisibleInList(PluginType.LOOP))
-        createViewsForPlugins(R.string.constraints, R.string.configbuilder_constraints_description, PluginType.CONSTRAINTS, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface::class.java, PluginType.CONSTRAINTS))
-        createViewsForPlugins(R.string.configbuilder_treatments, R.string.configbuilder_treatments_description, PluginType.TREATMENT, MainApp.getSpecificPluginsVisibleInList(PluginType.TREATMENT))
-        createViewsForPlugins(R.string.configbuilder_general, R.string.configbuilder_general_description, PluginType.GENERAL, MainApp.getSpecificPluginsVisibleInList(PluginType.GENERAL))
+        createViewsForPlugins(R.string.configbuilder_profile, R.string.configbuilder_profile_description, PluginType.PROFILE, activePlugin.getSpecificPluginsVisibleInListByInterface(ProfileInterface::class.java, PluginType.PROFILE))
+        createViewsForPlugins(R.string.configbuilder_insulin, R.string.configbuilder_insulin_description, PluginType.INSULIN, activePlugin.getSpecificPluginsVisibleInListByInterface(InsulinInterface::class.java, PluginType.INSULIN))
+        createViewsForPlugins(R.string.configbuilder_bgsource, R.string.configbuilder_bgsource_description, PluginType.BGSOURCE, activePlugin.getSpecificPluginsVisibleInListByInterface(BgSourceInterface::class.java, PluginType.BGSOURCE))
+        createViewsForPlugins(R.string.configbuilder_pump, R.string.configbuilder_pump_description, PluginType.PUMP, activePlugin.getSpecificPluginsVisibleInList(PluginType.PUMP))
+        createViewsForPlugins(R.string.configbuilder_sensitivity, R.string.configbuilder_sensitivity_description, PluginType.SENSITIVITY, activePlugin.getSpecificPluginsVisibleInListByInterface(SensitivityInterface::class.java, PluginType.SENSITIVITY))
+        createViewsForPlugins(R.string.configbuilder_aps, R.string.configbuilder_aps_description, PluginType.APS, activePlugin.getSpecificPluginsVisibleInList(PluginType.APS))
+        createViewsForPlugins(R.string.configbuilder_loop, R.string.configbuilder_loop_description, PluginType.LOOP, activePlugin.getSpecificPluginsVisibleInList(PluginType.LOOP))
+        createViewsForPlugins(R.string.constraints, R.string.configbuilder_constraints_description, PluginType.CONSTRAINTS, activePlugin.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface::class.java, PluginType.CONSTRAINTS))
+        createViewsForPlugins(R.string.configbuilder_treatments, R.string.configbuilder_treatments_description, PluginType.TREATMENT, activePlugin.getSpecificPluginsVisibleInList(PluginType.TREATMENT))
+        createViewsForPlugins(R.string.configbuilder_general, R.string.configbuilder_general_description, PluginType.GENERAL, activePlugin.getSpecificPluginsVisibleInList(PluginType.GENERAL))
     }
 
     private fun createViewsForPlugins(@StringRes title: Int, @StringRes description: Int, pluginType: PluginType, plugins: List<PluginBase>) {

@@ -45,6 +45,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
@@ -76,6 +77,7 @@ import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -89,8 +91,6 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
@@ -106,6 +106,7 @@ import info.nightscout.androidaps.plugins.source.DexcomPlugin;
 import info.nightscout.androidaps.plugins.source.XdripPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.DefaultValueHelper;
@@ -115,6 +116,7 @@ import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.SingleClickButton;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.ToastUtils;
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.wizard.BolusWizard;
@@ -127,6 +129,7 @@ import io.reactivex.schedulers.Schedulers;
 import static info.nightscout.androidaps.utils.DateUtil.now;
 
 public class OverviewFragment extends DaggerFragment implements View.OnClickListener, View.OnLongClickListener {
+    @Inject HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
     @Inject RxBusWrapper rxBus;
@@ -139,6 +142,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     @Inject NSDeviceStatus nsDeviceStatus;
     @Inject LoopPlugin loopPlugin;
     @Inject ConfigBuilderPlugin configBuilderPlugin;
+    @Inject ActivePluginProvider activePlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
     @Inject DexcomPlugin dexcomPlugin;
@@ -146,6 +150,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     @Inject NotificationStore notificationStore;
     @Inject ActionStringHandler actionStringHandler;
     @Inject QuickWizard quickWizard;
+    @Inject BuildHelper buildHelper;
+    @Inject CommandQueue commandQueue;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -242,8 +248,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         } else if (Config.NSCLIENT) {
             view = inflater.inflate(R.layout.overview_fragment_nsclient, container, false);
             shorttextmode = true;
-        } else if (smallHeight || landscape) { // now testing the same layout for small displays as well
-            view = inflater.inflate(R.layout.overview_fragment, container, false);
+        } else if (smallHeight || landscape) {
+            view = inflater.inflate(R.layout.overview_fragment_landscape, container, false);
         } else {
             view = inflater.inflate(R.layout.overview_fragment, container, false);
         }
@@ -565,7 +571,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             item.setCheckable(true);
             item.setChecked(sp.getBoolean("showactivitysecondary", true));
 
-            if (MainApp.devBranch) {
+            if (buildHelper.isDev()) {
                 item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
                 title = item.getTitle();
                 if (titleMaxChars < title.length()) titleMaxChars = title.length();
@@ -623,7 +629,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v == apsModeView) {
             final PumpDescription pumpDescription =
-                    configBuilderPlugin.getActivePump().getPumpDescription();
+                    activePlugin.getActivePump().getPumpDescription();
             if (!profileFunction.isProfileValid("ContexMenuCreation"))
                 return;
             menu.setHeaderTitle(resourceHelper.gs(R.string.loop));
@@ -654,7 +660,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         } else if (v == activeProfileView) {
             menu.setHeaderTitle(resourceHelper.gs(R.string.profile));
             menu.add(resourceHelper.gs(R.string.danar_viewprofile));
-            if (configBuilderPlugin.getActiveProfileInterface() != null && configBuilderPlugin.getActiveProfileInterface().getProfile() != null) {
+            activePlugin.getActiveProfileInterface();
+            if (activePlugin.getActiveProfileInterface().getProfile() != null) {
                 menu.add(resourceHelper.gs(R.string.careportal_profileswitch));
             }
         } else if (v == tempTargetView) {
@@ -690,7 +697,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             loopPlugin.setFragmentVisible(PluginType.LOOP, false);
             configBuilderPlugin.storeSettings("DisablingLoop");
             updateGUI("suspendmenu");
-            configBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+            commandQueue.cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -713,7 +720,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             aapsLogger.debug("USER ENTRY: RESUME");
             loopPlugin.suspendTo(0L);
             updateGUI("suspendmenu");
-            configBuilderPlugin.getCommandQueue().cancelTempBasal(true, new Callback() {
+            commandQueue.cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
                     if (!result.success) {
@@ -785,7 +792,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 pvd.show(manager, "ProfileViewDialog");
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.eatingsoon))) {
             aapsLogger.debug("USER ENTRY: TEMP TARGET EATING SOON");
-            double target = Profile.toMgdl(defaultValueHelper.determineEatingSoonTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(defaultValueHelper.determineEatingSoonTT(), profileFunction.getUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(System.currentTimeMillis())
                     .duration(defaultValueHelper.determineEatingSoonTTDuration())
@@ -796,7 +803,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             treatmentsPlugin.addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.activity))) {
             aapsLogger.debug("USER ENTRY: TEMP TARGET ACTIVITY");
-            double target = Profile.toMgdl(defaultValueHelper.determineActivityTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(defaultValueHelper.determineActivityTT(), profileFunction.getUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
                     .duration(defaultValueHelper.determineActivityTTDuration())
@@ -807,7 +814,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             treatmentsPlugin.addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(resourceHelper.gs(R.string.hypo))) {
             aapsLogger.debug("USER ENTRY: TEMP TARGET HYPO");
-            double target = Profile.toMgdl(defaultValueHelper.determineHypoTT(), ProfileFunctions.getSystemUnits());
+            double target = Profile.toMgdl(defaultValueHelper.determineHypoTT(), profileFunction.getUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
                     .duration(defaultValueHelper.determineHypoTTDuration())
@@ -896,8 +903,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 new CarbsDialog().show(manager, "Overview");
                 break;
             case R.id.overview_pumpstatus:
-                if (configBuilderPlugin.getActivePump().isSuspended() || !configBuilderPlugin.getActivePump().isInitialized())
-                    configBuilderPlugin.getCommandQueue().readStatus("RefreshClicked", null);
+                if (activePlugin.getActivePump().isSuspended() || !activePlugin.getActivePump().isInitialized())
+                    commandQueue.readStatus("RefreshClicked", null);
                 break;
         }
 
@@ -951,7 +958,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         final BgReading actualBg = iobCobCalculatorPlugin.actualBg();
         final Profile profile = profileFunction.getProfile();
         final String profileName = profileFunction.getProfileName();
-        final PumpInterface pump = configBuilderPlugin.getActivePump();
+        final PumpInterface pump = activePlugin.getActivePump();
 
         final QuickWizardEntry quickWizardEntry = quickWizard.getActive();
         if (quickWizardEntry != null && actualBg != null && profile != null) {
@@ -1048,13 +1055,13 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         BgReading actualBG = iobCobCalculatorPlugin.actualBg();
         BgReading lastBG = iobCobCalculatorPlugin.lastBg();
 
-        final PumpInterface pump = configBuilderPlugin.getActivePump();
+        final PumpInterface pump = activePlugin.getActivePump();
 
         final Profile profile = profileFunction.getProfile();
         if (profile == null) return;
         final String profileName = profileFunction.getProfileName();
 
-        final String units = ProfileFunctions.getSystemUnits();
+        final String units = profileFunction.getUnits();
         final double lowLine = defaultValueHelper.determineLowLine();
         final double highLine = defaultValueHelper.determineHighLine();
 
@@ -1070,7 +1077,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             arrowView.setText(lastBG.directionToSymbol());
             bgView.setTextColor(color);
             arrowView.setTextColor(color);
-            GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+            GlucoseStatus glucoseStatus = new GlucoseStatus(injector).getGlucoseStatusData();
             if (glucoseStatus != null) {
                 if (deltaView != null)
                     deltaView.setText("Δ " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
@@ -1132,7 +1139,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         if (tempTarget != null) {
             tempTargetView.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning));
             tempTargetView.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning));
-            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end()));
+            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units) + " " + DateUtil.untilString(tempTarget.end(), resourceHelper));
         } else {
             tempTargetView.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault));
             tempTargetView.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault));
@@ -1191,17 +1198,17 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         }
         baseBasalView.setText(basalText);
         baseBasalView.setOnClickListener(v -> {
-            String fullText = MainApp.gs(R.string.pump_basebasalrate_label) + ": " + MainApp.gs(R.string.pump_basebasalrate, profile.getBasal()) + "\n";
+            String fullText = resourceHelper.gs(R.string.pump_basebasalrate_label) + ": " + resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal()) + "\n";
             if (activeTemp != null) {
-                fullText += MainApp.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
+                fullText += resourceHelper.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull();
             }
-            OKDialog.show(getActivity(), MainApp.gs(R.string.basal), fullText);
+            OKDialog.show(getActivity(), resourceHelper.gs(R.string.basal), fullText);
         });
 
         if (activeTemp != null) {
             baseBasalView.setTextColor(resourceHelper.gc(R.color.basal));
         } else {
-            baseBasalView.setTextColor(MainApp.gc(R.color.defaulttextcolor));
+            baseBasalView.setTextColor(resourceHelper.gc(R.color.defaulttextcolor));
         }
 
 
@@ -1213,7 +1220,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             extendedBolusView.setText(extendedBolusText);
             extendedBolusView.setOnClickListener(v -> {
                 if (extendedBolus != null)
-                    OKDialog.show(getActivity(), MainApp.gs(R.string.extended_bolus), extendedBolus.toString());
+                    OKDialog.show(getActivity(), resourceHelper.gs(R.string.extended_bolus), extendedBolus.toString());
             });
         }
 
@@ -1232,7 +1239,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false);
-            text += " " + DecimalFormatter.toPumpSupportedBolus(wizard.getCalculatedTotalInsulin()) + "U";
+            text += " " + DecimalFormatter.toPumpSupportedBolus(wizard.getCalculatedTotalInsulin(), pump) + "U";
             quickWizardButton.setText(text);
             if (wizard.getCalculatedTotalInsulin() <= 0)
                 quickWizardButton.setVisibility(View.GONE);
@@ -1242,7 +1249,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         // **** Various treatment buttons ****
         if (carbsButton != null) {
             if (sp.getBoolean(R.string.key_show_carbs_button, true)
-                    && (!configBuilderPlugin.getActivePump().getPumpDescription().storesCarbInfo ||
+                    && (!activePlugin.getActivePump().getPumpDescription().storesCarbInfo ||
                     (pump.isInitialized() && !pump.isSuspended()))) {
                 carbsButton.setVisibility(View.VISIBLE);
             } else {
@@ -1400,7 +1407,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 if (Config.APS)
                     apsResult = loopPlugin.lastRun.constraintsProcessed;
                 else
-                    apsResult = NSDeviceStatus.getAPSResult();
+                    apsResult = NSDeviceStatus.getAPSResult(injector);
                 int predHours = (int) (Math.ceil(apsResult.getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
                 predHours = Math.min(2, predHours);
                 predHours = Math.max(0, predHours);
@@ -1490,7 +1497,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 secondGraphData.addRatio(fromTime, now, useRatioForScale, 1d);
             if (sp.getBoolean("showactivitysecondary", true))
                 secondGraphData.addActivity(fromTime, endTime, useIAForScale, 0.8d);
-            if (sp.getBoolean("showdevslope", false) && MainApp.devBranch)
+            if (sp.getBoolean("showdevslope", false) && buildHelper.isDev())
                 secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1d);
 
             // **** NOW line ****

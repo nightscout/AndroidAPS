@@ -12,7 +12,6 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,7 +33,7 @@ import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DoubleDataPoint;
@@ -51,7 +50,6 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 18.10.2017.
@@ -70,7 +68,7 @@ public class GraphData {
     private IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
     public GraphData(GraphView graph, IobCobCalculatorPlugin iobCobCalculatorPlugin) {
-        units = ProfileFunctions.getSystemUnits();
+        units = ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits();
         this.graph = graph;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
     }
@@ -153,7 +151,7 @@ public class GraphData {
         double lastBaseBasal = 0;
         double lastTempBasal = 0;
         for (long time = fromTime; time < toTime; time += 60 * 1000L) {
-            Profile profile = ProfileFunctions.getInstance().getProfile(time);
+            Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile(time);
             if (profile == null) continue;
             BasalData basalData = iobCobCalculatorPlugin.getBasalData(profile, time);
             double baseBasalValue = basalData.basal;
@@ -265,9 +263,9 @@ public class GraphData {
             TempTarget tt = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(time);
             double value;
             if (tt == null) {
-                value = Profile.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2, ProfileFunctions.getSystemUnits());
+                value = Profile.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2, ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits());
             } else {
-                value = Profile.fromMgdlToUnits(tt.target(), ProfileFunctions.getSystemUnits());
+                value = Profile.fromMgdlToUnits(tt.target(), ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits());
             }
             if (lastTarget != value) {
                 if (lastTarget != -1)
@@ -311,7 +309,7 @@ public class GraphData {
         }
 
         // Extended bolus
-        if (!ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses()) {
+        if (!PluginStore.Companion.getInstance().getActivePump().isFakingTempsByExtendedBoluses()) {
             List<ExtendedBolus> extendedBoluses = TreatmentsPlugin.getPlugin().getExtendedBolusesFromHistory().getList();
 
             for (int tx = 0; tx < extendedBoluses.size(); tx++) {
@@ -362,7 +360,7 @@ public class GraphData {
         double maxIAValue = 0;
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            Profile profile = ProfileFunctions.getInstance().getProfile(time);
+            Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile(time);
             double act = 0d;
             if (profile == null) continue;
             total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile);
@@ -372,7 +370,7 @@ public class GraphData {
                 actArrayHist.add(new ScaledDataPoint(time, act, actScale));
             else
                 actArrayPred.add(new ScaledDataPoint(time, act, actScale));
-            
+
             maxIAValue = Math.max(maxIAValue, Math.abs(act));
         }
 
@@ -414,7 +412,7 @@ public class GraphData {
         Scale iobScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            Profile profile = ProfileFunctions.getInstance().getProfile(time);
+            Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile(time);
             double iob = 0d;
             if (profile != null)
                 iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile).iob;

@@ -14,7 +14,7 @@ import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
 
 class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
-    private var pct = InputPercent(injector)
+    var pct = InputPercent(injector)
     var comparator = Comparator(injector)
 
     constructor(injector: HasAndroidInjector, value: Double, compare: Comparator.Compare) : this(injector) {
@@ -25,6 +25,16 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
     constructor(injector: HasAndroidInjector, triggerProfilePercent: TriggerProfilePercent) : this(injector) {
         pct = InputPercent(injector, triggerProfilePercent.pct.value)
         comparator = Comparator(injector, triggerProfilePercent.comparator.value)
+    }
+
+    fun setValue(value: Double): TriggerProfilePercent {
+        this.pct.value = value
+        return this
+    }
+
+    fun comparator(comparator: Comparator.Compare): TriggerProfilePercent {
+        this.comparator.value = comparator
+        return this
     }
 
     override fun shouldRun(): Boolean {

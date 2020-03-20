@@ -91,21 +91,21 @@ class InsulinDialog : DialogFragmentWithDate() {
         overview_insulin_time.setParams(savedInstanceState?.getDouble("overview_insulin_time")
             ?: 0.0, -12 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, ok, textWatcher)
         overview_insulin_amount.setParams(savedInstanceState?.getDouble("overview_insulin_amount")
-            ?: 0.0, 0.0, maxInsulin, activePlugin.activePump.pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
+            ?: 0.0, 0.0, maxInsulin, activePlugin.activePump.pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, ok, textWatcher)
 
-        overview_insulin_plus05.text = sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT).toSignedString()
+        overview_insulin_plus05.text = sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT).toSignedString(activePlugin.activePump)
         overview_insulin_plus05.setOnClickListener {
             overview_insulin_amount.value = max(0.0, overview_insulin_amount.value
                 + sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT))
             validateInputs()
         }
-        overview_insulin_plus10.text = sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT).toSignedString()
+        overview_insulin_plus10.text = sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT).toSignedString(activePlugin.activePump)
         overview_insulin_plus10.setOnClickListener {
             overview_insulin_amount.value = max(0.0, overview_insulin_amount.value
                 + sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT))
             validateInputs()
         }
-        overview_insulin_plus20.text = sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT).toSignedString()
+        overview_insulin_plus20.text = sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT).toSignedString(activePlugin.activePump)
         overview_insulin_plus20.setOnClickListener {
             overview_insulin_amount.value = max(0.0, overview_insulin_amount.value
                 + sp.getDouble(resourceHelper.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT))
@@ -119,8 +119,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     }
 
     override fun submit(): Boolean {
-        val pumpDescription = activePlugin.activePumpPlugin?.pumpDescription
-            ?: return false
+        val pumpDescription = activePlugin.activePump.pumpDescription
         val insulin = SafeParse.stringToDouble(overview_insulin_amount.text)
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()
         val actions: LinkedList<String?> = LinkedList()
@@ -130,7 +129,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         val eatingSoonChecked = overview_insulin_start_eating_soon_tt.isChecked
 
         if (insulinAfterConstraints > 0) {
-            actions.add(resourceHelper.gs(R.string.bolus) + ": " + "<font color='" + resourceHelper.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + resourceHelper.gs(R.string.insulin_unit_shortname) + "</font>")
+            actions.add(resourceHelper.gs(R.string.bolus) + ": " + "<font color='" + resourceHelper.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump) + resourceHelper.gs(R.string.insulin_unit_shortname) + "</font>")
             if (recordOnlyChecked)
                 actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.bolusrecordedonly) + "</font>")
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))

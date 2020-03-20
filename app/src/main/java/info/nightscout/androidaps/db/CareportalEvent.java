@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,7 +25,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
@@ -168,7 +167,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
 
     @Override
     public double getY() {
-        String units = ProfileFunctions.getSystemUnits();
+        String units = ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits();
         if (eventType.equals(MBG)) {
             double mbg = 0d;
             try {

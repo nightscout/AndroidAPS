@@ -14,7 +14,7 @@ class InputBg(injector: HasAndroidInjector) : Element(injector) {
 
     var units = Constants.MGDL
     var value = 0.0
-    private var minValue = 0.0
+    var minValue = 0.0
     private var maxValue = 0.0
     private var step = 0.0
     private var decimalFormat: DecimalFormat? = null
@@ -33,6 +33,11 @@ class InputBg(injector: HasAndroidInjector) : Element(injector) {
         numberPicker.setParams(value, minValue, maxValue, step, decimalFormat, false, root.findViewById(R.id.ok))
         numberPicker.setOnValueChangedListener { value: Double -> this.value = value }
         root.addView(numberPicker)
+    }
+
+    fun setValue(value: Double) : InputBg {
+        this.value = value
+        return this
     }
 
     fun setUnits(units: String): InputBg {

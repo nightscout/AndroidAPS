@@ -37,7 +37,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjection;
-import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.activities.PreferencesActivity;
 import info.nightscout.androidaps.activities.SingleFragmentActivity;
@@ -45,6 +44,8 @@ import info.nightscout.androidaps.activities.StatsActivity;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRebuildTabs;
+import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -61,10 +62,13 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.PasswordProtection;
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+
+import static info.nightscout.androidaps.utils.extensions.EspressoTestHelperKt.isRunningRealPumpTest;
 
 public class MainActivity extends NoSplashAppCompatActivity {
 
@@ -80,6 +84,8 @@ public class MainActivity extends NoSplashAppCompatActivity {
     @Inject SmsCommunicatorPlugin smsCommunicatorPlugin;
     @Inject LoopPlugin loopPlugin;
     @Inject NSSettingsStatus nsSettingsStatus;
+    @Inject BuildHelper buildHelper;
+    @Inject ActivePluginProvider activePlugin;
 
 
     @Override
@@ -149,7 +155,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 .subscribe(this::processPreferenceChange, exception -> FabricPrivacy.getInstance().logException(exception))
         );
 
-        if (!sp.getBoolean(R.string.key_setupwizard_processed, false)) {
+        if (!sp.getBoolean(R.string.key_setupwizard_processed, false) && !isRunningRealPumpTest()) {
             Intent intent = new Intent(this, SetupWizardActivity.class);
             startActivity(intent);
         }
@@ -201,14 +207,14 @@ public class MainActivity extends NoSplashAppCompatActivity {
         navigationView.setNavigationItemSelectedListener(menuItem -> true);
         Menu menu = navigationView.getMenu();
         menu.clear();
-        for (PluginBase p : MainApp.getPluginsList()) {
+        for (PluginBase p : activePlugin.getPluginsList()) {
             pageAdapter.registerNewFragment(p);
             if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.getPluginDescription().getType()) && !p.getPluginDescription().neverVisible) {
                 MenuItem menuItem = menu.add(p.getName());
                 menuItem.setCheckable(true);
                 menuItem.setOnMenuItemClickListener(item -> {
                     Intent intent = new Intent(this, SingleFragmentActivity.class);
-                    intent.putExtra("plugin", MainApp.getPluginsList().indexOf(p));
+                    intent.putExtra("plugin", activePlugin.getPluginsList().indexOf(p));
                     startActivity(intent);
                     ((DrawerLayout) findViewById(R.id.drawer_layout)).closeDrawers();
                     return true;
@@ -314,7 +320,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
                 message += "Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + "\n";
                 message += resourceHelper.gs(R.string.configbuilder_nightscoutversion_label) + " " + nsSettingsStatus.getNightscoutVersionName();
-                if (MainApp.engineeringMode)
+                if (buildHelper.isEngineeringMode())
                     message += "\n" + resourceHelper.gs(R.string.engineering_mode_enabled);
                 message += resourceHelper.gs(R.string.about_link_urls);
                 final SpannableString messageSpanned = new SpannableString(message);

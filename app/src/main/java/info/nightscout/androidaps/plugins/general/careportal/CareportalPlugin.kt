@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.careportal
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -11,7 +12,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CareportalPlugin @Inject constructor(aapsLogger: AAPSLogger, resourceHelper: ResourceHelper
+class CareportalPlugin @Inject constructor(
+    injector: HasAndroidInjector,
+    aapsLogger: AAPSLogger,
+    resourceHelper: ResourceHelper
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(CareportalFragment::class.java.name)
@@ -20,6 +24,5 @@ class CareportalPlugin @Inject constructor(aapsLogger: AAPSLogger, resourceHelpe
     .visibleByDefault(Config.NSCLIENT)
     .enableByDefault(Config.NSCLIENT)
     .description(R.string.description_careportal),
-    aapsLogger, resourceHelper
-
+    aapsLogger, resourceHelper, injector
 )

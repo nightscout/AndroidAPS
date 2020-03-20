@@ -14,6 +14,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Intervals;
@@ -21,6 +24,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
@@ -34,7 +38,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 
-public class TreatmentsExtendedBolusesFragment extends Fragment {
+public class TreatmentsExtendedBolusesFragment extends DaggerFragment {
+    @Inject ActivePluginProvider activePlugin;
+
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private RecyclerView recyclerView;
@@ -74,7 +80,7 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
                     holder.date.setText(DateUtil.dateAndTimeString(extendedBolus.date) + " - " + DateUtil.timeString(extendedBolus.end()));
                 }
                 holder.duration.setText(DecimalFormatter.to0Decimal(extendedBolus.durationInMinutes) + " min");
-                holder.insulin.setText(DecimalFormatter.toPumpSupportedBolus(extendedBolus.insulin) + " U");
+                holder.insulin.setText(DecimalFormatter.toPumpSupportedBolus(extendedBolus.insulin, activePlugin.getActivePump()) + " U");
                 holder.realDuration.setText(DecimalFormatter.to0Decimal(extendedBolus.getRealDuration()) + " min");
                 IobTotal iob = extendedBolus.iobCalc(System.currentTimeMillis());
                 holder.iob.setText(DecimalFormatter.to2Decimal(iob.iob) + " U");

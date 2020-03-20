@@ -10,7 +10,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
 abstract class Command(
-    injector: HasAndroidInjector,
+    val injector: HasAndroidInjector,
     val commandType: CommandType,
     val callback: Callback? = null
 ) {
@@ -42,7 +42,7 @@ abstract class Command(
     abstract fun status(): String
 
     fun cancel() {
-        val result = PumpEnactResult()
+        val result = PumpEnactResult(injector)
         result.success = false
         result.comment = resourceHelper.gs(R.string.connectiontimedout)
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")

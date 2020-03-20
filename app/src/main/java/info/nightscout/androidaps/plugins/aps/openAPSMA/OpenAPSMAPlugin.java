@@ -1,11 +1,13 @@
 package info.nightscout.androidaps.plugins.aps.openAPSMA;
 
+import android.content.Context;
+
 import org.json.JSONException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.MainApp;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
@@ -36,19 +38,17 @@ import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
-import static info.nightscout.androidaps.utils.HardLimits.checkOnlyHardLimits;
-import static info.nightscout.androidaps.utils.HardLimits.verifyHardLimits;
-
 @Singleton
 public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
     private final RxBusWrapper rxBus;
     private final ConstraintChecker constraintChecker;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
-    private final MainApp mainApp;
+    private final Context context;
     private final ActivePluginProvider activePlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
+    private final HardLimits hardLimits;
 
     // last values
     DetermineBasalAdapterMAJS lastDetermineBasalAdapterMAJS = null;
@@ -57,15 +57,17 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
 
     @Inject
     public OpenAPSMAPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             ConstraintChecker constraintChecker,
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
-            MainApp mainApp,
+            Context context,
             ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
-            IobCobCalculatorPlugin iobCobCalculatorPlugin
+            IobCobCalculatorPlugin iobCobCalculatorPlugin,
+            HardLimits hardLimits
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.APS)
@@ -74,33 +76,35 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
                         .shortName(R.string.oaps_shortname)
                         .preferencesId(R.xml.pref_openapsma)
                         .description(R.string.description_ma),
-                aapsLogger, resourceHelper
+                aapsLogger, resourceHelper, injector
         );
 
         this.constraintChecker = constraintChecker;
         this.resourceHelper = resourceHelper;
         this.profileFunction = profileFunction;
-        this.mainApp = mainApp;
+        this.context = context;
         this.rxBus = rxBus;
         this.activePlugin = activePlugin;
         this.treatmentsPlugin = treatmentsPlugin;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
+        this.hardLimits = hardLimits;
     }
 
     @Override
     public boolean specialEnableCondition() {
-        // main fail during init
-        if (activePlugin != null) {
-            PumpInterface pump = activePlugin.getActivePumpPlugin();
-            return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        try {
+            PumpInterface pump = activePlugin.getActivePump();
+            return pump.getPumpDescription().isTempBasalCapable;
+        } catch (Exception ignored) {
+            // may fail during initialization
+            return true;
         }
-        return true;
     }
 
     @Override
     public boolean specialShowInListCondition() {
-        PumpInterface pump = activePlugin.getActivePumpPlugin();
-        return pump == null || pump.getPumpDescription().isTempBasalCapable;
+        PumpInterface pump = activePlugin.getActivePump();
+        return pump.getPumpDescription().isTempBasalCapable;
     }
 
     @Override
@@ -118,21 +122,15 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         getAapsLogger().debug(LTag.APS, "invoke from " + initiator + " tempBasalFallback: " + tempBasalFallback);
         lastAPSResult = null;
         DetermineBasalAdapterMAJS determineBasalAdapterMAJS;
-        determineBasalAdapterMAJS = new DetermineBasalAdapterMAJS(new ScriptReader(mainApp), getAapsLogger());
+        determineBasalAdapterMAJS = new DetermineBasalAdapterMAJS(new ScriptReader(context), getInjector());
 
-        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+        GlucoseStatus glucoseStatus = new GlucoseStatus(getInjector()).getGlucoseStatusData();
         Profile profile = profileFunction.getProfile();
-        PumpInterface pump = activePlugin.getActivePumpPlugin();
+        PumpInterface pump = activePlugin.getActivePump();
 
         if (profile == null) {
             rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.noprofileselected)));
             getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.noprofileselected));
-            return;
-        }
-
-        if (pump == null) {
-            rxBus.send(new EventOpenAPSUpdateResultGui(resourceHelper.gs(R.string.nopumpselected)));
-            getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.nopumpselected));
             return;
         }
 
@@ -170,26 +168,26 @@ public class OpenAPSMAPlugin extends PluginBase implements APSInterface {
         double maxIob = constraintChecker.getMaxIOBAllowed().value();
         Profiler.log(getAapsLogger(), LTag.APS, "MA data gathering", start);
 
-        minBg = verifyHardLimits(minBg, "minBg", HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1]);
-        maxBg = verifyHardLimits(maxBg, "maxBg", HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1]);
-        targetBg = verifyHardLimits(targetBg, "targetBg", HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1]);
+        minBg = hardLimits.verifyHardLimits(minBg, "minBg", hardLimits.getVERY_HARD_LIMIT_MIN_BG()[0], hardLimits.getVERY_HARD_LIMIT_MIN_BG()[1]);
+        maxBg = hardLimits.verifyHardLimits(maxBg, "maxBg", hardLimits.getVERY_HARD_LIMIT_MAX_BG()[0], hardLimits.getVERY_HARD_LIMIT_MAX_BG()[1]);
+        targetBg = hardLimits.verifyHardLimits(targetBg, "targetBg", hardLimits.getVERY_HARD_LIMIT_TARGET_BG()[0], hardLimits.getVERY_HARD_LIMIT_TARGET_BG()[1]);
 
         TempTarget tempTarget = treatmentsPlugin.getTempTargetFromHistory(System.currentTimeMillis());
         if (tempTarget != null) {
-            minBg = verifyHardLimits(tempTarget.low, "minBg", HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1]);
-            maxBg = verifyHardLimits(tempTarget.high, "maxBg", HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1]);
-            targetBg = verifyHardLimits(tempTarget.target(), "targetBg", HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1]);
+            minBg = hardLimits.verifyHardLimits(tempTarget.low, "minBg", hardLimits.getVERY_HARD_LIMIT_TEMP_MIN_BG()[0], hardLimits.getVERY_HARD_LIMIT_TEMP_MIN_BG()[1]);
+            maxBg = hardLimits.verifyHardLimits(tempTarget.high, "maxBg", hardLimits.getVERY_HARD_LIMIT_TEMP_MAX_BG()[0], hardLimits.getVERY_HARD_LIMIT_TEMP_MAX_BG()[1]);
+            targetBg = hardLimits.verifyHardLimits(tempTarget.target(), "targetBg", hardLimits.getVERY_HARD_LIMIT_TEMP_TARGET_BG()[0], hardLimits.getVERY_HARD_LIMIT_TEMP_TARGET_BG()[1]);
         }
 
-        if (!checkOnlyHardLimits(profile.getDia(), "dia", HardLimits.MINDIA, HardLimits.MAXDIA))
+        if (!hardLimits.checkOnlyHardLimits(profile.getDia(), "dia", hardLimits.getMINDIA(), hardLimits.getMAXDIA()))
             return;
-        if (!checkOnlyHardLimits(profile.getIcTimeFromMidnight(Profile.secondsFromMidnight()), "carbratio", HardLimits.MINIC, HardLimits.MAXIC))
+        if (!hardLimits.checkOnlyHardLimits(profile.getIcTimeFromMidnight(Profile.secondsFromMidnight()), "carbratio", hardLimits.getMINIC(), hardLimits.getMAXIC()))
             return;
-        if (!checkOnlyHardLimits(profile.getIsfMgdl(), "sens", HardLimits.MINISF, HardLimits.MAXISF))
+        if (!hardLimits.checkOnlyHardLimits(profile.getIsfMgdl(), "sens", hardLimits.getMINISF(), hardLimits.getMAXISF()))
             return;
-        if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.02, HardLimits.maxBasal()))
+        if (!hardLimits.checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.02, hardLimits.maxBasal()))
             return;
-        if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, HardLimits.maxBasal()))
+        if (!hardLimits.checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, hardLimits.maxBasal()))
             return;
 
         start = System.currentTimeMillis();

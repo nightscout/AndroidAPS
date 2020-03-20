@@ -79,9 +79,9 @@ class LocalAlertUtils @Inject constructor(
     }
 
     fun notifyPumpStatusRead() { //TODO: persist the actual time the pump is read and simplify the whole logic when to alarm
-        val pump = activePlugin.activePumpPlugin
+        val pump = activePlugin.activePump
         val profile = profileFunction.getProfile()
-        if (pump != null && profile != null) {
+        if (profile != null) {
             val lastConnection = pump.lastDataTime()
             val earliestAlarmTime = lastConnection + pumpUnreachableThreshold()
             if (sp.getLong("nextPumpDisconnectedAlarm", 0L) < earliestAlarmTime) {

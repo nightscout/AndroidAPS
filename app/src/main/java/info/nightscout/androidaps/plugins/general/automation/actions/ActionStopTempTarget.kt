@@ -27,6 +27,6 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
             .source(Source.USER)
             .low(0.0).high(0.0)
         activePlugin.activeTreatments.addToHistoryTempTarget(tempTarget)
-        callback.result(PumpEnactResult().success(true).comment(R.string.ok))?.run()
+        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }
 }

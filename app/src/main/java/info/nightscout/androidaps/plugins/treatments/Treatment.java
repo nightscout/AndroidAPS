@@ -23,8 +23,8 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
@@ -39,7 +39,7 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     @Inject public DefaultValueHelper defaultValueHelper;
     @Inject public ResourceHelper resourceHelper;
     @Inject public ProfileFunction profileFunction;
-    @Inject public ConfigBuilderPlugin configBuilderPlugin;
+    @Inject public ActivePluginProvider activePlugin;
 
     public static final String TABLE_TREATMENTS = "Treatments";
 
@@ -77,7 +77,7 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
         MainApp.instance().androidInjector().inject(this); // TODO it will be removed by new database
     }
 
-   public Treatment(HasAndroidInjector injector) {
+    public Treatment(HasAndroidInjector injector) {
         injector.androidInjector().inject(this);
     }
 
@@ -245,7 +245,7 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     @Override
     public String getLabel() {
         String label = "";
-        if (insulin > 0) label += DecimalFormatter.toPumpSupportedBolus(insulin) + "U";
+        if (insulin > 0) label += DecimalFormatter.toPumpSupportedBolus(insulin, activePlugin.getActivePump()) + "U";
         if (carbs > 0)
             label += "~" + DecimalFormatter.to0Decimal(carbs) + "g";
         return label;
@@ -290,7 +290,7 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
         if (!isValid)
             return new Iob();
 
-        InsulinInterface insulinInterface = configBuilderPlugin.getActiveInsulin();
+        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
         return insulinInterface.iobCalcForTreatment(this, time, dia);
     }
 

@@ -36,7 +36,7 @@ class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {
                 }
             })
         } else {
-            callback.result(PumpEnactResult().success(true).comment(R.string.alreadydisabled)).run()
+            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadydisabled)).run()
         }
     }
 }

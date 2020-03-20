@@ -5,30 +5,27 @@ import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.preference.PreferenceManager;
 
 import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DbRequest;
@@ -42,10 +39,12 @@ import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.utils.BatteryLevel;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -77,7 +76,7 @@ public class NSUpload {
         try {
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
             boolean useAbsolute = SP.getBoolean("ns_sync_use_absolute", false);
-            Profile profile = ProfileFunctions.getInstance().getProfile(temporaryBasal.date);
+            Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile(temporaryBasal.date);
             double absoluteRate = 0;
             if (profile != null) {
                 absoluteRate = profile.getBasal(temporaryBasal.date) * temporaryBasal.percentRate / 100d;
@@ -162,8 +161,8 @@ public class NSUpload {
     }
 
     public static void uploadDeviceStatus(LoopPlugin loopPlugin) {
-        Profile profile = ProfileFunctions.getInstance().getProfile();
-        String profileName = ProfileFunctions.getInstance().getProfileName();
+        Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile();
+        String profileName = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfileName();
 
         if (profile == null || profileName == null) {
             log.error("Profile is null. Skipping upload");
@@ -212,7 +211,7 @@ public class NSUpload {
                 }
             }
             deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
-            JSONObject pumpstatus = ConfigBuilderPlugin.getPlugin().getActivePump().getJSONStatus(profile, profileName);
+            JSONObject pumpstatus = PluginStore.Companion.getInstance().getActivePump().getJSONStatus(profile, profileName);
             if (pumpstatus != null) {
                 deviceStatus.pump = pumpstatus;
             }
@@ -271,9 +270,9 @@ public class NSUpload {
             data.put("duration", tempTarget.durationInMinutes);
             if (tempTarget.low > 0) {
                 data.put("reason", tempTarget.reason);
-                data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.low, ProfileFunctions.getSystemUnits()));
-                data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.high, ProfileFunctions.getSystemUnits()));
-                data.put("units", ProfileFunctions.getSystemUnits());
+                data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.low, ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits()));
+                data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.high, ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits()));
+                data.put("units", ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits());
             }
             data.put("created_at", DateUtil.toISOString(tempTarget.date));
             data.put("enteredBy", MainApp.gs(R.string.app_name));
@@ -399,7 +398,7 @@ public class NSUpload {
 
     public static void uploadProfileStore(JSONObject profileStore) {
         if (SP.getBoolean(R.string.key_ns_uploadlocalprofile, false)) {
-            UploadQueue.add(new DbRequest("dbAdd", "profile", String.valueOf(profileStore)));
+            UploadQueue.add(new DbRequest("dbAdd", "profile", profileStore));
         }
     }
 
@@ -465,6 +464,22 @@ public class NSUpload {
             log.error("Unhandled exception", e);
         }
 
+    }
+
+    public static void createNSTreatment(JSONObject data, ProfileStore profileStore, ProfileFunction profileFunction, long eventTime) {
+        if (JsonHelper.safeGetString(data, "eventType", "").equals(CareportalEvent.PROFILESWITCH)) {
+            ProfileSwitch profileSwitch = profileFunction.prepareProfileSwitch(
+                    profileStore,
+                    JsonHelper.safeGetString(data, "profile"),
+                    JsonHelper.safeGetInt(data, "duration"),
+                    JsonHelper.safeGetInt(data, "percentage"),
+                    JsonHelper.safeGetInt(data, "timeshift"),
+                    eventTime
+            );
+            uploadProfileSwitch(profileSwitch);
+        } else {
+            uploadCareportalEntryToNS(data);
+        }
     }
 
     public static boolean isIdValid(String _id) {

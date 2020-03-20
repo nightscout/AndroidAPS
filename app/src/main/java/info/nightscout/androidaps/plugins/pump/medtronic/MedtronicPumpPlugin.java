@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +26,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
@@ -130,6 +130,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Inject
     public MedtronicPumpPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             MainApp maiApp,
@@ -148,7 +149,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         .shortName(R.string.medtronic_name_short) //
                         .preferencesId(R.xml.pref_medtronic).description(R.string.description_pump_medtronic), //
                 PumpType.Medtronic_522_722, // we default to most basic model, correct model from config is loaded later
-                resourceHelper, aapsLogger, commandQueue
+                injector, resourceHelper, aapsLogger, commandQueue
 
         );
         this.plugin = this;
@@ -827,7 +828,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         MedtronicPumpStatus mdtPumpStatus = getMDTPumpStatus();
 
         if (detailedBolusInfo.insulin > mdtPumpStatus.reservoirRemainingUnits) {
-            return new PumpEnactResult() //
+            return new PumpEnactResult(getInjector()) //
                     .success(false) //
                     .enacted(false) //
                     .comment(MainApp.gs(R.string.medtronic_cmd_bolus_could_not_be_delivered_no_insulin,
@@ -904,7 +905,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 detailedBolusInfo.date = now;
                 detailedBolusInfo.deliverAt = now; // not sure about that one
 
-                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
+                treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
 
                 // we subtract insulin, exact amount will be visible with next remainingInsulin update.
                 getMDTPumpStatus().reservoirRemainingUnits -= detailedBolusInfo.insulin;
@@ -920,13 +921,13 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 this.busyTimestamps.add(time);
                 setEnableCustomAction(MedtronicCustomActionType.ClearBolusBlock, true);
 
-                return new PumpEnactResult().success(true) //
+                return new PumpEnactResult(getInjector()).success(true) //
                         .enacted(true) //
                         .bolusDelivered(detailedBolusInfo.insulin) //
                         .carbsDelivered(detailedBolusInfo.carbs);
 
             } else {
-                return new PumpEnactResult() //
+                return new PumpEnactResult(getInjector()) //
                         .success(bolusDeliveryType == BolusDeliveryType.CancelDelivery) //
                         .enacted(false) //
                         .comment(MainApp.gs(R.string.medtronic_cmd_bolus_could_not_be_delivered));
@@ -947,11 +948,11 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         }
 
         if (success) {
-            return new PumpEnactResult() //
+            return new PumpEnactResult(getInjector()) //
                     .success(true) //
                     .enacted(false);
         } else {
-            return new PumpEnactResult() //
+            return new PumpEnactResult(getInjector()) //
                     .success(false) //
                     .enacted(false) //
                     .comment(MainApp.gs(R.string.medtronic_pump_status_pump_unreachable));
@@ -987,7 +988,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             setRefreshButtonEnabled(true);
 
-            return new PumpEnactResult() //
+            return new PumpEnactResult(getInjector()) //
                     .success(false) //
                     .enacted(false) //
                     .comment(MainApp.gs(R.string.medtronic_pump_status_pump_unreachable));
@@ -1007,7 +1008,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             if (isLoggingEnabled())
                 LOG.warn(getLogPrefix() + "setTempBasalAbsolute - Could not read current TBR, canceling operation.");
             finishAction("TBR");
-            return new PumpEnactResult().success(false).enacted(false)
+            return new PumpEnactResult(getInjector()).success(false).enacted(false)
                     .comment(MainApp.gs(R.string.medtronic_cmd_cant_read_tbr));
         } else {
             if (isLoggingEnabled())
@@ -1029,7 +1030,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     if (isLoggingEnabled())
                         LOG.info(getLogPrefix() + "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
                     finishAction("TBR");
-                    return new PumpEnactResult().success(true).enacted(false);
+                    return new PumpEnactResult(getInjector()).success(true).enacted(false);
                 }
             }
             // if not the same rate, we cancel and start new
@@ -1055,7 +1056,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
                 finishAction("TBR");
 
-                return new PumpEnactResult().success(false).enacted(false)
+                return new PumpEnactResult(getInjector()).success(false).enacted(false)
                         .comment(MainApp.gs(R.string.medtronic_cmd_cant_cancel_tbr_stop_op));
             }
         }
@@ -1081,19 +1082,19 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     .absolute(absoluteRate) //
                     .source(Source.USER);
 
-            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStart);
+            treatmentsPlugin.addToHistoryTempBasal(tempStart);
 
             incrementStatistics(MedtronicConst.Statistics.TBRsSet);
 
             finishAction("TBR");
 
-            return new PumpEnactResult().success(true).enacted(true) //
+            return new PumpEnactResult(getInjector()).success(true).enacted(true) //
                     .absolute(absoluteRate).duration(durationInMinutes);
 
         } else {
             finishAction("TBR");
 
-            return new PumpEnactResult().success(false).enacted(false) //
+            return new PumpEnactResult(getInjector()).success(false).enacted(false) //
                     .comment(MainApp.gs(R.string.medtronic_cmd_tbr_could_not_be_delivered));
         }
 
@@ -1395,7 +1396,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             setRefreshButtonEnabled(true);
 
-            return new PumpEnactResult() //
+            return new PumpEnactResult(getInjector()) //
                     .success(false) //
                     .enacted(false) //
                     .comment(MainApp.gs(R.string.medtronic_pump_status_pump_unreachable));
@@ -1411,13 +1412,13 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 if (isLoggingEnabled())
                     LOG.info(getLogPrefix() + "cancelTempBasal - TBR already canceled.");
                 finishAction("TBR");
-                return new PumpEnactResult().success(true).enacted(false);
+                return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
         } else {
             if (isLoggingEnabled())
                 LOG.warn(getLogPrefix() + "cancelTempBasal - Could not read currect TBR, canceling operation.");
             finishAction("TBR");
-            return new PumpEnactResult().success(false).enacted(false)
+            return new PumpEnactResult(getInjector()).success(false).enacted(false)
                     .comment(MainApp.gs(R.string.medtronic_cmd_cant_read_tbr));
         }
 
@@ -1436,15 +1437,15 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     .duration(0) //
                     .source(Source.USER);
 
-            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
+            treatmentsPlugin.addToHistoryTempBasal(tempBasal);
 
-            return new PumpEnactResult().success(true).enacted(true) //
+            return new PumpEnactResult(getInjector()).success(true).enacted(true) //
                     .isTempCancel(true);
         } else {
             if (isLoggingEnabled())
                 LOG.info(getLogPrefix() + "cancelTempBasal - Cancel TBR failed.");
 
-            return new PumpEnactResult().success(response).enacted(response) //
+            return new PumpEnactResult(getInjector()).success(response).enacted(response) //
                     .comment(MainApp.gs(R.string.medtronic_cmd_cant_cancel_tbr));
         }
     }
@@ -1471,7 +1472,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         // this shouldn't be needed, but let's do check if profile setting we are setting is same as current one
         if (isProfileSame(profile)) {
-            return new PumpEnactResult() //
+            return new PumpEnactResult(getInjector()) //
                     .success(true) //
                     .enacted(false) //
                     .comment(MainApp.gs(R.string.medtronic_cmd_basal_profile_not_set_is_same));
@@ -1483,7 +1484,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             setRefreshButtonEnabled(true);
 
-            return new PumpEnactResult() //
+            return new PumpEnactResult(getInjector()) //
                     .success(false) //
                     .enacted(false) //
                     .comment(MainApp.gs(R.string.medtronic_pump_status_pump_unreachable));
@@ -1496,7 +1497,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         String profileInvalid = isProfileValid(basalProfile);
 
         if (profileInvalid != null) {
-            return new PumpEnactResult() //
+            return new PumpEnactResult(getInjector()) //
                     .success(false) //
                     .enacted(false) //
                     .comment(MainApp.gs(R.string.medtronic_cmd_set_profile_pattern_overflow, profileInvalid));
@@ -1511,9 +1512,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             LOG.info(getLogPrefix() + "Basal Profile was set: " + response);
 
         if (response) {
-            return new PumpEnactResult().success(true).enacted(true);
+            return new PumpEnactResult(getInjector()).success(true).enacted(true);
         } else {
-            return new PumpEnactResult().success(response).enacted(response) //
+            return new PumpEnactResult(getInjector()).success(response).enacted(response) //
                     .comment(MainApp.gs(R.string.medtronic_cmd_basal_profile_could_not_be_set));
         }
     }

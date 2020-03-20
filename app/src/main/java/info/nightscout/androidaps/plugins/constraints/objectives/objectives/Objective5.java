@@ -14,8 +14,7 @@ public class Objective5 extends Objective {
     @Inject SafetyPlugin safetyPlugin;
 
     public Objective5(HasAndroidInjector injector) {
-        super("maxiobzero", R.string.objectives_maxiobzero_objective, R.string.objectives_maxiobzero_gate);
-        injector.androidInjector().inject(this);
+        super(injector, "maxiobzero", R.string.objectives_maxiobzero_objective, R.string.objectives_maxiobzero_gate);
     }
 
     @Override

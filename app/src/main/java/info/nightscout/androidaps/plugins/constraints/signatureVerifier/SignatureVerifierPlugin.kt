@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.constraints.signatureVerifier
 
 import android.content.Context
 import android.content.pm.PackageManager
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.ConstraintsInterface
@@ -9,14 +10,11 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import org.slf4j.LoggerFactory
 import org.spongycastle.util.encoders.Hex
 import java.io.*
 import java.net.URL
@@ -35,6 +33,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class SignatureVerifierPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     private val sp: SP,
@@ -46,13 +45,12 @@ class SignatureVerifierPlugin @Inject constructor(
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.signature_verifier),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ), ConstraintsInterface {
 
     private val REVOKED_CERTS_URL = "https://raw.githubusercontent.com/MilosKozak/AndroidAPS/master/app/src/main/assets/revoked_certs.txt"
     private val UPDATE_INTERVAL = TimeUnit.DAYS.toMillis(1)
 
-    private val log = StacktraceLoggerWrapper.getLogger(L.CORE)
     private val lock: Any = arrayOfNulls<Any>(0)
     private var revokedCertsFile: File? = null
     private var revokedCerts: List<ByteArray>? = null
@@ -65,7 +63,7 @@ class SignatureVerifierPlugin @Inject constructor(
                 try {
                     downloadAndSaveRevokedCerts()
                 } catch (e: IOException) {
-                    log.error("Could not download revoked certs", e)
+                    aapsLogger.error("Could not download revoked certs", e)
                 }
             }
             if (hasIllegalSignature()) showNotification()
@@ -75,14 +73,14 @@ class SignatureVerifierPlugin @Inject constructor(
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (hasIllegalSignature()) {
             showNotification()
-            value.set(false)
+            value.set(aapsLogger, false)
         }
         if (shouldDownloadCerts()) {
             Thread(Runnable {
                 try {
                     downloadAndSaveRevokedCerts()
                 } catch (e: IOException) {
-                    log.error("Could not download revoked certs", e)
+                    aapsLogger.error("Could not download revoked certs", e)
                 }
             }).start()
         }
@@ -114,9 +112,9 @@ class SignatureVerifierPlugin @Inject constructor(
                 }
             }
         } catch (e: PackageManager.NameNotFoundException) {
-            log.error("Error in SignatureVerifierPlugin", e)
+            aapsLogger.error("Error in SignatureVerifierPlugin", e)
         } catch (e: NoSuchAlgorithmException) {
-            log.error("Error in SignatureVerifierPlugin", e)
+            aapsLogger.error("Error in SignatureVerifierPlugin", e)
         }
         return false
     }
@@ -132,15 +130,15 @@ class SignatureVerifierPlugin @Inject constructor(
                     val digest = MessageDigest.getInstance("SHA256")
                     val fingerprint = digest.digest(signature.toByteArray())
                     val hash = Hex.toHexString(fingerprint)
-                    log.debug("Found signature: $hash")
-                    log.debug("Found signature (short): " + singleCharMap(fingerprint))
+                    aapsLogger.debug("Found signature: $hash")
+                    aapsLogger.debug("Found signature (short): " + singleCharMap(fingerprint))
                     hashes.add(singleCharMap(fingerprint))
                 }
             }
         } catch (e: PackageManager.NameNotFoundException) {
-            log.error("Error in SignatureVerifierPlugin", e)
+            aapsLogger.error("Error in SignatureVerifierPlugin", e)
         } catch (e: NoSuchAlgorithmException) {
-            log.error("Error in SignatureVerifierPlugin", e)
+            aapsLogger.error("Error in SignatureVerifierPlugin", e)
         }
         return hashes
     }
@@ -181,7 +179,7 @@ class SignatureVerifierPlugin @Inject constructor(
             if (revokedCerts == null) revokedCerts = readRevokedCertsInAssets()
             synchronized(lock) { this.revokedCerts = parseRevokedCertsFile(revokedCerts) }
         } catch (e: IOException) {
-            log.error("Error in SignatureVerifierPlugin", e)
+            aapsLogger.error("Error in SignatureVerifierPlugin", e)
         }
     }
 

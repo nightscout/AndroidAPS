@@ -26,7 +26,7 @@ class CommandSetProfile constructor(
     override fun execute() {
         if (commandQueue.isThisProfileSet(profile)) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set. profile: $profile")
-            callback?.result(PumpEnactResult().success(true).enacted(false))?.run()
+            callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
             return
         }
         val r = activePlugin.activePump.setNewBasalProfile(profile)

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.xdripStatusline
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.*
@@ -28,6 +29,7 @@ import javax.inject.Singleton
 
 @Singleton
 class StatusLinePlugin @Inject constructor(
+    injector: HasAndroidInjector,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     resourceHelper: ResourceHelper,
@@ -45,7 +47,9 @@ class StatusLinePlugin @Inject constructor(
         .shortName(R.string.xdripstatus_shortname)
         .neverVisible(true)
         .preferencesId(R.xml.pref_xdripstatus)
-        .description(R.string.description_xdrip_status_line), aapsLogger, resourceHelper) {
+        .description(R.string.description_xdrip_status_line),
+    aapsLogger, resourceHelper, injector
+) {
 
     private val disposable = CompositeDisposable()
     private var lastLoopStatus = false
@@ -54,8 +58,10 @@ class StatusLinePlugin @Inject constructor(
         //broadcast related constants
         @Suppress("SpellCheckingInspection")
         private const val EXTRA_STATUSLINE = "com.eveningoutpost.dexdrip.Extras.Statusline"
+
         @Suppress("SpellCheckingInspection")
         private const val ACTION_NEW_EXTERNAL_STATUSLINE = "com.eveningoutpost.dexdrip.ExternalStatusline"
+
         @Suppress("SpellCheckingInspection", "unused")
         private const val RECEIVER_PERMISSION = "com.eveningoutpost.dexdrip.permissions.RECEIVE_EXTERNAL_STATUSLINE"
     }
@@ -111,7 +117,6 @@ class StatusLinePlugin @Inject constructor(
 
     private fun buildStatusString(profile: Profile): String {
         var status = ""
-        if (activePlugin.activePumpPlugin == null) return ""
         if (!loopPlugin.isEnabled(PluginType.LOOP)) {
             status += resourceHelper.gs(R.string.disabledloop) + "\n"
             lastLoopStatus = false
@@ -134,11 +139,11 @@ class StatusLinePlugin @Inject constructor(
                 + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
                 + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")")
         }
-        if (!sp.getBoolean(R.string.key_xdripstatus_showbgi, false)) {
-            return status
+        if (sp.getBoolean(R.string.key_xdripstatus_showbgi, true)) {
+            val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.isfMgdl, profileFunction.getUnits())
+            status += " " + (if (bgi >= 0) "+" else "") + DecimalFormatter.to2Decimal(bgi)
         }
-        val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.isfMgdl, profileFunction.getUnits())
-        status += " " + (if (bgi >= 0) "+" else "") + DecimalFormatter.to2Decimal(bgi)
+        // COB
         status += " " + iobCobCalculatorPlugin.getCobInfo(false, "StatusLinePlugin").generateCOBString()
         return status
     }

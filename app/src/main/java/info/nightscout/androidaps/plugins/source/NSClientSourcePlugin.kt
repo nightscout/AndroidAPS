@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.source
 
 import android.content.Intent
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.BgReading
@@ -22,6 +23,7 @@ import javax.inject.Singleton
 
 @Singleton
 class NSClientSourcePlugin @Inject constructor(
+    injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val sp: SP
@@ -30,8 +32,7 @@ class NSClientSourcePlugin @Inject constructor(
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginName(R.string.nsclientbg)
     .description(R.string.description_source_ns_client),
-    aapsLogger,
-    resourceHelper
+    aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
     private var lastBGTimeStamp: Long = 0

@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.NativeObject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
@@ -15,8 +16,8 @@ public class DetermineBasalResultMA extends APSResult {
     private double snoozeBG;
     private String mealAssist;
 
-    DetermineBasalResultMA(NativeObject result, JSONObject j, AAPSLogger aapsLogger) {
-        this(aapsLogger);
+    DetermineBasalResultMA(HasAndroidInjector injector, NativeObject result, JSONObject j) {
+        this(injector);
         json = j;
         if (result.containsKey("error")) {
             reason = (String) result.get("error");
@@ -49,13 +50,13 @@ public class DetermineBasalResultMA extends APSResult {
         }
     }
 
-    private DetermineBasalResultMA(AAPSLogger aapsLogger) {
-        this.aapsLogger = aapsLogger;
+    private DetermineBasalResultMA(HasAndroidInjector injector) {
+        super(injector);
     }
 
     @Override
-    public DetermineBasalResultMA clone() {
-        DetermineBasalResultMA newResult = new DetermineBasalResultMA(aapsLogger);
+    public DetermineBasalResultMA newAndClone(HasAndroidInjector injector) {
+        DetermineBasalResultMA newResult = new DetermineBasalResultMA(injector);
         doClone(newResult);
 
         newResult.eventualBG = eventualBG;

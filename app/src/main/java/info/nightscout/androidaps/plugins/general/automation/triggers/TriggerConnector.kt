@@ -21,8 +21,6 @@ import java.util.*
 class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
     var list: MutableList<Trigger> = ArrayList()
     private var connectorType: Type = Type.AND
-    // TODO move to TriggerConnector
-    //var connector: TriggerConnector = TriggerConnector(injector, TriggerConnector.Type.AND)
 
     enum class Type {
         AND, OR, XOR;

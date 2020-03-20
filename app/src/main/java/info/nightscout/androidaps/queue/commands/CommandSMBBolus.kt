@@ -24,11 +24,11 @@ class CommandSMBBolus(
         val lastBolusTime = activePlugin.activeTreatments.lastBolusTime
         if (lastBolusTime != 0L && lastBolusTime + T.mins(3).msecs() > DateUtil.now()) {
             aapsLogger.debug(LTag.PUMPQUEUE, "SMB requested but still in 3 min interval")
-            r = PumpEnactResult().enacted(false).success(false).comment("SMB requested but still in 3 min interval")
+            r = PumpEnactResult(injector).enacted(false).success(false).comment("SMB requested but still in 3 min interval")
         } else if (detailedBolusInfo.deliverAt != 0L && detailedBolusInfo.deliverAt + T.mins(1).msecs() > System.currentTimeMillis()) {
             r = activePlugin.activePump.deliverTreatment(detailedBolusInfo)
         } else {
-            r = PumpEnactResult().enacted(false).success(false).comment("SMB request too old")
+            r = PumpEnactResult(injector).enacted(false).success(false).comment("SMB request too old")
             aapsLogger.debug(LTag.PUMPQUEUE, "SMB bolus canceled. deliverAt: " + DateUtil.dateAndTimeString(detailedBolusInfo.deliverAt))
         }
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")

@@ -95,7 +95,7 @@ public abstract class RileyLinkService extends Service {
         }
 
         if (bluetoothStateReceiver!=null) {
-            bluetoothStateReceiver.unregisterBroadcasts();
+            bluetoothStateReceiver.unregisterBroadcasts(this);
         }
 
     }
@@ -111,7 +111,7 @@ public abstract class RileyLinkService extends Service {
 
 
         bluetoothStateReceiver = new RileyLinkBluetoothStateReceiver();
-        bluetoothStateReceiver.registerBroadcasts();
+        bluetoothStateReceiver.registerBroadcasts(this);
 
         //LOG.debug("onCreate(): It's ALIVE!");
     }

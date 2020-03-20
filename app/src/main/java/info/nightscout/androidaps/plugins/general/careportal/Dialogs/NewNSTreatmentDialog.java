@@ -30,7 +30,6 @@ import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -40,6 +39,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import dagger.android.support.DaggerDialogFragment;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -49,6 +49,8 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
@@ -69,15 +71,16 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+    @Inject HasAndroidInjector injector;
+    @Inject AAPSLogger aapsLogger;
     @Inject DefaultValueHelper defaultValueHelper;
     @Inject ProfileFunction profileFunction;
     @Inject ResourceHelper resourceHelper;
     @Inject ConstraintChecker constraintChecker;
     @Inject SP sp;
-    @Inject ConfigBuilderPlugin configBuilderPlugin;
+    @Inject ActivePluginProvider activePlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
-
-    private static Logger log = StacktraceLoggerWrapper.getLogger(NewNSTreatmentDialog.class);
+    @Inject HardLimits hardLimits;
 
     private static OptionsToShow options;
     private static @StringRes int event;
@@ -176,10 +179,10 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
 
         // profile
         profile = profileFunction.getProfile();
-        profileStore = configBuilderPlugin.getActiveProfileInterface().getProfile();
+        profileStore = activePlugin.getActiveProfileInterface().getProfile();
         if (profileStore == null) {
             if (options.eventType == R.id.careportal_profileswitch) {
-                log.error("Profile switch called but plugin doesn't contain valid profile");
+                aapsLogger.error("Profile switch called but plugin doesn't contain valid profile");
             }
         } else {
             ArrayList<CharSequence> profileList;
@@ -193,7 +196,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
                     profileSpinner.setSelection(p);
             }
         }
-        final Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profileFunction.getUnits());
+        final Double bg = Profile.fromMgdlToUnits(new GlucoseStatus(injector).getGlucoseStatusData() != null ? new GlucoseStatus(injector).getGlucoseStatusData().glucose : 0d, profileFunction.getUnits());
 
         // temp target
         final List<String> reasonList = Lists.newArrayList(
@@ -278,7 +281,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
         }
 
         sensorRadioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            double bg1 = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profileFunction.getUnits());
+            double bg1 = Profile.fromMgdlToUnits(new GlucoseStatus(injector).getGlucoseStatusData() != null ? new GlucoseStatus(injector).getGlucoseStatusData().glucose : 0d, profileFunction.getUnits());
             if (savedInstanceState != null && savedInstanceState.getDouble("editBg") != bg1) {
                 editBg.setValue(savedInstanceState.getDouble("editBg"));
             } else {
@@ -341,7 +344,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
             }
         };
 
-        Double maxAbsolute = HardLimits.maxBasal();
+        Double maxAbsolute = hardLimits.maxBasal();
         if (profile != null)
             maxAbsolute = constraintChecker.getMaxBasalAllowed(profile).value();
         editAbsolute = view.findViewById(R.id.careportal_newnstreatment_absoluteinput);
@@ -601,7 +604,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
                 data.put("relative", enteredInsulin * (100 - SafeParse.stringToDouble(editSplit.getText())) / 100 / SafeParse.stringToDouble(editDuration.getText()) * 60);
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return data;
     }
@@ -712,25 +715,9 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
 
     private void confirmNSTreatmentCreation() {
         final JSONObject data = gatherData();
-        OKDialog.showConfirmation(getContext(), Translator.translate(JsonHelper.safeGetString(data, "eventType", resourceHelper.gs(R.string.overview_treatment_label))), buildConfirmText(data), () -> createNSTreatment(data));
+        OKDialog.showConfirmation(getContext(), Translator.translate(JsonHelper.safeGetString(data, "eventType", resourceHelper.gs(R.string.overview_treatment_label))), buildConfirmText(data), () -> NSUpload.createNSTreatment(data, profileStore, profileFunction, eventTime.getTime()));
     }
 
-
-    void createNSTreatment(JSONObject data) {
-        if (JsonHelper.safeGetString(data, "eventType", "").equals(CareportalEvent.PROFILESWITCH)) {
-            ProfileSwitch profileSwitch = profileFunction.prepareProfileSwitch(
-                    profileStore,
-                    JsonHelper.safeGetString(data, "profile"),
-                    JsonHelper.safeGetInt(data, "duration"),
-                    JsonHelper.safeGetInt(data, "percentage"),
-                    JsonHelper.safeGetInt(data, "timeshift"),
-                    eventTime.getTime()
-            );
-            NSUpload.uploadProfileSwitch(profileSwitch);
-        } else {
-            NSUpload.uploadCareportalEntryToNS(data);
-        }
-    }
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {

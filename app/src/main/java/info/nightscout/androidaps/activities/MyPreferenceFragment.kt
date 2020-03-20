@@ -11,7 +11,6 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.Config
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.events.EventPreferenceChange
@@ -22,6 +21,8 @@ import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin
@@ -60,6 +61,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var sp: SP
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var pluginStore: PluginStore
 
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var danaRPlugin: DanaRPlugin
@@ -110,6 +113,13 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putInt("id", pluginId)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        PreferenceManager
+            .getDefaultSharedPreferences(context)
+            .unregisterOnSharedPreferenceChangeListener(this)
     }
 
     private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?, enabled: Boolean) {
@@ -174,7 +184,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(maintenancePlugin, rootKey)
         }
         initSummary(preferenceScreen)
-        for (plugin in MainApp.getPluginsList()) {
+        for (plugin in pluginStore.plugins) {
             plugin.preprocessPreferences(this)
         }
     }
@@ -228,7 +238,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         )
         if (listOf(*unitDependent).contains(pref.key)) {
             val editTextPref = pref as EditTextPreference
-            val converted = Profile.toCurrentUnitsString(SafeParse.stringToDouble(editTextPref.text))
+            val converted = Profile.toCurrentUnitsString(profileFunction, SafeParse.stringToDouble(editTextPref.text))
             editTextPref.summary = converted
             editTextPref.text = converted
         }
@@ -245,7 +255,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 pref.dialogMessage = pref.dialogMessage
                 pref.setSummary(pref.text)
             } else {
-                for (plugin in MainApp.getPluginsList()) {
+                for (plugin in pluginStore.plugins) {
                     plugin.updatePreferenceSummary(pref)
                 }
             }

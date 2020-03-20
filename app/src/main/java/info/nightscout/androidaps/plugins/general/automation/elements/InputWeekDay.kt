@@ -56,6 +56,10 @@ class InputWeekDay(injector: HasAndroidInjector) : Element(injector) {
         for (day in DayOfWeek.values()) set(day, false)
     }
 
+    fun setAll(value:Boolean) {
+        for (day in DayOfWeek.values()) set(day, value)
+    }
+
     operator fun set(day: DayOfWeek, value: Boolean): InputWeekDay {
         weekdays[day.ordinal] = value
         return this

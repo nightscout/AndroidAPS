@@ -7,20 +7,20 @@ import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import dagger.Lazy
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
+import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventBolusRequested
+import info.nightscout.androidaps.events.EventNewBasalProfile
+import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.logging.L.isEnabled
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -31,8 +31,13 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.queue.commands.Command.CommandType
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -87,16 +92,47 @@ class CommandQueue @Inject constructor(
     val constraintChecker: ConstraintChecker,
     val profileFunction: ProfileFunction,
     val activePlugin: Lazy<ActivePluginProvider>,
-    val mainApp: MainApp
+    val context: Context,
+    val sp: SP,
+    private val buildHelper: BuildHelper,
+    val fabricPrivacy: FabricPrivacy
 ) : CommandQueueProvider {
+
+    private val disposable = CompositeDisposable()
 
     private val queue = LinkedList<Command>()
     private var thread: QueueThread? = null
 
     var performing: Command? = null
 
+    init {
+        disposable.add(rxBus
+            .toObservable(EventProfileNeedsUpdate::class.java)
+            .observeOn(Schedulers.io())
+            .subscribe({
+                aapsLogger.debug(LTag.PROFILE, "onProfileSwitch")
+                profileFunction.getProfile()?.let {
+                    setProfile(it, object : Callback() {
+                        override fun run() {
+                            if (!result.success) {
+                                val i = Intent(context, ErrorHelperActivity::class.java)
+                                i.putExtra("soundid", R.raw.boluserror)
+                                i.putExtra("status", result.comment)
+                                i.putExtra("title", resourceHelper.gs(R.string.failedupdatebasalprofile))
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                context.startActivity(i)
+                            }
+                            if (result.enacted) rxBus.send(EventNewBasalProfile())
+                        }
+                    })
+                }
+            }) { exception: Throwable -> fabricPrivacy.logException(exception) }
+        )
+
+    }
+
     private fun executingNowError(): PumpEnactResult =
-        PumpEnactResult().success(false).enacted(false).comment(resourceHelper.gs(R.string.executingrightnow))
+        PumpEnactResult(injector).success(false).enacted(false).comment(resourceHelper.gs(R.string.executingrightnow))
 
     override fun isRunning(type: CommandType): Boolean = performing?.commandType == type
 
@@ -161,7 +197,7 @@ class CommandQueue @Inject constructor(
             SystemClock.sleep(500)
         }
         if (thread == null || thread!!.state == Thread.State.TERMINATED) {
-            thread = QueueThread(this)
+            thread = QueueThread(this, context, aapsLogger, rxBus, activePlugin.get(), resourceHelper, sp)
             thread!!.start()
             aapsLogger.debug(LTag.PUMPQUEUE, "Starting new thread")
         } else {
@@ -171,7 +207,7 @@ class CommandQueue @Inject constructor(
 
     override fun independentConnect(reason: String, callback: Callback?) {
         aapsLogger.debug(LTag.PUMPQUEUE, "Starting new queue")
-        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, activePlugin, mainApp)
+        val tempCommandQueue = CommandQueue(injector, aapsLogger, rxBus, resourceHelper, constraintChecker, profileFunction, activePlugin, context, sp, buildHelper, fabricPrivacy)
         tempCommandQueue.readStatus(reason, callback)
     }
 
@@ -251,7 +287,7 @@ class CommandQueue @Inject constructor(
     @Synchronized
     override fun cancelAllBoluses() {
         if (!isRunning(CommandType.BOLUS)) {
-            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult().success(true).enacted(false)))
+            rxBus.send(EventDismissBolusProgressIfRunning(PumpEnactResult(injector).success(true).enacted(false)))
         }
         removeAll(CommandType.BOLUS)
         removeAll(CommandType.SMB_BOLUS)
@@ -335,13 +371,13 @@ class CommandQueue @Inject constructor(
     override fun setProfile(profile: Profile, callback: Callback?): Boolean {
         if (isThisProfileSet(profile)) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set")
-            callback?.result(PumpEnactResult().success(true).enacted(false))?.run()
+            callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
             return false
         }
-        if (!MainApp.isEngineeringModeOrRelease()) {
+        if (!buildHelper.isEngineeringModeOrRelease()) {
             val notification = Notification(Notification.NOT_ENG_MODE_OR_RELEASE, resourceHelper.gs(R.string.not_eng_mode_or_release), Notification.URGENT)
             rxBus.send(EventNewNotification(notification))
-            callback?.result(PumpEnactResult().success(false).enacted(false).comment(resourceHelper.gs(R.string.not_eng_mode_or_release)))?.run()
+            callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(resourceHelper.gs(R.string.not_eng_mode_or_release)))?.run()
             return false
         }
         // Compare with pump limits
@@ -350,7 +386,7 @@ class CommandQueue @Inject constructor(
             if (basalValue.value < activePlugin.get().activePump.pumpDescription.basalMinimumRate) {
                 val notification = Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, resourceHelper.gs(R.string.basalvaluebelowminimum), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
-                callback?.result(PumpEnactResult().success(false).enacted(false).comment(resourceHelper.gs(R.string.basalvaluebelowminimum)))?.run()
+                callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(resourceHelper.gs(R.string.basalvaluebelowminimum)))?.run()
                 return false
             }
         }
@@ -470,26 +506,24 @@ class CommandQueue @Inject constructor(
         return if (current != null) {
             val result = activePump.isThisProfileSet(profile)
             if (!result) {
-                if (isEnabled(L.PUMPQUEUE)) {
-                    aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: $current")
-                    aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $profile")
-                }
+                aapsLogger.debug(LTag.PUMPQUEUE, "Current profile: $current")
+                aapsLogger.debug(LTag.PUMPQUEUE, "New profile: $profile")
             }
             result
         } else true
     }
 
-    private fun showBolusProgressDialog(insulin: Double, context: Context?) {
-        if (context != null) {
+    private fun showBolusProgressDialog(insulin: Double, ctx: Context?) {
+        if (ctx != null) {
             val bolusProgressDialog = BolusProgressDialog()
             bolusProgressDialog.setInsulin(insulin)
-            bolusProgressDialog.show((context as AppCompatActivity).supportFragmentManager, "BolusProgress")
+            bolusProgressDialog.show((ctx as AppCompatActivity).supportFragmentManager, "BolusProgress")
         } else {
             val i = Intent()
             i.putExtra("insulin", insulin)
-            i.setClass(mainApp, BolusProgressHelperActivity::class.java)
+            i.setClass(context, BolusProgressHelperActivity::class.java)
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            mainApp.startActivity(i)
+            context.startActivity(i)
         }
     }
 }

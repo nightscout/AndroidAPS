@@ -3,9 +3,9 @@ package info.nightscout.androidaps.plugins.insulin
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.Iob
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin.Companion.MIN_DIA
 import info.nightscout.androidaps.plugins.treatments.Treatment
@@ -26,12 +26,13 @@ class InsulinOrefBasePluginTest {
     var shortDiaNotificationSend = false
 
     inner class InsulinBaseTest(
+        injector: HasAndroidInjector,
         resourceHelper: ResourceHelper,
         profileFunction: ProfileFunction,
         rxBus: RxBusWrapper,
         aapsLogger: AAPSLogger
     ) : InsulinOrefBasePlugin(
-        resourceHelper, profileFunction, rxBus, aapsLogger
+        injector, resourceHelper, profileFunction, rxBus, aapsLogger
     ) {
 
         override fun sendShortDiaNotification(dia: Double) {
@@ -59,22 +60,22 @@ class InsulinOrefBasePluginTest {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var aapsLogger: AAPSLogger
-    @Mock lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Mock lateinit var activePlugin: ActivePluginProvider
 
-    private var treatmentInjector: HasAndroidInjector = HasAndroidInjector {
+    private var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
             if (it is Treatment) {
                 it.defaultValueHelper = defaultValueHelper
                 it.resourceHelper = resourceHelper
                 it.profileFunction = profileFunction
-                it.configBuilderPlugin = configBuilderPlugin
+                it.activePlugin = activePlugin
             }
         }
     }
 
     @Before
     fun setUp() {
-        sut = InsulinBaseTest(resourceHelper, profileFunction, rxBus, aapsLogger)
+        sut = InsulinBaseTest(injector, resourceHelper, profileFunction, rxBus, aapsLogger)
     }
 
     @Test
@@ -94,7 +95,7 @@ class InsulinOrefBasePluginTest {
 
     @Test
     fun testIobCalcForTreatment() {
-        val treatment = Treatment(treatmentInjector) //TODO: this should be a separate sut. I'd prefer a separate class.
+        val treatment = Treatment(injector) //TODO: this should be a separate sut. I'd prefer a separate class.
         val expected = Iob()
         Assert.assertEquals(expected, sut.iobCalcForTreatment(treatment, 0, 0.0))
         testPeak = 30

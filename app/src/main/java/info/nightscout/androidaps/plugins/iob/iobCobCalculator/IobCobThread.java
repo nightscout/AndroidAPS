@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
@@ -40,6 +39,7 @@ import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.MidnightTime;
 import info.nightscout.androidaps.utils.Profiler;
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -62,6 +62,7 @@ public class IobCobThread extends Thread {
     @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
     @Inject SensitivityAAPSPlugin sensitivityAAPSPlugin;
     @Inject SensitivityWeightedAveragePlugin sensitivityWeightedAveragePlugin;
+    @Inject BuildHelper buildHelper;
 
     private final HasAndroidInjector injector;
     private boolean bgDataReload;
@@ -120,7 +121,7 @@ public class IobCobThread extends Thread {
                 AutosensData previous = autosensDataTable.get(prevDataTime);
                 // start from oldest to be able sub cob
                 for (int i = bucketed_data.size() - 4; i >= 0; i--) {
-                    String progress = i + (MainApp.isDev() ? " (" + from + ")" : "");
+                    String progress = i + (buildHelper.isDev() ? " (" + from + ")" : "");
                     rxBus.send(new EventIobCalculationProgress(progress));
 
                     if (iobCobCalculatorPlugin.stopCalculationTrigger) {

@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.source
 
 import android.content.Intent
 import android.os.Handler
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.BgReading
@@ -14,6 +15,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
@@ -24,17 +26,18 @@ import kotlin.math.sin
 
 @Singleton
 class RandomBgPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private var virtualPumpPlugin: VirtualPumpPlugin
+    private val virtualPumpPlugin: VirtualPumpPlugin,
+    private val buildHelper: BuildHelper
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginName(R.string.randombg)
     .shortName(R.string.randombg_short)
     .description(R.string.description_source_randombg),
-    aapsLogger,
-    resourceHelper
+    aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
     private val loopHandler = Handler()
@@ -66,7 +69,7 @@ class RandomBgPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-        return virtualPumpPlugin.isEnabled(PluginType.PUMP) && (MainApp.engineeringMode || isRunningTest())
+        return isRunningTest() || virtualPumpPlugin.isEnabled(PluginType.PUMP) && buildHelper.isEngineeringMode()
     }
 
     override fun handleNewData(intent: Intent) {
@@ -76,7 +79,7 @@ class RandomBgPlugin @Inject constructor(
 
         val cal = GregorianCalendar()
         val currentMinute = cal.get(Calendar.MINUTE) + (cal.get(Calendar.HOUR_OF_DAY) % 2) * 60
-        val bgMgdl = min + (max - min) * sin(currentMinute / 120.0 * 2 * PI)
+        val bgMgdl = min + (max - min) + (max - min) * sin(currentMinute / 120.0 * 2 * PI)
 
         val bgReading = BgReading()
         bgReading.value = bgMgdl

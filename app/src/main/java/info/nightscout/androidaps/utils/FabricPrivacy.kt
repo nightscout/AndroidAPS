@@ -6,9 +6,9 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -28,7 +28,7 @@ class FabricPrivacy @Inject constructor(
     private val constraintChecker: ConstraintChecker,
     private val mainApp: MainApp,
     private val signatureVerifierPlugin: SignatureVerifierPlugin,
-    private val configBuilderPlugin: ConfigBuilderPlugin
+    private val activePlugin: ActivePluginProvider
 ) {
 
     init {
@@ -37,7 +37,9 @@ class FabricPrivacy @Inject constructor(
 
     companion object {
         private lateinit var instance: FabricPrivacy
+
         @JvmStatic
+        @Deprecated("use dagger")
         fun getInstance(): FabricPrivacy = instance
     }
 
@@ -129,11 +131,11 @@ class FabricPrivacy @Inject constructor(
         mainApp.firebaseAnalytics.setUserProperty("Remote", remote)
         val hashes: List<String> = signatureVerifierPlugin.shortHashes()
         if (hashes.isNotEmpty()) mainApp.firebaseAnalytics.setUserProperty("Hash", hashes[0])
-        configBuilderPlugin.activePumpPlugin?.let { mainApp.firebaseAnalytics.setUserProperty("Pump", it::class.java.simpleName) }
-        configBuilderPlugin.activeAPS?.let { mainApp.firebaseAnalytics.setUserProperty("Aps", it::class.java.simpleName) }
-        configBuilderPlugin.activeBgSource?.let { mainApp.firebaseAnalytics.setUserProperty("BgSource", it::class.java.simpleName) }
-        mainApp.firebaseAnalytics.setUserProperty("Profile", configBuilderPlugin.activeProfileInterface.javaClass.simpleName)
-        configBuilderPlugin.activeSensitivity.let { mainApp.firebaseAnalytics.setUserProperty("Sensitivity", it::class.java.simpleName) }
-        configBuilderPlugin.activeInsulin.let { mainApp.firebaseAnalytics.setUserProperty("Insulin", it::class.java.simpleName) }
+        activePlugin.activePump.let { mainApp.firebaseAnalytics.setUserProperty("Pump", it::class.java.simpleName) }
+        activePlugin.activeAPS.let { mainApp.firebaseAnalytics.setUserProperty("Aps", it::class.java.simpleName) }
+        activePlugin.activeBgSource.let { mainApp.firebaseAnalytics.setUserProperty("BgSource", it::class.java.simpleName) }
+        mainApp.firebaseAnalytics.setUserProperty("Profile", activePlugin.activeProfileInterface.javaClass.simpleName)
+        activePlugin.activeSensitivity.let { mainApp.firebaseAnalytics.setUserProperty("Sensitivity", it::class.java.simpleName) }
+        activePlugin.activeInsulin.let { mainApp.firebaseAnalytics.setUserProperty("Insulin", it::class.java.simpleName) }
     }
 }

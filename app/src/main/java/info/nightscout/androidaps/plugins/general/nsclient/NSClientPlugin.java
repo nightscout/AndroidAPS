@@ -14,8 +14,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
 
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +21,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventChargingState;
@@ -35,8 +33,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.data.AlarmAck;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSAlarm;
@@ -46,20 +43,21 @@ import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientS
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.ToastUtils;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class NSClientPlugin extends PluginBase {
-    private Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
+    private final Context context;
+    private final SP sp;
 
     public Handler handler;
 
@@ -73,13 +71,16 @@ public class NSClientPlugin extends PluginBase {
 
     public NSClientService nsClientService = null;
 
-    private NsClientReceiverDelegate  nsClientReceiverDelegate = new NsClientReceiverDelegate();
+    private NsClientReceiverDelegate nsClientReceiverDelegate = new NsClientReceiverDelegate();
 
     @Inject
     public NSClientPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
-            ResourceHelper resourceHelper
+            ResourceHelper resourceHelper,
+            Context context,
+            SP sp
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
@@ -88,12 +89,14 @@ public class NSClientPlugin extends PluginBase {
                         .shortName(R.string.nsclientinternal_shortname)
                         .preferencesId(R.xml.pref_nsclientinternal)
                         .description(R.string.description_ns_client),
-                aapsLogger, resourceHelper
+                aapsLogger, resourceHelper, injector
         );
 
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
+        this.context = context;
+        this.sp = sp;
 
         if (Config.NSCLIENT) {
             getPluginDescription().alwaysEnabled(true).visibleByDefault(true);
@@ -113,10 +116,9 @@ public class NSClientPlugin extends PluginBase {
 
     @Override
     protected void onStart() {
-        paused = SP.getBoolean(R.string.key_nsclientinternal_paused, false);
-        autoscroll = SP.getBoolean(R.string.key_nsclientinternal_autoscroll, true);
+        paused = sp.getBoolean(R.string.key_nsclientinternal_paused, false);
+        autoscroll = sp.getBoolean(R.string.key_nsclientinternal_autoscroll, true);
 
-        Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, NSClientService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         super.onStart();
@@ -126,7 +128,7 @@ public class NSClientPlugin extends PluginBase {
                 .toObservable(EventNSClientStatus.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    status = event.getStatus(MainApp.instance().getResourceHelper());
+                    status = event.getStatus(resourceHelper);
                     rxBus.send(new EventNSClientUpdateGUI());
                 }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
@@ -145,7 +147,7 @@ public class NSClientPlugin extends PluginBase {
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     if (nsClientService != null) {
-                        MainApp.instance().getApplicationContext().unbindService(mConnection);
+                        context.unbindService(mConnection);
                     }
                 }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
@@ -154,8 +156,7 @@ public class NSClientPlugin extends PluginBase {
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     addToLog(event);
-                    if (L.isEnabled(L.NSCLIENT))
-                        log.debug(event.getAction() + " " + event.getLogText());
+                    aapsLogger.debug(LTag.NSCLIENT, event.getAction() + " " + event.getLogText());
                 }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
         disposable.add(rxBus
@@ -172,7 +173,7 @@ public class NSClientPlugin extends PluginBase {
 
     @Override
     protected void onStop() {
-        MainApp.instance().getApplicationContext().unbindService(mConnection);
+        context.getApplicationContext().unbindService(mConnection);
         disposable.clear();
         super.onStop();
     }
@@ -182,14 +183,14 @@ public class NSClientPlugin extends PluginBase {
         super.preprocessPreferences(preferenceFragment);
 
         if (Config.NSCLIENT) {
-            PreferenceScreen scrnAdvancedSettings = (PreferenceScreen) preferenceFragment.findPreference(MainApp.gs(R.string.key_advancedsettings));
+            PreferenceScreen scrnAdvancedSettings = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_advancedsettings));
             if (scrnAdvancedSettings != null) {
-                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(MainApp.gs(R.string.key_statuslights_res_warning)));
-                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(MainApp.gs(R.string.key_statuslights_res_critical)));
-                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(MainApp.gs(R.string.key_statuslights_bat_warning)));
-                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(MainApp.gs(R.string.key_statuslights_bat_critical)));
-                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(MainApp.gs(R.string.key_show_statuslights)));
-                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(MainApp.gs(R.string.key_show_statuslights_extended)));
+                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(resourceHelper.gs(R.string.key_statuslights_res_warning)));
+                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(resourceHelper.gs(R.string.key_statuslights_res_critical)));
+                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(resourceHelper.gs(R.string.key_statuslights_bat_warning)));
+                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(resourceHelper.gs(R.string.key_statuslights_bat_critical)));
+                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(resourceHelper.gs(R.string.key_show_statuslights)));
+                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(resourceHelper.gs(R.string.key_show_statuslights_extended)));
             }
         }
     }
@@ -197,14 +198,12 @@ public class NSClientPlugin extends PluginBase {
     private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
-            if (L.isEnabled(L.NSCLIENT))
-                log.debug("Service is disconnected");
+            aapsLogger.debug(LTag.NSCLIENT, "Service is disconnected");
             nsClientService = null;
         }
 
         public void onServiceConnected(ComponentName name, IBinder service) {
-            if (L.isEnabled(L.NSCLIENT))
-                log.debug("Service is connected");
+            aapsLogger.debug(LTag.NSCLIENT, "Service is connected");
             NSClientService.LocalBinder mLocalBinder = (NSClientService.LocalBinder) service;
             if (mLocalBinder != null) // is null when running in roboelectric
                 nsClientService = mLocalBinder.getServiceInstance();
@@ -243,7 +242,7 @@ public class NSClientPlugin extends PluginBase {
             }
             textLog = Html.fromHtml(newTextLog.toString());
         } catch (OutOfMemoryError e) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), "Out of memory!\nStop using this phone !!!", R.raw.error);
+            ToastUtils.showToastInUiThread(context, "Out of memory!\nStop using this phone !!!", R.raw.error);
         }
     }
 
@@ -253,9 +252,9 @@ public class NSClientPlugin extends PluginBase {
     }
 
     public void pause(boolean newState) {
-        SP.putBoolean(R.string.key_nsclientinternal_paused, newState);
+        sp.putBoolean(R.string.key_nsclientinternal_paused, newState);
         paused = newState;
-        rxBus.send(new EventPreferenceChange(MainApp.resources(), R.string.key_nsclientinternal_paused));
+        rxBus.send(new EventPreferenceChange(resourceHelper, R.string.key_nsclientinternal_paused));
     }
 
     public UploadQueue queue() {
@@ -275,9 +274,8 @@ public class NSClientPlugin extends PluginBase {
         if (!isEnabled(PluginType.GENERAL)) {
             return;
         }
-        if (SP.getBoolean(R.string.key_ns_noupload, false)) {
-            if (L.isEnabled(L.NSCLIENT))
-                log.debug("Upload disabled. Message dropped");
+        if (sp.getBoolean(R.string.key_ns_noupload, false)) {
+            aapsLogger.debug(LTag.NSCLIENT, "Upload disabled. Message dropped");
             return;
         }
 

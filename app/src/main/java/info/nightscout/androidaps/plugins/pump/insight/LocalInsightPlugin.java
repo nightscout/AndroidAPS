@@ -1,9 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.insight;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
@@ -12,8 +15,6 @@ import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,6 +26,7 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -48,12 +50,11 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -144,12 +145,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
-    private final ConstraintChecker constraintChecker;
     private final TreatmentsPlugin treatmentsPlugin;
     private final SP sp;
     private final CommandQueueProvider commandQueue;
+    private final ProfileFunction profileFunction;
+    private final Context context;
 
-    private Logger log = StacktraceLoggerWrapper.getLogger(L.PUMP);
+    public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
 
     private PumpDescription pumpDescription;
     private InsightAlertService alertService;
@@ -198,13 +200,15 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     @Inject
     public LocalInsightPlugin(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
-            ConstraintChecker constraintChecker,
             TreatmentsPlugin treatmentsPlugin,
-            info.nightscout.androidaps.utils.sharedPreferences.SP sp,
-            CommandQueueProvider commandQueue
+            SP sp,
+            CommandQueueProvider commandQueue,
+            ProfileFunction profileFunction,
+            Context context
     ) {
         super(new PluginDescription()
                         .pluginName(R.string.insight_local)
@@ -213,17 +217,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                         .description(R.string.description_pump_insight_local)
                         .fragmentClass(LocalInsightFragment.class.getName())
                         .preferencesId(Config.APS ? R.xml.pref_insight_local_full : R.xml.pref_insight_local_pumpcontrol),
-                aapsLogger, resourceHelper, commandQueue
+                injector, aapsLogger, resourceHelper, commandQueue
 
         );
-
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
-        this.constraintChecker = constraintChecker;
         this.treatmentsPlugin = treatmentsPlugin;
         this.sp = sp;
         this.commandQueue = commandQueue;
+        this.profileFunction = profileFunction;
+        this.context = context;
 
         pumpDescription = new PumpDescription();
         pumpDescription.setPumpDescription(PumpType.AccuChekInsightBluetooth);
@@ -272,14 +276,24 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     @Override
     protected void onStart() {
         super.onStart();
-        MainApp.instance().bindService(new Intent(MainApp.instance(), InsightConnectionService.class), serviceConnection, Context.BIND_AUTO_CREATE);
-        MainApp.instance().bindService(new Intent(MainApp.instance(), InsightAlertService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        context.bindService(new Intent(context, InsightConnectionService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        context.bindService(new Intent(context, InsightAlertService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        createNotificationChannel();
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            NotificationChannel channel = new NotificationChannel(ALERT_CHANNEL_ID, resourceHelper.gs(R.string.insight_alert_notification_channel), NotificationManager.IMPORTANCE_HIGH);
+            channel.setSound(null, null);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        MainApp.instance().unbindService(serviceConnection);
+        context.unbindService(serviceConnection);
     }
 
     @Override
@@ -353,11 +367,11 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             updatePumpTimeIfNeeded();
             fetchStatus();
         } catch (AppLayerErrorException e) {
-            log.info("Exception while fetching status: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception while fetching status: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
-            log.info("Exception while fetching status: " + e.getClass().getCanonicalName());
+            aapsLogger.info(LTag.PUMP, "Exception while fetching status: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
-            log.error("Exception while fetching status", e);
+            aapsLogger.error("Exception while fetching status", e);
         }
     }
 
@@ -467,7 +481,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     @NonNull @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         List<BasalProfileBlock> profileBlocks = new ArrayList<>();
         for (int i = 0; i < profile.getBasalValues().length; i++) {
@@ -500,17 +514,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             } catch (Exception ignored) {
             }
         } catch (AppLayerErrorException e) {
-            log.info("Exception while setting profile: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
-            log.info("Exception while setting profile: " + e.getClass().getCanonicalName());
+            aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.getClass().getCanonicalName());
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
-            log.error("Exception while setting profile", e);
+            aapsLogger.error("Exception while setting profile", e);
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
             result.comment = ExceptionTranslator.getString(e);
@@ -531,7 +545,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 nextValue = profile.getBasalValues()[i + 1];
             if (profileBlock.getDuration() * 60 != (nextValue != null ? nextValue.timeAsSeconds : 24 * 60 * 60) - basalValue.timeAsSeconds)
                 return false;
-            if (Math.abs(profileBlock.getBasalAmount() - basalValue.value) > (basalValue.value > 5 ? 0.05 : 0.005))
+            if (Math.abs(profileBlock.getBasalAmount() - basalValue.value) > (basalValue.value > 5 ? 0.051 : 0.0051))
                 return false;
         }
         return true;
@@ -564,7 +578,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         double insulin = Math.round(detailedBolusInfo.insulin / 0.01) * 0.01;
         if (insulin > 0) {
             try {
@@ -595,7 +609,16 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 detailedBolusInfo.date = insightBolusID.timestamp;
                 detailedBolusInfo.source = Source.PUMP;
                 detailedBolusInfo.pumpId = insightBolusID.id;
-                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
+                if (detailedBolusInfo.carbs > 0 && detailedBolusInfo.carbTime != 0) {
+                    DetailedBolusInfo carbInfo = new DetailedBolusInfo();
+                    carbInfo.carbs = detailedBolusInfo.carbs;
+                    carbInfo.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60L * 1000L;
+                    carbInfo.source = Source.USER;
+                    treatmentsPlugin.addToHistoryTreatment(carbInfo, false);
+                    detailedBolusInfo.carbTime = 0;
+                    detailedBolusInfo.carbs = 0;
+                }
+                treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
                 while (true) {
                     synchronized ($bolusLock) {
                         if (bolusCancelled) break;
@@ -634,13 +657,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 readHistory();
                 fetchStatus();
             } catch (AppLayerErrorException e) {
-                log.info("Exception while delivering bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+                aapsLogger.info(LTag.PUMP, "Exception while delivering bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
                 result.comment = ExceptionTranslator.getString(e);
             } catch (InsightException e) {
-                log.info("Exception while delivering bolus: " + e.getClass().getCanonicalName());
+                aapsLogger.info(LTag.PUMP, "Exception while delivering bolus: " + e.getClass().getCanonicalName());
                 result.comment = ExceptionTranslator.getString(e);
             } catch (Exception e) {
-                log.error("Exception while delivering bolus", e);
+                aapsLogger.error("Exception while delivering bolus", e);
                 result.comment = ExceptionTranslator.getString(e);
             }
         } else if (detailedBolusInfo.carbs > 0) {
@@ -662,21 +685,22 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     cancelBolusMessage.setBolusID(bolusID);
                     connectionService.requestMessage(cancelBolusMessage).await();
                     bolusCancelled = true;
+                    confirmAlert(AlertType.WARNING_38);
+                    alertService.ignore(null);
                 }
-                confirmAlert(AlertType.WARNING_38);
             } catch (AppLayerErrorException e) {
-                log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+                aapsLogger.info(LTag.PUMP, "Exception while canceling bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             } catch (InsightException e) {
-                log.info("Exception while canceling bolus: " + e.getClass().getCanonicalName());
+                aapsLogger.info(LTag.PUMP, "Exception while canceling bolus: " + e.getClass().getCanonicalName());
             } catch (Exception e) {
-                log.error("Exception while canceling bolus", e);
+                aapsLogger.error("Exception while canceling bolus", e);
             }
         }).start();
     }
 
     @NonNull @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew) {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         if (activeBasalRate == null) return result;
         if (activeBasalRate.getActiveBasalRate() == 0) return result;
         double percent = 100D / activeBasalRate.getActiveBasalRate() * absoluteRate;
@@ -714,18 +738,18 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             fetchStatus();
             readHistory();
         } catch (AppLayerErrorException e) {
-            log.info("Exception after setting TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception after setting TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
-            log.info("Exception after setting TBR: " + e.getClass().getCanonicalName());
+            aapsLogger.info(LTag.PUMP, "Exception after setting TBR: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
-            log.error("Exception after setting TBR", e);
+            aapsLogger.error("Exception after setting TBR", e);
         }
         return result;
     }
 
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew) {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = (int) Math.round(((double) percent) / 10d) * 10;
         if (percent == 100) return cancelTempBasal(true);
         else if (percent > 250) percent = 250;
@@ -750,13 +774,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             readHistory();
             fetchStatus();
         } catch (AppLayerErrorException e) {
-            log.info("Exception while setting TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception while setting TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
-            log.info("Exception while setting TBR: " + e.getClass().getCanonicalName());
+            aapsLogger.info(LTag.PUMP, "Exception while setting TBR: " + e.getClass().getCanonicalName());
             result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
-            log.error("Exception while setting TBR", e);
+            aapsLogger.error("Exception while setting TBR", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -770,17 +794,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             fetchStatus();
             readHistory();
         } catch (AppLayerErrorException e) {
-            log.info("Exception after delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception after delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
-            log.info("Exception after delivering extended bolus: " + e.getClass().getCanonicalName());
+            aapsLogger.info(LTag.PUMP, "Exception after delivering extended bolus: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
-            log.error("Exception after delivering extended bolus", e);
+            aapsLogger.error("Exception after delivering extended bolus", e);
         }
         return result;
     }
 
     public PumpEnactResult setExtendedBolusOnly(Double insulin, Integer durationInMinutes) {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         try {
             DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
             bolusMessage.setBolusType(BolusType.EXTENDED);
@@ -799,18 +823,18 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             extendedBolus.durationInMinutes = durationInMinutes;
             extendedBolus.insulin = insulin;
             extendedBolus.pumpId = insightBolusID.id;
-            TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
+            treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
             result.success = true;
             result.enacted = true;
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
-            log.info("Exception while delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
-            log.info("Exception while delivering extended bolus: " + e.getClass().getCanonicalName());
+            aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.getClass().getCanonicalName());
             result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
-            log.error("Exception while delivering extended bolus", e);
+            aapsLogger.error("Exception while delivering extended bolus", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -818,7 +842,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     @NonNull @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         PumpEnactResult cancelEBResult = null;
         if (isFakingTempsByExtendedBoluses()) cancelEBResult = cancelExtendedBolusOnly();
         PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
@@ -829,17 +853,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             fetchStatus();
             readHistory();
         } catch (AppLayerErrorException e) {
-            log.info("Exception after canceling TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception after canceling TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
-            log.info("Exception after canceling TBR: " + e.getClass().getCanonicalName());
+            aapsLogger.info(LTag.PUMP, "Exception after canceling TBR: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
-            log.error("Exception after canceling TBR", e);
+            aapsLogger.error("Exception after canceling TBR", e);
         }
         return result;
     }
 
     private PumpEnactResult cancelTempBasalOnly() {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         try {
             alertService.ignore(AlertType.WARNING_36);
             connectionService.requestMessage(new CancelTBRMessage()).await();
@@ -853,13 +877,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             result.success = true;
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
-            log.info("Exception while canceling TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception while canceling TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
-            log.info("Exception while canceling TBR: " + e.getClass().getCanonicalName());
+            aapsLogger.info(LTag.PUMP, "Exception while canceling TBR: " + e.getClass().getCanonicalName());
             result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
-            log.error("Exception while canceling TBR", e);
+            aapsLogger.error("Exception while canceling TBR", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -872,17 +896,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             fetchStatus();
             readHistory();
         } catch (AppLayerErrorException e) {
-            log.info("Exception after canceling extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception after canceling extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
-            log.info("Exception after canceling extended bolus: " + e.getClass().getCanonicalName());
+            aapsLogger.info(LTag.PUMP, "Exception after canceling extended bolus: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
-            log.error("Exception after canceling extended bolus", e);
+            aapsLogger.error("Exception after canceling extended bolus", e);
         }
         return result;
     }
 
     private PumpEnactResult cancelExtendedBolusOnly() {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         try {
             for (ActiveBolus activeBolus : activeBoluses) {
                 if (activeBolus.getBolusType() == BolusType.EXTENDED || activeBolus.getBolusType() == BolusType.MULTIWAVE) {
@@ -905,7 +929,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                                 else UploadQueue.removeID("dbAdd", _id);
                                 MainApp.getDbHelper().delete(extendedBolus);
                             } else
-                                TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
+                                treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
                         }
                         result.enacted = true;
                         result.success = true;
@@ -915,13 +939,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             result.success = true;
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
-            log.info("Exception while canceling extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception while canceling extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
-            log.info("Exception while canceling extended bolus: " + e.getClass().getCanonicalName());
+            aapsLogger.info(LTag.PUMP, "Exception while canceling extended bolus: " + e.getClass().getCanonicalName());
             result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
-            log.error("Exception while canceling extended bolus", e);
+            aapsLogger.error("Exception while canceling extended bolus", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -941,17 +965,18 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 }
             }
         } catch (AppLayerErrorException e) {
-            log.info("Exception while confirming alert: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception while confirming alert: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
-            log.info("Exception while confirming alert: " + e.getClass().getCanonicalName());
+            aapsLogger.info(LTag.PUMP, "Exception while confirming alert: " + e.getClass().getCanonicalName());
         } catch (Exception e) {
-            log.error("Exception while confirming alert", e);
+            aapsLogger.error("Exception while confirming alert", e);
         }
     }
 
     @NonNull @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
         long now = System.currentTimeMillis();
+        if (connectionService == null) return null;
         if (System.currentTimeMillis() - connectionService.getLastConnected() > (60 * 60 * 1000)) {
             return null;
         }
@@ -964,16 +989,16 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             status.put("timestamp", DateUtil.toISOString(connectionService.getLastConnected()));
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
-                extended.put("ActiveProfile", ProfileFunctions.getInstance().getProfileName());
+                extended.put("ActiveProfile", profileFunction.getProfileName());
             } catch (Exception e) {
             }
-            TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
+            TemporaryBasal tb = treatmentsPlugin.getTempBasalFromHistory(now);
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
                 extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
-            ExtendedBolus eb = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(now);
+            ExtendedBolus eb = treatmentsPlugin.getExtendedBolusFromHistory(now);
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
                 extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
@@ -992,7 +1017,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             }
             pump.put("clock", DateUtil.toISOString(now));
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return pump;
     }
@@ -1014,7 +1039,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     }
 
     public PumpEnactResult stopPump() {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         try {
             SetOperatingModeMessage operatingModeMessage = new SetOperatingModeMessage();
             operatingModeMessage.setOperatingMode(OperatingMode.STOPPED);
@@ -1024,20 +1049,20 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             fetchStatus();
             readHistory();
         } catch (AppLayerErrorException e) {
-            log.info("Exception while stopping pump: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception while stopping pump: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
-            log.info("Exception while stopping pump: " + e.getClass().getCanonicalName());
+            aapsLogger.info(LTag.PUMP, "Exception while stopping pump: " + e.getClass().getCanonicalName());
             result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
-            log.error("Exception while stopping pump", e);
+            aapsLogger.error("Exception while stopping pump", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
     }
 
     public PumpEnactResult startPump() {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         try {
             SetOperatingModeMessage operatingModeMessage = new SetOperatingModeMessage();
             operatingModeMessage.setOperatingMode(OperatingMode.STARTED);
@@ -1047,20 +1072,20 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             fetchStatus();
             readHistory();
         } catch (AppLayerErrorException e) {
-            log.info("Exception while starting pump: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception while starting pump: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
-            log.info("Exception while starting pump: " + e.getClass().getCanonicalName());
+            aapsLogger.info(LTag.PUMP, "Exception while starting pump: " + e.getClass().getCanonicalName());
             result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
-            log.error("Exception while starting pump", e);
+            aapsLogger.error("Exception while starting pump", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
     }
 
     public PumpEnactResult setTBROverNotification(boolean enabled) {
-        PumpEnactResult result = new PumpEnactResult();
+        PumpEnactResult result = new PumpEnactResult(getInjector());
         boolean valueBefore = tbrOverNotificationBlock.isEnabled();
         tbrOverNotificationBlock.setEnabled(enabled);
         try {
@@ -1069,15 +1094,15 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             result.enacted = true;
         } catch (AppLayerErrorException e) {
             tbrOverNotificationBlock.setEnabled(valueBefore);
-            log.info("Exception while updating TBR notification block: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception while updating TBR notification block: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             result.comment = ExceptionTranslator.getString(e);
         } catch (InsightException e) {
             tbrOverNotificationBlock.setEnabled(valueBefore);
-            log.info("Exception while updating TBR notification block: " + e.getClass().getSimpleName());
+            aapsLogger.info(LTag.PUMP, "Exception while updating TBR notification block: " + e.getClass().getSimpleName());
             result.comment = ExceptionTranslator.getString(e);
         } catch (Exception e) {
             tbrOverNotificationBlock.setEnabled(valueBefore);
-            log.error("Exception while updating TBR notification block", e);
+            aapsLogger.error("Exception while updating TBR notification block", e);
             result.comment = ExceptionTranslator.getString(e);
         }
         return result;
@@ -1124,7 +1149,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
 
     @NonNull @Override
     public PumpEnactResult loadTDDs() {
-        return new PumpEnactResult().success(true);
+        return new PumpEnactResult(getInjector()).success(true);
     }
 
     @Override
@@ -1173,11 +1198,11 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     MainApp.getDbHelper().createOrUpdate(historyOffset);
                 }
             } catch (AppLayerErrorException e) {
-                log.info("Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+                aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             } catch (InsightException e) {
-                log.info("Exception while reading history: " + e.getClass().getSimpleName());
+                aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.getClass().getSimpleName());
             } catch (Exception e) {
-                log.error("Exception while reading history", e);
+                aapsLogger.error("Exception while reading history", e);
             } finally {
                 try {
                     connectionService.requestMessage(new StopReadingHistoryMessage()).await();
@@ -1185,11 +1210,11 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 }
             }
         } catch (AppLayerErrorException e) {
-            log.info("Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
+            aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
         } catch (InsightException e) {
-            log.info("Exception while reading history: " + e.getClass().getSimpleName());
+            aapsLogger.info(LTag.PUMP, "Exception while reading history: " + e.getClass().getSimpleName());
         } catch (Exception e) {
-            log.error("Exception while reading history", e);
+            aapsLogger.error("Exception while reading history", e);
         }
         new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventRefreshOverview("LocalInsightPlugin::readHistory")));
     }
@@ -1216,7 +1241,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         }
         Collections.sort(temporaryBasals, (o1, o2) -> (int) (o1.date - o2.date));
         for (TemporaryBasal temporaryBasal : temporaryBasals)
-            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(temporaryBasal);
+            treatmentsPlugin.addToHistoryTempBasal(temporaryBasal);
     }
 
     private boolean processHistoryEvent(String serial, List<TemporaryBasal> temporaryBasals, List<InsightPumpID> pumpStartedEvents, HistoryEvent event) {
@@ -1381,7 +1406,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             detailedBolusInfo.source = Source.PUMP;
             detailedBolusInfo.pumpId = bolusID.id;
             detailedBolusInfo.insulin = event.getImmediateAmount();
-            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
+            treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
         }
         if ((event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE)) {
             ExtendedBolus extendedBolus = new ExtendedBolus();
@@ -1390,8 +1415,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             extendedBolus.durationInMinutes = event.getDuration();
             extendedBolus.insulin = event.getExtendedAmount();
             extendedBolus.pumpId = bolusID.id;
-            if (ProfileFunctions.getInstance().getProfile(extendedBolus.date) != null)
-                TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
+            if (profileFunction.getProfile(extendedBolus.date) != null)
+                treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
         }
     }
 
@@ -1415,7 +1440,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             detailedBolusInfo.source = Source.PUMP;
             detailedBolusInfo.pumpId = bolusID.id;
             detailedBolusInfo.insulin = event.getImmediateAmount();
-            TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
+            treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
         }
         if (event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE) {
             if (event.getDuration() == 0) {
@@ -1433,8 +1458,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 extendedBolus.durationInMinutes = event.getDuration();
                 extendedBolus.insulin = event.getExtendedAmount();
                 extendedBolus.pumpId = bolusID.id;
-                if (ProfileFunctions.getInstance().getProfile(extendedBolus.date) != null)
-                    TreatmentsPlugin.getPlugin().addToHistoryExtendedBolus(extendedBolus);
+                if (profileFunction.getProfile(extendedBolus.date) != null)
+                    treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus);
             }
         }
     }
@@ -1548,9 +1573,15 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             data.put("created_at", DateUtil.toISOString(date));
             data.put("eventType", CareportalEvent.NOTE);
             data.put("notes", note);
+            CareportalEvent careportalEvent = new CareportalEvent();
+            careportalEvent.date = date;
+            careportalEvent.source = Source.USER;
+            careportalEvent.eventType = CareportalEvent.NOTE;
+            careportalEvent.json = data.toString();
+            MainApp.getDbHelper().createOrUpdate(careportalEvent);
             NSUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -1576,36 +1607,42 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
             data.put("created_at", DateUtil.toISOString(date));
             data.put("eventType", event);
+            CareportalEvent careportalEvent = new CareportalEvent();
+            careportalEvent.date = date;
+            careportalEvent.source = Source.USER;
+            careportalEvent.eventType = event;
+            careportalEvent.json = data.toString();
+            MainApp.getDbHelper().createOrUpdate(careportalEvent);
             NSUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
-    @Override
-    public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, Profile profile) {
-        percentRate.setIfGreater(0, String.format(resourceHelper.gs(R.string.limitingpercentrate), 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
-        percentRate.setIfSmaller(getPumpDescription().maxTempPercent, String.format(resourceHelper.gs(R.string.limitingpercentrate), getPumpDescription().maxTempPercent, resourceHelper.gs(R.string.pumplimit)), this);
+    @NonNull @Override
+    public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, @NonNull Profile profile) {
+        percentRate.setIfGreater(getAapsLogger(), 0, String.format(resourceHelper.gs(R.string.limitingpercentrate), 0, resourceHelper.gs(R.string.itmustbepositivevalue)), this);
+        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().maxTempPercent, String.format(resourceHelper.gs(R.string.limitingpercentrate), getPumpDescription().maxTempPercent, resourceHelper.gs(R.string.pumplimit)), this);
         return percentRate;
     }
 
-    @Override
-    public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
+    @NonNull @Override
+    public Constraint<Double> applyBolusConstraints(@NonNull Constraint<Double> insulin) {
         if (!limitsFetched) return insulin;
-        insulin.setIfSmaller(maximumBolusAmount, String.format(resourceHelper.gs(R.string.limitingbolus), maximumBolusAmount, resourceHelper.gs(R.string.pumplimit)), this);
+        insulin.setIfSmaller(getAapsLogger(), maximumBolusAmount, String.format(resourceHelper.gs(R.string.limitingbolus), maximumBolusAmount, resourceHelper.gs(R.string.pumplimit)), this);
         if (insulin.value() < minimumBolusAmount) {
 
             //TODO: Add function to Constraints or use different approach
             // This only works if the interface of the InsightPlugin is called last.
             // If not, another constraint could theoretically set the value between 0 and minimumBolusAmount
 
-            insulin.set(0d, String.format(resourceHelper.gs(R.string.limitingbolus), minimumBolusAmount, resourceHelper.gs(R.string.pumplimit)), this);
+            insulin.set(getAapsLogger(), 0d, String.format(resourceHelper.gs(R.string.limitingbolus), minimumBolusAmount, resourceHelper.gs(R.string.pumplimit)), this);
         }
         return insulin;
     }
 
-    @Override
-    public Constraint<Double> applyExtendedBolusConstraints(Constraint<Double> insulin) {
+    @NonNull @Override
+    public Constraint<Double> applyExtendedBolusConstraints(@NonNull Constraint<Double> insulin) {
         return applyBolusConstraints(insulin);
     }
 

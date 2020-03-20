@@ -30,6 +30,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.DaggerService;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -78,6 +79,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class NSClientService extends DaggerService {
+    @Inject HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
     @Inject NSSettingsStatus nsSettingsStatus;
     @Inject NSDeviceStatus nsDeviceStatus;
@@ -524,7 +526,7 @@ public class NSClientService extends DaggerService {
                             JSONArray profiles = data.getJSONArray("profiles");
                             if (profiles.length() > 0) {
                                 JSONObject profile = (JSONObject) profiles.get(profiles.length() - 1);
-                                profileStore = new ProfileStore(profile);
+                                profileStore = new ProfileStore(injector, profile);
                                 broadcastProfile = true;
                                 rxBus.send(new EventNSClientNewLog("PROFILE", "profile received"));
                             }

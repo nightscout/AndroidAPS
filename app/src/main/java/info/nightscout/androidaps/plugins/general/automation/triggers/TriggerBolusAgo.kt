@@ -16,12 +16,22 @@ import info.nightscout.androidaps.utils.JsonHelper.safeGetString
 import org.json.JSONObject
 
 class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
-    private var minutesAgo: InputDuration = InputDuration(injector, 0, InputDuration.TimeUnit.MINUTES)
+    var minutesAgo: InputDuration = InputDuration(injector, 0, InputDuration.TimeUnit.MINUTES)
     var comparator: Comparator = Comparator(injector)
 
     private constructor(injector: HasAndroidInjector, triggerBolusAgo: TriggerBolusAgo) : this(injector) {
         minutesAgo = InputDuration(injector, triggerBolusAgo.minutesAgo.value, InputDuration.TimeUnit.MINUTES)
         comparator = Comparator(injector, triggerBolusAgo.comparator.value)
+    }
+
+    fun setValue(value: Int): TriggerBolusAgo {
+        minutesAgo.value = value
+        return this
+    }
+
+    fun comparator(comparator: Comparator.Compare): TriggerBolusAgo {
+        this.comparator.value = comparator
+        return this
     }
 
     override fun shouldRun(): Boolean {

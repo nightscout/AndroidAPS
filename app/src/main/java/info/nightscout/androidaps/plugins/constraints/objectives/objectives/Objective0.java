@@ -4,13 +4,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
@@ -20,16 +20,15 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class Objective0 extends Objective {
     @Inject SP sp;
-    @Inject ConfigBuilderPlugin configBuilderPlugin;
+    @Inject ActivePluginProvider activePlugin;
     @Inject VirtualPumpPlugin virtualPumpPlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject LoopPlugin loopPlugin;
     @Inject NSClientPlugin nsClientPlugin;
     @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
-    public Objective0() {
-        super("config", R.string.objectives_0_objective, R.string.objectives_0_gate);
-        MainApp.instance().androidInjector().inject(this); // TODO inject or pass itno constructor once AutomationPlugin is prepared for Dagger
+    public Objective0(HasAndroidInjector injector) {
+        super(injector, "config", R.string.objectives_0_objective, R.string.objectives_0_gate);
     }
 
     @Override
@@ -78,8 +77,8 @@ public class Objective0 extends Objective {
         tasks.add(new Task(R.string.apsselected) {
             @Override
             public boolean isCompleted() {
-                APSInterface usedAPS = configBuilderPlugin.getActiveAPS();
-                if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginType.APS))
+                APSInterface usedAPS = activePlugin.getActiveAPS();
+                if (((PluginBase) usedAPS).isEnabled(PluginType.APS))
                     return true;
                 return false;
             }

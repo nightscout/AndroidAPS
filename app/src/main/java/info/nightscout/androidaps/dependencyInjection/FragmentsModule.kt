@@ -30,6 +30,7 @@ import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicato
 import info.nightscout.androidaps.plugins.general.smsCommunicator.fragments.SmsCommunicatorLogFragment
 import info.nightscout.androidaps.plugins.general.smsCommunicator.fragments.SmsCommunicatorOtpFragment
 import info.nightscout.androidaps.plugins.general.tidepool.TidepoolFragment
+import info.nightscout.androidaps.plugins.insulin.InsulinFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
 import info.nightscout.androidaps.plugins.pump.combo.ComboFragment
@@ -41,7 +42,9 @@ import info.nightscout.androidaps.plugins.source.BGSourceFragment
 import info.nightscout.androidaps.plugins.treatments.TreatmentsFragment
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsBolusFragment
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsCareportalFragment
+import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsExtendedBolusesFragment
 import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsProfileSwitchFragment
+import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTempTargetFragment
 
 @Module
 @Suppress("unused")
@@ -54,11 +57,13 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment
     @ContributesAndroidInjector abstract fun contributesCareportalFragment(): CareportalFragment
     @ContributesAndroidInjector abstract fun contributesComboFragment(): ComboFragment
+
     @ContributesAndroidInjector
     abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
 
     @ContributesAndroidInjector abstract fun contributesDanaRFragment(): DanaRFragment
     @ContributesAndroidInjector abstract fun contributesFoodFragment(): FoodFragment
+    @ContributesAndroidInjector abstract fun contributesInsulinFragment(): InsulinFragment
     @ContributesAndroidInjector abstract fun contributesLocalProfileFragment(): LocalProfileFragment
     @ContributesAndroidInjector abstract fun contributesObjectivesFragment(): ObjectivesFragment
     @ContributesAndroidInjector abstract fun contributesOpenAPSAMAFragment(): OpenAPSAMAFragment
@@ -77,14 +82,11 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsFragment(): TreatmentsFragment
-    @ContributesAndroidInjector
-    abstract fun contributesTreatmentsBolusFragment(): TreatmentsBolusFragment
-
-    @ContributesAndroidInjector
-    abstract fun contributesTreatmentsCareportalFragment(): TreatmentsCareportalFragment
-
-    @ContributesAndroidInjector
-    abstract fun contributesTreatmentsProfileSwitchFragment(): TreatmentsProfileSwitchFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsBolusFragment(): TreatmentsBolusFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsTempTargetFragment(): TreatmentsTempTargetFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsExtendedBolusesFragment(): TreatmentsExtendedBolusesFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsCareportalFragment(): TreatmentsCareportalFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsProfileSwitchFragment(): TreatmentsProfileSwitchFragment
 
     @ContributesAndroidInjector abstract fun contributesVirtualPumpFragment(): VirtualPumpFragment
 
@@ -95,6 +97,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesEditActionDialog(): EditActionDialog
     @ContributesAndroidInjector abstract fun contributesEditEventDialog(): EditEventDialog
     @ContributesAndroidInjector abstract fun contributesEditTriggerDialog(): EditTriggerDialog
+
     @ContributesAndroidInjector
     abstract fun contributesEditQuickWizardDialog(): EditQuickWizardDialog
 

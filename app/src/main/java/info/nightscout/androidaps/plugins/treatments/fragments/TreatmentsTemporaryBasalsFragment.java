@@ -23,7 +23,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
@@ -84,7 +84,7 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
                 }
                 holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.durationInMinutes, " min"));
                 if (tempBasal.isAbsolute) {
-                    Profile profile = ProfileFunctions.getInstance().getProfile(tempBasal.date);
+                    Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile(tempBasal.date);
                     if (profile != null) {
                         holder.absolute.setText(DecimalFormatter.to2Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date, profile), " U/h"));
                         holder.percent.setText("");
@@ -99,7 +99,7 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
                 holder.realDuration.setText(DecimalFormatter.to0Decimal(tempBasal.getRealDuration(), " min"));
                 long now = DateUtil.now();
                 IobTotal iob = new IobTotal(now);
-                Profile profile = ProfileFunctions.getInstance().getProfile(now);
+                Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile(now);
                 if (profile != null)
                     iob = tempBasal.iobCalc(now, profile);
                 holder.iob.setText(DecimalFormatter.to2Decimal(iob.basaliob, " U"));

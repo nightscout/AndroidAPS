@@ -17,7 +17,7 @@ public class DanaRS_Packet {
 
     protected static final int TYPE_START = 0;
     protected static final int OPCODE_START = 1;
-    protected static final int DATA_START = 2;
+    public static final int DATA_START = 2;
 
     private boolean received;
     public boolean failed;

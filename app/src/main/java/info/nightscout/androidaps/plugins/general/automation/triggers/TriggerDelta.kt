@@ -21,7 +21,7 @@ import java.text.DecimalFormat
 class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
 
     var units: String = Constants.MGDL
-    private var delta: InputDelta = InputDelta(injector)
+    var delta: InputDelta = InputDelta(injector)
     var comparator: Comparator = Comparator(injector)
 
     companion object {
@@ -41,8 +41,24 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
         comparator = Comparator(injector, triggerDelta.comparator.value)
     }
 
+    fun units(units: String): TriggerDelta {
+        this.units = units
+        return this
+    }
+
+    fun setValue(value: Double, type: DeltaType): TriggerDelta {
+        this.delta.value = value
+        this.delta.deltaType = type
+        return this
+    }
+
+    fun comparator(comparator: Comparator.Compare): TriggerDelta {
+        this.comparator.value = comparator
+        return this
+    }
+
     override fun shouldRun(): Boolean {
-        val glucoseStatus = GlucoseStatus.getGlucoseStatusData()
+        val glucoseStatus = GlucoseStatus(injector).getGlucoseStatusData()
             ?: return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
                 true

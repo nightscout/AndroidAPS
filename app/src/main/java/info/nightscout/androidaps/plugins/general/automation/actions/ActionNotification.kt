@@ -34,7 +34,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
         rxBus.send(EventNewNotification(notification))
         NSUpload.uploadError(text.value)
         rxBus.send(EventRefreshOverview("ActionNotification"))
-        callback.result(PumpEnactResult().success(true).comment(R.string.ok))?.run()
+        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok))?.run()
     }
 
     override fun toJSON(): String {

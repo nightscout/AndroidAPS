@@ -77,16 +77,15 @@ class TreatmentDialog : DialogFragmentWithDate() {
 
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
-        val pumpDescription = activePlugin.activePumpPlugin?.pumpDescription ?: return
+        val pumpDescription = activePlugin.activePump.pumpDescription
         overview_treatment_carbs.setParams(savedInstanceState?.getDouble("overview_treatment_carbs")
             ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, ok, textWatcher)
         overview_treatment_insulin.setParams(savedInstanceState?.getDouble("overview_treatment_insulin")
-            ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(), false, ok, textWatcher)
+            ?: 0.0, 0.0, maxInsulin, pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, ok, textWatcher)
     }
 
     override fun submit(): Boolean {
-        val pumpDescription = activePlugin.activePumpPlugin?.pumpDescription
-            ?: return false
+        val pumpDescription = activePlugin.activePump.pumpDescription
         val insulin = SafeParse.stringToDouble(overview_treatment_insulin.text)
         val carbs = SafeParse.stringToInt(overview_treatment_carbs.text)
         val recordOnlyChecked = overview_treatment_record_only.isChecked
@@ -95,7 +94,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
 
         if (insulinAfterConstraints > 0) {
-            actions.add(resourceHelper.gs(R.string.bolus) + ": " + "<font color='" + resourceHelper.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints) + resourceHelper.gs(R.string.insulin_unit_shortname) + "</font>")
+            actions.add(resourceHelper.gs(R.string.bolus) + ": " + "<font color='" + resourceHelper.gc(R.color.bolus) + "'>" + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump) + resourceHelper.gs(R.string.insulin_unit_shortname) + "</font>")
             if (recordOnlyChecked)
                 actions.add("<font color='" + resourceHelper.gc(R.color.warning) + "'>" + resourceHelper.gs(R.string.bolusrecordedonly) + "</font>")
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))

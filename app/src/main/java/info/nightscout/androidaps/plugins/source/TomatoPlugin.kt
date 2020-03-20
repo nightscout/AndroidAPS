@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.source
 
 import android.content.Intent
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.db.BgReading
@@ -18,6 +19,7 @@ import javax.inject.Singleton
 
 @Singleton
 class TomatoPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val sp: SP
@@ -28,8 +30,7 @@ class TomatoPlugin @Inject constructor(
     .preferencesId(R.xml.pref_bgsource)
     .shortName(R.string.tomato_short)
     .description(R.string.description_source_tomato),
-    aapsLogger,
-    resourceHelper
+    aapsLogger, resourceHelper, injector
 ), BgSourceInterface {
 
     override fun advancedFilteringSupported(): Boolean {

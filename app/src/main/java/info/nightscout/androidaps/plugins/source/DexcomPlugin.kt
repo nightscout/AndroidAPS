@@ -3,12 +3,14 @@ package info.nightscout.androidaps.plugins.source
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.RequestDexcomPermissionActivity
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.db.CareportalEvent
+import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.BgSourceInterface
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -25,6 +27,7 @@ import javax.inject.Singleton
 
 @Singleton
 class DexcomPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     private val sp: SP,
     private val mainApp: MainApp,
     resourceHelper: ResourceHelper,
@@ -35,8 +38,10 @@ class DexcomPlugin @Inject constructor(
     .pluginName(R.string.dexcom_app_patched)
     .shortName(R.string.dexcom_short)
     .preferencesId(R.xml.pref_bgsourcedexcom)
-    .description(R.string.description_source_dexcom),
-    aapsLogger, resourceHelper), BgSourceInterface {
+    .description(R.string.description_source_dexcom)
+    .setDefault(),
+    aapsLogger, resourceHelper, injector
+), BgSourceInterface {
 
     override fun advancedFilteringSupported(): Boolean {
         return true
@@ -96,6 +101,13 @@ class DexcomPlugin @Inject constructor(
                             jsonObject.put("glucoseType", "Finger")
                             jsonObject.put("glucose", meter.getInt("meterValue"))
                             jsonObject.put("units", Constants.MGDL)
+
+                            val careportalEvent = CareportalEvent()
+                            careportalEvent.date = timestamp
+                            careportalEvent.source = Source.USER
+                            careportalEvent.eventType = CareportalEvent.BGCHECK
+                            careportalEvent.json = jsonObject.toString()
+                            MainApp.getDbHelper().createOrUpdate(careportalEvent)
                             NSUpload.uploadCareportalEntryToNS(jsonObject)
                         }
                 }
@@ -110,6 +122,12 @@ class DexcomPlugin @Inject constructor(
                             jsonObject.put("enteredBy", "AndroidAPS-Dexcom$sensorType")
                             jsonObject.put("created_at", DateUtil.toISOString(sensorInsertionTime))
                             jsonObject.put("eventType", CareportalEvent.SENSORCHANGE)
+                            val careportalEvent = CareportalEvent()
+                            careportalEvent.date = sensorInsertionTime
+                            careportalEvent.source = Source.USER
+                            careportalEvent.eventType = CareportalEvent.SENSORCHANGE
+                            careportalEvent.json = jsonObject.toString()
+                            MainApp.getDbHelper().createOrUpdate(careportalEvent)
                             NSUpload.uploadCareportalEntryToNS(jsonObject)
                         }
                 }

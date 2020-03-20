@@ -16,25 +16,15 @@ class DanaRS_Packet_Bolus_Get_Dual_Bolus(
     }
 
     override fun handleMessage(data: ByteArray) {
-        var dataIndex = DATA_START
-        var dataSize = 1
-        val error = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 2
-        danaRPump.bolusStep = byteArrayToInt(getBytes(data, dataIndex, dataSize)).toDouble()
-        dataIndex += dataSize
-        dataSize = 2
-        danaRPump.extendedBolusAbsoluteRate = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
-        dataIndex += dataSize
-        dataSize = 2
-        danaRPump.maxBolus = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
-        dataIndex += dataSize
-        dataSize = 1
-        val bolusIncrement = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
+        val error = byteArrayToInt(getBytes(data, DATA_START, 1))
+        danaRPump.bolusStep = byteArrayToInt(getBytes(data, DATA_START + 1, 2)) / 100.0
+        danaRPump.extendedBolusAbsoluteRate = byteArrayToInt(getBytes(data, DATA_START + 3, 2)) / 100.0
+        danaRPump.maxBolus = byteArrayToInt(getBytes(data, DATA_START + 5, 2)) / 100.0
+        val bolusIncrement = byteArrayToInt(getBytes(data, DATA_START + 7, 1)) / 100.0
         failed = error != 0
         aapsLogger.debug(LTag.PUMPCOMM, "Result: $error")
-        aapsLogger.debug(LTag.PUMPCOMM, "Bolus step: " + danaRPump.bolusStep + " U")
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus running: " + danaRPump.extendedBolusAbsoluteRate + " U/h")
+        aapsLogger.debug(LTag.PUMPCOMM, "Bolus step: ${danaRPump.bolusStep} U")
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus running: ${danaRPump.extendedBolusAbsoluteRate} U/h")
         aapsLogger.debug(LTag.PUMPCOMM, "Max bolus: " + danaRPump.maxBolus + " U")
         aapsLogger.debug(LTag.PUMPCOMM, "bolusIncrement: $bolusIncrement U")
     }

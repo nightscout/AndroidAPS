@@ -109,7 +109,7 @@ android {
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.6-dev-dagger3"
+        version "2.6.1-dagger3"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -336,6 +336,7 @@ dependencies {
     /* Dagger2 - default dependency */
     kapt 'com.google.dagger:dagger-compiler:2.25.2'
 
+    androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
 
 
@@ -362,7 +363,37 @@ task copyLibs(dependsOn: downloadAndUnzipFile, type: Copy) {
 task full_clean(type: Delete) {
     delete file("src/main/jniLibs")
 }
-
+/*
+// Run 'adb' shell command to clear application data of main app for 'debug' variant
+task clearMainAppData(type: Exec) {
+    // we have to iterate to find the 'debug' variant to obtain a variant reference
+    android.applicationVariants.all { variant ->
+        if (variant.name == "fullDebug") {
+            def applicationId = [variant.mergedFlavor.applicationId, variant.buildType.applicationIdSuffix].findAll().join()
+            def clearDataCommand = ['adb', 'shell', 'pm', 'clear', applicationId]
+            println "Clearing application data of ${variant.name} variant: [${clearDataCommand}]"
+            def stdout = new ByteArrayOutputStream()
+            exec {
+                commandLine clearDataCommand
+                standardOutput = stdout
+            }
+            String result = stdout.toString().trim()
+            if (!result.startsWith("Success")) {
+                println result
+                throw new GradleException(clearDataCommand.join(" "))
+            }
+        }
+    }
+}
+// Clear Application Data (once) before running instrumentation test
+tasks.whenTaskAdded { task ->
+    // Both of these targets are equivalent today, although in future connectedCheck
+    // will also include connectedUiAutomatorTest (not implemented yet)
+    if(task.name == "connectedAndroidTest" || task.name == "connectedCheck"){
+        task.dependsOn(clearMainAppData)
+    }
+}
+*/
 clean.dependsOn full_clean
 preBuild.dependsOn copyLibs
 

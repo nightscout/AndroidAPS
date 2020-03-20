@@ -5,16 +5,26 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.ProfileStore
+import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.db.ProfileSwitch
+import info.nightscout.androidaps.plugins.aps.loop.APSResult
+import info.nightscout.androidaps.plugins.aps.openAPSAMA.DetermineBasalResultAMA
+import info.nightscout.androidaps.plugins.aps.openAPSMA.DetermineBasalResultMA
 import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
+import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
 import info.nightscout.androidaps.plugins.general.automation.AutomationEvent
 import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.elements.*
 import info.nightscout.androidaps.plugins.general.automation.triggers.*
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
+import info.nightscout.androidaps.plugins.general.smsCommunicator.AuthRequest
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Thread
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
 import info.nightscout.androidaps.plugins.treatments.Treatment
@@ -38,6 +48,12 @@ import javax.inject.Singleton
 interface AppComponent : AndroidInjector<MainApp> {
 
     fun injectProfileStore(profileStore: ProfileStore)
+    fun injectPumpEnactResult(pumpEnactResult: PumpEnactResult)
+    fun injectAPSResult(apsResult: APSResult)
+    fun injectDetermineBasalResultSMB(determineBasalResultSMB: DetermineBasalResultSMB)
+    fun injectDetermineBasalResultMA(determineBasalResultMA: DetermineBasalResultMA)
+    fun injectDetermineBasalResultAMA(determineBasalResultAMA: DetermineBasalResultAMA)
+    fun injectDetermineBasalAdapterSMBJS(determineBasalAdapterSMBJS: DetermineBasalAdapterSMBJS)
 
     fun injectCommandQueue(commandQueue: CommandQueue)
     fun injectCommandBolus(commandBolus: CommandBolus)
@@ -57,12 +73,17 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectCommandTempBasalPercent(commandTempBasalPercent: CommandTempBasalPercent)
     fun injectCommandSetUserSettings(commandSetUserSettings: CommandSetUserSettings)
 
+    fun injectObjective(objective: Objective)
     fun injectObjective0(objective0: Objective0)
     fun injectObjective1(objective1: Objective1)
     fun injectObjective2(objective2: Objective2)
     fun injectObjective3(objective3: Objective3)
+    fun injectObjective3(objective4: Objective4)
     fun injectObjective5(objective5: Objective5)
     fun injectObjective6(objective6: Objective6)
+    fun injectObjective6(objective7: Objective7)
+    fun injectObjective6(objective8: Objective8)
+    fun injectObjective6(objective9: Objective9)
 
     fun injectAutomationEvent(automationEvent: AutomationEvent)
 
@@ -124,12 +145,18 @@ interface AppComponent : AndroidInjector<MainApp> {
 
     fun injectTreatment(treatment: Treatment)
     fun injectBgReading(bgReading: BgReading)
+    fun injectProfileSwitch(profileSwitch: ProfileSwitch)
 
     fun injectNotification(notificationWithAction: NotificationWithAction)
 
     fun injectLoggerCallback(loggerCallback: LoggerCallback)
     fun injectBolusWizard(bolusWizard: BolusWizard)
     fun injectQuickWizardEntry(quickWizardEntry: QuickWizardEntry)
+
+    fun injectAuthRequest(authRequest: AuthRequest)
+
+    fun injectProfile(profile: Profile)
+    fun injectGlucoseStatus(glucoseStatus: GlucoseStatus)
 
     @Component.Builder
     interface Builder {

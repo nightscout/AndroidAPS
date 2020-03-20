@@ -19,7 +19,7 @@ import javax.inject.Singleton
 
 @Singleton
 class DstHelperPlugin @Inject constructor(
-    private var injector: HasAndroidInjector,
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private var rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
@@ -32,7 +32,7 @@ class DstHelperPlugin @Inject constructor(
     .alwaysEnabled(true)
     .showInList(false)
     .pluginName(R.string.dst_plugin_name),
-    aapsLogger, resourceHelper
+    aapsLogger, resourceHelper, injector
 ), ConstraintsInterface {
 
     companion object {
@@ -42,7 +42,7 @@ class DstHelperPlugin @Inject constructor(
 
     //Return false if time to DST change happened in the last 3 hours.
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        val pump = activePlugin.activePumpPlugin ?: return value
+        val pump = activePlugin.activePump
         if (pump.canHandleDST()) {
             aapsLogger.debug(LTag.CONSTRAINTS, "Pump can handle DST")
             return value
@@ -75,7 +75,7 @@ class DstHelperPlugin @Inject constructor(
             } else {
                 aapsLogger.debug(LTag.CONSTRAINTS, "Loop already suspended")
             }
-            value.set(false, "DST in last 3 hours.", this)
+            value.set(aapsLogger, false, "DST in last 3 hours.", this)
         }
         return value
     }

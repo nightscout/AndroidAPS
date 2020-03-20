@@ -15,7 +15,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -26,14 +28,18 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.SP;
 
 public class DetermineBasalAdapterMAJS {
 
-    private final AAPSLogger aapsLogger;
+    private HasAndroidInjector injector;
+    @Inject AAPSLogger aapsLogger;
+    @Inject ProfileFunction profileFunction;
+    @Inject TreatmentsPlugin treatmentsPlugin;
+
     private ScriptReader mScriptReader;
     private JSONObject mProfile;
     private JSONObject mGlucoseStatus;
@@ -47,9 +53,10 @@ public class DetermineBasalAdapterMAJS {
     private String storedProfile = null;
     private String storedMeal_data = null;
 
-    DetermineBasalAdapterMAJS(ScriptReader scriptReader, AAPSLogger aapsLogger) {
+    DetermineBasalAdapterMAJS(ScriptReader scriptReader, HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
         mScriptReader = scriptReader;
-        this.aapsLogger = aapsLogger;
+        this.injector = injector;
     }
 
     @Nullable
@@ -105,7 +112,7 @@ public class DetermineBasalAdapterMAJS {
                 if (L.isEnabled(L.APS))
                     aapsLogger.debug(LTag.APS, "Result: " + result);
                 try {
-                    determineBasalResultMA = new DetermineBasalResultMA(jsResult, new JSONObject(result), aapsLogger);
+                    determineBasalResultMA = new DetermineBasalResultMA(injector, jsResult, new JSONObject(result));
                 } catch (JSONException e) {
                     aapsLogger.error(LTag.APS, "Unhandled exception", e);
                 }
@@ -176,12 +183,12 @@ public class DetermineBasalAdapterMAJS {
 
         mProfile.put("current_basal", basalRate);
 
-        if (ProfileFunctions.getSystemUnits().equals(Constants.MMOL)) {
+        if (profileFunction.getUnits().equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
         }
 
         long now = System.currentTimeMillis();
-        TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
+        TemporaryBasal tb = treatmentsPlugin.getTempBasalFromHistory(now);
 
         mCurrentTemp = new JSONObject();
         mCurrentTemp.put("duration", tb != null ? tb.getPlannedRemainingMinutes() : 0);

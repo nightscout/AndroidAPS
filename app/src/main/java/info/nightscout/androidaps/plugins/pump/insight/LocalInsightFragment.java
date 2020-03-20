@@ -19,10 +19,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBasalRate;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.ActiveBolus;
@@ -32,14 +30,19 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
 import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI;
 import info.nightscout.androidaps.queue.Callback;
+import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class LocalInsightFragment extends DaggerFragment implements View.OnClickListener {
     @Inject LocalInsightPlugin localInsightPlugin;
+    @Inject CommandQueue commandQueue;
+    @Inject RxBusWrapper rxBus;
+    @Inject ResourceHelper resourceHelper;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -73,7 +76,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
     @Override
     public synchronized void onResume() {
         super.onResume();
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventLocalInsightUpdateGUI.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updateGUI(), exception -> FabricPrivacy.getInstance().logException(exception))
@@ -110,10 +113,10 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                 switch (localInsightPlugin.getOperatingMode()) {
                     case PAUSED:
                     case STOPPED:
-                        ConfigBuilderPlugin.getPlugin().getCommandQueue().startPump(operatingModeCallback);
+                        commandQueue.startPump(operatingModeCallback);
                         break;
                     case STARTED:
-                        ConfigBuilderPlugin.getPlugin().getCommandQueue().stopPump(operatingModeCallback);
+                        commandQueue.stopPump(operatingModeCallback);
                 }
             }
         } else if (v == tbrOverNotification) {
@@ -129,8 +132,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                         });
                     }
                 };
-                ConfigBuilderPlugin.getPlugin().getCommandQueue()
-                        .setTBROverNotification(tbrOverNotificationCallback, !notificationBlock.isEnabled());
+                commandQueue.setTBROverNotification(tbrOverNotificationCallback, !notificationBlock.isEnabled());
             }
         } else if (v == refresh) {
             refresh.setEnabled(false);
@@ -143,7 +145,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                     });
                 }
             };
-            ConfigBuilderPlugin.getPlugin().getCommandQueue().readStatus("InsightRefreshButton", refreshCallback);
+            commandQueue.readStatus("InsightRefreshButton", refreshCallback);
         }
     }
 
@@ -219,9 +221,9 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                 string = R.string.recovering;
                 break;
         }
-        statusItems.add(getStatusItem(MainApp.gs(R.string.insight_status), MainApp.gs(string)));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.insight_status), resourceHelper.gs(string)));
         if (state == InsightState.RECOVERING) {
-            statusItems.add(getStatusItem(MainApp.gs(R.string.recovery_duration), localInsightPlugin.getConnectionService().getRecoveryDuration() / 1000 + "s"));
+            statusItems.add(getStatusItem(resourceHelper.gs(R.string.recovery_duration), localInsightPlugin.getConnectionService().getRecoveryDuration() / 1000 + "s"));
         }
     }
 
@@ -234,7 +236,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                 long lastConnection = localInsightPlugin.getConnectionService().getLastConnected();
                 if (lastConnection == 0) return;
                 int min = (int) ((System.currentTimeMillis() - lastConnection) / 60000);
-                statusItems.add(getStatusItem(MainApp.gs(R.string.last_connected), DateUtil.timeString(lastConnection)));
+                statusItems.add(getStatusItem(resourceHelper.gs(R.string.last_connected), DateUtil.timeString(lastConnection)));
         }
     }
 
@@ -260,12 +262,12 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                 string = R.string.paused;
                 break;
         }
-        statusItems.add(getStatusItem(MainApp.gs(R.string.operating_mode), MainApp.gs(string)));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.operating_mode), resourceHelper.gs(string)));
     }
 
     private void getBatteryStatusItem(List<View> statusItems) {
         if (localInsightPlugin.getBatteryStatus() == null) return;
-        statusItems.add(getStatusItem(MainApp.gs(R.string.pump_battery_label),
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.pump_battery_label),
                 localInsightPlugin.getBatteryStatus().getBatteryAmount() + "%"));
     }
 
@@ -275,30 +277,30 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
         String status;
         if (cartridgeStatus.isInserted())
             status = DecimalFormatter.to2Decimal(localInsightPlugin.getCartridgeStatus().getRemainingAmount()) + "U";
-        else status = MainApp.gs(R.string.not_inserted);
-        statusItems.add(getStatusItem(MainApp.gs(R.string.pump_reservoir_label), status));
+        else status = resourceHelper.gs(R.string.not_inserted);
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.pump_reservoir_label), status));
     }
 
     private void getTDDItems(List<View> statusItems) {
         if (localInsightPlugin.getTotalDailyDose() == null) return;
         TotalDailyDose tdd = localInsightPlugin.getTotalDailyDose();
-        statusItems.add(getStatusItem(MainApp.gs(R.string.tdd_bolus), DecimalFormatter.to2Decimal(tdd.getBolus())));
-        statusItems.add(getStatusItem(MainApp.gs(R.string.tdd_basal), DecimalFormatter.to2Decimal(tdd.getBasal())));
-        statusItems.add(getStatusItem(MainApp.gs(R.string.tdd_total), DecimalFormatter.to2Decimal(tdd.getBolusAndBasal())));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_bolus), DecimalFormatter.to2Decimal(tdd.getBolus())));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_basal), DecimalFormatter.to2Decimal(tdd.getBasal())));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.tdd_total), DecimalFormatter.to2Decimal(tdd.getBolusAndBasal())));
     }
 
     private void getBaseBasalRateItem(List<View> statusItems) {
         if (localInsightPlugin.getActiveBasalRate() == null) return;
         ActiveBasalRate activeBasalRate = localInsightPlugin.getActiveBasalRate();
-        statusItems.add(getStatusItem(MainApp.gs(R.string.pump_basebasalrate_label),
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.pump_basebasalrate_label),
                 DecimalFormatter.to2Decimal(activeBasalRate.getActiveBasalRate()) + " U/h (" + activeBasalRate.getActiveBasalProfileName() + ")"));
     }
 
     private void getTBRItem(List<View> statusItems) {
         if (localInsightPlugin.getActiveTBR() == null) return;
         ActiveTBR activeTBR = localInsightPlugin.getActiveTBR();
-        statusItems.add(getStatusItem(MainApp.gs(R.string.pump_tempbasal_label),
-                MainApp.gs(R.string.tbr_formatter, activeTBR.getPercentage(), activeTBR.getInitialDuration() - activeTBR.getRemainingDuration(), activeTBR.getInitialDuration())));
+        statusItems.add(getStatusItem(resourceHelper.gs(R.string.pump_tempbasal_label),
+                resourceHelper.gs(R.string.tbr_formatter, activeTBR.getPercentage(), activeTBR.getInitialDuration() - activeTBR.getRemainingDuration(), activeTBR.getInitialDuration())));
     }
 
     private void getBolusItems(List<View> statusItems) {
@@ -307,15 +309,15 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
             String label;
             switch (activeBolus.getBolusType()) {
                 case MULTIWAVE:
-                    label = MainApp.gs(R.string.multiwave_bolus);
+                    label = resourceHelper.gs(R.string.multiwave_bolus);
                     break;
                 case EXTENDED:
-                    label = MainApp.gs(R.string.extended_bolus);
+                    label = resourceHelper.gs(R.string.extended_bolus);
                     break;
                 default:
                     continue;
             }
-            statusItems.add(getStatusItem(label, MainApp.gs(R.string.eb_formatter, activeBolus.getRemainingAmount(), activeBolus.getInitialAmount(), activeBolus.getRemainingDuration())));
+            statusItems.add(getStatusItem(label, resourceHelper.gs(R.string.eb_formatter, activeBolus.getRemainingAmount(), activeBolus.getInitialAmount(), activeBolus.getRemainingDuration())));
         }
     }
 }

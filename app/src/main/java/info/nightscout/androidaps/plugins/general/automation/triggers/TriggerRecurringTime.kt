@@ -18,13 +18,18 @@ import org.json.JSONObject
 import java.util.*
 
 class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
-    private val days = InputWeekDay(injector)
-    private val time = InputTime(injector)
+    val days = InputWeekDay(injector)
+    val time = InputTime(injector)
 
     constructor(injector: HasAndroidInjector, triggerRecurringTime: TriggerRecurringTime) : this(injector) {
         this.time.value = triggerRecurringTime.time.value
         if (days.weekdays.size >= 0)
             System.arraycopy(triggerRecurringTime.days.weekdays, 0, days.weekdays, 0, triggerRecurringTime.days.weekdays.size)
+    }
+
+    fun time(minutes:Int): TriggerRecurringTime {
+        time.value = minutes
+        return  this
     }
 
     override fun shouldRun(): Boolean {

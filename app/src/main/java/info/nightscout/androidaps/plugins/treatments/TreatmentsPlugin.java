@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.treatments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -16,6 +17,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -38,7 +40,7 @@ import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
 import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempTargetChange;
-import info.nightscout.androidaps.interfaces.InsulinInterface;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -47,7 +49,6 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -65,12 +66,12 @@ import io.reactivex.schedulers.Schedulers;
 @Singleton
 public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface {
 
-    private final MainApp mainApp;
+    private final Context context;
     private final SP sp;
     private final RxBusWrapper rxBus;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
-    private final ConfigBuilderPlugin configBuilderPlugin;
+    private final ActivePluginProvider activePlugin;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -98,13 +99,15 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private final ProfileIntervals<ProfileSwitch> profiles = new ProfileIntervals<>();
 
     @Inject
-    public TreatmentsPlugin(AAPSLogger aapsLogger,
-                            RxBusWrapper rxBus,
-                            ResourceHelper resourceHelper,
-                            MainApp mainApp,
-                            SP sp,
-                            ProfileFunction profileFunction,
-                            ConfigBuilderPlugin configBuilderPlugin
+    public TreatmentsPlugin(
+            HasAndroidInjector injector,
+            AAPSLogger aapsLogger,
+            RxBusWrapper rxBus,
+            ResourceHelper resourceHelper,
+            Context context,
+            SP sp,
+            ProfileFunction profileFunction,
+            ActivePluginProvider activePlugin
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.TREATMENT)
@@ -112,16 +115,16 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                         .pluginName(R.string.treatments)
                         .shortName(R.string.treatments_shortname)
                         .alwaysEnabled(true)
-                        .description(R.string.description_treatments),
-                aapsLogger,
-                resourceHelper
+                        .description(R.string.description_treatments)
+                        .setDefault(),
+                aapsLogger, resourceHelper, injector
         );
         this.resourceHelper = resourceHelper;
-        this.mainApp = mainApp;
+        this.context = context;
         this.rxBus = rxBus;
         this.sp = sp;
         this.profileFunction = profileFunction;
-        this.configBuilderPlugin = configBuilderPlugin;
+        this.activePlugin = activePlugin;
         treatmentsPlugin = this;
     }
 
@@ -242,9 +245,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (profile == null)
             return total;
 
-        PumpInterface pumpInterface = configBuilderPlugin.getActivePumpPlugin();
-        if (pumpInterface == null)
-            return total;
+        PumpInterface pumpInterface = activePlugin.getActivePump();
 
         double dia = profile.getDia();
 
@@ -399,11 +400,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public IobTotal getCalculationToTimeTempBasals(long time, boolean truncate, long truncateTime) {
         IobTotal total = new IobTotal(time);
 
-        InsulinInterface insulinInterface = configBuilderPlugin.getActiveInsulin();
-
-        PumpInterface pumpInterface = configBuilderPlugin.getActivePumpPlugin();
-        if (pumpInterface == null)
-            return total;
+        PumpInterface pumpInterface = activePlugin.getActivePump();
 
         synchronized (tempBasals) {
             for (Integer pos = 0; pos < tempBasals.size(); pos++) {
@@ -457,11 +454,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public IobTotal getCalculationToTimeTempBasals(long time, long truncateTime, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
         IobTotal total = new IobTotal(time);
 
-        InsulinInterface insulinInterface = configBuilderPlugin.getActiveInsulin();
-
-        PumpInterface pumpInterface = configBuilderPlugin.getActivePumpPlugin();
-        if (pumpInterface == null)
-            return total;
+        PumpInterface pumpInterface = activePlugin.getActivePump();
 
         synchronized (tempBasals) {
             for (int pos = 0; pos < tempBasals.size(); pos++) {
@@ -524,7 +517,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (tb != null)
             return tb;
         ExtendedBolus eb = getExtendedBolusFromHistory(time);
-        if (eb != null && configBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses())
+        if (eb != null && activePlugin.getActivePump().isFakingTempsByExtendedBoluses())
             return new TemporaryBasal(eb);
         return null;
     }
@@ -542,11 +535,11 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         boolean newRecordCreated = MainApp.getDbHelper().createOrUpdate(extendedBolus);
         if (newRecordCreated) {
             if (extendedBolus.durationInMinutes == 0) {
-                if (configBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses())
+                if (activePlugin.getActivePump().isFakingTempsByExtendedBoluses())
                     NSUpload.uploadTempBasalEnd(extendedBolus.date, true, extendedBolus.pumpId);
                 else
                     NSUpload.uploadExtendedBolusEnd(extendedBolus.date, extendedBolus.pumpId);
-            } else if (configBuilderPlugin.getActivePump().isFakingTempsByExtendedBoluses())
+            } else if (activePlugin.getActivePump().isFakingTempsByExtendedBoluses())
                 NSUpload.uploadTempBasalStartAbsolute(new TemporaryBasal(extendedBolus), extendedBolus.insulin);
             else
                 NSUpload.uploadExtendedBolus(extendedBolus);
@@ -638,12 +631,12 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
             String status = String.format(resourceHelper.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs, DateUtil.dateAndTimeString(treatment.date));
 
-            Intent i = new Intent(mainApp, ErrorHelperActivity.class);
+            Intent i = new Intent(context, ErrorHelperActivity.class);
             i.putExtra("soundid", R.raw.error);
             i.putExtra("title", resourceHelper.gs(R.string.error_adding_treatment_title));
             i.putExtra("status", status);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mainApp.startActivity(i);
+            context.startActivity(i);
 
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "TreatmentClash");
@@ -738,12 +731,12 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public void doProfileSwitch(final int duration, final int percentage, final int timeShift) {
         ProfileSwitch profileSwitch = treatmentsPlugin.getProfileSwitchFromHistory(System.currentTimeMillis());
         if (profileSwitch != null) {
-            profileSwitch = new ProfileSwitch();
+            profileSwitch = new ProfileSwitch(getInjector());
             profileSwitch.date = System.currentTimeMillis();
             profileSwitch.source = Source.USER;
             profileSwitch.profileName = profileFunction.getProfileName(System.currentTimeMillis(), false, false);
             profileSwitch.profileJson = profileFunction.getProfile().getData().toString();
-            profileSwitch.profilePlugin = configBuilderPlugin.getActiveProfileInterface().getClass().getName();
+            profileSwitch.profilePlugin = activePlugin.getActiveProfileInterface().getClass().getName();
             profileSwitch.durationInMinutes = duration;
             profileSwitch.isCPP = percentage != 100 || timeShift != 0;
             profileSwitch.timeshift = timeShift;

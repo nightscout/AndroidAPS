@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.profile.local
 
 import android.app.Activity
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
@@ -31,6 +32,7 @@ import kotlin.math.max
 
 @Singleton
 class LocalProfilePlugin @Inject constructor(
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
@@ -42,7 +44,10 @@ class LocalProfilePlugin @Inject constructor(
     .enableByDefault(true)
     .pluginName(R.string.localprofile)
     .shortName(R.string.localprofile_shortname)
-    .description(R.string.description_profile_local), aapsLogger, resourceHelper), ProfileInterface {
+    .description(R.string.description_profile_local)
+    .setDefault(),
+    aapsLogger, resourceHelper, injector
+), ProfileInterface {
 
     var rawProfile: ProfileStore? = null
 
@@ -102,7 +107,7 @@ class LocalProfilePlugin @Inject constructor(
     var isEdited: Boolean = false
     var profiles: ArrayList<SingleProfile> = ArrayList()
 
-    private var numOfProfiles = 0
+    var numOfProfiles = 0
     internal var currentProfileIndex = 0
 
     fun currentProfile() = profiles[currentProfileIndex]
@@ -424,7 +429,7 @@ class LocalProfilePlugin @Inject constructor(
             aapsLogger.error("Unhandled exception", e)
         }
 
-        return ProfileStore(json)
+        return ProfileStore(injector, json)
     }
 
     override fun getProfile(): ProfileStore? {

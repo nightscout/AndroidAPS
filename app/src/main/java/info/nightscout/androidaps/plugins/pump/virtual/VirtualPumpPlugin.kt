@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.virtual
 
 import android.os.SystemClock
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
@@ -41,6 +42,7 @@ import kotlin.math.min
 
 @Singleton
 class VirtualPumpPlugin @Inject constructor(
+    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private var fabricPrivacy: FabricPrivacy,
@@ -56,13 +58,15 @@ class VirtualPumpPlugin @Inject constructor(
     .shortName(R.string.virtualpump_shortname)
     .preferencesId(R.xml.pref_virtualpump)
     .neverVisible(Config.NSCLIENT)
-    .description(R.string.description_pump_virtual),
-    aapsLogger, resourceHelper, commandQueue
+    .description(R.string.description_pump_virtual)
+    .setDefault(),
+    injector, aapsLogger, resourceHelper, commandQueue
 ), PumpInterface {
 
 
     companion object {
         private lateinit var virtualPumpPlugin: VirtualPumpPlugin
+
         @Deprecated("Use dagger to get an instance")
         fun getPlugin(): VirtualPumpPlugin {
             checkNotNull(virtualPumpPlugin) { "Accessing VirtualPumpPlugin before first instantiation" }
@@ -130,7 +134,7 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun loadTDDs(): PumpEnactResult { //no result, could read DB in the future?
-        return PumpEnactResult()
+        return PumpEnactResult(injector)
     }
 
     override fun getCustomActions(): List<CustomAction>? {
@@ -177,7 +181,7 @@ class VirtualPumpPlugin @Inject constructor(
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         lastDataTime = System.currentTimeMillis()
         // Do nothing here. we are using ConfigBuilderPlugin.getPlugin().getActiveProfile().getProfile();
-        val result = PumpEnactResult()
+        val result = PumpEnactResult(injector)
         result.success = true
         val notification = Notification(Notification.PROFILE_SET_OK, resourceHelper.gs(R.string.profile_set_ok), Notification.INFO, 60)
         rxBus.send(EventNewNotification(notification))
@@ -205,7 +209,7 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        val result = PumpEnactResult()
+        val result = PumpEnactResult(injector)
         result.success = true
         result.bolusDelivered = detailedBolusInfo.insulin
         result.carbsDelivered = detailedBolusInfo.carbs
@@ -240,7 +244,7 @@ class VirtualPumpPlugin @Inject constructor(
             .absolute(absoluteRate)
             .duration(durationInMinutes)
             .source(Source.USER)
-        val result = PumpEnactResult()
+        val result = PumpEnactResult(injector)
         result.success = true
         result.enacted = true
         result.isTempCancel = false
@@ -260,7 +264,7 @@ class VirtualPumpPlugin @Inject constructor(
             .percent(percent)
             .duration(durationInMinutes)
             .source(Source.USER)
-        val result = PumpEnactResult()
+        val result = PumpEnactResult(injector)
         result.success = true
         result.enacted = true
         result.percent = percent
@@ -297,7 +301,7 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun cancelTempBasal(force: Boolean): PumpEnactResult {
-        val result = PumpEnactResult()
+        val result = PumpEnactResult(injector)
         result.success = true
         result.isTempCancel = true
         result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
@@ -314,7 +318,7 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
-        val result = PumpEnactResult()
+        val result = PumpEnactResult(injector)
         if (treatmentsPlugin.isInHistoryExtendedBoluslInProgress) {
             val exStop = ExtendedBolus(System.currentTimeMillis())
             exStop.source = Source.USER

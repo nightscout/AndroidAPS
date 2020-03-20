@@ -4,10 +4,10 @@ import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 
 // Used for instantiation of other triggers only
-class TriggerDummy(injector: HasAndroidInjector) : Trigger(injector) {
+class TriggerDummy(injector: HasAndroidInjector, val shouldRun: Boolean = false) : Trigger(injector) {
 
     override fun shouldRun(): Boolean {
-        throw NotImplementedError("An operation is not implemented")
+        return shouldRun
     }
 
     override fun toJSON(): String {
@@ -23,7 +23,7 @@ class TriggerDummy(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun friendlyDescription(): String {
-        throw NotImplementedError("An operation is not implemented")
+        return "TriggerDummy"
     }
 
     override fun icon(): Optional<Int?> {

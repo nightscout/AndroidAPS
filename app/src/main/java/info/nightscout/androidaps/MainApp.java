@@ -7,9 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 
 import androidx.annotation.ColorRes;
-import androidx.annotation.PluralsRes;
 import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
@@ -23,31 +24,24 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.json.JSONException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.File;
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.constraints.dstHelper.DstHelperPlugin;
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin;
@@ -60,7 +54,6 @@ import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin;
 import info.nightscout.androidaps.plugins.general.dataBroadcaster.DataBroadcastPlugin;
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin;
-import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -101,18 +94,17 @@ import info.nightscout.androidaps.plugins.source.XdripPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
+import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.ActivityMonitor;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.LocaleHelper;
-import info.nightscout.androidaps.utils.OneTimePassword;
-import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.fabric.sdk.android.Fabric;
 
 public class MainApp extends DaggerApplication {
-    static Logger log = StacktraceLoggerWrapper.getLogger(L.CORE);
 
     static MainApp sInstance;
     private static Resources sResources;
@@ -121,24 +113,22 @@ public class MainApp extends DaggerApplication {
 
     static DatabaseHelper sDatabaseHelper = null;
 
-    static ArrayList<PluginBase> pluginsList = new ArrayList<>();
-
-    static DataReceiver dataReceiver = new DataReceiver();
+    DataReceiver dataReceiver = new DataReceiver();
     TimeDateOrTZChangeReceiver timeDateOrTZChangeReceiver;
-
-    public static boolean devBranch;
-    public static boolean engineeringMode;
 
     private String CHANNEL_ID = "AndroidAPS-Ongoing"; // TODO: move to OngoingNotificationProvider (and dagger)
     private int ONGOING_NOTIFICATION_ID = 4711; // TODO: move to OngoingNotificationProvider (and dagger)
     private Notification notification; // TODO: move to OngoingNotificationProvider (and dagger)
 
+    @Inject PluginStore pluginStore;
+    @Inject public HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
     @Inject ActivityMonitor activityMonitor;
     @Inject FabricPrivacy fabricPrivacy;
     @Inject ResourceHelper resourceHelper;
     @Inject VersionCheckerUtils versionCheckersUtils;
-    @Inject OneTimePassword oneTimePassword;
+    @Inject SP sp;
+    @Inject ProfileFunction profileFunction;
 
     @Inject ActionsPlugin actionsPlugin;
     @Inject AutomationPlugin automationPlugin;
@@ -199,7 +189,7 @@ public class MainApp extends DaggerApplication {
     public void onCreate() {
         super.onCreate();
 
-        log.debug("onCreate");
+        aapsLogger.debug("onCreate");
         sInstance = this;
         sResources = getResources();
         LocaleHelper.INSTANCE.update(this);
@@ -221,7 +211,7 @@ public class MainApp extends DaggerApplication {
                 Fabric.with(this, new Crashlytics());
             }
         } catch (Exception e) {
-            log.error("Error with Fabric init! " + e);
+            aapsLogger.error("Error with Fabric init! " + e);
         }
 
         registerActivityLifecycleCallbacks(activityMonitor);
@@ -231,15 +221,9 @@ public class MainApp extends DaggerApplication {
 
         JodaTimeAndroid.init(this);
 
-        log.info("Version: " + BuildConfig.VERSION_NAME);
-        log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
-        log.info("Remote: " + BuildConfig.REMOTE);
-
-        String extFilesDir = LoggerUtils.getLogDirectory();
-        File engineeringModeSemaphore = new File(extFilesDir, "engineering_mode");
-
-        engineeringMode = engineeringModeSemaphore.exists() && engineeringModeSemaphore.isFile();
-        devBranch = BuildConfig.VERSION.contains("-") || BuildConfig.VERSION.matches(".*[a-zA-Z]+.*");
+        aapsLogger.debug("Version: " + BuildConfig.VERSION_NAME);
+        aapsLogger.debug("BuildVersion: " + BuildConfig.BUILDVERSION);
+        aapsLogger.debug("Remote: " + BuildConfig.REMOTE);
 
         registerLocalBroadcastReceiver();
 
@@ -247,61 +231,61 @@ public class MainApp extends DaggerApplication {
         versionCheckersUtils.triggerCheckVersion();
 
         // Register all tabs in app here
-        pluginsList.add(overviewPlugin);
-        pluginsList.add(iobCobCalculatorPlugin);
-        if (!Config.NSCLIENT) pluginsList.add(actionsPlugin);
-        pluginsList.add(insulinOrefRapidActingPlugin);
-        pluginsList.add(insulinOrefUltraRapidActingPlugin);
-        pluginsList.add(insulinOrefFreePeakPlugin);
-        pluginsList.add(sensitivityOref0Plugin);
-        pluginsList.add(sensitivityAAPSPlugin);
-        pluginsList.add(sensitivityWeightedAveragePlugin);
-        pluginsList.add(sensitivityOref1Plugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(danaRPlugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(danaRKoreanPlugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(danaRv2Plugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(danaRSPlugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(localInsightPlugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(comboPlugin);
-        if (Config.PUMPDRIVERS) pluginsList.add(medtronicPumpPlugin);
-        if (!Config.NSCLIENT) pluginsList.add(mdiPlugin);
-        if (!Config.NSCLIENT) pluginsList.add(virtualPumpPlugin);
-        if (Config.NSCLIENT) pluginsList.add(careportalPlugin);
-        if (Config.APS) pluginsList.add(loopPlugin);
-        if (Config.APS) pluginsList.add(openAPSMAPlugin);
-        if (Config.APS) pluginsList.add(openAPSAMAPlugin);
-        if (Config.APS) pluginsList.add(openAPSSMBPlugin);
-        pluginsList.add(nsProfilePlugin);
-        if (!Config.NSCLIENT) pluginsList.add(localProfilePlugin);
-        pluginsList.add(treatmentsPlugin);
-        if (!Config.NSCLIENT) pluginsList.add(safetyPlugin);
-        if (!Config.NSCLIENT) pluginsList.add(versionCheckerPlugin);
-        if (Config.APS) pluginsList.add(storageConstraintPlugin);
-        if (Config.APS) pluginsList.add(signatureVerifierPlugin);
-        if (Config.APS) pluginsList.add(objectivesPlugin);
-        pluginsList.add(xdripPlugin);
-        pluginsList.add(nSClientSourcePlugin);
-        pluginsList.add(mM640GPlugin);
-        pluginsList.add(glimpPlugin);
-        pluginsList.add(dexcomPlugin);
-        pluginsList.add(poctechPlugin);
-        pluginsList.add(tomatoPlugin);
-        pluginsList.add(eversensePlugin);
-        pluginsList.add(randomBgPlugin);
-        if (!Config.NSCLIENT) pluginsList.add(smsCommunicatorPlugin);
-        pluginsList.add(foodPlugin);
+        pluginStore.add(overviewPlugin);
+        pluginStore.add(iobCobCalculatorPlugin);
+        if (!Config.NSCLIENT) pluginStore.add(actionsPlugin);
+        pluginStore.add(insulinOrefRapidActingPlugin);
+        pluginStore.add(insulinOrefUltraRapidActingPlugin);
+        pluginStore.add(insulinOrefFreePeakPlugin);
+        pluginStore.add(sensitivityOref0Plugin);
+        pluginStore.add(sensitivityAAPSPlugin);
+        pluginStore.add(sensitivityWeightedAveragePlugin);
+        pluginStore.add(sensitivityOref1Plugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(danaRPlugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(danaRKoreanPlugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(danaRv2Plugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(danaRSPlugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(localInsightPlugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(comboPlugin);
+        if (Config.PUMPDRIVERS) pluginStore.add(medtronicPumpPlugin);
+        if (!Config.NSCLIENT) pluginStore.add(mdiPlugin);
+        if (!Config.NSCLIENT) pluginStore.add(virtualPumpPlugin);
+        if (Config.NSCLIENT) pluginStore.add(careportalPlugin);
+        if (Config.APS) pluginStore.add(loopPlugin);
+        if (Config.APS) pluginStore.add(openAPSMAPlugin);
+        if (Config.APS) pluginStore.add(openAPSAMAPlugin);
+        if (Config.APS) pluginStore.add(openAPSSMBPlugin);
+        pluginStore.add(nsProfilePlugin);
+        if (!Config.NSCLIENT) pluginStore.add(localProfilePlugin);
+        pluginStore.add(treatmentsPlugin);
+        if (!Config.NSCLIENT) pluginStore.add(safetyPlugin);
+        if (!Config.NSCLIENT) pluginStore.add(versionCheckerPlugin);
+        if (Config.APS) pluginStore.add(storageConstraintPlugin);
+        if (Config.APS) pluginStore.add(signatureVerifierPlugin);
+        if (Config.APS) pluginStore.add(objectivesPlugin);
+        pluginStore.add(xdripPlugin);
+        pluginStore.add(nSClientSourcePlugin);
+        pluginStore.add(mM640GPlugin);
+        pluginStore.add(glimpPlugin);
+        pluginStore.add(dexcomPlugin);
+        pluginStore.add(poctechPlugin);
+        pluginStore.add(tomatoPlugin);
+        pluginStore.add(eversensePlugin);
+        pluginStore.add(randomBgPlugin);
+        if (!Config.NSCLIENT) pluginStore.add(smsCommunicatorPlugin);
+        pluginStore.add(foodPlugin);
 
-        pluginsList.add(wearPlugin);
-        pluginsList.add(statusLinePlugin);
-        pluginsList.add(persistentNotificationPlugin);
-        pluginsList.add(nsClientPlugin);
+        pluginStore.add(wearPlugin);
+        pluginStore.add(statusLinePlugin);
+        pluginStore.add(persistentNotificationPlugin);
+        pluginStore.add(nsClientPlugin);
 //            if (engineeringMode) pluginsList.add(tidepoolPlugin);
-        pluginsList.add(maintenancePlugin);
-        pluginsList.add(automationPlugin);
-        pluginsList.add(dstHelperPlugin);
-        pluginsList.add(dataBroadcastPlugin);
+        pluginStore.add(maintenancePlugin);
+        pluginStore.add(automationPlugin);
+        pluginStore.add(dstHelperPlugin);
+        pluginStore.add(dataBroadcastPlugin);
 
-        pluginsList.add(configBuilderPlugin);
+        pluginStore.add(configBuilderPlugin);
 
         configBuilderPlugin.initialize();
 
@@ -316,23 +300,23 @@ public class MainApp extends DaggerApplication {
 
         // guarantee that the unreachable threshold is at least 30 and of type String
         // Added in 1.57 at 21.01.2018
-        int unreachable_threshold = SP.getInt(R.string.key_pump_unreachable_threshold, 30);
-        SP.remove(R.string.key_pump_unreachable_threshold);
+        int unreachable_threshold = sp.getInt(R.string.key_pump_unreachable_threshold, 30);
+        sp.remove(R.string.key_pump_unreachable_threshold);
         if (unreachable_threshold < 30) unreachable_threshold = 30;
-        SP.putString(R.string.key_pump_unreachable_threshold, Integer.toString(unreachable_threshold));
+        sp.putString(R.string.key_pump_unreachable_threshold, Integer.toString(unreachable_threshold));
 
         // 2.5 -> 2.6
-        if (!SP.contains(R.string.key_units)) {
+        if (!sp.contains(R.string.key_units)) {
             String newUnits = Constants.MGDL;
-            Profile p = ProfileFunctions.getInstance().getProfile();
+            Profile p = profileFunction.getProfile();
             if (p != null && p.getData() != null && p.getData().has("units")) {
                 try {
                     newUnits = p.getData().getString("units");
                 } catch (JSONException e) {
-                    log.error("Unhandled exception", e);
+                    aapsLogger.error("Unhandled exception", e);
                 }
             }
-            SP.putString(R.string.key_units, newUnits);
+            sp.putString(R.string.key_units, newUnits);
         }
     }
 
@@ -357,6 +341,11 @@ public class MainApp extends DaggerApplication {
         this.timeDateOrTZChangeReceiver = new TimeDateOrTZChangeReceiver();
         this.timeDateOrTZChangeReceiver.registerBroadcasts(this);
 
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        registerReceiver(new NetworkChangeReceiver(), intentFilter);
     }
 
     @Deprecated
@@ -367,11 +356,6 @@ public class MainApp extends DaggerApplication {
     @Deprecated
     public static String gs(@StringRes int id, Object... args) {
         return sResources.getString(id, args);
-    }
-
-    @Deprecated
-    public static String gq(@PluralsRes int id, int quantity, Object... args) {
-        return sResources.getQuantityString(id, quantity, args);
     }
 
     @Deprecated
@@ -395,78 +379,6 @@ public class MainApp extends DaggerApplication {
 
     public FirebaseAnalytics getFirebaseAnalytics() {
         return firebaseAnalytics;
-    }
-
-    public static ArrayList<PluginBase> getPluginsList() {
-        return pluginsList;
-    }
-
-    public static ArrayList<PluginBase> getSpecificPluginsList(PluginType type) {
-        ArrayList<PluginBase> newList = new ArrayList<>();
-
-        if (pluginsList != null) {
-            for (PluginBase p : pluginsList) {
-                if (p.getType() == type)
-                    newList.add(p);
-            }
-        } else {
-            log.error("pluginsList=null");
-        }
-        return newList;
-    }
-
-    public static ArrayList<PluginBase> getSpecificPluginsVisibleInList(PluginType type) {
-        ArrayList<PluginBase> newList = new ArrayList<>();
-
-        if (pluginsList != null) {
-            for (PluginBase p : pluginsList) {
-                if (p.getType() == type)
-                    if (p.showInList(type))
-                        newList.add(p);
-            }
-        } else {
-            log.error("pluginsList=null");
-        }
-        return newList;
-    }
-
-    public ArrayList<PluginBase> getSpecificPluginsListByInterface(Class interfaceClass) {
-        ArrayList<PluginBase> newList = new ArrayList<>();
-
-        if (pluginsList != null) {
-            for (PluginBase p : pluginsList) {
-                if (p.getClass() != ConfigBuilderPlugin.class && interfaceClass.isAssignableFrom(p.getClass()))
-                    newList.add(p);
-            }
-        } else {
-            log.error("pluginsList=null");
-        }
-        return newList;
-    }
-
-    public static ArrayList<PluginBase> getSpecificPluginsVisibleInListByInterface(Class interfaceClass, PluginType type) {
-        ArrayList<PluginBase> newList = new ArrayList<>();
-
-        if (pluginsList != null) {
-            for (PluginBase p : pluginsList) {
-                if (p.getClass() != ConfigBuilderPlugin.class && interfaceClass.isAssignableFrom(p.getClass()))
-                    if (p.showInList(type))
-                        newList.add(p);
-            }
-        } else {
-            log.error("pluginsList=null");
-        }
-        return newList;
-    }
-
-    public static boolean isEngineeringModeOrRelease() {
-        if (!Config.APS)
-            return true;
-        return engineeringMode || !devBranch;
-    }
-
-    public static boolean isDev() {
-        return devBranch;
     }
 
     // global Notification has been moved to MainApp because PersistentNotificationPlugin is initialized too late
@@ -516,16 +428,4 @@ public class MainApp extends DaggerApplication {
         keepAliveManager.cancelAlarm(this);
         super.onTerminate();
     }
-
-    @Deprecated
-    public static int dpToPx(int dp) {
-        float scale = sResources.getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
-    }
-
-    @Deprecated
-    public ResourceHelper getResourceHelper() {
-        return resourceHelper;
-    }
-
 }

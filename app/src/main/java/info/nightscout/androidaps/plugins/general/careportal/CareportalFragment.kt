@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventCareportalEventChange
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
@@ -26,7 +26,7 @@ class CareportalFragment : DaggerFragment(), View.OnClickListener {
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
+    @Inject lateinit var activePlugin: ActivePluginProvider
 
     private val disposable = CompositeDisposable()
 
@@ -57,7 +57,7 @@ class CareportalFragment : DaggerFragment(), View.OnClickListener {
         careportal_openapsoffline.setOnClickListener(this)
         careportal_temporarytarget.setOnClickListener(this)
 
-        val profileStore = configBuilderPlugin.activeProfileInterface.profile
+        val profileStore = activePlugin.activeProfileInterface.profile
         if (profileStore == null) {
             profileview_noprofile.visibility = View.VISIBLE
             careportal_buttons.visibility = View.GONE

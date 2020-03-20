@@ -4,7 +4,6 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
@@ -17,7 +16,7 @@ import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -96,7 +95,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
     }
 
     public TemporaryBasal(ExtendedBolus extendedBolus) {
-        double basal = ProfileFunctions.getInstance().getProfile(extendedBolus.date).getBasal(extendedBolus.date);
+        double basal = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile(extendedBolus.date).getBasal(extendedBolus.date);
         this.date = extendedBolus.date;
         this.isValid = extendedBolus.isValid;
         this.source = extendedBolus.source;
@@ -237,7 +236,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
         }
 
         IobTotal result = new IobTotal(time);
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
+        InsulinInterface insulinInterface = PluginStore.Companion.getInstance().getActiveInsulin();
 
         int realDuration = getDurationToTime(time);
         double netBasalAmount = 0d;
@@ -292,7 +291,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
         }
 
         IobTotal result = new IobTotal(time);
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
+        InsulinInterface insulinInterface = PluginStore.Companion.getInstance().getActiveInsulin();
 
         double realDuration = getDurationToTime(time);
         double netBasalAmount = 0d;
@@ -405,7 +404,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
     public String toStringFull() {
         if (isFakeExtended) {
 
-            Profile profile = ProfileFunctions.getInstance().getProfile();
+            Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile();
             if (profile == null)
                 return "null";
             Double currentBasalRate = profile.getBasal();
@@ -429,7 +428,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
 
             double rate;
             if (isFakeExtended) {
-                Profile profile = ProfileFunctions.getInstance().getProfile();
+                Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile();
                 if (profile == null)
                     return "null";
                 double currentBasalRate = profile.getBasal();
@@ -439,7 +438,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
             }
 
             if (SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)) {
-                Profile profile = ProfileFunctions.getInstance().getProfile();
+                Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile();
                 if (profile != null) {
                     double basal = profile.getBasal();
                     if (basal != 0) {
@@ -454,7 +453,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
     }
 
     private String getCalcuatedPercentageIfNeeded() {
-        Profile profile = ProfileFunctions.getInstance().getProfile();
+        Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile();
 
         if (profile == null)
             return "null";
@@ -480,7 +479,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
     }
 
     public String toStringVeryShort() {
-        Profile profile = ProfileFunctions.getInstance().getProfile();
+        Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile();
 
         if (profile == null)
             return "null";

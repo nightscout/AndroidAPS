@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.Constraint
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -22,6 +23,7 @@ import kotlinx.android.synthetic.main.loop_fragment.*
 import javax.inject.Inject
 
 class LoopFragment : DaggerFragment() {
+    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var sp: SP
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -96,7 +98,7 @@ class LoopFragment : DaggerFragment() {
                     val allConstraints = Constraint(0.0)
                     constraintsProcessed.rateConstraint?.let { rateConstraint -> allConstraints.copyReasons(rateConstraint) }
                     constraintsProcessed.smbConstraint?.let { smbConstraint -> allConstraints.copyReasons(smbConstraint) }
-                    allConstraints.mostLimitedReasons
+                    allConstraints.getMostLimitedReasons(aapsLogger)
                 } ?: ""
             loop_constraints?.text = constraints
         }

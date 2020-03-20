@@ -12,7 +12,7 @@ import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.setupwizard.SWNumberValidator;
 import info.nightscout.androidaps.utils.NumberPicker;
 import info.nightscout.androidaps.utils.SP;
@@ -64,10 +64,10 @@ public class SWEditNumberWithUnits extends SWItem {
         layout.addView(l);
 
         double initValue = SP.getDouble(preferenceId, init);
-        initValue = Profile.toCurrentUnits(initValue);
+        initValue = Profile.toCurrentUnits(ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits(), initValue);
 
         NumberPicker numberPicker = new NumberPicker(context);
-        if (ProfileFunctions.getSystemUnits().equals(Constants.MMOL))
+        if (ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits().equals(Constants.MMOL))
             numberPicker.setParams(initValue, min, max, 0.1d, new DecimalFormat("0.0"), false, null, watcher);
         else
             numberPicker.setParams(initValue, min * 18, max * 18, 1d, new DecimalFormat("0"), false, null, watcher);

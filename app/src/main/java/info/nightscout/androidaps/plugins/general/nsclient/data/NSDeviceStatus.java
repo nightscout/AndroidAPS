@@ -14,6 +14,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -457,8 +458,8 @@ public class NSDeviceStatus {
         return Html.fromHtml(string.toString());
     }
 
-    public static APSResult getAPSResult() {
-        APSResult result = new APSResult();
+    public static APSResult getAPSResult(HasAndroidInjector injector) {
+        APSResult result = new APSResult(injector);
         result.json = deviceStatusOpenAPSData.suggested;
         result.date = deviceStatusOpenAPSData.clockSuggested;
         return result;

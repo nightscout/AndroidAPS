@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import com.google.common.base.Joiner
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
@@ -31,6 +32,7 @@ import java.util.*
 import javax.inject.Inject
 
 class CareDialog : DialogFragmentWithDate() {
+    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
@@ -57,6 +59,8 @@ class CareDialog : DialogFragmentWithDate() {
         super.onSaveInstanceState(savedInstanceState)
         savedInstanceState.putDouble("actions_care_bg", actions_care_bg.value)
         savedInstanceState.putDouble("actions_care_duration", actions_care_duration.value)
+        savedInstanceState.putInt("event", event)
+        savedInstanceState.putInt("options", options.ordinal)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -67,6 +71,11 @@ class CareDialog : DialogFragmentWithDate() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        savedInstanceState?.let {
+            event = savedInstanceState.getInt("event", R.string.error)
+            options = EventType.values()[savedInstanceState.getInt("options", 0)]
+        }
 
         actions_care_icon.setImageResource(when (options) {
             EventType.BGCHECK        -> R.drawable.icon_cp_bgcheck
@@ -102,7 +111,7 @@ class CareDialog : DialogFragmentWithDate() {
             }
         }
 
-        val bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData()?.glucose
+        val bg = Profile.fromMgdlToUnits(GlucoseStatus(injector).getGlucoseStatusData()?.glucose
             ?: 0.0, profileFunction.getUnits())
         val bgTextWatcher: TextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
@@ -141,7 +150,7 @@ class CareDialog : DialogFragmentWithDate() {
                     else                          -> "Manual"
                 }
             actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + Translator.translate(type))
-            actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(actions_care_bg.value) + " " + resourceHelper.gs(unitResId))
+            actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, actions_care_bg.value) + " " + resourceHelper.gs(unitResId))
             json.put("glucose", actions_care_bg.value)
             json.put("glucoseType", type)
         }

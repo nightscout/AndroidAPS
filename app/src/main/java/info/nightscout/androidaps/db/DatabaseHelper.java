@@ -18,7 +18,6 @@ import com.j256.ormlite.table.TableUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,8 +31,6 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.data.OverlappingIntervals;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
@@ -52,9 +49,9 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightBolusID;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightHistoryOffset;
@@ -519,7 +516,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // ------------- DbRequests handling -------------------
 
     public void create(DbRequest dbr) throws SQLException {
-            getDaoDbRequest().create(dbr);
+        getDaoDbRequest().create(dbr);
     }
 
     public int delete(DbRequest dbr) {
@@ -798,31 +795,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             historyList = new ArrayList<>();
         }
         return historyList;
-    }
-
-    public void updateDanaRHistoryRecordId(JSONObject trJson) {
-        try {
-            QueryBuilder<DanaRHistoryRecord, String> queryBuilder = getDaoDanaRHistory().queryBuilder();
-            Where where = queryBuilder.where();
-            where.ge("bytes", trJson.get(DanaRNSHistorySync.DANARSIGNATURE));
-            PreparedQuery<DanaRHistoryRecord> preparedQuery = queryBuilder.prepare();
-            List<DanaRHistoryRecord> list = getDaoDanaRHistory().query(preparedQuery);
-            if (list.size() == 0) {
-                // Record does not exists. Ignore
-            } else if (list.size() == 1) {
-                DanaRHistoryRecord record = list.get(0);
-                if (record._id == null || !record._id.equals(trJson.getString("_id"))) {
-                    if (L.isEnabled(L.DATABASE))
-                        log.debug("Updating _id in DanaR history database: " + trJson.getString("_id"));
-                    record._id = trJson.getString("_id");
-                    getDaoDanaRHistory().update(record);
-                } else {
-                    // already set
-                }
-            }
-        } catch (SQLException | JSONException e) {
-            log.error("Unhandled exception: " + trJson.toString(), e);
-        }
     }
 
     // ------------ TemporaryBasal handling ---------------
@@ -1738,7 +1710,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void createProfileSwitchFromJsonIfNotExists(JSONObject trJson) {
         try {
-            ProfileSwitch profileSwitch = new ProfileSwitch();
+            ProfileSwitch profileSwitch = new ProfileSwitch(MainApp.instance().injector);
             profileSwitch.date = trJson.getLong("mills");
             if (trJson.has("duration"))
                 profileSwitch.durationInMinutes = trJson.getInt("duration");
@@ -1753,30 +1725,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (trJson.has("profileJson"))
                 profileSwitch.profileJson = trJson.getString("profileJson");
             else {
-                ProfileInterface profileInterface = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface();
-                if (profileInterface != null) {
-                    ProfileStore store = profileInterface.getProfile();
-                    if (store != null) {
-                        Profile profile = store.getSpecificProfile(profileSwitch.profileName);
-                        if (profile != null) {
-                            profileSwitch.profileJson = profile.getData().toString();
-                            if (L.isEnabled(L.DATABASE))
-                                log.debug("Profile switch prefilled with JSON from local store");
-                            // Update data in NS
-                            NSUpload.updateProfileSwitch(profileSwitch);
-                        } else {
-                            if (L.isEnabled(L.DATABASE))
-                                log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
-                            return;
-                        }
+                ProfileInterface profileInterface = PluginStore.Companion.getInstance().getActiveProfileInterface();
+                ProfileStore store = profileInterface.getProfile();
+                if (store != null) {
+                    Profile profile = store.getSpecificProfile(profileSwitch.profileName);
+                    if (profile != null) {
+                        profileSwitch.profileJson = profile.getData().toString();
+                        if (L.isEnabled(L.DATABASE))
+                            log.debug("Profile switch prefilled with JSON from local store");
+                        // Update data in NS
+                        NSUpload.updateProfileSwitch(profileSwitch);
                     } else {
                         if (L.isEnabled(L.DATABASE))
-                            log.debug("Store for profile switch doesn't exist. Ignoring: " + trJson.toString());
+                            log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
                         return;
                     }
                 } else {
                     if (L.isEnabled(L.DATABASE))
-                        log.debug("No active profile interface. Ignoring: " + trJson.toString());
+                        log.debug("Store for profile switch doesn't exist. Ignoring: " + trJson.toString());
                     return;
                 }
             }
