@@ -2,10 +2,11 @@ package info.nightscout.androidaps.plugins.general.smsCommunicator
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -22,12 +23,13 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(SmsCommunicatorPlugin::class, DateUtil::class)
+@PrepareForTest(SmsCommunicatorPlugin::class, DateUtil::class, OneTimePassword::class)
 class AuthRequestTest : TestBase() {
 
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Mock lateinit var resourceHelper: ResourceHelper
+    @Mock lateinit var otp: OneTimePassword
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -35,6 +37,7 @@ class AuthRequestTest : TestBase() {
                 it.aapsLogger = aapsLogger
                 it.resourceHelper = resourceHelper
                 it.smsCommunicatorPlugin = smsCommunicatorPlugin
+                it.otp = otp
             }
         }
     }

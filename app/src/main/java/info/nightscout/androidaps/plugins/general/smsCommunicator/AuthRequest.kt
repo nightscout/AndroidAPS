@@ -6,8 +6,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.OneTimePassword
-import info.nightscout.androidaps.utils.OneTimePasswordValidationResult
+import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
+import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
@@ -21,7 +21,7 @@ class AuthRequest internal constructor(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var otp :OneTimePassword
+    @Inject lateinit var otp : OneTimePassword
 
     private val date = DateUtil.now()
     private var processed = false
@@ -32,10 +32,10 @@ class AuthRequest internal constructor(
     }
 
     private fun codeIsValid(toValidate: String) : Boolean {
-        if (otp.isEnabled()) {
-            return otp.checkOTP(toValidate) == OneTimePasswordValidationResult.OK
+        return if (otp.isEnabled()) {
+            otp.checkOTP(toValidate) == OneTimePasswordValidationResult.OK
         } else {
-            return confirmCode.equals(toValidate)
+            confirmCode == toValidate
         }
     }
 
