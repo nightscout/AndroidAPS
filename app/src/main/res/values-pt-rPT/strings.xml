@@ -827,7 +827,7 @@
     <string name="overview_show_activity">Actividade</string>
     <string name="overview_show_sensitivity">Sensibilidade</string>
     <string name="overview_show_deviations">Desvios</string>
-    <string name="overview_show_cob">Carboidratos a bordo</string>
+    <string name="overview_show_cob">Hidratos a Bordo (COB)</string>
     <string name="overview_show_iob">Insulina a bordo</string>
     <string name="overview_show_basals">Basais</string>
     <string name="no_action_selected">Nenhuma acção seleccionada, nada irá acontecer</string>
@@ -883,7 +883,7 @@
     <string name="reset">repor</string>
     <string name="waitingfortimesynchronization">À espera da sincronização da hora (%1$d sec)</string>
     <string name="loopdisconnectedfor">Desligado (%1$d m)</string>
-    <string name="openapssmb_maxiob_title">Máximo total IOS OpenAPS não pode superar [U]</string>
+    <string name="openapssmb_maxiob_title">Máximo total IOB OpenAPS não pode superar [U]</string>
     <string name="openapssmb_maxiob_summary">Este valor é chamado de Max IOB em contexto de OpenAPS\nOpenAPS não adicionará mais insulina se o IOB atual for maior que este valor</string>
     <string name="pump_stopped">Bomba parada</string>
     <string name="pump_started">Bomba iniciada</string>
