@@ -74,7 +74,7 @@ class OneTimePassword @Inject constructor(
 
     private fun configure() {
         ensureKey()
-        pin = sp.getString(R.string.key_smscommunicator_otp_pin, "").trim()
+        pin = sp.getString(R.string.key_smscommunicator_otp_password, "").trim()
     }
 
     private fun generateOneTimePassword(counter: Long): String {

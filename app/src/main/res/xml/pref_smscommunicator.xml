@@ -28,13 +28,14 @@
             validate:testType="numericRange" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
+            android:enabled="false"
             android:key="@string/key_smscommunicator_otp_enabled"
-            android:title="@string/smscommunicator_otp_enabled"
-            android:summary="@string/smscommunicator_otp_enabled_summary"/>
+            android:summary="@string/smscommunicator_otp_enabled_summary"
+            android:title="@string/smscommunicator_otp_enabled" />
 
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
-            android:key="@string/key_smscommunicator_otp_pin"
+            android:key="@string/key_smscommunicator_otp_password"
             android:summary="@string/smscommunicator_otp_pin_summary"
             android:title="@string/smscommunicator_otp_pin"
             validate:testType="pinStrength" />

@@ -1707,7 +1707,7 @@
 
     <string name="key_smscommunicator_otp_enabled" translatable="false">smscommunicator_otp_enabled</string>
     <string name="key_smscommunicator_otp_name" translatable="false">smscommunicator_otp_name</string>
-    <string name="key_smscommunicator_otp_pin" translatable="false">smscommunicator_otp_pin</string>
+    <string name="key_smscommunicator_otp_password" translatable="false">smscommunicator_otp_password</string>
     <string name="key_smscommunicator_otp_secret" translatable="false">smscommunicator_otp_secret</string>
 
     <string name="smscommunicator_default_user_display_name" comment="This is default user display name, shown by Authenticators">User</string>
