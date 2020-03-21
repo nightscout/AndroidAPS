@@ -36,6 +36,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var localAlertUtils: LocalAlertUtils
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
 
 
     companion object {
@@ -133,7 +134,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         }
         if (lastRun != 0L && System.currentTimeMillis() - lastRun > T.mins(10).msecs()) {
             aapsLogger.error(LTag.CORE, "KeepAlive fail")
-            FabricPrivacy.getInstance().logCustom("KeepAliveFail")
+            fabricPrivacy.logCustom("KeepAliveFail")
         }
         lastRun = System.currentTimeMillis()
     }

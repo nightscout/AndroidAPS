@@ -6,11 +6,9 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
@@ -31,7 +29,6 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -106,10 +103,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(resourceHelper.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
 
-//        PowerMockito.mockStatic(FabricPrivacy::class.java)
-//        val mainApp = AAPSMocker.mockMainApp()
-//        `when`(mainApp.packageName).thenReturn("info.nightscout.androidaps")
-
         // RS constructor
         `when`(sp.getString(R.string.key_danars_address, "")).thenReturn("")
 
@@ -118,7 +111,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         constraintChecker = ConstraintChecker(activePlugin)
 
         danaRPump = DanaRPump(aapsLogger, sp, injector)
-        hardLimits = HardLimits(aapsLogger, sp, resourceHelper, context)
+        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp)
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, profileFunction, treatmentsPlugin, sp, commandQueue, context)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, treatmentsPlugin, sp, commandQueue, danaRPump)

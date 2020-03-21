@@ -242,7 +242,7 @@ public class NSClientPlugin extends PluginBase {
             }
             textLog = Html.fromHtml(newTextLog.toString());
         } catch (OutOfMemoryError e) {
-            ToastUtils.showToastInUiThread(context, "Out of memory!\nStop using this phone !!!", R.raw.error);
+            ToastUtils.showToastInUiThread(context, rxBus, "Out of memory!\nStop using this phone !!!", R.raw.error);
         }
     }
 

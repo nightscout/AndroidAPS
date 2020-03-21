@@ -74,7 +74,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
-        hardLimits = HardLimits(aapsLogger, sp, resourceHelper, context)
+        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context)
         safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper, treatmentsPlugin)
     }
 

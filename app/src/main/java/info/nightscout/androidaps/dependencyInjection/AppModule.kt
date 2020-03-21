@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.general.automation.AutomationEvent
 import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.elements.*
 import info.nightscout.androidaps.plugins.general.automation.triggers.*
+import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.general.smsCommunicator.AuthRequest
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
@@ -45,6 +46,7 @@ import info.nightscout.androidaps.setupwizard.SWDefinition
 import info.nightscout.androidaps.setupwizard.SWEventListener
 import info.nightscout.androidaps.setupwizard.SWScreen
 import info.nightscout.androidaps.setupwizard.elements.*
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -64,8 +66,8 @@ open class AppModule {
 
     @Provides
     @Singleton
-    fun provideProfileFunction(injector: HasAndroidInjector, aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePluginProvider): ProfileFunction {
-        return ProfileFunctionImplementation(injector, aapsLogger, sp, resourceHelper, activePlugin)
+    fun provideProfileFunction(injector: HasAndroidInjector, aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePluginProvider, fabricPrivacy: FabricPrivacy): ProfileFunction {
+        return ProfileFunctionImplementation(injector, aapsLogger, sp, resourceHelper, activePlugin, fabricPrivacy)
     }
 
     @Provides
@@ -229,6 +231,8 @@ open class AppModule {
 
         @ContributesAndroidInjector fun profileInjector(): Profile
         @ContributesAndroidInjector fun glucoseStatusInjector(): GlucoseStatus
+
+        @ContributesAndroidInjector fun graphDataInjector(): GraphData
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector

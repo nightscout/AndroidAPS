@@ -3,6 +3,7 @@ package info.nightscout.androidaps.utils
 import android.content.Context
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -12,6 +13,7 @@ import javax.inject.Singleton
 @Singleton
 class HardLimits @Inject constructor(
     val aapsLogger: AAPSLogger,
+    val rxBus: RxBusWrapper,
     val sp: SP,
     val resourceHelper: ResourceHelper,
     val context: Context
@@ -85,7 +87,7 @@ class HardLimits @Inject constructor(
             msg += String.format(resourceHelper.gs(R.string.valuelimitedto), value, newvalue)
             aapsLogger.error(msg)
             NSUpload.uploadError(msg)
-            ToastUtils.showToastInUiThread(context, msg, R.raw.error)
+            ToastUtils.showToastInUiThread(context, rxBus, msg, R.raw.error)
         }
         return newvalue
     }

@@ -107,7 +107,7 @@ class TidepoolUploader @Inject constructor(
             rxBus.send(EventTidepoolStatus(("Connecting")))
             val call = session?.service?.getLogin(authHeader)
 
-            call?.enqueue(TidepoolCallback<AuthReplyMessage>(rxBus, session!!, "Login", {
+            call?.enqueue(TidepoolCallback<AuthReplyMessage>(aapsLogger, rxBus, session!!, "Login", {
                 startSession(session!!, doUpload)
             }, {
                 connectionStatus = ConnectionStatus.FAILED
@@ -128,7 +128,7 @@ class TidepoolUploader @Inject constructor(
         session.authHeader?.let {
             val call = session.service?.getLogin(it)
 
-            call?.enqueue(TidepoolCallback<AuthReplyMessage>(rxBus, session, "Login", {
+            call?.enqueue(TidepoolCallback<AuthReplyMessage>(aapsLogger, rxBus, session, "Login", {
                 OKDialog.show(rootContext, resourceHelper.gs(R.string.tidepool), "Successfully logged into Tidepool.")
             }, {
                 OKDialog.show(rootContext, resourceHelper.gs(R.string.tidepool), "Failed to log into Tidepool.\nCheck that your user name and password are correct.")
@@ -146,12 +146,12 @@ class TidepoolUploader @Inject constructor(
             val datasetCall = session.service!!.getOpenDataSets(session.token!!,
                 session.authReply!!.userid!!, BuildConfig.APPLICATION_ID, 1)
 
-            datasetCall.enqueue(TidepoolCallback<List<DatasetReplyMessage>>(rxBus, session, "Get Open Datasets", {
+            datasetCall.enqueue(TidepoolCallback<List<DatasetReplyMessage>>(aapsLogger, rxBus, session, "Get Open Datasets", {
                 if (session.datasetReply == null) {
                     rxBus.send(EventTidepoolStatus(("Creating new dataset")))
                     val call = session.service.openDataSet(session.token!!, session.authReply!!.userid!!,
                         OpenDatasetRequestMessage(activePlugin.activePump.serialNumber()).getBody())
-                    call.enqueue(TidepoolCallback<DatasetReplyMessage>(rxBus, session, "Open New Dataset", {
+                    call.enqueue(TidepoolCallback<DatasetReplyMessage>(aapsLogger, rxBus, session, "Open New Dataset", {
                         connectionStatus = ConnectionStatus.CONNECTED
                         rxBus.send(EventTidepoolStatus(("New dataset OK")))
                         if (doUpload) doUpload()
@@ -215,7 +215,7 @@ class TidepoolUploader @Inject constructor(
                     rxBus.send(EventTidepoolStatus(("Uploading")))
                     if (session.service != null && session.token != null && session.datasetReply != null) {
                         val call = session.service.doUpload(session.token!!, session.datasetReply!!.getUploadId()!!, body)
-                        call.enqueue(TidepoolCallback<UploadReplyMessage>(rxBus, session, "Data Upload", {
+                        call.enqueue(TidepoolCallback<UploadReplyMessage>(aapsLogger, rxBus, session, "Data Upload", {
                             uploadChunk.setLastEnd(session.end)
                             rxBus.send(EventTidepoolStatus(("Upload completed OK")))
                             releaseWakeLock()
@@ -242,7 +242,7 @@ class TidepoolUploader @Inject constructor(
         if (session?.datasetReply?.id != null) {
             extendWakeLock(60000)
             val call = session!!.service?.deleteDataSet(session!!.token!!, session!!.datasetReply!!.id!!)
-            call?.enqueue(TidepoolCallback(rxBus, session!!, "Delete Dataset", {
+            call?.enqueue(TidepoolCallback(aapsLogger, rxBus, session!!, "Delete Dataset", {
                 connectionStatus = ConnectionStatus.DISCONNECTED
                 rxBus.send(EventTidepoolStatus(("Dataset removed OK")))
                 releaseWakeLock()
@@ -267,7 +267,7 @@ class TidepoolUploader @Inject constructor(
             requireNotNull(userId)
             extendWakeLock(60000)
             val call = session.service?.deleteAllData(token, userId)
-            call?.enqueue(TidepoolCallback(rxBus, session, "Delete all data", {
+            call?.enqueue(TidepoolCallback(aapsLogger, rxBus, session, "Delete all data", {
                 connectionStatus = ConnectionStatus.DISCONNECTED
                 rxBus.send(EventTidepoolStatus(("All data removed OK")))
                 releaseWakeLock()

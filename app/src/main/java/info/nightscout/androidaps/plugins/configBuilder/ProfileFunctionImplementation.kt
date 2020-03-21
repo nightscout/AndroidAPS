@@ -26,7 +26,8 @@ class ProfileFunctionImplementation @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val resourceHelper: ResourceHelper,
-    private val activePlugin: ActivePluginProvider
+    private val activePlugin: ActivePluginProvider,
+    private val fabricPrivacy: FabricPrivacy
 ) : ProfileFunction {
 
     override fun getProfileName(): String =
@@ -54,10 +55,10 @@ class ProfileFunctionImplementation @Inject constructor(
             }
 
             if (showRemainingTime && profileSwitch.durationInMinutes != 0) {
-                profileName += DateUtil.untilString(profileSwitch.originalEnd(), resourceHelper);
+                profileName += DateUtil.untilString(profileSwitch.originalEnd(), resourceHelper)
             }
         }
-        return profileName;
+        return profileName
     }
 
     override fun getProfileNameWithDuration(): String =
@@ -89,7 +90,7 @@ class ProfileFunctionImplementation @Inject constructor(
             bundle.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, BuildConfig.BUILDVERSION)
             bundle.putString(FirebaseAnalytics.Param.START_DATE, time.toString())
             bundle.putString(FirebaseAnalytics.Param.VALUE, activeTreatments.profileSwitchesFromHistory.toString())
-            FabricPrivacy.getInstance().logCustom(bundle)
+            fabricPrivacy.logCustom(bundle)
         }
         aapsLogger.error("getProfile at the end: returning null")
         return null

@@ -23,6 +23,7 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.data.Profile;
@@ -48,6 +49,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
+    @Inject HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
     @Inject RxBusWrapper rxBus;
     @Inject SP sp;
@@ -57,6 +59,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
     @Inject IobCobStaticCalculatorPlugin iobCobStaticCalculatorPlugin;
     @Inject ActivePluginProvider activePlugin;
     @Inject BuildHelper buildHelper;
+    @Inject FabricPrivacy fabricPrivacy;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -191,7 +194,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
                             updateGUI("EventAutosensCalculationFinished");
                         }
                     }
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, exception -> fabricPrivacy.logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventIobCalculationProgress.class)
@@ -199,7 +202,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
                 .subscribe(event -> {
                     if (iobCalculationProgressView != null)
                         iobCalculationProgressView.setText(event.getProgress());
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, exception -> fabricPrivacy.logException(exception))
         );
         // set start of current day
         Calendar calendar = Calendar.getInstance();
@@ -276,7 +279,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
 
         //  ------------------ 1st graph
 
-        final GraphData graphData = new GraphData(bgGraph, iobCobStaticCalculatorPlugin);
+        final GraphData graphData = new GraphData(injector, bgGraph, iobCobStaticCalculatorPlugin);
 
         // **** In range Area ****
         graphData.addInRangeArea(fromTime, toTime, lowLine, highLine);
@@ -309,7 +312,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
         // ------------------ 2nd graph
 
         new Thread(() -> {
-            final GraphData secondGraphData = new GraphData(iobGraph, iobCobStaticCalculatorPlugin);
+            final GraphData secondGraphData = new GraphData(injector, iobGraph, iobCobStaticCalculatorPlugin);
 
             boolean useIobForScale = false;
             boolean useCobForScale = false;

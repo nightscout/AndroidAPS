@@ -178,7 +178,7 @@ class TidepoolPlugin @Inject constructor(
             }
             textLog = HtmlHelper.fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
-            ToastUtils.showToastInUiThread(context, "Out of memory!\nStop using this phone !!!", R.raw.error)
+            ToastUtils.showToastInUiThread(context, rxBus, "Out of memory!\nStop using this phone !!!", R.raw.error)
         }
     }
 

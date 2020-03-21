@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.general.automation.AutomationEvent
 import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.elements.*
 import info.nightscout.androidaps.plugins.general.automation.triggers.*
+import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.general.smsCommunicator.AuthRequest
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
@@ -174,6 +175,8 @@ interface AppComponent : AndroidInjector<MainApp> {
 
     fun injectProfile(profile: Profile)
     fun injectGlucoseStatus(glucoseStatus: GlucoseStatus)
+
+    fun injectGraphData(graphData: GraphData)
 
     @Component.Builder
     interface Builder {

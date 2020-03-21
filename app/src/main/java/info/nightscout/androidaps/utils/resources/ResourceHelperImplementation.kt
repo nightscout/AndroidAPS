@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.DisplayMetrics
 import androidx.annotation.ArrayRes
 import androidx.annotation.BoolRes
 import androidx.annotation.ColorRes
@@ -59,6 +60,9 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
 
     override fun decodeResource(id: Int): Bitmap =
         BitmapFactory.decodeResource(context.resources, id)
+
+    override fun getDisplayMetrics():DisplayMetrics =
+        context.resources.getDisplayMetrics()
 
     override fun dpToPx(dp: Int): Int {
         val scale = context.resources.displayMetrics.density

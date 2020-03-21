@@ -86,6 +86,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
     @Inject NSSettingsStatus nsSettingsStatus;
     @Inject BuildHelper buildHelper;
     @Inject ActivePluginProvider activePlugin;
+    @Inject FabricPrivacy fabricPrivacy;
 
 
     @Override
@@ -130,7 +131,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         if (!loopPlugin.isEnabled(PluginType.LOOP))
             versionCheckerUtils.triggerCheckVersion();
 
-        FabricPrivacy.getInstance().setUserStats();
+        fabricPrivacy.setUserStats();
 
         setupTabs();
         setupViews();
@@ -147,12 +148,12 @@ public class MainActivity extends NoSplashAppCompatActivity {
                         setupViews();
                     }
                     setWakeLock();
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, exception -> fabricPrivacy.logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::processPreferenceChange, exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(this::processPreferenceChange, exception -> fabricPrivacy.logException(exception))
         );
 
         if (!sp.getBoolean(R.string.key_setupwizard_processed, false) && !isRunningRealPumpTest()) {

@@ -2,6 +2,7 @@ package info.nightscout.androidaps.utils.resources
 
 import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
+import android.util.DisplayMetrics
 import androidx.annotation.*
 
 interface ResourceHelper {
@@ -17,5 +18,6 @@ interface ResourceHelper {
     fun getIcon() : Int
     fun getNotificationIcon() : Int
     fun decodeResource(id : Int) : Bitmap
+    fun getDisplayMetrics(): DisplayMetrics
     fun dpToPx(dp: Int): Int
 }

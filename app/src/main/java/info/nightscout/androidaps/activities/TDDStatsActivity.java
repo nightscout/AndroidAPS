@@ -17,9 +17,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -39,7 +36,7 @@ import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
@@ -58,6 +55,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
 public class TDDStatsActivity extends NoSplashAppCompatActivity {
+    @Inject AAPSLogger aapsLogger;
     @Inject ResourceHelper resourceHelper;
     @Inject RxBusWrapper rxBus;
     @Inject SP sp;
@@ -70,8 +68,8 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
     @Inject LocalInsightPlugin localInsightPlugin;
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject CommandQueueProvider commandQueue;
+    @Inject FabricPrivacy fabricPrivacy;
 
-    private static Logger log = StacktraceLoggerWrapper.getLogger(TDDStatsActivity.class);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     TextView statusView, statsMessage, totalBaseBasal2;
@@ -96,15 +94,15 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
         disposable.add(rxBus
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> statusView.setText(event.getStatus(resourceHelper)), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> statusView.setText(event.getStatus(resourceHelper)), exception -> fabricPrivacy.logException(exception))
         );
         disposable.add(rxBus
                 .toObservable(EventDanaRSyncStatus.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> {
-                    log.debug("EventDanaRSyncStatus: " + event.getMessage());
+                    aapsLogger.debug("EventDanaRSyncStatus: " + event.getMessage());
                     statusView.setText(event.getMessage());
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, exception -> fabricPrivacy.logException(exception))
         );
     }
 

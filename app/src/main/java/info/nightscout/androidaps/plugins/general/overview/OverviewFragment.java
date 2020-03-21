@@ -1428,7 +1428,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             //  ------------------ 1st graph
             Profiler.log(aapsLogger, LTag.OVERVIEW, from + " - 1st graph - START", updateGUIStart);
 
-            final GraphData graphData = new GraphData(bgGraph, iobCobCalculatorPlugin);
+            final GraphData graphData = new GraphData(injector, bgGraph, iobCobCalculatorPlugin);
 
             // **** In range Area ****
             graphData.addInRangeArea(fromTime, endTime, lowLine, highLine);
@@ -1464,7 +1464,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             // ------------------ 2nd graph
             Profiler.log(aapsLogger, LTag.OVERVIEW, from + " - 2nd graph - START", updateGUIStart);
 
-            final GraphData secondGraphData = new GraphData(iobGraph, iobCobCalculatorPlugin);
+            final GraphData secondGraphData = new GraphData(injector, iobGraph, iobCobCalculatorPlugin);
 
             boolean useIobForScale = false;
             boolean useCobForScale = false;
