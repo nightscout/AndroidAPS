@@ -35,6 +35,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.anyDouble
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.stubbing.Answer
 import org.powermock.api.mockito.PowerMockito
@@ -58,6 +59,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var localProfilePlugin: LocalProfilePlugin
     @Mock lateinit var treatmentService: TreatmentService
     @Mock lateinit var otp: OneTimePassword
+    @Mock lateinit var xdripCalibrations: XdripCalibrations
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -98,14 +100,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(iobCobCalculatorPlugin.getCobInfo(false, "SMS COB")).thenReturn(CobInfo(10.0, 2.0))
         `when`(iobCobCalculatorPlugin.lastBg()).thenReturn(reading)
 
-        PowerMockito.mockStatic(XdripCalibrations::class.java)
         PowerMockito.spy(DateUtil::class.java)
         PowerMockito.mockStatic(SmsManager::class.java)
         val smsManager = PowerMockito.mock(SmsManager::class.java)
         `when`(SmsManager.getDefault()).thenReturn(smsManager)
         `when`(sp.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678")
 
-        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculatorPlugin, otp)
+        smsCommunicatorPlugin = SmsCommunicatorPlugin(injector, aapsLogger, resourceHelper, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue, loopPlugin, iobCobCalculatorPlugin, xdripCalibrations, otp)
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val callback = invocation.getArgument<Callback>(1)
@@ -890,7 +891,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertEquals("CAL 0", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
-        PowerMockito.`when`(XdripCalibrations.sendIntent(anyObject())).thenReturn(true)
+        PowerMockito.`when`(xdripCalibrations.sendIntent(ArgumentMatchers.anyDouble())).thenReturn(true)
         //CAL 1
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CAL 1")

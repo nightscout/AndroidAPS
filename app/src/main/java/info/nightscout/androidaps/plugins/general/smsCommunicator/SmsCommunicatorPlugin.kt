@@ -60,6 +60,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val commandQueue: CommandQueueProvider,
     private val loopPlugin: LoopPlugin,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val xdripCalibrations: XdripCalibrations,
     private var otp: OneTimePassword
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
@@ -845,7 +846,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(cal) {
                 override fun run() {
-                    val result = XdripCalibrations.sendIntent(aDouble)
+                    val result = xdripCalibrations.sendIntent(aDouble!!)
                     if (result) sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_calibrationsent))) else sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.smscommunicator_calibrationfailed)))
                 }
             })

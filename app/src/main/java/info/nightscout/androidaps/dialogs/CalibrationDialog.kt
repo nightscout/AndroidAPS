@@ -26,6 +26,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var xdripCalibrations: XdripCalibrations
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -63,7 +64,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.overview_calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                     aapsLogger.debug("USER ENTRY: CALIBRATION $bg")
-                    XdripCalibrations.sendIntent(bg)
+                    xdripCalibrations.sendIntent(bg)
                 })
             }
         } else
