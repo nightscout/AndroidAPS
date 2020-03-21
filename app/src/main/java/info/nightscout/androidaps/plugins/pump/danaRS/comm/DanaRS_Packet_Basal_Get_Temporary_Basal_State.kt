@@ -20,12 +20,12 @@ class DanaRS_Packet_Basal_Get_Temporary_Basal_State(
     override fun handleMessage(data: ByteArray) {
         val error = byteArrayToInt(getBytes(data, DATA_START, 1))
         danaRPump.isTempBasalInProgress = byteArrayToInt(getBytes(data, DATA_START + 1, 1)) == 0x01
-        val isAPSTempBasalInProgress = byteArrayToInt(getBytes(data, DATA_START + 2, 1)) == 0x02
-        danaRPump.tempBasalPercent = byteArrayToInt(getBytes(data, DATA_START + 3, 1))
+        val isAPSTempBasalInProgress = byteArrayToInt(getBytes(data, DATA_START + 1, 1)) == 0x02
+        danaRPump.tempBasalPercent = byteArrayToInt(getBytes(data, DATA_START + 2, 1))
         if (danaRPump.tempBasalPercent > 200) danaRPump.tempBasalPercent = (danaRPump.tempBasalPercent - 200) * 10
-        val durationHour = byteArrayToInt(getBytes(data, DATA_START + 4, 1))
+        val durationHour = byteArrayToInt(getBytes(data, DATA_START + 3, 1))
         if (durationHour == 150) danaRPump.tempBasalTotalSec = 15 * 60 else if (durationHour == 160) danaRPump.tempBasalTotalSec = 30 * 60 else danaRPump.tempBasalTotalSec = durationHour * 60 * 60
-        val runningMin = byteArrayToInt(getBytes(data, DATA_START + 5, 2))
+        val runningMin = byteArrayToInt(getBytes(data, DATA_START + 4, 2))
         if (error != 0) failed = true
         val tempBasalRemainingMin = (danaRPump.tempBasalTotalSec - runningMin * 60) / 60
         val tempBasalStart = if (danaRPump.isTempBasalInProgress) getDateFromTempBasalSecAgo(runningMin * 60) else 0
