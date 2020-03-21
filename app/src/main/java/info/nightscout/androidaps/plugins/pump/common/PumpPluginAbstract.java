@@ -8,14 +8,11 @@ import androidx.annotation.NonNull;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
@@ -23,6 +20,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -30,16 +28,14 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -56,7 +52,12 @@ import io.reactivex.schedulers.Schedulers;
 public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpInterface, ConstraintsInterface {
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMP);
+    protected AAPSLogger aapsLogger;
+    protected RxBusWrapper rxBus;
+    protected ActivePluginProvider activePlugin;
+    protected Context context;
+    protected FabricPrivacy fabricPrivacy;
+
     /*
         protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
                 .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_supported_by_pump_driver));
@@ -72,9 +73,25 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     protected boolean displayConnectionMessages = false;
 
 
-    protected PumpPluginAbstract(PluginDescription pluginDescription, PumpType pumpType, HasAndroidInjector injector, ResourceHelper resourceHelper, AAPSLogger aapsLogger, CommandQueueProvider commandQueue) {
+    protected PumpPluginAbstract(
+            PluginDescription pluginDescription,
+            PumpType pumpType,
+            HasAndroidInjector injector,
+            ResourceHelper resourceHelper,
+            AAPSLogger aapsLogger,
+            CommandQueueProvider commandQueue,
+            RxBusWrapper rxBus,
+            ActivePluginProvider activePlugin,
+            Context context,
+            FabricPrivacy fabricPrivacy
+    ) {
 
         super(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue);
+        this.aapsLogger = aapsLogger;
+        this.rxBus = rxBus;
+        this.activePlugin = activePlugin;
+        this.context = context;
+        this.fabricPrivacy = fabricPrivacy;
 
         pumpDescription.setPumpDescription(pumpType);
 
@@ -90,18 +107,15 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         // TODO: moved from constructor .... test if it works
         initPumpStatusData();
 
-        Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, getServiceClass());
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
 
         serviceRunning = true;
 
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> {
-                    MainApp.instance().getApplicationContext().unbindService(serviceConnection);
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> context.unbindService(serviceConnection), exception -> fabricPrivacy.logException(exception))
         );
         onStartCustomActions();
     }
@@ -109,7 +123,6 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
     @Override
     protected void onStop() {
-        Context context = MainApp.instance().getApplicationContext();
         context.unbindService(serviceConnection);
 
         serviceRunning = false;
@@ -152,98 +165,91 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
 
     public boolean isConnected() {
-        if (displayConnectionMessages && isLoggingEnabled())
-            LOG.warn("isConnected [PumpPluginAbstract].");
+        if (displayConnectionMessages)
+            aapsLogger.debug(LTag.PUMP, "isConnected [PumpPluginAbstract].");
         return PumpDriverState.isConnected(pumpState);
     }
 
 
     public boolean isConnecting() {
-        if (displayConnectionMessages && isLoggingEnabled())
-            LOG.warn("isConnecting [PumpPluginAbstract].");
+        if (displayConnectionMessages)
+            aapsLogger.debug(LTag.PUMP, "isConnecting [PumpPluginAbstract].");
         return pumpState == PumpDriverState.Connecting;
     }
 
 
     public void connect(String reason) {
-        if (displayConnectionMessages && isLoggingEnabled())
-            LOG.warn("connect (reason={}) [PumpPluginAbstract] - default (empty) implementation.", reason);
+        if (displayConnectionMessages)
+            aapsLogger.debug(LTag.PUMP, "connect (reason={}) [PumpPluginAbstract] - default (empty) implementation." + reason);
     }
 
 
     public void disconnect(String reason) {
-        if (displayConnectionMessages && isLoggingEnabled())
-            LOG.warn("disconnect (reason={}) [PumpPluginAbstract] - default (empty) implementation.", reason);
+        if (displayConnectionMessages)
+            aapsLogger.debug(LTag.PUMP, "disconnect (reason={}) [PumpPluginAbstract] - default (empty) implementation." + reason);
     }
 
 
     public void stopConnecting() {
-        if (displayConnectionMessages && isLoggingEnabled())
-            LOG.warn("stopConnecting [PumpPluginAbstract] - default (empty) implementation.");
+        if (displayConnectionMessages)
+            aapsLogger.debug(LTag.PUMP, "stopConnecting [PumpPluginAbstract] - default (empty) implementation.");
     }
 
 
     @Override
     public boolean isHandshakeInProgress() {
-        if (displayConnectionMessages && isLoggingEnabled())
-            LOG.warn("isHandshakeInProgress [PumpPluginAbstract] - default (empty) implementation.");
+        if (displayConnectionMessages)
+            aapsLogger.debug(LTag.PUMP, "isHandshakeInProgress [PumpPluginAbstract] - default (empty) implementation.");
         return false;
     }
 
 
     @Override
     public void finishHandshaking() {
-        if (displayConnectionMessages && isLoggingEnabled())
-            LOG.warn("finishHandshaking [PumpPluginAbstract] - default (empty) implementation.");
+        if (displayConnectionMessages)
+            aapsLogger.debug(LTag.PUMP, "finishHandshaking [PumpPluginAbstract] - default (empty) implementation.");
     }
 
 
     public void getPumpStatus() {
-        if (isLoggingEnabled())
-            LOG.warn("getPumpStatus [PumpPluginAbstract] - Not implemented.");
+        aapsLogger.debug(LTag.PUMP, "getPumpStatus [PumpPluginAbstract] - Not implemented.");
     }
 
 
     // Upload to pump new basal profile
     @NonNull public PumpEnactResult setNewBasalProfile(Profile profile) {
-        if (isLoggingEnabled())
-            LOG.warn("setNewBasalProfile [PumpPluginAbstract] - Not implemented.");
+        aapsLogger.debug(LTag.PUMP, "setNewBasalProfile [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
 
     public boolean isThisProfileSet(Profile profile) {
-        if (isLoggingEnabled())
-            LOG.warn("isThisProfileSet [PumpPluginAbstract] - Not implemented.");
+        aapsLogger.debug(LTag.PUMP, "isThisProfileSet [PumpPluginAbstract] - Not implemented.");
         return true;
     }
 
 
     public long lastDataTime() {
-        if (isLoggingEnabled())
-            LOG.warn("lastDataTime [PumpPluginAbstract].");
+        aapsLogger.debug(LTag.PUMP, "lastDataTime [PumpPluginAbstract].");
         return pumpStatus.lastConnection;
     }
 
 
     public double getBaseBasalRate() {
-        if (isLoggingEnabled())
-            LOG.warn("getBaseBasalRate [PumpPluginAbstract] - Not implemented.");
+        aapsLogger.debug(LTag.PUMP, "getBaseBasalRate [PumpPluginAbstract] - Not implemented.");
         return 0.0d;
     } // base basal rate, not temp basal
 
 
     public void stopBolusDelivering() {
-        if (isLoggingEnabled())
-            LOG.warn("stopBolusDelivering [PumpPluginAbstract] - Not implemented.");
+        aapsLogger.debug(LTag.PUMP, "stopBolusDelivering [PumpPluginAbstract] - Not implemented.");
     }
 
 
     @NonNull @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile,
                                                 boolean enforceNew) {
-        if (isLoggingEnabled())
-            LOG.warn("setTempBasalAbsolute [PumpPluginAbstract] - Not implemented.");
+        aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
@@ -251,15 +257,13 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile,
                                                boolean enforceNew) {
-        if (isLoggingEnabled())
-            LOG.warn("setTempBasalPercent [PumpPluginAbstract] - Not implemented.");
+        aapsLogger.debug(LTag.PUMP, "setTempBasalPercent [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
 
     @NonNull public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        if (isLoggingEnabled())
-            LOG.warn("setExtendedBolus [PumpPluginAbstract] - Not implemented.");
+        aapsLogger.debug(LTag.PUMP, "setExtendedBolus [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
@@ -268,15 +272,13 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     // when the cancel request is requested by the user (forced), the pump should always do a real cancel
 
     @NonNull public PumpEnactResult cancelTempBasal(boolean enforceNew) {
-        if (isLoggingEnabled())
-            LOG.warn("cancelTempBasal [PumpPluginAbstract] - Not implemented.");
+        aapsLogger.debug(LTag.PUMP, "cancelTempBasal [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
 
     @NonNull public PumpEnactResult cancelExtendedBolus() {
-        if (isLoggingEnabled())
-            LOG.warn("cancelExtendedBolus [PumpPluginAbstract] - Not implemented.");
+        aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
@@ -288,8 +290,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     // }
 
     public String deviceID() {
-        if (isLoggingEnabled())
-            LOG.warn("deviceID [PumpPluginAbstract] - Not implemented.");
+        aapsLogger.debug(LTag.PUMP, "deviceID [PumpPluginAbstract] - Not implemented.");
         return "FakeDevice";
     }
 
@@ -304,16 +305,14 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     // Short info for SMS, Wear etc
 
     public boolean isFakingTempsByExtendedBoluses() {
-        if (isLoggingEnabled())
-            LOG.warn("isFakingTempsByExtendedBoluses [PumpPluginAbstract] - Not implemented.");
+        aapsLogger.debug(LTag.PUMP, "isFakingTempsByExtendedBoluses [PumpPluginAbstract] - Not implemented.");
         return false;
     }
 
 
     @NonNull @Override
     public PumpEnactResult loadTDDs() {
-        if (isLoggingEnabled())
-            LOG.warn("loadTDDs [PumpPluginAbstract] - Not implemented.");
+        aapsLogger.debug(LTag.PUMP, "loadTDDs [PumpPluginAbstract] - Not implemented.");
         return getOperationNotSupportedWithCustomText(R.string.pump_operation_not_supported_by_pump_driver);
     }
 
@@ -321,9 +320,8 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     @NonNull @Override
     public JSONObject getJSONStatus(Profile profile, String profileName) {
 
-        long now = System.currentTimeMillis();
         if ((pumpStatus.lastConnection + 5 * 60 * 1000L) < System.currentTimeMillis()) {
-            return null;
+            return new JSONObject();
         }
 
         JSONObject pump = new JSONObject();
@@ -336,10 +334,10 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
                 extended.put("ActiveProfile", profileName);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
 
-            TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(System.currentTimeMillis());
+            TemporaryBasal tb = activePlugin.getActiveTreatments().getTempBasalFromHistory(System.currentTimeMillis());
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate",
                         tb.tempBasalConvertedToAbsolute(System.currentTimeMillis(), profile));
@@ -347,7 +345,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
 
-            ExtendedBolus eb = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(System.currentTimeMillis());
+            ExtendedBolus eb = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(System.currentTimeMillis());
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
                 extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
@@ -362,7 +360,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             pump.put("reservoir", pumpStatus.reservoirRemainingUnits);
             pump.put("clock", DateUtil.toISOString(new Date()));
         } catch (JSONException e) {
-            LOG.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return pump;
     }
@@ -373,7 +371,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     public String shortStatus(boolean veryShort) {
         String ret = "";
         if (pumpStatus.lastConnection != 0) {
-            Long agoMsec = System.currentTimeMillis() - pumpStatus.lastConnection;
+            long agoMsec = System.currentTimeMillis() - pumpStatus.lastConnection;
             int agoMin = (int) (agoMsec / 60d / 1000d);
             ret += "LastConn: " + agoMin + " min ago\n";
         }
@@ -381,12 +379,11 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pumpStatus.lastBolusAmount) + "U @" + //
                     android.text.format.DateFormat.format("HH:mm", pumpStatus.lastBolusTime) + "\n";
         }
-        TemporaryBasal activeTemp = TreatmentsPlugin.getPlugin()
-                .getRealTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal activeTemp = activePlugin.getActiveTreatments().getRealTempBasalFromHistory(System.currentTimeMillis());
         if (activeTemp != null) {
             ret += "Temp: " + activeTemp.toStringFull() + "\n";
         }
-        ExtendedBolus activeExtendedBolus = TreatmentsPlugin.getPlugin().getExtendedBolusFromHistory(
+        ExtendedBolus activeExtendedBolus = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(
                 System.currentTimeMillis());
         if (activeExtendedBolus != null) {
             ret += "Extended: " + activeExtendedBolus.toString() + "\n";
@@ -408,31 +405,29 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         try {
             if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
                 // neither carbs nor bolus requested
-                if (isLoggingEnabled())
-                    LOG.error("deliverTreatment: Invalid input");
+                aapsLogger.error("deliverTreatment: Invalid input");
                 return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
-                        .comment(MainApp.gs(R.string.danar_invalidinput));
+                        .comment(getResourceHelper().gs(R.string.danar_invalidinput));
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 return deliverBolus(detailedBolusInfo);
             } else {
                 if (MedtronicHistoryData.doubleBolusDebug)
-                    LOG.debug("DoubleBolusDebug: deliverTreatment::(carb only entry)");
+                    aapsLogger.debug("DoubleBolusDebug: deliverTreatment::(carb only entry)");
 
                 // no bolus required, carb only treatment
-                TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, true);
+                activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, true);
 
                 EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(new Treatment());
                 bolusingEvent.getT().isSMB = detailedBolusInfo.isSMB;
                 bolusingEvent.setPercent(100);
-                RxBus.Companion.getINSTANCE().send(bolusingEvent);
+                rxBus.send(bolusingEvent);
 
-                if (isLoggingEnabled())
-                    LOG.debug("deliverTreatment: Carb only treatment.");
+                aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.");
 
                 return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
-                        .carbsDelivered(detailedBolusInfo.carbs).comment(MainApp.gs(R.string.virtualpump_resultok));
+                        .carbsDelivered(detailedBolusInfo.carbs).comment(getResourceHelper().gs(R.string.virtualpump_resultok));
             }
         } finally {
             triggerUIChange();
@@ -440,20 +435,12 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
     }
 
-
-    public boolean isLoggingEnabled() {
-        return L.isEnabled(L.PUMP);
-    }
-
-
     protected abstract PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo);
-
 
     protected abstract void triggerUIChange();
 
-
-    public PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
-        return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(MainApp.gs(resourceId));
+    private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
+        return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(getResourceHelper().gs(resourceId));
     }
 
 }

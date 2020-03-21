@@ -14,6 +14,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.MidnightTime
 import info.nightscout.androidaps.utils.T
@@ -29,8 +30,9 @@ class TddCalculator @Inject constructor(
     val mainApp: MainApp,
     val sp: SP,
     val activePlugin: ActivePluginProvider,
-    val profileFunction: ProfileFunction
-) : TreatmentsPlugin(injector, aapsLogger, rxBus, resourceHelper, mainApp, sp, profileFunction, activePlugin) {
+    val profileFunction: ProfileFunction,
+    fabricPrivacy: FabricPrivacy
+) : TreatmentsPlugin(injector, aapsLogger, rxBus, resourceHelper, mainApp, sp, profileFunction, activePlugin, fabricPrivacy) {
 
     init {
         service = TreatmentService() // plugin is not started

@@ -72,20 +72,9 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final ActivePluginProvider activePlugin;
+    private final FabricPrivacy fabricPrivacy;
 
     private CompositeDisposable disposable = new CompositeDisposable();
-
-    private static TreatmentsPlugin treatmentsPlugin;
-
-    /**
-     * @deprecated Use dagger to get an instance
-     */
-    @Deprecated
-    public static TreatmentsPlugin getPlugin() {
-        if (treatmentsPlugin == null)
-            throw new IllegalStateException("Accessing TreatmentsPlugin before first instantiation");
-        return treatmentsPlugin;
-    }
 
     protected TreatmentService service;
 
@@ -107,7 +96,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             Context context,
             SP sp,
             ProfileFunction profileFunction,
-            ActivePluginProvider activePlugin
+            ActivePluginProvider activePlugin,
+            FabricPrivacy fabricPrivacy
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.TREATMENT)
@@ -125,7 +115,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         this.sp = sp;
         this.profileFunction = profileFunction;
         this.activePlugin = activePlugin;
-        treatmentsPlugin = this;
+        this.fabricPrivacy = fabricPrivacy;
     }
 
     @Override
@@ -143,19 +133,19 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                             updateTotalIOBTreatments();
                             rxBus.send(event.getNext());
                         },
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventReloadProfileSwitchData.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> initializeProfileSwitchData(range()),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> initializeTempTargetData(range()),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventReloadTempBasalData.class)
@@ -165,7 +155,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                             initializeTempBasalData(range());
                             updateTotalIOBTempBasals();
                         },
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
     }
 
@@ -641,7 +631,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             Bundle bundle = new Bundle();
             bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "TreatmentClash");
             bundle.putString(FirebaseAnalytics.Param.VALUE, status);
-            FabricPrivacy.getInstance().logCustom(bundle);
+            fabricPrivacy.logCustom(bundle);
         }
 
         return newRecordCreated;
@@ -722,14 +712,14 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     @Override
     public void doProfileSwitch(@NotNull final ProfileStore profileStore, @NotNull final String profileName, final int duration, final int percentage, final int timeShift, final long date) {
         ProfileSwitch profileSwitch = profileFunction.prepareProfileSwitch(profileStore, profileName, duration, percentage, timeShift, date);
-        treatmentsPlugin.addToHistoryProfileSwitch(profileSwitch);
+        addToHistoryProfileSwitch(profileSwitch);
         if (percentage == 90 && duration == 10)
             sp.putBoolean(R.string.key_objectiveuseprofileswitch, true);
     }
 
     @Override
     public void doProfileSwitch(final int duration, final int percentage, final int timeShift) {
-        ProfileSwitch profileSwitch = treatmentsPlugin.getProfileSwitchFromHistory(System.currentTimeMillis());
+        ProfileSwitch profileSwitch = getProfileSwitchFromHistory(System.currentTimeMillis());
         if (profileSwitch != null) {
             profileSwitch = new ProfileSwitch(getInjector());
             profileSwitch.date = System.currentTimeMillis();
@@ -741,7 +731,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             profileSwitch.isCPP = percentage != 100 || timeShift != 0;
             profileSwitch.timeshift = timeShift;
             profileSwitch.percentage = percentage;
-            treatmentsPlugin.addToHistoryProfileSwitch(profileSwitch);
+            addToHistoryProfileSwitch(profileSwitch);
         } else {
             getAapsLogger().error(LTag.PROFILE, "No profile switch exists");
         }
