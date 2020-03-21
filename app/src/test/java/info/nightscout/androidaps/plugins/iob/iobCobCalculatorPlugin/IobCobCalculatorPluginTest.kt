@@ -1,16 +1,12 @@
 package info.nightscout.androidaps.plugins.iob.iobCobCalculatorPlugin
 
-import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
@@ -19,6 +15,7 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAverage
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -32,6 +29,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
 @RunWith(PowerMockRunner::class)
+@PrepareForTest(FabricPrivacy::class)
 class IobCobCalculatorPluginTest : TestBase() {
 
     @Mock lateinit var aapsLogger: AAPSLogger
@@ -45,6 +43,7 @@ class IobCobCalculatorPluginTest : TestBase() {
     @Mock lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
     @Mock lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
+    @Mock lateinit var fabricPrivacy: FabricPrivacy
 
     lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
@@ -61,7 +60,7 @@ class IobCobCalculatorPluginTest : TestBase() {
 
     @Before
     fun mock() {
-        iobCobCalculatorPlugin = IobCobCalculatorPlugin(injector, aapsLogger, rxBus, sp, resourceHelper, profileFunction, activePlugin, treatmentsPlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin)
+        iobCobCalculatorPlugin = IobCobCalculatorPlugin(injector, aapsLogger, rxBus, sp, resourceHelper, profileFunction, activePlugin, treatmentsPlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy)
     }
 
     @Test

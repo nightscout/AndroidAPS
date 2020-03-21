@@ -331,7 +331,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         //LOOP DISABLE : from enabled
         hasBeenRun = false
         PowerMockito.`when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(true)
-        PowerMockito.doAnswer(Answer { invocation: InvocationOnMock? ->
+        PowerMockito.doAnswer(Answer { _: InvocationOnMock? ->
             hasBeenRun = true
             null
         } as Answer<*>).`when`(loopPlugin).setPluginEnabled(PluginType.LOOP, false)
@@ -355,7 +355,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         //LOOP ENABLE : from disabled
         hasBeenRun = false
         PowerMockito.`when`(loopPlugin.isEnabled(PluginType.LOOP)).thenReturn(false)
-        PowerMockito.doAnswer(Answer { invocation: InvocationOnMock? ->
+        PowerMockito.doAnswer(Answer { _: InvocationOnMock? ->
             hasBeenRun = true
             null
         } as Answer<*>).`when`(loopPlugin).setPluginEnabled(PluginType.LOOP, true)
