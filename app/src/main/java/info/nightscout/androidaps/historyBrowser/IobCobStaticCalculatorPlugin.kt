@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
@@ -25,9 +26,10 @@ class IobCobStaticCalculatorPlugin @Inject constructor(
     treatmentsPlugin: TreatmentsPlugin,
     sensitivityOref1Plugin: SensitivityOref1Plugin,
     sensitivityAAPSPlugin: SensitivityAAPSPlugin,
-    sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
+    sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin,
+    fabricPrivacy: FabricPrivacy
 ) : IobCobCalculatorPlugin(injector, aapsLogger, rxBus, sp, resourceHelper, profileFunction,
-    activePlugin, treatmentsPlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin) {
+    activePlugin, treatmentsPlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy) {
 
     override fun onStart() { // do not attach to rxbus
     }

@@ -391,7 +391,7 @@ public class LoopPlugin extends PluginBase {
             lastRun.lastSMBEnact = 0;
             lastRun.lastSMBRequest = 0;
 
-            NSUpload.uploadDeviceStatus(this);
+            NSUpload.uploadDeviceStatus(this, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump());
 
             if (isSuspended()) {
                 getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.loopsuspended));
@@ -516,7 +516,7 @@ public class LoopPlugin extends PluginBase {
                     lastRun.lastTBRRequest = lastRun.lastAPSRun.getTime();
                     lastRun.lastTBREnact = DateUtil.now();
                     lastRun.lastOpenModeAccept = DateUtil.now();
-                    NSUpload.uploadDeviceStatus(lp);
+                    NSUpload.uploadDeviceStatus(lp, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump());
                     sp.incInt(R.string.key_ObjectivesmanualEnacts);
                 }
                 rxBus.send(new EventAcceptOpenLoopChange());

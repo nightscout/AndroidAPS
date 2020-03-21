@@ -66,17 +66,9 @@ public class IobCobCalculatorPlugin extends PluginBase {
     private final SensitivityOref1Plugin sensitivityOref1Plugin;
     private final SensitivityAAPSPlugin sensitivityAAPSPlugin;
     private final SensitivityWeightedAveragePlugin sensitivityWeightedAveragePlugin;
+    private final FabricPrivacy fabricPrivacy;
 
     private CompositeDisposable disposable = new CompositeDisposable();
-
-    private static IobCobCalculatorPlugin plugin = null;
-
-    @Deprecated
-    public static IobCobCalculatorPlugin getPlugin() {
-        if (plugin == null)
-            throw new IllegalStateException("Accessing IobCobCalculatorPlugin before first instantiation");
-        return plugin;
-    }
 
     private LongSparseArray<IobTotal> iobTable = new LongSparseArray<>(); // oldest at index 0
     private LongSparseArray<AutosensData> autosensDataTable = new LongSparseArray<>(); // oldest at index 0
@@ -102,7 +94,8 @@ public class IobCobCalculatorPlugin extends PluginBase {
             TreatmentsPlugin treatmentsPlugin,
             SensitivityOref1Plugin sensitivityOref1Plugin,
             SensitivityAAPSPlugin sensitivityAAPSPlugin,
-            SensitivityWeightedAveragePlugin sensitivityWeightedAveragePlugin
+            SensitivityWeightedAveragePlugin sensitivityWeightedAveragePlugin,
+            FabricPrivacy fabricPrivacy
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
@@ -112,7 +105,6 @@ public class IobCobCalculatorPlugin extends PluginBase {
                         .alwaysEnabled(true),
                 aapsLogger, resourceHelper, injector
         );
-        this.plugin = this;
         this.injector = injector;
         this.sp = sp;
         this.rxBus = rxBus;
@@ -123,6 +115,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         this.sensitivityOref1Plugin = sensitivityOref1Plugin;
         this.sensitivityAAPSPlugin = sensitivityAAPSPlugin;
         this.sensitivityWeightedAveragePlugin = sensitivityWeightedAveragePlugin;
+        this.fabricPrivacy = fabricPrivacy;
     }
 
     @Override
@@ -140,7 +133,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                         autosensDataTable = new LongSparseArray<>();
                     }
                     runCalculation("onEventConfigBuilderChange", System.currentTimeMillis(), false, true, event);
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
         // EventNewBasalProfile
         disposable.add(rxBus
@@ -158,7 +151,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                         basalDataTable = new LongSparseArray<>();
                     }
                     runCalculation("onNewProfile", System.currentTimeMillis(), false, true, event);
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
         // EventNewBG
         disposable.add(rxBus
@@ -167,7 +160,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 .subscribe(event -> {
                     stopCalculation("onEventNewBG");
                     runCalculation("onEventNewBG", System.currentTimeMillis(), true, true, event);
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
         // EventPreferenceChange
         disposable.add(rxBus
@@ -192,19 +185,19 @@ public class IobCobCalculatorPlugin extends PluginBase {
                         }
                         runCalculation("onEventPreferenceChange", System.currentTimeMillis(), false, true, event);
                     }
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
         // EventAppInitialized
         disposable.add(rxBus
                 .toObservable(EventAppInitialized.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, event), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> runCalculation("onEventAppInitialized", System.currentTimeMillis(), true, true, event), fabricPrivacy::logException)
         );
         // EventNewHistoryData
         disposable.add(rxBus
                 .toObservable(EventNewHistoryData.class)
                 .observeOn(Schedulers.io())
-                .subscribe(this::newHistoryData, exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(this::newHistoryData, fabricPrivacy::logException)
         );
     }
 

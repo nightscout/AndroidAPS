@@ -33,6 +33,7 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
@@ -160,9 +161,9 @@ public class NSUpload {
         }
     }
 
-    public static void uploadDeviceStatus(LoopPlugin loopPlugin) {
-        Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile();
-        String profileName = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfileName();
+    public static void uploadDeviceStatus(LoopPlugin loopPlugin, IobCobCalculatorPlugin iobCobCalculatorPlugin, ProfileFunction profileFunction, PumpInterface pumpInterface) {
+        Profile profile = profileFunction.getProfile();
+        String profileName = profileFunction.getProfileName();
 
         if (profile == null || profileName == null) {
             log.error("Profile is null. Skipping upload");
@@ -204,14 +205,14 @@ public class NSUpload {
             } else {
                 if (L.isEnabled(L.NSCLIENT))
                     log.debug("OpenAPS data too old to upload, sending iob only");
-                IobTotal[] iob = IobCobCalculatorPlugin.getPlugin().calculateIobArrayInDia(profile);
+                IobTotal[] iob = iobCobCalculatorPlugin.calculateIobArrayInDia(profile);
                 if (iob.length > 0) {
                     deviceStatus.iob = iob[0].json();
                     deviceStatus.iob.put("time", DateUtil.toISOString(DateUtil.now()));
                 }
             }
             deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
-            JSONObject pumpstatus = PluginStore.Companion.getInstance().getActivePump().getJSONStatus(profile, profileName);
+            JSONObject pumpstatus = pumpInterface.getJSONStatus(profile, profileName);
             if (pumpstatus != null) {
                 deviceStatus.pump = pumpstatus;
             }

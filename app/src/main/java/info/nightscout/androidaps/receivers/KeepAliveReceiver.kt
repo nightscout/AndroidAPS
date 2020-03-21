@@ -107,7 +107,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         else if (DateUtil.isOlderThan(usedAPS.lastAPSRun, 5)) shouldUploadStatus = true
         if (DateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY) && shouldUploadStatus) {
             lastIobUpload = DateUtil.now()
-            NSUpload.uploadDeviceStatus(loopPlugin)
+            NSUpload.uploadDeviceStatus(loopPlugin, iobCobCalculatorPlugin, profileFunction, activePlugin.activePump)
         }
     }
 
