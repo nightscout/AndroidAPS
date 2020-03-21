@@ -2,11 +2,7 @@ package info.nightscout.androidaps.utils.resources
 
 import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
-import androidx.annotation.BoolRes
-import androidx.annotation.ColorRes
-import androidx.annotation.PluralsRes
-import androidx.annotation.RawRes
-import androidx.annotation.StringRes
+import androidx.annotation.*
 
 interface ResourceHelper {
     fun gs(@StringRes id: Int): String
@@ -15,6 +11,7 @@ interface ResourceHelper {
     fun gc(@ColorRes id: Int): Int
     fun gb(@BoolRes id :Int) : Boolean
     fun gcs(@ColorRes id: Int): String
+    fun gsa(@ArrayRes id:Int): Array<String>
     fun openRawResourceFd(@RawRes id : Int) : AssetFileDescriptor?
 
     fun getIcon() : Int

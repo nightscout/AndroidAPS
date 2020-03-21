@@ -1,25 +1,24 @@
 package info.nightscout.androidaps.setupwizard
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.events.EventStatus
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.setupwizard.elements.SWItem
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 
 class SWEventListener constructor(
-    private val resourceHelper: ResourceHelper,
-    rxBus: RxBusWrapper,
+    injector:HasAndroidInjector,
     clazz: Class<out EventStatus>
-) : SWItem(Type.LISTENER) {
+) : SWItem(injector, Type.LISTENER) {
 
     private val disposable = CompositeDisposable()
     private var textLabel = 0
     private var status = ""
-    var textView: TextView? = null
+    private var textView: TextView? = null
 
     // TODO: Adrian how to clear disposable in this case?
     init {
@@ -28,13 +27,14 @@ class SWEventListener constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { event: Any ->
                 status = (event as EventStatus).getStatus(resourceHelper)
+                @SuppressLint("SetTextI18n")
                 textView?.text = (if (textLabel != 0) resourceHelper.gs(textLabel) else "") + " " + status
             }
         )
     }
 
-    override fun label(newLabel: Int): SWEventListener {
-        textLabel = newLabel
+    override fun label(label: Int): SWEventListener {
+        textLabel = label
         return this
     }
 
@@ -43,6 +43,7 @@ class SWEventListener constructor(
         return this
     }
 
+    @SuppressLint("SetTextI18n")
     override fun generateDialog(layout: LinearLayout) {
         val context = layout.context
         textView = TextView(context)

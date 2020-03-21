@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import androidx.annotation.ArrayRes
 import androidx.annotation.BoolRes
 import androidx.annotation.ColorRes
 import androidx.annotation.PluralsRes
@@ -28,11 +29,14 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
 
     override fun gc(@ColorRes id: Int): Int = ContextCompat.getColor(context, id)
 
-    override fun gb(@BoolRes id :Int) : Boolean = context.resources.getBoolean(id)
+    override fun gb(@BoolRes id: Int): Boolean = context.resources.getBoolean(id)
 
     @SuppressLint("ResourceType")
     override fun gcs(@ColorRes id: Int): String =
         gs(id).replace("#ff", "#")
+
+    override fun gsa(@ArrayRes id: Int): Array<String> =
+        context.resources.getStringArray(id)
 
     override fun openRawResourceFd(id: Int): AssetFileDescriptor =
         context.resources.openRawResourceFd(id)

@@ -81,7 +81,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
                         .pluginName(R.string.openapssmb)
                         .shortName(R.string.smb_shortname)
                         .preferencesId(R.xml.pref_openapssmb)
-                        .description(R.string.description_smb),
+                        .description(R.string.description_smb)
+                        .setDefault(),
                 aapsLogger, resourceHelper, injector
         );
         this.constraintChecker = constraintChecker;

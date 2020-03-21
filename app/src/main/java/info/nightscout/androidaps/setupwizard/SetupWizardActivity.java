@@ -16,6 +16,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
@@ -38,6 +39,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class SetupWizardActivity extends NoSplashAppCompatActivity {
 
+    @Inject HasAndroidInjector injector;
     @Inject LocalProfilePlugin localProfilePlugin;
     @Inject SWDefinition swDefinition;
     @Inject RxBusWrapper rxBus;
@@ -119,9 +121,9 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
 
     private void generateLayout() {
         SWScreen currentScreen = screens.get(currentWizardPage);
-        LinearLayout layout = SWItem.generateLayout(this.findViewById(R.id.sw_content_fields));
-        for (int i = 0; i < currentScreen.items.size(); i++) {
-            SWItem currentItem = currentScreen.items.get(i);
+        LinearLayout layout = new SWItem(injector, SWItem.Type.NONE).generateLayout(this.findViewById(R.id.sw_content_fields));
+        for (int i = 0; i < currentScreen.getItems().size(); i++) {
+            SWItem currentItem = currentScreen.getItems().get(i);
             currentItem.generateDialog(layout);
         }
         scrollView.smoothScrollTo(0, 0);
@@ -130,7 +132,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
     private void updateButtons() {
         runOnUiThread(() -> {
             SWScreen currentScreen = screens.get(currentWizardPage);
-            if (currentScreen.validator == null || currentScreen.validator.isValid() || currentScreen.skippable) {
+            if (currentScreen.getValidator() == null || currentScreen.getValidator().isValid() || currentScreen.getSkippable()) {
                 if (currentWizardPage == nextPage()) {
                     findViewById(R.id.finish_button).setVisibility(View.VISIBLE);
                     findViewById(R.id.next_button).setVisibility(View.GONE);
@@ -188,7 +190,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
     private int nextPage() {
         int page = currentWizardPage + 1;
         while (page < screens.size()) {
-            if (screens.get(page).visibility == null || screens.get(page).visibility.isValid())
+            if (screens.get(page).getVisibility() == null || screens.get(page).getVisibility().isValid())
                 return page;
             page++;
         }
@@ -198,7 +200,7 @@ public class SetupWizardActivity extends NoSplashAppCompatActivity {
     private int previousPage() {
         int page = currentWizardPage - 1;
         while (page >= 0) {
-            if (screens.get(page).visibility == null || screens.get(page).visibility.isValid())
+            if (screens.get(page).getVisibility() == null || screens.get(page).getVisibility().isValid())
                 return page;
             page--;
         }

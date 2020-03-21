@@ -88,7 +88,14 @@ class PluginStore @Inject constructor(
         var pluginsInCategory: ArrayList<PluginBase>?
 
         // PluginType.APS
-        activeAPS = determineActivePlugin(APSInterface::class.java, PluginType.APS)
+        pluginsInCategory = getSpecificPluginsList(PluginType.APS)
+        activeAPS = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APSInterface?
+        if (activeAPS == null) {
+            activeAPS = getDefaultPlugin(PluginType.APS) as APSInterface
+            (activeAPS as PluginBase).setPluginEnabled(PluginType.APS, true)
+            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
+        }
+        setFragmentVisiblities((activeAPS as PluginBase).name, pluginsInCategory, PluginType.APS)
 
         // PluginType.INSULIN
         pluginsInCategory = getSpecificPluginsList(PluginType.INSULIN)
@@ -121,7 +128,14 @@ class PluginStore @Inject constructor(
         setFragmentVisiblities((activeSensitivity as PluginBase).name, pluginsInCategory, PluginType.PROFILE)
 
         // PluginType.BGSOURCE
-        activeBgSource = this.determineActivePlugin(BgSourceInterface::class.java, PluginType.BGSOURCE)
+        pluginsInCategory = getSpecificPluginsList(PluginType.BGSOURCE)
+        activeBgSource = getTheOneEnabledInArray(pluginsInCategory, PluginType.BGSOURCE) as BgSourceInterface?
+        if (activeBgSource == null) {
+            activeBgSource = getDefaultPlugin(PluginType.BGSOURCE) as BgSourceInterface
+            (activeBgSource as PluginBase).setPluginEnabled(PluginType.BGSOURCE, true)
+            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting BgInterface")
+        }
+        setFragmentVisiblities((activeBgSource as PluginBase).name, pluginsInCategory, PluginType.PUMP)
 
         // PluginType.PUMP
         pluginsInCategory = getSpecificPluginsList(PluginType.PUMP)

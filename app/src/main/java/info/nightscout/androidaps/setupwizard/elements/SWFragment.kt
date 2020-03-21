@@ -2,9 +2,10 @@ package info.nightscout.androidaps.setupwizard.elements
 
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.setupwizard.SWDefinition
 
-class SWFragment(private var definition: SWDefinition) : SWItem(Type.FRAGMENT) {
+class SWFragment(injecto:HasAndroidInjector, private var definition: SWDefinition) : SWItem(injecto, Type.FRAGMENT) {
     lateinit var fragment: Fragment
 
     fun add(fragment: Fragment): SWFragment {

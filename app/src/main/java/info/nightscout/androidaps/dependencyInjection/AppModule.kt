@@ -41,6 +41,10 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.queue.commands.*
+import info.nightscout.androidaps.setupwizard.SWDefinition
+import info.nightscout.androidaps.setupwizard.SWEventListener
+import info.nightscout.androidaps.setupwizard.SWScreen
+import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -208,6 +212,20 @@ open class AppModule {
         @ContributesAndroidInjector fun loggerQuickWizardEntry(): QuickWizardEntry
 
         @ContributesAndroidInjector fun authRequestInjector(): AuthRequest
+
+        @ContributesAndroidInjector fun swBreakInjector(): SWBreak
+        @ContributesAndroidInjector fun swButtonInjector(): SWButton
+        @ContributesAndroidInjector fun swEditNumberWithUnitsInjector(): SWEditNumberWithUnits
+        @ContributesAndroidInjector fun swEditStringInjector(): SWEditString
+        @ContributesAndroidInjector fun swEditUrlInjector(): SWEditUrl
+        @ContributesAndroidInjector fun swFragmentInjector(): SWFragment
+        @ContributesAndroidInjector fun swHtmlLinkInjector(): SWHtmlLink
+        @ContributesAndroidInjector fun swInfotextInjector(): SWInfotext
+        @ContributesAndroidInjector fun swItemInjector(): SWItem
+        @ContributesAndroidInjector fun swPluginInjector(): SWPlugin
+        @ContributesAndroidInjector fun swRadioButtonInjector(): SWRadioButton
+        @ContributesAndroidInjector fun swScreenInjector(): SWScreen
+        @ContributesAndroidInjector fun swEventListenerInjector(): SWEventListener
 
         @ContributesAndroidInjector fun profileInjector(): Profile
         @ContributesAndroidInjector fun glucoseStatusInjector(): GlucoseStatus

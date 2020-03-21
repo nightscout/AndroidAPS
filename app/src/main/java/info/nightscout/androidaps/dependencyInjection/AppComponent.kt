@@ -30,6 +30,9 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.queue.commands.*
+import info.nightscout.androidaps.setupwizard.SWEventListener
+import info.nightscout.androidaps.setupwizard.SWScreen
+import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import javax.inject.Singleton
@@ -154,6 +157,20 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectQuickWizardEntry(quickWizardEntry: QuickWizardEntry)
 
     fun injectAuthRequest(authRequest: AuthRequest)
+
+    fun injectSWBreak(swBreak: SWBreak)
+    fun injectSWButton(swButton: SWButton)
+    fun injectSWEditNumberWithUnits(swEditNumberWithUnits: SWEditNumberWithUnits)
+    fun injectSWEditString(swEditString: SWEditString)
+    fun injectSWEditUrl(swEditUrl: SWEditUrl)
+    fun injectSWFragment(swFragment: SWFragment)
+    fun injectSSWHtmlLink(swHtmlLink: SWHtmlLink)
+    fun injectSWInfotext(swInfotext: SWInfotext)
+    fun injectSWItem(swItem: SWItem)
+    fun injectSWPlugin(swPlugin: SWPlugin)
+    fun injectSWRadioButton(swRadioButton: SWRadioButton)
+    fun injectSWScreen(swScreen: SWScreen)
+    fun injectSWEventListener(swEventListener: SWEventListener)
 
     fun injectProfile(profile: Profile)
     fun injectGlucoseStatus(glucoseStatus: GlucoseStatus)
