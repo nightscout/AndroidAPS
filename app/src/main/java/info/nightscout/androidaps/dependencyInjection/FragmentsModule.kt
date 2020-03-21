@@ -38,11 +38,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicFragment
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
 import info.nightscout.androidaps.plugins.treatments.TreatmentsFragment
-import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsBolusFragment
-import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsCareportalFragment
-import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsExtendedBolusesFragment
-import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsProfileSwitchFragment
-import info.nightscout.androidaps.plugins.treatments.fragments.TreatmentsTempTargetFragment
+import info.nightscout.androidaps.plugins.treatments.fragments.*
 
 @Module
 @Suppress("unused")
@@ -79,6 +75,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsFragment(): TreatmentsFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsBolusFragment(): TreatmentsBolusFragment
+    @ContributesAndroidInjector abstract fun contributesTreatmentsTemporaryBasalsFragment(): TreatmentsTemporaryBasalsFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsTempTargetFragment(): TreatmentsTempTargetFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsExtendedBolusesFragment(): TreatmentsExtendedBolusesFragment
     @ContributesAndroidInjector abstract fun contributesTreatmentsCareportalFragment(): TreatmentsCareportalFragment
