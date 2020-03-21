@@ -92,6 +92,7 @@ import info.nightscout.androidaps.plugins.source.RandomBgPlugin;
 import info.nightscout.androidaps.plugins.source.TomatoPlugin;
 import info.nightscout.androidaps.plugins.source.XdripPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.receivers.ChargingStateReceiver;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
@@ -346,6 +347,7 @@ public class MainApp extends DaggerApplication {
         intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         registerReceiver(new NetworkChangeReceiver(), intentFilter);
+        registerReceiver(new ChargingStateReceiver(), new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
 
     @Deprecated

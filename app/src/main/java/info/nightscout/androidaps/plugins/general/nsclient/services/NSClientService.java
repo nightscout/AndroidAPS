@@ -31,6 +31,7 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -70,6 +71,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.buildHelper.BuildHelper;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
@@ -88,6 +90,7 @@ public class NSClientService extends DaggerService {
     @Inject ResourceHelper resourceHelper;
     @Inject SP sp;
     @Inject NSClientPlugin nsClientPlugin;
+    @Inject BuildHelper buildHelper;
 
     private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -290,7 +293,7 @@ public class NSClientService extends DaggerService {
         } else if (!nsEnabled) {
             rxBus.send(new EventNSClientNewLog("NSCLIENT", "disabled"));
             rxBus.send(new EventNSClientStatus("Disabled"));
-        } else if (!nsURL.equals("")) {
+        } else if (!nsURL.equals("") && (buildHelper.isEngineeringMode() || nsURL.toLowerCase().startsWith("https://"))) {
             try {
                 rxBus.send(new EventNSClientStatus("Connecting ..."));
                 IO.Options opt = new IO.Options();
@@ -299,6 +302,9 @@ public class NSClientService extends DaggerService {
                 mSocket = IO.socket(nsURL, opt);
                 mSocket.on(Socket.EVENT_CONNECT, onConnect);
                 mSocket.on(Socket.EVENT_DISCONNECT, onDisconnect);
+                mSocket.on(Socket.EVENT_ERROR, onError);
+                mSocket.on(Socket.EVENT_CONNECT_ERROR, onError);
+                mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onError);
                 mSocket.on(Socket.EVENT_PING, onPing);
                 rxBus.send(new EventNSClientNewLog("NSCLIENT", "do connect"));
                 mSocket.connect();
@@ -311,6 +317,9 @@ public class NSClientService extends DaggerService {
                 rxBus.send(new EventNSClientNewLog("NSCLIENT", "Wrong URL syntax"));
                 rxBus.send(new EventNSClientStatus("Wrong URL syntax"));
             }
+        } else if (nsURL.toLowerCase().startsWith("http://")) {
+            rxBus.send(new EventNSClientNewLog("NSCLIENT", "NS URL not encrypted"));
+            rxBus.send(new EventNSClientStatus("Not encrypted"));
         } else {
             rxBus.send(new EventNSClientNewLog("NSCLIENT", "No NS URL specified"));
             rxBus.send(new EventNSClientStatus("Not configured"));
@@ -407,6 +416,17 @@ public class NSClientService extends DaggerService {
         nsAPISecret = sp.getString(R.string.key_nsclientinternal_api_secret, "");
         nsDevice = sp.getString("careportal_enteredby", "");
     }
+
+    private Emitter.Listener onError = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            String msg = "Unknown Error";
+            if (args.length > 0 && args[0] != null) {
+                msg = args[0].toString();
+            }
+            rxBus.send(new EventNSClientNewLog("ERROR", msg));
+        }
+    };
 
     private Emitter.Listener onPing = new Emitter.Listener() {
         @Override
