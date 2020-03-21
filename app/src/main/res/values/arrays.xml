@@ -191,6 +191,7 @@
         <item>@string/medtronic_pump_battery_alkaline</item>
         <item>@string/medtronic_pump_battery_lithium</item>
         <item>@string/medtronic_pump_battery_nizn</item>
+        <item>@string/medtronic_pump_battery_nimh</item>
     </string-array>
 
     <string-array name="medtronicBatteryTypeValues">
@@ -198,6 +199,7 @@
         <item>@string/key_medtronic_pump_battery_alkaline</item>
         <item>@string/key_medtronic_pump_battery_lithium</item>
         <item>@string/key_medtronic_pump_battery_nizn</item>
+        <item>@string/key_medtronic_pump_battery_nimh</item>
     </string-array>
 
     <string-array name="smbMaxMinutes">
