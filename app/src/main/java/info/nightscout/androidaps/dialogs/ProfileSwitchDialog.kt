@@ -78,9 +78,9 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             ?: return false
 
         val actions: LinkedList<String> = LinkedList()
-        val duration = overview_profileswitch_duration.value
+        val duration = overview_profileswitch_duration.value.toInt()
         if (duration > 0)
-            actions.add(MainApp.gs(R.string.duration) + ": " + MainApp.gs(R.string.format_hours, duration))
+            actions.add(MainApp.gs(R.string.duration) + ": " + MainApp.gs(R.string.format_mins, duration))
         val profile = overview_profileswitch_profile.selectedItem.toString()
         actions.add(MainApp.gs(R.string.profile) + ": " + profile)
         val percent = overview_profileswitch_percentage.value.toInt()
@@ -98,7 +98,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, MainApp.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
                 log.debug("USER ENTRY: PROFILE SWITCH $profile percent: $percent timeshift: $timeShift duration: $duration")
-                ProfileFunctions.doProfileSwitch(profileStore, profile, duration.toInt(), percent, timeShift, eventTime)
+                ProfileFunctions.doProfileSwitch(profileStore, profile, duration, percent, timeShift, eventTime)
             })
         }
         return true

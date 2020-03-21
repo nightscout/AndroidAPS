@@ -62,13 +62,11 @@ object OKDialog {
     }
 
     @JvmStatic
-    @JvmOverloads
     fun showConfirmation(activity: Activity, message: String, ok: Runnable?) {
         showConfirmation(activity, MainApp.gs(R.string.confirmation), message, ok, null)
     }
 
     @JvmStatic
-    @JvmOverloads
     fun showConfirmation(activity: Activity, message: Spanned, ok: Runnable?) {
         showConfirmation(activity, MainApp.gs(R.string.confirmation), message, ok, null)
     }

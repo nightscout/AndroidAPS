@@ -82,6 +82,11 @@ class DetailedBolusInfoStorageTest {
         d = DetailedBolusInfoStorage.findDetailedBolusInfo(1070000, 4.0)
         assertNull(d)
         assertEquals(3, DetailedBolusInfoStorage.store.size)
+        // Use last, if bolus size is the same
+        setUp()
+        d = DetailedBolusInfoStorage.findDetailedBolusInfo(1070000, 5.0)
+        assertEquals(5.0, d!!.insulin, 0.01)
+        assertEquals(2, DetailedBolusInfoStorage.store.size)
 
     }
 

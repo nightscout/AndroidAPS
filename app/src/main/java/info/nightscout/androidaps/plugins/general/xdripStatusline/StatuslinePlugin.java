@@ -202,13 +202,13 @@ public class StatuslinePlugin extends PluginBase {
                     + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
         }
 
-        if (!mPrefs.getBoolean("xdripstatus_showbgi", false)) {
-            return status;
+        // BGI
+        if (mPrefs.getBoolean("xdripstatus_showbgi", true)) {
+            double bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), ProfileFunctions.getSystemUnits());
+            status += " " + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to2Decimal(bgi);
         }
 
-        double bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), ProfileFunctions.getSystemUnits());
-
-        status += " " + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to2Decimal(bgi);
+        /* COB */
         status += " " + IobCobCalculatorPlugin.getPlugin().getCobInfo(false, "StatuslinePlugin").generateCOBString();
 
         return status;

@@ -42,10 +42,10 @@
     <string name="description_pump_dana_rs">Intégration pour les pompes Diabecare DANA RS</string>
     <string name="description_pump_mdi">Intégration pompe pour les personnes qui font des injections quotidiennes multiples pour le traitement de leur diabète</string>
     <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
-    <string name="description_sensitivity_aaps">La Sensibilité est calculée de la même manière que Oref0, mais vous pouvez spécifier la periode concernée. L\'absorption minimale des glucides est calculée à partir des temps d’absorption max des glucides du menu préférences.</string>
-    <string name="description_sensitivity_oref0">Sensibilité est calculée à partir des données sur les dernières 24h et les glucides (non absorbés) ne sont plus pris en compte après l’heure spécifiée dans les préférences.</string>
-    <string name="description_sensitivity_oref1">Sensibilité est calculée à partir des données des dernières 8 heures et des glucides (si non absorbés) ne sont plus pris en compte après le temps spécifié dans les préférences. Plugin calcule également RNS (UAM).</string>
-    <string name="description_sensitivity_weighted_average">Sensibilité est calculée comme une moyenne pondérée des écarts. Les écarts les plus récents ont un poids plus élevé. L\'absorption minimale des glucides est calculée à partir des temps d’absorption des glucides max du menu préférences. Cet algorithme est le plus rapide pour s\'adapter aux changements de sensibilité.</string>
+    <string name="description_sensitivity_aaps">La sensibilité est calculée de la même manière que Oref0, mais vous pouvez spécifier la période concernée. L\'absorption minimale des glucides est calculée à partir des temps d’absorption max des glucides du menu préférences.</string>
+    <string name="description_sensitivity_oref0">La sensibilité est calculée à partir des données sur les dernières 24h et les glucides (si non absorbés) ne sont plus pris en compte après l’heure spécifiée dans les préférences.</string>
+    <string name="description_sensitivity_oref1">La sensibilité est calculée à partir des données des dernières 8 heures et les glucides (si non absorbés) ne sont plus pris en compte après le temps spécifié dans les préférences. Le plugin calcule également les RNS (UAM).</string>
+    <string name="description_sensitivity_weighted_average">La sensibilité est calculée comme une moyenne pondérée des écarts. Les écarts les plus récents ont un poids plus élevé. L\'absorption minimale des glucides est calculée à partir des temps d’absorption des glucides max du menu préférences. Cet algorithme est le plus rapide pour s\'adapter aux changements de sensibilité.</string>
     <string name="description_source_eversense">Recevoir les valeurs de glycémie de l’app Eversense patchée.</string>
     <string name="description_source_glimp">Recevoir les glycémies depuis Glimp.</string>
     <string name="description_source_mm640g">Recevoir les glycémies depuis le 600SeriesAndroidUploder.</string>
@@ -145,7 +145,7 @@
     <string name="overview_newtempbasal_basalpercent">Valeur Basal [%]</string>
     <string name="setbasalquestion">Accepter nouveau basal temporaire :</string>
     <string name="overview_treatment_label">Traitement</string>
-    <string name="overview_calculator_label">Calculatrice</string>
+    <string name="overview_calculator_label">Assistant</string>
     <string name="constraintapllied">Restriction appliquée !</string>
     <string name="confirmation">Confirmation</string>
     <string name="bolus">Bolus</string>
@@ -456,7 +456,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="openapsama_max_daily_safety_multiplier_summary">Valeur par défaut : 3 Ceci est un paramètre important de sécurité de l’OpenAPS. Ceci va limiter vos débits basal à 3 fois votre débit Basal maximum. Il est probable que vous n’aurez pas besoin de changer cela, mais vous devez être conscient de ce qui est discuté pour les limites de sécurité dans “3x max daily; 4x current”.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Valeur par défaut : 4 Ceci est l’autre moitié des paramètres de sécurité limitant l’OpenAPS, et l’autre moitié de “3x max daily, 4x current” des paramètres de sécurité. Quel que soit le basal maximum prédéfini dans votre pompe, il ne pourra pas être plus haut que ce nombre multiplié par le Basal actuel. Ceci est fait pour ne pas mettre l’utilisateur en danger en programmant des débits Basal maximum trop élevés avant de comprendre comment l’algorithme fonctionne. Encore une fois, la valeur par défaut est 4x, la plupart des gens n’auront jamais besoin d’ajuster ce paramètre, plutôt ils auront tendance à ajuster d’autres paramètres s’ils voient qu’ils atteignent ce paramètre de limite de sécurité.</string>
     <string name="openapsama_autosens_max_summary">Valeur par défaut: 1.2\nCeci est la limite du multiplicateur utilisé par Autosens (et bientôt Autotune) pour définir +20%% en limite maximale du ratio Autosens. En consequence, ceci dit va définir la valeur maximale du Basal pour Autosens, la valeur minimale de la Sensibilité à l\'Insuline (SI, ISF), et la valeur minimale de la cible glycémique.</string>
-    <string name="openapsama_autosens_min_summary">Valeur par défaut: 0.7\nL’autre aspect pour les limites de sécurité pour Autosens. Cette valeur va créer une limite qui définit jusqu\'à quelle valeur minimale Autosens va pouvoir ajuster le basal , et jusqu\'à quelles valeurs maximales Autosens pourra ajuster la Sensibilité à l\'Insuline (SI, ISF) et les cibles glycémiques.</string>
+    <string name="openapsama_autosens_min_summary">Valeur par défaut: 0,7\nL\'autre volet des limites de sécurité de l\'autosens, c\'est de définir une limite basse sur l\'ajustement des débits de basal et une limite haute sur l\'ajustement de la SI et des cibles GLY effectués par l\'autosens.</string>
     <string name="openapsama_autosens_adjusttargets">Autosens ajuste aussi les cibles</string>
     <string name="openapsama_autosens_adjusttargets_summary">Valeur par défaut : true\nCeci est utilisé pour autoriser Autosens à ajuster les cibles de glycémie en plus de SI et les basals.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Valeur par défaut : 2\nBolus snooze est activé apres votre bolus de repas, la boucle ne réagira pas avec des valeurs basses temporaire quand vous venez juste de manger. L’exemple ici et la valeur par défaut est 2 ; donc avec une Durée d\'Action (DIA) de 3 heures signifie que snooze bolus sera graduellement éliminé après 1,5 heures (3DIA/2).</string>
@@ -543,7 +543,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="treatments_wizard_cob_label">GA</string>
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Démarrage AAPS entré dans NS</string>
-    <string name="restartingapp">Sortie de l’application pour appliquer de nouveaux paramètres.</string>
+    <string name="restartingapp">Sortir de l’application pour appliquer les nouveaux paramètres.</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="configbuilder_insulin">Insuline</string>
     <string name="configbuilder_insulin_description">Quel type d\'insuline utilisez-vous ?</string>
@@ -565,7 +565,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="pump_lastconnection_label">Dernière connexion</string>
     <string name="danar_bluetooth_status">État Bluetooth</string>
-    <string name="nav_about">À propos de</string>
+    <string name="nav_about">À propos</string>
     <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
     <string name="smscommunicator_missingphonestatepermission">Autorisation du téléphone manquante</string>
     <string name="xdripstatus_settings">état Xdrip (montre)</string>
@@ -984,7 +984,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="combo_invalid_setup">Paramétrage de la pompe invalide. Vérifiez la documentation et le menu QUICK INFO en utilisant le logiciel de configuration 360.</string>
     <string name="custom">Personnalisé</string>
     <string name="largetimedifftitle">Différence horaire importante</string>
-    <string name="largetimediff">La différence horaire importante:\nTime avec la pompe de plus d\'1,5 heure.\nMerci d\'ajuster manuellement l\'heure de la pompe et assurez-vous que la lecture de l\'historique de la pompe ne cause pas de dysfonctionnements.\nSi possible, effacez l\'historique de la pompe avant de modifier l\'heure ou désactivez la Boucle Fermée pour une DIA après la dernière entrée erronée de l\'historique et en tout état de cause au minimum une DIA à partir de maintenant.</string>
+    <string name="largetimediff">Différence horaire importante:\nL\'heure de la pompe est en écart de plus d\'une heure et demi.\nMerci d\'ajuster manuellement l\'heure de la pompe et assurez-vous que la lecture de l\'historique de la pompe ne cause pas de dysfonctionnements.\nSi possible, effacez l\'historique de la pompe avant de modifier l\'heure ou désactivez la Boucle Fermée pour une DAI après la dernière entrée erronée de l\'historique et au minimum une DAI à partir de maintenant.</string>
     <string name="careportal_removestartedevents">Réinitialiser AndroidAPS</string>
     <string name="storedsettingsfound">Paramètres sauvegardés trouvés</string>
     <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AndroidAPS copiera les paramètres Basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres Basal dans AndroidAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres Basal sur votre pompe, appuyez sur Annuler et reporter le passage à la pompe à une date ultérieure.</string>
@@ -1425,10 +1425,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="invalidage">Âge invalide</string>
     <string name="invalidweight">Poids invalide</string>
     <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
-    <string name="tirformat"><![CDATA[<b>%1$s:</b> Bas: <b>%2$02d%%</b> Médian: <b>%3$02d%%</b> Haut: <b>%4$02d%%</b>]]></string>
+    <string name="tirformat"><![CDATA[<b>%1$s:</b> Bas: <b>%2$02d%%</b> Cible: <b>%3$02d%%</b> Haut: <b>%4$02d%%</b>]]></string>
     <string name="average">Moyenne</string>
     <string name="tdd">DTI</string>
-    <string name="tir">TIR</string>
+    <string name="tir">Cible Gly</string>
     <string name="activitymonitor">Moniteur d\'activité</string>
     <string name="doyouwantresetstats">Voulez-vous réinitialiser les stats d\'activité ?</string>
     <string name="statistics">Statistiques</string>
@@ -1454,4 +1454,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="loop_smbexecution_time_label">Heure d\'exécution SMB</string>
     <string name="loop_tbrrequest_time_label">Heure de demande basal temp</string>
     <string name="loop_tbrexecution_time_label">Heure d\'exécution basal temp</string>
+    <string name="insight_alert_notification_channel">Alertes Pompe Insight</string>
 </resources>
