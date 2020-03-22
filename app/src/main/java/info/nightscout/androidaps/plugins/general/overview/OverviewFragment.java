@@ -1187,7 +1187,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             if (activeTemp != null) {
                 basalText = "T: " + activeTemp.toStringVeryShort();
             } else {
-                basalText = MainApp.gs(R.string.pump_basebasalrate, profile.getBasal());
+                basalText = resourceHelper.gs(R.string.pump_basebasalrate, profile.getBasal());
             }
         } else {
             if (activeTemp != null) {
@@ -1293,7 +1293,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         bgView.setPaintFlags(flag);
 
         if (timeAgoView != null)
-            timeAgoView.setText(DateUtil.minAgo(lastBG.date));
+            timeAgoView.setText(DateUtil.minAgo(resourceHelper, lastBG.date));
         if (timeAgoShortView != null)
             timeAgoShortView.setText("(" + DateUtil.minAgoShort(lastBG.date) + ")");
 

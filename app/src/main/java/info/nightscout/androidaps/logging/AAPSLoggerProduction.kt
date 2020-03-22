@@ -42,6 +42,10 @@ class AAPSLoggerProduction : AAPSLogger {
         }
     }
 
+    override fun info(tag: LTag, format: String, vararg arguments: Any?) {
+        LoggerFactory.getLogger(tag.tag).info(stackLogMarker() + String.format(format, arguments))
+    }
+
     override fun error(tag: LTag, message: String) {
         if (L.isEnabled(tag.tag)) {
             LoggerFactory.getLogger(tag.tag).error(stackLogMarker() + message)

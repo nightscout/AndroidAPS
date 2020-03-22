@@ -1,17 +1,16 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.service;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Binder;
 import android.os.IBinder;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
@@ -30,14 +29,17 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * RileyLinkMedtronicService is intended to stay running when the gui-app is closed.
  */
 public class RileyLinkMedtronicService extends RileyLinkService {
 
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
+    @Inject AAPSLogger aapsLogger;
+    @Inject Context context;
+    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+    @Inject SP sp;
 
     private static RileyLinkMedtronicService instance;
     private static ServiceTask currentTask = null;
@@ -49,12 +51,11 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
 
     public RileyLinkMedtronicService() {
-        super(MainApp.instance().getApplicationContext());
+        super();
         instance = this;
-        if (isLogEnabled())
-            LOG.debug("RileyLinkMedtronicService newly constructed");
+        aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed");
         MedtronicUtil.setMedtronicService(this);
-        pumpStatus = (MedtronicPumpStatus) MedtronicPumpPlugin.getPlugin().getPumpStatusData();
+        pumpStatus = (MedtronicPumpStatus) medtronicPumpPlugin.getPumpStatusData();
     }
 
 
@@ -70,8 +71,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        if (isLogEnabled())
-            LOG.warn("onConfigurationChanged");
+        aapsLogger.warn(LTag.PUMPCOMM, "onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
     }
 
@@ -98,10 +98,10 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         RileyLinkUtil.setRileyLinkServiceData(rileyLinkServiceData);
         RileyLinkUtil.setTargetDevice(RileyLinkTargetDevice.MedtronicPump);
 
-        setPumpIDString(SP.getString(MedtronicConst.Prefs.PumpSerial, "000000"));
+        setPumpIDString(sp.getString(MedtronicConst.Prefs.PumpSerial, "000000"));
 
         // get most recently used RileyLink address
-        rileyLinkServiceData.rileylinkAddress = SP.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+        rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
         rileyLinkBLE = new RileyLinkBLE(this.context); // or this
         rfspy = new RFSpy(rileyLinkBLE);
@@ -127,29 +127,29 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
     public void setPumpIDString(String pumpID) {
         if (pumpID.length() != 6) {
-            LOG.error("setPumpIDString: invalid pump id string: " + pumpID);
+            aapsLogger.error("setPumpIDString: invalid pump id string: " + pumpID);
             return;
         }
 
         byte[] pumpIDBytes = ByteUtil.fromHexString(pumpID);
 
         if (pumpIDBytes == null) {
-            LOG.error("Invalid pump ID? - PumpID is null.");
+            aapsLogger.error("Invalid pump ID? - PumpID is null.");
 
             rileyLinkServiceData.setPumpID("000000", new byte[]{0, 0, 0});
 
         } else if (pumpIDBytes.length != 3) {
-            LOG.error("Invalid pump ID? " + ByteUtil.shortHexString(pumpIDBytes));
+            aapsLogger.error("Invalid pump ID? " + ByteUtil.shortHexString(pumpIDBytes));
 
             rileyLinkServiceData.setPumpID("000000", new byte[]{0, 0, 0});
 
         } else if (pumpID.equals("000000")) {
-            LOG.error("Using pump ID " + pumpID);
+            aapsLogger.error("Using pump ID " + pumpID);
 
             rileyLinkServiceData.setPumpID(pumpID, new byte[]{0, 0, 0});
 
         } else {
-            LOG.info("Using pump ID " + pumpID);
+            aapsLogger.info(LTag.PUMPBTCOMM, "Using pump ID " + pumpID);
 
             String oldId = rileyLinkServiceData.pumpID;
 
@@ -197,10 +197,5 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
     @Override
     public void registerDeviceSpecificBroadcasts(IntentFilter intentFilter) {
-    }
-
-
-    private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMPCOMM);
     }
 }

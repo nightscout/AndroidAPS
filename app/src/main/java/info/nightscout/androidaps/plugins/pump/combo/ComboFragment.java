@@ -197,7 +197,7 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
             }
 
             // last connection
-            String minAgo = DateUtil.minAgo(comboPlugin.getPump().lastSuccessfulCmdTime);
+            String minAgo = DateUtil.minAgo(resourceHelper, comboPlugin.getPump().lastSuccessfulCmdTime);
             long min = (System.currentTimeMillis() - comboPlugin.getPump().lastSuccessfulCmdTime) / 1000 / 60;
             if (comboPlugin.getPump().lastSuccessfulCmdTime + 60 * 1000 > System.currentTimeMillis()) {
                 lastConnectionView.setText(R.string.combo_pump_connected_now);
@@ -220,7 +220,7 @@ public class ComboFragment extends DaggerFragment implements View.OnClickListene
                 if ((agoMsc < 60 * 1000)) {
                     ago = resourceHelper.gs(R.string.combo_pump_connected_now);
                 } else if (bolusMinAgo < 60) {
-                    ago = DateUtil.minAgo(bolus.timestamp);
+                    ago = DateUtil.minAgo(resourceHelper, bolus.timestamp);
                 } else {
                     ago = DateUtil.hourAgo(bolus.timestamp, resourceHelper);
                 }

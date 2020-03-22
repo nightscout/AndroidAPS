@@ -257,7 +257,7 @@ class MedtronicFragment : DaggerFragment() {
 
         // last connection
         if (pumpStatus.lastConnection != 0L) {
-            val minAgo = DateUtil.minAgo(pumpStatus.lastConnection)
+            val minAgo = DateUtil.minAgo(resourceHelper, pumpStatus.lastConnection)
             val min = (System.currentTimeMillis() - pumpStatus.lastConnection) / 1000 / 60
             if (pumpStatus.lastConnection + 60 * 1000 > System.currentTimeMillis()) {
                 medtronic_lastconnection.setText(R.string.combo_pump_connected_now)
@@ -295,7 +295,7 @@ class MedtronicFragment : DaggerFragment() {
             if (agoMsc < 60 * 1000) {
                 ago = resourceHelper.gs(R.string.combo_pump_connected_now)
             } else if (bolusMinAgo < 60) {
-                ago = DateUtil.minAgo(pumpStatus.lastBolusTime.time)
+                ago = DateUtil.minAgo(resourceHelper, pumpStatus.lastBolusTime.time)
             } else {
                 ago = DateUtil.hourAgo(pumpStatus.lastBolusTime.time, resourceHelper)
             }

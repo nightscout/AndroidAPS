@@ -211,7 +211,7 @@ public class NSDeviceStatus {
         }
 
         if (fields.contains("clock")) {
-            string.append(DateUtil.minAgo(deviceStatusPumpData.clock)).append(" ");
+            string.append(DateUtil.minAgo(resourceHelper, deviceStatusPumpData.clock)).append(" ");
         }
 
         if (fields.contains("status")) {
@@ -341,7 +341,7 @@ public class NSDeviceStatus {
         if (level == Levels.URGENT) string.append("red\">");
 
         if (deviceStatusOpenAPSData.clockSuggested != 0) {
-            string.append(DateUtil.minAgo(deviceStatusOpenAPSData.clockSuggested)).append(" ");
+            string.append(DateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockSuggested)).append(" ");
         }
         string.append("</span>"); // color
 
@@ -362,9 +362,9 @@ public class NSDeviceStatus {
 
         try {
             if (deviceStatusOpenAPSData.enacted != null && deviceStatusOpenAPSData.clockEnacted != deviceStatusOpenAPSData.clockSuggested)
-                string.append("<b>").append(DateUtil.minAgo(deviceStatusOpenAPSData.clockEnacted)).append("</b> ").append(deviceStatusOpenAPSData.enacted.getString("reason")).append("<br>");
+                string.append("<b>").append(DateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockEnacted)).append("</b> ").append(deviceStatusOpenAPSData.enacted.getString("reason")).append("<br>");
             if (deviceStatusOpenAPSData.suggested != null)
-                string.append("<b>").append(DateUtil.minAgo(deviceStatusOpenAPSData.clockSuggested)).append("</b> ").append(deviceStatusOpenAPSData.suggested.getString("reason")).append("<br>");
+                string.append("<b>").append(DateUtil.minAgo(resourceHelper, deviceStatusOpenAPSData.clockSuggested)).append("</b> ").append(deviceStatusOpenAPSData.suggested.getString("reason")).append("<br>");
             return Html.fromHtml(string.toString());
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);

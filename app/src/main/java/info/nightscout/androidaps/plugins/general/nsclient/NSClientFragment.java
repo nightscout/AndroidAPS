@@ -16,9 +16,8 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientUpdateGUI;
@@ -33,6 +32,8 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
     @Inject NSClientPlugin nsClientPlugin;
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
+    @Inject RxBusWrapper rxBus;
+    @Inject FabricPrivacy fabricPrivacy;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -54,31 +55,31 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.nsclientinternal_fragment, container, false);
 
-        logScrollview = (ScrollView) view.findViewById(R.id.nsclientinternal_logscrollview);
-        autoscrollCheckbox = (CheckBox) view.findViewById(R.id.nsclientinternal_autoscroll);
+        logScrollview = view.findViewById(R.id.nsclientinternal_logscrollview);
+        autoscrollCheckbox = view.findViewById(R.id.nsclientinternal_autoscroll);
         autoscrollCheckbox.setChecked(nsClientPlugin.autoscroll);
         autoscrollCheckbox.setOnCheckedChangeListener(this);
-        pausedCheckbox = (CheckBox) view.findViewById(R.id.nsclientinternal_paused);
+        pausedCheckbox = view.findViewById(R.id.nsclientinternal_paused);
         pausedCheckbox.setChecked(nsClientPlugin.paused);
         pausedCheckbox.setOnCheckedChangeListener(this);
-        logTextView = (TextView) view.findViewById(R.id.nsclientinternal_log);
-        queueTextView = (TextView) view.findViewById(R.id.nsclientinternal_queue);
-        urlTextView = (TextView) view.findViewById(R.id.nsclientinternal_url);
-        statusTextView = (TextView) view.findViewById(R.id.nsclientinternal_status);
+        logTextView = view.findViewById(R.id.nsclientinternal_log);
+        queueTextView = view.findViewById(R.id.nsclientinternal_queue);
+        urlTextView = view.findViewById(R.id.nsclientinternal_url);
+        statusTextView = view.findViewById(R.id.nsclientinternal_status);
 
-        clearlog = (TextView) view.findViewById(R.id.nsclientinternal_clearlog);
+        clearlog = view.findViewById(R.id.nsclientinternal_clearlog);
         clearlog.setOnClickListener(this);
         clearlog.setPaintFlags(clearlog.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        restart = (TextView) view.findViewById(R.id.nsclientinternal_restart);
+        restart = view.findViewById(R.id.nsclientinternal_restart);
         restart.setOnClickListener(this);
         restart.setPaintFlags(restart.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        delivernow = (TextView) view.findViewById(R.id.nsclientinternal_delivernow);
+        delivernow = view.findViewById(R.id.nsclientinternal_delivernow);
         delivernow.setOnClickListener(this);
         delivernow.setPaintFlags(delivernow.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        clearqueue = (TextView) view.findViewById(R.id.nsclientinternal_clearqueue);
+        clearqueue = view.findViewById(R.id.nsclientinternal_clearqueue);
         clearqueue.setOnClickListener(this);
         clearqueue.setPaintFlags(clearqueue.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-        showqueue = (TextView) view.findViewById(R.id.nsclientinternal_showqueue);
+        showqueue = view.findViewById(R.id.nsclientinternal_showqueue);
         showqueue.setOnClickListener(this);
         showqueue.setPaintFlags(showqueue.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
@@ -88,10 +89,10 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
     @Override
     public synchronized void onResume() {
         super.onResume();
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventNSClientUpdateGUI.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateGui(), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> updateGui(), fabricPrivacy::logException)
         );
         updateGui();
     }
@@ -106,25 +107,25 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.nsclientinternal_restart:
-                RxBus.Companion.getINSTANCE().send(new EventNSClientRestart());
-                FabricPrivacy.getInstance().logCustom("NSClientRestart");
+                rxBus.send(new EventNSClientRestart());
+                fabricPrivacy.logCustom("NSClientRestart");
                 break;
             case R.id.nsclientinternal_delivernow:
                 nsClientPlugin.resend("GUI");
-                FabricPrivacy.getInstance().logCustom("NSClientDeliverNow");
+                fabricPrivacy.logCustom("NSClientDeliverNow");
                 break;
             case R.id.nsclientinternal_clearlog:
                 nsClientPlugin.clearLog();
                 break;
             case R.id.nsclientinternal_clearqueue:
-                OKDialog.showConfirmation(getContext(), MainApp.gs(R.string.nsclientinternal), MainApp.gs(R.string.clearqueueconfirm), () -> {
+                OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.nsclientinternal), resourceHelper.gs(R.string.clearqueueconfirm), () -> {
                     UploadQueue.clearQueue();
                     updateGui();
-                    FabricPrivacy.getInstance().logCustom("NSClientClearQueue");
+                    fabricPrivacy.logCustom("NSClientClearQueue");
                 });
                 break;
             case R.id.nsclientinternal_showqueue:
-                RxBus.Companion.getINSTANCE().send(new EventNSClientNewLog("QUEUE", nsClientPlugin.queue().textList()));
+                rxBus.send(new EventNSClientNewLog("QUEUE", nsClientPlugin.queue().textList()));
                 break;
         }
     }
@@ -135,7 +136,7 @@ public class NSClientFragment extends DaggerFragment implements View.OnClickList
             case R.id.nsclientinternal_paused:
                 nsClientPlugin.pause(isChecked);
                 updateGui();
-                FabricPrivacy.getInstance().logCustom("NSClientPause");
+                fabricPrivacy.logCustom("NSClientPause");
                 break;
             case R.id.nsclientinternal_autoscroll:
                 sp.putBoolean(R.string.key_nsclientinternal_autoscroll, isChecked);

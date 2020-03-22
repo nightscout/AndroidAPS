@@ -177,7 +177,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Override
     protected void onStart() {
         super.onStart();
-        medtronicUIComm = new MedtronicUIComm();
+        medtronicUIComm = new MedtronicUIComm(aapsLogger, rxBus, getResourceHelper());
         medtronicHistoryData = new MedtronicHistoryData(aapsLogger, sp, activePlugin);
     }
 
@@ -432,12 +432,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         if (isPumpNotReachable()) {
             aapsLogger.error("Pump unreachable.");
-            MedtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable);
+            MedtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable, getResourceHelper(), rxBus);
 
             return;
         }
 
-        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
+        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable, rxBus);
 
 
         if (hasTimeDateOrTimeZoneChanged) {
@@ -532,14 +532,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         if (isRefresh) {
             if (isPumpNotReachable()) {
                 aapsLogger.error(getLogPrefix() + "initializePump::Pump unreachable.");
-                MedtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable);
+                MedtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable, getResourceHelper(), rxBus);
 
                 setRefreshButtonEnabled(true);
 
                 return;
             }
 
-            MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
+            MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable, rxBus);
         }
 
         // model (once)
@@ -548,7 +548,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         } else {
             if (pumpStatusLocal.medtronicDeviceType != MedtronicUtil.getMedtronicPumpModel()) {
                 aapsLogger.warn(LTag.PUMP, getLogPrefix() + "Configured pump is not the same as one detected.");
-                MedtronicUtil.sendNotification(MedtronicNotificationType.PumpTypeNotSame);
+                MedtronicUtil.sendNotification(MedtronicNotificationType.PumpTypeNotSame, getResourceHelper(), rxBus);
             }
         }
 
@@ -737,7 +737,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             return;
         }
 
-        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
+        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable, rxBus);
 
         medtronicUIComm.executeCommand(MedtronicCommandType.GetRealTimeClock);
 
@@ -769,7 +769,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             } else {
                 if ((clock.localDeviceTime.getYear() > 2015)) {
                     aapsLogger.error("MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference over 24h requested [diff={}]. Doing nothing." + timeDiff);
-                    sendNotification(MedtronicNotificationType.TimeChangeOver24h);
+                    sendNotification(MedtronicNotificationType.TimeChangeOver24h, getResourceHelper(), rxBus);
                 }
             }
 
@@ -806,7 +806,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             return setNotReachable(true, false);
         }
 
-        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
+        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable, rxBus);
 
         if (bolusDeliveryType == BolusDeliveryType.CancelDelivery) {
             // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled.");
@@ -957,7 +957,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     .comment(getResourceHelper().gs(R.string.medtronic_pump_status_pump_unreachable));
         }
 
-        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
+        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable, rxBus);
 
         getMDTPumpStatus();
 
@@ -1344,7 +1344,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     .comment(getResourceHelper().gs(R.string.medtronic_pump_status_pump_unreachable));
         }
 
-        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
+        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable, rxBus);
         setRefreshButtonEnabled(false);
 
         TempBasalPair tbrCurrent = readTBR();
@@ -1427,7 +1427,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     .comment(getResourceHelper().gs(R.string.medtronic_pump_status_pump_unreachable));
         }
 
-        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable);
+        MedtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable, rxBus);
 
         BasalProfile basalProfile = convertProfileToMedtronicProfile(profile);
 

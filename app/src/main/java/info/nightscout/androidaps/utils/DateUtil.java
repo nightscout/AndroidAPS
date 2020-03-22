@@ -176,9 +176,9 @@ public class DateUtil {
         return dateString(mills) + " " + timeFullString(mills);
     }
 
-    public static String minAgo(long time) {
+    public static String minAgo(ResourceHelper resourceHelper, long time) {
         int mins = (int) ((now() - time) / 1000 / 60);
-        return MainApp.gs(R.string.minago, mins);
+        return resourceHelper.gs(R.string.minago, mins);
     }
 
     public static String minAgoShort(long time) {

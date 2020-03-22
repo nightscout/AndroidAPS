@@ -25,14 +25,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,11 +37,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import info.nightscout.androidaps.MainApp;
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
@@ -52,12 +50,16 @@ import info.nightscout.androidaps.plugins.pump.common.utils.LocationHelper;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 // IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
 public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(RileyLinkBLEScanActivity.class);
+    @Inject AAPSLogger aapsLogger;
+    @Inject SP sp;
+    @Inject RxBusWrapper rxBus;
+    @Inject ResourceHelper resourceHelper;
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 30241; // arbitrary.
     private static final int REQUEST_ENABLE_BT = 30242; // arbitrary
@@ -91,7 +93,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
         mHandler = new Handler();
 
         mLeDeviceListAdapter = new LeDeviceListAdapter();
-        listBTScan = (ListView) findViewById(R.id.rileylink_listBTScan);
+        listBTScan = findViewById(R.id.rileylink_listBTScan);
         listBTScan.setAdapter(mLeDeviceListAdapter);
         listBTScan.setOnItemClickListener((parent, view, position, id) -> {
 
@@ -101,22 +103,22 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
                 mLEScanner.stopScan(mScanCallback2);
             }
 
-            TextView textview = (TextView) view.findViewById(R.id.rileylink_device_address);
+            TextView textview = view.findViewById(R.id.rileylink_device_address);
             String bleAddress = textview.getText().toString();
 
-            SP.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
+            sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
 
             RileyLinkUtil.getRileyLinkSelectPreference().setSummary(bleAddress);
 
             MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
             pumpStatus.verifyConfiguration(); // force reloading of address
 
-            RxBus.Companion.getINSTANCE().send(new EventMedtronicPumpConfigurationChanged());
+            rxBus.send(new EventMedtronicPumpConfigurationChanged());
 
             finish();
         });
 
-        toolbarBTScan = (Toolbar) findViewById(R.id.rileylink_toolbarBTScan);
+        toolbarBTScan = findViewById(R.id.rileylink_toolbarBTScan);
         toolbarBTScan.setTitle(R.string.rileylink_scanner_title);
         setSupportActionBar(toolbarBTScan);
 
@@ -128,8 +130,8 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_rileylink_ble_scan, menu);
 
-        actionTitleStart = MainApp.gs(R.string.rileylink_scanner_scan_scan);
-        actionTitleStop = MainApp.gs(R.string.rileylink_scanner_scan_stop);
+        actionTitleStart = resourceHelper.gs(R.string.rileylink_scanner_scan_scan);
+        actionTitleStop = resourceHelper.gs(R.string.rileylink_scanner_scan_stop);
 
         menuItem = menu.getItem(0);
 
@@ -272,7 +274,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
         @Override
         public void onScanFailed(int errorCode) {
             Log.e("Scan Failed", "Error Code: " + errorCode);
-            Toast.makeText(mContext, MainApp.gs(R.string.rileylink_scanner_scanning_error, errorCode),
+            Toast.makeText(mContext, resourceHelper.gs(R.string.rileylink_scanner_scanning_error, errorCode),
                     Toast.LENGTH_LONG).show();
         }
 
@@ -295,7 +297,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
                 if (mScanning) {
                     mScanning = false;
                     mLEScanner.stopScan(mScanCallback2);
-                    LOG.debug("scanLeDevice: Scanning Stop");
+                    aapsLogger.debug("scanLeDevice: Scanning Stop");
                     Toast.makeText(mContext, R.string.rileylink_scanner_scanning_finished, Toast.LENGTH_SHORT).show();
                     menuItem.setTitle(actionTitleStart);
                 }
@@ -303,7 +305,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
             mScanning = true;
             mLEScanner.startScan(filters, settings, mScanCallback2);
-            LOG.debug("scanLeDevice: Scanning Start");
+            aapsLogger.debug("scanLeDevice: Scanning Start");
             Toast.makeText(this, R.string.rileylink_scanner_scanning, Toast.LENGTH_SHORT).show();
 
             menuItem.setTitle(actionTitleStop);
@@ -313,7 +315,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
                 mScanning = false;
                 mLEScanner.stopScan(mScanCallback2);
 
-                LOG.debug("scanLeDevice: Scanning Stop");
+                aapsLogger.debug("scanLeDevice: Scanning Stop");
                 Toast.makeText(this, R.string.rileylink_scanner_scanning_finished, Toast.LENGTH_SHORT).show();
 
                 menuItem.setTitle(actionTitleStart);
@@ -334,7 +336,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
             mLeDevices = new ArrayList<>();
             rileyLinkDevices = new HashMap<>();
             mInflator = RileyLinkBLEScanActivity.this.getLayoutInflater();
-            currentlySelectedAddress = SP.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+            currentlySelectedAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
         }
 
 
@@ -381,8 +383,8 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
             if (view == null) {
                 view = mInflator.inflate(R.layout.rileylink_scan_item, null);
                 viewHolder = new ViewHolder();
-                viewHolder.deviceAddress = (TextView) view.findViewById(R.id.rileylink_device_address);
-                viewHolder.deviceName = (TextView) view.findViewById(R.id.rileylink_device_name);
+                viewHolder.deviceAddress = view.findViewById(R.id.rileylink_device_address);
+                viewHolder.deviceName = view.findViewById(R.id.rileylink_device_name);
                 view.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) view.getTag();

@@ -32,6 +32,10 @@ class AAPSLoggerDebug : AAPSLogger {
         Log.i(tag.tag, message)
     }
 
+    override fun info(tag: LTag, format: String, vararg arguments: Any?) {
+        Log.i(tag.tag, String.format(format, arguments))
+    }
+
     override fun error(tag: LTag, message: String) {
         Log.e(tag.tag, message)
 

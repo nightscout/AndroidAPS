@@ -15,7 +15,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.T;
@@ -141,7 +140,7 @@ public abstract class Objective {
         ;
 
         public String getProgress() {
-            return MainApp.gs(isCompleted() ? R.string.completed_well_done : R.string.not_completed_yet);
+            return resourceHelper.gs(isCompleted() ? R.string.completed_well_done : R.string.not_completed_yet);
         }
 
         Task hint(Hint hint) {

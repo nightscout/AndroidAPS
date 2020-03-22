@@ -21,6 +21,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -41,6 +42,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService;
 import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by andy on 5/9/18.
@@ -227,26 +229,26 @@ public class MedtronicUtil extends RileyLinkUtil {
     }
 
 
-    public static void sendNotification(MedtronicNotificationType notificationType) {
+    public static void sendNotification(MedtronicNotificationType notificationType, ResourceHelper resourceHelper, RxBusWrapper rxBus) {
         Notification notification = new Notification( //
                 notificationType.getNotificationType(), //
-                MainApp.gs(notificationType.getResourceId()), //
+                resourceHelper.gs(notificationType.getResourceId()), //
                 notificationType.getNotificationUrgency());
-        RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
+        rxBus.send(new EventNewNotification(notification));
     }
 
 
-    public static void sendNotification(MedtronicNotificationType notificationType, Object... parameters) {
+    public static void sendNotification(MedtronicNotificationType notificationType, ResourceHelper resourceHelper, RxBusWrapper rxBus, Object... parameters) {
         Notification notification = new Notification( //
                 notificationType.getNotificationType(), //
-                MainApp.gs(notificationType.getResourceId(), parameters), //
+                resourceHelper.gs(notificationType.getResourceId(), parameters), //
                 notificationType.getNotificationUrgency());
-        RxBus.Companion.getINSTANCE().send(new EventNewNotification(notification));
+        rxBus.send(new EventNewNotification(notification));
     }
 
 
-    public static void dismissNotification(MedtronicNotificationType notificationType) {
-        RxBus.Companion.getINSTANCE().send(new EventDismissNotification(notificationType.getNotificationType()));
+    public static void dismissNotification(MedtronicNotificationType notificationType, RxBusWrapper rxBus) {
+        rxBus.send(new EventDismissNotification(notificationType.getNotificationType()));
     }
 
 
