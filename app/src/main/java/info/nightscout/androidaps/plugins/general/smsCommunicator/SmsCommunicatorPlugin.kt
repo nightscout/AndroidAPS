@@ -713,6 +713,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                 override fun run() {
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.carbs = anInteger().toDouble()
+                    detailedBolusInfo.source = Source.USER
                     detailedBolusInfo.date = secondLong()
                     ConfigBuilderPlugin.getPlugin().commandQueue.bolus(detailedBolusInfo, object : Callback() {
                         override fun run() {
