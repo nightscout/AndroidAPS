@@ -122,6 +122,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.wizard.BolusWizard;
 import info.nightscout.androidaps.utils.wizard.QuickWizard;
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry;
+import info.nightscout.androidaps.utils.protection.ProtectionCheck;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -856,11 +857,10 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 onClickAcceptTemp();
                 break;
             case R.id.overview_quickwizardbutton:
-                onClickQuickwizard();
+                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, this::onClickQuickwizard);
                 break;
             case R.id.overview_wizardbutton:
-                WizardDialog wizardDialog = new WizardDialog();
-                wizardDialog.show(manager, "WizardDialog");
+                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new WizardDialog().show(manager, "WizardDialog"));
                 break;
             case R.id.overview_calibrationbutton:
                 if (xdrip) {
@@ -894,13 +894,13 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 }
                 break;
             case R.id.overview_treatmentbutton:
-                new TreatmentDialog().show(manager, "Overview");
+                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new TreatmentDialog().show(manager, "Overview"));
                 break;
             case R.id.overview_insulinbutton:
-                new InsulinDialog().show(manager, "Overview");
+                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new InsulinDialog().show(manager, "Overview"));
                 break;
             case R.id.overview_carbsbutton:
-                new CarbsDialog().show(manager, "Overview");
+                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new CarbsDialog().show(manager, "Overview"));
                 break;
             case R.id.overview_pumpstatus:
                 if (activePlugin.getActivePump().isSuspended() || !activePlugin.getActivePump().isInitialized())

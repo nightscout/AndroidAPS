@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.activities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
@@ -51,6 +52,7 @@ import info.nightscout.androidaps.plugins.source.PoctechPlugin
 import info.nightscout.androidaps.plugins.source.TomatoPlugin
 import info.nightscout.androidaps.utils.OKDialog.show
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
@@ -211,6 +213,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         updatePrefSummary(findPreference(key))
     }
 
+    @SuppressLint("RestrictedApi")
     private fun addPreferencesFromResource(@XmlRes preferencesResId: Int, key: String?) {
         val xmlRoot = preferenceManager.inflateFromResource(context,
             preferencesResId, null)
@@ -247,6 +250,24 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     private fun updatePrefSummary(pref: Preference?) {
         if (pref is ListPreference) {
             pref.setSummary(pref.entry)
+            // Preferences
+            // Preferences
+            if (pref.getKey() == resourceHelper.gs(R.string.key_settings_protection)) {
+                val pass: Preference? = findPreference(resourceHelper.gs(R.string.key_settings_password))
+                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.PASSWORD.ordinal.toString()
+            }
+            // Application
+            // Application
+            if (pref.getKey() == resourceHelper.gs(R.string.key_application_protection)) {
+                val pass: Preference? = findPreference(resourceHelper.gs(R.string.key_application_password))
+                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.PASSWORD.ordinal.toString()
+            }
+            // Bolus
+            // Bolus
+            if (pref.getKey() == resourceHelper.gs(R.string.key_bolus_protection)) {
+                val pass: Preference? = findPreference(resourceHelper.gs(R.string.key_bolus_password))
+                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.PASSWORD.ordinal.toString()
+            }
         }
         if (pref is EditTextPreference) {
             if (pref.getKey().contains("password") || pref.getKey().contains("secret")) {

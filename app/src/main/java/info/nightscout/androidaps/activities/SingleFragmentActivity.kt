@@ -10,7 +10,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.utils.LocaleHelper
-import info.nightscout.androidaps.utils.PasswordProtection
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import javax.inject.Inject
 
 class SingleFragmentActivity : DaggerAppCompatActivity() {
@@ -36,7 +36,7 @@ class SingleFragmentActivity : DaggerAppCompatActivity() {
             finish()
             return true
         } else if (item.itemId == R.id.nav_plugin_preferences) {
-            PasswordProtection.QueryPassword(this, R.string.settings_password, "settings_password", Runnable {
+            ProtectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, Runnable {
                 val i = Intent(this, PreferencesActivity::class.java)
                 i.putExtra("id", plugin?.preferencesId)
                 startActivity(i)

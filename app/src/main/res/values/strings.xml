@@ -520,8 +520,6 @@
     <string name="virtualpump_settings">Virtual pump settings</string>
     <string name="virtualpump_uploadstatus_title">Upload status to NS</string>
     <string name="wrongpassword">Wrong password</string>
-    <string name="settings_password">Password for settings</string>
-    <string name="unlock_settings">Unlock settings</string>
     <string name="approachingdailylimit">Approaching insulin daily limit</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>

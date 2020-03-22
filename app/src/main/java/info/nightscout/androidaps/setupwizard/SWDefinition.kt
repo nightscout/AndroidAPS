@@ -34,8 +34,8 @@ import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.LocaleHelper.update
-import info.nightscout.androidaps.utils.PasswordProtection
 import info.nightscout.androidaps.utils.extensions.isRunningTest
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
@@ -217,12 +217,12 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.insulinsourcesetup)
             .action(Runnable {
-                val plugin = activePlugin.activeInsulin as PluginBase?
-                if (plugin != null) {
-                    PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", Runnable {
+                val plugin = activePlugin.activeInsulin as PluginBase
+                activity?.let { activity ->
+                    ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
                         i.putExtra("id", plugin.preferencesId)
-                        activity?.startActivity(i)
+                        activity.startActivity(i)
                     }, null)
                 }
             })
@@ -236,12 +236,12 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.bgsourcesetup)
             .action(Runnable {
-                val plugin = activePlugin.activeBgSource as PluginBase?
-                if (plugin != null) {
-                    PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", Runnable {
+                val plugin = activePlugin.activeBgSource as PluginBase
+                activity?.let { activity ->
+                    ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
                         i.putExtra("id", plugin.preferencesId)
-                        activity!!.startActivity(i)
+                        activity.startActivity(i)
                     }, null)
                 }
             })
@@ -287,11 +287,13 @@ class SWDefinition @Inject constructor(
             .text(R.string.pumpsetup)
             .action(Runnable {
                 val plugin = activePlugin.activePump as PluginBase
-                PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", Runnable {
-                    val i = Intent(activity, PreferencesActivity::class.java)
-                    i.putExtra("id", plugin.preferencesId)
-                    activity!!.startActivity(i)
-                }, null)
+                activity?.let { activity ->
+                    ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                        val i = Intent(activity, PreferencesActivity::class.java)
+                        i.putExtra("id", plugin.preferencesId)
+                        activity.startActivity(i)
+                    }, null)
+                }
             })
             .visibility(SWValidator { (activePlugin.activePump as PluginBase).preferencesId > 0 }))
         .add(SWButton(injector)
@@ -313,12 +315,12 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.apssetup)
             .action(Runnable {
-                val plugin = activePlugin.activeAPS as PluginBase?
-                if (plugin != null) {
-                    PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", Runnable {
+                val plugin = activePlugin.activeAPS as PluginBase
+                activity?.let { activity ->
+                    ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
                         i.putExtra("id", plugin.preferencesId)
-                        activity!!.startActivity(i)
+                        activity.startActivity(i)
                     }, null)
                 }
             })
@@ -363,12 +365,12 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.sensitivitysetup)
             .action(Runnable {
-                val plugin = activePlugin.activeSensitivity as PluginBase?
-                if (plugin != null) {
-                    PasswordProtection.QueryPassword(activity, R.string.settings_password, "settings_password", Runnable {
+                val plugin = activePlugin.activeSensitivity as PluginBase
+                activity?.let { activity ->
+                    ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
                         i.putExtra("id", plugin.preferencesId)
-                        activity!!.startActivity(i)
+                        activity.startActivity(i)
                     }, null)
                 }
             })

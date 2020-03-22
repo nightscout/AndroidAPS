@@ -12,15 +12,14 @@ import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.StringRes
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.events.EventRebuildTabs
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.PasswordProtection
 import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.toVisibility
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -47,16 +46,20 @@ class ConfigBuilderFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (PasswordProtection.isLocked("settings_password"))
+        if (ProtectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES))
             configbuilder_main_layout.visibility = View.GONE
         else
             unlock.visibility = View.GONE
 
         unlock.setOnClickListener {
-            PasswordProtection.QueryPassword(context, R.string.settings_password, "settings_password", {
-                configbuilder_main_layout.visibility = View.VISIBLE
-                unlock.visibility = View.GONE
-            }, null)
+            activity?.let { activity ->
+                ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    activity.runOnUiThread {
+                        configbuilder_main_layout.visibility = View.VISIBLE
+                        unlock.visibility = View.GONE
+                    }
+                })
+            }
         }
     }
 
@@ -144,11 +147,13 @@ class ConfigBuilderFragment : DaggerFragment() {
             }
 
             pluginPreferences.setOnClickListener {
-                PasswordProtection.QueryPassword(fragment.context, R.string.settings_password, "settings_password", {
-                    val i = Intent(fragment.context, PreferencesActivity::class.java)
-                    i.putExtra("id", plugin.preferencesId)
-                    fragment.startActivity(i)
-                }, null)
+                fragment.activity?.let { activity ->
+                    ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                        val i = Intent(fragment.context, PreferencesActivity::class.java)
+                        i.putExtra("id", plugin.preferencesId)
+                        fragment.startActivity(i)
+                    }, null)
+                }
             }
             update()
         }
