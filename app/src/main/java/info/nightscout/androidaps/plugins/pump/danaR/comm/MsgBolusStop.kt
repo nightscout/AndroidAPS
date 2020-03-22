@@ -30,7 +30,7 @@ class MsgBolusStop(
             bolusingEvent.status = resourceHelper.gs(R.string.overview_bolusprogress_delivered)
             bolusingEvent.percent = 100
         } else {
-            bolusingEvent.status = MainApp.gs(R.string.overview_bolusprogress_stoped)
+            bolusingEvent.status = resourceHelper.gs(R.string.overview_bolusprogress_stoped)
         }
         rxBus.send(bolusingEvent)
     }

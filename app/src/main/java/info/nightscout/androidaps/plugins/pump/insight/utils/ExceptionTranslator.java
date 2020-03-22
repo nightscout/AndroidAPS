@@ -8,7 +8,6 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.ConnectionFailedException;
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.ConnectionLostException;
@@ -44,12 +43,12 @@ public class ExceptionTranslator {
         TABLE.put(RunModeNotAllowedException.class, R.string.run_mode_not_allowed);
     }
 
-    public static String getString(Exception exception) {
+    public static String getString(Context context, Exception exception) {
         Integer res = TABLE.get(exception.getClass());
-        return res == null ? exception.getClass().getSimpleName() : MainApp.gs(res);
+        return res == null ? exception.getClass().getSimpleName() : context.getString(res);
     }
 
     public static void makeToast(Context context, Exception exception) {
-        new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, getString(exception), Toast.LENGTH_LONG).show());
+        new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, getString(context, exception), Toast.LENGTH_LONG).show());
     }
 }

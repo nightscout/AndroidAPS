@@ -43,6 +43,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
     @Inject CommandQueue commandQueue;
     @Inject RxBusWrapper rxBus;
     @Inject ResourceHelper resourceHelper;
+    @Inject FabricPrivacy fabricPrivacy;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -79,7 +80,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
         disposable.add(rxBus
                 .toObservable(EventLocalInsightUpdateGUI.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateGUI(), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> updateGUI(), fabricPrivacy::logException)
         );
         updateGUI();
     }

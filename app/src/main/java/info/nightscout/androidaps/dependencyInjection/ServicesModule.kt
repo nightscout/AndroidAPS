@@ -10,6 +10,8 @@ import info.nightscout.androidaps.plugins.pump.danaR.services.DanaRExecutionServ
 import info.nightscout.androidaps.plugins.pump.danaRKorean.services.DanaRKoreanExecutionService
 import info.nightscout.androidaps.plugins.pump.danaRS.services.DanaRSService
 import info.nightscout.androidaps.plugins.pump.danaRv2.services.DanaRv2ExecutionService
+import info.nightscout.androidaps.plugins.pump.insight.InsightAlertService
+import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService
 import info.nightscout.androidaps.services.AlarmSoundService
 import info.nightscout.androidaps.services.DataService
 import info.nightscout.androidaps.services.LocationService
@@ -29,4 +31,6 @@ abstract class ServicesModule {
     @ContributesAndroidInjector abstract fun contributesDanaRExecutionService(): DanaRExecutionService
     @ContributesAndroidInjector abstract fun contributesDanaRKoreanExecutionService(): DanaRKoreanExecutionService
     @ContributesAndroidInjector abstract fun contributesWatchUpdaterService(): WatchUpdaterService
+    @ContributesAndroidInjector abstract fun contributesInsightAlertService(): InsightAlertService
+    @ContributesAndroidInjector abstract fun contributesInsightConnectionService(): InsightConnectionService
 }

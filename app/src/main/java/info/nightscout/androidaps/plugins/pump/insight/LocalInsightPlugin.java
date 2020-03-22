@@ -53,7 +53,6 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
@@ -517,17 +516,17 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.getClass().getCanonicalName());
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (Exception e) {
             aapsLogger.error("Exception while setting profile", e);
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, resourceHelper.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
             rxBus.send(new EventNewNotification(notification));
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         }
         return result;
     }
@@ -658,13 +657,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                 fetchStatus();
             } catch (AppLayerErrorException e) {
                 aapsLogger.info(LTag.PUMP, "Exception while delivering bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-                result.comment = ExceptionTranslator.getString(e);
+                result.comment = ExceptionTranslator.getString(context, e);
             } catch (InsightException e) {
                 aapsLogger.info(LTag.PUMP, "Exception while delivering bolus: " + e.getClass().getCanonicalName());
-                result.comment = ExceptionTranslator.getString(e);
+                result.comment = ExceptionTranslator.getString(context, e);
             } catch (Exception e) {
                 aapsLogger.error("Exception while delivering bolus", e);
-                result.comment = ExceptionTranslator.getString(e);
+                result.comment = ExceptionTranslator.getString(context, e);
             }
         } else if (detailedBolusInfo.carbs > 0) {
             result.success = true;
@@ -775,13 +774,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             fetchStatus();
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while setting TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while setting TBR: " + e.getClass().getCanonicalName());
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (Exception e) {
             aapsLogger.error("Exception while setting TBR", e);
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         }
         return result;
     }
@@ -829,13 +828,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.getClass().getCanonicalName());
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (Exception e) {
             aapsLogger.error("Exception while delivering extended bolus", e);
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         }
         return result;
     }
@@ -878,13 +877,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while canceling TBR: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while canceling TBR: " + e.getClass().getCanonicalName());
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (Exception e) {
             aapsLogger.error("Exception while canceling TBR", e);
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         }
         return result;
     }
@@ -940,13 +939,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while canceling extended bolus: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while canceling extended bolus: " + e.getClass().getCanonicalName());
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (Exception e) {
             aapsLogger.error("Exception while canceling extended bolus", e);
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         }
         return result;
     }
@@ -1050,13 +1049,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             readHistory();
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while stopping pump: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while stopping pump: " + e.getClass().getCanonicalName());
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (Exception e) {
             aapsLogger.error("Exception while stopping pump", e);
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         }
         return result;
     }
@@ -1073,13 +1072,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             readHistory();
         } catch (AppLayerErrorException e) {
             aapsLogger.info(LTag.PUMP, "Exception while starting pump: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (InsightException e) {
             aapsLogger.info(LTag.PUMP, "Exception while starting pump: " + e.getClass().getCanonicalName());
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (Exception e) {
             aapsLogger.error("Exception while starting pump", e);
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         }
         return result;
     }
@@ -1095,15 +1094,15 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         } catch (AppLayerErrorException e) {
             tbrOverNotificationBlock.setEnabled(valueBefore);
             aapsLogger.info(LTag.PUMP, "Exception while updating TBR notification block: " + e.getClass().getCanonicalName() + " (" + e.getErrorCode() + ")");
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (InsightException e) {
             tbrOverNotificationBlock.setEnabled(valueBefore);
             aapsLogger.info(LTag.PUMP, "Exception while updating TBR notification block: " + e.getClass().getSimpleName());
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         } catch (Exception e) {
             tbrOverNotificationBlock.setEnabled(valueBefore);
             aapsLogger.error("Exception while updating TBR notification block", e);
-            result.comment = ExceptionTranslator.getString(e);
+            result.comment = ExceptionTranslator.getString(context, e);
         }
         return result;
     }
