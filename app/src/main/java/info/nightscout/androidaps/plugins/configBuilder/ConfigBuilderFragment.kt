@@ -34,6 +34,7 @@ class ConfigBuilderFragment : DaggerFragment() {
     @Inject lateinit var configBuilderPlugin: ConfigBuilderPlugin
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private val pluginViewHolders = ArrayList<PluginViewHolder>()
@@ -46,14 +47,14 @@ class ConfigBuilderFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (ProtectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES))
+        if (protectionCheck.isLocked(ProtectionCheck.Protection.PREFERENCES))
             configbuilder_main_layout.visibility = View.GONE
         else
             unlock.visibility = View.GONE
 
         unlock.setOnClickListener {
             activity?.let { activity ->
-                ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
                     activity.runOnUiThread {
                         configbuilder_main_layout.visibility = View.VISIBLE
                         unlock.visibility = View.GONE
@@ -148,7 +149,7 @@ class ConfigBuilderFragment : DaggerFragment() {
 
             pluginPreferences.setOnClickListener {
                 fragment.activity?.let { activity ->
-                    ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
                         val i = Intent(fragment.context, PreferencesActivity::class.java)
                         i.putExtra("id", plugin.preferencesId)
                         fragment.startActivity(i)

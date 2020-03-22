@@ -87,6 +87,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
     @Inject BuildHelper buildHelper;
     @Inject ActivePluginProvider activePlugin;
     @Inject FabricPrivacy fabricPrivacy;
+    @Inject ProtectionCheck protectionCheck;
 
 
     @Override
@@ -192,7 +193,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ProtectionCheck.INSTANCE.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null, this::finish, this::finish);
+        protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null, this::finish, this::finish);
     }
 
     private void setWakeLock() {
@@ -308,7 +309,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_preferences:
-                ProtectionCheck.INSTANCE.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, () -> {
+                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, () -> {
                     Intent i = new Intent(this, PreferencesActivity.class);
                     i.putExtra("id", -1);
                     startActivity(i);
@@ -348,7 +349,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
             case R.id.nav_plugin_preferences:
                 ViewPager viewPager = findViewById(R.id.pager);
                 final PluginBase plugin = ((TabPageAdapter) viewPager.getAdapter()).getPluginAt(viewPager.getCurrentItem());
-                ProtectionCheck.INSTANCE.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, () -> {
+                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, () -> {
                     Intent i = new Intent(this, PreferencesActivity.class);
                     i.putExtra("id", plugin.getPreferencesId());
                     startActivity(i);

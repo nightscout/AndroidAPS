@@ -57,7 +57,8 @@ class SWDefinition @Inject constructor(
     private val configBuilderPlugin: ConfigBuilderPlugin,
     private val loopPlugin: LoopPlugin,
     private val nsClientPlugin: NSClientPlugin,
-    private val nsProfilePlugin: NSProfilePlugin
+    private val nsProfilePlugin: NSProfilePlugin,
+    private val protectionCheck: ProtectionCheck
 ) {
 
     var activity: AppCompatActivity? = null
@@ -219,7 +220,7 @@ class SWDefinition @Inject constructor(
             .action(Runnable {
                 val plugin = activePlugin.activeInsulin as PluginBase
                 activity?.let { activity ->
-                    ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
                         i.putExtra("id", plugin.preferencesId)
                         activity.startActivity(i)
@@ -238,7 +239,7 @@ class SWDefinition @Inject constructor(
             .action(Runnable {
                 val plugin = activePlugin.activeBgSource as PluginBase
                 activity?.let { activity ->
-                    ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
                         i.putExtra("id", plugin.preferencesId)
                         activity.startActivity(i)
@@ -288,7 +289,7 @@ class SWDefinition @Inject constructor(
             .action(Runnable {
                 val plugin = activePlugin.activePump as PluginBase
                 activity?.let { activity ->
-                    ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
                         i.putExtra("id", plugin.preferencesId)
                         activity.startActivity(i)
@@ -317,7 +318,7 @@ class SWDefinition @Inject constructor(
             .action(Runnable {
                 val plugin = activePlugin.activeAPS as PluginBase
                 activity?.let { activity ->
-                    ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
                         i.putExtra("id", plugin.preferencesId)
                         activity.startActivity(i)
@@ -367,7 +368,7 @@ class SWDefinition @Inject constructor(
             .action(Runnable {
                 val plugin = activePlugin.activeSensitivity as PluginBase
                 activity?.let { activity ->
-                    ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
                         val i = Intent(activity, PreferencesActivity::class.java)
                         i.putExtra("id", plugin.preferencesId)
                         activity.startActivity(i)

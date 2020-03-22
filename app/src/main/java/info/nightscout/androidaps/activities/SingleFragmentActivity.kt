@@ -15,6 +15,7 @@ import javax.inject.Inject
 
 class SingleFragmentActivity : DaggerAppCompatActivity() {
     @Inject lateinit var pluginStore: PluginStore
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
     private var plugin: PluginBase? = null
 
@@ -36,7 +37,7 @@ class SingleFragmentActivity : DaggerAppCompatActivity() {
             finish()
             return true
         } else if (item.itemId == R.id.nav_plugin_preferences) {
-            ProtectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, Runnable {
+            protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, Runnable {
                 val i = Intent(this, PreferencesActivity::class.java)
                 i.putExtra("id", plugin?.preferencesId)
                 startActivity(i)

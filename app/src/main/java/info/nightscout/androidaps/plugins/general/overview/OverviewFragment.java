@@ -117,12 +117,12 @@ import info.nightscout.androidaps.utils.SingleClickButton;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.ToastUtils;
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper;
+import info.nightscout.androidaps.utils.protection.ProtectionCheck;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.wizard.BolusWizard;
 import info.nightscout.androidaps.utils.wizard.QuickWizard;
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry;
-import info.nightscout.androidaps.utils.protection.ProtectionCheck;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -153,6 +153,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     @Inject QuickWizard quickWizard;
     @Inject BuildHelper buildHelper;
     @Inject CommandQueue commandQueue;
+    @Inject ProtectionCheck protectionCheck;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -857,10 +858,10 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 onClickAcceptTemp();
                 break;
             case R.id.overview_quickwizardbutton:
-                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, this::onClickQuickwizard);
+                protectionCheck.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, this::onClickQuickwizard);
                 break;
             case R.id.overview_wizardbutton:
-                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new WizardDialog().show(manager, "WizardDialog"));
+                protectionCheck.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new WizardDialog().show(manager, "WizardDialog"));
                 break;
             case R.id.overview_calibrationbutton:
                 if (xdrip) {
@@ -894,13 +895,13 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 }
                 break;
             case R.id.overview_treatmentbutton:
-                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new TreatmentDialog().show(manager, "Overview"));
+                protectionCheck.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new TreatmentDialog().show(manager, "Overview"));
                 break;
             case R.id.overview_insulinbutton:
-                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new InsulinDialog().show(manager, "Overview"));
+                protectionCheck.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new InsulinDialog().show(manager, "Overview"));
                 break;
             case R.id.overview_carbsbutton:
-                ProtectionCheck.INSTANCE.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new CarbsDialog().show(manager, "Overview"));
+                protectionCheck.queryProtection(getActivity(), ProtectionCheck.Protection.BOLUS, () -> new CarbsDialog().show(manager, "Overview"));
                 break;
             case R.id.overview_pumpstatus:
                 if (activePlugin.getActivePump().isSuspended() || !activePlugin.getActivePump().isInitialized())

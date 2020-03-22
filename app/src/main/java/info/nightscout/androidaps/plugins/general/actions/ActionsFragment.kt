@@ -52,6 +52,7 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -74,7 +75,7 @@ class ActionsFragment : DaggerFragment() {
         }
         actions_extendedbolus.setOnClickListener {
             activity?.let { activity ->
-                ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, Runnable {
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, Runnable {
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.extended_bolus), resourceHelper.gs(R.string.ebstopsloop),
                         Runnable {
                             fragmentManager?.let { ExtendedBolusDialog().show(it, "Actions") }
@@ -121,7 +122,7 @@ class ActionsFragment : DaggerFragment() {
         }
         actions_fill.setOnClickListener {
             activity?.let { activity ->
-                ProtectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, Runnable { fragmentManager?.let { FillDialog().show(it, "FillDialog") } })
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, Runnable { fragmentManager?.let { FillDialog().show(it, "FillDialog") } })
             }
         }
         actions_historybrowser.setOnClickListener { startActivity(Intent(context, HistoryBrowseActivity::class.java)) }
