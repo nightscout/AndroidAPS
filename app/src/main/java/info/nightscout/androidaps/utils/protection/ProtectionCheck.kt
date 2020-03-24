@@ -21,7 +21,8 @@ class ProtectionCheck @Inject constructor(
     enum class ProtectionType {
         NONE,
         BIOMETRIC,
-        PASSWORD
+        MASTER_PASSWORD,
+        CUSTOM_PASSWORD
     }
 
     private val passwordsResourceIDs = listOf(
@@ -43,7 +44,8 @@ class ProtectionCheck @Inject constructor(
         return when (ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionType.NONE.ordinal)]) {
             ProtectionType.NONE      -> false
             ProtectionType.BIOMETRIC -> true
-            ProtectionType.PASSWORD  -> sp.getString(passwordsResourceIDs[protection.ordinal], "") != ""
+            ProtectionType.MASTER_PASSWORD  -> sp.getString(R.string.key_master_password, "") != ""
+            ProtectionType.CUSTOM_PASSWORD  -> sp.getString(passwordsResourceIDs[protection.ordinal], "") != ""
         }
     }
 
@@ -55,8 +57,10 @@ class ProtectionCheck @Inject constructor(
                 ok?.run()
             ProtectionType.BIOMETRIC ->
                 BiometricCheck.biometricPrompt(activity, titleResourceIDs[protection.ordinal], ok, cancel, fail)
-            ProtectionType.PASSWORD  ->
-                passwordCheck.queryPassword(activity, titleResourceIDs[protection.ordinal], passwordsResourceIDs[protection.ordinal], ok, cancel, fail)
+            ProtectionType.MASTER_PASSWORD  ->
+                passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+            ProtectionType.CUSTOM_PASSWORD  ->
+                passwordCheck.queryPassword(activity, titleResourceIDs[protection.ordinal], passwordsResourceIDs[protection.ordinal], { ok?.run() }, { cancel?.run() }, { fail?.run() })
         }
     }
 }

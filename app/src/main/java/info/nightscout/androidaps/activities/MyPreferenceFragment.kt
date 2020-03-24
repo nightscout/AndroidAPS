@@ -50,8 +50,10 @@ import info.nightscout.androidaps.plugins.source.EversensePlugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.plugins.source.PoctechPlugin
 import info.nightscout.androidaps.plugins.source.TomatoPlugin
+import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.OKDialog.show
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -97,6 +99,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Inject lateinit var wearPlugin: WearPlugin
     @Inject lateinit var maintenancePlugin: MaintenancePlugin
+
+    @Inject lateinit var passwordCheck: PasswordCheck
 
     @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
@@ -254,19 +258,19 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             // Preferences
             if (pref.getKey() == resourceHelper.gs(R.string.key_settings_protection)) {
                 val pass: Preference? = findPreference(resourceHelper.gs(R.string.key_settings_password))
-                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.PASSWORD.ordinal.toString()
+                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.CUSTOM_PASSWORD.ordinal.toString()
             }
             // Application
             // Application
             if (pref.getKey() == resourceHelper.gs(R.string.key_application_protection)) {
                 val pass: Preference? = findPreference(resourceHelper.gs(R.string.key_application_password))
-                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.PASSWORD.ordinal.toString()
+                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.CUSTOM_PASSWORD.ordinal.toString()
             }
             // Bolus
             // Bolus
             if (pref.getKey() == resourceHelper.gs(R.string.key_bolus_protection)) {
                 val pass: Preference? = findPreference(resourceHelper.gs(R.string.key_bolus_password))
-                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.PASSWORD.ordinal.toString()
+                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.CUSTOM_PASSWORD.ordinal.toString()
             }
         }
         if (pref is EditTextPreference) {
@@ -278,6 +282,16 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             } else {
                 for (plugin in pluginStore.plugins) {
                     plugin.updatePreferenceSummary(pref)
+                }
+            }
+        }
+
+        if (pref is Preference) {
+            if ((pref.getKey() != null) && (pref.getKey().contains("_password"))) {
+                if (sp.getString(pref.getKey(), "").startsWith("hmac:")) {
+                    pref.setSummary("******")
+                } else {
+                    pref.setSummary(resourceHelper.gs(R.string.password_not_set))
                 }
             }
         }
@@ -293,5 +307,30 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         } else {
             updatePrefSummary(p)
         }
+    }
+
+    // We use Preference and custom editor instead of EditTextPreference
+    // to hash password while it is saved and never have to show it, even hashed
+
+    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+        if (preference != null) {
+            if (preference.key == resourceHelper.gs(R.string.key_master_password)) {
+                passwordCheck.setPassword(this.context!!, R.string.master_password, R.string.key_master_password)
+                return true;
+            }
+            if (preference.key == resourceHelper.gs(R.string.key_settings_password)) {
+                passwordCheck.setPassword(this.context!!, R.string.settings_password, R.string.key_settings_password)
+                return true;
+            }
+            if (preference.key == resourceHelper.gs(R.string.key_bolus_password)) {
+                passwordCheck.setPassword(this.context!!, R.string.bolus_password, R.string.key_bolus_password)
+                return true;
+            }
+            if (preference.key == resourceHelper.gs(R.string.key_application_password)) {
+                passwordCheck.setPassword(this.context!!, R.string.application_password, R.string.key_application_password)
+                return true;
+            }
+        }
+        return super.onPreferenceTreeClick(preference)
     }
 }
