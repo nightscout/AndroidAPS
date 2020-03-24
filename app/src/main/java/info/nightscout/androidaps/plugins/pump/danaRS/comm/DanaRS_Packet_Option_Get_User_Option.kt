@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import com.cozmo.danar.util.BleCommandUtil
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
@@ -11,7 +11,7 @@ class DanaRS_Packet_Option_Get_User_Option(
 ) : DanaRS_Packet() {
 
     init {
-        opCode = BleCommandUtil.DANAR_PACKET__OPCODE_OPTION__GET_USER_OPTION
+        opCode = BleEncryption.DANAR_PACKET__OPCODE_OPTION__GET_USER_OPTION
         aapsLogger.debug(LTag.PUMPCOMM, "Requesting user settings")
     }
 

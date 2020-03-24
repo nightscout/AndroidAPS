@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import com.cozmo.danar.util.BleCommandUtil
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -19,8 +19,8 @@ class DanaRS_Packet_Notify_Delivery_Rate_Display(
 
 
     init {
-        type = BleCommandUtil.DANAR_PACKET__TYPE_NOTIFY
-        opCode = BleCommandUtil.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_RATE_DISPLAY
+        type = BleEncryption.DANAR_PACKET__TYPE_NOTIFY
+        opCode = BleEncryption.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_RATE_DISPLAY
     }
 
     override fun handleMessage(data: ByteArray) {

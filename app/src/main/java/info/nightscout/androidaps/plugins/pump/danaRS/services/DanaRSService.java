@@ -101,10 +101,11 @@ public class DanaRSService extends DaggerService {
     @Inject ActivePluginProvider activePlugin;
     @Inject ConstraintChecker constraintChecker;
     @Inject DetailedBolusInfoStorage detailedBolusInfoStorage;
+    @Inject BLEComm bleComm;
+    @Inject FabricPrivacy fabricPrivacy;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
-    private BLEComm bleComm;
 
     private IBinder mBinder = new LocalBinder();
 
@@ -116,14 +117,13 @@ public class DanaRSService extends DaggerService {
     @Override
     public void onCreate() {
         super.onCreate();
-        bleComm = new BLEComm(this, danaRSMessageHashTable, danaRPump);
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     aapsLogger.debug(LTag.PUMPCOMM, "EventAppExit received");
                     stopSelf();
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
     }
 
@@ -134,15 +134,15 @@ public class DanaRSService extends DaggerService {
     }
 
     public boolean isConnected() {
-        return bleComm.isConnected;
+        return bleComm.isConnected();
     }
 
     public boolean isConnecting() {
-        return bleComm.isConnecting;
+        return bleComm.isConnecting();
     }
 
-    public boolean connect(String from, String address, Object confirmConnect) {
-        return bleComm.connect(from, address, confirmConnect);
+    public boolean connect(String from, String address) {
+        return bleComm.connect(from, address);
     }
 
     public void stopConnecting() {

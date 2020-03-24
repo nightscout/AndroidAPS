@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import com.cozmo.danar.util.BleCommandUtil
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -18,8 +18,8 @@ class DanaRS_Packet_Notify_Delivery_Complete(
 ) : DanaRS_Packet() {
 
     init {
-        type = BleCommandUtil.DANAR_PACKET__TYPE_NOTIFY
-        opCode = BleCommandUtil.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_COMPLETE
+        type = BleEncryption.DANAR_PACKET__TYPE_NOTIFY
+        opCode = BleEncryption.DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_COMPLETE
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

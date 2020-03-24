@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import com.cozmo.danar.util.BleCommandUtil
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -18,7 +18,7 @@ class DanaRS_Packet_General_Get_Pump_Check(
 ) : DanaRS_Packet() {
 
     init {
-        opCode = BleCommandUtil.DANAR_PACKET__OPCODE_REVIEW__GET_PUMP_CHECK
+        opCode = BleEncryption.DANAR_PACKET__OPCODE_REVIEW__GET_PUMP_CHECK
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
 

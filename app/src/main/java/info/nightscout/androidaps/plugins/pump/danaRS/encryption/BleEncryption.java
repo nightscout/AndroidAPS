@@ -1,10 +1,18 @@
-package com.cozmo.danar.util;
+package info.nightscout.androidaps.plugins.pump.danaRS.encryption;
 
 import android.content.Context;
 
-import info.nightscout.androidaps.MainApp;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-public class BleCommandUtil {
+@Singleton
+public class BleEncryption {
+    private Context context;
+
+    @Inject BleEncryption(Context context) {
+        this.context = context;
+    }
+
     public static final int DANAR_PACKET__TYPE_ENCRYPTION_REQUEST = 0x01;
     public static final int DANAR_PACKET__TYPE_ENCRYPTION_RESPONSE = 0x02;
     public static final int DANAR_PACKET__TYPE_COMMAND = 0xA1;
@@ -12,10 +20,13 @@ public class BleCommandUtil {
     public static final int DANAR_PACKET__TYPE_NOTIFY = 0xC3;
 
     public static final int DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK = 0x00;
+    public static final int DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION = 0x01;
     public static final int DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY = 0xD0;
     public static final int DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST = 0xD1;
     public static final int DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN = 0xD2;
-    public static final int DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION = 0x01;
+    // Easy Mode
+    public static final int DANAR_PACKET__OPCODE_ENCRYPTION__GET_PUMP_CHECK = 0xF3;
+    public static final int DANAR_PACKET__OPCODE_ENCRYPTION__GET_EASYMENU_CHECK = 0xF4;
 
     public static final int DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_COMPLETE = 0x01;
     public static final int DANAR_PACKET__OPCODE_NOTIFY__DELIVERY_RATE_DISPLAY = 0x02;
@@ -86,35 +97,50 @@ public class BleCommandUtil {
     public static final int DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS = 0xC2;
     public static final int DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY = 0xC3;
 
+    // Easy Mode
+    public static final int DANAR_PACKET__OPCODE_OPTION__GET_EASY_MENU_OPTION = 0x74;
+    public static final int DANAR_PACKET__OPCODE_OPTION__SET_EASY_MENU_OPTION = 0x75;
+
     public static final int DANAR_PACKET__OPCODE_ETC__SET_HISTORY_SAVE = 0xE0;
     public static final int DANAR_PACKET__OPCODE_ETC__KEEP_CONNECTION = 0xFF;
 
     static {
-        System.loadLibrary("BleCommandUtil");
+        System.loadLibrary("BleEncryption");
     }
 
-    private static native byte[] getEncryptedPacketJni(Object context, int opcode, byte[] bytes, String deviceName);
+    private static native byte[] encryptPacketJni(Object context, int opcode, byte[] bytes, String deviceName);
 
-    private static native byte[] getDecryptedPacketJni(Object context, byte[] bytes);
+    private static native byte[] decryptPacketJni(Object context, byte[] bytes);
 
-    // ---------------------------------------------------------
+    private static native void setPairingKeysJni(byte[] pairingKey, byte[] randomPairingKey, byte randomSyncKey);
 
-    private static BleCommandUtil mInstance = null;
+    private static native void setEnhancedEncryptionJni(boolean isSecurityVersion);
 
-    public static BleCommandUtil getInstance() {
-        if (mInstance == null) {
-            mInstance = new BleCommandUtil();
-        }
-        return mInstance;
-    }
+    private static native byte[] encryptSecondLevelPacketJni(Object context, byte[] bytes);
 
-    // ---------------------------------------------------------
+    private static native byte[] decryptSecondLevelPacketJni(Object context, byte[] bytes);
 
     public byte[] getEncryptedPacket(int opcode, byte[] bytes, String deviceName) {
-        return getEncryptedPacketJni(MainApp.instance().getApplicationContext(), opcode, bytes, deviceName);
+        return encryptPacketJni(context, opcode, bytes, deviceName);
     }
 
     public byte[] getDecryptedPacket(byte[] bytes) {
-        return getDecryptedPacketJni(MainApp.instance().getApplicationContext(), bytes);
+        return decryptPacketJni(context, bytes);
+    }
+
+    public void setPairingKeys(byte[] pairingKey, byte[] randomPairingKey, byte randomSyncKey) {
+        setPairingKeysJni(pairingKey, randomPairingKey, randomSyncKey);
+    }
+
+    public void setEnhancedEncryption(boolean isSecureVersion) {
+        setEnhancedEncryptionJni(isSecureVersion);
+    }
+
+    public byte[] encryptSecondLevelPacket(byte[] bytes) {
+        return encryptSecondLevelPacketJni(context, bytes);
+    }
+
+    public byte[] ecryptSecondLevelPacket(byte[] bytes) {
+        return decryptSecondLevelPacketJni(context, bytes);
     }
 }

@@ -3,9 +3,8 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm;
 import android.annotation.TargetApi;
 import android.os.Build;
 
-import com.cozmo.danar.util.BleCommandUtil;
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -21,7 +20,7 @@ public class DanaRS_Packet {
 
     private boolean received;
     public boolean failed;
-    protected int type = BleCommandUtil.DANAR_PACKET__TYPE_RESPONSE; // most of the messages, should be changed for others
+    protected int type = BleEncryption.DANAR_PACKET__TYPE_RESPONSE; // most of the messages, should be changed for others
     protected int opCode;
 
     public DanaRS_Packet() {

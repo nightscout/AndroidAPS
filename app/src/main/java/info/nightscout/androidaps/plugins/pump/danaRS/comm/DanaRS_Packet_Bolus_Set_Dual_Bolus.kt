@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import com.cozmo.danar.util.BleCommandUtil
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 
@@ -13,7 +13,7 @@ class DanaRS_Packet_Bolus_Set_Dual_Bolus(
 
 
     init {
-        opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BOLUS__SET_DUAL_BOLUS
+        opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_DUAL_BOLUS
         aapsLogger.debug(LTag.PUMPCOMM, "Dual bolus start : $amount U extended: $extendedAmount U halfhours: $extendedBolusDurationInHalfHours")
     }
 

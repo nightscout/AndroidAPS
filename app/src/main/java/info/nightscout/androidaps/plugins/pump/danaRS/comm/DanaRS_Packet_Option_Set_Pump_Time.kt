@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import com.cozmo.danar.util.BleCommandUtil
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
@@ -14,7 +14,7 @@ class DanaRS_Packet_Option_Set_Pump_Time(
     var error = 0
 
     init {
-        opCode = BleCommandUtil.DANAR_PACKET__OPCODE_OPTION__SET_PUMP_TIME
+        opCode = BleEncryption.DANAR_PACKET__OPCODE_OPTION__SET_PUMP_TIME
         aapsLogger.debug(LTag.PUMPCOMM, "Setting pump time " + DateUtil.dateAndTimeString(time))
     }
 

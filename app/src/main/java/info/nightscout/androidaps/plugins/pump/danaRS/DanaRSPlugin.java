@@ -195,9 +195,7 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
     public void connect(String from) {
         getAapsLogger().debug(LTag.PUMP, "RS connect from: " + from);
         if (danaRSService != null && !mDeviceAddress.equals("") && !mDeviceName.equals("")) {
-            final Object o = new Object();
-
-            danaRSService.connect(from, mDeviceAddress, o);
+            danaRSService.connect(from, mDeviceAddress);
         }
     }
 

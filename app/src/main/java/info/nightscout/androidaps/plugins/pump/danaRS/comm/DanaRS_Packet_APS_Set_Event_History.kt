@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import com.cozmo.danar.util.BleCommandUtil
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
@@ -16,7 +16,7 @@ class DanaRS_Packet_APS_Set_Event_History(
 ) : DanaRS_Packet() {
 
     init {
-        opCode = BleCommandUtil.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY
+        opCode = BleEncryption.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY
         if ((packetType == DanaRPump.CARBS || packetType == DanaRPump.BOLUS) && param1 <= 0) this.param1 = 0
         aapsLogger.debug(LTag.PUMPCOMM, "Set history entry: " + DateUtil.dateAndTimeString(time) + " type: " + packetType + " param1: " + param1 + " param2: " + param2)
     }

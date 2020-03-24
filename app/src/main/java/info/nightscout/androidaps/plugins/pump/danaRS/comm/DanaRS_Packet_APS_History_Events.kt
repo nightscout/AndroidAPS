@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import com.cozmo.danar.util.BleCommandUtil
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.db.ExtendedBolus
@@ -36,7 +36,7 @@ open class DanaRS_Packet_APS_History_Events(
     private var sec = 0
 
     init {
-        opCode = BleCommandUtil.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS
+        opCode = BleEncryption.DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS
         val cal = GregorianCalendar()
         if (from > DateUtil.now()) {
             aapsLogger.debug(LTag.PUMPCOMM, "Asked to load from the future")

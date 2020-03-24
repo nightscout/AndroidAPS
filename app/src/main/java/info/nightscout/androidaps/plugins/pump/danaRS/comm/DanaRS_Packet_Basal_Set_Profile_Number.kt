@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import com.cozmo.danar.util.BleCommandUtil
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 
@@ -10,7 +10,7 @@ class DanaRS_Packet_Basal_Set_Profile_Number(
 ) : DanaRS_Packet() {
 
     init {
-        opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BASAL__SET_PROFILE_NUMBER
+        opCode = BleEncryption.DANAR_PACKET__OPCODE_BASAL__SET_PROFILE_NUMBER
         aapsLogger.debug(LTag.PUMPCOMM, "Setting profile number $profileNumber")
     }
 

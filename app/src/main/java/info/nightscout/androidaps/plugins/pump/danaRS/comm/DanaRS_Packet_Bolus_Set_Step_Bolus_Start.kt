@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import com.cozmo.danar.util.BleCommandUtil
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -17,7 +17,7 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_Start(
 
 
     init {
-        opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_START
+        opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_START
         // Speed 0 => 12 sec/U, 1 => 30 sec/U, 2 => 60 sec/U
         // HARDCODED LIMIT - if there is one that could be created
         amount = constraintChecker.applyBolusConstraints(Constraint(amount)).value()

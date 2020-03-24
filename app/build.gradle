@@ -340,30 +340,6 @@ dependencies {
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
 
-
-task downloadZipFile(type: Download) {
-    src 'https://github.com/MilosKozak/danars-support-lib/archive/master.zip'
-    dest new File(buildDir, 'danars.zip')
-}
-
-task downloadAndUnzipFile(dependsOn: downloadZipFile, type: Copy) {
-    from zipTree(downloadZipFile.dest)
-    def outputDir = file("${buildDir}/unpacked/dist")
-    into outputDir
-}
-
-
-task copyLibs(dependsOn: downloadAndUnzipFile, type: Copy) {
-    def src = file("${buildDir}/unpacked/dist/danars-support-lib-master")
-    def target = file("src/main/jniLibs/")
-
-    from src
-    into target
-}
-
-task full_clean(type: Delete) {
-    delete file("src/main/jniLibs")
-}
 /*
 // Run 'adb' shell command to clear application data of main app for 'debug' variant
 task clearMainAppData(type: Exec) {
@@ -395,8 +371,6 @@ tasks.whenTaskAdded { task ->
     }
 }
 */
-clean.dependsOn full_clean
-preBuild.dependsOn copyLibs
 
 printf('--------------\n')
 printf('isMaster: %s\n', isMaster().toString())

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import com.cozmo.danar.util.BleCommandUtil
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 
@@ -14,7 +14,7 @@ class DanaRS_Packet_APS_Basal_Set_Temporary_Basal(
     var error = 0
 
     init {
-        opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BASAL__APS_SET_TEMPORARY_BASAL
+        opCode = BleEncryption.DANAR_PACKET__OPCODE_BASAL__APS_SET_TEMPORARY_BASAL
         aapsLogger.debug(LTag.PUMPCOMM, "New message: percent: $percent")
 
         if (percent < 0) percent = 0

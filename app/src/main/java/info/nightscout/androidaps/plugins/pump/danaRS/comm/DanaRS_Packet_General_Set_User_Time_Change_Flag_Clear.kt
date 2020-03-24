@@ -1,18 +1,15 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import com.cozmo.danar.util.BleCommandUtil
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.logging.L.isEnabled
 import info.nightscout.androidaps.logging.LTag
-import org.slf4j.LoggerFactory
 
 class DanaRS_Packet_General_Set_User_Time_Change_Flag_Clear(
     private val aapsLogger: AAPSLogger
 ) : DanaRS_Packet() {
 
     init {
-        opCode = BleCommandUtil.DANAR_PACKET__OPCODE_REVIEW__SET_USER_TIME_CHANGE_FLAG_CLEAR
+        opCode = BleEncryption.DANAR_PACKET__OPCODE_REVIEW__SET_USER_TIME_CHANGE_FLAG_CLEAR
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }
     override fun handleMessage(data: ByteArray) {
