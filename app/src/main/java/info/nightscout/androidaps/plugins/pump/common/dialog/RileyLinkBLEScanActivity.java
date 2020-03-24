@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.common.dialog;
 
-import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.BluetoothLeScanner;
@@ -10,7 +9,6 @@ import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
@@ -26,13 +24,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +40,10 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
-import info.nightscout.androidaps.plugins.pump.common.utils.LocationHelper;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
@@ -60,9 +57,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
     @Inject SP sp;
     @Inject RxBusWrapper rxBus;
     @Inject ResourceHelper resourceHelper;
-
-    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 30241; // arbitrary.
-    private static final int REQUEST_ENABLE_BT = 30242; // arbitrary
+    @Inject BlePreCheck blePrecheck;
 
     private static String TAG = "RileyLinkBLEScanActivity";
 
@@ -156,55 +151,19 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
 
     public void prepareForScanning() {
-        // https://developer.android.com/training/permissions/requesting.html
-        // http://developer.radiusnetworks.com/2015/09/29/is-your-beacon-app-ready-for-android-6.html
-        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Toast.makeText(this, R.string.rileylink_scanner_ble_not_supported, Toast.LENGTH_SHORT).show();
-        } else {
-            // Use this check to determine whether BLE is supported on the device. Then
-            // you can selectively disable BLE-related features.
-            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // your code that requires permission
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
-                        PERMISSION_REQUEST_COARSE_LOCATION);
-            }
+        boolean checkOK = blePrecheck.prerequisitesCheck(this);
 
-            // Ensures Bluetooth is available on the device and it is enabled. If not,
-            // displays a dialog requesting user permission to enable Bluetooth.
-            if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-                Toast.makeText(this, R.string.rileylink_scanner_ble_not_enabled, Toast.LENGTH_SHORT).show();
-            } else {
-
-                // Will request that GPS be enabled for devices running Marshmallow or newer.
-                if (!LocationHelper.isLocationEnabled(this)) {
-                    LocationHelper.requestLocationForBluetooth(this);
-                }
-
-                mLEScanner = mBluetoothAdapter.getBluetoothLeScanner();
-                settings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
-                filters = Arrays.asList(new ScanFilter.Builder().setServiceUuid(
-                        ParcelUuid.fromString(GattAttributes.SERVICE_RADIO)).build());
-
-            }
+        if (checkOK) {
+            mLEScanner = mBluetoothAdapter.getBluetoothLeScanner();
+            settings = new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build();
+            filters = Collections.singletonList(new ScanFilter.Builder().setServiceUuid(
+                    ParcelUuid.fromString(GattAttributes.SERVICE_RADIO)).build());
         }
 
         // disable currently selected RL, so that we can discover it
         RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect);
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ENABLE_BT) {
-            if (resultCode == RESULT_OK) {
-                // User allowed Bluetooth to turn on
-            } else if (resultCode == RESULT_CANCELED) {
-                // Error, or user said "NO"
-                finish();
-            }
-        }
-    }
 
     private ScanCallback mScanCallback2 = new ScanCallback() {
 

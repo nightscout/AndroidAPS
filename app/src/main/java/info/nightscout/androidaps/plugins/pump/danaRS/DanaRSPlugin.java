@@ -61,6 +61,7 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.ToastUtils;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
@@ -77,16 +78,16 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
     private final TreatmentsPlugin treatmentsPlugin;
     private final SP sp;
     private final RxBusWrapper rxBus;
-    private final CommandQueueProvider commandQueue;
     private final DanaRPump danaRPump;
     private final DetailedBolusInfoStorage detailedBolusInfoStorage;
+    private final FabricPrivacy fabricPrivacy;
 
-    private static DanaRSService danaRSService;
+    private DanaRSService danaRSService;
 
-    private static String mDeviceAddress = "";
-    public static String mDeviceName = "";
+    private String mDeviceAddress = "";
+    public String mDeviceName = "";
 
-    public static PumpDescription pumpDescription = new PumpDescription();
+    public PumpDescription pumpDescription = new PumpDescription();
 
     // Bolus & history handling
     public int bolusStartErrorCode; // from start message
@@ -112,7 +113,8 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
             SP sp,
             CommandQueueProvider commandQueue,
             DanaRPump danaRPump,
-            DetailedBolusInfoStorage detailedBolusInfoStorage
+            DetailedBolusInfoStorage detailedBolusInfoStorage,
+            FabricPrivacy fabricPrivacy
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
@@ -130,9 +132,9 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
         this.profileFunction = profileFunction;
         this.treatmentsPlugin = treatmentsPlugin;
         this.sp = sp;
-        this.commandQueue = commandQueue;
         this.danaRPump = danaRPump;
         this.detailedBolusInfoStorage = detailedBolusInfoStorage;
+        this.fabricPrivacy = fabricPrivacy;
 
         pumpDescription.setPumpDescription(PumpType.DanaRS);
     }
@@ -153,12 +155,12 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> context.unbindService(mConnection), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> context.unbindService(mConnection), fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventDanaRSDeviceChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> loadAddress(), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> loadAddress(), fabricPrivacy::logException)
         );
         loadAddress(); // load device name
         super.onStart();
@@ -195,7 +197,9 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
     public void connect(String from) {
         getAapsLogger().debug(LTag.PUMP, "RS connect from: " + from);
         if (danaRSService != null && !mDeviceAddress.equals("") && !mDeviceName.equals("")) {
-            danaRSService.connect(from, mDeviceAddress);
+            boolean success = danaRSService.connect(from, mDeviceAddress);
+            if (!success)
+                ToastUtils.showToastInUiThread(context, resourceHelper.gs(R.string.rileylink_scanner_ble_not_supported));
         }
     }
 

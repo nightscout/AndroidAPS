@@ -37,6 +37,7 @@ class BLEComm @Inject internal constructor(
     private val sp: SP,
     private val danaRSMessageHashTable: DanaRSMessageHashTable,
     private val danaRPump: DanaRPump,
+    private val danaRSPlugin: DanaRSPlugin,
     private val bleEncryption: BleEncryption
 ) {
 
@@ -52,66 +53,51 @@ class BLEComm @Inject internal constructor(
     private var scheduledDisconnection: ScheduledFuture<*>? = null
     private var processedMessage: DanaRS_Packet? = null
     private val mSendQueue = ArrayList<ByteArray>()
-    private var mBluetoothManager: BluetoothManager? = null
-    private var mBluetoothAdapter: BluetoothAdapter? = null
+    private var bluetoothManager: BluetoothManager? = null
+    private var bluetoothAdapter: BluetoothAdapter? = null
     private var connectDeviceName: String? = null
-    private var mBluetoothGatt: BluetoothGatt? = null
+    private var bluetoothGatt: BluetoothGatt? = null
 
     var isConnected = false
     var isConnecting = false
     private var uartRead: BluetoothGattCharacteristic? = null
     private var uartWrite: BluetoothGattCharacteristic? = null
 
-    init {
-        initialize()
-    }
-
-    private fun initialize(): Boolean {
+    @Synchronized
+    fun connect(from: String, address: String?): Boolean {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing BLEComm.")
-        if (mBluetoothManager == null) {
-            mBluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-            if (mBluetoothManager == null) {
+        if (bluetoothManager == null) {
+            bluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+            if (bluetoothManager == null) {
                 aapsLogger.error("Unable to initialize BluetoothManager.")
                 return false
             }
         }
-        mBluetoothAdapter = mBluetoothManager?.adapter
-        if (mBluetoothAdapter == null) {
+        bluetoothAdapter = bluetoothManager?.adapter
+        if (bluetoothAdapter == null) {
             aapsLogger.error("Unable to obtain a BluetoothAdapter.")
             return false
         }
-        return true
-    }
-
-    fun connect(from: String, address: String?): Boolean {
-        // test existing BT device
-        val tBluetoothManager = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?
-            ?: return false
-        tBluetoothManager.adapter ?: return false
 
         if (address == null) {
             aapsLogger.error("unspecified address.")
             return false
         }
 
-        if (mBluetoothAdapter == null) {
-            if (!initialize()) {
-                return false
-            }
-        }
         isConnecting = true
-        val device = mBluetoothAdapter?.getRemoteDevice(address)
+        val device = bluetoothAdapter?.getRemoteDevice(address)
         if (device == null) {
             aapsLogger.error("Device not found.  Unable to connect from: $from")
             return false
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "Trying to create a new connection from: $from")
         connectDeviceName = device.name
-        mBluetoothGatt = device.connectGatt(context, false, mGattCallback)
+        bluetoothGatt = device.connectGatt(context, false, mGattCallback)
         setCharacteristicNotification(uartReadBTGattChar, true)
         return true
     }
 
+    @Synchronized
     fun stopConnecting() {
         isConnecting = false
     }
@@ -124,21 +110,21 @@ class BLEComm @Inject internal constructor(
         scheduledDisconnection?.cancel(false)
         scheduledDisconnection = null
 
-        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            aapsLogger.error("disconnect not possible: (mBluetoothAdapter == null) " + (mBluetoothAdapter == null))
-            aapsLogger.error("disconnect not possible: (mBluetoothGatt == null) " + (mBluetoothGatt == null))
+        if (bluetoothAdapter == null || bluetoothGatt == null) {
+            aapsLogger.error("disconnect not possible: (mBluetoothAdapter == null) " + (bluetoothAdapter == null))
+            aapsLogger.error("disconnect not possible: (mBluetoothGatt == null) " + (bluetoothGatt == null))
             return
         }
         setCharacteristicNotification(uartReadBTGattChar, false)
-        mBluetoothGatt?.disconnect()
+        bluetoothGatt?.disconnect()
         isConnected = false
         SystemClock.sleep(2000)
     }
 
     @Synchronized fun close() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "BluetoothAdapter close")
-        mBluetoothGatt?.close()
-        mBluetoothGatt = null
+        bluetoothGatt?.close()
+        bluetoothGatt = null
     }
 
     private val mGattCallback: BluetoothGattCallback = object : BluetoothGattCallback() {
@@ -185,20 +171,20 @@ class BLEComm @Inject internal constructor(
     @Synchronized
     private fun setCharacteristicNotification(characteristic: BluetoothGattCharacteristic?, enabled: Boolean) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "setCharacteristicNotification")
-        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+        if (bluetoothAdapter == null || bluetoothGatt == null) {
             aapsLogger.error("BluetoothAdapter not initialized_ERROR")
             isConnecting = false
             isConnected = false
             return
         }
-        mBluetoothGatt!!.setCharacteristicNotification(characteristic, enabled)
+        bluetoothGatt!!.setCharacteristicNotification(characteristic, enabled)
     }
 
     @Synchronized
     private fun writeCharacteristicNoResponse(characteristic: BluetoothGattCharacteristic, data: ByteArray) {
         Thread(Runnable {
             SystemClock.sleep(WRITE_DELAY_MILLIS)
-            if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            if (bluetoothAdapter == null || bluetoothGatt == null) {
                 aapsLogger.error("BluetoothAdapter not initialized_ERROR")
                 isConnecting = false
                 isConnected = false
@@ -207,7 +193,7 @@ class BLEComm @Inject internal constructor(
             characteristic.value = data
             characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE
             aapsLogger.debug("writeCharacteristic:" + DanaRS_Packet.toHexString(data))
-            mBluetoothGatt!!.writeCharacteristic(characteristic)
+            bluetoothGatt!!.writeCharacteristic(characteristic)
         }).start()
     }
 
@@ -220,15 +206,15 @@ class BLEComm @Inject internal constructor(
             ?: BluetoothGattCharacteristic(UUID.fromString(UART_WRITE_UUID), BluetoothGattCharacteristic.PROPERTY_WRITE_NO_RESPONSE, 0).also { uartWrite = it }
 
     private fun getSupportedGattServices(): List<BluetoothGattService>? {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "getSupportedGattServices")
-            if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-                aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-                isConnecting = false
-                isConnected = false
-                return null
-            }
-            return mBluetoothGatt?.services
+        aapsLogger.debug(LTag.PUMPBTCOMM, "getSupportedGattServices")
+        if (bluetoothAdapter == null || bluetoothGatt == null) {
+            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
+            isConnecting = false
+            isConnected = false
+            return null
         }
+        return bluetoothGatt?.services
+    }
 
     private fun findCharacteristic() {
         val gattServices = getSupportedGattServices() ?: return
@@ -339,7 +325,7 @@ class BLEComm @Inject internal constructor(
                                 BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK.toByte()       -> if (decryptedBuffer.size == 4 && decryptedBuffer[2] == 'O'.toByte() && decryptedBuffer[3] == 'K'.toByte()) {
                                     aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (OK)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
                                     // Grab pairing key from preferences if exists
-                                    val pairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName, "")
+                                    val pairingKey = sp.getString(resourceHelper.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName, "")
                                     aapsLogger.debug(LTag.PUMPBTCOMM, "Using stored pairing key: $pairingKey")
                                     if (pairingKey.isNotEmpty()) {
                                         val encodedPairingKey = DanaRS_Packet.hexToBytes(pairingKey)
@@ -366,7 +352,7 @@ class BLEComm @Inject internal constructor(
                                     aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (ERROR)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
                                     mSendQueue.clear()
                                     rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.connectionerror)))
-                                    sp.remove(resourceHelper.gs(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName)
+                                    sp.remove(resourceHelper.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName)
                                     val n = Notification(Notification.WRONGSERIALNUMBER, resourceHelper.gs(R.string.wrongpassword), Notification.URGENT)
                                     rxBus.send(EventNewNotification(n))
                                 }
@@ -396,7 +382,7 @@ class BLEComm @Inject internal constructor(
                                     sendTimeInfo()
                                     val pairingKey = byteArrayOf(decryptedBuffer[2], decryptedBuffer[3])
                                     // store pairing key to preferences
-                                    sp.putString(resourceHelper.gs(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName, DanaRS_Packet.bytesToHex(pairingKey))
+                                    sp.putString(resourceHelper.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName, DanaRS_Packet.bytesToHex(pairingKey))
                                     aapsLogger.debug(LTag.PUMPBTCOMM, "Got pairing key: " + DanaRS_Packet.bytesToHex(pairingKey))
                                 }
 

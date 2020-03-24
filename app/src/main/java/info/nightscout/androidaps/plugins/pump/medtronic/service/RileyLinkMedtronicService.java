@@ -53,9 +53,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     public RileyLinkMedtronicService() {
         super();
         instance = this;
-        aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed");
-        MedtronicUtil.setMedtronicService(this);
-        pumpStatus = (MedtronicPumpStatus) medtronicPumpPlugin.getPumpStatusData();
     }
 
 
@@ -68,6 +65,12 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         return instance.medtronicCommunicationManager;
     }
 
+    @Override public void onCreate() {
+        super.onCreate();
+        aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly created");
+        MedtronicUtil.setMedtronicService(this);
+        pumpStatus = (MedtronicPumpStatus) medtronicPumpPlugin.getPumpStatusData();
+    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
