@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
 import info.nightscout.androidaps.plugins.pump.combo.ComboFragment
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRFragment
+import info.nightscout.androidaps.plugins.pump.danaRS.dialogs.PairingProgressDialog
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightFragment
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicFragment
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
@@ -83,6 +84,7 @@ abstract class FragmentsModule {
 
     @ContributesAndroidInjector abstract fun contributesVirtualPumpFragment(): VirtualPumpFragment
 
+    @ContributesAndroidInjector abstract fun contributesPairingProgressDialog(): PairingProgressDialog
     @ContributesAndroidInjector abstract fun contributesBolusProgressDialog(): BolusProgressDialog
     @ContributesAndroidInjector abstract fun contributesCalibrationDialog(): CalibrationDialog
     @ContributesAndroidInjector abstract fun contributesCarbsDialog(): CarbsDialog

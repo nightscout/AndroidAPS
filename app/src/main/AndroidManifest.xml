@@ -81,7 +81,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".plugins.pump.danaRS.activities.PairingHelperActivity" />
+        <activity
+            android:name=".plugins.pump.danaRS.activities.PairingHelperActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".historyBrowser.HistoryBrowseActivity" />
         <activity android:name=".activities.SurveyActivity" />
         <activity android:name=".activities.StatsActivity" />
