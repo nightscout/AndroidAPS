@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import android.os.Bundle;
@@ -12,11 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.jetbrains.annotations.NotNull;
+
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 
 /**
@@ -83,6 +88,8 @@ public class RileyLinkStatusHistory extends Fragment implements RefreshableInter
         public void addItemsAndClean(List<RLHistoryItem> items) {
             this.historyList.clear();
 
+            Collections.sort(items, new RLHistoryItem.Comparator());
+
             for (RLHistoryItem item : items) {
 
                 if (!historyList.contains(item) && isValidItem(item)) {
@@ -110,6 +117,7 @@ public class RileyLinkStatusHistory extends Fragment implements RefreshableInter
         }
 
 
+        @NotNull
         @Override
         public RecyclerViewAdapter.HistoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.rileylink_status_history_item, //

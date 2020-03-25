@@ -125,4 +125,12 @@ public class RLHistoryItem {
         }
     }
 
+    public static class Comparator implements java.util.Comparator<RLHistoryItem> {
+
+        @Override
+        public int compare(RLHistoryItem o1, RLHistoryItem o2) {
+            return o2.dateTime.compareTo(o1.dateTime);
+        }
+    }
+
 }
