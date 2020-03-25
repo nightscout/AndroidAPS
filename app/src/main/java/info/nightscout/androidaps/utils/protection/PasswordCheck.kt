@@ -3,6 +3,7 @@ package info.nightscout.androidaps.utils.protection
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
@@ -17,6 +18,9 @@ import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
+
+// since androidx.autofill.HintConstants are not available
+val AUTOFILL_HINT_NEW_PASSWORD = "newPassword"
 
 @Singleton
 class PasswordCheck @Inject constructor(val sp: SP) {
@@ -39,6 +43,11 @@ class PasswordCheck @Inject constructor(val sp: SP) {
         alertDialogBuilder.setView(promptsView)
 
         val userInput = promptsView.findViewById<View>(R.id.passwordprompt_pass) as EditText
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val autoFillHintPasswordKind = activity.getString(preference)
+            userInput.setAutofillHints(View.AUTOFILL_HINT_PASSWORD, "aaps_${autoFillHintPasswordKind}")
+            userInput.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_YES
+        }
 
         alertDialogBuilder
             .setCancelable(false)
@@ -61,7 +70,7 @@ class PasswordCheck @Inject constructor(val sp: SP) {
     }
 
     @SuppressLint("InflateParams")
-    fun setPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int) {
+    fun setPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ( (String) -> Unit)? = null, cancel: (()->Unit)? = null, clear: (()->Unit)? = null) {
         val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
 
         val titleLayout = LayoutInflater.from(context).inflate(R.layout.dialog_alert_custom, null)
@@ -73,6 +82,12 @@ class PasswordCheck @Inject constructor(val sp: SP) {
 
         val userInput = promptsView.findViewById<View>(R.id.passwordprompt_pass) as EditText
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val autoFillHintPasswordKind = context.getString(preference)
+            userInput.setAutofillHints(AUTOFILL_HINT_NEW_PASSWORD, "aaps_${autoFillHintPasswordKind}")
+            userInput.importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_YES
+        }
+
         alertDialogBuilder
             .setCancelable(false)
             .setCustomTitle(titleLayout)
@@ -80,9 +95,13 @@ class PasswordCheck @Inject constructor(val sp: SP) {
                 val enteredPassword = userInput.text.toString()
                 if (enteredPassword.isNotEmpty()) {
                     sp.putString(preference, CryptoUtil.hashPassword(enteredPassword))
+                    ok?.invoke(enteredPassword)
                 } else {
                     if (sp.contains(preference)) {
                         sp.remove(preference)
+                        clear?.invoke()
+                    } else {
+                        cancel?.invoke()
                     }
                 }
                 ToastUtils.showToastInUiThread(context, context.getString(R.string.password_set))
@@ -90,6 +109,7 @@ class PasswordCheck @Inject constructor(val sp: SP) {
             .setNegativeButton(context.getString(R.string.cancel)
             ) { dialog, _ ->
                 ToastUtils.showToastInUiThread(context, context.getString(R.string.password_not_changed))
+                cancel?.invoke()
                 dialog.cancel()
             }
 
