@@ -15,6 +15,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginDescription;
@@ -143,6 +144,12 @@ public class SourceEversensePlugin extends PluginBase implements BgSourceInterfa
                         data.put("glucoseType", "Finger");
                         data.put("glucose", calibrationGlucoseLevels[i]);
                         data.put("units", Constants.MGDL);
+                        CareportalEvent careportalEvent = new CareportalEvent();
+                        careportalEvent.date = calibrationTimestamps[i];
+                        careportalEvent.source = Source.USER;
+                        careportalEvent.eventType = CareportalEvent.BGCHECK;
+                        careportalEvent.json = data.toString();
+                        MainApp.getDbHelper().createOrUpdate(careportalEvent);
                         NSUpload.uploadCareportalEntryToNS(data);
                     }
                 } catch (JSONException e) {

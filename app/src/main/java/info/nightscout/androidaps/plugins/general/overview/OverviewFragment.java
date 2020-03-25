@@ -221,8 +221,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (Config.NSCLIENT) {
             view = inflater.inflate(R.layout.overview_fragment_nsclient, container, false);
             shorttextmode = true;
-        } else if (smallHeight || landscape) { // now testing the same layout for small displays as well
-            view = inflater.inflate(R.layout.overview_fragment, container, false);
+        } else if (smallHeight || landscape) {
+            view = inflater.inflate(R.layout.overview_fragment_landscape, container, false);
         } else {
             view = inflater.inflate(R.layout.overview_fragment, container, false);
         }
@@ -667,6 +667,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
         if (item.getTitle().equals(MainApp.gs(R.string.disableloop))) {
+            log.debug("USER ENTRY: LOOP DISABLED");
             loopPlugin.setPluginEnabled(PluginType.LOOP, false);
             loopPlugin.setFragmentVisible(PluginType.LOOP, false);
             ConfigBuilderPlugin.getPlugin().storeSettings("DisablingLoop");
@@ -679,17 +680,19 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
-            NSUpload.uploadOpenAPSOffline(24 * 60); // upload 24h, we don't know real duration
+            LoopPlugin.getPlugin().createOfflineEvent(24 * 60); // upload 24h, we don't know real duration
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.enableloop))) {
+            log.debug("USER ENTRY: LOOP ENABLED");
             loopPlugin.setPluginEnabled(PluginType.LOOP, true);
             loopPlugin.setFragmentVisible(PluginType.LOOP, true);
             ConfigBuilderPlugin.getPlugin().storeSettings("EnablingLoop");
             updateGUI("suspendmenu");
-            NSUpload.uploadOpenAPSOffline(0);
+            LoopPlugin.getPlugin().createOfflineEvent(0);
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.resume)) ||
                 item.getTitle().equals(MainApp.gs(R.string.reconnect))) {
+            log.debug("USER ENTRY: RESUME");
             loopPlugin.suspendTo(0L);
             updateGUI("suspendmenu");
             ConfigBuilderPlugin.getPlugin().getCommandQueue().cancelTempBasal(true, new Callback() {
@@ -701,42 +704,51 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 }
             });
             SP.putBoolean(R.string.key_objectiveusereconnect, true);
-            NSUpload.uploadOpenAPSOffline(0);
+            LoopPlugin.getPlugin().createOfflineEvent(0);
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.suspendloopfor1h))) {
+            log.debug("USER ENTRY: SUSPEND 1h");
             LoopPlugin.getPlugin().suspendLoop(60);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.suspendloopfor2h))) {
+            log.debug("USER ENTRY: SUSPEND 2h");
             LoopPlugin.getPlugin().suspendLoop(120);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.suspendloopfor3h))) {
+            log.debug("USER ENTRY: SUSPEND 3h");
             LoopPlugin.getPlugin().suspendLoop(180);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.suspendloopfor10h))) {
+            log.debug("USER ENTRY: SUSPEND 10h");
             LoopPlugin.getPlugin().suspendLoop(600);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.disconnectpumpfor15m))) {
+            log.debug("USER ENTRY: DISCONNECT 15m");
             LoopPlugin.getPlugin().disconnectPump(15, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.disconnectpumpfor30m))) {
+            log.debug("USER ENTRY: DISCONNECT 30m");
             LoopPlugin.getPlugin().disconnectPump(30, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.disconnectpumpfor1h))) {
+            log.debug("USER ENTRY: DISCONNECT 1h");
             LoopPlugin.getPlugin().disconnectPump(60, profile);
             SP.putBoolean(R.string.key_objectiveusedisconnect, true);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.disconnectpumpfor2h))) {
+            log.debug("USER ENTRY: DISCONNECT 2h");
             LoopPlugin.getPlugin().disconnectPump(120, profile);
             updateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.gs(R.string.disconnectpumpfor3h))) {
+            log.debug("USER ENTRY: DISCONNECT 3h");
             LoopPlugin.getPlugin().disconnectPump(180, profile);
             updateGUI("suspendmenu");
             return true;
@@ -754,6 +766,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (manager != null)
                 pvd.show(manager, "ProfileViewDialog");
         } else if (item.getTitle().equals(MainApp.gs(R.string.eatingsoon))) {
+            log.debug("USER ENTRY: TEMP TARGET EATING SOON");
             double target = Profile.toMgdl(DefaultValueHelper.determineEatingSoonTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(System.currentTimeMillis())
@@ -764,6 +777,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     .high(target);
             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(MainApp.gs(R.string.activity))) {
+            log.debug("USER ENTRY: TEMP TARGET ACTIVITY");
             double target = Profile.toMgdl(DefaultValueHelper.determineActivityTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
@@ -774,6 +788,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     .high(target);
             TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget);
         } else if (item.getTitle().equals(MainApp.gs(R.string.hypo))) {
+            log.debug("USER ENTRY: TEMP TARGET HYPO");
             double target = Profile.toMgdl(DefaultValueHelper.determineHypoTT(), ProfileFunctions.getSystemUnits());
             TempTarget tempTarget = new TempTarget()
                     .date(now())
@@ -788,6 +803,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (manager != null)
                 new TempTargetDialog().show(manager, "Overview");
         } else if (item.getTitle().equals(MainApp.gs(R.string.cancel))) {
+            log.debug("USER ENTRY: TEMP TARGET CANCEL");
             TempTarget tempTarget = new TempTarget()
                     .source(Source.USER)
                     .date(now())
@@ -907,6 +923,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
             if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.isChangeRequested()) {
                 OKDialog.showConfirmation(context, MainApp.gs(R.string.pump_tempbasal_label), finalLastRun.constraintsProcessed.toSpanned(), () -> {
+                    log.debug("USER ENTRY: ACCEPT TEMP BASAL");
                     hideTempRecommendation();
                     clearNotification();
                     LoopPlugin.getPlugin().acceptChangeRequest();
@@ -1113,7 +1130,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (acceptTempButton != null) {
             boolean showAcceptButton = !closedLoopEnabled.value(); // Open mode needed
             showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
-            showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
+            showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == 0 || finalLastRun.lastOpenModeAccept < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
             showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.isChangeRequested(); // change is requested
 
             if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && LoopPlugin.getPlugin().isEnabled(PluginType.LOOP)) {

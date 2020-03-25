@@ -63,6 +63,8 @@ import info.nightscout.androidaps.utils.SP;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 
+import static info.nightscout.androidaps.utils.EspressoTestHelperKt.isRunningRealPumpTest;
+
 public class MainActivity extends NoSplashAppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(L.CORE);
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -137,7 +139,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                 .subscribe(this::processPreferenceChange, FabricPrivacy::logException)
         );
 
-        if (!SP.getBoolean(R.string.key_setupwizard_processed, false)) {
+        if (!SP.getBoolean(R.string.key_setupwizard_processed, false) && !isRunningRealPumpTest()) {
             Intent intent = new Intent(this, SetupWizardActivity.class);
             startActivity(intent);
         }
@@ -147,6 +149,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
         if (Config.PUMPDRIVERS) {
             AndroidPermission.notifyForLocationPermissions(this);
             AndroidPermission.notifyForSMSPermissions(this);
+            AndroidPermission.notifyForSystemWindowPermissions(this);
         }
     }
 
@@ -245,6 +248,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
                     case AndroidPermission.CASE_SMS:
                     case AndroidPermission.CASE_BATTERY:
                     case AndroidPermission.CASE_PHONE_STATE:
+                    case AndroidPermission.CASE_SYSTEM_WINDOW:
                         break;
                 }
             }

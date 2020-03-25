@@ -122,7 +122,7 @@
     <string name="nsclient_xdripfollower">xDrip app in volg-modus.</string>
     <string name="nsclient_looponiphone">Loop app op de iPhone.</string>
     <string name="nsclient_spikeiphone">Spike app op de iPhone.</string>
-    <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Children/kinderen.html</string>
+    <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Children/Children.html</string>
     <string name="isf_label">Onderwerp: Insulinegevoeligheidsfactor</string>
     <string name="isf_increasingvalue">Hogere ISF-waarden leiden tot minder insulineafgifte wanneer AAPS voor hoge BG corrigeert.</string>
     <string name="isf_decreasingvalue">Lagere ISF-waarden leiden tot minder insulineafgifte wanneer AAPS voor hoge BG corrigeert.</string>
@@ -130,7 +130,7 @@
     <string name="isf_preferences">U moet ISF invoeren in Instellingen.</string>
     <string name="isf_profile">Het wijzigen van de ISF-waarde in uw profiel is voldoende om de wijziging toe te passen.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Getting-Started/FAQ.html#insuline-gevoeligheids-factor-insulin-sensitivity-factor-ISF-mmol-l-E-of-mg-dl-E</string>
-    <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Usage/Profielen.html</string>
+    <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Usage/Profiles.html</string>
     <string name="ic_label">Onderwerp: De KH ratio</string>
     <string name="ic_increasingvalue">Hogere KH ratios leiden tot minder insuline afgifte voor een bepaalde hoeveelheid koolhydraten.</string>
     <string name="ic_decreasingvalue">Lagere KH ratios leiden tot minder insuline afgifte voor een bepaalde hoeveelheid koolhydraten.</string>

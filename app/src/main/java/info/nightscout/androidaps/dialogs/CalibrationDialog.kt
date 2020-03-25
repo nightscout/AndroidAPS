@@ -56,7 +56,8 @@ class CalibrationDialog : DialogFragmentWithDate() {
         if (bg > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, MainApp.gs(R.string.overview_calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
-                    XdripCalibrations.confirmAndSendCalibration(bg, context)
+                    log.debug("USER ENTRY: CALIBRATION $bg")
+                    XdripCalibrations.sendIntent(bg)
                 })
             }
         } else

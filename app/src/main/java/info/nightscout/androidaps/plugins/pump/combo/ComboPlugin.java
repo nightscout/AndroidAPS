@@ -654,16 +654,29 @@ public class ComboPlugin extends PluginBase implements PumpInterface, Constraint
      * Creates a treatment record based on the request in DetailBolusInfo and the delivered bolus.
      */
     private boolean addBolusToTreatments(DetailedBolusInfo detailedBolusInfo, Bolus lastPumpBolus) {
-        DetailedBolusInfo dbi = detailedBolusInfo.copy();
-        dbi.date = calculateFakeBolusDate(lastPumpBolus);
-        dbi.pumpId = dbi.date;
-        dbi.source = Source.PUMP;
-        dbi.insulin = lastPumpBolus.amount;
+        DetailedBolusInfo bolusInfo = detailedBolusInfo.copy();
+        bolusInfo.date = calculateFakeBolusDate(lastPumpBolus);
+        bolusInfo.pumpId = bolusInfo.date;
+        bolusInfo.source = Source.PUMP;
+        bolusInfo.insulin = lastPumpBolus.amount;
         try {
-            TreatmentsPlugin.getPlugin().addToHistoryTreatment(dbi, true);
+            if (bolusInfo.carbs > 0 && bolusInfo.carbTime != 0) {
+                // split out a separate carbs record without a pumpId
+                DetailedBolusInfo carbInfo = new DetailedBolusInfo();
+                carbInfo.date = bolusInfo.date + bolusInfo.carbTime * 60L * 1000L;
+                carbInfo.carbs = bolusInfo.carbs;
+                carbInfo.source = Source.USER;
+                TreatmentsPlugin.getPlugin().addToHistoryTreatment(carbInfo, true);
+
+                // remove carbs from bolusInfo to not trigger any unwanted code paths in
+                // TreatmentsPlugin.addToHistoryTreatment() method
+                bolusInfo.carbTime = 0;
+                bolusInfo.carbs = 0;
+            }
+            TreatmentsPlugin.getPlugin().addToHistoryTreatment(bolusInfo, true);
         } catch (Exception e) {
             log.error("Adding treatment record failed", e);
-            if (dbi.isSMB) {
+            if (bolusInfo.isSMB) {
                 Notification notification = new Notification(Notification.COMBO_PUMP_ALARM, MainApp.gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
                 RxBus.INSTANCE.send(new EventNewNotification(notification));
             }

@@ -74,7 +74,7 @@ public abstract class PluginBase {
         }
     }
 
-    private void performPluginSwitch(boolean enabled, PluginType type) {
+    public void performPluginSwitch(boolean enabled, PluginType type) {
         setPluginEnabled(type, enabled);
         setFragmentVisible(type, enabled);
         ConfigBuilderPlugin.getPlugin().processOnEnabledCategoryChanged(this, getType());

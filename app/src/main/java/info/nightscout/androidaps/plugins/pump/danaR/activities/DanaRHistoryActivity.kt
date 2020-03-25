@@ -100,23 +100,23 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
         danar_history_reload.setOnClickListener {
             val selected = danar_history_spinner.selectedItem as TypeList
             runOnUiThread {
-                danar_history_reload.visibility = View.GONE
-                danar_history_status.visibility = View.VISIBLE
+                danar_history_reload?.visibility = View.GONE
+                danar_history_status?.visibility = View.VISIBLE
             }
             clearCardView()
             ConfigBuilderPlugin.getPlugin().commandQueue.loadHistory(selected.type, object : Callback() {
                 override fun run() {
                     loadDataFromDB(selected.type)
                     runOnUiThread {
-                        danar_history_reload.visibility = View.VISIBLE
-                        danar_history_status.visibility = View.GONE
+                        danar_history_reload?.visibility = View.VISIBLE
+                        danar_history_status?.visibility = View.GONE
                     }
                 }
             })
         }
         danar_history_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
-                val selected = danar_history_spinner.selectedItem as TypeList
+                val selected = danar_history_spinner?.selectedItem as TypeList? ?: return
                 loadDataFromDB(selected.type)
                 showingType = selected.type
             }

@@ -168,7 +168,7 @@ public class TreatmentsTempTargetFragment extends Fragment {
                     RxBus.INSTANCE.send(new EventNSClientRestart());
                 }));
 
-        boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, false);
+        boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, true);
         if (nsUploadOnly)
             refreshFromNS.setVisibility(View.GONE);
 

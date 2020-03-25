@@ -323,7 +323,9 @@ public class NSUpload {
                 prebolus.put("created_at", DateUtil.toISOString(preBolusDate));
                 uploadCareportalEntryToNS(prebolus);
             }
-            UploadQueue.add(new DbRequest("dbAdd", "treatments", data));
+            DbRequest dbr = new DbRequest("dbAdd", "treatments", data);
+            log.debug("Prepared: " + dbr.log());
+            UploadQueue.add(dbr);
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
@@ -334,12 +336,10 @@ public class NSUpload {
         UploadQueue.add(new DbRequest("dbRemove", "treatments", _id));
     }
 
-    public static void uploadOpenAPSOffline(double durationInMinutes) {
+    public static void uploadOpenAPSOffline(CareportalEvent event) {
         try {
-            JSONObject data = new JSONObject();
-            data.put("eventType", "OpenAPS Offline");
-            data.put("duration", durationInMinutes);
-            data.put("created_at", DateUtil.toISOString(new Date()));
+            JSONObject data = new JSONObject(event.json);
+            data.put("created_at", DateUtil.toISOString(event.date));
             data.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));
             UploadQueue.add(new DbRequest("dbAdd", "treatments", data));
         } catch (JSONException e) {
@@ -396,7 +396,7 @@ public class NSUpload {
 
     public static void uploadProfileStore(JSONObject profileStore) {
         if (SP.getBoolean(R.string.key_ns_uploadlocalprofile, false)) {
-            UploadQueue.add(new DbRequest("dbAdd", "profile", String.valueOf(profileStore)));
+            UploadQueue.add(new DbRequest("dbAdd", "profile", profileStore));
         }
     }
 

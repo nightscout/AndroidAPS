@@ -32,6 +32,7 @@ public class AndroidPermission {
     public static final int CASE_LOCATION = 0x3;
     public static final int CASE_BATTERY = 0x4;
     public static final int CASE_PHONE_STATE = 0x5;
+    public static final int CASE_SYSTEM_WINDOW = 0x6;
 
     private static boolean permission_battery_optimization_failed = false;
 
@@ -129,5 +130,23 @@ public class AndroidPermission {
             RxBus.INSTANCE.send(new EventNewNotification(notification));
         } else
             RxBus.INSTANCE.send(new EventDismissNotification(Notification.PERMISSION_LOCATION));
+    }
+
+    public static synchronized void notifyForSystemWindowPermissions(Activity activity) {
+        // Check if Android Q or higher
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            if (!Settings.canDrawOverlays(activity)) {
+                NotificationWithAction notification = new NotificationWithAction(Notification.PERMISSION_SYSTEM_WINDOW, MainApp.gs(R.string.needsystemwindowpermission), Notification.URGENT);
+                notification.action(R.string.request, () -> {
+                    // Show alert dialog to the user saying a separate permission is needed
+                    // Launch the settings activity if the user prefers
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + activity.getPackageName()));
+                    activity.startActivity(intent);
+                });
+                RxBus.INSTANCE.send(new EventNewNotification(notification));
+            } else
+                RxBus.INSTANCE.send(new EventDismissNotification(Notification.PERMISSION_SYSTEM_WINDOW));
+        }
     }
 }

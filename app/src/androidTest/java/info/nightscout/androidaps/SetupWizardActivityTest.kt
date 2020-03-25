@@ -1,6 +1,5 @@
 package info.nightscout.androidaps
 
-
 import android.os.SystemClock
 import android.view.View
 import android.view.ViewGroup
@@ -9,12 +8,15 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.scrollTo
-import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withClassName
+import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.matcher.ViewMatchers.withTagValue
+import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
-import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
@@ -39,7 +41,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
 @LargeTest
 @RunWith(AndroidJUnit4::class)
 class SetupWizardActivityTest {
@@ -50,12 +51,12 @@ class SetupWizardActivityTest {
 
     @Rule
     @JvmField
-    var mGrantPermissionRule =
-            GrantPermissionRule.grant(
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
+    var mGrantPermissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
 
     @Before
     fun clear() {
@@ -74,9 +75,9 @@ adb shell settings put global transition_animation_scale 0 &
 adb shell settings put global animator_duration_scale 0 &
  */
 
-
     @Test
     fun setupWizardActivityTest() {
+        SP.clear()
         Assert.assertTrue(isRunningTest())
         // Welcome page
         onView(withId(R.id.next_button)).perform(click())
@@ -86,7 +87,7 @@ adb shell settings put global animator_duration_scale 0 &
         // Agreement page
         onView(withText("I UNDERSTAND AND AGREE")).perform(scrollTo(), click())
         onView(withId(R.id.next_button)).waitAndPerform(click())
-        // Loction permission
+        // Location permission
         var askButton = onView(withText("Ask for permission"))
         if (askButton.isDisplayed()) {
             askButton.perform(scrollTo(), click())
@@ -97,6 +98,11 @@ adb shell settings put global animator_duration_scale 0 &
         if (askButton.isDisplayed()) {
             askButton.perform(scrollTo(), click())
             onView(withText("OK")).perform(click())
+            onView(withId(R.id.next_button)).waitAndPerform(click())
+        }
+        // Import settings : skip of found
+        askButton = onView(withText("IMPORT SETTINGS"))
+        if (askButton.isDisplayed()) {
             onView(withId(R.id.next_button)).waitAndPerform(click())
         }
         // Units selection
@@ -125,41 +131,44 @@ adb shell settings put global animator_duration_scale 0 &
         // Local profile - IC
         onView(withId(R.id.ic_tab)).perform(scrollTo(), click())
         onView(Matchers.allOf(withTagValue(Matchers.`is`("IC-1-0")), isDisplayed()))
-                .perform(ViewActions.replaceText("2"), ViewActions.closeSoftKeyboard())
+            .perform(ViewActions.replaceText("2"), ViewActions.closeSoftKeyboard())
         // Local profile - ISF
         onView(withId(R.id.isf_tab)).perform(scrollTo(), click())
         onView(Matchers.allOf(withTagValue(Matchers.`is`("ISF-1-0")), isDisplayed()))
-                .perform(ViewActions.replaceText("3"), ViewActions.closeSoftKeyboard())
+            .perform(ViewActions.replaceText("3"), ViewActions.closeSoftKeyboard())
         // Local profile - BAS
         onView(withId(R.id.basal_tab)).perform(scrollTo(), click())
         onView(childAtPosition(Matchers.allOf(withId(R.id.localprofile_basal), childAtPosition(withClassName(Matchers.`is`("android.widget.LinearLayout")), 6)), 2))
-                .perform(scrollTo(), click())
+            .perform(scrollTo(), click())
         onView(Matchers.allOf(withTagValue(Matchers.`is`("BASAL-1-0")), isDisplayed()))
-                .perform(ViewActions.replaceText("1.1"), ViewActions.closeSoftKeyboard())
+            .perform(ViewActions.replaceText("1.1"), ViewActions.closeSoftKeyboard())
         onView(Matchers.allOf(withTagValue(Matchers.`is`("BASAL-1-1")), isDisplayed()))
-                .perform(ViewActions.replaceText("1.2"), ViewActions.closeSoftKeyboard())
+            .perform(ViewActions.replaceText("1.2"), ViewActions.closeSoftKeyboard())
         onView(Matchers.allOf(withId(R.id.timelistedit_time), childAtPosition(childAtPosition(withId(R.id.localprofile_basal), 2), 0)))
-                .perform(scrollTo(), click())
+            .perform(scrollTo(), click())
         onData(Matchers.anything()).inAdapterView(childAtPosition(withClassName(Matchers.`is`("android.widget.PopupWindow\$PopupBackgroundView")), 0)).atPosition(13)
-                .perform(click())
+            .perform(click())
         // Local profile - TARGET
         onView(withId(R.id.target_tab)).perform(scrollTo(), click())
         onView(Matchers.allOf(withTagValue(Matchers.`is`("TARGET-1-0")), isDisplayed()))
-                .perform(ViewActions.replaceText("6"), ViewActions.closeSoftKeyboard())
+            .perform(ViewActions.replaceText("6"), ViewActions.closeSoftKeyboard())
         onView(Matchers.allOf(withTagValue(Matchers.`is`("TARGET-2-0")), isDisplayed()))
-                .perform(ViewActions.replaceText("6.5"), ViewActions.closeSoftKeyboard())
+            .perform(ViewActions.replaceText("6.5"), ViewActions.closeSoftKeyboard())
         onView(withText("Save")).perform(scrollTo(), click())
         onView(Matchers.allOf(withId(R.id.localprofile_profileswitch), isDisplayed()))
-                .perform(scrollTo(), click())
+            .perform(scrollTo(), click())
         onView(allOf(withId(R.id.ok), isDisplayed())).perform(click())
-        onView(Matchers.allOf(withText("OK"), isDisplayed())).perform(click())
+        // confirm dialog
+        //onView(Matchers.allOf(withText("OK"), isDisplayed())).perform(click()) not working on real phone
+        clickOkInDialog()
         onView(withId(R.id.next_button)).waitAndPerform(click())
         // Profile switch
         askButton = onView(withText("Do Profile Switch"))
         if (askButton.isDisplayed()) {
             askButton.perform(scrollTo(), click())
             onView(allOf(withId(R.id.ok), isDisplayed())).perform(click())
-            onView(Matchers.allOf(withText("OK"), isDisplayed())).perform(click())
+            // onView(Matchers.allOf(withText("OK"), isDisplayed())).perform(click()) not working on real phone
+            clickOkInDialog()
             while (ProfileFunctions.getInstance().profile == null) SystemClock.sleep(100)
             onView(withId(R.id.next_button)).waitAndPerform(click())
         }
@@ -204,7 +213,7 @@ adb shell settings put global animator_duration_scale 0 &
     }
 
     private fun childAtPosition(
-            parentMatcher: Matcher<View>, position: Int): Matcher<View> {
+        parentMatcher: Matcher<View>, position: Int): Matcher<View> {
 
         return object : TypeSafeMatcher<View>() {
             override fun describeTo(description: Description) {
@@ -215,7 +224,7 @@ adb shell settings put global animator_duration_scale 0 &
             public override fun matchesSafely(view: View): Boolean {
                 val parent = view.parent
                 return parent is ViewGroup && parentMatcher.matches(parent)
-                        && view == parent.getChildAt(position)
+                    && view == parent.getChildAt(position)
             }
         }
     }

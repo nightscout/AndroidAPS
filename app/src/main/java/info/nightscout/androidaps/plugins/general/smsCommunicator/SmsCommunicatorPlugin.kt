@@ -330,7 +330,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
             "RESUME" -> {
                 LoopPlugin.getPlugin().suspendTo(0)
                 send(EventRefreshOverview("SMS_LOOP_RESUME"))
-                NSUpload.uploadOpenAPSOffline(0.0)
+                LoopPlugin.getPlugin().createOfflineEvent(0)
                 sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, R.string.smscommunicator_loopresumed))
             }
             "SUSPEND" -> {
@@ -352,7 +352,7 @@ object SmsCommunicatorPlugin : PluginBase(PluginDescription()
                                 override fun run() {
                                     if (result.success) {
                                         LoopPlugin.getPlugin().suspendTo(System.currentTimeMillis() + anInteger() * 60L * 1000)
-                                        NSUpload.uploadOpenAPSOffline(anInteger() * 60.toDouble())
+                                        LoopPlugin.getPlugin().createOfflineEvent(anInteger() * 60)
                                         send(EventRefreshOverview("SMS_LOOP_SUSPENDED"))
                                         val replyText = MainApp.gs(R.string.smscommunicator_loopsuspended) + " " +
                                                 MainApp.gs(if (result.success) R.string.smscommunicator_tempbasalcanceled else R.string.smscommunicator_tempbasalcancelfailed)

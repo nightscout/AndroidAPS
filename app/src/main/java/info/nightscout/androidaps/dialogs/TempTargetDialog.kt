@@ -114,11 +114,11 @@ class TempTargetDialog : DialogFragmentWithDate() {
         val reason = overview_temptarget_reason.selectedItem.toString()
         val unitResId = if (ProfileFunctions.getSystemUnits() == Constants.MGDL) R.string.mgdl else R.string.mmol
         val target = overview_temptarget_temptarget.value
-        val duration = overview_temptarget_duration.value
-        if (target != 0.0 && duration != 0.0) {
+        val duration = overview_temptarget_duration.value.toInt()
+        if (target != 0.0 && duration != 0) {
             actions.add(MainApp.gs(R.string.reason) + ": " + reason)
             actions.add(MainApp.gs(R.string.nsprofileview_target_label) + ": " + Profile.toCurrentUnitsString(target) + " " + MainApp.gs(unitResId))
-            actions.add(MainApp.gs(R.string.duration) + ": " + MainApp.gs(R.string.format_hours, duration))
+            actions.add(MainApp.gs(R.string.duration) + ": " + MainApp.gs(R.string.format_mins, duration))
         } else {
             actions.add(MainApp.gs(R.string.stoptemptarget))
         }
@@ -127,7 +127,8 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, MainApp.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
-                if (target == 0.0 || duration == 0.0) {
+                log.debug("USER ENTRY: TEMP TARGET $target duration: $duration")
+                if (target == 0.0 || duration == 0) {
                     val tempTarget = TempTarget()
                         .date(eventTime)
                         .duration(0)
@@ -144,7 +145,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                         .high(Profile.toMgdl(target, ProfileFunctions.getSystemUnits()))
                     TreatmentsPlugin.getPlugin().addToHistoryTempTarget(tempTarget)
                 }
-                if (duration == 10.0) SP.putBoolean(R.string.key_objectiveusetemptarget, true)
+                if (duration == 10) SP.putBoolean(R.string.key_objectiveusetemptarget, true)
             })
         }
         return true

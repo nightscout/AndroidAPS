@@ -528,6 +528,12 @@ public class MedtronicHistoryData {
             if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
             data.put("created_at", DateUtil.toISOString(date));
             data.put("eventType", event);
+            CareportalEvent careportalEvent = new CareportalEvent();
+            careportalEvent.date = date;
+            careportalEvent.source = Source.USER;
+            careportalEvent.eventType = event;
+            careportalEvent.json = data.toString();
+            MainApp.getDbHelper().createOrUpdate(careportalEvent);
             NSUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             LOG.error("Unhandled exception", e);

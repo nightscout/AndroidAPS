@@ -31,7 +31,7 @@ object RandomBgPlugin : PluginBase(PluginDescription()
     private val loopHandler = Handler()
     private lateinit var refreshLoop: Runnable
 
-    const val interval = 5L // minutes
+    const val interval = 1L // minutes
 
     init {
         refreshLoop = Runnable {
@@ -55,7 +55,7 @@ object RandomBgPlugin : PluginBase(PluginDescription()
     }
 
     override fun specialEnableCondition(): Boolean {
-        return VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP) && (MainApp.engineeringMode || isRunningTest())
+        return isRunningTest() || VirtualPumpPlugin.getPlugin().isEnabled(PluginType.PUMP) && MainApp.engineeringMode
     }
 
     override fun handleNewData(intent: Intent) {
@@ -65,7 +65,7 @@ object RandomBgPlugin : PluginBase(PluginDescription()
 
         val cal = GregorianCalendar()
         val currentMinute = cal.get(Calendar.MINUTE) + (cal.get(Calendar.HOUR_OF_DAY) % 2) * 60
-        val bgMgdl = min + (max - min) * sin(currentMinute / 120.0 * 2 * PI)
+        val bgMgdl = min + (max - min) + (max - min) * sin(currentMinute / 120.0 * 2 * PI)
 
         val bgReading = BgReading()
         bgReading.value = bgMgdl

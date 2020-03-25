@@ -63,6 +63,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, MainApp.gs(R.string.extended_bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
+                log.debug("USER ENTRY: EXTENDED BOLUS $insulinAfterConstraint duration: $durationInMinutes")
                 ConfigBuilderPlugin.getPlugin().commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
                     override fun run() {
                         if (!result.success) {

@@ -1109,6 +1109,7 @@
     <string name="startobjective">Start your first objective</string>
     <string name="permission">Permission</string>
     <string name="askforpermission">Ask for permission</string>
+    <string name="needsystemwindowpermission">Application needs system window permission for notifications</string>
     <string name="needlocationpermission">Application needs location permission for BT scan</string>
     <string name="needstoragepermission">Application needs storage permission to be able store log files</string>
     <string name="request">Request</string>
@@ -1707,5 +1708,10 @@
     <string name="phonechecker">\"PhoneChecker\"</string>
     <string name="chartmenu">Chart menu</string>
     <string name="sensitivity_short">AS</string>
+    <string name="loop_smbrequest_time_label">SMB request time</string>
+    <string name="loop_smbexecution_time_label">SMB execution time</string>
+    <string name="loop_tbrrequest_time_label">Temp basal request time</string>
+    <string name="loop_tbrexecution_time_label">Temp basal execution time</string>
+    <string name="insight_alert_notification_channel">Insight Pump Alerts</string>
 
 </resources>

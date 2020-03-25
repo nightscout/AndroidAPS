@@ -502,8 +502,8 @@ public class ActionStringHandler {
                 if (LoopPlugin.lastRun.lastAPSRun != null)
                     ret += "\nLast Run: " + DateUtil.timeString(LoopPlugin.lastRun.lastAPSRun);
 
-                if (LoopPlugin.lastRun.lastEnact != null)
-                    ret += "\nLast Enact: " + DateUtil.timeString(LoopPlugin.lastRun.lastEnact);
+                if (LoopPlugin.lastRun.lastTBREnact != 0)
+                    ret += "\nLast Enact: " + DateUtil.timeString(LoopPlugin.lastRun.lastTBREnact);
 
             }
 

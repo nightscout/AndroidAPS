@@ -69,6 +69,12 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
     public void attachBaseContext(Context newBase) {
         super.attachBaseContext(LocaleHelper.INSTANCE.wrap(newBase));
     }
