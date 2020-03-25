@@ -34,6 +34,8 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -48,6 +50,8 @@ public class DetermineBasalAdapterSMBJS {
     @Inject ResourceHelper resourceHelper;
     @Inject ProfileFunction profileFunction;
     @Inject TreatmentsPlugin treatmentsPlugin;
+    @Inject ActivePluginProvider activePluginProvider;
+
 
     private ScriptReader mScriptReader;
     private JSONObject mProfile;
@@ -233,7 +237,7 @@ public class DetermineBasalAdapterSMBJS {
     ) throws JSONException {
 
         String units = profile.getUnits();
-        Double pumpbolusstep = ConfigBuilderPlugin.getPlugin().getActivePump().getPumpDescription().bolusStep;
+        Double pumpbolusstep = activePluginProvider.getActivePump().getPumpDescription().bolusStep;
         mProfile = new JSONObject();
 
         mProfile.put("max_iob", maxIob);
@@ -272,7 +276,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("enableUAM", uamAllowed);
         mProfile.put("A52_risk_enable", SMBDefaults.A52_risk_enable);
 
-        boolean smbEnabled = sp.getBoolean(MainApp.gs(R.string.key_use_smb), false);
+        boolean smbEnabled = sp.getBoolean(resourceHelper.gs(R.string.key_use_smb), false);
         mProfile.put("SMBInterval", sp.getInt("key_smbinterval", SMBDefaults.SMBInterval));
         mProfile.put("enableSMB_with_COB", smbEnabled && sp.getBoolean(R.string.key_enableSMB_with_COB, false));
         mProfile.put("enableSMB_with_temptarget", smbEnabled && sp.getBoolean(R.string.key_enableSMB_with_temptarget, false));
