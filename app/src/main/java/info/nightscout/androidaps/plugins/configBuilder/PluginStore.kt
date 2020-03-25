@@ -6,6 +6,7 @@ import info.nightscout.androidaps.logging.LTag
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.ArrayList
 
 @Singleton
 class PluginStore @Inject constructor(
@@ -26,8 +27,7 @@ class PluginStore @Inject constructor(
             return pluginStore!!
         }
     }
-
-    var plugins = ArrayList<PluginBase>()
+    lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
 
     private var activeBgSource: BgSourceInterface? = null
     private var activePump: PumpInterface? = null
@@ -39,11 +39,6 @@ class PluginStore @Inject constructor(
 
     fun loadDefaults() {
         verifySelectionInCategories()
-    }
-
-    fun add(pluginBase: PluginBase): ActivePluginProvider {
-        plugins.add(pluginBase)
-        return this
     }
 
     fun getDefaultPlugin(type: PluginType): PluginBase {
@@ -243,6 +238,6 @@ class PluginStore @Inject constructor(
     override fun getActiveTreatments(): TreatmentsInterface =
         activeTreatments ?: checkNotNull(activeTreatments) { "No treatments selected" }
 
-    override fun getPluginsList(): ArrayList<PluginBase> = plugins
+    override fun getPluginsList(): ArrayList<PluginBase> = ArrayList(plugins)
 
 }
