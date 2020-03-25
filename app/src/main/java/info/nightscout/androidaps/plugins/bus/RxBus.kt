@@ -5,8 +5,13 @@ import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 
-// Use object so we have a singleton instance
-object RxBus {
+class RxBus {
+
+    companion object {
+        @JvmStatic
+        @Deprecated("Get via Dagger. Will be removed once fully transitioned to Dagger")
+        var INSTANCE: RxBus = RxBus()//TODO: remove as soon as Dagger is fully set up
+    }
 
     private val publisher = PublishSubject.create<Event>()
 

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.general.tidepool.utils
 
 import info.nightscout.androidaps.logging.L
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.T
 import org.slf4j.LoggerFactory
@@ -10,7 +11,7 @@ object RateLimit {
 
     private val rateLimits = HashMap<String, Long>()
 
-    private val log = LoggerFactory.getLogger(L.TIDEPOOL)
+    private val log = StacktraceLoggerWrapper.getLogger(L.TIDEPOOL)
 
     // return true if below rate limit
     @Synchronized

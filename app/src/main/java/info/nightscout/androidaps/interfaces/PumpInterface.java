@@ -1,8 +1,11 @@
 package info.nightscout.androidaps.interfaces;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
@@ -40,6 +43,7 @@ public interface PumpInterface {
     void getPumpStatus();
 
     // Upload to pump new basal profile
+    @NotNull
     PumpEnactResult setNewBasalProfile(Profile profile);
 
     boolean isThisProfileSet(Profile profile);
@@ -52,43 +56,57 @@ public interface PumpInterface {
 
     int getBatteryLevel();  // in percent as integer
 
+    @NotNull
     PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo);
 
     void stopBolusDelivering();
 
+    @NotNull
     PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, Profile profile, boolean enforceNew);
 
+    @NotNull
     PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes, Profile profile, boolean enforceNew);
 
+    @NotNull
     PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes);
 
     //some pumps might set a very short temp close to 100% as cancelling a temp can be noisy
     //when the cancel request is requested by the user (forced), the pump should always do a real cancel
+    @NotNull
     PumpEnactResult cancelTempBasal(boolean enforceNew);
 
+    @NotNull
     PumpEnactResult cancelExtendedBolus();
 
     // Status to be passed to NS
+    @NotNull
     JSONObject getJSONStatus(Profile profile, String profileName);
 
+    @NotNull
     ManufacturerType manufacturer();
 
+    @NotNull
     PumpType model();
 
+    @NotNull
     String serialNumber();
 
     // Pump capabilities
+    @NotNull
     PumpDescription getPumpDescription();
 
     // Short info for SMS, Wear etc
+    @NotNull
     String shortStatus(boolean veryShort);
 
     boolean isFakingTempsByExtendedBoluses();
 
+    @NotNull
     PumpEnactResult loadTDDs();
 
     boolean canHandleDST();
 
+    @Nullable
     List<CustomAction> getCustomActions();
 
     void executeCustomAction(CustomActionType customActionType);
@@ -98,5 +116,4 @@ public interface PumpInterface {
      * example update clock on pump).
      */
     void timeDateOrTimeZoneChanged();
-
 }

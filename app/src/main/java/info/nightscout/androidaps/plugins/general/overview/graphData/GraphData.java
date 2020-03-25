@@ -5,19 +5,18 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.Series;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -28,12 +27,14 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.AreaGraphSeries;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DoubleDataPoint;
@@ -47,31 +48,38 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.BasalData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by mike on 18.10.2017.
  */
 
 public class GraphData {
-    private static Logger log = LoggerFactory.getLogger(L.OVERVIEW);
+
+    @Inject AAPSLogger aapsLogger;
+    @Inject ProfileFunction profileFunction;
+    @Inject ResourceHelper resourceHelper;
+    @Inject ActivePluginProvider activePlugin;
 
     private GraphView graph;
     public double maxY = Double.MIN_VALUE;
-    public double minY = Double.MAX_VALUE;
+    private double minY = Double.MAX_VALUE;
     private List<BgReading> bgReadingsArray;
     private String units;
     private List<Series> series = new ArrayList<>();
+    private TreatmentsInterface treatmentsPlugin;
 
-    private IobCobCalculatorPlugin iobCobCalculatorPlugin;
 
-    public GraphData(GraphView graph, IobCobCalculatorPlugin iobCobCalculatorPlugin) {
-        units = ProfileFunctions.getSystemUnits();
+    private IobCobCalculatorPlugin iobCobCalculatorPlugin; // Cannot be injected: HistoryBrowser
+
+    public GraphData(HasAndroidInjector injector, GraphView graph, IobCobCalculatorPlugin iobCobCalculatorPlugin) {
+        injector.androidInjector().inject(this);
+        units = profileFunction.getUnits();
         this.graph = graph;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
+        treatmentsPlugin = activePlugin.getActiveTreatments();
     }
 
     public void addBgReadings(long fromTime, long toTime, double lowLine, double highLine, List<BgReading> predictions) {
@@ -81,8 +89,7 @@ public class GraphData {
         List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
 
         if (bgReadingsArray == null || bgReadingsArray.size() == 0) {
-            if (L.isEnabled(L.OVERVIEW))
-                log.debug("No BG data.");
+            aapsLogger.debug(LTag.OVERVIEW, "No BG data.");
             maxY = 10;
             minY = 0;
             return;
@@ -128,7 +135,7 @@ public class GraphData {
         inRangeAreaSeries = new AreaGraphSeries<>(inRangeAreaDataPoints);
         inRangeAreaSeries.setColor(0);
         inRangeAreaSeries.setDrawBackground(true);
-        inRangeAreaSeries.setBackgroundColor(MainApp.gc(R.color.inrangebackground));
+        inRangeAreaSeries.setBackgroundColor(resourceHelper.gc(R.color.inrangebackground));
 
         addSeries(inRangeAreaSeries);
     }
@@ -152,7 +159,7 @@ public class GraphData {
         double lastBaseBasal = 0;
         double lastTempBasal = 0;
         for (long time = fromTime; time < toTime; time += 60 * 1000L) {
-            Profile profile = ProfileFunctions.getInstance().getProfile(time);
+            Profile profile = profileFunction.getProfile(time);
             if (profile == null) continue;
             BasalData basalData = iobCobCalculatorPlugin.getBasalData(profile, time);
             double baseBasalValue = basalData.basal;
@@ -206,14 +213,14 @@ public class GraphData {
         baseBasal = baseBasalArray.toArray(baseBasal);
         baseBasalsSeries = new LineGraphSeries<>(baseBasal);
         baseBasalsSeries.setDrawBackground(true);
-        baseBasalsSeries.setBackgroundColor(MainApp.gc(R.color.basebasal));
+        baseBasalsSeries.setBackgroundColor(resourceHelper.gc(R.color.basebasal));
         baseBasalsSeries.setThickness(0);
 
         ScaledDataPoint[] tempBasal = new ScaledDataPoint[tempBasalArray.size()];
         tempBasal = tempBasalArray.toArray(tempBasal);
         tempBasalsSeries = new LineGraphSeries<>(tempBasal);
         tempBasalsSeries.setDrawBackground(true);
-        tempBasalsSeries.setBackgroundColor(MainApp.gc(R.color.tempbasal));
+        tempBasalsSeries.setBackgroundColor(resourceHelper.gc(R.color.tempbasal));
         tempBasalsSeries.setThickness(0);
 
         ScaledDataPoint[] basalLine = new ScaledDataPoint[basalLineArray.size()];
@@ -221,9 +228,9 @@ public class GraphData {
         basalsLineSeries = new LineGraphSeries<>(basalLine);
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(MainApp.instance().getApplicationContext().getResources().getDisplayMetrics().scaledDensity * 2);
+        paint.setStrokeWidth(resourceHelper.getDisplayMetrics().scaledDensity * 2);
         paint.setPathEffect(new DashPathEffect(new float[]{2, 4}, 0));
-        paint.setColor(MainApp.gc(R.color.basal));
+        paint.setColor(resourceHelper.gc(R.color.basal));
         basalsLineSeries.setCustomPaint(paint);
 
         ScaledDataPoint[] absoluteBasalLine = new ScaledDataPoint[absoluteBasalLineArray.size()];
@@ -231,8 +238,8 @@ public class GraphData {
         absoluteBasalsLineSeries = new LineGraphSeries<>(absoluteBasalLine);
         Paint absolutePaint = new Paint();
         absolutePaint.setStyle(Paint.Style.STROKE);
-        absolutePaint.setStrokeWidth(MainApp.instance().getApplicationContext().getResources().getDisplayMetrics().scaledDensity * 2);
-        absolutePaint.setColor(MainApp.gc(R.color.basal));
+        absolutePaint.setStrokeWidth(resourceHelper.getDisplayMetrics().scaledDensity * 2);
+        absolutePaint.setColor(resourceHelper.gc(R.color.basal));
         absoluteBasalsLineSeries.setCustomPaint(absolutePaint);
 
         basalScale.setMultiplier(maxY * scale / maxBasalValueFound);
@@ -243,7 +250,7 @@ public class GraphData {
         addSeries(absoluteBasalsLineSeries);
     }
 
-    public void addTargetLine(long fromTime, long toTime, Profile profile) {
+    public void addTargetLine(long fromTime, long toTime, Profile profile, LoopPlugin.LastRun lastRun) {
         LineGraphSeries<DataPoint> targetsSeries;
 
         Scale targetsScale = new Scale();
@@ -252,8 +259,8 @@ public class GraphData {
         List<DataPoint> targetsSeriesArray = new ArrayList<>();
         double lastTarget = -1;
 
-        if (LoopPlugin.lastRun != null && LoopPlugin.lastRun.constraintsProcessed != null) {
-            APSResult apsResult = LoopPlugin.lastRun.constraintsProcessed;
+        if (lastRun != null && lastRun.constraintsProcessed != null) {
+            APSResult apsResult = lastRun.constraintsProcessed;
             long latestPredictionsTime = apsResult.getLatestPredictionsTime();
             if (latestPredictionsTime > toTime) {
                 toTime = latestPredictionsTime;
@@ -261,12 +268,12 @@ public class GraphData {
         }
 
         for (long time = fromTime; time < toTime; time += 5 * 60 * 1000L) {
-            TempTarget tt = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(time);
+            TempTarget tt = treatmentsPlugin.getTempTargetFromHistory(time);
             double value;
             if (tt == null) {
-                value = Profile.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2, ProfileFunctions.getSystemUnits());
+                value = Profile.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2, profileFunction.getUnits());
             } else {
-                value = Profile.fromMgdlToUnits(tt.target(), ProfileFunctions.getSystemUnits());
+                value = Profile.fromMgdlToUnits(tt.target(), profileFunction.getUnits());
             }
             if (lastTarget != value) {
                 if (lastTarget != -1)
@@ -281,7 +288,7 @@ public class GraphData {
         targets = targetsSeriesArray.toArray(targets);
         targetsSeries = new LineGraphSeries<>(targets);
         targetsSeries.setDrawBackground(false);
-        targetsSeries.setColor(MainApp.gc(R.color.tempTargetBackground));
+        targetsSeries.setColor(resourceHelper.gc(R.color.tempTargetBackground));
         targetsSeries.setThickness(2);
 
         addSeries(targetsSeries);
@@ -290,7 +297,7 @@ public class GraphData {
     public void addTreatments(long fromTime, long endTime) {
         List<DataPointWithLabelInterface> filteredTreatments = new ArrayList<>();
 
-        List<Treatment> treatments = TreatmentsPlugin.getPlugin().getTreatmentsFromHistory();
+        List<Treatment> treatments = treatmentsPlugin.getTreatmentsFromHistory();
 
         for (int tx = 0; tx < treatments.size(); tx++) {
             Treatment t = treatments.get(tx);
@@ -301,7 +308,7 @@ public class GraphData {
         }
 
         // ProfileSwitch
-        List<ProfileSwitch> profileSwitches = TreatmentsPlugin.getPlugin().getProfileSwitchesFromHistory().getList();
+        List<ProfileSwitch> profileSwitches = treatmentsPlugin.getProfileSwitchesFromHistory().getList();
 
         for (int tx = 0; tx < profileSwitches.size(); tx++) {
             DataPointWithLabelInterface t = profileSwitches.get(tx);
@@ -310,8 +317,8 @@ public class GraphData {
         }
 
         // Extended bolus
-        if (!ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses()) {
-            List<ExtendedBolus> extendedBoluses = TreatmentsPlugin.getPlugin().getExtendedBolusesFromHistory().getList();
+        if (!activePlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
+            List<ExtendedBolus> extendedBoluses = treatmentsPlugin.getExtendedBolusesFromHistory().getList();
 
             for (int tx = 0; tx < extendedBoluses.size(); tx++) {
                 DataPointWithLabelInterface t = extendedBoluses.get(tx);
@@ -361,8 +368,8 @@ public class GraphData {
         double maxIAValue = 0;
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            Profile profile = ProfileFunctions.getInstance().getProfile(time);
-            double act = 0d;
+            Profile profile = profileFunction.getProfile(time);
+            double act;
             if (profile == null) continue;
             total = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile);
             act = total.activity;
@@ -371,7 +378,7 @@ public class GraphData {
                 actArrayHist.add(new ScaledDataPoint(time, act, actScale));
             else
                 actArrayPred.add(new ScaledDataPoint(time, act, actScale));
-            
+
             maxIAValue = Math.max(maxIAValue, Math.abs(act));
         }
 
@@ -379,7 +386,7 @@ public class GraphData {
         actData = actArrayHist.toArray(actData);
         actSeriesHist = new FixedLineGraphSeries<>(actData);
         actSeriesHist.setDrawBackground(false);
-        actSeriesHist.setColor(MainApp.gc(R.color.activity));
+        actSeriesHist.setColor(resourceHelper.gc(R.color.activity));
         actSeriesHist.setThickness(3);
 
         addSeries(actSeriesHist);
@@ -392,7 +399,7 @@ public class GraphData {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(3);
         paint.setPathEffect(new DashPathEffect(new float[]{4, 4}, 0));
-        paint.setColor(MainApp.gc(R.color.activity));
+        paint.setColor(resourceHelper.gc(R.color.activity));
         actSeriesPred.setCustomPaint(paint);
 
         if (useForScale) {
@@ -413,7 +420,7 @@ public class GraphData {
         Scale iobScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
-            Profile profile = ProfileFunctions.getInstance().getProfile(time);
+            Profile profile = profileFunction.getProfile(time);
             double iob = 0d;
             if (profile != null)
                 iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time, profile).iob;
@@ -430,23 +437,23 @@ public class GraphData {
         iobData = iobArray.toArray(iobData);
         iobSeries = new FixedLineGraphSeries<>(iobData);
         iobSeries.setDrawBackground(true);
-        iobSeries.setBackgroundColor(0x80FFFFFF & MainApp.gc(R.color.iob)); //50%
-        iobSeries.setColor(MainApp.gc(R.color.iob));
+        iobSeries.setBackgroundColor(0x80FFFFFF & resourceHelper.gc(R.color.iob)); //50%
+        iobSeries.setColor(resourceHelper.gc(R.color.iob));
         iobSeries.setThickness(3);
 
         if (showPrediction) {
             AutosensResult lastAutosensResult;
-            AutosensData autosensData = IobCobCalculatorPlugin.getPlugin().getLastAutosensDataSynchronized("GraphData");
+            AutosensData autosensData = iobCobCalculatorPlugin.getLastAutosensDataSynchronized("GraphData");
             if (autosensData == null)
                 lastAutosensResult = new AutosensResult();
             else
                 lastAutosensResult = autosensData.autosensResult;
-            boolean isTempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory(System.currentTimeMillis()) != null;
+            boolean isTempTarget = treatmentsPlugin.getTempTargetFromHistory(System.currentTimeMillis()) != null;
 
             List<DataPointWithLabelInterface> iobPred = new ArrayList<>();
-            IobTotal[] iobPredArray = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
+            IobTotal[] iobPredArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
             for (IobTotal i : iobPredArray) {
-                iobPred.add(i.setColor(MainApp.gc(R.color.iobPredAS)));
+                iobPred.add(i.setColor(resourceHelper.gc(R.color.iobPredAS)));
                 maxIobValueFound = Math.max(maxIobValueFound, Math.abs(i.iob));
             }
             DataPointWithLabelInterface[] iobp = new DataPointWithLabelInterface[iobPred.size()];
@@ -455,19 +462,17 @@ public class GraphData {
 
 
             List<DataPointWithLabelInterface> iobPred2 = new ArrayList<>();
-            IobTotal[] iobPredArray2 = IobCobCalculatorPlugin.getPlugin().calculateIobArrayForSMB(new AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
+            IobTotal[] iobPredArray2 = iobCobCalculatorPlugin.calculateIobArrayForSMB(new AutosensResult(), SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
             for (IobTotal i : iobPredArray2) {
-                iobPred2.add(i.setColor(MainApp.gc(R.color.iobPred)));
+                iobPred2.add(i.setColor(resourceHelper.gc(R.color.iobPred)));
                 maxIobValueFound = Math.max(maxIobValueFound, Math.abs(i.iob));
             }
             DataPointWithLabelInterface[] iobp2 = new DataPointWithLabelInterface[iobPred2.size()];
             iobp2 = iobPred2.toArray(iobp2);
             addSeries(new PointsWithLabelGraphSeries<>(iobp2));
 
-            if (L.isEnabled(L.AUTOSENS)) {
-                log.debug("IOB pred for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + IobCobCalculatorPlugin.getPlugin().iobArrayToString(iobPredArray));
-                log.debug("IOB pred for AS=" + DecimalFormatter.to2Decimal(1) + ": " + IobCobCalculatorPlugin.getPlugin().iobArrayToString(iobPredArray2));
-            }
+            aapsLogger.debug(LTag.AUTOSENS, "IOB pred for AS=" + DecimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredArray));
+            aapsLogger.debug(LTag.AUTOSENS, "IOB pred for AS=" + DecimalFormatter.to2Decimal(1) + ": " + iobCobCalculatorPlugin.iobArrayToString(iobPredArray2));
         }
 
         if (useForScale) {
@@ -513,8 +518,8 @@ public class GraphData {
         cobData = cobArray.toArray(cobData);
         cobSeries = new FixedLineGraphSeries<>(cobData);
         cobSeries.setDrawBackground(true);
-        cobSeries.setBackgroundColor(0x80FFFFFF & MainApp.gc(R.color.cob)); //50%
-        cobSeries.setColor(MainApp.gc(R.color.cob));
+        cobSeries.setBackgroundColor(0x80FFFFFF & resourceHelper.gc(R.color.cob)); //50%
+        cobSeries.setColor(resourceHelper.gc(R.color.cob));
         cobSeries.setThickness(3);
 
         if (useForScale) {
@@ -536,7 +541,7 @@ public class GraphData {
         class DeviationDataPoint extends ScaledDataPoint {
             public int color;
 
-            public DeviationDataPoint(double x, double y, int color, Scale scale) {
+            private DeviationDataPoint(double x, double y, int color, Scale scale) {
                 super(x, y, scale);
                 this.color = color;
             }
@@ -550,18 +555,18 @@ public class GraphData {
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
             AutosensData autosensData = iobCobCalculatorPlugin.getAutosensData(time);
             if (autosensData != null) {
-                int color = MainApp.gc(R.color.deviationblack); // "="
+                int color = resourceHelper.gc(R.color.deviationblack); // "="
                 if (autosensData.type.equals("") || autosensData.type.equals("non-meal")) {
                     if (autosensData.pastSensitivity.equals("C"))
-                        color = MainApp.gc(R.color.deviationgrey);
+                        color = resourceHelper.gc(R.color.deviationgrey);
                     if (autosensData.pastSensitivity.equals("+"))
-                        color = MainApp.gc(R.color.deviationgreen);
+                        color = resourceHelper.gc(R.color.deviationgreen);
                     if (autosensData.pastSensitivity.equals("-"))
-                        color = MainApp.gc(R.color.deviationred);
+                        color = resourceHelper.gc(R.color.deviationred);
                 } else if (autosensData.type.equals("uam")) {
-                    color = MainApp.gc(R.color.uam);
+                    color = resourceHelper.gc(R.color.uam);
                 } else if (autosensData.type.equals("csf")) {
-                    color = MainApp.gc(R.color.deviationgrey);
+                    color = resourceHelper.gc(R.color.deviationgrey);
                 }
                 devArray.add(new DeviationDataPoint(time, autosensData.deviation, color, devScale));
                 maxDevValueFound = Math.max(maxDevValueFound, Math.abs(autosensData.deviation));
@@ -572,12 +577,7 @@ public class GraphData {
         DeviationDataPoint[] devData = new DeviationDataPoint[devArray.size()];
         devData = devArray.toArray(devData);
         devSeries = new BarGraphSeries<>(devData);
-        devSeries.setValueDependentColor(new ValueDependentColor<DeviationDataPoint>() {
-            @Override
-            public int get(DeviationDataPoint data) {
-                return data.color;
-            }
-        });
+        devSeries.setValueDependentColor(data -> data.color);
 
         if (useForScale) {
             maxY = maxDevValueFound;
@@ -593,8 +593,8 @@ public class GraphData {
     public void addRatio(long fromTime, long toTime, boolean useForScale, double scale) {
         LineGraphSeries<ScaledDataPoint> ratioSeries;
         List<ScaledDataPoint> ratioArray = new ArrayList<>();
-        Double maxRatioValueFound = Double.MIN_VALUE;
-        Double minRatioValueFound = Double.MAX_VALUE;
+        double maxRatioValueFound = Double.MIN_VALUE;
+        double minRatioValueFound = Double.MAX_VALUE;
         Scale ratioScale = new Scale();
 
         for (long time = fromTime; time <= toTime; time += 5 * 60 * 1000L) {
@@ -610,7 +610,7 @@ public class GraphData {
         ScaledDataPoint[] ratioData = new ScaledDataPoint[ratioArray.size()];
         ratioData = ratioArray.toArray(ratioData);
         ratioSeries = new LineGraphSeries<>(ratioData);
-        ratioSeries.setColor(MainApp.gc(R.color.ratio));
+        ratioSeries.setColor(resourceHelper.gc(R.color.ratio));
         ratioSeries.setThickness(3);
 
         if (useForScale) {
@@ -629,8 +629,8 @@ public class GraphData {
         LineGraphSeries<ScaledDataPoint> dsMinSeries;
         List<ScaledDataPoint> dsMaxArray = new ArrayList<>();
         List<ScaledDataPoint> dsMinArray = new ArrayList<>();
-        Double maxFromMaxValueFound = 0d;
-        Double maxFromMinValueFound = 0d;
+        double maxFromMaxValueFound = 0d;
+        double maxFromMinValueFound = 0d;
         Scale dsMaxScale = new Scale();
         Scale dsMinScale = new Scale();
 
@@ -648,13 +648,13 @@ public class GraphData {
         ScaledDataPoint[] ratioMaxData = new ScaledDataPoint[dsMaxArray.size()];
         ratioMaxData = dsMaxArray.toArray(ratioMaxData);
         dsMaxSeries = new LineGraphSeries<>(ratioMaxData);
-        dsMaxSeries.setColor(MainApp.gc(R.color.devslopepos));
+        dsMaxSeries.setColor(resourceHelper.gc(R.color.devslopepos));
         dsMaxSeries.setThickness(3);
 
         ScaledDataPoint[] ratioMinData = new ScaledDataPoint[dsMinArray.size()];
         ratioMinData = dsMinArray.toArray(ratioMinData);
         dsMinSeries = new LineGraphSeries<>(ratioMinData);
-        dsMinSeries.setColor(MainApp.gc(R.color.devslopeneg));
+        dsMinSeries.setColor(resourceHelper.gc(R.color.devslopeneg));
         dsMinSeries.setThickness(3);
 
         if (useForScale) {

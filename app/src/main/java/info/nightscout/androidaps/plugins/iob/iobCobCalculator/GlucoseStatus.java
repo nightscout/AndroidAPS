@@ -2,14 +2,15 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator;
 
 import androidx.annotation.Nullable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
@@ -19,7 +20,11 @@ import info.nightscout.androidaps.utils.Round;
  */
 
 public class GlucoseStatus {
-    private static Logger log = LoggerFactory.getLogger(GlucoseStatus.class);
+    @Inject public AAPSLogger aapsLogger;
+    @Inject public IobCobCalculatorPlugin iobCobCalculatorPlugin;
+
+    private HasAndroidInjector injector;
+
     public double glucose = 0d;
     public double noise = 0d;
     public double delta = 0d;
@@ -37,7 +42,9 @@ public class GlucoseStatus {
                 "Long avg. delta: " + DecimalFormatter.to2Decimal(long_avgdelta) + " mg/dl";
     }
 
-    public GlucoseStatus() {
+    public GlucoseStatus(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
+        this.injector = injector;
     }
 
     public GlucoseStatus round() {
@@ -52,36 +59,33 @@ public class GlucoseStatus {
 
 
     @Nullable
-    public static GlucoseStatus getGlucoseStatusData() {
+    public GlucoseStatus getGlucoseStatusData() {
         return getGlucoseStatusData(false);
     }
 
     @Nullable
-    public static GlucoseStatus getGlucoseStatusData(boolean allowOldData) {
+    public GlucoseStatus getGlucoseStatusData(boolean allowOldData) {
         // load 45min
         //long fromtime = DateUtil.now() - 60 * 1000L * 45;
         //List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
 
-        synchronized (IobCobCalculatorPlugin.getPlugin().getDataLock()) {
+        synchronized (iobCobCalculatorPlugin.getDataLock()) {
 
-            List<BgReading> data = IobCobCalculatorPlugin.getPlugin().getBgReadings();
+            List<BgReading> data = iobCobCalculatorPlugin.getBgReadings();
 
             if (data == null) {
-                if (L.isEnabled(L.GLUCOSE))
-                    log.debug("data=null");
+                aapsLogger.debug(LTag.GLUCOSE, "data=null");
                 return null;
             }
 
             int sizeRecords = data.size();
             if (sizeRecords == 0) {
-                if (L.isEnabled(L.GLUCOSE))
-                    log.debug("sizeRecords==0");
+                aapsLogger.debug(LTag.GLUCOSE, "sizeRecords==0");
                 return null;
             }
 
             if (data.get(0).date < DateUtil.now() - 7 * 60 * 1000L && !allowOldData) {
-                if (L.isEnabled(L.GLUCOSE))
-                    log.debug("olddata");
+                aapsLogger.debug(LTag.GLUCOSE, "olddata");
                 return null;
             }
 
@@ -90,7 +94,7 @@ public class GlucoseStatus {
             double change;
 
             if (sizeRecords == 1) {
-                GlucoseStatus status = new GlucoseStatus();
+                GlucoseStatus status = new GlucoseStatus(injector);
                 status.glucose = now.value;
                 status.noise = 0d;
                 status.short_avgdelta = 0d;
@@ -98,8 +102,7 @@ public class GlucoseStatus {
                 status.long_avgdelta = 0d;
                 status.avgdelta = 0d; // for OpenAPS MA
                 status.date = now_date;
-                if (L.isEnabled(L.GLUCOSE))
-                    log.debug("sizeRecords==1");
+                aapsLogger.debug(LTag.GLUCOSE, "sizeRecords==1");
                 return status.round();
             }
 
@@ -123,8 +126,7 @@ public class GlucoseStatus {
                     change = now.value - then.value;
                     avgdelta = change / minutesago * 5;
 
-                    if (L.isEnabled(L.GLUCOSE))
-                        log.debug(then.toString() + " minutesago=" + minutesago + " avgdelta=" + avgdelta);
+                    aapsLogger.debug(LTag.GLUCOSE, then.toString() + " minutesago=" + minutesago + " avgdelta=" + avgdelta);
 
                     // use the average of all data points in the last 2.5m for all further "now" calculations
                     if (0 < minutesago && minutesago < 2.5) {
@@ -149,7 +151,7 @@ public class GlucoseStatus {
                 }
             }
 
-            GlucoseStatus status = new GlucoseStatus();
+            GlucoseStatus status = new GlucoseStatus(injector);
             status.glucose = now.value;
             status.date = now_date;
             status.noise = 0d; //for now set to nothing as not all CGMs report noise
@@ -165,8 +167,7 @@ public class GlucoseStatus {
             status.long_avgdelta = average(long_deltas);
             status.avgdelta = status.short_avgdelta; // for OpenAPS MA
 
-            if (L.isEnabled(L.GLUCOSE))
-                log.debug(status.log());
+            aapsLogger.debug(LTag.GLUCOSE, status.log());
             return status.round();
         }
     }

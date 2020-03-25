@@ -29,13 +29,14 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
  * Created by mike on 29.12.2016.
  */
 
 public class TimeListEdit {
-    private static Logger log = LoggerFactory.getLogger(TimeListEdit.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(TimeListEdit.class);
 
     private final int ONEHOURINSECONDS = 60 * 60;
 

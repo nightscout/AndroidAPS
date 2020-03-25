@@ -17,7 +17,7 @@ public class ChargingStateReceiver extends BroadcastReceiver {
         EventChargingState event = grabChargingState(context);
 
         if (event != null)
-            RxBus.INSTANCE.send(event);
+            RxBus.Companion.getINSTANCE().send(event);
         lastEvent = event;
     }
 

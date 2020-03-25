@@ -25,13 +25,14 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
  * Created by mike on 28.06.2016.
  */
 public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         View.OnTouchListener, View.OnClickListener {
-    private static Logger log = LoggerFactory.getLogger(NumberPicker.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(NumberPicker.class);
 
     public interface OnValueChangedListener {
         void onValueChanged(double value);

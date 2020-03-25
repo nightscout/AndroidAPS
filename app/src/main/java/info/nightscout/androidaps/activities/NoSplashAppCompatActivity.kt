@@ -2,11 +2,13 @@ package info.nightscout.androidaps.activities
 
 import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.LocaleHelper
 
-open class NoSplashAppCompatActivity : AppCompatActivity() {
+@Suppress("registered")
+open class NoSplashAppCompatActivity : DaggerAppCompatActivity() {
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme_NoActionBar)
         super.onCreate(savedInstanceState)

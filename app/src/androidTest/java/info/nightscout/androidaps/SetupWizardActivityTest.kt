@@ -29,7 +29,7 @@ import info.nightscout.androidaps.plugins.source.RandomBgPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.SP
-import info.nightscout.androidaps.utils.isRunningTest
+import info.nightscout.androidaps.utils.extensions.isRunningTest
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.Description
 import org.hamcrest.Matcher

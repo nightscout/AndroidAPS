@@ -19,7 +19,9 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -40,6 +42,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService;
 import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by andy on 5/9/18.
@@ -47,7 +50,7 @@ import info.nightscout.androidaps.utils.OKDialog;
 
 public class MedtronicUtil extends RileyLinkUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
     static int ENVELOPE_SIZE = 4; // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
     static int CRC_SIZE = 1;
     private static boolean lowLevelDebug = true;
@@ -226,26 +229,26 @@ public class MedtronicUtil extends RileyLinkUtil {
     }
 
 
-    public static void sendNotification(MedtronicNotificationType notificationType) {
+    public static void sendNotification(MedtronicNotificationType notificationType, ResourceHelper resourceHelper, RxBusWrapper rxBus) {
         Notification notification = new Notification( //
                 notificationType.getNotificationType(), //
-                MainApp.gs(notificationType.getResourceId()), //
+                resourceHelper.gs(notificationType.getResourceId()), //
                 notificationType.getNotificationUrgency());
-        RxBus.INSTANCE.send(new EventNewNotification(notification));
+        rxBus.send(new EventNewNotification(notification));
     }
 
 
-    public static void sendNotification(MedtronicNotificationType notificationType, Object... parameters) {
+    public static void sendNotification(MedtronicNotificationType notificationType, ResourceHelper resourceHelper, RxBusWrapper rxBus, Object... parameters) {
         Notification notification = new Notification( //
                 notificationType.getNotificationType(), //
-                MainApp.gs(notificationType.getResourceId(), parameters), //
+                resourceHelper.gs(notificationType.getResourceId(), parameters), //
                 notificationType.getNotificationUrgency());
-        RxBus.INSTANCE.send(new EventNewNotification(notification));
+        rxBus.send(new EventNewNotification(notification));
     }
 
 
-    public static void dismissNotification(MedtronicNotificationType notificationType) {
-        RxBus.INSTANCE.send(new EventDismissNotification(notificationType.getNotificationType()));
+    public static void dismissNotification(MedtronicNotificationType notificationType, RxBusWrapper rxBus) {
+        rxBus.send(new EventDismissNotification(notificationType.getNotificationType()));
     }
 
 
@@ -420,7 +423,7 @@ public class MedtronicUtil extends RileyLinkUtil {
 
         historyRileyLink.add(new RLHistoryItem(pumpDeviceState, RileyLinkTargetDevice.MedtronicPump));
 
-        RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
+        RxBus.Companion.getINSTANCE().send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
     }
 
 
@@ -489,7 +492,7 @@ public class MedtronicUtil extends RileyLinkUtil {
             setCurrentCommand(currentCommand);
         }
 
-        RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
+        RxBus.Companion.getINSTANCE().send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
     }
 
 

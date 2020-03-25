@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * The Class DateUtil. A simple wrapper around SimpleDateFormat to ease the handling of iso date string &lt;-&gt; date obj
@@ -175,9 +176,9 @@ public class DateUtil {
         return dateString(mills) + " " + timeFullString(mills);
     }
 
-    public static String minAgo(long time) {
+    public static String minAgo(ResourceHelper resourceHelper, long time) {
         int mins = (int) ((now() - time) / 1000 / 60);
-        return MainApp.gs(R.string.minago, mins);
+        return resourceHelper.gs(R.string.minago, mins);
     }
 
     public static String minAgoShort(long time) {
@@ -185,9 +186,9 @@ public class DateUtil {
         return (mins > 0 ? "+" : "") + mins.toString();
     }
 
-    public static String hourAgo(long time) {
+    public static String hourAgo(long time, ResourceHelper resourceHelper) {
         double hours = (now() - time) / 1000d / 60 / 60;
-        return MainApp.gs(R.string.hoursago, hours);
+        return resourceHelper.gs(R.string.hoursago, hours);
     }
 
     private static LongSparseArray<String> timeStrings = new LongSparseArray<>();
@@ -202,19 +203,19 @@ public class DateUtil {
     }
 
 
-    public static String timeFrameString(long timeInMillis) {
+    public static String timeFrameString(long timeInMillis, ResourceHelper resourceHelper) {
         long remainingTimeMinutes = timeInMillis / (1000 * 60);
         long remainingTimeHours = remainingTimeMinutes / 60;
         remainingTimeMinutes = remainingTimeMinutes % 60;
-        return "(" + ((remainingTimeHours > 0) ? (remainingTimeHours + MainApp.gs(R.string.shorthour) + " ") : "") + remainingTimeMinutes + "')";
+        return "(" + ((remainingTimeHours > 0) ? (remainingTimeHours + resourceHelper.gs(R.string.shorthour) + " ") : "") + remainingTimeMinutes + "')";
     }
 
-    public static String sinceString(long timestamp) {
-        return timeFrameString(System.currentTimeMillis() - timestamp);
+    public static String sinceString(long timestamp, ResourceHelper resourceHelper) {
+        return timeFrameString(System.currentTimeMillis() - timestamp, resourceHelper);
     }
 
-    public static String untilString(long timestamp) {
-        return timeFrameString(timestamp - System.currentTimeMillis());
+    public static String untilString(long timestamp, ResourceHelper resourceHelper) {
+        return timeFrameString(timestamp - System.currentTimeMillis(), resourceHelper);
     }
 
     public static long now() {
@@ -247,26 +248,26 @@ public class DateUtil {
         return TimeZone.getDefault().getOffset(timestamp) / 60000;
     }
 
-    public static String niceTimeScalar(long t) {
-        String unit = MainApp.gs(R.string.unit_second);
+    public static String niceTimeScalar(long t, ResourceHelper resourceHelper) {
+        String unit = resourceHelper.gs(R.string.unit_second);
         t = t / 1000;
-        if (t != 1) unit = MainApp.gs(R.string.unit_seconds);
+        if (t != 1) unit = resourceHelper.gs(R.string.unit_seconds);
         if (t > 59) {
-            unit = MainApp.gs(R.string.unit_minute);
+            unit = resourceHelper.gs(R.string.unit_minute);
             t = t / 60;
-            if (t != 1) unit = MainApp.gs(R.string.unit_minutes);
+            if (t != 1) unit = resourceHelper.gs(R.string.unit_minutes);
             if (t > 59) {
-                unit = MainApp.gs(R.string.unit_hour);
+                unit = resourceHelper.gs(R.string.unit_hour);
                 t = t / 60;
-                if (t != 1) unit = MainApp.gs(R.string.unit_hours);
+                if (t != 1) unit = resourceHelper.gs(R.string.unit_hours);
                 if (t > 24) {
-                    unit = MainApp.gs(R.string.unit_day) + "\"";
+                    unit = resourceHelper.gs(R.string.unit_day) + "\"";
                     t = t / 24;
-                    if (t != 1) unit = MainApp.gs(R.string.unit_days) + "\"";
+                    if (t != 1) unit = resourceHelper.gs(R.string.unit_days) + "\"";
                     if (t > 28) {
-                        unit = MainApp.gs(R.string.unit_week) + "\"";
+                        unit = resourceHelper.gs(R.string.unit_week) + "\"";
                         t = t / 7;
-                        if (t != 1) unit = MainApp.gs(R.string.unit_weeks) + "\"";
+                        if (t != 1) unit = resourceHelper.gs(R.string.unit_weeks) + "\"";
                     }
                 }
             }

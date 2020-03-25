@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Environment;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -27,6 +27,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
@@ -37,7 +38,7 @@ import info.nightscout.androidaps.utils.ToastUtils;
  */
 
 public class ImportExportPrefs {
-    private static Logger log = LoggerFactory.getLogger(L.CORE);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.CORE);
     private static File path = new File(Environment.getExternalStorageDirectory().toString());
     static public final File file = new File(path, MainApp.gs(R.string.app_name) + "Preferences");
 
@@ -110,7 +111,7 @@ public class ImportExportPrefs {
                 SP.putBoolean(R.string.key_setupwizard_processed, true);
                 OKDialog.show(context, MainApp.gs(R.string.setting_imported), MainApp.gs(R.string.restartingapp), () -> {
                     log.debug("Exiting");
-                    RxBus.INSTANCE.send(new EventAppExit());
+                    RxBus.Companion.getINSTANCE().send(new EventAppExit());
                     if (context instanceof Activity) {
                         ((Activity) context).finish();
                     }

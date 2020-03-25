@@ -8,29 +8,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import androidx.fragment.app.DialogFragment
-import info.nightscout.androidaps.MainApp
+import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
 import info.nightscout.androidaps.events.EventPumpStatusChanged
-import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.plugins.bus.RxBus.toObservable
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.dialog_bolusprogress.*
-import org.slf4j.LoggerFactory
+import javax.inject.Inject
 
-class BolusProgressDialog : DialogFragment() {
-    private val log = LoggerFactory.getLogger(L.UI)
+class BolusProgressDialog : DaggerDialogFragment() {
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+
     private val disposable = CompositeDisposable()
 
     companion object {
-        private val DEFAULT_STATE = MainApp.gs(R.string.waitingforpump)
-
         @JvmField
         var bolusEnded = false
 
@@ -67,16 +71,17 @@ class BolusProgressDialog : DialogFragment() {
         savedInstanceState?.let {
             amount = it.getDouble("amount")
         }
-        overview_bolusprogress_title.text = String.format(MainApp.gs(R.string.overview_bolusprogress_goingtodeliver), amount)
+        overview_bolusprogress_title.text = resourceHelper.gs(R.string.overview_bolusprogress_goingtodeliver, amount)
         overview_bolusprogress_stop.setOnClickListener {
-            if (L.isEnabled(L.UI)) log.debug("Stop bolus delivery button pressed")
+            aapsLogger.debug(LTag.UI, "Stop bolus delivery button pressed")
             stopPressed = true
             overview_bolusprogress_stoppressed.visibility = View.VISIBLE
             overview_bolusprogress_stop.visibility = View.INVISIBLE
-            ConfigBuilderPlugin.getPlugin().commandQueue.cancelAllBoluses()
+            commandQueue.cancelAllBoluses()
         }
+        val defaultState = resourceHelper.gs(R.string.waitingforpump)
         overview_bolusprogress_progressbar.max = 100
-        state = savedInstanceState?.getString("state", DEFAULT_STATE) ?: DEFAULT_STATE
+        state = savedInstanceState?.getString("state", defaultState) ?: defaultState
         overview_bolusprogress_status.text = state
         stopPressed = false
     }
@@ -88,25 +93,28 @@ class BolusProgressDialog : DialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        if (L.isEnabled(L.UI)) log.debug("onResume")
-        if (!ConfigBuilderPlugin.getPlugin().commandQueue.bolusInQueue())
+        aapsLogger.debug(LTag.UI, "onResume")
+        if (!commandQueue.bolusInQueue())
             bolusEnded = true
 
         if (bolusEnded) dismiss()
         else running = true
 
-        disposable.add(toObservable(EventPumpStatusChanged::class.java)
+        disposable.add(rxBus
+            .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ overview_bolusprogress_status.text = it.getStatus() }) { FabricPrivacy.logException(it) }
+            .subscribe({ overview_bolusprogress_status.text = it.getStatus(resourceHelper) }) { fabricPrivacy.logException(it) }
         )
-        disposable.add(toObservable(EventDismissBolusProgressIfRunning::class.java)
+        disposable.add(rxBus
+            .toObservable(EventDismissBolusProgressIfRunning::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ if (running) dismiss() }) { FabricPrivacy.logException(it) }
+            .subscribe({ if (running) dismiss() }) { fabricPrivacy.logException(it) }
         )
-        disposable.add(toObservable(EventOverviewBolusProgress::class.java)
+        disposable.add(rxBus
+            .toObservable(EventOverviewBolusProgress::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                if (L.isEnabled(L.UI)) log.debug("Status: " + it.status + " Percent: " + it.percent)
+                aapsLogger.debug(LTag.UI, "Status: ${it.status} Percent: ${it.percent}")
                 overview_bolusprogress_status.text = it.status
                 overview_bolusprogress_progressbar.progress = it.percent
                 if (it.percent == 100) {
@@ -114,26 +122,26 @@ class BolusProgressDialog : DialogFragment() {
                     scheduleDismiss()
                 }
                 state = it.status
-            }) { FabricPrivacy.logException(it) }
+            }) { fabricPrivacy.logException(it) }
         )
     }
 
     override fun dismiss() {
-        if (L.isEnabled(L.UI)) log.debug("dismiss")
+        aapsLogger.debug(LTag.UI, "dismiss")
         try {
             super.dismiss()
         } catch (e: IllegalStateException) {
             // dialog not running yet. onResume will try again. Set bolusEnded to make extra
             // sure onResume will catch this
             bolusEnded = true
-            log.error("Unhandled exception", e)
+            aapsLogger.error("Unhandled exception", e)
         }
         helpActivity?.finish()
     }
 
     override fun onPause() {
         super.onPause()
-        if (L.isEnabled(L.UI)) log.debug("onPause")
+        aapsLogger.debug(LTag.UI, "onPause")
         running = false
         disposable.clear()
     }
@@ -145,18 +153,18 @@ class BolusProgressDialog : DialogFragment() {
     }
 
     private fun scheduleDismiss() {
-        if (L.isEnabled(L.UI)) log.debug("scheduleDismiss")
+        aapsLogger.debug(LTag.UI, "scheduleDismiss")
         Thread(Runnable {
             SystemClock.sleep(5000)
             bolusEnded = true
             val activity: Activity? = activity
             activity?.runOnUiThread {
                 if (running) {
-                    if (L.isEnabled(L.UI)) log.debug("executing")
+                    aapsLogger.debug(LTag.UI, "executing")
                     try {
                         dismiss()
                     } catch (e: Exception) {
-                        log.error("Unhandled exception", e)
+                        aapsLogger.error("Unhandled exception", e)
                     }
                 }
             }

@@ -26,25 +26,25 @@ class NsClientReceiverDelegate {
         Context context = MainApp.instance().getApplicationContext();
 
         EventNetworkChange event = NetworkChangeReceiver.grabNetworkStatus(context);
-        if (event != null) RxBus.INSTANCE.send(event);
+        if (event != null) RxBus.Companion.getINSTANCE().send(event);
 
         EventChargingState eventChargingState = ChargingStateReceiver.grabChargingState(context);
-        if (eventChargingState != null) RxBus.INSTANCE.send(eventChargingState);
+        if (eventChargingState != null) RxBus.Companion.getINSTANCE().send(eventChargingState);
 
     }
 
     void onStatusEvent(EventPreferenceChange ev) {
-        if (ev.isChanged(R.string.key_ns_wifionly) ||
-                ev.isChanged(R.string.key_ns_wifi_ssids) ||
-                ev.isChanged(R.string.key_ns_allowroaming)
+        if (ev.isChanged(MainApp.resources(), R.string.key_ns_wifionly) ||
+                ev.isChanged(MainApp.resources(), R.string.key_ns_wifi_ssids) ||
+                ev.isChanged(MainApp.resources(), R.string.key_ns_allowroaming)
         ) {
             EventNetworkChange event = NetworkChangeReceiver.grabNetworkStatus(MainApp.instance().getApplicationContext());
             if (event != null)
-                RxBus.INSTANCE.send(event);
-        } else if (ev.isChanged(R.string.key_ns_chargingonly)) {
+                RxBus.Companion.getINSTANCE().send(event);
+        } else if (ev.isChanged(MainApp.resources(), R.string.key_ns_chargingonly)) {
             EventChargingState event = ChargingStateReceiver.grabChargingState(MainApp.instance().getApplicationContext());
             if (event != null)
-                RxBus.INSTANCE.send(event);
+                RxBus.Companion.getINSTANCE().send(event);
         }
     }
 
@@ -70,7 +70,7 @@ class NsClientReceiverDelegate {
         boolean newAllowedState = allowedChargingState && allowedNetworkState;
         if (newAllowedState != allowed) {
             allowed = newAllowedState;
-            RxBus.INSTANCE.send(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
+            RxBus.Companion.getINSTANCE().send(new EventPreferenceChange(MainApp.gs(R.string.key_nsclientinternal_paused)));
         }
     }
 

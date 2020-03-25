@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.db.TDD;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
@@ -23,7 +24,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpH
 
 public class DailyTotalsDTO {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
     // bg avg, bg low hi, number Bgs,
     // Sen Avg, Sen Lo/Hi, Sens Cal/Data = 0/0,

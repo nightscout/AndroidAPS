@@ -9,30 +9,36 @@ import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.RhinoException;
 import org.mozilla.javascript.Scriptable;
 import org.mozilla.javascript.ScriptableObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.SP;
 
 public class DetermineBasalAdapterMAJS {
-    private static Logger log = LoggerFactory.getLogger(L.APS);
+
+    private HasAndroidInjector injector;
+    @Inject AAPSLogger aapsLogger;
+    @Inject ProfileFunction profileFunction;
+    @Inject TreatmentsPlugin treatmentsPlugin;
 
     private ScriptReader mScriptReader;
     private JSONObject mProfile;
@@ -47,8 +53,10 @@ public class DetermineBasalAdapterMAJS {
     private String storedProfile = null;
     private String storedMeal_data = null;
 
-    DetermineBasalAdapterMAJS(ScriptReader scriptReader) {
+    DetermineBasalAdapterMAJS(ScriptReader scriptReader, HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
         mScriptReader = scriptReader;
+        this.injector = injector;
     }
 
     @Nullable
@@ -102,21 +110,21 @@ public class DetermineBasalAdapterMAJS {
                 // Parse the jsResult object to a JSON-String
                 String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();
                 if (L.isEnabled(L.APS))
-                    log.debug("Result: " + result);
+                    aapsLogger.debug(LTag.APS, "Result: " + result);
                 try {
-                    determineBasalResultMA = new DetermineBasalResultMA(jsResult, new JSONObject(result));
+                    determineBasalResultMA = new DetermineBasalResultMA(injector, jsResult, new JSONObject(result));
                 } catch (JSONException e) {
-                    log.error("Unhandled exception", e);
+                    aapsLogger.error(LTag.APS, "Unhandled exception", e);
                 }
             } else {
-                log.debug("Problem loading JS Functions");
+                aapsLogger.debug(LTag.APS, "Problem loading JS Functions");
             }
         } catch (IOException e) {
-            log.error("IOException");
+            aapsLogger.error(LTag.APS, "IOException");
         } catch (RhinoException e) {
-            log.error("RhinoException: (" + e.lineNumber() + "," + e.columnNumber() + ") " + e.toString());
+            aapsLogger.error(LTag.APS, "RhinoException: (" + e.lineNumber() + "," + e.columnNumber() + ") " + e.toString());
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
-            log.error(e.toString());
+            aapsLogger.error(LTag.APS, e.toString());
         } finally {
             Context.exit();
         }
@@ -175,12 +183,12 @@ public class DetermineBasalAdapterMAJS {
 
         mProfile.put("current_basal", basalRate);
 
-        if (ProfileFunctions.getSystemUnits().equals(Constants.MMOL)) {
+        if (profileFunction.getUnits().equals(Constants.MMOL)) {
             mProfile.put("out_units", "mmol/L");
         }
 
         long now = System.currentTimeMillis();
-        TemporaryBasal tb = TreatmentsPlugin.getPlugin().getTempBasalFromHistory(now);
+        TemporaryBasal tb = treatmentsPlugin.getTempBasalFromHistory(now);
 
         mCurrentTemp = new JSONObject();
         mCurrentTemp.put("duration", tb != null ? tb.getPlannedRemainingMinutes() : 0);
