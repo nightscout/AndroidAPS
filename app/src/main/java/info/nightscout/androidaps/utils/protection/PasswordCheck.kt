@@ -95,16 +95,19 @@ class PasswordCheck @Inject constructor(val sp: SP) {
                 val enteredPassword = userInput.text.toString()
                 if (enteredPassword.isNotEmpty()) {
                     sp.putString(preference, CryptoUtil.hashPassword(enteredPassword))
+                    ToastUtils.showToastInUiThread(context, context.getString(R.string.password_set))
                     ok?.invoke(enteredPassword)
                 } else {
                     if (sp.contains(preference)) {
                         sp.remove(preference)
+                        ToastUtils.showToastInUiThread(context, context.getString(R.string.password_cleared))
                         clear?.invoke()
                     } else {
+                        ToastUtils.showToastInUiThread(context, context.getString(R.string.password_not_changed))
                         cancel?.invoke()
                     }
                 }
-                ToastUtils.showToastInUiThread(context, context.getString(R.string.password_set))
+
             }
             .setNegativeButton(context.getString(R.string.cancel)
             ) { dialog, _ ->

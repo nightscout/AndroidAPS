@@ -18,6 +18,7 @@
     <string name="password_set">Password set!</string>
     <string name="password_not_set">Password not set</string>
     <string name="password_not_changed">Password not changed</string>
+    <string name="password_cleared">Password cleared!</string>
     <string name="password_hint">Enter password here</string>
 
     <string name="key_master_password">master_password</string>
