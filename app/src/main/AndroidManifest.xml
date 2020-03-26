@@ -84,6 +84,8 @@
         <activity
             android:name=".plugins.pump.danaRS.activities.PairingHelperActivity"
             android:launchMode="singleTask" />
+        <activity android:name=".plugins.pump.danaRS.activities.EnterPinActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".historyBrowser.HistoryBrowseActivity" />
         <activity android:name=".activities.SurveyActivity" />
         <activity android:name=".activities.StatsActivity" />

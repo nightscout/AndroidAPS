@@ -14,7 +14,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class DanaRS_Packet_Notify_AlarmTest : DanaRSTestBase() {
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Notify_Alarm(aapsLogger, resourceHelper)
+        val packet = DanaRS_Packet_Notify_Alarm(aapsLogger, resourceHelper, rxBus)
         // test params
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding

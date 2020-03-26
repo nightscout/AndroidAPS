@@ -13,6 +13,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyL
 import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRHistoryActivity
 import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRUserOptionsActivity
 import info.nightscout.androidaps.plugins.pump.danaRS.activities.BLEScanActivity
+import info.nightscout.androidaps.plugins.pump.danaRS.activities.EnterPinActivity
 import info.nightscout.androidaps.plugins.pump.danaRS.activities.PairingHelperActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingActivity
@@ -28,6 +29,7 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector abstract fun contributeBolusProgressHelperActivity(): BolusProgressHelperActivity
     @ContributesAndroidInjector abstract fun contributeDanaRHistoryActivity(): DanaRHistoryActivity
     @ContributesAndroidInjector abstract fun contributeDanaRUserOptionsActivity(): DanaRUserOptionsActivity
+    @ContributesAndroidInjector abstract fun contributeEnterPinActivity(): EnterPinActivity
     @ContributesAndroidInjector abstract fun contributeErrorHelperActivity(): ErrorHelperActivity
     @ContributesAndroidInjector abstract fun contributesHistoryBrowseActivity(): HistoryBrowseActivity
     @ContributesAndroidInjector abstract fun contributesInsightAlertActivity(): InsightAlertActivity

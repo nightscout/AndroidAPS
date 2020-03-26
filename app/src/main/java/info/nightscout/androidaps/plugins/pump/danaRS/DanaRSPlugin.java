@@ -27,6 +27,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -158,6 +159,11 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
                 .subscribe(event -> context.unbindService(mConnection), fabricPrivacy::logException)
         );
         disposable.add(rxBus
+                .toObservable(EventConfigBuilderChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> danaRPump.setLastConnection(0))
+        );
+        disposable.add(rxBus
                 .toObservable(EventDanaRSDeviceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> loadAddress(), fabricPrivacy::logException)
@@ -191,6 +197,7 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
     private void loadAddress() {
         mDeviceAddress = sp.getString(R.string.key_danars_address, "");
         mDeviceName = sp.getString(R.string.key_danars_name, "");
+        danaRPump.setLastConnection(0);
     }
 
     @Override

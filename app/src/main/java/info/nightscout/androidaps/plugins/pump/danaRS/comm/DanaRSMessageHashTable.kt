@@ -69,7 +69,7 @@ class DanaRSMessageHashTable @Inject constructor(
         put(DanaRS_Packet_General_Delivery_Status(aapsLogger))
         put(DanaRS_Packet_General_Get_Password(aapsLogger, danaRPump))
         put(DanaRS_Packet_General_Initial_Screen_Information(aapsLogger, danaRPump))
-        put(DanaRS_Packet_Notify_Alarm(aapsLogger, resourceHelper))
+        put(DanaRS_Packet_Notify_Alarm(aapsLogger, resourceHelper, rxBus))
         put(DanaRS_Packet_Notify_Delivery_Complete(aapsLogger, rxBus, resourceHelper, danaRSPlugin))
         put(DanaRS_Packet_Notify_Delivery_Rate_Display(aapsLogger, rxBus, resourceHelper, danaRSPlugin))
         put(DanaRS_Packet_Notify_Missed_Bolus_Alarm(aapsLogger))

@@ -11,7 +11,6 @@ class DanaRS_Packet_General_Initial_Screen_Information(
 ) : DanaRS_Packet() {
 
     init {
-        type = BleEncryption.DANAR_PACKET__TYPE_RESPONSE
         opCode = BleEncryption.DANAR_PACKET__OPCODE_REVIEW__INITIAL_SCREEN_INFORMATION
         aapsLogger.debug(LTag.PUMPCOMM, "New message")
     }

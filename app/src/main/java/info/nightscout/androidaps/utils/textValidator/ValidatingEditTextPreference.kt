@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils.textValidator
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import androidx.core.content.res.TypedArrayUtils
@@ -22,7 +23,7 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAt
     constructor(ctx: Context, attrs: AttributeSet, defStyle: Int)
         : this(ctx, attrs, defStyle, 0)
 
-    constructor(ctx: Context, attrs: AttributeSet)
+    @SuppressLint("RestrictedApi") constructor(ctx: Context, attrs: AttributeSet)
         : this(ctx, attrs, TypedArrayUtils.getAttr(ctx, R.attr.editTextPreferenceStyle,
         R.attr.editTextPreferenceStyle))
 

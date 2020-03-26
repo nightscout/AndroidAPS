@@ -11,6 +11,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.TDDStatsActivity
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventExtendedBolusChange
+import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -24,13 +25,16 @@ import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRHistoryActi
 import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRUserOptionsActivity
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRNewStatus
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
+import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.OKDialog
 import info.nightscout.androidaps.utils.SetWarnColor
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.danar_fragment.*
@@ -43,8 +47,10 @@ class DanaRFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
+    @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var danaRPump: DanaRPump
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var sp: SP
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -93,12 +99,28 @@ class DanaRFragment : DaggerFragment() {
             danaRPump.lastConnection = 0
             commandQueue.readStatus("Clicked connect to pump", null)
         }
+        if (danaRSPlugin.isEnabled())
+            danar_btconnection.setOnLongClickListener {
+                activity?.let {
+                    OKDialog.showConfirmation(it, resourceHelper.gs(R.string.resetpairing), Runnable {
+                        sp.remove(resourceHelper.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName)
+                        sp.remove(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
+                        sp.remove(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
+                        sp.remove(resourceHelper.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName)
+                    })
+                }
+                true
+            }
     }
 
     @Synchronized
     override fun onResume() {
         super.onResume()
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
+        disposable += rxBus
+            .toObservable(EventInitializationChanged::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
             .toObservable(EventDanaRNewStatus::class.java)
             .observeOn(AndroidSchedulers.mainThread())

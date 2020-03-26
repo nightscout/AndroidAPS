@@ -140,7 +140,7 @@ public class BleEncryption {
         return encryptSecondLevelPacketJni(context, bytes);
     }
 
-    public byte[] ecryptSecondLevelPacket(byte[] bytes) {
+    public byte[] decryptSecondLevelPacket(byte[] bytes) {
         return decryptSecondLevelPacketJni(context, bytes);
     }
 }

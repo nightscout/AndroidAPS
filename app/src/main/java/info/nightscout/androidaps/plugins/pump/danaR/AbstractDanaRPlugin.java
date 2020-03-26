@@ -15,6 +15,8 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventConfigBuilderChange;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -42,6 +44,8 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mike on 28.01.2018.
@@ -49,6 +53,8 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public abstract class AbstractDanaRPlugin extends PumpPluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface {
     protected AbstractDanaRExecutionService sExecutionService;
+
+    protected CompositeDisposable disposable = new CompositeDisposable();
 
     protected boolean useExtendedBoluses = false;
 
@@ -84,6 +90,28 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         this.rxBus = rxBus;
         this.treatmentsPlugin = treatmentsPlugin;
         this.sp = sp;
+    }
+
+    @Override protected void onStart() {
+        super.onStart();
+        disposable.add(rxBus
+                .toObservable(EventConfigBuilderChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> danaRPump.setLastConnection(0))
+        );
+        disposable.add(rxBus
+                .toObservable(EventPreferenceChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (event.isChanged(getResourceHelper(), R.string.key_danar_bt_name))
+                        danaRPump.setLastConnection(0);
+                })
+        );
+    }
+
+    @Override protected void onStop() {
+        super.onStop();
+        disposable.clear();
     }
 
     @Override
@@ -488,6 +516,4 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     public void timeDateOrTimeZoneChanged() {
 
     }
-
-
 }

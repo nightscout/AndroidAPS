@@ -15,6 +15,9 @@ class DefaultEditTextValidator : EditTextValidator {
     protected var testErrorString: String? = null
     protected var emptyAllowed = false
     protected lateinit var editTextView: EditText
+    private var tw: TextWatcher? = null
+    private var defaultEmptyErrorString: String? = null
+
     protected var testType: Int
     protected var classType: String? = null
     protected var customRegexp: String? = null
@@ -26,8 +29,6 @@ class DefaultEditTextValidator : EditTextValidator {
     protected var maxNumber = 0
     protected var floatminNumber = 0f
     protected var floatmaxNumber = 0f
-    private var tw: TextWatcher? = null
-    private var defaultEmptyErrorString: String? = null
 
     @Suppress("unused")
     constructor(editTextView: EditText, context: Context) {
@@ -167,44 +168,50 @@ class DefaultEditTextValidator : EditTextValidator {
     }
 
     @Suppress("unused")
-    fun setClassType(classType: String?, testErrorString: String?, context: Context) {
+    fun setClassType(classType: String?, testErrorString: String?, context: Context)  : DefaultEditTextValidator{
         testType = EditTextValidator.TEST_CUSTOM
         this.classType = classType
         this.testErrorString = testErrorString
         resetValidators(context)
+        return this
     }
 
     @Suppress("unused")
-    fun setCustomRegexp(customRegexp: String?, context: Context) {
+    fun setCustomRegexp(customRegexp: String?, context: Context) : DefaultEditTextValidator {
         testType = EditTextValidator.TEST_REGEXP
         this.customRegexp = customRegexp
         resetValidators(context)
+        return this
     }
 
     @Suppress("unused")
-    fun setEmptyAllowed(emptyAllowed: Boolean, context: Context) {
+    fun setEmptyAllowed(emptyAllowed: Boolean, context: Context) : DefaultEditTextValidator {
         this.emptyAllowed = emptyAllowed
         resetValidators(context)
+        return this
     }
 
-    fun setEmptyErrorString(emptyErrorString: String?) {
+    fun setEmptyErrorString(emptyErrorString: String?) : DefaultEditTextValidator {
         emptyErrorStringActual = if (!TextUtils.isEmpty(emptyErrorString)) {
             emptyErrorString
         } else {
             defaultEmptyErrorString
         }
+        return this
     }
 
     @Suppress("unused")
-    fun setTestErrorString(testErrorString: String?, context: Context) {
+    fun setTestErrorString(testErrorString: String?, context: Context) : DefaultEditTextValidator {
         this.testErrorString = testErrorString
         resetValidators(context)
+        return this
     }
 
     @Suppress("unused")
-    fun setTestType(testType: Int, context: Context) {
+    fun setTestType(testType: Int, context: Context) : DefaultEditTextValidator {
         this.testType = testType
         resetValidators(context)
+        return this
     }
 
     override fun testValidity(): Boolean {
