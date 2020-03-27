@@ -1008,6 +1008,63 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         }
     }
 
+    private void processInsulinCarbsButtonsVisibility() {
+        BgReading lastBG = iobCobCalculatorPlugin.lastBg();
+
+        final PumpInterface pump = activePlugin.getActivePump();
+
+        final Profile profile = profileFunction.getProfile();
+        final String profileName = profileFunction.getProfileName();
+
+        // QuickWizard button
+        QuickWizardEntry quickWizardEntry = quickWizard.getActive();
+        if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && !pump.isSuspended()) {
+            quickWizardButton.setVisibility(View.VISIBLE);
+            String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
+            BolusWizard wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false);
+            text += " " + DecimalFormatter.toPumpSupportedBolus(wizard.getCalculatedTotalInsulin(), pump) + "U";
+            quickWizardButton.setText(text);
+            if (wizard.getCalculatedTotalInsulin() <= 0)
+                quickWizardButton.setVisibility(View.GONE);
+        } else
+            quickWizardButton.setVisibility(View.GONE);
+
+        // **** Various treatment buttons ****
+        if (carbsButton != null) {
+            if ((!activePlugin.getActivePump().getPumpDescription().storesCarbInfo || (pump.isInitialized() && !pump.isSuspended())) &&
+                    profile != null &&
+                    sp.getBoolean(R.string.key_show_carbs_button, true))
+                carbsButton.setVisibility(View.VISIBLE);
+            else
+                carbsButton.setVisibility(View.GONE);
+        }
+
+        if (treatmentButton != null) {
+            if (pump.isInitialized() && !pump.isSuspended() &&
+                    profile != null &&
+                    sp.getBoolean(R.string.key_show_treatment_button, false))
+                treatmentButton.setVisibility(View.VISIBLE);
+            else
+                treatmentButton.setVisibility(View.GONE);
+        }
+        if (wizardButton != null) {
+            if (pump.isInitialized() && !pump.isSuspended() &&
+                    profile != null &&
+                    sp.getBoolean(R.string.key_show_wizard_button, true))
+                wizardButton.setVisibility(View.VISIBLE);
+            else
+                wizardButton.setVisibility(View.GONE);
+        }
+        if (insulinButton != null) {
+            if (pump.isInitialized() && !pump.isSuspended() &&
+                    profile != null &&
+                    sp.getBoolean(R.string.key_show_insulin_button, true))
+                insulinButton.setVisibility(View.VISIBLE);
+            else
+                insulinButton.setVisibility(View.GONE);
+        }
+    }
+
     private void scheduleUpdateGUI(final String from) {
         class UpdateRunnable implements Runnable {
             public void run() {
@@ -1060,7 +1117,6 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
 
         final Profile profile = profileFunction.getProfile();
         if (profile == null) return;
-        final String profileName = profileFunction.getProfileName();
 
         final String units = profileFunction.getUnits();
         final double lowLine = defaultValueHelper.determineLowLine();
@@ -1234,50 +1290,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             activeProfileView.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault));
         }
 
-        // QuickWizard button
-        QuickWizardEntry quickWizardEntry = quickWizard.getActive();
-        if (quickWizardEntry != null && lastBG != null && pump.isInitialized() && !pump.isSuspended()) {
-            quickWizardButton.setVisibility(View.VISIBLE);
-            String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
-            BolusWizard wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false);
-            text += " " + DecimalFormatter.toPumpSupportedBolus(wizard.getCalculatedTotalInsulin(), pump) + "U";
-            quickWizardButton.setText(text);
-            if (wizard.getCalculatedTotalInsulin() <= 0)
-                quickWizardButton.setVisibility(View.GONE);
-        } else
-            quickWizardButton.setVisibility(View.GONE);
-
-        // **** Various treatment buttons ****
-        if ((!activePlugin.getActivePump().getPumpDescription().storesCarbInfo ||
-                (pump.isInitialized() && !pump.isSuspended())) && carbsButton != null) {
-            if (sp.getBoolean(R.string.key_show_carbs_button, true)) {
-                carbsButton.setVisibility(View.VISIBLE);
-            } else {
-                carbsButton.setVisibility(View.GONE);
-            }
-        }
-
-        if (pump.isInitialized() && !pump.isSuspended() && treatmentButton != null) {
-            if (sp.getBoolean(R.string.key_show_treatment_button, false)) {
-                treatmentButton.setVisibility(View.VISIBLE);
-            } else {
-                treatmentButton.setVisibility(View.GONE);
-            }
-        }
-        if (pump.isInitialized() && !pump.isSuspended() && wizardButton != null) {
-            if (sp.getBoolean(R.string.key_show_wizard_button, true)) {
-                wizardButton.setVisibility(View.VISIBLE);
-            } else {
-                wizardButton.setVisibility(View.GONE);
-            }
-        }
-        if (pump.isInitialized() && !pump.isSuspended() && insulinButton != null) {
-            if (sp.getBoolean(R.string.key_show_insulin_button, true)) {
-                insulinButton.setVisibility(View.VISIBLE);
-            } else {
-                insulinButton.setVisibility(View.GONE);
-            }
-        }
+        processInsulinCarbsButtonsVisibility();
 
         // **** BG value ****
         if (lastBG == null) { //left this here as it seems you want to exit at this point if it is null...
