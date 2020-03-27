@@ -171,7 +171,7 @@ class DanaRFragment : DaggerFragment() {
 
     // GUI functions
     @Synchronized
-    internal fun updateGUI() {
+    fun updateGUI() {
         if (danar_dailyunits == null) return
         val pump = danaRPump
         val plugin: PumpInterface = activePlugin.activePump

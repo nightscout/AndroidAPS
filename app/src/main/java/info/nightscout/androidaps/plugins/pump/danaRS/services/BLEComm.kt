@@ -96,6 +96,9 @@ class BLEComm @Inject internal constructor(
             return false
         }
 
+        isConnected = false
+        v3Encryption = false
+        encryptedDataRead = false
         isConnecting = true
         val device = bluetoothAdapter?.getRemoteDevice(address)
         if (device == null) {
@@ -118,13 +121,14 @@ class BLEComm @Inject internal constructor(
     fun disconnect(from: String) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "disconnect from: $from")
 
-        if (!encryptedDataRead) {
+        if (!encryptedDataRead && v3Encryption) {
             // there was no response from pump after started encryption
             // assume pairing keys are invalid
             sp.remove(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
             sp.remove(resourceHelper.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
             sp.remove(resourceHelper.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName)
             ToastUtils.showToastInUiThread(context, R.string.invalidpairing)
+            danaRSPlugin.changePump()
         }
         // cancel previous scheduled disconnection to prevent closing upcoming connection
         scheduledDisconnection?.cancel(false)
