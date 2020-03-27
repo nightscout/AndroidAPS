@@ -1454,4 +1454,5 @@ Eversense-appen.</string>
     <string name="loop_smbexecution_time_label">SMB utförd</string>
     <string name="loop_tbrrequest_time_label">Basalförändring begärd</string>
     <string name="loop_tbrexecution_time_label">Basalförändring utförd</string>
+    <string name="insight_alert_notification_channel">Pumpvarningar Insight</string>
 </resources>
