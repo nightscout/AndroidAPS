@@ -1248,37 +1248,34 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             quickWizardButton.setVisibility(View.GONE);
 
         // **** Various treatment buttons ****
-        if (carbsButton != null) {
-            if (sp.getBoolean(R.string.key_show_carbs_button, true)
-                    && (!activePlugin.getActivePump().getPumpDescription().storesCarbInfo ||
-                    (pump.isInitialized() && !pump.isSuspended()))) {
+        if ((!activePlugin.getActivePump().getPumpDescription().storesCarbInfo ||
+                (pump.isInitialized() && !pump.isSuspended())) && carbsButton != null) {
+            if (sp.getBoolean(R.string.key_show_carbs_button, true)) {
                 carbsButton.setVisibility(View.VISIBLE);
             } else {
                 carbsButton.setVisibility(View.GONE);
             }
         }
 
-        if (pump.isInitialized() && !pump.isSuspended()) {
-            if (treatmentButton != null) {
-                if (sp.getBoolean(R.string.key_show_treatment_button, false)) {
-                    treatmentButton.setVisibility(View.VISIBLE);
-                } else {
-                    treatmentButton.setVisibility(View.GONE);
-                }
+        if (pump.isInitialized() && !pump.isSuspended() && treatmentButton != null) {
+            if (sp.getBoolean(R.string.key_show_treatment_button, false)) {
+                treatmentButton.setVisibility(View.VISIBLE);
+            } else {
+                treatmentButton.setVisibility(View.GONE);
             }
-            if (pump.isInitialized() && !pump.isSuspended() && wizardButton != null) {
-                if (sp.getBoolean(R.string.key_show_wizard_button, true)) {
-                    wizardButton.setVisibility(View.VISIBLE);
-                } else {
-                    wizardButton.setVisibility(View.GONE);
-                }
+        }
+        if (pump.isInitialized() && !pump.isSuspended() && wizardButton != null) {
+            if (sp.getBoolean(R.string.key_show_wizard_button, true)) {
+                wizardButton.setVisibility(View.VISIBLE);
+            } else {
+                wizardButton.setVisibility(View.GONE);
             }
-            if (pump.isInitialized() && !pump.isSuspended() && insulinButton != null) {
-                if (sp.getBoolean(R.string.key_show_insulin_button, true)) {
-                    insulinButton.setVisibility(View.VISIBLE);
-                } else {
-                    insulinButton.setVisibility(View.GONE);
-                }
+        }
+        if (pump.isInitialized() && !pump.isSuspended() && insulinButton != null) {
+            if (sp.getBoolean(R.string.key_show_insulin_button, true)) {
+                insulinButton.setVisibility(View.VISIBLE);
+            } else {
+                insulinButton.setVisibility(View.GONE);
             }
         }
 
