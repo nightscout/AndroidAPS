@@ -101,5 +101,8 @@ class DanaRSMessageHashTable @Inject constructor(
         put(DanaRS_Packet_APS_Basal_Set_Temporary_Basal(aapsLogger, 0))
         put(DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, 0))
         put(DanaRS_Packet_APS_Set_Event_History(aapsLogger, 0, 0, 0, 0))
+        // v3
+        put(DanaRS_Packet_General_Get_Shipping_Version(aapsLogger, danaRPump))
+        put(DanaRS_Packet_Review_Get_Pump_Dec_Ratio(aapsLogger, danaRPump))
     }
 }

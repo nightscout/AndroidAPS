@@ -210,8 +210,8 @@ class DanaRFragment : DaggerFragment() {
         danar_battery.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"
         SetWarnColor.setColorInverse(danar_battery, pump.batteryRemaining.toDouble(), 51.0, 26.0)
         danar_iob.text = resourceHelper.gs(R.string.formatinsulinunits, pump.iob)
-        if (pump.model != 0 || pump.protocol != 0 || pump.productCode != 0) {
-            danar_firmware.text = resourceHelper.gs(R.string.danar_model, pump.model, pump.protocol, pump.productCode)
+        if (pump.btModel != 0 || pump.protocol != 0 || pump.productCode != 0) {
+            danar_firmware.text = resourceHelper.gs(R.string.danar_model, pump.btModel, pump.protocol, pump.productCode)
         } else {
             @Suppress("SetTextI18n")
             danar_firmware.text = "OLD"
@@ -229,7 +229,7 @@ class DanaRFragment : DaggerFragment() {
         //hide user options button if not an RS pump or old firmware
         // also excludes pump with model 03 because of untested error
         val isKorean = danaRKoreanPlugin.isEnabled(PluginType.PUMP)
-        if (isKorean || danar_firmware.text === "OLD" || pump.model == 3) {
+        if (isKorean || danar_firmware.text === "OLD" || pump.btModel == 3) {
             danar_user_options.visibility = View.GONE
         }
     }

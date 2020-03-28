@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 
 class DanaRS_Packet_General_Initial_Screen_Information(
     private val aapsLogger: AAPSLogger,
@@ -51,6 +51,14 @@ class DanaRS_Packet_General_Initial_Screen_Information(
         dataIndex += dataSize
         dataSize = 2
         danaRPump.iob = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
+        if (data.size >= 18) {
+            //protocol 10+
+            dataIndex += dataSize
+            dataSize = 1
+            danaRPump.errorState = DanaRPump.ErrorState[byteArrayToInt(getBytes(data, dataIndex, dataSize))]
+                ?: DanaRPump.ErrorState.NONE
+            aapsLogger.debug(LTag.PUMPCOMM, "ErrorState: " + danaRPump.errorState.name)
+        }
         aapsLogger.debug(LTag.PUMPCOMM, "Pump suspended: " + danaRPump.pumpSuspended)
         aapsLogger.debug(LTag.PUMPCOMM, "Temp basal in progress: " + danaRPump.isTempBasalInProgress)
         aapsLogger.debug(LTag.PUMPCOMM, "Extended in progress: " + danaRPump.isExtendedInProgress)

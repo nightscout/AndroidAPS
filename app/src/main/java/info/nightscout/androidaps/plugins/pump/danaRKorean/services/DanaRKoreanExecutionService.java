@@ -212,8 +212,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 if (danaRPump.getPumpTime() == 0) {
                     // initial handshake was not successfull
                     // deinitialize pump
-                    danaRPump.setLastConnection(0);
-                    danaRPump.setLastSettingsRead(0);
+                    danaRPump.reset();
                     rxBus.send(new EventDanaRNewStatus());
                     rxBus.send(new EventInitializationChanged());
                     return;

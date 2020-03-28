@@ -97,16 +97,16 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         disposable.add(rxBus
                 .toObservable(EventConfigBuilderChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> danaRPump.setLastConnection(0))
+                .subscribe(event -> danaRPump.reset())
         );
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
                     if (event.isChanged(getResourceHelper(), R.string.key_danar_bt_name)) {
-                        danaRPump.setLastConnection(0);
-                        danaRPump.setLastSettingsRead(0);
-                        getCommandQueue().readStatus("DeviceChanged", null);                    }
+                        danaRPump.reset();
+                        getCommandQueue().readStatus("DeviceChanged", null);
+                    }
                 })
         );
     }

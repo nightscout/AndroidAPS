@@ -26,6 +26,20 @@ class DanaRPump @Inject constructor(
     private val injector: HasAndroidInjector
 ) {
 
+    enum class ErrorState(val code: Int) {
+        NONE(0x00),
+        SUSPENDED(0x01),
+        DAILYMAX(0x02),
+        BOLUSBLOCK(0x04),
+        ORDERDELIVERING(0x08),
+        NOPRIME(0x10);
+
+        companion object {
+            private val map = values().associateBy(ErrorState::code)
+            operator fun get(value: Int) = map[value]
+        }
+    }
+
     var lastConnection: Long = 0
     var lastSettingsRead: Long = 0
 
@@ -33,12 +47,14 @@ class DanaRPump @Inject constructor(
     var serialNumber = ""
     var shippingDate: Long = 0
     var shippingCountry = ""
-    var isNewPump = true
-    var password = -1
+    var bleModel = "" // RS v3:  like BPN-1.0.1
+    var isNewPump = true // R only , providing model info
+    var password = -1 // R, RSv1
     var pumpTime: Long = 0
-    var model = 0
+    var btModel = 0
     var protocol = 0
     var productCode = 0
+    var errorState: ErrorState = ErrorState.NONE
     var isConfigUD = false
     var isExtendedBolusEnabled = false
     var isEasyModeEnabled = false
@@ -49,6 +65,7 @@ class DanaRPump @Inject constructor(
     var dailyTotalUnits = 0.0
     var dailyTotalBolusUnits = 0.0 // RS only
     var dailyTotalBasalUnits = 0.0 // RS only
+    var decRatio = 0 // RS v3: [%] for pump IOB calculation
     var maxDailyTotalUnits = 0
     var bolusStep = 0.1
     var basalStep = 0.1
@@ -207,6 +224,7 @@ class DanaRPump @Inject constructor(
     fun reset() {
         aapsLogger.debug(LTag.PUMP, "DanaRPump reset")
         lastConnection = 0
+        lastSettingsRead = 0
     }
 
     companion object {
@@ -234,6 +252,8 @@ class DanaRPump @Inject constructor(
         const val PROFILECHANGE = 13
         const val CARBS = 14
         const val PRIMECANNULA = 15
+
+        // Dana R btModel
         const val DOMESTIC_MODEL = 0x01
         const val EXPORT_MODEL = 0x03
     }

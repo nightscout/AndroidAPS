@@ -161,7 +161,7 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
         disposable.add(rxBus
                 .toObservable(EventConfigBuilderChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> danaRPump.setLastConnection(0))
+                .subscribe(event -> danaRPump.reset())
         );
         disposable.add(rxBus
                 .toObservable(EventDanaRSDeviceChange.class)
@@ -197,8 +197,7 @@ public class DanaRSPlugin extends PumpPluginBase implements PumpInterface, DanaR
     public void changePump() {
         mDeviceAddress = sp.getString(R.string.key_danars_address, "");
         mDeviceName = sp.getString(R.string.key_danars_name, "");
-        danaRPump.setLastConnection(0);
-        danaRPump.setLastSettingsRead(0);
+        danaRPump.reset();
         getCommandQueue().readStatus("DeviceChanged", null);
     }
 

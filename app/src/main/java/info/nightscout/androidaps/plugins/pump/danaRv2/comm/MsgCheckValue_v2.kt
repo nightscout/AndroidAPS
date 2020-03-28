@@ -38,11 +38,11 @@ class MsgCheckValue_v2(
     override fun handleMessage(bytes: ByteArray) {
         danaRPump.isNewPump = true
         aapsLogger.debug(LTag.PUMPCOMM, "New firmware confirmed")
-        danaRPump.model = intFromBuff(bytes, 0, 1)
+        danaRPump.btModel = intFromBuff(bytes, 0, 1)
         danaRPump.protocol = intFromBuff(bytes, 1, 1)
         danaRPump.productCode = intFromBuff(bytes, 2, 1)
-        if (danaRPump.model != DanaRPump.EXPORT_MODEL) {
-            danaRPump.lastConnection = 0
+        if (danaRPump.btModel != DanaRPump.EXPORT_MODEL) {
+            danaRPump.reset()
             val notification = Notification(Notification.WRONG_DRIVER, resourceHelper.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
             danaRPlugin.disconnect("Wrong Model")
@@ -59,7 +59,7 @@ class MsgCheckValue_v2(
             return
         }
         if (danaRPump.protocol != 2) {
-            danaRPump.lastConnection = 0
+            danaRPump.reset()
             val notification = Notification(Notification.WRONG_DRIVER, resourceHelper.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
             danaRKoreanPlugin.disconnect("Wrong Model")
@@ -74,7 +74,7 @@ class MsgCheckValue_v2(
             commandQueue.readStatus("PumpDriverChange", null) // force new connection
             return
         }
-        aapsLogger.debug(LTag.PUMPCOMM, "Model: " + String.format("%02X ", danaRPump.model))
+        aapsLogger.debug(LTag.PUMPCOMM, "Model: " + String.format("%02X ", danaRPump.btModel))
         aapsLogger.debug(LTag.PUMPCOMM, "Protocol: " + String.format("%02X ", danaRPump.protocol))
         aapsLogger.debug(LTag.PUMPCOMM, "Product Code: " + String.format("%02X ", danaRPump.productCode))
     }

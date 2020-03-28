@@ -189,7 +189,7 @@ public class DanaRSService extends DaggerService {
             if (danaRPump.getPumpTime() == 0) {
                 // initial handshake was not successfull
                 // deinitialize pump
-                danaRPump.setLastConnection(0);
+                danaRPump.reset();
                 rxBus.send(new EventDanaRNewStatus());
                 rxBus.send(new EventInitializationChanged());
                 return;
@@ -221,7 +221,7 @@ public class DanaRSService extends DaggerService {
                     context.startActivity(i);
 
                     //deinitialize pump
-                    danaRPump.setLastConnection(0);
+                    danaRPump.reset();
                     rxBus.send(new EventDanaRNewStatus());
                     rxBus.send(new EventInitializationChanged());
                     return;

@@ -97,6 +97,10 @@ public class BleEncryption {
     public static final int DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS = 0xC2;
     public static final int DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY = 0xC3;
 
+    // v3 specific
+    public static final int DANAR_PACKET__OPCODE_REVIEW__GET_PUMP_DEC_RATIO = 0x80;
+    public static final int DANAR_PACKET__OPCODE_GENERAL__GET_SHIPPING_VERSION = 0x81;
+
     // Easy Mode
     public static final int DANAR_PACKET__OPCODE_OPTION__GET_EASY_MENU_OPTION = 0x74;
     public static final int DANAR_PACKET__OPCODE_OPTION__SET_EASY_MENU_OPTION = 0x75;
