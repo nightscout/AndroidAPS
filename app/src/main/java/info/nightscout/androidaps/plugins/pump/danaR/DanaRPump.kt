@@ -51,7 +51,7 @@ class DanaRPump @Inject constructor(
     var isNewPump = true // R only , providing model info
     var password = -1 // R, RSv1
     var pumpTime: Long = 0
-    var btModel = 0
+    var hwModel = 0
     var protocol = 0
     var productCode = 0
     var errorState: ErrorState = ErrorState.NONE
@@ -226,6 +226,21 @@ class DanaRPump @Inject constructor(
         lastConnection = 0
         lastSettingsRead = 0
     }
+
+    fun modelFriendlyName(): String =
+        when (hwModel) {
+            0x01 -> "DanaR Korean"
+            0x03 ->
+                if (protocol == 0x00) "DanaR old"
+                else if (protocol == 0x02) "DanaR v2"
+                else "DanaR" // 0x01 and 0x03 known
+            0x05 ->
+                if (protocol < 10) "DanaRS"
+                else "DanaRS v3"
+            0x06 -> "DanaRS Korean"
+            0x07 -> "Dana-i"
+            else -> "Unknown Dana pump"
+        }
 
     companion object {
         const val UNITS_MGDL = 0

@@ -33,6 +33,6 @@ class MsgCheckValue_v2Test : DanaRTestBase() {
         val packet = MsgCheckValue_v2(aapsLogger, rxBus, resourceHelper, danaRPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue)
         // test message decoding
         packet.handleMessage(createArray(34, 3.toByte()))
-        Assert.assertEquals(DanaRPump.EXPORT_MODEL, danaRPump.btModel)
+        Assert.assertEquals(DanaRPump.EXPORT_MODEL, danaRPump.hwModel)
     }
 }

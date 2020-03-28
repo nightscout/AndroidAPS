@@ -30,14 +30,14 @@ class DanaRS_Packet_General_Get_Pump_Check(
             failed = false
         var dataIndex = DATA_START
         var dataSize = 1
-        danaRPump.btModel = byteArrayToInt(getBytes(data, dataIndex, dataSize))
+        danaRPump.hwModel = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
         danaRPump.protocol = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         dataIndex += dataSize
         dataSize = 1
         danaRPump.productCode = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        aapsLogger.debug(LTag.PUMPCOMM, "Model: " + String.format("%02X ", danaRPump.btModel))
+        aapsLogger.debug(LTag.PUMPCOMM, "Model: " + String.format("%02X ", danaRPump.hwModel))
         aapsLogger.debug(LTag.PUMPCOMM, "Protocol: " + String.format("%02X ", danaRPump.protocol))
         aapsLogger.debug(LTag.PUMPCOMM, "Product Code: " + String.format("%02X ", danaRPump.productCode))
         if (danaRPump.productCode < 2) {

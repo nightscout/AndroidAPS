@@ -20,6 +20,6 @@ class MsgCheckValueTest : DanaRTestBase() {
         val array = ByteArray(100)
         putByteToArray(array, 0, DanaRPump.EXPORT_MODEL.toByte())
         packet.handleMessage(array)
-        Assert.assertEquals(DanaRPump.EXPORT_MODEL, danaRPump.btModel)
+        Assert.assertEquals(DanaRPump.EXPORT_MODEL, danaRPump.hwModel)
     }
 }
