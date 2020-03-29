@@ -108,6 +108,28 @@ public class DateUtil {
         return retval;
     }
 
+    public static long toTodayTime(String hh_colon_mm) {
+        Pattern p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.| AM| PM|AM|PM|)");
+        Matcher m = p.matcher(hh_colon_mm);
+        long retval = 0;
+
+        if (m.find()) {
+            int hours = SafeParse.stringToInt(m.group(1));
+            int minutes = SafeParse.stringToInt(m.group(2));
+            if ((m.group(3).equals(" a.m.") || m.group(3).equals(" AM") || m.group(3).equals("AM")) && m.group(1).equals("12"))
+                hours -= 12;
+            if ((m.group(3).equals(" p.m.") || m.group(3).equals(" PM") || m.group(3).equals("PM")) && !(m.group(1).equals("12")))
+                hours += 12;
+            Calendar c = Calendar.getInstance();
+            c.set(Calendar.HOUR_OF_DAY, hours);
+            c.set(Calendar.MINUTE, minutes);
+            c.set(Calendar.SECOND, 0);
+            c.set(Calendar.MILLISECOND, 0);
+            retval = c.getTimeInMillis();
+        }
+        return retval;
+    }
+
     public static String dateString(Date date) {
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
         return df.format(date);
