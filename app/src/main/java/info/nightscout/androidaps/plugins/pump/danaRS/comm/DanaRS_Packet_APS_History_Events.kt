@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.db.ExtendedBolus
@@ -13,7 +12,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
-import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
@@ -23,7 +22,7 @@ open class DanaRS_Packet_APS_History_Events(
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
     private val activePlugin: ActivePluginProvider,
-    private val danaRSPlugin: DanaRSPlugin,
+    private val danaRPump: DanaRPump,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private var from: Long
 ) : DanaRS_Packet() {
@@ -50,7 +49,7 @@ open class DanaRS_Packet_APS_History_Events(
         min = cal[Calendar.MINUTE]
         sec = cal[Calendar.SECOND]
         aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + DateUtil.dateAndTimeString(cal.timeInMillis))
-        danaRSPlugin.apsHistoryDone = false
+        danaRPump.historyDoneReceived = false
     }
 
     override fun getRequestParams(): ByteArray {
@@ -68,7 +67,7 @@ open class DanaRS_Packet_APS_History_Events(
         val recordCode = intFromBuff(data, 0, 1).toByte()
         // Last record
         if (recordCode == 0xFF.toByte()) {
-            danaRSPlugin.apsHistoryDone = true
+            danaRPump.historyDoneReceived = true
             aapsLogger.debug(LTag.PUMPCOMM, "Last record received")
             return
         }
@@ -191,7 +190,7 @@ open class DanaRS_Packet_APS_History_Events(
                 status = "UNKNOWN " + DateUtil.timeString(datetime)
             }
         }
-        if (datetime > danaRSPlugin.lastEventTimeLoaded) danaRSPlugin.lastEventTimeLoaded = datetime
+        if (datetime > danaRPump.lastEventTimeLoaded) danaRPump.lastEventTimeLoaded = datetime
         rxBus.send(EventPumpStatusChanged(resourceHelper.gs(R.string.processinghistory) + ": " + status))
     }
 

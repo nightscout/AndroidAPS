@@ -168,7 +168,7 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = detailedBolusInfo.carbs;
             if (!result.success)
-                result.comment = resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaRPump.getMessageStartErrorCode());
+                result.comment = resourceHelper.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaRPump.getBolusStartErrorCode());
             else
                 result.comment = resourceHelper.gs(R.string.virtualpump_resultok);
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);

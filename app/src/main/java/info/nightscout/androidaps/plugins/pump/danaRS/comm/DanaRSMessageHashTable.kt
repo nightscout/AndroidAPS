@@ -18,7 +18,6 @@ class DanaRSMessageHashTable @Inject constructor(
     rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
     danaRPump: DanaRPump,
-    danaRSPlugin: DanaRSPlugin,
     activePlugin: ActivePluginProvider,
     constraintChecker: ConstraintChecker,
     detailedBolusInfoStorage: DetailedBolusInfoStorage
@@ -62,16 +61,16 @@ class DanaRSMessageHashTable @Inject constructor(
         put(DanaRS_Packet_Bolus_Set_Dual_Bolus(aapsLogger))
         put(DanaRS_Packet_Bolus_Set_Extended_Bolus(aapsLogger))
         put(DanaRS_Packet_Bolus_Set_Extended_Bolus_Cancel(aapsLogger))
-        put(DanaRS_Packet_Bolus_Set_Step_Bolus_Start(aapsLogger, danaRSPlugin, constraintChecker))
-        put(DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(aapsLogger, rxBus, resourceHelper, danaRSPlugin))
+        put(DanaRS_Packet_Bolus_Set_Step_Bolus_Start(aapsLogger, danaRPump, constraintChecker))
+        put(DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(aapsLogger, rxBus, resourceHelper, danaRPump))
         put(DanaRS_Packet_Etc_Keep_Connection(aapsLogger))
         put(DanaRS_Packet_Etc_Set_History_Save(aapsLogger))
         put(DanaRS_Packet_General_Delivery_Status(aapsLogger))
         put(DanaRS_Packet_General_Get_Password(aapsLogger, danaRPump))
         put(DanaRS_Packet_General_Initial_Screen_Information(aapsLogger, danaRPump))
         put(DanaRS_Packet_Notify_Alarm(aapsLogger, resourceHelper, rxBus))
-        put(DanaRS_Packet_Notify_Delivery_Complete(aapsLogger, rxBus, resourceHelper, danaRSPlugin))
-        put(DanaRS_Packet_Notify_Delivery_Rate_Display(aapsLogger, rxBus, resourceHelper, danaRSPlugin))
+        put(DanaRS_Packet_Notify_Delivery_Complete(aapsLogger, rxBus, resourceHelper, danaRPump))
+        put(DanaRS_Packet_Notify_Delivery_Rate_Display(aapsLogger, rxBus, resourceHelper, danaRPump))
         put(DanaRS_Packet_Notify_Missed_Bolus_Alarm(aapsLogger))
         put(DanaRS_Packet_Option_Get_Pump_Time(aapsLogger, danaRPump))
         put(DanaRS_Packet_Option_Get_User_Option(aapsLogger, danaRPump))
@@ -99,7 +98,7 @@ class DanaRSMessageHashTable @Inject constructor(
         put(DanaRS_Packet_History_Temporary(aapsLogger, rxBus))
         // APS
         put(DanaRS_Packet_APS_Basal_Set_Temporary_Basal(aapsLogger, 0))
-        put(DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, 0))
+        put(DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRPump, detailedBolusInfoStorage, 0))
         put(DanaRS_Packet_APS_Set_Event_History(aapsLogger, 0, 0, 0, 0))
         // v3
         put(DanaRS_Packet_General_Get_Shipping_Version(aapsLogger, danaRPump))

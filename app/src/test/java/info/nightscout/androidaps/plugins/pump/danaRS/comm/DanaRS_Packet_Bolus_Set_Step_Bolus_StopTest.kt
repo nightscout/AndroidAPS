@@ -18,13 +18,12 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(RxBusWrapper::class)
+@PrepareForTest(RxBusWrapper::class, DanaRSPlugin::class)
 class DanaRS_Packet_Bolus_Set_Step_Bolus_StopTest : DanaRSTestBase() {
 
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePlugin: ActivePluginProvider
-    @Mock lateinit var danaRSPlugin: DanaRSPlugin
 
     private var treatmentInjector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -40,8 +39,8 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_StopTest : DanaRSTestBase() {
     @Test fun runTest() {
         `when`(resourceHelper.gs(Mockito.anyInt())).thenReturn("SomeString")
 
-        danaRSPlugin.bolusingTreatment = Treatment(treatmentInjector)
-        val testPacket = DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(aapsLogger, rxBus, resourceHelper, danaRSPlugin)
+        danaRPump.bolusingTreatment = Treatment(treatmentInjector)
+        val testPacket = DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(aapsLogger, rxBus, resourceHelper, danaRPump)
         // test message decoding
         testPacket.handleMessage(byteArrayOf(0.toByte(), 0.toByte(), 0.toByte()))
         Assert.assertEquals(false, testPacket.failed)

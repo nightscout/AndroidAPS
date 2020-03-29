@@ -709,7 +709,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 return
             }
-            time = midnight + T.secs(seconds.toLong()).msecs()
+            time = midnight + T.secs(seconds.toLong()).msecs() // TODO: this is wrong during leap day
         }
         grams = constraintChecker.applyCarbsConstraints(Constraint(grams)).value()
         if (grams == 0) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))

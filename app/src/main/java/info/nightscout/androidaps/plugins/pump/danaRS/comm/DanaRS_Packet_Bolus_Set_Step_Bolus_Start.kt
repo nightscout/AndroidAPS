@@ -1,15 +1,15 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
+import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 
 class DanaRS_Packet_Bolus_Set_Step_Bolus_Start(
     private val aapsLogger: AAPSLogger,
-    private val danaRSPlugin: DanaRSPlugin,
+    private val danaRPump: DanaRPump,
     constraintChecker: ConstraintChecker,
     private var amount: Double = 0.0,
     private var speed: Int = 0
@@ -34,12 +34,12 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_Start(
     }
 
     override fun handleMessage(data: ByteArray) {
-        danaRSPlugin.bolusStartErrorCode = intFromBuff(data, 0, 1)
-        if (danaRSPlugin.bolusStartErrorCode == 0) {
+        danaRPump.bolusStartErrorCode = intFromBuff(data, 0, 1)
+        if (danaRPump.bolusStartErrorCode == 0) {
             failed = false
             aapsLogger.debug(LTag.PUMPCOMM, "Result OK")
         } else {
-            aapsLogger.error("Result Error: ${danaRSPlugin.bolusStartErrorCode}")
+            aapsLogger.error("Result Error: ${danaRPump.bolusStartErrorCode}")
             failed = true
         }
     }

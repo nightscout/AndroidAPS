@@ -615,9 +615,8 @@ class BLEComm @Inject internal constructor(
     }
 
     // the rest of packets
-    fun sendMessage(message: DanaRS_Packet?) {
+    fun sendMessage(message: DanaRS_Packet) {
         processedMessage = message
-        if (message == null) return
         val command = byteArrayOf(message.type.toByte(), message.opCode.toByte())
         val params = message.requestParams
         aapsLogger.debug(LTag.PUMPBTCOMM, ">>>>> " + message.friendlyName + " " + DanaRS_Packet.toHexString(command) + " " + DanaRS_Packet.toHexString(params))

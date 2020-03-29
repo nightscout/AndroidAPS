@@ -4,7 +4,6 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 
 class MsgBolusStart(
@@ -31,6 +30,6 @@ class MsgBolusStart(
             failed = false
             aapsLogger.debug(LTag.PUMPBTCOMM, "Messsage response: $errorCode OK")
         }
-        danaRPump.messageStartErrorCode = errorCode
+        danaRPump.bolusStartErrorCode = errorCode
     }
 }

@@ -50,7 +50,7 @@ class DanaRS_Packet_Notify_Delivery_Rate_DisplayTest : DanaRSTestBase() {
     @Test fun runTest() {
         `when`(resourceHelper.gs(ArgumentMatchers.anyInt(), anyObject())).thenReturn("SomeString")
         // val packet = DanaRS_Packet_Notify_Delivery_Rate_Display(1.0, Treatment(treatmentInjector))
-        val packet = DanaRS_Packet_Notify_Delivery_Rate_Display(aapsLogger, rxBus, resourceHelper, danaRSPlugin)
+        val packet = DanaRS_Packet_Notify_Delivery_Rate_Display(aapsLogger, rxBus, resourceHelper, danaRPump)
         // test params
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
@@ -66,6 +66,6 @@ class DanaRS_Packet_Notify_Delivery_Rate_DisplayTest : DanaRSTestBase() {
     @Before
     fun mock() {
         danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump, detailedBolusInfoStorage, fabricPrivacy)
-        danaRSPlugin.bolusingTreatment = Treatment(treatmentInjector)
+        danaRPump.bolusingTreatment = Treatment(treatmentInjector)
     }
 }

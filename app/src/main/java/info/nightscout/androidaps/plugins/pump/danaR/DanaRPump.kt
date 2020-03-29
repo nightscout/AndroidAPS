@@ -141,15 +141,15 @@ class DanaRPump @Inject constructor(
         return if (units == UNITS_MGDL) Constants.MGDL else Constants.MMOL
     }
 
-    // DanaR,Rv2,RK specific flags
-    // last start bolus erroCode
-    var messageStartErrorCode: Int = 0
-    var historyDoneReceived: Boolean = false
+    var bolusStartErrorCode: Int = 0 // last start bolus erroCode
+    var historyDoneReceived: Boolean = false // true when last history message is received
     var bolusingTreatment: Treatment? = null // actually delivered treatment
     var bolusAmountToBeDelivered = 0.0 // amount to be delivered
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
     var bolusStopped = false // bolus finished
     var bolusStopForced = false // bolus forced to stop by user
+    var bolusDone = false // success end
+    var lastEventTimeLoaded: Long = 0 // timestamp of last received event
 
     fun createConvertedProfile(): ProfileStore? {
         pumpProfiles?.let {

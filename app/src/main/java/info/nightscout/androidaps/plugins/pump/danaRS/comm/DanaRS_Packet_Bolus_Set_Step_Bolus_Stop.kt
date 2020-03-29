@@ -1,19 +1,19 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
-import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
+import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 open class DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val danaRSPlugin: DanaRSPlugin
+    private val danaRPump: DanaRPump
 ) : DanaRS_Packet() {
 
 
@@ -31,10 +31,10 @@ open class DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(
             failed = true
         }
         val bolusingEvent = EventOverviewBolusProgress
-        danaRSPlugin.bolusStopped = true
-        if (!danaRSPlugin.bolusStopForced) {
+        danaRPump.bolusStopped = true
+        if (!danaRPump.bolusStopForced) {
             // delivery ended without user intervention
-            danaRSPlugin.bolusingTreatment.insulin = danaRSPlugin.bolusAmountToBeDelivered
+            danaRPump.bolusingTreatment?.insulin = danaRPump.bolusAmountToBeDelivered
             bolusingEvent.status = resourceHelper.gs(R.string.overview_bolusprogress_delivered)
             bolusingEvent.percent = 100
         } else {

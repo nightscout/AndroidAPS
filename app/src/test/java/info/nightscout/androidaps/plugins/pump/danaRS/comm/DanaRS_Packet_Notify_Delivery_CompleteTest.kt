@@ -19,11 +19,10 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(RxBusWrapper::class)
+@PrepareForTest(RxBusWrapper::class, DanaRSPlugin::class)
 class DanaRS_Packet_Notify_Delivery_CompleteTest : DanaRSTestBase() {
 
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
-    @Mock lateinit var danaRSPlugin: DanaRSPlugin
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePlugin: ActivePluginProvider
 
@@ -41,13 +40,13 @@ class DanaRS_Packet_Notify_Delivery_CompleteTest : DanaRSTestBase() {
     @Test fun runTest() {
         `when`(resourceHelper.gs(anyInt(), anyDouble())).thenReturn("SomeString")
 
-        danaRSPlugin.bolusingTreatment = Treatment(treatmentInjector)
-        val packet = DanaRS_Packet_Notify_Delivery_Complete(aapsLogger, rxBus, resourceHelper, danaRSPlugin)
+        danaRPump.bolusingTreatment = Treatment(treatmentInjector)
+        val packet = DanaRS_Packet_Notify_Delivery_Complete(aapsLogger, rxBus, resourceHelper, danaRPump)
         // test params
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
         packet.handleMessage(createArray(17, 0.toByte()))
-        Assert.assertEquals(true, danaRSPlugin.bolusDone)
+        Assert.assertEquals(true, danaRPump.bolusDone)
         Assert.assertEquals("NOTIFY__DELIVERY_COMPLETE", packet.friendlyName)
     }
 }

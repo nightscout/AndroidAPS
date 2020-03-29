@@ -31,7 +31,7 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_StartTest : DanaRSTestBase() {
     private lateinit var danaRSPlugin: DanaRSPlugin
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Bolus_Set_Step_Bolus_Start(aapsLogger, danaRSPlugin, constraintChecker)
+        val packet = DanaRS_Packet_Bolus_Set_Step_Bolus_Start(aapsLogger, danaRPump, constraintChecker)
         // test params
         val testparams = packet.requestParams
         Assert.assertEquals(0.toByte(), testparams[0])

@@ -14,17 +14,16 @@ import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(RxBusWrapper::class, DetailedBolusInfoStorage::class)
+@PrepareForTest(RxBusWrapper::class, DetailedBolusInfoStorage::class, DanaRSPlugin::class)
 class DanaRS_Packet_APS_History_EventsTest : DanaRSTestBase() {
 
     @Mock lateinit var activePlugin: ActivePluginProvider
-    @Mock lateinit var danaRSPlugin: DanaRSPlugin
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
 
     @Test fun runTest() {
         val now = DateUtil.now()
 
-        val testPacket = DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, now)
+        val testPacket = DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRPump, detailedBolusInfoStorage, now)
         // test getRequestedParams
         val returnedValues = testPacket.requestParams
         val expectedValues = getCalender(now)
