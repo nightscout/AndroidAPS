@@ -4,16 +4,19 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
 import android.os.LocaleList
+import androidx.preference.PreferenceManager
 import info.nightscout.androidaps.R
 import java.util.*
 
-
 object LocaleHelper {
-    fun currentLanguage(): String =
-            SP.getString(R.string.key_language, Locale.getDefault().language)
+    private fun currentLanguage(context: Context): String =
+        PreferenceManager.getDefaultSharedPreferences(context).getString(context.getString(R.string.key_language), "en")
+            ?: "en"
+    // injection not possible because of use in attachBaseContext
+    //SP.getString(R.string.key_language, Locale.getDefault().language)
 
-    private fun currentLocale(): Locale {
-        val language = currentLanguage()
+    private fun currentLocale(context: Context): Locale {
+        val language = currentLanguage(context)
         var locale = Locale(language)
         if (language.contains("_")) {
             // language with country like pt_BR defined in arrays.xml
@@ -26,7 +29,7 @@ object LocaleHelper {
 
     @Suppress("DEPRECATION")
     fun update(context: Context) {
-        val locale = currentLocale()
+        val locale = currentLocale(context)
         Locale.setDefault(locale)
         val resources = context.resources
         val configuration = resources.configuration
@@ -39,7 +42,7 @@ object LocaleHelper {
     fun wrap(ctx: Context): ContextWrapper {
         val res = ctx.resources
         val configuration = res.configuration
-        val newLocale = currentLocale()
+        val newLocale = currentLocale(ctx)
         val context = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             configuration.setLocale(newLocale)
             val localeList = LocaleList(newLocale)

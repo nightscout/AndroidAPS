@@ -40,7 +40,7 @@ class TddCalculator @Inject constructor(
 
     fun calculate(days: Long): LongSparseArray<TDD> {
         val range = T.days(days + 1).msecs()
-        val startTime = MidnightTime.calc(DateUtil.now()) - T.days(days).msecs()
+        val startTime = MidnightTime.calc(DateUtil.now() - T.days(days).msecs())
         val endTime = MidnightTime.calc(DateUtil.now())
         initializeData(range)
 

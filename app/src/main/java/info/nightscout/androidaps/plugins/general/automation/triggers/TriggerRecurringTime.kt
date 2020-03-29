@@ -93,7 +93,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun duplicate(): Trigger = TriggerRecurringTime(injector, this)
 
-    private fun toMills(minutesSinceMidnight: Int): Long = MidnightTime.calc() + T.mins(minutesSinceMidnight.toLong()).msecs()
+    private fun toMills(minutesSinceMidnight: Int): Long = MidnightTime.calcPlusMinutes(minutesSinceMidnight)
 
     private fun getMinSinceMidnight(time: Long): Int = Profile.secondsFromMidnight(time) / 60
 

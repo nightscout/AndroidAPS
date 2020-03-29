@@ -68,7 +68,7 @@ class TidepoolUploader @Inject constructor(
 
             val client = OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)
-                .addInterceptor(InfoInterceptor(TidepoolUploader::class.java.name))
+                .addInterceptor(InfoInterceptor(TidepoolUploader::class.java.name, aapsLogger))
                 .build()
 
             retrofit = Retrofit.Builder()

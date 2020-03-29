@@ -190,6 +190,7 @@ class PluginStore @Inject constructor(
     </T> */
     private fun <T> determineActivePlugin(pluginsInCategory: ArrayList<PluginBase>,
                                           pluginType: PluginType): T? {
+        @Suppress("UNCHECKED_CAST")
         val activePlugin = getTheOneEnabledInArray(pluginsInCategory, pluginType) as T?
         if (activePlugin != null) {
             setFragmentVisiblities((activePlugin as PluginBase).name, pluginsInCategory, pluginType)

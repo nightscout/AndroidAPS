@@ -50,7 +50,8 @@ class TidepoolPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val tidepoolUploader: TidepoolUploader,
     private val uploadChunk: UploadChunk,
-    private val sp: SP
+    private val sp: SP,
+    private val rateLimit: RateLimit
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .pluginName(R.string.tidepool)
@@ -103,7 +104,7 @@ class TidepoolPlugin @Inject constructor(
                 if (isEnabled(PluginType.GENERAL)
                     && (!sp.getBoolean(R.string.key_tidepool_only_while_charging, false) || ChargingStateReceiver.isCharging())
                     && (!sp.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || NetworkChangeReceiver.isWifiConnected())
-                    && RateLimit.rateLimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
+                    && rateLimit.rateLimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
                     doUpload()
             }, {
                 fabricPrivacy.logException(it)
