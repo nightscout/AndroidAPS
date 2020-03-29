@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.utils.DateUtil
-import java.util.*
+import org.joda.time.DateTime
 
 class DanaRS_Packet_Option_Get_Pump_Time(
     private val aapsLogger: AAPSLogger,
@@ -36,10 +36,9 @@ class DanaRS_Packet_Option_Get_Pump_Time(
         dataIndex += dataSize
         dataSize = 1
         val sec = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        val time = Date(100 + year, month - 1, day, hour, min, sec)
-        danaRPump.pumpTime = time.time
-        failed = year == month && month == day && day == hour && hour == min && min == sec && sec == 1
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + DateUtil.dateAndTimeString(time))
+        val time = DateTime(2000 + year, month, day, hour, min, sec)
+        danaRPump.pumpTime = time.millis
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + DateUtil.dateAndTimeString(time.millis))
     }
 
     override fun handleMessageNotReceived() {

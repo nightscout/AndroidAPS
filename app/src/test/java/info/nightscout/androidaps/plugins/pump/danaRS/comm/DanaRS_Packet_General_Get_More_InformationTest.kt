@@ -3,25 +3,39 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
+import java.util.*
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest()
 class DanaRS_Packet_General_Get_More_InformationTest : DanaRSTestBase() {
 
     @Test fun runTest() {
         var packet = DanaRS_Packet_General_Get_More_Information(aapsLogger, danaRPump)
-        Assert.assertEquals(null, packet.requestParams)
-        // test message decoding
-        // test for the length message
-        packet.handleMessage(createArray(13, 0.toByte()))
-        Assert.assertEquals(true, packet.failed)
+
+        packet.handleMessage(createArray(14, 0.toByte()))
+        Assert.assertTrue(packet.failed)
+
         packet = DanaRS_Packet_General_Get_More_Information(aapsLogger, danaRPump)
-        packet.handleMessage(createArray(15, 0.toByte()))
-        Assert.assertEquals(false, packet.failed)
-        packet.handleMessage(createArray(15, 161.toByte()))
-        Assert.assertEquals(true, packet.failed)
+        val array = createArray(15, 0.toByte()) // 13 + 2
+        putIntToArray(array, 0, 600) // iob 6
+        putIntToArray(array, 2, 1250) // daily units 12.5
+        putByteToArray(array, 4, 1) // is extended in progress
+        putIntToArray(array, 5, 150) // extended remaining minutes 150
+        putByteToArray(array, 9, 15) // hours 15
+        putByteToArray(array, 10, 25) // minutes 25
+        putIntToArray(array, 11, 170) // last bolus manout 1.70
+
+        packet.handleMessage(array)
+        Assert.assertFalse(packet.failed)
+        Assert.assertEquals(6.0, danaRPump.iob, 0.01)
+        Assert.assertEquals(12.5, danaRPump.dailyTotalUnits, 0.01)
+        Assert.assertTrue(danaRPump.isExtendedInProgress)
+        Assert.assertEquals(150, danaRPump.extendedBolusRemainingMinutes)
+        val lastBolus = Date(danaRPump.lastBolusTime)
+        Assert.assertEquals(15, lastBolus.hours)
+        Assert.assertEquals(25, lastBolus.minutes)
+        Assert.assertEquals(1.7, danaRPump.lastBolusAmount, 0.01)
+
         Assert.assertEquals("REVIEW__GET_MORE_INFORMATION", packet.friendlyName)
     }
 }

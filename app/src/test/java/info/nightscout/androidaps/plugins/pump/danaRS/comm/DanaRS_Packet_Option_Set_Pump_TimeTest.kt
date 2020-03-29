@@ -1,22 +1,25 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.utils.DateUtil
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import java.util.*
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest()
 class DanaRS_Packet_Option_Set_Pump_TimeTest : DanaRSTestBase() {
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Option_Set_Pump_Time(aapsLogger, DateUtil.now())
+        val date = Date()
+        val packet = DanaRS_Packet_Option_Set_Pump_Time(aapsLogger, date.time)
         // test params
         val params = packet.requestParams
-        Assert.assertEquals((Date().date and 0xff).toByte(), params[2])
+        Assert.assertEquals((date.year  - 100 and 0xff).toByte(), params[0]) // 2019 -> 19
+        Assert.assertEquals((date.month + 1 and 0xff).toByte(), params[1])
+        Assert.assertEquals((date.date and 0xff).toByte(), params[2])
+        Assert.assertEquals((date.hours and 0xff).toByte(), params[3])
+        Assert.assertEquals((date.minutes and 0xff).toByte(), params[4])
+        Assert.assertEquals((date.seconds and 0xff).toByte(), params[5])
         // test message decoding
         packet.handleMessage(createArray(3, 0.toByte()))
         Assert.assertEquals(false, packet.failed)

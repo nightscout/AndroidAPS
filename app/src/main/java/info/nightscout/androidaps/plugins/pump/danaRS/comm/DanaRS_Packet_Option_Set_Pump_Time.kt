@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.utils.DateUtil
-import java.util.*
+import org.joda.time.DateTime
 
 class DanaRS_Packet_Option_Set_Pump_Time(
     private val aapsLogger: AAPSLogger,
@@ -19,14 +19,14 @@ class DanaRS_Packet_Option_Set_Pump_Time(
     }
 
     override fun getRequestParams(): ByteArray {
-        val date = Date(time)
+        val date = DateTime(time)
         val request = ByteArray(6)
-        request[0] = (date.year - 100 and 0xff).toByte()
-        request[1] = (date.month + 1 and 0xff).toByte()
-        request[2] = (date.date and 0xff).toByte()
-        request[3] = (date.hours and 0xff).toByte()
-        request[4] = (date.minutes and 0xff).toByte()
-        request[5] = (date.seconds and 0xff).toByte()
+        request[0] = (date.year - 2000 and 0xff).toByte()
+        request[1] = (date.monthOfYear and 0xff).toByte()
+        request[2] = (date.dayOfMonth and 0xff).toByte()
+        request[3] = (date.hourOfDay and 0xff).toByte()
+        request[4] = (date.minuteOfHour and 0xff).toByte()
+        request[5] = (date.secondOfMinute and 0xff).toByte()
         return request
     }
 

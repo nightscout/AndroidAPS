@@ -25,8 +25,8 @@ open class MsgHistoryAll(
         val datetimewihtsec = dateTimeSecFromBuff(bytes, 1) // 6 bytes
         val dailyBasal = intFromBuff(bytes, 4, 2) * 0.01
         val dailyBolus = intFromBuff(bytes, 6, 2) * 0.01
-        val paramByte5 = intFromBuff(bytes, 4, 1).toByte()
-        val paramByte6 = intFromBuff(bytes, 5, 1).toByte()
+        //val paramByte5 = intFromBuff(bytes, 4, 1).toByte()
+        //val paramByte6 = intFromBuff(bytes, 5, 1).toByte()
         val paramByte7 = intFromBuff(bytes, 6, 1).toByte()
         val paramByte8 = intFromBuff(bytes, 7, 1).toByte()
         val value = intFromBuff(bytes, 8, 2).toDouble()

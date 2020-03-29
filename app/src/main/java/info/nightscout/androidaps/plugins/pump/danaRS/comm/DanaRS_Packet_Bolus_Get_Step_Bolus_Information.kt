@@ -5,6 +5,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.utils.DateUtil
+import org.joda.time.DateTime
 import java.util.*
 
 class DanaRS_Packet_Bolus_Get_Step_Bolus_Information(
@@ -18,32 +19,15 @@ class DanaRS_Packet_Bolus_Get_Step_Bolus_Information(
     }
 
     override fun handleMessage(data: ByteArray) {
-        var dataIndex = DATA_START
-        var dataSize = 1
-        val error = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        val bolusType = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 2
-        danaRPump.initialBolusAmount = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
-        val lbt = Date() // it doesn't provide day only hour+min, workaround: expecting today
-        dataIndex += dataSize
-        dataSize = 1
-        lbt.hours = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        dataIndex += dataSize
-        dataSize = 1
-        lbt.minutes = byteArrayToInt(getBytes(data, dataIndex, dataSize))
-        danaRPump.lastBolusTime = lbt.time
-        dataIndex += dataSize
-        dataSize = 2
-        danaRPump.lastBolusAmount = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
-        dataIndex += dataSize
-        dataSize = 2
-        danaRPump.maxBolus = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
-        dataIndex += dataSize
-        dataSize = 1
-        danaRPump.bolusStep = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
+        val error = intFromBuff(data, 0, 1)
+        val bolusType = intFromBuff(data, 1, 1)
+        danaRPump.initialBolusAmount = intFromBuff(data, 2, 2) / 100.0
+        val hours = intFromBuff(data, 4, 1)
+        val minutes = intFromBuff(data, 5, 1)
+        danaRPump.lastBolusTime = DateTime.now().withHourOfDay(hours).withMinuteOfHour(minutes).millis
+        danaRPump.lastBolusAmount = intFromBuff(data, 6, 2) / 100.0
+        danaRPump.maxBolus = intFromBuff(data, 8, 2) / 100.0
+        danaRPump.bolusStep = intFromBuff(data, 10, 1) / 100.0
         failed = error != 0
         aapsLogger.debug(LTag.PUMPCOMM, "Result: $error")
         aapsLogger.debug(LTag.PUMPCOMM, "BolusType: $bolusType")

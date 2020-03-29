@@ -4,6 +4,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.utils.DateUtil
+import org.joda.time.DateTime
 import java.util.*
 
 class MsgSettingPumpTime(
@@ -17,14 +18,14 @@ class MsgSettingPumpTime(
     }
 
     override fun handleMessage(bytes: ByteArray) {
-        val time = Date(
-            100 + intFromBuff(bytes, 5, 1),
-            intFromBuff(bytes, 4, 1) - 1,
+        val time = DateTime(
+            2000 + intFromBuff(bytes, 5, 1),
+            intFromBuff(bytes, 4, 1),
             intFromBuff(bytes, 3, 1),
             intFromBuff(bytes, 2, 1),
             intFromBuff(bytes, 1, 1),
             intFromBuff(bytes, 0, 1)
-        ).time
+        ).millis
         aapsLogger.debug(LTag.PUMPCOMM, "Pump time: " + DateUtil.dateAndTimeString(time) + " Phone time: " + Date())
         danaRPump.pumpTime = time
     }

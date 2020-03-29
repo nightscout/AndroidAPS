@@ -4,6 +4,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase
 
+@Suppress("UNUSED_PARAMETER")
 class MsgSetAPSTempBasalStart_v2(
     private val aapsLogger: AAPSLogger,
     private var percent: Int,
