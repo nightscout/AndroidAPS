@@ -92,7 +92,6 @@ public class MainActivity extends NoSplashAppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        AndroidInjection.inject(this);
         super.onCreate(savedInstanceState);
 
         Iconify.with(new FontAwesomeModule());
