@@ -366,7 +366,7 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 */
 
 public class DeviceStatus {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.APS);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
 
     public String device = null;
     public JSONObject pump = null;

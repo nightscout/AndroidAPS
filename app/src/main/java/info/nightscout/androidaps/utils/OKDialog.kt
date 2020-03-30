@@ -39,6 +39,7 @@ object OKDialog {
     }
 
     fun runOnUiThread(theRunnable: Runnable?) {
+        @Suppress("DEPRECATION"
         val mainHandler = Handler(MainApp.instance().applicationContext.mainLooper)
         theRunnable?.let { mainHandler.post(it) }
     }

@@ -1,0 +1,30 @@
+package info.nightscout.androidaps.logging
+
+enum class LTag(val tag: String, val defaultValue : Boolean = false, val requiresRestart: Boolean = false) {
+    CORE("CORE", defaultValue = false),
+    APS("APS", defaultValue = false),
+    AUTOSENS("AUTOSENS"),
+    AUTOMATION("AUTOMATION", defaultValue = false),
+    BGSOURCE("BGSOURCE", defaultValue = false),
+    CONFIGBUILDER("CONFIGBUILDER"),
+    CONSTRAINTS("CONSTRAINTS", defaultValue = false),
+    DATABASE("DATABASE", defaultValue = false),
+    DATAFOOD("DATAFOOD"),
+    DATASERVICE("DATASERVICE", defaultValue = false),
+    DATATREATMENTS("DATATREATMENTS", defaultValue = false),
+    EVENTS("EVENTS", defaultValue = false, requiresRestart = true),
+    GLUCOSE("GLUCOSE"),
+    LOCATION("LOCATION", defaultValue = false),
+    NOTIFICATION("NOTIFICATION", defaultValue = false),
+    NSCLIENT("NSCLIENT", defaultValue = false),
+    OVERVIEW("OVERVIEW", defaultValue = false),
+    PUMP("PUMP", defaultValue = false),
+    PUMPBTCOMM("PUMPBTCOMM"),
+    PUMPCOMM("PUMPCOMM", defaultValue = false),
+    PUMPQUEUE("PUMPQUEUE", defaultValue = false),
+    PROFILE("PROFILE", defaultValue = false),
+    SMS("SMS", defaultValue = false),
+    TIDEPOOL("TIDEPOOL"),
+    UI("UI", defaultValue = false),
+    WEAR("WEAR")
+}

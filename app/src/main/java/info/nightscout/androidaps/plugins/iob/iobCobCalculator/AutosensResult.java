@@ -2,17 +2,14 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.logging.LTag;
 
 /**
  * Created by mike on 06.01.2017.
  */
 public class AutosensResult {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.AUTOSENS);
 
     //default values to show when autosens algorithm is not called
     public double ratio = 1d;
@@ -30,7 +27,7 @@ public class AutosensResult {
             ret.put("sensResult", sensResult);
             ret.put("ratio", ratio);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            LoggerFactory.getLogger(LTag.CORE.getTag()).error("Unhandled exception", e);
         }
         return ret;
     }

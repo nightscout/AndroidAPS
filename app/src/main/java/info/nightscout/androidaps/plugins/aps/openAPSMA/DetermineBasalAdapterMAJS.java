@@ -109,8 +109,7 @@ public class DetermineBasalAdapterMAJS {
 
                 // Parse the jsResult object to a JSON-String
                 String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();
-                if (L.isEnabled(L.APS))
-                    aapsLogger.debug(LTag.APS, "Result: " + result);
+                aapsLogger.debug(LTag.APS, "Result: " + result);
                 try {
                     determineBasalResultMA = new DetermineBasalResultMA(injector, jsResult, new JSONObject(result));
                 } catch (JSONException e) {
