@@ -19,6 +19,8 @@ import info.nightscout.androidaps.plugins.pump.danaRS.activities.EnterPinActivit
 import info.nightscout.androidaps.plugins.pump.danaRS.activities.PairingHelperActivity
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRSMessageHashTable
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet
+import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_Etc_Keep_Connection
+import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_General_Get_Pump_Check
 import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSPairingSuccess
 import info.nightscout.androidaps.utils.ToastUtils
@@ -72,6 +74,7 @@ class BLEComm @Inject internal constructor(
     var isConnected = false
     var isConnecting = false
     private var encryptedDataRead = false
+    private var encryptedCommandSent = false
     private var uartRead: BluetoothGattCharacteristic? = null
     private var uartWrite: BluetoothGattCharacteristic? = null
 
@@ -99,6 +102,7 @@ class BLEComm @Inject internal constructor(
         isConnected = false
         v3Encryption = false
         encryptedDataRead = false
+        encryptedCommandSent = false
         isConnecting = true
         val device = bluetoothAdapter?.getRemoteDevice(address)
         if (device == null) {
@@ -121,7 +125,7 @@ class BLEComm @Inject internal constructor(
     fun disconnect(from: String) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "disconnect from: $from")
 
-        if (!encryptedDataRead && v3Encryption) {
+        if (!encryptedDataRead && encryptedCommandSent && v3Encryption) {
             // there was no response from pump after started encryption
             // assume pairing keys are invalid
             sp.remove(resourceHelper.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
@@ -143,6 +147,7 @@ class BLEComm @Inject internal constructor(
         bluetoothGatt?.disconnect()
         isConnected = false
         encryptedDataRead = false
+        encryptedCommandSent = false
         SystemClock.sleep(2000)
     }
 
@@ -202,6 +207,7 @@ class BLEComm @Inject internal constructor(
             isConnecting = false
             isConnected = false
             encryptedDataRead = false
+            encryptedCommandSent = false
             return
         }
         bluetoothGatt?.setCharacteristicNotification(characteristic, enabled)
@@ -216,6 +222,7 @@ class BLEComm @Inject internal constructor(
                 isConnecting = false
                 isConnected = false
                 encryptedDataRead = false
+                encryptedCommandSent = false
                 return@Runnable
             }
             characteristic.value = data
@@ -241,6 +248,7 @@ class BLEComm @Inject internal constructor(
             isConnecting = false
             isConnected = false
             encryptedDataRead = false
+            encryptedCommandSent = false
             return null
         }
         return bluetoothGatt?.services
@@ -275,6 +283,7 @@ class BLEComm @Inject internal constructor(
             isConnecting = false
             v3Encryption = false
             encryptedDataRead = false
+            encryptedCommandSent = false
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
             aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected " + gatt.device.name) //Device was disconnected
         }
@@ -527,6 +536,7 @@ class BLEComm @Inject internal constructor(
                     isConnected = true
                     isConnecting = false
                     aapsLogger.debug(LTag.PUMPBTCOMM, "Connect !!")
+                    // Send one message to confirm communication
                 } else {
                     context.startActivity(Intent(context, EnterPinActivity::class.java).also { it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
                     aapsLogger.debug(LTag.PUMPBTCOMM, "Request pairing keys !!")
@@ -616,6 +626,7 @@ class BLEComm @Inject internal constructor(
 
     // the rest of packets
     fun sendMessage(message: DanaRS_Packet) {
+        encryptedCommandSent = true
         processedMessage = message
         val command = byteArrayOf(message.type.toByte(), message.opCode.toByte())
         val params = message.requestParams
