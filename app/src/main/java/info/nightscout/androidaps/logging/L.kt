@@ -7,59 +7,18 @@ object L {
     private var logElements: MutableList<LogElement> = ArrayList()
 
     const val CORE = "CORE"
-    const val AUTOSENS = "AUTOSENS"
-    const val AUTOMATION = "AUTOMATION"
-    const val EVENTS = "EVENTS"
-    const val GLUCOSE = "GLUCOSE"
     const val BGSOURCE = "BGSOURCE"
-    const val OVERVIEW = "OVERVIEW"
-    const val NOTIFICATION = "NOTIFICATION"
     const val DATASERVICE = "DATASERVICE"
     const val DATABASE = "DATABASE"
     const val DATAFOOD = "DATAFOOD"
     const val DATATREATMENTS = "DATATREATMENTS"
     const val NSCLIENT = "NSCLIENT"
-    const val TIDEPOOL = "TIDEPOOL"
-    const val CONSTRAINTS = "CONSTRAINTS"
     const val PUMP = "PUMP"
-    const val PUMPQUEUE = "PUMPQUEUE"
     const val PUMPCOMM = "PUMPCOMM"
     const val PUMPBTCOMM = "PUMPBTCOMM"
-    const val APS = "APS"
-    const val PROFILE = "PROFILE"
-    const val CONFIGBUILDER = "CONFIGBUILDER"
-    const val UI = "UI"
-    const val LOCATION = "LOCATION"
-    const val SMS = "SMS"
-    const val WEAR = "WEAR"
 
     init {
-        logElements.add(LogElement(APS, defaultValue = true))
-        logElements.add(LogElement(AUTOMATION, defaultValue = true))
-        logElements.add(LogElement(AUTOSENS, defaultValue = false))
-        logElements.add(LogElement(BGSOURCE, defaultValue = true))
-        logElements.add(LogElement(GLUCOSE, defaultValue = false))
-        logElements.add(LogElement(CONFIGBUILDER, defaultValue = false))
-        logElements.add(LogElement(CONSTRAINTS, defaultValue = true))
-        logElements.add(LogElement(CORE, defaultValue = true))
-        logElements.add(LogElement(DATABASE, defaultValue = true))
-        logElements.add(LogElement(DATAFOOD, false))
-        logElements.add(LogElement(DATASERVICE, true))
-        logElements.add(LogElement(DATATREATMENTS, true))
-        logElements.add(LogElement(EVENTS, false, requiresRestart = true))
-        logElements.add(LogElement(LOCATION, true))
-        logElements.add(LogElement(NOTIFICATION, true))
-        logElements.add(LogElement(NSCLIENT, true))
-        logElements.add(LogElement(TIDEPOOL, true))
-        logElements.add(LogElement(OVERVIEW, true))
-        logElements.add(LogElement(PROFILE, true))
-        logElements.add(LogElement(PUMP, true))
-        logElements.add(LogElement(PUMPBTCOMM, false))
-        logElements.add(LogElement(PUMPCOMM, true))
-        logElements.add(LogElement(PUMPQUEUE, true))
-        logElements.add(LogElement(SMS, true))
-        logElements.add(LogElement(UI, true))
-        logElements.add(LogElement(WEAR, true))
+        LTag.values().forEach { logElements.add(LogElement(it)) }
     }
 
     private fun findByName(name: String): LogElement {
@@ -90,16 +49,10 @@ object L {
         var enabled: Boolean
         private var requiresRestart = false
 
-        internal constructor(name: String, defaultValue: Boolean) {
-            this.name = name
-            this.defaultValue = defaultValue
-            enabled = SP.getBoolean(getSPName(), defaultValue)
-        }
-
-        internal constructor(name: String, defaultValue: Boolean, requiresRestart: Boolean) {
-            this.name = name
-            this.defaultValue = defaultValue
-            this.requiresRestart = requiresRestart
+        internal constructor(tag:LTag) {
+            this.name = tag.tag
+            this.defaultValue = tag.defaultValue
+            this.requiresRestart = tag.requiresRestart
             enabled = SP.getBoolean(getSPName(), defaultValue)
         }
 
@@ -120,33 +73,4 @@ object L {
             enable(defaultValue)
         }
     }
-}
-
-enum class LTag(val tag: String) {
-    CORE("CORE"),
-    AUTOSENS("AUTOSENS"),
-    AUTOMATION("AUTOMATION"),
-    EVENTS("EVENTS"),
-    GLUCOSE("GLUCOSE"),
-    BGSOURCE("BGSOURCE"),
-    OVERVIEW("OVERVIEW"),
-    NOTIFICATION("NOTIFICATION"),
-    DATASERVICE("DATASERVICE"),
-    DATABASE("DATABASE"),
-    DATAFOOD("DATAFOOD"),
-    DATATREATMENTS("DATATREATMENTS"),
-    NSCLIENT("NSCLIENT"),
-    TIDEPOOL("TIDEPOOL"),
-    CONSTRAINTS("CONSTRAINTS"),
-    PUMP("PUMP"),
-    PUMPQUEUE("PUMPQUEUE"),
-    PUMPCOMM("PUMPCOMM"),
-    PUMPBTCOMM("PUMPBTCOMM"),
-    APS("APS"),
-    PROFILE("PROFILE"),
-    CONFIGBUILDER("CONFIGBUILDER"),
-    UI("UI"),
-    LOCATION("LOCATION"),
-    WEAR("WEAR"),
-    SMS("SMS"),
 }

@@ -37,8 +37,6 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 class RealPumpTest {
 
-    private val log = LoggerFactory.getLogger(L.CORE)
-
     companion object {
         const val R_PASSWORD = 1234
         const val R_SERIAL = "PBB00013LR_P"
@@ -120,12 +118,12 @@ class RealPumpTest {
         preparePlugins()
 
         while (!pump.isInitialized) {
-            log.debug("Waiting for initialization")
+            //log.debug("Waiting for initialization")
             SystemClock.sleep(1000)
         }
 
         while (true) {
-            log.debug("Tick")
+            //log.debug("Tick")
             SystemClock.sleep(1000)
         }
     }
