@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.logging
 
-import info.nightscout.androidaps.utils.SP
+import androidx.preference.PreferenceManager
+import info.nightscout.androidaps.MainApp
 import java.util.*
 
 object L {
@@ -49,11 +50,13 @@ object L {
         var enabled: Boolean
         private var requiresRestart = false
 
-        internal constructor(tag:LTag) {
+        internal constructor(tag: LTag) {
             this.name = tag.tag
             this.defaultValue = tag.defaultValue
             this.requiresRestart = tag.requiresRestart
-            enabled = SP.getBoolean(getSPName(), defaultValue)
+            //TODO: remove after getting rid of old logging style "if (L.isEnabled(...))"
+            @Suppress("DEPRECATION")
+            enabled = PreferenceManager.getDefaultSharedPreferences(MainApp.instance()).getBoolean(getSPName(), defaultValue)
         }
 
         internal constructor(defaultValue: Boolean) {
@@ -66,7 +69,8 @@ object L {
 
         fun enable(enabled: Boolean) {
             this.enabled = enabled
-            SP.putBoolean(getSPName(), enabled)
+            @Suppress("DEPRECATION")
+            PreferenceManager.getDefaultSharedPreferences(MainApp.instance()).edit().putBoolean(getSPName(), enabled).apply()
         }
 
         fun resetToDefault() {
