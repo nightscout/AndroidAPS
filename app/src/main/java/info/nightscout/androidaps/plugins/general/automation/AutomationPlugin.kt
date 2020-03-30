@@ -228,7 +228,8 @@ object AutomationPlugin : PluginBase(PluginDescription()
                 TriggerLocation(),
                 TriggerAutosensValue(),
                 TriggerBolusAgo(),
-                TriggerPumpLastConnection()
+                TriggerPumpLastConnection(),
+                TriggerBTDevice()
         )
     }
 
