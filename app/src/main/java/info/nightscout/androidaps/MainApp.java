@@ -114,9 +114,6 @@ public class MainApp extends DaggerApplication {
 
     static DatabaseHelper sDatabaseHelper = null;
 
-    DataReceiver dataReceiver = new DataReceiver();
-    TimeDateOrTZChangeReceiver timeDateOrTZChangeReceiver;
-
     private String CHANNEL_ID = "AndroidAPS-Ongoing"; // TODO: move to OngoingNotificationProvider (and dagger)
     private int ONGOING_NOTIFICATION_ID = 4711; // TODO: move to OngoingNotificationProvider (and dagger)
     private Notification notification; // TODO: move to OngoingNotificationProvider (and dagger)
@@ -330,23 +327,28 @@ public class MainApp extends DaggerApplication {
     }
 
     private void registerLocalBroadcastReceiver() {
-        LocalBroadcastManager lbm = LocalBroadcastManager.getInstance(this);
-        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_TREATMENT));
-        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_CHANGED_TREATMENT));
-        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_REMOVED_TREATMENT));
-        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_SGV));
-        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_PROFILE));
-        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_MBG));
-        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_CAL));
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intents.ACTION_NEW_TREATMENT);
+        filter.addAction(Intents.ACTION_CHANGED_TREATMENT);
+        filter.addAction(Intents.ACTION_REMOVED_TREATMENT);
+        filter.addAction(Intents.ACTION_NEW_SGV);
+        filter.addAction(Intents.ACTION_NEW_PROFILE);
+        filter.addAction(Intents.ACTION_NEW_MBG);
+        filter.addAction(Intents.ACTION_NEW_CAL);
+        LocalBroadcastManager.getInstance(this).registerReceiver(new DataReceiver(), filter);
 
-        this.timeDateOrTZChangeReceiver = new TimeDateOrTZChangeReceiver();
-        this.timeDateOrTZChangeReceiver.registerBroadcasts(this);
+        filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_TIME_CHANGED);
+        filter.addAction(Intent.ACTION_DATE_CHANGED);
+        filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        registerReceiver(new TimeDateOrTZChangeReceiver(), filter);
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        intentFilter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
-        intentFilter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
-        registerReceiver(new NetworkChangeReceiver(), intentFilter);
+        filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
+        filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
+        registerReceiver(new NetworkChangeReceiver(), filter);
+
         registerReceiver(new ChargingStateReceiver(), new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
     }
 
@@ -421,11 +423,7 @@ public class MainApp extends DaggerApplication {
 
     @Override
     public void onTerminate() {
-
         aapsLogger.debug(LTag.CORE, "onTerminate");
-
-        if (timeDateOrTZChangeReceiver != null)
-            unregisterReceiver(timeDateOrTZChangeReceiver);
         unregisterActivityLifecycleCallbacks(activityMonitor);
         keepAliveManager.cancelAlarm(this);
         super.onTerminate();
