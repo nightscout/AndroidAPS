@@ -6,7 +6,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.events.EventChargingState
 import info.nightscout.androidaps.events.EventNetworkChange
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -23,7 +22,6 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
 import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
@@ -36,24 +34,19 @@ class NsClientReceiverDelegateTest : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var resourceHelper: ResourceHelper
 
-    lateinit var receiverStatusStore : ReceiverStatusStore
+    lateinit var receiverStatusStore: ReceiverStatusStore
     val rxBus: RxBusWrapper = RxBusWrapper()
 
     private var sut: NsClientReceiverDelegate? = null
 
     @Before fun prepare() {
-        receiverStatusStore = ReceiverStatusStore(context)
-        System.setProperty("disableFirebase", "true")
-        PowerMockito.mockStatic(MainApp::class.java)
-        val mainApp: MainApp = mock(MainApp::class.java)
-        `when`(MainApp.instance()).thenReturn(mainApp)
-        PowerMockito.mockStatic(SP::class.java)
+        receiverStatusStore = ReceiverStatusStore(context, rxBus)
         `when`(sp.getLong(anyInt(), anyLong())).thenReturn(0L)
         `when`(sp.getBoolean(anyInt(), anyBoolean())).thenReturn(false)
         `when`(sp.getInt(anyInt(), anyInt())).thenReturn(0)
         `when`(sp.getString(anyInt(), anyString())).thenReturn("")
 
-        sut = NsClientReceiverDelegate(aapsLogger, context, rxBus, resourceHelper, sp, receiverStatusStore)
+        sut = NsClientReceiverDelegate(rxBus, resourceHelper, sp, receiverStatusStore)
     }
 
     @Test fun testCalculateStatusChargingState() {

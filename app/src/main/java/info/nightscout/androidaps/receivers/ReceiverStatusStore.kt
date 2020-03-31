@@ -2,12 +2,14 @@ package info.nightscout.androidaps.receivers
 
 import android.content.Context
 import android.content.Intent
+import info.nightscout.androidaps.events.EventChargingState
 import info.nightscout.androidaps.events.EventNetworkChange
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ReceiverStatusStore @Inject constructor(val context: Context) {
+class ReceiverStatusStore @Inject constructor(val context: Context, val rxBus: RxBusWrapper) {
 
     var lastNetworkEvent: EventNetworkChange? = null
 
@@ -19,5 +21,14 @@ class ReceiverStatusStore @Inject constructor(val context: Context) {
 
     fun updateNetworkStatus() {
         context.sendBroadcast(Intent(context, NetworkChangeReceiver::class.java))
+    }
+
+    var lastChargingEvent: EventChargingState? = null
+
+    val isCharging: Boolean
+        get() = lastChargingEvent?.isCharging ?: false
+
+    fun broadcastChargingState() {
+        lastChargingEvent?.let { rxBus.send(it) }
     }
 }

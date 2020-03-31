@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.general.nsclient;
 
-import android.content.Context;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -9,10 +7,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventChargingState;
 import info.nightscout.androidaps.events.EventNetworkChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.receivers.ChargingStateReceiver;
-import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
 import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -24,8 +19,6 @@ class NsClientReceiverDelegate {
     private boolean allowedNetworkState = true;
     boolean allowed = true;
 
-    private AAPSLogger aapsLogger;
-    private Context context;
     private RxBusWrapper rxBus;
     private ResourceHelper resourceHelper;
     private SP sp;
@@ -33,15 +26,11 @@ class NsClientReceiverDelegate {
 
     @Inject
     public NsClientReceiverDelegate(
-            AAPSLogger aapsLogger,
-            Context context,
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
             SP sp,
             ReceiverStatusStore receiverStatusStore
     ) {
-        this.aapsLogger = aapsLogger;
-        this.context = context;
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
         this.sp = sp;
@@ -51,10 +40,6 @@ class NsClientReceiverDelegate {
     void grabReceiversState() {
 
         receiverStatusStore.updateNetworkStatus();
-
-        EventChargingState eventChargingState = ChargingStateReceiver.grabChargingState(context);
-        rxBus.send(eventChargingState);
-
     }
 
     void onStatusEvent(EventPreferenceChange ev) {
@@ -64,8 +49,7 @@ class NsClientReceiverDelegate {
         ) {
             receiverStatusStore.updateNetworkStatus();
         } else if (ev.isChanged(resourceHelper, R.string.key_ns_chargingonly)) {
-            EventChargingState event = ChargingStateReceiver.grabChargingState(context);
-            rxBus.send(event);
+            receiverStatusStore.broadcastChargingState();
         }
     }
 
