@@ -10,7 +10,6 @@ import org.mockito.Mock
 
 open class DanaRTestBase : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var sp: SP
     @Mock lateinit var injector: HasAndroidInjector
 

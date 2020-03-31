@@ -22,7 +22,6 @@ import java.util.*
 @RunWith(PowerMockRunner::class)
 class DstHelperPluginTest : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var activePlugin: ActivePluginProvider

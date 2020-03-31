@@ -26,7 +26,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(Profile::class)
 class QuickWizardTest : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var sp: SP
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin

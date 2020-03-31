@@ -26,7 +26,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(SmsCommunicatorPlugin::class, DateUtil::class, OneTimePassword::class)
 class AuthRequestTest : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var otp: OneTimePassword

@@ -78,6 +78,7 @@ public class MainActivity extends NoSplashAppCompatActivity {
 
     @Inject AAPSLogger aapsLogger;
     @Inject RxBusWrapper rxBus;
+    @Inject AndroidPermission androidPermission;
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
     @Inject VersionCheckerUtils versionCheckerUtils;
@@ -161,12 +162,12 @@ public class MainActivity extends NoSplashAppCompatActivity {
             startActivity(intent);
         }
 
-        AndroidPermission.notifyForStoragePermission(this);
-        AndroidPermission.notifyForBatteryOptimizationPermission(this);
+        androidPermission.notifyForStoragePermission(this);
+        androidPermission.notifyForBatteryOptimizationPermission(this);
         if (Config.PUMPDRIVERS) {
-            AndroidPermission.notifyForLocationPermissions(this);
-            AndroidPermission.notifyForSMSPermissions(this, smsCommunicatorPlugin);
-            AndroidPermission.notifyForSystemWindowPermissions(this);
+            androidPermission.notifyForLocationPermissions(this);
+            androidPermission.notifyForSMSPermissions(this, smsCommunicatorPlugin);
+            androidPermission.notifyForSystemWindowPermissions(this);
         }
     }
 

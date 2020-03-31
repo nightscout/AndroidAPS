@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.setupwizard
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.dialogs.ProfileSwitchDialog
@@ -46,7 +46,7 @@ import javax.inject.Singleton
 class SWDefinition @Inject constructor(
     injector: HasAndroidInjector,
     private val rxBus: RxBusWrapper,
-    private val mainApp: MainApp,
+    private val context: Context,
     resourceHelper: ResourceHelper,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
@@ -58,10 +58,11 @@ class SWDefinition @Inject constructor(
     private val loopPlugin: LoopPlugin,
     private val nsClientPlugin: NSClientPlugin,
     private val nsProfilePlugin: NSProfilePlugin,
-    private val protectionCheck: ProtectionCheck
+    private val protectionCheck: ProtectionCheck,
+    private val androidPermission: AndroidPermission
 ) {
 
-    var activity: AppCompatActivity? = null
+    lateinit var activity: AppCompatActivity
     private val screens: MutableList<SWScreen> = ArrayList()
 
     fun getScreens(): List<SWScreen> {
@@ -83,7 +84,7 @@ class SWDefinition @Inject constructor(
             .preferenceId(R.string.key_language).label(R.string.language)
             .comment(R.string.setupwizard_language_prompt))
         .validator(SWValidator {
-            update(mainApp)
+            update(context)
             sp.contains(R.string.key_language)
         })
     private val screenEula = SWScreen(injector, R.string.end_user_license_agreement)
@@ -127,10 +128,10 @@ class SWDefinition @Inject constructor(
         .add(SWBreak(injector))
         .add(SWButton(injector)
             .text(R.string.askforpermission)
-            .visibility(SWValidator { AndroidPermission.permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) })
-            .action(Runnable { AndroidPermission.askForPermission(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, AndroidPermission.CASE_BATTERY) }))
-        .visibility(SWValidator { AndroidPermission.permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) })
-        .validator(SWValidator { !AndroidPermission.permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) })
+            .visibility(SWValidator { androidPermission.permissionNotGranted(context, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) })
+            .action(Runnable { androidPermission.askForPermission(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS, AndroidPermission.CASE_BATTERY) }))
+        .visibility(SWValidator { androidPermission.permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) })
+        .validator(SWValidator { !androidPermission.permissionNotGranted(activity, Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS) })
     private val screenPermissionBt = SWScreen(injector, R.string.permission)
         .skippable(false)
         .add(SWInfotext(injector)
@@ -138,10 +139,10 @@ class SWDefinition @Inject constructor(
         .add(SWBreak(injector))
         .add(SWButton(injector)
             .text(R.string.askforpermission)
-            .visibility(SWValidator { AndroidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) })
-            .action(Runnable { AndroidPermission.askForPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION, AndroidPermission.CASE_LOCATION) }))
-        .visibility(SWValidator { AndroidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) })
-        .validator(SWValidator { !AndroidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) })
+            .visibility(SWValidator { androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) })
+            .action(Runnable { androidPermission.askForPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION, AndroidPermission.CASE_LOCATION) }))
+        .visibility(SWValidator { androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) })
+        .validator(SWValidator { !androidPermission.permissionNotGranted(activity, Manifest.permission.ACCESS_FINE_LOCATION) })
     private val screenPermissionStore = SWScreen(injector, R.string.permission)
         .skippable(false)
         .add(SWInfotext(injector)
@@ -149,10 +150,10 @@ class SWDefinition @Inject constructor(
         .add(SWBreak(injector))
         .add(SWButton(injector)
             .text(R.string.askforpermission)
-            .visibility(SWValidator { AndroidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) })
-            .action(Runnable { AndroidPermission.askForPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE, AndroidPermission.CASE_STORAGE) }))
-        .visibility(SWValidator { AndroidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) })
-        .validator(SWValidator { !AndroidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) })
+            .visibility(SWValidator { androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) })
+            .action(Runnable { androidPermission.askForPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE, AndroidPermission.CASE_STORAGE) }))
+        .visibility(SWValidator { androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) })
+        .validator(SWValidator { !androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) })
     private val screenImport = SWScreen(injector, R.string.nav_import)
         .add(SWInfotext(injector)
             .label(R.string.storedsettingsfound))
@@ -160,7 +161,7 @@ class SWDefinition @Inject constructor(
         .add(SWButton(injector)
             .text(R.string.nav_import)
             .action(Runnable { ImportExportPrefs.importSharedPreferences(activity) }))
-        .visibility(SWValidator { ImportExportPrefs.file.exists() && !AndroidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) })
+        .visibility(SWValidator { ImportExportPrefs.file.exists() && !androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) })
     private val screenNsClient = SWScreen(injector, R.string.nsclientinternal_title)
         .skippable(true)
         .add(SWInfotext(injector)
@@ -219,13 +220,11 @@ class SWDefinition @Inject constructor(
             .text(R.string.insulinsourcesetup)
             .action(Runnable {
                 val plugin = activePlugin.activeInsulin as PluginBase
-                activity?.let { activity ->
-                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
-                        val i = Intent(activity, PreferencesActivity::class.java)
-                        i.putExtra("id", plugin.preferencesId)
-                        activity.startActivity(i)
-                    }, null)
-                }
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    val i = Intent(activity, PreferencesActivity::class.java)
+                    i.putExtra("id", plugin.preferencesId)
+                    activity.startActivity(i)
+                }, null)
             })
             .visibility(SWValidator { (activePlugin.activeInsulin as PluginBase).preferencesId > 0 }))
     private val screenBgSource = SWScreen(injector, R.string.configbuilder_bgsource)
@@ -238,13 +237,11 @@ class SWDefinition @Inject constructor(
             .text(R.string.bgsourcesetup)
             .action(Runnable {
                 val plugin = activePlugin.activeBgSource as PluginBase
-                activity?.let { activity ->
-                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
-                        val i = Intent(activity, PreferencesActivity::class.java)
-                        i.putExtra("id", plugin.preferencesId)
-                        activity.startActivity(i)
-                    }, null)
-                }
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    val i = Intent(activity, PreferencesActivity::class.java)
+                    i.putExtra("id", plugin.preferencesId)
+                    activity.startActivity(i)
+                }, null)
             })
             .visibility(SWValidator { (activePlugin.activeBgSource as PluginBase).preferencesId > 0 }))
     private val screenProfile = SWScreen(injector, R.string.configbuilder_profile)
@@ -275,7 +272,7 @@ class SWDefinition @Inject constructor(
             .label(R.string.profileswitch_ismissing))
         .add(SWButton(injector)
             .text(R.string.doprofileswitch)
-            .action(Runnable { ProfileSwitchDialog().show(activity!!.supportFragmentManager, "SetupWizard") }))
+            .action(Runnable { ProfileSwitchDialog().show(activity.supportFragmentManager, "SetupWizard") }))
         .validator(SWValidator { profileFunction.getProfile() != null })
         .visibility(SWValidator { profileFunction.getProfile() == null })
     private val screenPump = SWScreen(injector, R.string.configbuilder_pump)
@@ -288,13 +285,11 @@ class SWDefinition @Inject constructor(
             .text(R.string.pumpsetup)
             .action(Runnable {
                 val plugin = activePlugin.activePump as PluginBase
-                activity?.let { activity ->
-                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
-                        val i = Intent(activity, PreferencesActivity::class.java)
-                        i.putExtra("id", plugin.preferencesId)
-                        activity.startActivity(i)
-                    }, null)
-                }
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    val i = Intent(activity, PreferencesActivity::class.java)
+                    i.putExtra("id", plugin.preferencesId)
+                    activity.startActivity(i)
+                }, null)
             })
             .visibility(SWValidator { (activePlugin.activePump as PluginBase).preferencesId > 0 }))
         .add(SWButton(injector)
@@ -317,13 +312,11 @@ class SWDefinition @Inject constructor(
             .text(R.string.apssetup)
             .action(Runnable {
                 val plugin = activePlugin.activeAPS as PluginBase
-                activity?.let { activity ->
-                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
-                        val i = Intent(activity, PreferencesActivity::class.java)
-                        i.putExtra("id", plugin.preferencesId)
-                        activity.startActivity(i)
-                    }, null)
-                }
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    val i = Intent(activity, PreferencesActivity::class.java)
+                    i.putExtra("id", plugin.preferencesId)
+                    activity.startActivity(i)
+                }, null)
             })
             .visibility(SWValidator { (activePlugin.activeAPS as PluginBase).preferencesId > 0 }))
         .visibility(SWValidator { Config.APS })
@@ -367,13 +360,11 @@ class SWDefinition @Inject constructor(
             .text(R.string.sensitivitysetup)
             .action(Runnable {
                 val plugin = activePlugin.activeSensitivity as PluginBase
-                activity?.let { activity ->
-                    protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
-                        val i = Intent(activity, PreferencesActivity::class.java)
-                        i.putExtra("id", plugin.preferencesId)
-                        activity.startActivity(i)
-                    }, null)
-                }
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.PREFERENCES, Runnable {
+                    val i = Intent(activity, PreferencesActivity::class.java)
+                    i.putExtra("id", plugin.preferencesId)
+                    activity.startActivity(i)
+                }, null)
             })
             .visibility(SWValidator { (activePlugin.activeSensitivity as PluginBase).preferencesId > 0 }))
     private val getScreenObjectives = SWScreen(injector, R.string.objectives)

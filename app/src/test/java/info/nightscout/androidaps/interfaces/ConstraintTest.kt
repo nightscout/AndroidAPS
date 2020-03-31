@@ -19,8 +19,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(MainApp::class, SP::class)
 class ConstraintTest : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
-
     @Test fun doTests() {
         val b = Constraint(true)
         Assert.assertEquals(true, b.value())

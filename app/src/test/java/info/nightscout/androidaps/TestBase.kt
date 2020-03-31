@@ -4,6 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.ProfileStore
+import info.nightscout.androidaps.logging.AAPSLoggerTest
 import org.json.JSONObject
 import org.junit.Before
 import org.junit.Rule
@@ -13,6 +14,9 @@ import org.mockito.junit.MockitoRule
 import java.util.*
 
 open class TestBase {
+
+    val aapsLogger = AAPSLoggerTest()
+
     // Add a JUnit rule that will setup the @Mock annotated vars and log.
     // Another possibility would be to add `MockitoAnnotations.initMocks(this) to the setup method.
     @get:Rule

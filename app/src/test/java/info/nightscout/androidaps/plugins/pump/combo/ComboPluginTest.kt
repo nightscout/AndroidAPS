@@ -33,7 +33,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(MainApp::class, ConfigBuilderPlugin::class, ConstraintChecker::class, Context::class, CommandQueue::class)
 class ComboPluginTest : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var constraintChecker: ConstraintChecker

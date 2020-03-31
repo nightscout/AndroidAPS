@@ -26,7 +26,6 @@ class MaintenancePluginTest : TestBase() {
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var nsSettingsStatus: NSSettingsStatus
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var buildHelper: BuildHelper
 
     lateinit var sut: MaintenancePlugin

@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.setupwizard.SWDefinition
 
-class SWFragment(injecto:HasAndroidInjector, private var definition: SWDefinition) : SWItem(injecto, Type.FRAGMENT) {
+class SWFragment(injector:HasAndroidInjector, private var definition: SWDefinition) : SWItem(injector, Type.FRAGMENT) {
     lateinit var fragment: Fragment
 
     fun add(fragment: Fragment): SWFragment {
@@ -14,6 +14,6 @@ class SWFragment(injecto:HasAndroidInjector, private var definition: SWDefinitio
     }
 
     override fun generateDialog(layout: LinearLayout) {
-        definition.activity?.supportFragmentManager?.beginTransaction()?.add(layout.id, fragment, fragment.tag)?.commit()
+        definition.activity.supportFragmentManager.beginTransaction().add(layout.id, fragment, fragment.tag).commit()
     }
 }

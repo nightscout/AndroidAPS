@@ -15,17 +15,7 @@ class EventPreferenceChange : Event {
         changedKey = resourceHelper.gs(resourceID)
     }
 
-    @Deprecated("use injected version")
-    constructor(resources: Resources, id: Int) {
-        changedKey == resources.getString(id)
-    }
-
     fun isChanged(resourceHelper: ResourceHelper, id: Int): Boolean {
         return changedKey == resourceHelper.gs(id)
-    }
-
-    @Deprecated("use injected version")
-    fun isChanged(resources: Resources, id: Int): Boolean {
-        return changedKey == resources.getString(id)
     }
 }
