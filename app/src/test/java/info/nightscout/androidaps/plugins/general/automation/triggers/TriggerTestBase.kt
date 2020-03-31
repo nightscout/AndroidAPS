@@ -37,7 +37,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
 
     @Before
     fun prepareMock1() {
-        receiverStatusStore = ReceiverStatusStore(context)
+        receiverStatusStore = ReceiverStatusStore(context, rxBus)
     }
 
     var injector: HasAndroidInjector = HasAndroidInjector {
