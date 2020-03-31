@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.overview.notifications
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
@@ -16,7 +17,6 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -36,7 +36,7 @@ class NotificationStore @Inject constructor(
     private val sp: SP,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val mainApp: MainApp
+    private val context: Context
 ) {
 
     var store: MutableList<Notification> = ArrayList()
@@ -66,15 +66,15 @@ class NotificationStore @Inject constructor(
         if (sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, false) && n !is NotificationWithAction) {
             raiseSystemNotification(n)
             if (usesChannels && n.soundId != null && n.soundId != 0) {
-                val alarm = Intent(mainApp, AlarmSoundService::class.java)
+                val alarm = Intent(context, AlarmSoundService::class.java)
                 alarm.putExtra("soundid", n.soundId)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) mainApp.startForegroundService(alarm) else mainApp.startService(alarm)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) context.startForegroundService(alarm) else context.startService(alarm)
             }
         } else {
             if (n.soundId != null && n.soundId != 0) {
-                val alarm = Intent(mainApp, AlarmSoundService::class.java)
+                val alarm = Intent(context, AlarmSoundService::class.java)
                 alarm.putExtra("soundid", n.soundId)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) mainApp.startForegroundService(alarm) else mainApp.startService(alarm)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) context.startForegroundService(alarm) else context.startService(alarm)
             }
         }
         Collections.sort(store, NotificationComparator())
@@ -85,8 +85,8 @@ class NotificationStore @Inject constructor(
         for (i in store.indices) {
             if (store[i].id == id) {
                 if (store[i].soundId != null) {
-                    val alarm = Intent(mainApp, AlarmSoundService::class.java)
-                    mainApp.stopService(alarm)
+                    val alarm = Intent(context, AlarmSoundService::class.java)
+                    context.stopService(alarm)
                 }
                 store.removeAt(i)
                 return true
@@ -108,16 +108,16 @@ class NotificationStore @Inject constructor(
     }
 
     private fun raiseSystemNotification(n: Notification) {
-        val mgr = mainApp.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val mgr = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val largeIcon = resourceHelper.decodeResource(resourceHelper.getIcon())
         val smallIcon = resourceHelper.getNotificationIcon()
         val sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-        val notificationBuilder = NotificationCompat.Builder(mainApp, CHANNEL_ID)
+        val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(smallIcon)
             .setLargeIcon(largeIcon)
             .setContentText(n.text)
             .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setDeleteIntent(DismissNotificationService.deleteIntent(n.id))
+            .setDeleteIntent(deleteIntent(n.id))
         if (n.level == Notification.URGENT) {
             notificationBuilder.setVibrate(longArrayOf(1000, 1000, 1000, 1000))
                 .setContentTitle(resourceHelper.gs(R.string.urgent_alarm))
@@ -129,10 +129,16 @@ class NotificationStore @Inject constructor(
         mgr.notify(n.id, notificationBuilder.build())
     }
 
+    private fun deleteIntent(id: Int): PendingIntent {
+        val intent = Intent(context, DismissNotificationService::class.java)
+        intent.putExtra("alertID", id)
+        return PendingIntent.getService(context, id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
     fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             usesChannels = true
-            val mNotificationManager = mainApp.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             @SuppressLint("WrongConstant") val channel = NotificationChannel(CHANNEL_ID,
                 CHANNEL_ID,
                 NotificationManager.IMPORTANCE_HIGH)
@@ -159,17 +165,19 @@ class NotificationStore @Inject constructor(
         clone.addAll(store)
         return clone
     }
-/*
-    private fun unSnooze() {
-        if (sp.getBoolean(R.string.key_nsalarm_staledata, false)) {
-            val notification = Notification(Notification.NSALARM, resourceHelper.gs(R.string.nsalarm_staledata), Notification.URGENT)
-            sp.putLong(R.string.key_snoozedTo, System.currentTimeMillis())
-            add(notification)
-            aapsLogger.debug(LTag.NOTIFICATION, "Snoozed to current time and added back notification!")
+
+    /*
+        private fun unSnooze() {
+            if (sp.getBoolean(R.string.key_nsalarm_staledata, false)) {
+                val notification = Notification(Notification.NSALARM, resourceHelper.gs(R.string.nsalarm_staledata), Notification.URGENT)
+                sp.putLong(R.string.key_snoozedTo, System.currentTimeMillis())
+                add(notification)
+                aapsLogger.debug(LTag.NOTIFICATION, "Snoozed to current time and added back notification!")
+            }
         }
-    }
-*/
+    */
     inner class NotificationRecyclerViewAdapter internal constructor(private val notificationsList: List<Notification>) : RecyclerView.Adapter<NotificationRecyclerViewAdapter.NotificationsViewHolder>() {
+
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): NotificationsViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.overview_notification_item, viewGroup, false)
             return NotificationsViewHolder(v)
