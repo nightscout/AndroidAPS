@@ -9,6 +9,8 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.services.DataService
 import javax.inject.Inject
 
+// We are not ready to switch to JobScheduler
+@Suppress("DEPRECATION")
 open class DataReceiver : WakefulBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
 
