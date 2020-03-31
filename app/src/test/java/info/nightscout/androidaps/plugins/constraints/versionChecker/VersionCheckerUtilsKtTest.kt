@@ -15,7 +15,6 @@ class VersionCheckerUtilsKtTest : TestBase() {
 
     lateinit var versionCheckerUtils: VersionCheckerUtils
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var sp: SP
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var context: Context

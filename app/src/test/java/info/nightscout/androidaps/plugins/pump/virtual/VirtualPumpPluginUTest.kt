@@ -26,7 +26,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(FabricPrivacy::class)
 class VirtualPumpPluginUTest : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     val rxBus = RxBusWrapper()
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var resourceHelper: ResourceHelper

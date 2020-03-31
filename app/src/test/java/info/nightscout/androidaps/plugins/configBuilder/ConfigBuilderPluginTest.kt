@@ -25,7 +25,6 @@ class ConfigBuilderPluginTest : TestBase() {
     @Mock lateinit var treatmentsPlugin: Lazy<TreatmentsPlugin>
 
     @Mock lateinit var sp: SP
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var activePlugin: ActivePluginProvider

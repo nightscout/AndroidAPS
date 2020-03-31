@@ -13,7 +13,6 @@ import org.mockito.Mock
 class GlimpPluginTest : TestBase() {
     private lateinit var glimpPlugin: GlimpPlugin
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
 
     @Before

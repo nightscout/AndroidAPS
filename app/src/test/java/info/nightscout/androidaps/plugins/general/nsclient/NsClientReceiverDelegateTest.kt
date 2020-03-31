@@ -32,7 +32,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(MainApp::class, SP::class, Context::class)
 class NsClientReceiverDelegateTest : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
     @Mock lateinit var resourceHelper: ResourceHelper

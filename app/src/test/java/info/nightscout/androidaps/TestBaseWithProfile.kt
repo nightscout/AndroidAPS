@@ -7,6 +7,7 @@ import info.nightscout.androidaps.data.ProfileStore
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.AAPSLoggerTest
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -18,7 +19,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 
 @PrepareForTest(FabricPrivacy::class)
 open class TestBaseWithProfile : TestBase() {
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var activePluginProvider: ActivePluginProvider
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin

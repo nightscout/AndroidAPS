@@ -18,7 +18,6 @@ class NSClientPluginTest : TestBase() {
 
     private lateinit var nsClientSourcePlugin: NSClientSourcePlugin
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
 

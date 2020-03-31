@@ -19,7 +19,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 class AbstractSensitivityPluginTest : TestBase() {
 
     @Mock lateinit var pluginDescription: PluginDescription
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
 

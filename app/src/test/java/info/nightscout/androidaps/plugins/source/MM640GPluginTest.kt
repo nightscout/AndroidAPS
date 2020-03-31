@@ -17,7 +17,6 @@ class MM640GPluginTest : TestBase() {
 
     private lateinit var mM640gPlugin: MM640gPlugin
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
 
     @Before
