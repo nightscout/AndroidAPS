@@ -96,6 +96,7 @@ import info.nightscout.androidaps.receivers.ChargingStateReceiver;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
+import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.ActivityMonitor;
@@ -121,6 +122,7 @@ public class MainApp extends DaggerApplication {
     @Inject PluginStore pluginStore;
     @Inject public HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
+    @Inject ReceiverStatusStore receiverStatusStore;
     @Inject ActivityMonitor activityMonitor;
     @Inject FabricPrivacy fabricPrivacy;
     @Inject ResourceHelper resourceHelper;
@@ -349,7 +351,11 @@ public class MainApp extends DaggerApplication {
         filter.addAction(WifiManager.WIFI_STATE_CHANGED_ACTION);
         registerReceiver(new NetworkChangeReceiver(), filter);
 
-        registerReceiver(new ChargingStateReceiver(), new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_POWER_CONNECTED);
+        filter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+        filter.addAction(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(new ChargingStateReceiver(), filter);
     }
 
     @Deprecated
