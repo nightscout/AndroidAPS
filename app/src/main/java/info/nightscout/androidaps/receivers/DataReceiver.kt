@@ -2,7 +2,7 @@ package info.nightscout.androidaps.receivers
 
 import android.content.Context
 import android.content.Intent
-import androidx.legacy.content.WakefulBroadcastReceiver
+import androidx.legacy.content.*
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
