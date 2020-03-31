@@ -30,7 +30,7 @@ class TriggerWifiSsidTest : TriggerTestBase() {
 
     @Test fun shouldRunTest() {
         val e = EventNetworkChange()
-        PowerMockito.`when`(NetworkChangeReceiver.getLastEvent()).thenReturn(e)
+        receiverStatusStore.lastNetworkEvent = e
         var t: TriggerWifiSsid = TriggerWifiSsid(injector).setValue("aSSID").comparator(Comparator.Compare.IS_EQUAL)
         e.wifiConnected = false
         Assert.assertFalse(t.shouldRun())
@@ -45,7 +45,7 @@ class TriggerWifiSsidTest : TriggerTestBase() {
         Assert.assertTrue(t.shouldRun())
 
         // no network data
-        PowerMockito.`when`(NetworkChangeReceiver.getLastEvent()).thenReturn(null)
+        receiverStatusStore.lastNetworkEvent = null
         Assert.assertFalse(t.shouldRun())
     }
 

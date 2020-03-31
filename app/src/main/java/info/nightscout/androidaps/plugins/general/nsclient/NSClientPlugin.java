@@ -71,7 +71,7 @@ public class NSClientPlugin extends PluginBase {
 
     public NSClientService nsClientService = null;
 
-    private NsClientReceiverDelegate nsClientReceiverDelegate = new NsClientReceiverDelegate();
+    private NsClientReceiverDelegate nsClientReceiverDelegate;
 
     @Inject
     public NSClientPlugin(
@@ -80,7 +80,8 @@ public class NSClientPlugin extends PluginBase {
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
             Context context,
-            SP sp
+            SP sp,
+            NsClientReceiverDelegate nsClientReceiverDelegate
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
@@ -97,6 +98,7 @@ public class NSClientPlugin extends PluginBase {
         this.resourceHelper = resourceHelper;
         this.context = context;
         this.sp = sp;
+        this.nsClientReceiverDelegate = nsClientReceiverDelegate;
 
         if (Config.NSCLIENT) {
             getPluginDescription().alwaysEnabled(true).visibleByDefault(true);

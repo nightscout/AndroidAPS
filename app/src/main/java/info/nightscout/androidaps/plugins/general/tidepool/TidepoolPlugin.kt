@@ -26,7 +26,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolS
 import info.nightscout.androidaps.plugins.general.tidepool.events.EventTidepoolUpdateGUI
 import info.nightscout.androidaps.plugins.general.tidepool.utils.RateLimit
 import info.nightscout.androidaps.receivers.ChargingStateReceiver
-import info.nightscout.androidaps.receivers.NetworkChangeReceiver
+import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.T
@@ -51,7 +51,8 @@ class TidepoolPlugin @Inject constructor(
     private val tidepoolUploader: TidepoolUploader,
     private val uploadChunk: UploadChunk,
     private val sp: SP,
-    private val rateLimit: RateLimit
+    private val rateLimit: RateLimit,
+    private val receiverStatusStore: ReceiverStatusStore
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .pluginName(R.string.tidepool)
@@ -103,7 +104,7 @@ class TidepoolPlugin @Inject constructor(
                     uploadChunk.setLastEnd(bgReading.date)
                 if (isEnabled(PluginType.GENERAL)
                     && (!sp.getBoolean(R.string.key_tidepool_only_while_charging, false) || ChargingStateReceiver.isCharging())
-                    && (!sp.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || NetworkChangeReceiver.isWifiConnected())
+                    && (!sp.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || receiverStatusStore.isWifiConnected)
                     && rateLimit.rateLimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
                     doUpload()
             }, {
