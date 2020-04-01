@@ -941,7 +941,13 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                     activeAlert.warningCode == PumpWarningCodes.TBR_CANCELLED)) {
                 // turn benign warnings into notifications
                 notifyAboutPumpWarning(activeAlert);
-                ruffyScripter.confirmAlert(activeAlert.warningCode);
+                CommandResult alertConfirmationResult = ruffyScripter.confirmAlert(activeAlert.warningCode);
+                if (!alertConfirmationResult.success) {
+                    return alertConfirmationResult;
+                }
+                // while the warning was active the menu data couldn't be read, only after confirmation,
+                // so update the var with it, so the check routines below can work on it
+                preCheckResult = alertConfirmationResult;
             } else if (activeAlert.errorCode != null) {
                 Notification notification = new Notification();
                 notification.date = DateUtil.now();
