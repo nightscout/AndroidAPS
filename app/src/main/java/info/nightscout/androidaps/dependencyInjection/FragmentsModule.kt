@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
 import info.nightscout.androidaps.plugins.treatments.TreatmentsFragment
 import info.nightscout.androidaps.plugins.treatments.fragments.*
+import info.nightscout.androidaps.utils.protection.PasswordCheck
 
 @Module
 @Suppress("unused")
@@ -112,4 +113,6 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesTreatmentDialog(): TreatmentDialog
     @ContributesAndroidInjector abstract fun contributesWizardDialog(): WizardDialog
     @ContributesAndroidInjector abstract fun contributesWizardInfoDialog(): WizardInfoDialog
+
+    @ContributesAndroidInjector abstract fun contributesPasswordCheck(): PasswordCheck
 }

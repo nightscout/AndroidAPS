@@ -26,7 +26,6 @@ import info.nightscout.androidaps.plugins.aps.openAPSMA.DetermineBasalResultMA
 import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
@@ -36,6 +35,9 @@ import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.elements.*
 import info.nightscout.androidaps.plugins.general.automation.triggers.*
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
+import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
+import info.nightscout.androidaps.plugins.general.maintenance.formats.ClassicPrefsFormat
+import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.general.smsCommunicator.AuthRequest
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
@@ -45,7 +47,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.queue.commands.*
-import info.nightscout.androidaps.setupwizard.SWDefinition
 import info.nightscout.androidaps.setupwizard.SWEventListener
 import info.nightscout.androidaps.setupwizard.SWScreen
 import info.nightscout.androidaps.setupwizard.elements.*
@@ -54,6 +55,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.sharedPreferences.SPImplementation
+import info.nightscout.androidaps.utils.storage.FileStorage
+import info.nightscout.androidaps.utils.storage.Storage
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import javax.inject.Singleton
@@ -101,6 +104,12 @@ open class AppModule {
         if (Config.APS) plugins += aps.get()
         if (!Config.NSCLIENT) plugins += notNsClient.get()
         return plugins.toList().sortedBy { it.first }.map { it.second }
+    }
+
+    @Provides
+    @Singleton
+    fun provideStorage(): Storage {
+        return FileStorage()
     }
 
     @Module
@@ -248,6 +257,10 @@ open class AppModule {
         @ContributesAndroidInjector fun glucoseStatusInjector(): GlucoseStatus
 
         @ContributesAndroidInjector fun graphDataInjector(): GraphData
+
+        @ContributesAndroidInjector fun importExportPrefsInjector(): ImportExportPrefs
+        @ContributesAndroidInjector fun encryptedPrefsFormatInjector(): EncryptedPrefsFormat
+        @ContributesAndroidInjector fun classicPrefsFormatInjector(): ClassicPrefsFormat
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector

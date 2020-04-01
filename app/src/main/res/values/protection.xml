@@ -14,6 +14,7 @@
     <string name="custom_password">Custom password</string>
     <string name="noprotection">No protection</string>
     <string name="protection">Protection</string>
+    <string name="master_password_missing">Master password is not set!\n\nPlease set your Master password in Preferences (%1$s &#8594; %2$s)</string>
 
     <string name="password_set">Password set!</string>
     <string name="password_not_set">Password not set</string>
