@@ -81,16 +81,19 @@ class ImportExportPrefs @Inject constructor(
         return encFile.exists() || file.exists()
     }
 
+
     fun exportSharedPreferences(f: Fragment) {
         f.activity?.let { exportSharedPreferences(it) }
     }
 
     fun verifyStoragePermissions(fragment: Fragment) {
-        val permission = ContextCompat.checkSelfPermission(fragment.context!!,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            fragment.requestPermissions(PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE)
+        fragment.context?.let {
+            val permission = ContextCompat.checkSelfPermission(it,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                // We don't have permission so prompt the user
+                fragment.requestPermissions(PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE)
+            }
         }
     }
 
@@ -245,7 +248,7 @@ class ImportExportPrefs @Inject constructor(
                 // if at end we allow to import preferences
                 val importPossible = (importOk || buildHelper.isEngineeringMode()) && (prefs.values.size > 0)
 
-                PrefImportSummaryDialog.showSummary(activity!!, importOk, importPossible, prefs, {
+                PrefImportSummaryDialog.showSummary(activity, importOk, importPossible, prefs, {
                     if (importPossible) {
                         sp.clear()
                         for ((key, value) in prefs.values) {
@@ -277,35 +280,35 @@ class ImportExportPrefs @Inject constructor(
     private fun checkMetadata(metadata: Map<PrefsMetadataKey, PrefMetadata>): Map<PrefsMetadataKey, PrefMetadata> {
         val meta = metadata.toMutableMap()
 
-        if (meta.containsKey(PrefsMetadataKey.AAPS_FLAVOUR)) {
-            val flavourOfPrefs = meta[PrefsMetadataKey.AAPS_FLAVOUR]!!.value
-            if (meta[PrefsMetadataKey.AAPS_FLAVOUR]!!.value != BuildConfig.FLAVOR) {
-                meta[PrefsMetadataKey.AAPS_FLAVOUR]!!.status = PrefsStatus.WARN
-                meta[PrefsMetadataKey.AAPS_FLAVOUR]!!.info = resourceHelper.gs(R.string.metadata_warning_different_flavour, flavourOfPrefs, BuildConfig.FLAVOR)
+         meta[PrefsMetadataKey.AAPS_FLAVOUR]?.let { flavour ->
+             val flavourOfPrefs = flavour.value
+             if (flavour.value != BuildConfig.FLAVOR) {
+                 flavour.status = PrefsStatus.WARN
+                 flavour.info = resourceHelper.gs(R.string.metadata_warning_different_flavour, flavourOfPrefs, BuildConfig.FLAVOR)
+             }
+         }
+
+        meta[PrefsMetadataKey.DEVICE_MODEL]?.let { model ->
+            if (model.value != getCurrentDeviceModelString()) {
+                model.status = PrefsStatus.WARN
+                model.info = resourceHelper.gs(R.string.metadata_warning_different_device)
             }
         }
 
-        if (meta.containsKey(PrefsMetadataKey.DEVICE_MODEL)) {
-            if (meta[PrefsMetadataKey.DEVICE_MODEL]!!.value != getCurrentDeviceModelString()) {
-                meta[PrefsMetadataKey.DEVICE_MODEL]!!.status = PrefsStatus.WARN
-                meta[PrefsMetadataKey.DEVICE_MODEL]!!.info = resourceHelper.gs(R.string.metadata_warning_different_device)
-            }
-        }
-
-        if (meta.containsKey(PrefsMetadataKey.CREATED_AT)) {
+        meta[PrefsMetadataKey.CREATED_AT]?.let { createdAt ->
             try {
-                val date1 = DateTime.parse(meta[PrefsMetadataKey.CREATED_AT]!!.value);
+                val date1 = DateTime.parse(createdAt.value);
                 val date2 = DateTime.now()
 
                 val daysOld = Days.daysBetween(date1.toLocalDate(), date2.toLocalDate()).getDays()
 
                 if (daysOld > IMPORT_AGE_NOT_YET_OLD_DAYS) {
-                    meta[PrefsMetadataKey.CREATED_AT]!!.status = PrefsStatus.WARN
-                    meta[PrefsMetadataKey.CREATED_AT]!!.info = resourceHelper.gs(R.string.metadata_warning_old_export, daysOld.toString())
+                    createdAt.status = PrefsStatus.WARN
+                    createdAt.info = resourceHelper.gs(R.string.metadata_warning_old_export, daysOld.toString())
                 }
             } catch (e: Exception) {
-                meta[PrefsMetadataKey.CREATED_AT]!!.status = PrefsStatus.WARN
-                meta[PrefsMetadataKey.CREATED_AT]!!.info = resourceHelper.gs(R.string.metadata_warning_date_format)
+                createdAt.status = PrefsStatus.WARN
+                createdAt.info = resourceHelper.gs(R.string.metadata_warning_date_format)
             }
         }
 
@@ -324,7 +327,7 @@ class ImportExportPrefs @Inject constructor(
 
     private fun restartAppAfterImport(context: Context) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
-        show(context!!, resourceHelper.gs(R.string.setting_imported), resourceHelper.gs(R.string.restartingapp), Runnable {
+        show(context, resourceHelper.gs(R.string.setting_imported), resourceHelper.gs(R.string.restartingapp), Runnable {
             log.debug(TAG, "Exiting")
             rxBus.send(EventAppExit())
             if (context is Activity) {

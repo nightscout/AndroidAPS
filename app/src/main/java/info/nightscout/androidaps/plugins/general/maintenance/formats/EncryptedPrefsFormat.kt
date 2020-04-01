@@ -109,7 +109,7 @@ class EncryptedPrefsFormat @Inject constructor(
                 val fileFormat = container.getString(PrefsMetadataKey.FILE_FORMAT.key)
 
                 if ((fileFormat != FORMAT_KEY_ENC) && (fileFormat != FORMAT_KEY_NOENC)) {
-                    throw PrefFormatError("Unsupported file format: "+fileFormat)
+                    throw PrefFormatError("Unsupported file format: " + fileFormat)
                 }
 
                 val meta = container.getJSONObject("metadata")
