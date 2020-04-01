@@ -564,7 +564,7 @@
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="pump_lastconnection_label">Última ligação</string>
     <string name="danar_bluetooth_status">Estado Bluetooth</string>
-    <string name="nav_about">Acerca</string>
+    <string name="nav_about">Sobre</string>
     <string name="smscommunicator_missingsmspermission">Falta de permissão SMS</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
     <string name="xdripstatus_settings">Estado xDrip (relógio)</string>
@@ -742,7 +742,7 @@
     <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
     <string name="zerovalueinprofile">Perfil inválido: %1$s</string>
     <string name="combo_programming_bolus">A programar a bomba para injectar o bolus</string>
-    <string name="combo_refresh">Actualizar</string>
+    <string name="combo_refresh">Atualizar</string>
     <string name="combo_pump_state_label">Estado</string>
     <string name="combo_pump_activity_label">Atividades</string>
     <string name="combo_no_pump_connection">Sem conexão há %1$d min</string>
@@ -841,7 +841,7 @@
     <string name="combo_error_updating_treatment_record">O bolus foi injectado, mas não foi possível adicionar ao histórico. Isto é possível se dois bolus do mesmo valor baixo foram administrados nos últimos dois minutos. Por favor verifique o histórico da bomba e use o Careportal para adicionar os dados em falta caso necessário. Cuidado para não adicionar dados com o mesmo valor no mesmo minuto.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">A rejeitar a temporal alta uma vez que o cálculo não considerou as mudanças do histórico da bomba</string>
     <string name="combo_activity_checking_pump_state">Atualizando estado da bomba</string>
-    <string name="combo_warning_pump_basal_rate_changed">O rácio da basal foi alterado na bomba e vai ser actualizado em breve</string>
+    <string name="combo_warning_pump_basal_rate_changed">A taxa basal na bomba mudou e será atualizada em breve</string>
     <string name="combo_error_failure_reading_changed_basal_rate">Rácio da basal foi alterado na bomba, mas a leitura falhou</string>
     <string name="combo_activity_checking_for_history_changes">Verificando alterações de histórico</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Bólus múltiplos, com a mesma quantidade e no mesmo minuto acabaram de ser importados. Apenas um registo pôde ser adicionado aos tratamentos. Por favor confirma na bomba e adicione o registo de bólus manualmente, utilizando o separador do Careportal. Tenha em atenção que deve criar um bólus com um tempo em que nã oexistem outros registos de bólus.</string>
