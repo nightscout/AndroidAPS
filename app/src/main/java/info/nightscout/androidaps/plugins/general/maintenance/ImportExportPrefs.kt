@@ -82,7 +82,7 @@ class ImportExportPrefs @Inject constructor(
     }
 
     fun exportSharedPreferences(f: Fragment) {
-        exportSharedPreferences(f.activity)
+        f.activity?.let { exportSharedPreferences(it) }
     }
 
     fun verifyStoragePermissions(fragment: Fragment) {
@@ -94,14 +94,11 @@ class ImportExportPrefs @Inject constructor(
         }
     }
 
-    private fun prepareMetadata(context: Context?): Map<PrefsMetadataKey, PrefMetadata> {
+    private fun prepareMetadata(context: Context): Map<PrefsMetadataKey, PrefMetadata> {
 
         val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = mutableMapOf()
 
-        if (context != null) {
-            metadata[PrefsMetadataKey.DEVICE_NAME] = PrefMetadata(detectUserName(context), PrefsStatus.OK)
-        }
-
+        metadata[PrefsMetadataKey.DEVICE_NAME] = PrefMetadata(detectUserName(context), PrefsStatus.OK)
         metadata[PrefsMetadataKey.CREATED_AT] = PrefMetadata(DateUtil.toISOString(Date()), PrefsStatus.OK)
         metadata[PrefsMetadataKey.AAPS_VERSION] = PrefMetadata(BuildConfig.VERSION_NAME, PrefsStatus.OK)
         metadata[PrefsMetadataKey.AAPS_FLAVOUR] = PrefMetadata(BuildConfig.FLAVOR, PrefsStatus.OK)
@@ -141,15 +138,15 @@ class ImportExportPrefs @Inject constructor(
     private fun prefsEncryptionIsDisabled() =
         buildHelper.isEngineeringMode() && !sp.getBoolean(resourceHelper.gs(R.string.key_maintenance_encrypt_exported_prefs), true)
 
-    private fun askForMasterPass(activity: Activity?, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        passwordCheck.queryPassword(activity!!, R.string.master_password, R.string.key_master_password, { password ->
+    private fun askForMasterPass(activity: Activity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
+        passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { password ->
             then(password)
         }, {
             ToastUtils.warnToast(activity, resourceHelper.gs(canceledMsg))
         })
     }
 
-    private fun askForMasterPassIfNeeded(activity: Activity?, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
+    private fun askForMasterPassIfNeeded(activity: Activity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
         if (prefsEncryptionIsDisabled()) {
             then("")
         } else {
@@ -157,9 +154,9 @@ class ImportExportPrefs @Inject constructor(
         }
     }
 
-    private fun assureMasterPasswordSet(activity: Activity?, @StringRes wrongPwdTitle: Int): Boolean {
+    private fun assureMasterPasswordSet(activity: Activity, @StringRes wrongPwdTitle: Int): Boolean {
         if (!sp.contains(R.string.key_master_password) || (sp.getString(R.string.key_master_password, "") == "")) {
-            WarningDialog.showWarning(activity!!,
+            WarningDialog.showWarning(activity,
                 resourceHelper.gs(wrongPwdTitle),
                 resourceHelper.gs(R.string.master_password_missing, resourceHelper.gs(R.string.configbuilder_general), resourceHelper.gs(R.string.protection)),
                 R.string.nav_preferences, {
@@ -173,35 +170,35 @@ class ImportExportPrefs @Inject constructor(
         return true
     }
 
-    private fun askToConfirmExport(activity: Activity?, then: ((password: String) -> Unit)) {
+    private fun askToConfirmExport(activity: Activity, then: ((password: String) -> Unit)) {
         if (!prefsEncryptionIsDisabled() && !assureMasterPasswordSet(activity, R.string.nav_export)) return
 
-        TwoMessagesAlertDialog.showAlert(activity!!, resourceHelper.gs(R.string.nav_export),
+        TwoMessagesAlertDialog.showAlert(activity, resourceHelper.gs(R.string.nav_export),
             resourceHelper.gs(R.string.export_to) + " " + encFile + " ?",
             resourceHelper.gs(R.string.password_preferences_encrypt_prompt), {
             askForMasterPassIfNeeded(activity, R.string.preferences_export_canceled, then)
         }, null,  R.drawable.ic_header_export)
     }
 
-    private fun askToConfirmImport(activity: Activity?, fileToImport: File, then: ((password: String) -> Unit)) {
+    private fun askToConfirmImport(activity: Activity, fileToImport: File, then: ((password: String) -> Unit)) {
 
         if (encFile.exists()) {
             if (!assureMasterPasswordSet(activity, R.string.nav_import)) return
 
-            TwoMessagesAlertDialog.showAlert(activity!!, resourceHelper.gs(R.string.nav_import),
+            TwoMessagesAlertDialog.showAlert(activity, resourceHelper.gs(R.string.nav_import),
                 resourceHelper.gs(R.string.import_from) + " " + fileToImport + " ?",
                 resourceHelper.gs(R.string.password_preferences_decrypt_prompt), {
                 askForMasterPass(activity, R.string.preferences_import_canceled, then)
             }, null, R.drawable.ic_header_import)
 
         } else {
-            OKDialog.showConfirmation(activity!!, resourceHelper.gs(R.string.nav_import),
+            OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.nav_import),
                 resourceHelper.gs(R.string.import_from) + " " + fileToImport + " ?",
                 Runnable { then("") })
         }
     }
 
-    private fun exportSharedPreferences(activity: Activity?) {
+    private fun exportSharedPreferences(activity: Activity) {
         askToConfirmExport(activity) { password ->
             try {
                 val entries: MutableMap<String, String> = mutableMapOf()
@@ -226,10 +223,10 @@ class ImportExportPrefs @Inject constructor(
     }
 
     fun importSharedPreferences(fragment: Fragment) {
-        importSharedPreferences(fragment.activity)
+        fragment.activity?.let { importSharedPreferences(it) }
     }
 
-    fun importSharedPreferences(activity: Activity?) {
+    fun importSharedPreferences(activity: Activity) {
 
         val importFile = prefsImportFile()
 
@@ -325,7 +322,7 @@ class ImportExportPrefs @Inject constructor(
         return importOk
     }
 
-    private fun restartAppAfterImport(context: Context?) {
+    private fun restartAppAfterImport(context: Context) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
         show(context!!, resourceHelper.gs(R.string.setting_imported), resourceHelper.gs(R.string.restartingapp), Runnable {
             log.debug(TAG, "Exiting")

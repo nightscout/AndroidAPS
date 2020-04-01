@@ -26,8 +26,6 @@ import java.util.*
 object PrefImportSummaryDialog {
 
     @SuppressLint("InflateParams")
-    @JvmStatic
-    @JvmOverloads
     fun showSummary(context: Context, importOk: Boolean, importPossible: Boolean, prefs: Prefs, ok: (() -> Unit)?, cancel: (() -> Unit)? = null) {
 
         @StyleRes val theme: Int = if (importOk) R.style.AppTheme else {

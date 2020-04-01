@@ -14,8 +14,6 @@ import info.nightscout.androidaps.utils.runOnUiThread
 object TwoMessagesAlertDialog {
 
     @SuppressLint("InflateParams")
-    @JvmStatic
-    @JvmOverloads
     fun showAlert(context: Context, title: String, message: String, secondMessage: String, ok: (() -> Unit)?, cancel: (() -> Unit)? = null, @DrawableRes icon: Int? = null) {
 
         val secondMessageLayout = LayoutInflater.from(context).inflate(R.layout.dialog_alert_two_messages, null)
