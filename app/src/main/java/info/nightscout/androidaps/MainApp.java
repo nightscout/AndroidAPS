@@ -96,15 +96,13 @@ public class MainApp extends DaggerApplication {
         generateEmptyNotification();
         sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
 
-/* TODO: put back
         Thread.setDefaultUncaughtExceptionHandler((thread, ex) -> {
             if (ex instanceof InternalError) {
                 // usually the app trying to spawn a thread while being killed
                 return;
             }
-            log.error("Uncaught exception crashing app", ex);
+            aapsLogger.error("Uncaught exception crashing app", ex);
         });
-*/
 
         try {
             if (fabricPrivacy.fabricEnabled()) {
