@@ -1463,7 +1463,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
 
             // add basal data
             if (pump.getPumpDescription().isTempBasalCapable && sp.getBoolean("showbasals", true)) {
-                graphData.addBasals(fromTime, now, lowLine / graphData.maxY / 1.2d);
+                graphData.addBasals(fromTime, now, lowLine / graphData.getMaxY() / 1.2d);
             }
 
             // add target line
