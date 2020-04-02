@@ -1382,6 +1382,8 @@
     <string name="exists">exists</string>
     <string name="notexists">not exists</string>
     <string name="temptargetcompared">Temp target %1$s</string>
+    <string name="btdevicecompared">Bluetooth connection to device %1$s %2$s</string>
+    <string name="btdevice">Connection to Bluetooth device </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -1736,4 +1738,6 @@
     <string name="smscommunicator_otp_install_info">On each follower phone install Authenticator app that support RFC 6238 TOTP tokens. Popular free apps are:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_provisioning_warning">DO NOT SHARE this code online!\nUse it only to setup Authenticator App on follower phones.</string>
     <string name="smscommunicator_otp_reset_warning">By reseting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
+    <string name="onconnect">On connect</string>
+    <string name="ondisconnect">On disconnect</string>
 </resources>

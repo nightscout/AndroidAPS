@@ -92,42 +92,13 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
     @Inject ProfileFunction profileFunction;
     @Inject SP sp;
 
-    private CompositeDisposable disposable = new CompositeDisposable();
-
     public DanaRExecutionService() {
-
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         mBinder = new LocalBinder();
-        context.registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
-        disposable.add(rxBus
-                .toObservable(EventPreferenceChange.class)
-                .observeOn(Schedulers.io())
-                .subscribe(event -> {
-                    if (mSerialIOThread != null)
-                        mSerialIOThread.disconnect("EventPreferenceChange");
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
-        );
-        disposable.add(rxBus
-                .toObservable(EventAppExit.class)
-                .observeOn(Schedulers.io())
-                .subscribe(event -> {
-                    aapsLogger.debug(LTag.PUMP, "EventAppExit received");
-                    if (mSerialIOThread != null)
-                        mSerialIOThread.disconnect("Application exit");
-                    context.unregisterReceiver(receiver);
-                    stopSelf();
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
-        );
-    }
-
-    @Override
-    public void onDestroy() {
-        disposable.clear();
-        super.onDestroy();
     }
 
     public class LocalBinder extends Binder {

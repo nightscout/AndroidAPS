@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.constraints.signatureVerifier.Signatur
 import info.nightscout.androidaps.plugins.constraints.storage.StorageConstraintPlugin
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerPlugin
 import info.nightscout.androidaps.plugins.general.actions.ActionsPlugin
+import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin
 import info.nightscout.androidaps.plugins.general.dataBroadcaster.DataBroadcastPlugin
 import info.nightscout.androidaps.plugins.general.food.FoodPlugin
@@ -212,6 +213,12 @@ abstract class PluginsModule {
     @IntoMap
     @IntKey(250)
     abstract fun bindLocalProfilePlugin(plugin: LocalProfilePlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(255)
+    abstract fun bindAutomationPlugin(plugin: AutomationPlugin): PluginBase
 
     @Binds
     @AllConfigs

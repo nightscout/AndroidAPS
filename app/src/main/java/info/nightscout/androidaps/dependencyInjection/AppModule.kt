@@ -171,6 +171,7 @@ open class AppModule {
         @ContributesAndroidInjector
         fun triggerPumpLastConnectionInjector(): TriggerPumpLastConnection
 
+        @ContributesAndroidInjector fun triggerBTDeviceInjector(): TriggerBTDevice
         @ContributesAndroidInjector fun triggerRecurringTimeInjector(): TriggerRecurringTime
         @ContributesAndroidInjector fun triggerTempTargetInjector(): TriggerTempTarget
         @ContributesAndroidInjector fun triggerTime(): TriggerTime
@@ -197,10 +198,12 @@ open class AppModule {
         @ContributesAndroidInjector fun inputBgInjector(): InputBg
         @ContributesAndroidInjector fun inputButtonInjector(): InputButton
         @ContributesAndroidInjector fun comparatorInjector(): Comparator
+        @ContributesAndroidInjector fun comparatorConnectInjector(): ComparatorConnect
         @ContributesAndroidInjector fun comparatorExistsInjector(): ComparatorExists
         @ContributesAndroidInjector fun inputDateTimeInjector(): InputDateTime
         @ContributesAndroidInjector fun inputDeltaInjector(): InputDelta
         @ContributesAndroidInjector fun inputDoubleInjector(): InputDouble
+        @ContributesAndroidInjector fun inputDropdownMenuInjector(): InputDropdownMenu
         @ContributesAndroidInjector fun inputDurationInjector(): InputDuration
         @ContributesAndroidInjector fun inputInsulinInjector(): InputInsulin
         @ContributesAndroidInjector fun inputLocationModeInjector(): InputLocationMode

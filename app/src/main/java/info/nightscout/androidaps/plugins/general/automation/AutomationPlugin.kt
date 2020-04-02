@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Handler
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.events.EventBTChange
 import info.nightscout.androidaps.events.EventChargingState
 import info.nightscout.androidaps.events.EventLocationChange
 import info.nightscout.androidaps.events.EventNetworkChange
@@ -38,6 +39,7 @@ import org.json.JSONObject
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.collections.ArrayList
 
 @Singleton
 class AutomationPlugin @Inject constructor(
@@ -65,6 +67,7 @@ class AutomationPlugin @Inject constructor(
 
     val automationEvents = ArrayList<AutomationEvent>()
     var executionLog: MutableList<String> = ArrayList()
+    var btConnects : MutableList<EventBTChange> = ArrayList()
 
     private val loopHandler = Handler()
     private lateinit var refreshLoop: Runnable
@@ -123,6 +126,14 @@ class AutomationPlugin @Inject constructor(
             .toObservable(EventAutosensCalculationFinished::class.java)
             .observeOn(Schedulers.io())
             .subscribe({ processActions() }, { fabricPrivacy.logException(it) })
+        disposable += rxBus
+            .toObservable(EventBTChange::class.java)
+            .observeOn(Schedulers.io())
+            .subscribe({
+                aapsLogger.debug(LTag.AUTOMATION, "Grabbed new BT event: $it")
+                btConnects.add(it)
+                processActions()
+            }, { fabricPrivacy.logException(it) })
     }
 
     override fun onStop() {
@@ -197,6 +208,12 @@ class AutomationPlugin @Inject constructor(
                 event.lastRun = DateUtil.now()
             }
         }
+        // we cannot detect connected BT devices
+        // so let's collect all connection/disconnections between 2 runs of processActions()
+        // TriggerBTDevice can pick up and process these events
+        // after processing clear events to prevent repeated actions
+        btConnects.clear()
+
         storeToSP() // save last run time
     }
 
@@ -231,8 +248,8 @@ class AutomationPlugin @Inject constructor(
             TriggerLocation(injector),
             TriggerAutosensValue(injector),
             TriggerBolusAgo(injector),
-            TriggerPumpLastConnection(injector)
+            TriggerPumpLastConnection(injector),
+            TriggerBTDevice(injector)
         )
     }
-
 }
