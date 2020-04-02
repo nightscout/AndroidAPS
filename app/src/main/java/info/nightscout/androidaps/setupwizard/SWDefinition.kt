@@ -59,6 +59,7 @@ class SWDefinition @Inject constructor(
     private val nsClientPlugin: NSClientPlugin,
     private val nsProfilePlugin: NSProfilePlugin,
     private val protectionCheck: ProtectionCheck,
+    private val importExportPrefs: ImportExportPrefs,
     private val androidPermission: AndroidPermission
 ) {
 
@@ -160,8 +161,8 @@ class SWDefinition @Inject constructor(
         .add(SWBreak(injector))
         .add(SWButton(injector)
             .text(R.string.nav_import)
-            .action(Runnable { ImportExportPrefs.importSharedPreferences(activity) }))
-        .visibility(SWValidator { ImportExportPrefs.file.exists() && !androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) })
+            .action(Runnable { importExportPrefs.importSharedPreferences(activity) }))
+        .visibility(SWValidator { importExportPrefs.prefsFileExists() && !androidPermission.permissionNotGranted(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) })
     private val screenNsClient = SWScreen(injector, R.string.nsclientinternal_title)
         .skippable(true)
         .add(SWInfotext(injector)

@@ -54,6 +54,7 @@ import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -571,7 +572,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     // return true if new record is created
     @Override
     public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo, boolean allowUpdate) {
-        boolean medtronicPump = MedtronicUtil.isMedtronicPump();
+        boolean medtronicPump = activePlugin.getActivePump() instanceof MedtronicPumpPlugin;
 
         getAapsLogger().debug(MedtronicHistoryData.doubleBolusDebug, LTag.DATATREATMENTS, "DoubleBolusDebug: addToHistoryTreatment::isMedtronicPump={} " + medtronicPump);
 

@@ -285,8 +285,15 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             }
         }
 
+        val hmacPasswords = arrayOf(
+            resourceHelper.gs(R.string.key_bolus_password),
+            resourceHelper.gs(R.string.key_master_password),
+            resourceHelper.gs(R.string.key_application_password),
+            resourceHelper.gs(R.string.key_settings_password)
+        )
+
         if (pref is Preference) {
-            if ((pref.key != null) && (pref.key.contains("_password"))) {
+            if ((pref.key != null) && (hmacPasswords.contains(pref.key))) {
                 if (sp.getString(pref.key, "").startsWith("hmac:")) {
                     pref.summary = "******"
                 } else {

@@ -28,6 +28,8 @@ ext {
     ormLiteVersion = "4.46"
     powermockVersion = "1.7.3"
     dexmakerVersion = "1.2"
+    retrofit2Version = '2.8.1'
+    okhttp3Version="4.4.1"
 }
 
 
@@ -224,9 +226,9 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
     implementation "com.google.android.gms:play-services-location:17.0.0"
-    implementation 'com.google.firebase:firebase-core:17.2.1'
-    implementation 'com.google.firebase:firebase-auth:19.2.0'
-    implementation 'com.google.firebase:firebase-database:19.2.0'
+    implementation 'com.google.firebase:firebase-core:17.2.3'
+    implementation 'com.google.firebase:firebase-auth:19.3.0'
+    implementation 'com.google.firebase:firebase-database:19.2.1'
     implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
         transitive = true;
     }
@@ -240,7 +242,7 @@ dependencies {
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation "androidx.preference:preference-ktx:1.1.0"
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
 
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
@@ -251,7 +253,7 @@ dependencies {
         exclude group: "com.google.android", module: "android"
     }
     implementation "org.apache.commons:commons-lang3:3.9"
-    implementation "org.slf4j:slf4j-api:1.7.29"
+    implementation 'org.slf4j:slf4j-api:1.7.30'
     // Graphview cannot be upgraded
     implementation "com.jjoe64:graphview:4.0.1"
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
@@ -288,7 +290,7 @@ dependencies {
     testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
     testImplementation "joda-time:joda-time:2.10.5"
-    testImplementation("com.google.truth:truth:0.39") {
+    testImplementation('com.google.truth:truth:1.0.1') {
         exclude group: "com.google.guava", module: "guava"
         exclude group: "com.google.code.findbugs", module: "jsr305"
     }
@@ -300,11 +302,11 @@ dependencies {
 
 
     // new for tidepool
-    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
-    implementation "com.squareup.retrofit2:retrofit:2.6.2"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.2"
-    implementation "com.squareup.retrofit2:converter-gson:2.6.2"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3Version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3Version"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit2Version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit2Version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit2Version"
 
     // Phone checker
     implementation 'com.scottyab:rootbeer-lib:0.0.7'

@@ -47,6 +47,8 @@
 
     <color name="dialog_title_background">#303030</color>
     <color name="activity_title_background">#121212</color>
+    <color name="dialog_title_color">#FFFFFF</color>
+    <color name="dialog_title_icon_tint">#FFFFFF</color>
 
     <color name="cardColorBackground">#121212</color>
     <color name="cardObjectiveText">#779ECB</color>
@@ -87,4 +89,21 @@
     <color name="ribbonTextCritical">#FFFFFF</color>
 
     <color name="splashBackground">#2E2E2E</color>
+
+    <color name="warningAlertBackground">#FFFB8C00</color>
+    <color name="warningAlertHeaderText">#FF000000</color>
+
+    <color name="errorAlertBackground">#FFFF5555</color>
+    <color name="errorAlertHeaderText">#FF000000</color>
+
+    <color name="toastBorder">#666666</color>
+    <color name="toastBase">#ffffff</color>
+    <color name="toastOk">#77dd77</color>
+    <color name="toastError">#ff0400</color>
+    <color name="toastWarn">#FF8C00</color>
+    <color name="toastInfo">#03A9F4</color>
+
+    <color name="metadataTextWarning">#FF8C00</color>
+    <color name="metadataTextError">#FF5555</color>
+
 </resources>

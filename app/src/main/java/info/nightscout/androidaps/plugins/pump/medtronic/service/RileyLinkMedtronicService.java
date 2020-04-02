@@ -61,10 +61,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
-    public static MedtronicCommunicationManager getCommunicationManager() {
-        return instance.medtronicCommunicationManager;
-    }
-
     @Override public void onCreate() {
         super.onCreate();
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly created");

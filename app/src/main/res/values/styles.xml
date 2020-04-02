@@ -11,6 +11,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="dialogTitleBackground">@color/dialog_title_background</item>
+        <item name="dialogTitleColor">@color/dialog_title_color</item>
+        <item name="dialogTitleIconTint">@color/dialog_title_icon_tint</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.NoActionBar">
@@ -65,6 +68,30 @@
         <item name="android:paddingEnd">15dp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textColor">#ff0000</item>
+    </style>
+
+    <style name="AppThemeWarningDialog" parent="AppTheme">
+        <item name="alertDialogTheme">@style/AppThemeWarningDialogTheme</item>
+        <item name="dialogTitleBackground">@color/warningAlertBackground</item>
+        <item name="dialogTitleColor">@color/warningAlertHeaderText</item>
+        <item name="dialogTitleIconTint">@color/warningAlertHeaderText</item>
+    </style>
+
+    <style name="AppThemeWarningDialogTheme" parent="Theme.AppCompat.Dialog.MinWidth">
+        <item name="android:windowBackground">@drawable/alert_border_warning</item>
+        <item name="colorAccent">@color/warningAlertBackground</item>
+    </style>
+
+    <style name="AppThemeErrorDialog" parent="AppTheme">
+        <item name="alertDialogTheme">@style/AppThemeErrorDialogTheme</item>
+        <item name="dialogTitleBackground">@color/errorAlertBackground</item>
+        <item name="dialogTitleColor">@color/errorAlertHeaderText</item>
+        <item name="dialogTitleIconTint">@color/errorAlertHeaderText</item>
+    </style>
+
+    <style name="AppThemeErrorDialogTheme" parent="Theme.AppCompat.Dialog.MinWidth">
+        <item name="android:windowBackground">@drawable/alert_border_error</item>
+        <item name="colorAccent">@color/errorAlertBackground</item>
     </style>
 
 </resources>

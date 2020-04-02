@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -43,8 +42,7 @@ public class MedtronicUIComm {
 
     public synchronized MedtronicUITask executeCommand(MedtronicCommandType commandType, Object... parameters) {
 
-        if (isLogEnabled())
-            aapsLogger.warn(LTag.PUMP, "Execute Command: " + commandType.name());
+        aapsLogger.warn(LTag.PUMP, "Execute Command: " + commandType.name());
 
         MedtronicUITask task = new MedtronicUITask(commandType, parameters);
 
@@ -78,7 +76,7 @@ public class MedtronicUIComm {
         // }
         // }
 
-        if (!task.isReceived() && isLogEnabled()) {
+        if (!task.isReceived()) {
             aapsLogger.warn(LTag.PUMP, "Reply not received for " + commandType);
         }
 
@@ -112,9 +110,4 @@ public class MedtronicUIComm {
     public void startTunning() {
         RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
     }
-
-    private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMP);
-    }
-
 }
