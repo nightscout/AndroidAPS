@@ -48,8 +48,8 @@ class OneTimePassword @Inject constructor(
      * Name of master device (target of OTP)
      */
     fun name(): String {
-        val defaultUserName = resourceHelper.gs(R.string.smscommunicator_default_user_display_name)
-        var userName = sp.getString(R.string.key_smscommunicator_otp_name, defaultUserName).replace(":", "").trim()
+        val defaultUserName = resourceHelper.gs(R.string.patient_name_default)
+        var userName = sp.getString(R.string.key_patient_name, defaultUserName).replace(":", "").trim()
         if (userName.isEmpty())
             userName = defaultUserName
         return userName
@@ -119,6 +119,6 @@ class OneTimePassword @Inject constructor(
      * Return URI used to provision Authenticator apps
      */
     fun provisioningURI(): String? =
-        key?.let { "otpauth://totp/AndroidAPS:" + URLEncoder.encode(name(), "utf-8") + "?secret=" + BaseEncoding.base32().encode(it.encoded).replace("=", "") + "&issuer=AndroidAPS" }
+        key?.let { "otpauth://totp/AndroidAPS:" + URLEncoder.encode(name(), "utf-8").replace("+", "%20") + "?secret=" + BaseEncoding.base32().encode(it.encoded).replace("=", "") + "&issuer=AndroidAPS" }
 
 }

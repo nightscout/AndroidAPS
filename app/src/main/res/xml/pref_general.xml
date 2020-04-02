@@ -20,6 +20,14 @@
             android:key="@string/key_language"
             android:title="@string/language" />
 
+
+        <EditTextPreference
+            android:inputType="textPersonName"
+            android:key="@string/key_patient_name"
+            android:title="@string/patient_name"
+            android:summary="@string/patient_name_summary"
+            />
+
         <PreferenceCategory android:title="@string/protection">
 
             <Preference
