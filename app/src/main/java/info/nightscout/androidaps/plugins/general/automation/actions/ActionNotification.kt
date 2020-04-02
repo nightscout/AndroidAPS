@@ -13,6 +13,7 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuil
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationUserMessage
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -30,7 +31,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = R.drawable.ic_notifications
 
     override fun doAction(callback: Callback) {
-        val notification = Notification(Notification.USERMESSAGE, text.value, Notification.URGENT)
+        val notification = NotificationUserMessage(text.value)
         rxBus.send(EventNewNotification(notification))
         NSUpload.uploadError(text.value)
         rxBus.send(EventRefreshOverview("ActionNotification"))
