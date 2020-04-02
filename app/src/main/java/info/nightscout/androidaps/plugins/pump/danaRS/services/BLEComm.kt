@@ -19,15 +19,13 @@ import info.nightscout.androidaps.plugins.pump.danaRS.activities.EnterPinActivit
 import info.nightscout.androidaps.plugins.pump.danaRS.activities.PairingHelperActivity
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRSMessageHashTable
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet
-import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_Etc_Keep_Connection
-import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_General_Get_Pump_Check
 import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSPairingSuccess
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.extensions.notify
+import info.nightscout.androidaps.utils.extensions.waitMillis
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import okhttp3.internal.notify
-import okhttp3.internal.waitMillis
 import java.util.*
 import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
@@ -230,7 +228,7 @@ class BLEComm @Inject internal constructor(
             //aapsLogger.debug("writeCharacteristic:" + DanaRS_Packet.toHexString(data))
             bluetoothGatt?.writeCharacteristic(characteristic)
         }).start()
-        waitMillis(50)
+        SystemClock.sleep(50)
     }
 
     private val uartReadBTGattChar: BluetoothGattCharacteristic
