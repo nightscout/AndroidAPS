@@ -4,6 +4,7 @@ import android.os.Bundle
 import com.crashlytics.android.Crashlytics
 import com.google.firebase.analytics.FirebaseAnalytics
 import info.nightscout.androidaps.BuildConfig
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -132,7 +133,8 @@ class FabricPrivacy @Inject constructor(
         val hashes: List<String> = signatureVerifierPlugin.shortHashes()
         if (hashes.isNotEmpty()) mainApp.firebaseAnalytics.setUserProperty("Hash", hashes[0])
         activePlugin.activePump.let { mainApp.firebaseAnalytics.setUserProperty("Pump", it::class.java.simpleName) }
-        activePlugin.activeAPS.let { mainApp.firebaseAnalytics.setUserProperty("Aps", it::class.java.simpleName) }
+        if (!Config.NSCLIENT && !Config.PUMPCONTROL)
+            activePlugin.activeAPS.let { mainApp.firebaseAnalytics.setUserProperty("Aps", it::class.java.simpleName) }
         activePlugin.activeBgSource.let { mainApp.firebaseAnalytics.setUserProperty("BgSource", it::class.java.simpleName) }
         mainApp.firebaseAnalytics.setUserProperty("Profile", activePlugin.activeProfileInterface.javaClass.simpleName)
         activePlugin.activeSensitivity.let { mainApp.firebaseAnalytics.setUserProperty("Sensitivity", it::class.java.simpleName) }
