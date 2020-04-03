@@ -10,13 +10,10 @@ import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,15 +22,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.jjoe64.graphview.GraphView;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -55,15 +52,11 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.ExtendedBolus;
-import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.dialogs.CalibrationDialog;
 import info.nightscout.androidaps.dialogs.CarbsDialog;
 import info.nightscout.androidaps.dialogs.InsulinDialog;
-import info.nightscout.androidaps.dialogs.ProfileSwitchDialog;
-import info.nightscout.androidaps.dialogs.ProfileViewerDialog;
-import info.nightscout.androidaps.dialogs.TempTargetDialog;
 import info.nightscout.androidaps.dialogs.TreatmentDialog;
 import info.nightscout.androidaps.dialogs.WizardDialog;
 import info.nightscout.androidaps.events.EventAcceptOpenLoopChange;
@@ -80,7 +73,6 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.Constraint;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -105,7 +97,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCa
 import info.nightscout.androidaps.plugins.source.DexcomPlugin;
 import info.nightscout.androidaps.plugins.source.XdripPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
-import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.CommandQueue;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
@@ -126,8 +117,6 @@ import info.nightscout.androidaps.utils.wizard.QuickWizardEntry;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
-
-import static info.nightscout.androidaps.utils.DateUtil.now;
 
 public class OverviewFragment extends DaggerFragment implements View.OnClickListener, View.OnLongClickListener {
     @Inject HasAndroidInjector injector;
@@ -154,6 +143,8 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     @Inject BuildHelper buildHelper;
     @Inject CommandQueue commandQueue;
     @Inject ProtectionCheck protectionCheck;
+    @Inject FabricPrivacy fabricPrivacy;
+    @Inject OverviewMenus overviewMenus;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -182,7 +173,6 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
     GraphView iobGraph;
-    ImageButton chartButton;
 
     TextView iage;
     TextView cage;
@@ -213,8 +203,6 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
     boolean smallHeight;
 
     public static boolean shorttextmode = false;
-
-    private boolean accepted;
 
     private int rangeToDisplay = 6; // for graph
 
@@ -364,7 +352,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
             return false;
         });
 
-        setupChartMenu(view);
+        overviewMenus.setupChartMenu(view.findViewById(R.id.overview_chartMenuButton));
 
         return view;
     }
@@ -386,79 +374,79 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                 .toObservable(EventRefreshOverview.class)
                 .observeOn(Schedulers.io())
                 .subscribe(eventOpenAPSUpdateGui -> scheduleUpdateGUI(eventOpenAPSUpdateGui.getFrom()),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventExtendedBolusChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventExtendedBolusChange"),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventTempBasalChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventTempBasalChange"),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventTreatmentChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventTreatmentChange"),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventTempTargetChange"),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventAcceptOpenLoopChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventAcceptOpenLoopChange"),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventCareportalEventChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventCareportalEventChange"),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventInitializationChanged.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventInitializationChanged"),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventAutosensCalculationFinished.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventAutosensCalculationFinished"),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventProfileNeedsUpdate.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventProfileNeedsUpdate"),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventPreferenceChange"),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventNewOpenLoopNotification.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> scheduleUpdateGUI("EventNewOpenLoopNotification"),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventPumpStatusChanged.class)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(event -> updatePumpStatus(event),
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         disposable.add(rxBus
                 .toObservable(EventIobCalculationProgress.class)
@@ -467,7 +455,7 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
                             if (iobCalculationProgressView != null)
                                 iobCalculationProgressView.setText(event.getProgress());
                         },
-                        exception -> FabricPrivacy.getInstance().logException(exception)
+                        fabricPrivacy::logException
                 ));
         sRefreshLoop = () -> {
             scheduleUpdateGUI("refreshLoop");
@@ -480,367 +468,18 @@ public class OverviewFragment extends DaggerFragment implements View.OnClickList
         updateGUI("onResume");
     }
 
-    private void setupChartMenu(View view) {
-        chartButton = (ImageButton) view.findViewById(R.id.overview_chartMenuButton);
-        chartButton.setOnClickListener(v -> {
-            boolean predictionsAvailable;
-            if (Config.APS)
-                predictionsAvailable = loopPlugin.lastRun != null && loopPlugin.lastRun.request.hasPredictions;
-            else if (Config.NSCLIENT)
-                predictionsAvailable = true;
-            else
-                predictionsAvailable = false;
-
-            MenuItem item, dividerItem;
-            CharSequence title;
-            int titleMaxChars = 0;
-            SpannableString s;
-            PopupMenu popup = new PopupMenu(v.getContext(), v);
-            if (predictionsAvailable) {
-                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.PRE.ordinal(), Menu.NONE, "Predictions");
-                title = item.getTitle();
-                if (titleMaxChars < title.length()) titleMaxChars = title.length();
-                s = new SpannableString(title);
-                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.prediction, null)), 0, s.length(), 0);
-                item.setTitle(s);
-                item.setCheckable(true);
-                item.setChecked(sp.getBoolean("showprediction", true));
-            }
-
-            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.BAS.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_basals));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.basal, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(sp.getBoolean("showbasals", true));
-
-            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.ACTPRIM.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_activity));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.activity, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(sp.getBoolean("showactivityprimary", true));
-
-            dividerItem = popup.getMenu().add("");
-            dividerItem.setEnabled(false);
-
-            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.IOB.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_iob));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.iob, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(sp.getBoolean("showiob", true));
-
-            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.COB.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_cob));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.cob, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(sp.getBoolean("showcob", true));
-
-            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEV.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_deviations));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.deviations, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(sp.getBoolean("showdeviations", false));
-
-            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.SEN.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_sensitivity));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.ratio, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(sp.getBoolean("showratios", false));
-
-            item = popup.getMenu().add(Menu.NONE, CHARTTYPE.ACTSEC.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_activity));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.activity, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(sp.getBoolean("showactivitysecondary", true));
-
-            if (buildHelper.isDev()) {
-                item = popup.getMenu().add(Menu.NONE, CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
-                title = item.getTitle();
-                if (titleMaxChars < title.length()) titleMaxChars = title.length();
-                s = new SpannableString(title);
-                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.devslopepos, null)), 0, s.length(), 0);
-                item.setTitle(s);
-                item.setCheckable(true);
-                item.setChecked(sp.getBoolean("showdevslope", false));
-            }
-
-            // Fairly good guestimate for required divider text size...
-            title = new String(new char[titleMaxChars + 10]).replace("\0", "_");
-            dividerItem.setTitle(title);
-
-            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    if (item.getItemId() == CHARTTYPE.PRE.ordinal()) {
-                        sp.putBoolean("showprediction", !item.isChecked());
-                    } else if (item.getItemId() == CHARTTYPE.BAS.ordinal()) {
-                        sp.putBoolean("showbasals", !item.isChecked());
-                    } else if (item.getItemId() == CHARTTYPE.IOB.ordinal()) {
-                        sp.putBoolean("showiob", !item.isChecked());
-                    } else if (item.getItemId() == CHARTTYPE.COB.ordinal()) {
-                        sp.putBoolean("showcob", !item.isChecked());
-                    } else if (item.getItemId() == CHARTTYPE.DEV.ordinal()) {
-                        sp.putBoolean("showdeviations", !item.isChecked());
-                    } else if (item.getItemId() == CHARTTYPE.SEN.ordinal()) {
-                        sp.putBoolean("showratios", !item.isChecked());
-                    } else if (item.getItemId() == CHARTTYPE.ACTPRIM.ordinal()) {
-                        sp.putBoolean("showactivityprimary", !item.isChecked());
-                    } else if (item.getItemId() == CHARTTYPE.ACTSEC.ordinal()) {
-                        sp.putBoolean("showactivitysecondary", !item.isChecked());
-                    } else if (item.getItemId() == CHARTTYPE.DEVSLOPE.ordinal()) {
-                        sp.putBoolean("showdevslope", !item.isChecked());
-                    }
-                    scheduleUpdateGUI("onGraphCheckboxesCheckedChanged");
-                    return true;
-                }
-            });
-            chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
-            popup.setOnDismissListener(new PopupMenu.OnDismissListener() {
-                @Override
-                public void onDismiss(PopupMenu menu) {
-                    chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp);
-                }
-            });
-            popup.show();
-        });
-    }
-
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(@NotNull ContextMenu menu, @NotNull View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        if (v == apsModeView) {
-            final PumpDescription pumpDescription =
-                    activePlugin.getActivePump().getPumpDescription();
-            if (!profileFunction.isProfileValid("ContexMenuCreation"))
-                return;
-            menu.setHeaderTitle(resourceHelper.gs(R.string.loop));
-            if (loopPlugin.isEnabled(PluginType.LOOP)) {
-                menu.add(resourceHelper.gs(R.string.disableloop));
-                if (!loopPlugin.isSuspended()) {
-                    menu.add(resourceHelper.gs(R.string.suspendloopfor1h));
-                    menu.add(resourceHelper.gs(R.string.suspendloopfor2h));
-                    menu.add(resourceHelper.gs(R.string.suspendloopfor3h));
-                    menu.add(resourceHelper.gs(R.string.suspendloopfor10h));
-                } else {
-                    if (!loopPlugin.isDisconnected()) {
-                        menu.add(resourceHelper.gs(R.string.resume));
-                    }
-                }
-            }
-
-            if (!loopPlugin.isEnabled(PluginType.LOOP)) {
-                menu.add(resourceHelper.gs(R.string.enableloop));
-            }
-
-            if (!loopPlugin.isDisconnected()) {
-                showSuspendtPump(menu, pumpDescription);
-            } else {
-                menu.add(resourceHelper.gs(R.string.reconnect));
-            }
-
-        } else if (v == activeProfileView) {
-            menu.setHeaderTitle(resourceHelper.gs(R.string.profile));
-            menu.add(resourceHelper.gs(R.string.danar_viewprofile));
-            activePlugin.getActiveProfileInterface();
-            if (activePlugin.getActiveProfileInterface().getProfile() != null) {
-                menu.add(resourceHelper.gs(R.string.careportal_profileswitch));
-            }
-        } else if (v == tempTargetView) {
-            menu.setHeaderTitle(resourceHelper.gs(R.string.careportal_temporarytarget));
-            menu.add(resourceHelper.gs(R.string.custom));
-            menu.add(resourceHelper.gs(R.string.eatingsoon));
-            menu.add(resourceHelper.gs(R.string.activity));
-            menu.add(resourceHelper.gs(R.string.hypo));
-            if (treatmentsPlugin.getTempTargetFromHistory() != null) {
-                menu.add(resourceHelper.gs(R.string.cancel));
-            }
-        }
-    }
-
-    private void showSuspendtPump(ContextMenu menu, PumpDescription pumpDescription) {
-        if (pumpDescription.tempDurationStep15mAllowed)
-            menu.add(resourceHelper.gs(R.string.disconnectpumpfor15m));
-        if (pumpDescription.tempDurationStep30mAllowed)
-            menu.add(resourceHelper.gs(R.string.disconnectpumpfor30m));
-        menu.add(resourceHelper.gs(R.string.disconnectpumpfor1h));
-        menu.add(resourceHelper.gs(R.string.disconnectpumpfor2h));
-        menu.add(resourceHelper.gs(R.string.disconnectpumpfor3h));
+        overviewMenus.createContextMenu(menu, v);
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        final Profile profile = profileFunction.getProfile();
-        if (profile == null)
-            return true;
-        if (item.getTitle().equals(resourceHelper.gs(R.string.disableloop))) {
-            aapsLogger.debug("USER ENTRY: LOOP DISABLED");
-            loopPlugin.setPluginEnabled(PluginType.LOOP, false);
-            loopPlugin.setFragmentVisible(PluginType.LOOP, false);
-            configBuilderPlugin.storeSettings("DisablingLoop");
-            updateGUI("suspendmenu");
-            commandQueue.cancelTempBasal(true, new Callback() {
-                @Override
-                public void run() {
-                    if (!result.success) {
-                        ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.tempbasaldeliveryerror));
-                    }
-                }
-            });
-            loopPlugin.createOfflineEvent(24 * 60); // upload 24h, we don't know real duration
-            return true;
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.enableloop))) {
-            aapsLogger.debug("USER ENTRY: LOOP ENABLED");
-            loopPlugin.setPluginEnabled(PluginType.LOOP, true);
-            loopPlugin.setFragmentVisible(PluginType.LOOP, true);
-            configBuilderPlugin.storeSettings("EnablingLoop");
-            updateGUI("suspendmenu");
-            loopPlugin.createOfflineEvent(0);
-            return true;
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.resume)) ||
-                item.getTitle().equals(resourceHelper.gs(R.string.reconnect))) {
-            aapsLogger.debug("USER ENTRY: RESUME");
-            loopPlugin.suspendTo(0L);
-            updateGUI("suspendmenu");
-            commandQueue.cancelTempBasal(true, new Callback() {
-                @Override
-                public void run() {
-                    if (!result.success) {
-                        ToastUtils.showToastInUiThread(mainApp, resourceHelper.gs(R.string.tempbasaldeliveryerror));
-                    }
-                }
-            });
-            sp.putBoolean(R.string.key_objectiveusereconnect, true);
-            loopPlugin.createOfflineEvent(0);
-            return true;
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.suspendloopfor1h))) {
-            aapsLogger.debug("USER ENTRY: SUSPEND 1h");
-            loopPlugin.suspendLoop(60);
-            updateGUI("suspendmenu");
-            return true;
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.suspendloopfor2h))) {
-            aapsLogger.debug("USER ENTRY: SUSPEND 2h");
-            loopPlugin.suspendLoop(120);
-            updateGUI("suspendmenu");
-            return true;
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.suspendloopfor3h))) {
-            aapsLogger.debug("USER ENTRY: SUSPEND 3h");
-            loopPlugin.suspendLoop(180);
-            updateGUI("suspendmenu");
-            return true;
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.suspendloopfor10h))) {
-            aapsLogger.debug("USER ENTRY: SUSPEND 10h");
-            loopPlugin.suspendLoop(600);
-            updateGUI("suspendmenu");
-            return true;
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.disconnectpumpfor15m))) {
-            aapsLogger.debug("USER ENTRY: DISCONNECT 15m");
-            loopPlugin.disconnectPump(15, profile);
-            updateGUI("suspendmenu");
-            return true;
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.disconnectpumpfor30m))) {
-            aapsLogger.debug("USER ENTRY: DISCONNECT 30m");
-            loopPlugin.disconnectPump(30, profile);
-            updateGUI("suspendmenu");
-            return true;
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.disconnectpumpfor1h))) {
-            aapsLogger.debug("USER ENTRY: DISCONNECT 1h");
-            loopPlugin.disconnectPump(60, profile);
-            sp.putBoolean(R.string.key_objectiveusedisconnect, true);
-            updateGUI("suspendmenu");
-            return true;
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.disconnectpumpfor2h))) {
-            aapsLogger.debug("USER ENTRY: DISCONNECT 2h");
-            loopPlugin.disconnectPump(120, profile);
-            updateGUI("suspendmenu");
-            return true;
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.disconnectpumpfor3h))) {
-            aapsLogger.debug("USER ENTRY: DISCONNECT 3h");
-            loopPlugin.disconnectPump(180, profile);
-            updateGUI("suspendmenu");
-            return true;
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.careportal_profileswitch))) {
-            FragmentManager manager = getFragmentManager();
-            if (manager != null)
-                new ProfileSwitchDialog().show(manager, "Overview");
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.danar_viewprofile))) {
-            Bundle args = new Bundle();
-            args.putLong("time", DateUtil.now());
-            args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal());
-            ProfileViewerDialog pvd = new ProfileViewerDialog();
-            pvd.setArguments(args);
-            FragmentManager manager = getFragmentManager();
-            if (manager != null)
-                pvd.show(manager, "ProfileViewDialog");
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.eatingsoon))) {
-            aapsLogger.debug("USER ENTRY: TEMP TARGET EATING SOON");
-            double target = Profile.toMgdl(defaultValueHelper.determineEatingSoonTT(), profileFunction.getUnits());
-            TempTarget tempTarget = new TempTarget()
-                    .date(System.currentTimeMillis())
-                    .duration(defaultValueHelper.determineEatingSoonTTDuration())
-                    .reason(resourceHelper.gs(R.string.eatingsoon))
-                    .source(Source.USER)
-                    .low(target)
-                    .high(target);
-            treatmentsPlugin.addToHistoryTempTarget(tempTarget);
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.activity))) {
-            aapsLogger.debug("USER ENTRY: TEMP TARGET ACTIVITY");
-            double target = Profile.toMgdl(defaultValueHelper.determineActivityTT(), profileFunction.getUnits());
-            TempTarget tempTarget = new TempTarget()
-                    .date(now())
-                    .duration(defaultValueHelper.determineActivityTTDuration())
-                    .reason(resourceHelper.gs(R.string.activity))
-                    .source(Source.USER)
-                    .low(target)
-                    .high(target);
-            treatmentsPlugin.addToHistoryTempTarget(tempTarget);
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.hypo))) {
-            aapsLogger.debug("USER ENTRY: TEMP TARGET HYPO");
-            double target = Profile.toMgdl(defaultValueHelper.determineHypoTT(), profileFunction.getUnits());
-            TempTarget tempTarget = new TempTarget()
-                    .date(now())
-                    .duration(defaultValueHelper.determineHypoTTDuration())
-                    .reason(resourceHelper.gs(R.string.hypo))
-                    .source(Source.USER)
-                    .low(target)
-                    .high(target);
-            treatmentsPlugin.addToHistoryTempTarget(tempTarget);
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.custom))) {
-            FragmentManager manager = getFragmentManager();
-            if (manager != null)
-                new TempTargetDialog().show(manager, "Overview");
-        } else if (item.getTitle().equals(resourceHelper.gs(R.string.cancel))) {
-            aapsLogger.debug("USER ENTRY: TEMP TARGET CANCEL");
-            TempTarget tempTarget = new TempTarget()
-                    .source(Source.USER)
-                    .date(now())
-                    .duration(0)
-                    .low(0)
-                    .high(0);
-            treatmentsPlugin.addToHistoryTempTarget(tempTarget);
-        }
-
-        return super.onContextItemSelected(item);
+        FragmentManager manager = getFragmentManager();
+        if (manager != null && overviewMenus.onContextItemSelected(item, manager)) return true;
+        else return super.onContextItemSelected(item);
     }
 
     @Override
