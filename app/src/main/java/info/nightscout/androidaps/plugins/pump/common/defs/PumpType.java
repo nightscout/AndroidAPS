@@ -59,6 +59,13 @@ public enum PumpType {
             new DoseSettings(10, 15, 24 * 60, 0d, 250d), PumpCapability.BasalRate_Duration15and30minAllowed, //
             0.02d, 0.01d, DoseStepSize.InsightBolus, PumpCapability.InsightCapabilities, false, false), //
 
+    AccuChekSolo("Accu-Chek Solo", ManufacturerType.Roche, "Solo", 0.01d, null, //
+            new DoseSettings(0.01d, 15, 24 * 60, 0.05d), //
+            PumpTempBasalType.Percent,
+            new DoseSettings(10, 15, 24 * 60, 0d, 250d), PumpCapability.BasalRate_Duration15and30minAllowed, //
+            0.02d, 0.01d, DoseStepSize.InsightBolus, PumpCapability.InsightCapabilities, false, false), //
+
+
     // Animas
     AnimasVibe("Animas Vibe", ManufacturerType.Animas, "Vibe", 0.05d, null, // AnimasBolus?
             new DoseSettings(0.05d, 30, 12 * 60, 0.05d), //
