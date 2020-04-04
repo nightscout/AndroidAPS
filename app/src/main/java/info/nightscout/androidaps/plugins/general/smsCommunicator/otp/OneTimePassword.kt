@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.general.smsCommunicator.otp
 
 import android.util.Base64
-import com.eatthepath.otp.TimeBasedOneTimePasswordGenerator
+import com.eatthepath.otp.HmacOneTimePasswordGenerator
 import com.google.common.io.BaseEncoding
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
@@ -23,7 +23,7 @@ class OneTimePassword @Inject constructor(
 
     private var key: SecretKey? = null
     private var pin: String = ""
-    private val totp = TimeBasedOneTimePasswordGenerator()
+    private val totp = HmacOneTimePasswordGenerator()
 
     init {
         instance = this
