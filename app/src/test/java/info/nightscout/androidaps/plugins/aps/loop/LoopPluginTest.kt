@@ -33,7 +33,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(ConstraintChecker::class, VirtualPumpPlugin::class)
 class LoopPluginTest : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var sp: SP
     private val rxBus: RxBusWrapper = RxBusWrapper()
     @Mock lateinit var constraintChecker: ConstraintChecker

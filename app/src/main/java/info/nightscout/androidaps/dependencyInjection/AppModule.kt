@@ -3,10 +3,12 @@ package info.nightscout.androidaps.dependencyInjection
 import android.content.Context
 import androidx.preference.PreferenceManager
 import dagger.Binds
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.ProfileStore
@@ -15,6 +17,7 @@ import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.AAPSLoggerProduction
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
@@ -23,7 +26,6 @@ import info.nightscout.androidaps.plugins.aps.openAPSMA.DetermineBasalResultMA
 import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
@@ -33,6 +35,9 @@ import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.elements.*
 import info.nightscout.androidaps.plugins.general.automation.triggers.*
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
+import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
+import info.nightscout.androidaps.plugins.general.maintenance.formats.ClassicPrefsFormat
+import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.general.smsCommunicator.AuthRequest
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
@@ -42,7 +47,6 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.queue.commands.*
-import info.nightscout.androidaps.setupwizard.SWDefinition
 import info.nightscout.androidaps.setupwizard.SWEventListener
 import info.nightscout.androidaps.setupwizard.SWScreen
 import info.nightscout.androidaps.setupwizard.elements.*
@@ -51,11 +55,13 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.sharedPreferences.SPImplementation
+import info.nightscout.androidaps.utils.storage.FileStorage
+import info.nightscout.androidaps.utils.storage.Storage
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import javax.inject.Singleton
 
-@Module(includes = [AppModule.AppBindings::class])
+@Module(includes = [AppModule.AppBindings::class, PluginsModule::class])
 open class AppModule {
 
     @Provides
@@ -86,6 +92,24 @@ open class AppModule {
             AAPSLoggerProduction()
         }
  */
+    }
+
+    @Provides
+    fun providesPlugins(@PluginsModule.AllConfigs allConfigs: Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>,
+                        @PluginsModule.PumpDriver pumpDrivers: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
+                        @PluginsModule.NotNSClient notNsClient: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
+                        @PluginsModule.APS aps: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>): List<@JvmSuppressWildcards PluginBase> {
+        val plugins = allConfigs.toMutableMap()
+        if (Config.PUMPDRIVERS) plugins += pumpDrivers.get()
+        if (Config.APS) plugins += aps.get()
+        if (!Config.NSCLIENT) plugins += notNsClient.get()
+        return plugins.toList().sortedBy { it.first }.map { it.second }
+    }
+
+    @Provides
+    @Singleton
+    fun provideStorage(): Storage {
+        return FileStorage()
     }
 
     @Module
@@ -156,6 +180,7 @@ open class AppModule {
         @ContributesAndroidInjector
         fun triggerPumpLastConnectionInjector(): TriggerPumpLastConnection
 
+        @ContributesAndroidInjector fun triggerBTDeviceInjector(): TriggerBTDevice
         @ContributesAndroidInjector fun triggerRecurringTimeInjector(): TriggerRecurringTime
         @ContributesAndroidInjector fun triggerTempTargetInjector(): TriggerTempTarget
         @ContributesAndroidInjector fun triggerTime(): TriggerTime
@@ -182,10 +207,12 @@ open class AppModule {
         @ContributesAndroidInjector fun inputBgInjector(): InputBg
         @ContributesAndroidInjector fun inputButtonInjector(): InputButton
         @ContributesAndroidInjector fun comparatorInjector(): Comparator
+        @ContributesAndroidInjector fun comparatorConnectInjector(): ComparatorConnect
         @ContributesAndroidInjector fun comparatorExistsInjector(): ComparatorExists
         @ContributesAndroidInjector fun inputDateTimeInjector(): InputDateTime
         @ContributesAndroidInjector fun inputDeltaInjector(): InputDelta
         @ContributesAndroidInjector fun inputDoubleInjector(): InputDouble
+        @ContributesAndroidInjector fun inputDropdownMenuInjector(): InputDropdownMenu
         @ContributesAndroidInjector fun inputDurationInjector(): InputDuration
         @ContributesAndroidInjector fun inputInsulinInjector(): InputInsulin
         @ContributesAndroidInjector fun inputLocationModeInjector(): InputLocationMode
@@ -233,6 +260,10 @@ open class AppModule {
         @ContributesAndroidInjector fun glucoseStatusInjector(): GlucoseStatus
 
         @ContributesAndroidInjector fun graphDataInjector(): GraphData
+
+        @ContributesAndroidInjector fun importExportPrefsInjector(): ImportExportPrefs
+        @ContributesAndroidInjector fun encryptedPrefsFormatInjector(): EncryptedPrefsFormat
+        @ContributesAndroidInjector fun classicPrefsFormatInjector(): ClassicPrefsFormat
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector

@@ -64,11 +64,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
-    public static MedtronicCommunicationManager getCommunicationManager() {
-        return instance.medtronicCommunicationManager;
-    }
-
-
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         aapsLogger.warn(LTag.PUMPCOMM, "onConfigurationChanged");

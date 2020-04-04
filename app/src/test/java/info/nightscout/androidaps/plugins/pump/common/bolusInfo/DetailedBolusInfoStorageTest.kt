@@ -14,8 +14,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 @RunWith(PowerMockRunner::class)
 class DetailedBolusInfoStorageTest : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
-
     private val info1 = DetailedBolusInfo()
     private val info2 = DetailedBolusInfo()
     private val info3 = DetailedBolusInfo()

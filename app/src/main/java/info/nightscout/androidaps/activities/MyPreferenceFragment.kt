@@ -52,6 +52,7 @@ import info.nightscout.androidaps.plugins.source.PoctechPlugin
 import info.nightscout.androidaps.plugins.source.TomatoPlugin
 import info.nightscout.androidaps.utils.OKDialog.show
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -97,6 +98,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Inject lateinit var wearPlugin: WearPlugin
     @Inject lateinit var maintenancePlugin: MaintenancePlugin
+
+    @Inject lateinit var passwordCheck: PasswordCheck
 
     @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
@@ -185,7 +188,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResource(R.xml.pref_datachoices, rootKey)
             addPreferencesFromResourceIfEnabled(maintenancePlugin, rootKey)
         }
-        initSummary(preferenceScreen)
+        initSummary(preferenceScreen, pluginId != -1)
         for (plugin in pluginStore.plugins) {
             plugin.preprocessPreferences(this)
         }
@@ -254,19 +257,19 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             // Preferences
             if (pref.getKey() == resourceHelper.gs(R.string.key_settings_protection)) {
                 val pass: Preference? = findPreference(resourceHelper.gs(R.string.key_settings_password))
-                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.PASSWORD.ordinal.toString()
+                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.CUSTOM_PASSWORD.ordinal.toString()
             }
             // Application
             // Application
             if (pref.getKey() == resourceHelper.gs(R.string.key_application_protection)) {
                 val pass: Preference? = findPreference(resourceHelper.gs(R.string.key_application_password))
-                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.PASSWORD.ordinal.toString()
+                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.CUSTOM_PASSWORD.ordinal.toString()
             }
             // Bolus
             // Bolus
             if (pref.getKey() == resourceHelper.gs(R.string.key_bolus_protection)) {
                 val pass: Preference? = findPreference(resourceHelper.gs(R.string.key_bolus_password))
-                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.PASSWORD.ordinal.toString()
+                if (pass != null) pass.isEnabled = pref.value == ProtectionCheck.ProtectionType.CUSTOM_PASSWORD.ordinal.toString()
             }
         }
         if (pref is EditTextPreference) {
@@ -281,17 +284,66 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 }
             }
         }
+
+        val hmacPasswords = arrayOf(
+            resourceHelper.gs(R.string.key_bolus_password),
+            resourceHelper.gs(R.string.key_master_password),
+            resourceHelper.gs(R.string.key_application_password),
+            resourceHelper.gs(R.string.key_settings_password)
+        )
+
+        if (pref is Preference) {
+            if ((pref.key != null) && (hmacPasswords.contains(pref.key))) {
+                if (sp.getString(pref.key, "").startsWith("hmac:")) {
+                    pref.summary = "******"
+                } else {
+                    pref.summary = resourceHelper.gs(R.string.password_not_set)
+                }
+            }
+        }
         pref?.let { adjustUnitDependentPrefs(it) }
     }
 
-    private fun initSummary(p: Preference) {
+    private fun initSummary(p: Preference, isSinglePreference: Boolean) {
         p.isIconSpaceReserved = false // remove extra spacing on left after migration to androidx
+        // expand single plugin preference by default
+        if (p is PreferenceScreen && isSinglePreference) {
+            if (p.size > 0 && p.getPreference(0) is PreferenceCategory)
+                (p.getPreference(0) as PreferenceCategory).initialExpandedChildrenCount = Int.MAX_VALUE
+        }
         if (p is PreferenceGroup) {
             for (i in 0 until p.preferenceCount) {
-                initSummary(p.getPreference(i))
+                initSummary(p.getPreference(i), isSinglePreference)
             }
         } else {
             updatePrefSummary(p)
         }
+    }
+
+    // We use Preference and custom editor instead of EditTextPreference
+    // to hash password while it is saved and never have to show it, even hashed
+
+    override fun onPreferenceTreeClick(preference: Preference?): Boolean {
+        context?.let { context ->
+            if (preference != null) {
+                if (preference.key == resourceHelper.gs(R.string.key_master_password)) {
+                    passwordCheck.setPassword(context, R.string.master_password, R.string.key_master_password)
+                    return true
+                }
+                if (preference.key == resourceHelper.gs(R.string.key_settings_password)) {
+                    passwordCheck.setPassword(context, R.string.settings_password, R.string.key_settings_password)
+                    return true
+                }
+                if (preference.key == resourceHelper.gs(R.string.key_bolus_password)) {
+                    passwordCheck.setPassword(context, R.string.bolus_password, R.string.key_bolus_password)
+                    return true
+                }
+                if (preference.key == resourceHelper.gs(R.string.key_application_password)) {
+                    passwordCheck.setPassword(context, R.string.application_password, R.string.key_application_password)
+                    return true
+                }
+            }
+        }
+        return super.onPreferenceTreeClick(preference)
     }
 }

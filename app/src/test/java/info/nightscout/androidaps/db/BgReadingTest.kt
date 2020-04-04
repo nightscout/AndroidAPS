@@ -30,7 +30,6 @@ import java.util.logging.Logger
 @PrepareForTest(MainApp::class, Logger::class, L::class, SP::class, GlucoseStatus::class)
 class BgReadingTest : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var resourceHelper: ResourceHelper

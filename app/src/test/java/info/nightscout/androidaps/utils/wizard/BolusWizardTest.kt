@@ -37,7 +37,6 @@ class BolusWizardTest : TestBase() {
 
     private val PUMP_BOLUS_STEP = 0.1
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var constraintChecker: ConstraintChecker

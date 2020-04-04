@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,7 +27,7 @@ class PluginStore @Inject constructor(
         }
     }
 
-    var plugins = ArrayList<PluginBase>()
+    lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
 
     private var activeBgSource: BgSourceInterface? = null
     private var activePump: PumpInterface? = null
@@ -39,11 +39,6 @@ class PluginStore @Inject constructor(
 
     fun loadDefaults() {
         verifySelectionInCategories()
-    }
-
-    fun add(pluginBase: PluginBase): ActivePluginProvider {
-        plugins.add(pluginBase)
-        return this
     }
 
     fun getDefaultPlugin(type: PluginType): PluginBase {
@@ -88,14 +83,16 @@ class PluginStore @Inject constructor(
         var pluginsInCategory: ArrayList<PluginBase>?
 
         // PluginType.APS
-        pluginsInCategory = getSpecificPluginsList(PluginType.APS)
-        activeAPS = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APSInterface?
-        if (activeAPS == null) {
-            activeAPS = getDefaultPlugin(PluginType.APS) as APSInterface
-            (activeAPS as PluginBase).setPluginEnabled(PluginType.APS, true)
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
+        if (!Config.NSCLIENT && !Config.PUMPCONTROL) {
+            pluginsInCategory = getSpecificPluginsList(PluginType.APS)
+            activeAPS = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APSInterface?
+            if (activeAPS == null) {
+                activeAPS = getDefaultPlugin(PluginType.APS) as APSInterface
+                (activeAPS as PluginBase).setPluginEnabled(PluginType.APS, true)
+                aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
+            }
+            setFragmentVisiblities((activeAPS as PluginBase).name, pluginsInCategory, PluginType.APS)
         }
-        setFragmentVisiblities((activeAPS as PluginBase).name, pluginsInCategory, PluginType.APS)
 
         // PluginType.INSULIN
         pluginsInCategory = getSpecificPluginsList(PluginType.INSULIN)
@@ -190,6 +187,7 @@ class PluginStore @Inject constructor(
     </T> */
     private fun <T> determineActivePlugin(pluginsInCategory: ArrayList<PluginBase>,
                                           pluginType: PluginType): T? {
+        @Suppress("UNCHECKED_CAST")
         val activePlugin = getTheOneEnabledInArray(pluginsInCategory, pluginType) as T?
         if (activePlugin != null) {
             setFragmentVisiblities((activePlugin as PluginBase).name, pluginsInCategory, pluginType)
@@ -242,6 +240,6 @@ class PluginStore @Inject constructor(
     override fun getActiveTreatments(): TreatmentsInterface =
         activeTreatments ?: checkNotNull(activeTreatments) { "No treatments selected" }
 
-    override fun getPluginsList(): ArrayList<PluginBase> = plugins
+    override fun getPluginsList(): ArrayList<PluginBase> = ArrayList(plugins)
 
 }

@@ -13,7 +13,6 @@ import org.junit.Test
 import org.mockito.Mock
 
 class SignatureVerifierPluginTest : TestBase() {
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var context: Context

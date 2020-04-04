@@ -35,6 +35,7 @@
     <string name="objectives_useloop">Affichage du contenu du plugin Boucle</string>
     <string name="objectives_usescale">Modification de l\'échelle du graphique par un appui long sur la courbe de glycémie</string>
     <string name="objectives_button_enter">Entrer</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Si vous avez au moins 3 mois d\'expérience de boucle fermée avec d\'autres systèmes, vous pourriez avoir droit à un code permettant d\'ignorer les objectifs. Voir https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Usage/Objectives.html#ignorer-les-objectifs pour plus de détails.</string>
     <string name="codeaccepted">Code accepté</string>
     <string name="codeinvalid">Code invalide</string>
     <string name="objectives_exam_objective">Prouver ses connaissances</string>

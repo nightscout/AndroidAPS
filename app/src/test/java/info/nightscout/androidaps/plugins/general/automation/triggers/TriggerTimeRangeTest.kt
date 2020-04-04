@@ -22,9 +22,9 @@ class TriggerTimeRangeTest : TriggerTestBase() {
 
     @Before
     fun mock() {
-        var realNow = System.currentTimeMillis()
         PowerMockito.mockStatic(DateUtil::class.java)
-        PowerMockito.`when`(DateUtil.now()).thenReturn(now.toLong() * 60000 + MidnightTime.calc(realNow))
+        val nowMills = MidnightTime.calcPlusMinutes(now)
+        PowerMockito.`when`(DateUtil.now()).thenReturn(nowMills)
     }
 
     @Test

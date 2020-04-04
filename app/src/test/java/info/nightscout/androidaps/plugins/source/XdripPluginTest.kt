@@ -17,7 +17,6 @@ class XdripPluginTest : TestBase() {
 
     private lateinit var xdripPlugin: XdripPlugin
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
 
     @Before

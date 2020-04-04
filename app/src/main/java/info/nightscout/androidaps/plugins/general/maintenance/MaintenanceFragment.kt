@@ -23,6 +23,7 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var foodPlugin: FoodPlugin
+    @Inject lateinit var importExportPrefs: ImportExportPrefs
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.maintenance_fragment, container, false)
@@ -45,13 +46,13 @@ class MaintenanceFragment : DaggerFragment() {
         }
         nav_export.setOnClickListener {
             // start activity for checking permissions...
-            ImportExportPrefs.verifyStoragePermissions(this)
-            ImportExportPrefs.exportSharedPreferences(this)
+            importExportPrefs.verifyStoragePermissions(this)
+            importExportPrefs.exportSharedPreferences(this)
         }
         nav_import.setOnClickListener {
             // start activity for checking permissions...
-            ImportExportPrefs.verifyStoragePermissions(this)
-            ImportExportPrefs.importSharedPreferences(this)
+            importExportPrefs.verifyStoragePermissions(this)
+            importExportPrefs.importSharedPreferences(this)
         }
         nav_logsettings.setOnClickListener { startActivity(Intent(activity, LogSettingActivity::class.java)) }
     }

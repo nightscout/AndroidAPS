@@ -30,7 +30,6 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var aapsLogger: AAPSLogger
 
     private var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {

@@ -253,6 +253,51 @@
     <string name="dismiss">DISMISS</string>
     <string name="language" translatable="false">Language</string>
 
+    <string name="password_preferences_encrypt_prompt">You will be asked for master password, which will be used to encrypt exported preferences.</string>
+    <string name="password_preferences_decrypt_prompt">You will be asked for master password, which is needed to decrypt imported preferences.</string>
+    <string name="preferences_export_canceled">Export canceled! Preferences were NOT exported!</string>
+    <string name="preferences_import_canceled">Import canceled! Preferences were NOT imported!</string>
+
+    <string name="check_preferences_before_import">Please check preferences before importing:</string>
+    <string name="check_preferences_cannot_import">Preferences cannot be imported!</string>
+    <string name="check_preferences_dangerous_import">Preferences should not be imported!</string>
+    <string name="check_preferences_details_btn">Explain import issues…</string>
+    <string name="check_preferences_details_title">Import issues details</string>
+    <string name="check_preferences_import_btn">Import</string>
+    <string name="check_preferences_import_anyway_btn">Import anyway (DANGEROUS!)</string>
+
+    <string name="metadata_warning_different_flavour">Preferences were created with different variant of AAPS (%1$s) while you have: %2$s.\n\nSome settings may be missing or invalid - after importing please check and update your preferences.</string>
+    <string name="metadata_warning_different_device">Preferences were created on a different device. It is OK if you are importing from older/different phone, but make sure imported preferences are correct!</string>
+    <string name="metadata_warning_outdated_format">You are using the outdated legacy format from old versions of AAPS, which is not secure! Only use it as a last resort, if you do not have an export in current, JSON format.</string>
+    <string name="metadata_warning_old_export">Imported preferences are already %1$s days old! Maybe you have more up-to-date preferences or you choose the wrong file? Remember to export preferences regularly!</string>
+    <string name="metadata_warning_date_format">Invalid date-time format!</string>
+
+    <string name="metadata_label_format">File format</string>
+    <string name="metadata_label_created_at">Created at</string>
+    <string name="metadata_label_aaps_version">AAPS Version</string>
+    <string name="metadata_label_aaps_flavour">Build Variant</string>
+    <string name="metadata_label_device_name">Exporting device name</string>
+    <string name="metadata_label_device_model">Exporting device model</string>
+    <string name="metadata_label_encryption">File encryption</string>
+
+    <string name="metadata_format_old">Old export format</string>
+    <string name="metadata_format_new">New encrypted format</string>
+    <string name="metadata_format_debug">New debug format (unencrypted)</string>
+    <string name="metadata_format_other">Unknown export format</string>
+
+    <string name="prefdecrypt_settings_tampered">Settings file tampered</string>
+    <string name="prefdecrypt_settings_secure">Settings file is secure</string>
+    <string name="prefdecrypt_settings_unencrypted">Using not secure, unencrypted settings format</string>
+    <string name="prefdecrypt_wrong_json">JSON format error, missing required field (format, content, metadata or security)</string>
+    <string name="prefdecrypt_wrong_password">Decryption error, the given password cannot decrypt the file</string>
+
+    <string name="prefdecrypt_issue_missing_file_hash">File checksum (hash) missing, cannot verify the authenticity of settings!</string>
+    <string name="prefdecrypt_issue_modified">File was modified after export!</string>
+    <string name="prefdecrypt_issue_parsing">Decryption error, parsing preferences failed!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Decryption error, the provided password is invalid or settings file was modified! It may happen that the imported file was exported with a different Master password.</string>
+    <string name="prefdecrypt_issue_wrong_format">Missing encryption configuration, settings format is invalid!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Unsupported or not specified encryption algorithm!</string>
+
     <string name="danarpump">DanaR</string>
     <string name="connecting">Connecting</string>
     <string name="connected">Connected</string>
@@ -1155,6 +1200,8 @@
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
     <string name="maintenance_settings">Maintenance Settings</string>
     <string name="maintenance_email">Email recipient</string>
+    <string name="key_maintenance_encrypt_exported_prefs">maintenance_encrypt_exported_prefs</string>
+    <string name="maintenance_encrypt_exported_prefs">Encrypt exported settings</string>
     <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
     <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
     <string name="key_logshipper_amount" translatable="false">logshipper_amount</string>
@@ -1396,6 +1443,8 @@
     <string name="exists">exists</string>
     <string name="notexists">not exists</string>
     <string name="temptargetcompared">Temp target %1$s</string>
+    <string name="btdevicecompared">Bluetooth connection to device %1$s %2$s</string>
+    <string name="btdevice">Connection to Bluetooth device </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -1750,4 +1799,6 @@
     <string name="smscommunicator_otp_install_info">On each follower phone install Authenticator app that support RFC 6238 TOTP tokens. Popular free apps are:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_provisioning_warning">DO NOT SHARE this code online!\nUse it only to setup Authenticator App on follower phones.</string>
     <string name="smscommunicator_otp_reset_warning">By reseting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
+    <string name="onconnect">On connect</string>
+    <string name="ondisconnect">On disconnect</string>
 </resources>

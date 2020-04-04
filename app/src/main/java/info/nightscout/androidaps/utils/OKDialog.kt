@@ -4,17 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
-import android.os.Handler
 import android.os.SystemClock
 import android.text.Spanned
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.view.ContextThemeWrapper
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.utils.alertDialogs.AlertDialogHelper
 
 object OKDialog {
     @SuppressLint("InflateParams")
@@ -23,11 +16,9 @@ object OKDialog {
     fun show(context: Context, title: String, message: String, runnable: Runnable? = null) {
         var notEmptytitle = title
         if (notEmptytitle.isEmpty()) notEmptytitle = context.getString(R.string.message)
-        val titleLayout = LayoutInflater.from(context).inflate(R.layout.dialog_alert_custom, null)
-        (titleLayout.findViewById<View>(R.id.alertdialog_title) as TextView).text = notEmptytitle
-        (titleLayout.findViewById<View>(R.id.alertdialog_icon) as ImageView).setImageResource(R.drawable.ic_check_while_48dp)
-        AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
-            .setCustomTitle(titleLayout)
+
+        AlertDialogHelper.Builder(context)
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, notEmptytitle))
             .setMessage(message)
             .setPositiveButton(context.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
@@ -38,22 +29,15 @@ object OKDialog {
             .setCanceledOnTouchOutside(false)
     }
 
-    fun runOnUiThread(theRunnable: Runnable?) {
-        val mainHandler = Handler(MainApp.instance().applicationContext.mainLooper)
-        theRunnable?.let { mainHandler.post(it) }
-    }
-
     @SuppressLint("InflateParams")
     @JvmStatic
     @JvmOverloads
     fun show(activity: Activity, title: String, message: Spanned, runnable: Runnable? = null) {
         var notEmptytitle = title
         if (notEmptytitle.isEmpty()) notEmptytitle = activity.getString(R.string.message)
-        val titleLayout = activity.layoutInflater.inflate(R.layout.dialog_alert_custom, null)
-        (titleLayout.findViewById<View>(R.id.alertdialog_title) as TextView).text = notEmptytitle
-        (titleLayout.findViewById<View>(R.id.alertdialog_icon) as ImageView).setImageResource(R.drawable.ic_check_while_48dp)
-        AlertDialog.Builder(ContextThemeWrapper(activity, R.style.AppTheme))
-            .setCustomTitle(titleLayout)
+
+        AlertDialogHelper.Builder(activity)
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, notEmptytitle))
             .setMessage(message)
             .setPositiveButton(activity.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
@@ -78,12 +62,9 @@ object OKDialog {
     @JvmStatic
     @JvmOverloads
     fun showConfirmation(activity: Activity, title: String, message: Spanned, ok: Runnable?, cancel: Runnable? = null) {
-        val titleLayout = activity.layoutInflater.inflate(R.layout.dialog_alert_custom, null)
-        (titleLayout.findViewById<View>(R.id.alertdialog_title) as TextView).text = title
-        (titleLayout.findViewById<View>(R.id.alertdialog_icon) as ImageView).setImageResource(R.drawable.ic_check_while_48dp)
-        AlertDialog.Builder(ContextThemeWrapper(activity, R.style.AppTheme))
+        AlertDialogHelper.Builder(activity)
             .setMessage(message)
-            .setCustomTitle(titleLayout)
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 SystemClock.sleep(100)
@@ -102,12 +83,9 @@ object OKDialog {
     @SuppressLint("InflateParams")
     @JvmStatic
     fun showConfirmation(activity: Activity, title: String, message: String, ok: Runnable?, cancel: Runnable? = null) {
-        val titleLayout = activity.layoutInflater.inflate(R.layout.dialog_alert_custom, null)
-        (titleLayout.findViewById<View>(R.id.alertdialog_title) as TextView).text = title
-        (titleLayout.findViewById<View>(R.id.alertdialog_icon) as ImageView).setImageResource(R.drawable.ic_check_while_48dp)
-        AlertDialog.Builder(ContextThemeWrapper(activity, R.style.AppTheme))
+        AlertDialogHelper.Builder(activity)
             .setMessage(message)
-            .setCustomTitle(titleLayout)
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(activity, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 SystemClock.sleep(100)
@@ -132,12 +110,9 @@ object OKDialog {
     @JvmStatic
     @JvmOverloads
     fun showConfirmation(context: Context, title: String, message: Spanned, ok: Runnable?, cancel: Runnable? = null) {
-        val titleLayout = LayoutInflater.from(context).inflate(R.layout.dialog_alert_custom, null)
-        (titleLayout.findViewById<View>(R.id.alertdialog_title) as TextView).text = title
-        (titleLayout.findViewById<View>(R.id.alertdialog_icon) as ImageView).setImageResource(R.drawable.ic_check_while_48dp)
-        AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        AlertDialogHelper.Builder(context)
             .setMessage(message)
-            .setCustomTitle(titleLayout)
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 SystemClock.sleep(100)
@@ -163,12 +138,9 @@ object OKDialog {
     @JvmStatic
     @JvmOverloads
     fun showConfirmation(context: Context, title: String, message: String, ok: Runnable?, cancel: Runnable? = null) {
-        val titleLayout = LayoutInflater.from(context).inflate(R.layout.dialog_alert_custom, null)
-        (titleLayout.findViewById<View>(R.id.alertdialog_title) as TextView).text = title
-        (titleLayout.findViewById<View>(R.id.alertdialog_icon) as ImageView).setImageResource(R.drawable.ic_check_while_48dp)
-        AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        AlertDialogHelper.Builder(context)
             .setMessage(message)
-            .setCustomTitle(titleLayout)
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()
                 SystemClock.sleep(100)
@@ -187,12 +159,9 @@ object OKDialog {
     @JvmStatic
     @JvmOverloads
     fun showConfirmation(context: Context, title: String, message: String, ok: DialogInterface.OnClickListener?, cancel: DialogInterface.OnClickListener? = null) {
-        val titleLayout = LayoutInflater.from(context).inflate(R.layout.dialog_alert_custom, null)
-        (titleLayout.findViewById<View>(R.id.alertdialog_title) as TextView).text = title
-        (titleLayout.findViewById<View>(R.id.alertdialog_icon) as ImageView).setImageResource(R.drawable.ic_check_while_48dp)
-        AlertDialog.Builder(ContextThemeWrapper(context, R.style.AppTheme))
+        AlertDialogHelper.Builder(context)
             .setMessage(message)
-            .setCustomTitle(titleLayout)
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, title))
             .setPositiveButton(android.R.string.ok) { dialog: DialogInterface, which: Int ->
                 dialog.dismiss()
                 SystemClock.sleep(100)

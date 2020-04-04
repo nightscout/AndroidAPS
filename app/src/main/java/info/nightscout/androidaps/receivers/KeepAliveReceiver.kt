@@ -98,13 +98,12 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     // if there is no BG available, we have to upload anyway to have correct
     // IOB displayed in NS
     private fun checkAPS() {
-        val usedAPS = activePlugin.activeAPS
         var shouldUploadStatus = false
         if (Config.NSCLIENT) return
         if (Config.PUMPCONTROL) shouldUploadStatus = true
-        if (!loopPlugin.isEnabled() || iobCobCalculatorPlugin.actualBg() == null)
+        else if (!loopPlugin.isEnabled() || iobCobCalculatorPlugin.actualBg() == null)
             shouldUploadStatus = true
-        else if (DateUtil.isOlderThan(usedAPS.lastAPSRun, 5)) shouldUploadStatus = true
+        else if (DateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
         if (DateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY) && shouldUploadStatus) {
             lastIobUpload = DateUtil.now()
             NSUpload.uploadDeviceStatus(loopPlugin, iobCobCalculatorPlugin, profileFunction, activePlugin.activePump)

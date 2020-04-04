@@ -27,7 +27,6 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(NSUpload::class, RxBusWrapper::class)
 class ActionNotificationTest : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var rxBus: RxBusWrapper
 

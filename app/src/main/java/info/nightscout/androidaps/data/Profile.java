@@ -2,6 +2,7 @@ package info.nightscout.androidaps.data;
 
 import androidx.collection.LongSparseArray;
 
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -607,13 +608,15 @@ public class Profile {
     }
 
     public static int secondsFromMidnight() {
-        long passed = DateUtil.now() - MidnightTime.calc();
+        // long passed = DateUtil.now() - MidnightTime.calc();
+        long passed = new DateTime().getMillisOfDay();
         return (int) (passed / 1000);
     }
 
     public static int secondsFromMidnight(long date) {
-        long midnight = MidnightTime.calc(date);
-        long passed = date - midnight;
+        //long midnight = MidnightTime.calc(date);
+        //long passed = date - midnight;
+        long passed = new DateTime(date).getMillisOfDay();
         return (int) (passed / 1000);
     }
 

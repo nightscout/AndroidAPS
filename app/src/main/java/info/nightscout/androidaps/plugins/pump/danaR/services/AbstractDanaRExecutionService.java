@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.danaR.services;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
@@ -20,6 +19,9 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventBTChange;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -41,9 +43,12 @@ import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgPCCommStop;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.ToastUtils;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by mike on 28.01.2018.
@@ -57,6 +62,9 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     @Inject Context context;
     @Inject ResourceHelper resourceHelper;
     @Inject DanaRPump danaRPump;
+    @Inject FabricPrivacy fabricPrivacy;
+
+    private CompositeDisposable disposable = new CompositeDisposable();
 
     protected String mDevName;
 
@@ -101,22 +109,41 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
 
     public abstract PumpEnactResult setUserOptions();
 
-    protected BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-            String action = intent.getAction();
-            if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-                aapsLogger.debug(LTag.PUMP, "Device was disconnected " + device.getName());//Device was disconnected
-                if (mBTDevice != null && mBTDevice.getName() != null && mBTDevice.getName().equals(device.getName())) {
-                    if (mSerialIOThread != null) {
-                        mSerialIOThread.disconnect("BT disconnection broadcast");
+    @Override public void onCreate() {
+        super.onCreate();
+        disposable.add(rxBus
+                .toObservable(EventBTChange.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    if (event.getState() == EventBTChange.Change.DISCONNECT) {
+                        aapsLogger.debug(LTag.PUMP, "Device was disconnected " + event.getDeviceName());//Device was disconnected
+                        if (mBTDevice != null && mBTDevice.getName() != null && mBTDevice.getName().equals(event.getDeviceName())) {
+                            if (mSerialIOThread != null) {
+                                mSerialIOThread.disconnect("BT disconnection broadcast");
+                            }
+                            rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED));
+                        }
                     }
-                    rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED));
-                }
-            }
-        }
-    };
+                }, fabricPrivacy::logException)
+        );
+        disposable.add(rxBus
+                .toObservable(EventAppExit.class)
+                .observeOn(Schedulers.io())
+                .subscribe(event -> {
+                    aapsLogger.debug(LTag.PUMP, "EventAppExit received");
+                    if (mSerialIOThread != null)
+                        mSerialIOThread.disconnect("Application exit");
+                    stopSelf();
+                }, fabricPrivacy::logException)
+        );
+
+    }
+
+    @Override
+    public void onDestroy() {
+        disposable.clear();
+        super.onDestroy();
+    }
 
     @Override
     public IBinder onBind(Intent intent) {

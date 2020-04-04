@@ -37,6 +37,7 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.OKDialog
 import info.nightscout.androidaps.utils.SetWarnColor
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.extensions.plusAssign
@@ -86,13 +87,13 @@ class MedtronicFragment : DaggerFragment() {
             if (MedtronicUtil.getPumpStatus().verifyConfiguration()) {
                 startActivity(Intent(context, MedtronicHistoryActivity::class.java))
             } else {
-                MedtronicUtil.displayNotConfiguredDialog(context)
+                displayNotConfiguredDialog()
             }
         }
 
         medtronic_refresh.setOnClickListener {
             if (!MedtronicUtil.getPumpStatus().verifyConfiguration()) {
-                MedtronicUtil.displayNotConfiguredDialog(context)
+                displayNotConfiguredDialog()
             } else {
                 medtronic_refresh.isEnabled = false
                 medtronicPumpPlugin.resetStatusState()
@@ -108,7 +109,7 @@ class MedtronicFragment : DaggerFragment() {
             if (MedtronicUtil.getPumpStatus().verifyConfiguration()) {
                 startActivity(Intent(context, RileyLinkStatusActivity::class.java))
             } else {
-                MedtronicUtil.displayNotConfiguredDialog(context)
+                displayNotConfiguredDialog()
             }
         }
     }
@@ -244,6 +245,13 @@ class MedtronicFragment : DaggerFragment() {
                 object2
             } else
                 object1
+        }
+    }
+
+    private fun displayNotConfiguredDialog() {
+        context?.let {
+            OKDialog.show(it, resourceHelper.gs(R.string.combo_warning),
+                resourceHelper.gs(R.string.medtronic_error_operation_not_possible_no_configuration), null)
         }
     }
 

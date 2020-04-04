@@ -30,7 +30,6 @@ import java.util.*
 @PrepareForTest(IobCobCalculatorPlugin::class, DateUtil::class)
 class GlucoseStatusTest : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
     val injector = HasAndroidInjector {

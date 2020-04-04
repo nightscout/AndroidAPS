@@ -11,10 +11,14 @@ import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithE
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver
+import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject
+import javax.inject.Inject
 
 class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
+    @Inject lateinit var receiverStatusStore: ReceiverStatusStore
+
     var ssid = InputString(injector)
     var comparator = Comparator(injector)
 
@@ -39,7 +43,7 @@ class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val eventNetworkChange = NetworkChangeReceiver.getLastEvent() ?: return false
+        val eventNetworkChange = receiverStatusStore.lastNetworkEvent ?: return false
         if (!eventNetworkChange.wifiConnected && comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true

@@ -196,17 +196,15 @@ public class IobCobOref1Thread extends Thread {
                             try {
                                 for (; past < 12; past++) {
                                     AutosensData ad = autosensDataTable.valueAt(initialIndex + past);
-                                    if (L.isEnabled(L.AUTOSENS)) {
-                                        aapsLogger.debug(">>>>> past=" + past + " ad=" + (ad != null ? ad.toString() : null));
-                                        if (ad == null) {
-                                            aapsLogger.debug(autosensDataTable.toString());
-                                            aapsLogger.debug(bucketed_data.toString());
-                                            aapsLogger.debug(iobCobCalculatorPlugin.getBgReadings().toString());
-                                            Notification notification = new Notification(Notification.SENDLOGFILES, resourceHelper.gs(R.string.sendlogfiles), Notification.LOW);
-                                            rxBus.send(new EventNewNotification(notification));
-                                            sp.putBoolean("log_AUTOSENS", true);
-                                            break;
-                                        }
+                                    aapsLogger.debug(LTag.AUTOSENS, ">>>>> past=" + past + " ad=" + (ad != null ? ad.toString() : null));
+                                    if (ad == null) {
+                                        aapsLogger.debug(LTag.AUTOSENS, autosensDataTable.toString());
+                                        aapsLogger.debug(LTag.AUTOSENS, bucketed_data.toString());
+                                        aapsLogger.debug(LTag.AUTOSENS, iobCobCalculatorPlugin.getBgReadings().toString());
+                                        Notification notification = new Notification(Notification.SENDLOGFILES, resourceHelper.gs(R.string.sendlogfiles), Notification.LOW);
+                                        rxBus.send(new EventNewNotification(notification));
+                                        sp.putBoolean("log_AUTOSENS", true);
+                                        break;
                                     }
                                     // let it here crash on NPE to get more data as i cannot reproduce this bug
                                     double deviationSlope = (ad.avgDeviation - avgDeviation) / (ad.time - bgTime) * 1000 * 60 * 5;

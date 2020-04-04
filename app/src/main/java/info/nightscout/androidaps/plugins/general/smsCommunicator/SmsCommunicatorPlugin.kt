@@ -703,13 +703,11 @@ class SmsCommunicatorPlugin @Inject constructor(
         var grams = SafeParse.stringToInt(splitted[1])
         var time = DateUtil.now()
         if (splitted.size > 2) {
-            val seconds = DateUtil.toSeconds(splitted[2].toUpperCase(Locale.getDefault()))
-            val midnight = MidnightTime.calc()
-            if (seconds == 0 && (!splitted[2].startsWith("00:00") || !splitted[2].startsWith("12:00"))) {
+            time = DateUtil.toTodayTime(splitted[2].toUpperCase(Locale.getDefault()))
+            if (time == 0L) {
                 sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))
                 return
             }
-            time = midnight + T.secs(seconds.toLong()).msecs()
         }
         grams = constraintChecker.applyCarbsConstraints(Constraint(grams)).value()
         if (grams == 0) sendSMS(Sms(receivedSms.phoneNumber, resourceHelper.gs(R.string.wrongformat)))

@@ -32,7 +32,6 @@ import java.util.*
 @PrepareForTest(FabricPrivacy::class)
 class IobCobCalculatorPluginTest : TestBase() {
 
-    @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var sp: SP
     private val rxBus: RxBusWrapper = RxBusWrapper()
     @Mock lateinit var resourceHelper: ResourceHelper

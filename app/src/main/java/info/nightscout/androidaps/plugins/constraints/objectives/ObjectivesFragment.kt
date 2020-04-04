@@ -26,7 +26,7 @@ import info.nightscout.androidaps.plugins.constraints.objectives.dialogs.NtpProg
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventNtpStatus
 import info.nightscout.androidaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective.ExamTask
-import info.nightscout.androidaps.receivers.NetworkChangeReceiver
+import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
@@ -48,6 +48,7 @@ class ObjectivesFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var objectivesPlugin: ObjectivesPlugin
+    @Inject lateinit var receiverStatusStore: ReceiverStatusStore
 
     private val objectivesAdapter = ObjectivesAdapter()
     private val handler = Handler(Looper.getMainLooper())
@@ -223,7 +224,7 @@ class ObjectivesFragment : DaggerFragment() {
             holder.accomplished.text = resourceHelper.gs(R.string.accomplished, DateUtil.dateAndTimeString(objective.accomplishedOn))
             holder.accomplished.setTextColor(-0x3e3e3f)
             holder.verify.setOnClickListener {
-                NetworkChangeReceiver.grabNetworkStatus(context)
+                receiverStatusStore.updateNetworkStatus()
                 if (objectives_fake.isChecked) {
                     objective.accomplishedOn = DateUtil.now()
                     scrollToCurrentObjective()
@@ -257,12 +258,12 @@ class ObjectivesFragment : DaggerFragment() {
                                     rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.failedretrievetime), 99))
                                 }
                             }
-                        }, NetworkChangeReceiver.isConnected())
+                        }, receiverStatusStore.isConnected)
                     }.start()
                 }
             }
             holder.start.setOnClickListener {
-                NetworkChangeReceiver.grabNetworkStatus(context)
+                receiverStatusStore.updateNetworkStatus()
                 if (objectives_fake.isChecked) {
                     objective.startedOn = DateUtil.now()
                     scrollToCurrentObjective()
@@ -292,7 +293,7 @@ class ObjectivesFragment : DaggerFragment() {
                                     rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.failedretrievetime), 99))
                                 }
                             }
-                        }, NetworkChangeReceiver.isConnected())
+                        }, receiverStatusStore.isConnected)
                     }.start()
             }
             holder.unStart.setOnClickListener {

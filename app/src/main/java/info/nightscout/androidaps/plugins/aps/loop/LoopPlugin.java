@@ -334,8 +334,7 @@ public class LoopPlugin extends PluginBase {
             Profile profile = profileFunction.getProfile();
 
             if (profile == null || !profileFunction.isProfileValid("Loop")) {
-                if (L.isEnabled(L.APS))
-                    getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.noprofileselected));
+                getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.noprofileselected));
                 rxBus.send(new EventLoopSetLastRunGui(resourceHelper.gs(R.string.noprofileselected)));
                 return;
             }

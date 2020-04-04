@@ -22,6 +22,12 @@
 
         <PreferenceCategory android:title="@string/protection">
 
+            <Preference
+                android:inputType="textPassword"
+                android:key="@string/key_master_password"
+                android:title="@string/master_password"
+                />
+
             <ListPreference
                 android:defaultValue="1"
                 android:entries="@array/protectiontype"
@@ -29,7 +35,7 @@
                 android:key="@string/key_settings_protection"
                 android:title="@string/settings_protection" />
 
-            <EditTextPreference
+            <Preference
                 android:inputType="textPassword"
                 android:key="@string/key_settings_password"
                 android:title="@string/settings_password" />
@@ -41,7 +47,7 @@
                 android:key="@string/key_application_protection"
                 android:title="@string/application_protection" />
 
-            <EditTextPreference
+            <Preference
                 android:inputType="textPassword"
                 android:key="@string/key_application_password"
                 android:title="@string/application_password" />
@@ -53,7 +59,7 @@
                 android:key="@string/key_bolus_protection"
                 android:title="@string/bolus_protection" />
 
-            <EditTextPreference
+            <Preference
                 android:inputType="textPassword"
                 android:key="@string/key_bolus_password"
                 android:title="@string/bolus_password" />

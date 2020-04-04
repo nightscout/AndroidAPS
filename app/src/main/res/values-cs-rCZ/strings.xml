@@ -280,7 +280,7 @@
     <string name="danarprofile">DanaR profil</string>
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="danarprofile_dia_summary">Celková doba aktivity inzulínu</string>
-    <string name="failedupdatebasalprofile">Chyba při nastavení dočasného bazálu</string>
+    <string name="failedupdatebasalprofile">Chyba při nastavení bazálního pprofilu</string>
     <string name="danar_historyreload">Načíst</string>
     <string name="uploading">Nahrávám</string>
     <string name="danar_ebolus">E bolus</string>
