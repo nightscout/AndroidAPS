@@ -84,7 +84,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         log.debug("signInAnonymously:success")
-                        val user = auth.currentUser // TODO: do we need this, seems unused?
+                        // val user = auth.currentUser // TODO: do we need this, seems unused?
 
                         val database = FirebaseDatabase.getInstance().reference
                         database.child("survey").child(r.id).setValue(r)

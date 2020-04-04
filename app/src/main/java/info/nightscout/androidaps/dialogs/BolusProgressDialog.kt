@@ -30,8 +30,10 @@ class BolusProgressDialog : DialogFragment() {
 
     companion object {
         private val DEFAULT_STATE = MainApp.gs(R.string.waitingforpump)
+
         @JvmField
         var bolusEnded = false
+
         @JvmField
         var stopPressed = false
     }
@@ -62,6 +64,9 @@ class BolusProgressDialog : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        savedInstanceState?.let {
+            amount = it.getDouble("amount")
+        }
         overview_bolusprogress_title.text = String.format(MainApp.gs(R.string.overview_bolusprogress_goingtodeliver), amount)
         overview_bolusprogress_stop.setOnClickListener {
             if (L.isEnabled(L.UI)) log.debug("Stop bolus delivery button pressed")
@@ -136,6 +141,7 @@ class BolusProgressDialog : DialogFragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putString("state", state)
+        outState.putDouble("amount", amount)
     }
 
     private fun scheduleDismiss() {

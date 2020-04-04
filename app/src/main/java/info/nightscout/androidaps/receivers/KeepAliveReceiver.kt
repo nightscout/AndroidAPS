@@ -23,9 +23,6 @@ import org.slf4j.LoggerFactory
 import kotlin.math.abs
 
 class KeepAliveReceiver : BroadcastReceiver() {
-    private var lastReadStatus: Long = 0
-    private var lastRun: Long = 0
-    private var lastIobUpload: Long = 0
 
     override fun onReceive(context: Context, rIntent: Intent) {
         if (L.isEnabled(L.CORE))
@@ -46,6 +43,10 @@ class KeepAliveReceiver : BroadcastReceiver() {
         private val KEEP_ALIVE_MILLISECONDS = T.mins(5).msecs()
         private val STATUS_UPDATE_FREQUENCY = T.mins(15).msecs()
         private val IOB_UPDATE_FREQUENCY = T.mins(5).msecs()
+
+        private var lastReadStatus: Long = 0
+        private var lastRun: Long = 0
+        private var lastIobUpload: Long = 0
 
         //called by MainApp at first app start
         @JvmStatic

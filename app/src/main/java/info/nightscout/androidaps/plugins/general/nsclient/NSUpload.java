@@ -396,7 +396,7 @@ public class NSUpload {
 
     public static void uploadProfileStore(JSONObject profileStore) {
         if (SP.getBoolean(R.string.key_ns_uploadlocalprofile, false)) {
-            UploadQueue.add(new DbRequest("dbAdd", "profile", String.valueOf(profileStore)));
+            UploadQueue.add(new DbRequest("dbAdd", "profile", profileStore));
         }
     }
 

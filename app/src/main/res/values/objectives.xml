@@ -47,7 +47,7 @@
     <string name="objectives_useloop">Display content of Loop plugin</string>
     <string name="objectives_usescale">Use scale function by long-pressing BG chart</string>
     <string name="objectives_button_enter">Enter</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">If you were OpenAPS user before and your NS has at least 3 months of looping data, you can send an email to objectives@androidaps.org with your NS address and request code to bypass the rest of objectives. Enter code obtained from developers</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">If you have at least 3 month of closed loop experience with other systems you might qualify for a code to skip objectives. See https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for details.</string>
     <string name="codeaccepted">Code accepted</string>
     <string name="codeinvalid">Code invalid</string>
     <string name="objectives_exam_objective">Prove your knowledge</string>

@@ -274,7 +274,7 @@ public class NSClientService extends Service {
         } else if (!nsEnabled) {
             RxBus.INSTANCE.send(new EventNSClientNewLog("NSCLIENT", "disabled"));
             RxBus.INSTANCE.send(new EventNSClientStatus("Disabled"));
-        } else if (!nsURL.equals("")) {
+        } else if (!nsURL.equals("") && (MainApp.engineeringMode || nsURL.toLowerCase().startsWith("https://"))) {
             try {
                 RxBus.INSTANCE.send(new EventNSClientStatus("Connecting ..."));
                 IO.Options opt = new IO.Options();
@@ -283,6 +283,9 @@ public class NSClientService extends Service {
                 mSocket = IO.socket(nsURL, opt);
                 mSocket.on(Socket.EVENT_CONNECT, onConnect);
                 mSocket.on(Socket.EVENT_DISCONNECT, onDisconnect);
+                mSocket.on(Socket.EVENT_ERROR, onError);
+                mSocket.on(Socket.EVENT_CONNECT_ERROR, onError);
+                mSocket.on(Socket.EVENT_CONNECT_TIMEOUT, onError);
                 mSocket.on(Socket.EVENT_PING, onPing);
                 RxBus.INSTANCE.send(new EventNSClientNewLog("NSCLIENT", "do connect"));
                 mSocket.connect();
@@ -295,6 +298,9 @@ public class NSClientService extends Service {
                 RxBus.INSTANCE.send(new EventNSClientNewLog("NSCLIENT", "Wrong URL syntax"));
                 RxBus.INSTANCE.send(new EventNSClientStatus("Wrong URL syntax"));
             }
+        } else if (nsURL.toLowerCase().startsWith("http://")) {
+            RxBus.INSTANCE.send(new EventNSClientNewLog("NSCLIENT", "NS URL not encrypted"));
+            RxBus.INSTANCE.send(new EventNSClientStatus("Not encrypted"));
         } else {
             RxBus.INSTANCE.send(new EventNSClientNewLog("NSCLIENT", "No NS URL specified"));
             RxBus.INSTANCE.send(new EventNSClientStatus("Not configured"));
@@ -391,6 +397,17 @@ public class NSClientService extends Service {
         nsAPISecret = SP.getString(R.string.key_nsclientinternal_api_secret, "");
         nsDevice = SP.getString("careportal_enteredby", "");
     }
+
+    private Emitter.Listener onError = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            String msg = "Unknown Error";
+            if (args.length > 0 && args[0] != null) {
+                msg = args[0].toString();
+            }
+            RxBus.INSTANCE.send(new EventNSClientNewLog("ERROR", msg));
+        }
+    };
 
     private Emitter.Listener onPing = new Emitter.Listener() {
         @Override
