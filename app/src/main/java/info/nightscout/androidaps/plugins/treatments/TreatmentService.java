@@ -280,6 +280,10 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
     // return true if new record is created
     public UpdateReturn createOrUpdate(Treatment treatment) {
+        if (treatment != null && treatment.source == Source.NONE) {
+            log.error("Coder error: source is not set for treatment: " + treatment, new Exception());
+            FabricPrivacy.logException(new Exception("Coder error: source is not set for treatment: " + treatment));
+        }
         try {
             Treatment old;
             treatment.date = DatabaseHelper.roundDateToSec(treatment.date);

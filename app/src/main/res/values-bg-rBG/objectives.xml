@@ -35,6 +35,7 @@
     <string name="objectives_useloop">Отворете съдържанието на Цикъл плъгина.</string>
     <string name="objectives_usescale">Използвайте функцията за удължаване на периода на графиката, като задържите върху нея.</string>
     <string name="objectives_button_enter">Въведи</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Ако имате поне 3 месеца опит с други системи, които биха може да получите код за пропускане на целите. Прочетете https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives за получаване на подробна информация.</string>
     <string name="codeaccepted">Код приет!</string>
     <string name="codeinvalid">Неправилен код</string>
     <string name="objectives_exam_objective">Докажете знанията си</string>
@@ -45,6 +46,7 @@
     <string name="requestcode">Код (request code): %1$s</string>
     <string name="objectives_hint">(отбележете всички правилни отговори)</string>
     <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="notconnected">Няма връзка с Интернет!</string>
     <string name="failedretrievetime">Не може да се вземе времето</string>
     <string name="requirementnotmet">Задачите не са изпълнени</string>
     <plurals name="objective_days">
