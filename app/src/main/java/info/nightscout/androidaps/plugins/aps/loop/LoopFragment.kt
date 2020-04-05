@@ -81,7 +81,7 @@ class LoopFragment : DaggerFragment() {
             loop_request?.text = it.request?.toSpanned() ?: ""
             loop_constraintsprocessed?.text = it.constraintsProcessed?.toSpanned() ?: ""
             loop_source?.text = it.source ?: ""
-            loop_lastrun?.text = it.lastAPSRun?.let { lastRun -> DateUtil.dateAndTimeString(lastRun.time) }
+            loop_lastrun?.text = DateUtil.dateAndTimeString(it.lastAPSRun)
                 ?: ""
             loop_smbrequest_time?.text = DateUtil.dateAndTimeAndSecondsString(it.lastSMBRequest)
             loop_smbexecution_time?.text = DateUtil.dateAndTimeAndSecondsString(it.lastSMBEnact)

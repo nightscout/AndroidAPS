@@ -125,7 +125,7 @@ class DataBroadcastPlugin @Inject constructor(
 
     private fun bgStatus(bundle: Bundle) {
         val lastBG: BgReading = iobCobCalculatorPlugin.lastBg() ?: return
-        val glucoseStatus = GlucoseStatus(injector).getGlucoseStatusData() ?: return
+        val glucoseStatus = GlucoseStatus(injector).glucoseStatusData ?: return
 
         bundle.putDouble("glucoseMgdl", lastBG.value)   // last BG in mgdl
         bundle.putLong("glucoseTimeStamp", lastBG.date) // timestamp
@@ -158,10 +158,9 @@ class DataBroadcastPlugin @Inject constructor(
         bundle.putInt("rigBattery", nsDeviceStatus.uploaderStatus.replace("%", "").trim { it <= ' ' }.toInt())
 
         if (Config.APS && lazyLoopPlugin.get().lastRun?.lastTBREnact != 0L) { //we are AndroidAPS
-            bundle.putLong("suggestedTimeStamp", lazyLoopPlugin.get().lastRun?.lastAPSRun?.time
-                ?: -1L)
+            bundle.putLong("suggestedTimeStamp", lazyLoopPlugin.get().lastRun?.lastAPSRun ?: -1L)
             bundle.putString("suggested", lazyLoopPlugin.get().lastRun?.request?.json().toString())
-            if (lazyLoopPlugin.get().lastRun.tbrSetByPump != null && lazyLoopPlugin.get().lastRun.tbrSetByPump.enacted) {
+            if (lazyLoopPlugin.get().lastRun?.tbrSetByPump != null && lazyLoopPlugin.get().lastRun?.tbrSetByPump?.enacted == true) {
                 bundle.putLong("enactedTimeStamp", lazyLoopPlugin.get().lastRun?.lastTBREnact
                     ?: -1L)
                 bundle.putString("enacted", lazyLoopPlugin.get().lastRun?.request?.json().toString())

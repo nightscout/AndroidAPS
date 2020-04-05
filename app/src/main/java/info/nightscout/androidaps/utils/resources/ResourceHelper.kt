@@ -20,4 +20,5 @@ interface ResourceHelper {
     fun decodeResource(id : Int) : Bitmap
     fun getDisplayMetrics(): DisplayMetrics
     fun dpToPx(dp: Int): Int
+    fun shortTextMode(): Boolean
 }

@@ -107,10 +107,6 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
         return diff.get(TimeUnit.DAYS) + days + diff.get(TimeUnit.HOURS) + hours;
     }
 
-    public String age() {
-        return age(OverviewFragment.shorttextmode);
-    }
-
     public boolean isOlderThan(double hours) {
         return getHoursFromStart() > hours;
     }

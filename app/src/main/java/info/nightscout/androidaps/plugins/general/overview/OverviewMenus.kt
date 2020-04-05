@@ -31,7 +31,6 @@ import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
-import info.nightscout.androidaps.plugins.general.overview.OverviewFragment.CHARTTYPE
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
@@ -58,6 +57,10 @@ class OverviewMenus @Inject constructor(
     private val loopPlugin: LoopPlugin
 ) {
 
+    enum class CharType {
+        PRE, BAS, IOB, COB, DEV, SEN, ACTPRIM, ACTSEC, DEVSLOPE
+    }
+
     fun setupChartMenu(chartButton: ImageButton) {
         chartButton.setOnClickListener { v: View ->
             val predictionsAvailable: Boolean = when {
@@ -72,7 +75,7 @@ class OverviewMenus @Inject constructor(
             //var s: SpannableString
             val popup = PopupMenu(v.context, v)
             if (predictionsAvailable) {
-                val item = popup.menu.add(Menu.NONE, CHARTTYPE.PRE.ordinal, Menu.NONE, "Predictions")
+                val item = popup.menu.add(Menu.NONE, CharType.PRE.ordinal, Menu.NONE, "Predictions")
                 val title = item.title
                 if (titleMaxChars < title.length) titleMaxChars = title.length
                 val s = SpannableString(title)
@@ -82,7 +85,7 @@ class OverviewMenus @Inject constructor(
                 item.isChecked = sp.getBoolean("showprediction", true)
             }
             run {
-                val item = popup.menu.add(Menu.NONE, CHARTTYPE.BAS.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_basals))
+                val item = popup.menu.add(Menu.NONE, CharType.BAS.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_basals))
                 val title = item.title
                 if (titleMaxChars < title.length) titleMaxChars = title.length
                 val s = SpannableString(title)
@@ -92,7 +95,7 @@ class OverviewMenus @Inject constructor(
                 item.isChecked = sp.getBoolean("showbasals", true)
             }
             run {
-                val item = popup.menu.add(Menu.NONE, CHARTTYPE.ACTPRIM.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_activity))
+                val item = popup.menu.add(Menu.NONE, CharType.ACTPRIM.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_activity))
                 val title = item.title
                 if (titleMaxChars < title.length) titleMaxChars = title.length
                 val s = SpannableString(title)
@@ -104,7 +107,7 @@ class OverviewMenus @Inject constructor(
                 dividerItem.isEnabled = false
             }
             run {
-                val item = popup.menu.add(Menu.NONE, CHARTTYPE.IOB.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_iob))
+                val item = popup.menu.add(Menu.NONE, CharType.IOB.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_iob))
                 val title = item.title
                 if (titleMaxChars < title.length) titleMaxChars = title.length
                 val s = SpannableString(title)
@@ -114,7 +117,7 @@ class OverviewMenus @Inject constructor(
                 item.isChecked = sp.getBoolean("showiob", true)
             }
             run {
-                val item = popup.menu.add(Menu.NONE, CHARTTYPE.COB.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_cob))
+                val item = popup.menu.add(Menu.NONE, CharType.COB.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_cob))
                 val title = item.title
                 if (titleMaxChars < title.length) titleMaxChars = title.length
                 val s = SpannableString(title)
@@ -124,7 +127,7 @@ class OverviewMenus @Inject constructor(
                 item.isChecked = sp.getBoolean("showcob", true)
             }
             run {
-                val item = popup.menu.add(Menu.NONE, CHARTTYPE.DEV.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_deviations))
+                val item = popup.menu.add(Menu.NONE, CharType.DEV.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_deviations))
                 val title = item.title
                 if (titleMaxChars < title.length) titleMaxChars = title.length
                 val s = SpannableString(title)
@@ -134,7 +137,7 @@ class OverviewMenus @Inject constructor(
                 item.isChecked = sp.getBoolean("showdeviations", false)
             }
             run {
-                val item = popup.menu.add(Menu.NONE, CHARTTYPE.SEN.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_sensitivity))
+                val item = popup.menu.add(Menu.NONE, CharType.SEN.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_sensitivity))
                 val title = item.title
                 if (titleMaxChars < title.length) titleMaxChars = title.length
                 val s = SpannableString(title)
@@ -144,7 +147,7 @@ class OverviewMenus @Inject constructor(
                 item.isChecked = sp.getBoolean("showratios", false)
             }
             run {
-                val item = popup.menu.add(Menu.NONE, CHARTTYPE.ACTSEC.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_activity))
+                val item = popup.menu.add(Menu.NONE, CharType.ACTSEC.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_activity))
                 val title = item.title
                 if (titleMaxChars < title.length) titleMaxChars = title.length
                 val s = SpannableString(title)
@@ -154,7 +157,7 @@ class OverviewMenus @Inject constructor(
                 item.isChecked = sp.getBoolean("showactivitysecondary", true)
             }
             if (buildHelper.isDev()) {
-                val item = popup.menu.add(Menu.NONE, CHARTTYPE.DEVSLOPE.ordinal, Menu.NONE, "Deviation slope")
+                val item = popup.menu.add(Menu.NONE, CharType.DEVSLOPE.ordinal, Menu.NONE, "Deviation slope")
                 val title = item.title
                 if (titleMaxChars < title.length) titleMaxChars = title.length
                 val s = SpannableString(title)
@@ -168,15 +171,15 @@ class OverviewMenus @Inject constructor(
             dividerItem.title = String(CharArray(titleMaxChars + 10)).replace("\u0000", "_")
             popup.setOnMenuItemClickListener {
                 when (it.itemId) {
-                    CHARTTYPE.PRE.ordinal      -> sp.putBoolean("showprediction", !it.isChecked)
-                    CHARTTYPE.BAS.ordinal      -> sp.putBoolean("showbasals", !it.isChecked)
-                    CHARTTYPE.IOB.ordinal      -> sp.putBoolean("showiob", !it.isChecked)
-                    CHARTTYPE.COB.ordinal      -> sp.putBoolean("showcob", !it.isChecked)
-                    CHARTTYPE.DEV.ordinal      -> sp.putBoolean("showdeviations", !it.isChecked)
-                    CHARTTYPE.SEN.ordinal      -> sp.putBoolean("showratios", !it.isChecked)
-                    CHARTTYPE.ACTPRIM.ordinal  -> sp.putBoolean("showactivityprimary", !it.isChecked)
-                    CHARTTYPE.ACTSEC.ordinal   -> sp.putBoolean("showactivitysecondary", !it.isChecked)
-                    CHARTTYPE.DEVSLOPE.ordinal -> sp.putBoolean("showdevslope", !it.isChecked)
+                    CharType.PRE.ordinal      -> sp.putBoolean("showprediction", !it.isChecked)
+                    CharType.BAS.ordinal      -> sp.putBoolean("showbasals", !it.isChecked)
+                    CharType.IOB.ordinal      -> sp.putBoolean("showiob", !it.isChecked)
+                    CharType.COB.ordinal      -> sp.putBoolean("showcob", !it.isChecked)
+                    CharType.DEV.ordinal      -> sp.putBoolean("showdeviations", !it.isChecked)
+                    CharType.SEN.ordinal      -> sp.putBoolean("showratios", !it.isChecked)
+                    CharType.ACTPRIM.ordinal  -> sp.putBoolean("showactivityprimary", !it.isChecked)
+                    CharType.ACTSEC.ordinal   -> sp.putBoolean("showactivitysecondary", !it.isChecked)
+                    CharType.DEVSLOPE.ordinal -> sp.putBoolean("showdevslope", !it.isChecked)
                 }
                 rxBus.send(EventRefreshOverview("OnMenuItemClickListener"))
                 return@setOnMenuItemClickListener true
