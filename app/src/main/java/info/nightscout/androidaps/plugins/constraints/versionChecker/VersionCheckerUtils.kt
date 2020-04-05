@@ -46,7 +46,7 @@ private fun checkVersion() = if (isConnected()) {
         }
     }.start()
 } else
-    log.debug("Github master version no checked. No connectivity")
+    log.debug("Github master version not checked. No connectivity")
 
 fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {
 
