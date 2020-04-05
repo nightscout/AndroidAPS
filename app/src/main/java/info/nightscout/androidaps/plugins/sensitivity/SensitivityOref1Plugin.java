@@ -50,7 +50,8 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
                         .shortName(R.string.sensitivity_shortname)
                         .enableByDefault(true)
                         .preferencesId(R.xml.pref_absorption_oref1)
-                        .description(R.string.description_sensitivity_oref1),
+                        .description(R.string.description_sensitivity_oref1)
+                        .setDefault(),
                 injector, aapsLogger, resourceHelper, sp
         );
         this.profileFunction = profileFunction;

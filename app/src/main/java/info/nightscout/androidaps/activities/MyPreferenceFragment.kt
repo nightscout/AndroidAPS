@@ -84,7 +84,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     @Inject lateinit var safetyPlugin: SafetyPlugin
     @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
-    @Inject lateinit var sensitivityOref0Plugin: SensitivityOref1Plugin
     @Inject lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
     @Inject lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
     @Inject lateinit var dexcomPlugin: DexcomPlugin
@@ -167,7 +166,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(openAPSSMBPlugin, rootKey, Config.APS)
             addPreferencesFromResourceIfEnabled(sensitivityAAPSPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(sensitivityWeightedAveragePlugin, rootKey)
-            addPreferencesFromResourceIfEnabled(sensitivityOref0Plugin, rootKey)
             addPreferencesFromResourceIfEnabled(sensitivityOref1Plugin, rootKey)
             addPreferencesFromResourceIfEnabled(danaRPlugin, rootKey, Config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(danaRKoreanPlugin, rootKey, Config.PUMPDRIVERS)
