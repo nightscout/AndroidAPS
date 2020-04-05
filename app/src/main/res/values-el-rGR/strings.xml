@@ -43,7 +43,6 @@
     <string name="description_pump_mdi">Ολοκλήρωση αντλίας για ανθρώπους που κάνουν εντατικοποιημένο σχήμα ενέσεων για την θεραπεία τους</string>
     <string name="description_pump_virtual">Ολοκλήρωση αντλίας για αντλίες που δεν έχουν κανέναν οδηγό ακόμα (Ανοιχτό Κύκλωμα)</string>
     <string name="description_sensitivity_aaps">Η ευαισθησία υπολογίζεται με τον ίδιο τρόπο όπως το Oref0, αλλά μπορείτε να καθορίσετε το χρονικό διάστημα στο παρελθόν. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από την μέγιστη απορρόφηση υδατανθράκων από τις επιλογές.</string>
-    <string name="description_sensitivity_oref0">Η ευαισθησία υπολογίζεται από 24h δεδομένα στο παρελθόν και οι υδατάνθρακες (αν δεν έχουν απορροφηθεί) κόβονται μετά από χρονικό διάστημα που καθορίζεται στις επιλογές.</string>
     <string name="description_sensitivity_oref1">Η ευαισθησία υπολογίζεται από 8h δεδομένα στο παρελθόν και οι υδατάνθρακες (αν δεν έχουν απορροφηθεί) κόβονται μετά από χρονικό διάστημα που καθορίζεται στις επιλογές. Η προσθήκη υπολογίζει ακόμα το UAM.</string>
     <string name="description_sensitivity_weighted_average">Η ευαισθησία υπολογίζεται ως ο σταθμισμένος μέσος όρος των αποκλίσεων. Νεότερες αποκλίσεις έχουν μεγαλύτερο βάρος. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από τον χρόνο της μέγιστης απορρόφησης υδατανθράκων από τις επιλογές. Αυτός ο αλγόριθμος είναι ο πιο γρήγορος για να ακολουθεί τις αλλαγές της ευαισθησίας.</string>
     <string name="description_source_eversense">Λάβετε τις τιμές BG από την εφαρμογή του Eversense.</string>
@@ -576,7 +575,6 @@
     <string name="configbuilder_sensitivity">Ανίχνευση ευαισθησίας</string>
     <string name="configbuilder_sensitivity_description">Ποιος αλγόριθμος ευαισθησίας να χρησιμοποιηθεί;</string>
     <string name="sensitivity_shortname">SENS</string>
-    <string name="sensitivityoref0">Ευαισθησία Oref0</string>
     <string name="sensitivityoref1">Ευαισθησία Oref1</string>
     <string name="sensitivityaaps">Ευαισθησία AAPS</string>
     <string name="absorptionsettings_title">Ρύθμιση απορρόφησης</string>

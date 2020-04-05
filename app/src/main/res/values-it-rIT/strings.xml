@@ -43,7 +43,6 @@
     <string name="description_pump_mdi">Per le persone in terapia multi-iniettiva</string>
     <string name="description_pump_virtual">Per microinfusori che non hanno ancora alcun driver (Loop aperto)</string>
     <string name="description_sensitivity_aaps">La sensibilità è calcolata allo stesso modo di Oref0, ma puoi specificare l\'intervallo di tempo al passato. L\'assorbimento minimo dei carboidrati è calcolato da \'max tempo assorbimento pasto\' nelle preferenze.</string>
-    <string name="description_sensitivity_oref0">La sensibilità è calcolata dai dati delle ultime 24h e i carboidrati (se non assorbiti) vengono tagliati fuori dopo il tempo specificato nelle preferenze.</string>
     <string name="description_sensitivity_oref1">La sensibilità è calcolata dai dati delle ultime 8h e i carboidrati (se non assorbiti) vengono tagliati fuori dopo il tempo specificato nelle preferenze. Il Plugin calcola anche UAM.</string>
     <string name="description_sensitivity_weighted_average">La sensibilità è calcolata come media ponderata dalle deviazioni. Le deviazioni più recenti hanno peso maggiore. L\'assorbimento minimo dei carboidrati è calcolato da \'max tempo assorbimento pasto\' nelle preferenze. Questo algoritmo è il più veloce nel seguire i cambiamenti di sensibilità.</string>
     <string name="description_source_eversense">Ricevi valori glicemia dall\'app Eversense modificata.</string>
@@ -602,7 +601,6 @@
     <string name="configbuilder_sensitivity">Rilevamento sensibilità</string>
     <string name="configbuilder_sensitivity_description">Quale algoritmo di sensibilità dovrebbe essere utilizzato?</string>
     <string name="sensitivity_shortname">SENS</string>
-    <string name="sensitivityoref0">Sensibilità Oref0</string>
     <string name="sensitivityoref1">Sensibilità Oref1</string>
     <string name="sensitivityaaps">Sensibilità AAPS</string>
     <string name="absorptionsettings_title">Impostazioni assorbimento</string>

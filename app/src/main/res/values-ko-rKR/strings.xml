@@ -43,7 +43,6 @@
     <string name="description_pump_mdi">다회요법으로 관리하는 사용자를 위한 설정</string>
     <string name="description_pump_virtual">가상용 펌프를 위한 설정(Open Loop)</string>
     <string name="description_sensitivity_aaps">Oref0와 동일한 방법으로 민감도가 계산되지만, 과거 시간을 지정할 수 있습니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다.</string>
-    <string name="description_sensitivity_oref0">민감도가 과거 24시간의 데이터로 부터 계산됩니다. (흡수되지 않은 경우) 탄수화물은 설정에서 설정된 시간이 지나면 없어집니다.</string>
     <string name="description_sensitivity_oref1">민감도가 과거 8시간의 데이터로 부터 계산됩니다. (흡수되지 않은 경우) 탄수화물은 설정에서 설정된 시간이 지나면 없어집니다. UAM(알리지 않은 음식)도 계산합니다.</string>
     <string name="description_sensitivity_weighted_average">민감도가 편차의 가중평균으로 계산됩니다. 최근의 편차가 더 가중됩니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다. 이 알고리즘의 민감도가 가장 빠릅니다.</string>
     <string name="description_source_eversense">패치된 Eversense 앱에서 혈당값 받기</string>
@@ -602,7 +601,6 @@
     <string name="configbuilder_sensitivity">민감도 감지</string>
     <string name="configbuilder_sensitivity_description">어떤 민감도 알고리즘을 사용하겠습니까?</string>
     <string name="sensitivity_shortname">민감도</string>
-    <string name="sensitivityoref0">민감도 Oref0</string>
     <string name="sensitivityoref1">민감도 Oref1</string>
     <string name="sensitivityaaps">민감도 AAPS</string>
     <string name="absorptionsettings_title">흡수 설정</string>

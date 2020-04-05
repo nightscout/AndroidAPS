@@ -43,7 +43,6 @@
     <string name="description_pump_mdi">Писалки - За хората, които правят множество ежедневни инжекции ( интензифицирано лечение с писалки)</string>
     <string name="description_pump_virtual">За помпи, който все още не работят с AndroidAPS(Open Loop)</string>
     <string name="description_sensitivity_aaps">Чувствителността се изчислява по същия начин като в Oref0, но можете да зададете времева рамка. Минимална въглехидрати абсорбция се изчислява от Макс време за усвояване на въглехидратите в опциите.</string>
-    <string name="description_sensitivity_oref0">Чувствителността се изчислява за 24 часа назад в миналото, а въглехидрати (ако не са се абсорбирали) изчезват след изтичане на срока от настройките.</string>
     <string name="description_sensitivity_oref1">Чувствителността се изчислява за 8 часа назад в миналото, а въглехидрати (ако не са се абсорбирали) изчезват след изтичане на срока от настройките. Също така се изчисляват и необявени хранения (UAM).</string>
     <string name="description_sensitivity_weighted_average">Чувствителността се изчислява като среднопретеглена стойност от отклоненията. По-новите отклонения имат по-високо тегло. Минималната абсорбция на въглехидрати се изчислява от Време за макс усвояване на въглехидрати от опциите. Този алгоритъм е най-бързият при проследяването на промени в чувствителността.</string>
     <string name="description_source_eversense">Получава данни за КЗ от модифицираното приложение на Eversense.</string>
@@ -602,7 +601,6 @@
     <string name="configbuilder_sensitivity">Определяне на чувствителност</string>
     <string name="configbuilder_sensitivity_description">Кой алгоритъм за определяне на чувствителността да се използва?</string>
     <string name="sensitivity_shortname">ЧУВСТВ</string>
-    <string name="sensitivityoref0">чрез Oref0</string>
     <string name="sensitivityoref1">Чрез Oref1</string>
     <string name="sensitivityaaps">чрез AAPS</string>
     <string name="absorptionsettings_title">Настройки за абсорбция</string>

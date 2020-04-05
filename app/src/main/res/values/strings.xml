@@ -717,7 +717,6 @@
     <string name="configbuilder_sensitivity">Sensitivity detection</string>
     <string name="configbuilder_sensitivity_description">Which sensitivity algorithm should be used?</string>
     <string name="sensitivity_shortname">SENS</string>
-    <string name="sensitivityoref0">Sensitivity Oref0</string>
     <string name="sensitivityoref1">Sensitivity Oref1</string>
     <string name="sensitivityaaps">Sensitivity AAPS</string>
     <string name="absorptionsettings_title">Absorption settings</string>

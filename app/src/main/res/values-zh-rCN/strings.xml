@@ -41,7 +41,6 @@
     <string name="description_pump_mdi">与用于糖尿病治疗的多次每日注射的泵集成</string>
     <string name="description_pump_virtual">与我们还没有其驱动的泵集成（开环）</string>
     <string name="description_sensitivity_aaps">灵敏度的计算方式与 Oref0 相同, 但可以指定过去的时间范围。碳水化合物吸收最小值是根据参数选项里的碳水化合物吸收时间最大值计算得来的</string>
-    <string name="description_sensitivity_oref0">灵敏度是根据过去的24小时数据计算出来的, 而碳水化合物 (如果不吸收) 则在参数选项里指定的时间后减掉</string>
     <string name="description_sensitivity_oref1">灵敏度是根据过去的24小时数据计算出来的, 而碳水化合物 (如果不吸收) 则在参数选项里指定的时间后减掉。插件还计算 UAM。</string>
     <string name="description_sensitivity_weighted_average">灵敏度计算根据偏差的加权平均值。新的偏差有更高的权重。碳水化合物吸收最小值是根据参数选项里的碳水化合物吸收时间最大值计算得来的好。此算法在敏感度变化后最快。</string>
     <string name="description_source_eversense">从 Eversense 补丁app接收血糖值。</string>
@@ -566,7 +565,6 @@
     <string name="configbuilder_sensitivity">灵敏度检测</string>
     <string name="configbuilder_sensitivity_description">应使用哪一种灵敏度算法？</string>
     <string name="sensitivity_shortname">灵敏度</string>
-    <string name="sensitivityoref0">灵敏度 Oref0</string>
     <string name="sensitivityoref1">灵敏度 Oref1</string>
     <string name="sensitivityaaps">灵敏度 AAPS</string>
     <string name="absorptionsettings_title">食物吸收设置</string>

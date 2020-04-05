@@ -43,7 +43,6 @@
     <string name="description_pump_mdi">Integration för de som endast använder insulinpennor</string>
     <string name="description_pump_virtual">Integration för pumpar som ännu inte stöds av AndroidAPS (Open loop)</string>
     <string name="description_sensitivity_aaps">Känsligheten beräknas på samma sätt som i Oref0, men du kan specificera hur mycket av historiken som ska tas med i beräkningen. Minimalt upptag av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i Inställningar.</string>
-    <string name="description_sensitivity_oref0">Känsligheten beräknas från 24 timmars data från historiken och kolhydrater som inte redan tagits upp, ignoreras efter tiden som ställts in i inställningarna.</string>
     <string name="description_sensitivity_oref1">Känsligheten beräknas från 8 timmars data från historiken och kolhydrater som ännu inte tagits upp ignoreras efter tiden som ställts in i inställningarna. Insticksprogrammet beräknar också icke inmatade måltider, UAM.</string>
     <string name="description_sensitivity_weighted_average">Känsligheten beräknas som ett viktat medelvärde av avvikelserna. Senare avvikelser får en högre vikt. Minimal upptagning av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i inställningarna. Den här algoritmen är den snabbaste att justera förändringar i känsligheten.</string>
     <string name="description_source_eversense">Ta emot BG-data från den modifierade
@@ -603,7 +602,6 @@ Eversense-appen.</string>
     <string name="configbuilder_sensitivity">Känslighetsavkänning</string>
     <string name="configbuilder_sensitivity_description">Vilken algoritm vill du använda för känslighetsavkänning?</string>
     <string name="sensitivity_shortname">SENS</string>
-    <string name="sensitivityoref0">Oref0</string>
     <string name="sensitivityoref1">Oref1</string>
     <string name="sensitivityaaps">AAPS</string>
     <string name="absorptionsettings_title">Absorptionsinställningar</string>

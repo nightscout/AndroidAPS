@@ -43,7 +43,6 @@
     <string name="description_pump_mdi">Integración de bomba de insulina para personas que usan varias inyecciones diarias para su terapia de diabetes</string>
     <string name="description_pump_virtual">Integración para bombas de insulina que aún no tienen ningún controlador/driver (lazo abierto)</string>
     <string name="description_sensitivity_aaps">Sensibilidad calculada de la misma manera que Oref0, pero puede especificarse el rango de tiempo. Absorción de carbohidratos mínima se calcula con el máximo tiempo de absorción de carbohidratos en preferencias.</string>
-    <string name="description_sensitivity_oref0">La sensibilidad se calcula con las últimas 24 h y los carbohidratos (si no son absorbidos) se anulan después del tiempo indicado en preferencias.</string>
     <string name="description_sensitivity_oref1">La sensibilidad se calcula con las últimas 8 h y los carbohidratos (si no son absorbidos) se anulan después del tiempo indicado en preferencias. El complemento también calcula UAM.</string>
     <string name="description_sensitivity_weighted_average">La sensibilidad se calcula como un promedio ampliado de las desviaciones. Desviaciones más recientes tienen mayor impacto. Absorción de carbohidratos mínima se calcula desde el tiempo de absorción de carbohidratos máximo en preferencias. Este algoritmo es el más rápido siguiendo los cambios de sensibilidad.</string>
     <string name="description_source_eversense">Recibir los valores de glucosa de la aplicación Eversense parcheada.</string>
@@ -602,7 +601,6 @@
     <string name="configbuilder_sensitivity">Detección sensibilidad</string>
     <string name="configbuilder_sensitivity_description">¿Que algoritmo de sensibilidad se debe usar?</string>
     <string name="sensitivity_shortname">SENS</string>
-    <string name="sensitivityoref0">Sensibilidad Oref0</string>
     <string name="sensitivityoref1">Sensibilidad Oref1</string>
     <string name="sensitivityaaps">Sensibilidad AAPS</string>
     <string name="absorptionsettings_title">Ajustes absorción</string>

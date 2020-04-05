@@ -43,7 +43,6 @@
     <string name="description_pump_mdi">Pomp integratie voor mensen met pen-therapie (meerdere dagelijkse injecties)</string>
     <string name="description_pump_virtual">Pomp integratie voor pompen, waar nog geen driver voor is (Open Loop)</string>
     <string name="description_sensitivity_aaps">Gevoeligheid wordt berekend op dezelfde manier als Oref0, maar u kunt een tijdframe naar het verleden specificeren. Minimale koolhydraat absorptie is berekend op basis van max koolhydraat absorptie tijd van de voorkeursinstellingen.</string>
-    <string name="description_sensitivity_oref0">Gevoeligheid is berekend op basis van 24h gegevens uit het verleden en koolhydraten (indien niet geabsorbeerd) worden hiervan afgehaald, na de duur die is opgegeven in de voorkeursinstellingen.</string>
     <string name="description_sensitivity_oref1">Gevoeligheid is berekend op basis van 8h gegevens uit het verleden en koolhydraten (indien niet geabsorbeerd) worden hiervan afgehaald, na de duur die is opgegeven in de voorkeursinstellingen. De plugin berekent ook UAM.</string>
     <string name="description_sensitivity_weighted_average">Gevoeligheid wordt berekend als een gewogen gemiddelde van afwijkingen. Nieuwere afwijkingen wegen hierbij zwaarder. Minimale koolhydraat absorptie is berekend op basis van de max koolhydraat absorptie tijd uit de voorkeursinstellingen. Dit algoritme is de snelste in het volgen van wijzigingen van de gevoeligheid.</string>
     <string name="description_source_eversense">Ontvang BG waardes van de aangepaste Eversense app.</string>
@@ -602,7 +601,6 @@
     <string name="configbuilder_sensitivity">Gevoeligheid detectie</string>
     <string name="configbuilder_sensitivity_description">Welke gevoeligheid algoritme moet worden gebruikt?</string>
     <string name="sensitivity_shortname">SENS</string>
-    <string name="sensitivityoref0">Gevoeligheid Oref0</string>
     <string name="sensitivityoref1">Gevoeligheid Oref1</string>
     <string name="sensitivityaaps">Gevoeligheid AAPS</string>
     <string name="absorptionsettings_title">Opname instellingen</string>
