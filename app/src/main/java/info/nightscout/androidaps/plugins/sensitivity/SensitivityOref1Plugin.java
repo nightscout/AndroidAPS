@@ -27,6 +27,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
+
 /**
  * Created by mike on 19.06.2018.
  */
@@ -165,12 +166,10 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
 
         for (int i = 0; i < deviationsHour.size(); i++) {
             ArrayList deviations = deviationsHour.get(i);
-            if (L.isEnabled(L.AUTOSENS))
-                log.debug("Using most recent " + deviations.size() + " deviations");
+            getAapsLogger().debug(LTag.AUTOSENS,"Using most recent " + deviations.size() + " deviations");
             if (deviations.size() < deviationCategory.get(i)) {
                 int pad = (int) Math.round((1 - (double) deviations.size() / deviationCategory.get(i)) * 18);
-                if (L.isEnabled(L.AUTOSENS))
-                    log.debug("Adding " + pad + " more zero deviations");
+                    getAapsLogger().debug(LTag.AUTOSENS,"Adding " + pad + " more zero deviations");
                 for (int d = 0; d < pad; d++) { ;
                     deviations.add(0d);
                 }
@@ -197,8 +196,8 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
 
             double sens = profile.getIsfMgdl();
 
-            if (L.isEnabled(L.AUTOSENS))
-                getAapsLogger().debug(LTag.AUTOSENS,"Records: " + index + "   " + pastSensitivity);
+
+            getAapsLogger().debug(LTag.AUTOSENS,"Records: " + index + "   " + pastSensitivity);
 
             Arrays.sort(deviations);
             double pSensitive = IobCobCalculatorPlugin.percentile(deviations, 0.50);
@@ -216,8 +215,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
                 sensResult+= "Sensitivity normal";
             }
 
-            if (L.isEnabled(L.AUTOSENS))
-                getAapsLogger().debug(LTag.AUTOSENS,sensResult);
+            getAapsLogger().debug(LTag.AUTOSENS,sensResult);
 
             double ratio = 1 + (basalOff / profile.getMaxDailyBasal());
 
@@ -239,9 +237,10 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         AutosensResult output = fillResult(ratioArray.get(key), current.cob, pastSensitivityArray.get(key), ratioLimitArray.get(key),
                 sensResultArray.get(key)+comparison, deviationsHour.get(key).size());
 
-        if (L.isEnabled(L.AUTOSENS))
-            getAapsLogger().debug(LTag.AUTOSENS, message+" Sensitivity to: {} ratio: {} mealCOB: {}",
-                    new Date(toTime).toLocaleString(), output.ratio, current.cob);
+        getAapsLogger().debug(LTag.AUTOSENS, "Sensitivity to: "
+                + DateUtil.dateAndTimeString(toTime) +
+                " ratio: " + output.ratio
+                + " mealCOB: " + current.cob);
 
         return output;
     }
