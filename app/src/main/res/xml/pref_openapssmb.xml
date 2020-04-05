@@ -73,7 +73,7 @@
             android:summary="@string/enablesmbaftercarbs_summary"
             android:title="@string/enablesmbaftercarbs" />
 
-        <com.andreabaccega.widget.ValidatingEditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="3"
             android:digits="0123456789"
             android:inputType="number"
@@ -86,14 +86,14 @@
             validate:minNumber="1"
             validate:testType="numericRange" />
 
-        <com.andreabaccega.widget.ValidatingEditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="30"
             android:entries="@array/smbMaxMinutes"
             android:entryValues="@array/smbMaxMinutes"
             android:key="@string/key_smbmaxminutes"
             android:title="@string/smbmaxminutes_summary" />
 
-        <com.andreabaccega.widget.ValidatingEditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="30"
             android:dialogMessage="@string/uamsmbmaxminutes"
             android:digits="0123456789"
@@ -143,7 +143,7 @@
             android:summary="@string/low_temptarget_lowers_sensitivity_summary"
             android:title="@string/low_temptarget_lowers_sensitivity_title" />
 
-        <com.andreabaccega.widget.ValidatingEditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:key="@string/key_carbsReqThreshold"
             android:title="@string/carbsReqThreshold"
             android:defaultValue="1"
