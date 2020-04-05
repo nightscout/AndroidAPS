@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.treatments;
 
 import android.graphics.Color;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -9,28 +11,36 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.JsonHelper;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @DatabaseTable(tableName = Treatment.TABLE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
+    @Inject public DefaultValueHelper defaultValueHelper;
+    @Inject public ResourceHelper resourceHelper;
+    @Inject public ProfileFunction profileFunction;
+    @Inject public ActivePluginProvider activePlugin;
+
     public static final String TABLE_TREATMENTS = "Treatments";
 
     @DatabaseField(id = true)
@@ -64,6 +74,11 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     public String boluscalc;
 
     public Treatment() {
+        MainApp.instance().androidInjector().inject(this); // TODO it will be removed by new database
+    }
+
+    public Treatment(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
     }
 
     public static Treatment createFromJson(JSONObject json) throws JSONException {
@@ -72,11 +87,11 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
         treatment.date = DateUtil.roundDateToSec(JsonHelper.safeGetLong(json, "mills"));
         if (treatment.date == 0L)
             return null;
-        treatment.carbs = JsonHelper.safeGetDouble(json,"carbs");
-        treatment.insulin = JsonHelper.safeGetDouble(json,"insulin");
+        treatment.carbs = JsonHelper.safeGetDouble(json, "carbs");
+        treatment.insulin = JsonHelper.safeGetDouble(json, "insulin");
         treatment.pumpId = JsonHelper.safeGetLong(json, "pumpId");
         treatment._id = json.getString("_id");
-        treatment.isSMB = JsonHelper.safeGetBoolean(json,"isSMB");
+        treatment.isSMB = JsonHelper.safeGetBoolean(json, "isSMB");
         if (json.has("eventType")) {
             treatment.mealBolus = !json.get("eventType").equals("Correction Bolus");
             double carbs = treatment.carbs;
@@ -93,10 +108,10 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
         return treatment;
     }
 
-    public String toString() {
+    @NonNull public String toString() {
         return "Treatment{" +
                 "date= " + date +
-                ", date= " + new Date(date).toLocaleString() +
+                ", date= " + DateUtil.dateAndTimeString(date) +
                 ", isValid= " + isValid +
                 ", isSMB= " + isSMB +
                 ", _id= " + _id +
@@ -170,11 +185,11 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
 
     public double getIc() {
         JSONObject bw = getBoluscalc();
-         if (bw == null || !bw.has("ic")) {
-             Profile profile = ProfileFunctions.getInstance().getProfile(date);
-             return profile.getIc(date);
+        if (bw == null || !bw.has("ic")) {
+            Profile profile = profileFunction.getProfile(date);
+            return profile.getIc(date);
         }
-         return JsonHelper.safeGetDouble(bw, "ic");
+        return JsonHelper.safeGetDouble(bw, "ic");
     }
 
     /*
@@ -224,13 +239,13 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
 
     @Override
     public double getY() {
-        return isSMB ? OverviewPlugin.INSTANCE.determineLowLine() : yValue;
+        return isSMB ? defaultValueHelper.determineLowLine() : yValue;
     }
 
     @Override
     public String getLabel() {
         String label = "";
-        if (insulin > 0) label += DecimalFormatter.toPumpSupportedBolus(insulin) + "U";
+        if (insulin > 0) label += DecimalFormatter.toPumpSupportedBolus(insulin, activePlugin.getActivePump()) + "U";
         if (carbs > 0)
             label += "~" + DecimalFormatter.to0Decimal(carbs) + "g";
         return label;
@@ -257,11 +272,11 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     @Override
     public int getColor() {
         if (isSMB)
-            return MainApp.gc(R.color.tempbasal);
+            return resourceHelper.gc(R.color.tempbasal);
         else if (isValid)
             return Color.CYAN;
         else
-            return MainApp.instance().getResources().getColor(android.R.color.holo_red_light);
+            return resourceHelper.gc(android.R.color.holo_red_light);
     }
 
     @Override
@@ -275,7 +290,7 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
         if (!isValid)
             return new Iob();
 
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
+        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
         return insulinInterface.iobCalcForTreatment(this, time, dia);
     }
 

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.interfaces;
 
+import dagger.android.HasAndroidInjector;
+
 /**
  * Created by mike on 21.05.2017.
  */

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.danaR;
 
 import android.bluetooth.*;
 import android.content.Context;
-import android.preference.ListPreference;
+import androidx.preference.ListPreference;
 import android.util.AttributeSet;
 
 import java.util.Set;

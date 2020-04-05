@@ -3,13 +3,15 @@ package info.nightscout.androidaps.plugins.constraints.objectives.objectives;
 import java.util.Collections;
 import java.util.List;
 
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 
 public class Objective2 extends Objective {
 
 
-    public Objective2() {
-        super("exam", R.string.objectives_exam_objective, R.string.objectives_exam_gate);
+    public Objective2(HasAndroidInjector injector) {
+        super(injector, "exam", R.string.objectives_exam_objective, R.string.objectives_exam_gate);
         for (Task task : tasks) {
             if (!task.isCompleted()) setAccomplishedOn(0);
         }

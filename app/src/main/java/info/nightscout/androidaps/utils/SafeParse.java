@@ -3,11 +3,13 @@ package info.nightscout.androidaps.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+
 /**
  * Created by mike on 23.06.2016.
  */
 public class SafeParse {
-    private static Logger log = LoggerFactory.getLogger(SafeParse.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(SafeParse.class);
     public static Double stringToDouble(String input) {
         Double result = 0d;
         input = input.replace(",", ".");

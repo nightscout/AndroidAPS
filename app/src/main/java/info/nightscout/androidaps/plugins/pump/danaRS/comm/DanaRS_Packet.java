@@ -10,15 +10,17 @@ import org.slf4j.LoggerFactory;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+
 public class DanaRS_Packet {
-    private static final Logger log = LoggerFactory.getLogger(DanaRS_Packet.class);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(DanaRS_Packet.class);
 
     protected static final int TYPE_START = 0;
     protected static final int OPCODE_START = 1;
-    protected static final int DATA_START = 2;
+    public static final int DATA_START = 2;
 
     private boolean received;
-    protected boolean failed;
+    public boolean failed;
     protected int type = BleCommandUtil.DANAR_PACKET__TYPE_RESPONSE; // most of the messages, should be changed for others
     protected int opCode;
 

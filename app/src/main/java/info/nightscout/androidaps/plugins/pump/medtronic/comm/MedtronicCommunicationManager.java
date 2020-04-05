@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
@@ -57,7 +58,7 @@ import info.nightscout.androidaps.utils.SP;
  */
 public class MedtronicCommunicationManager extends RileyLinkCommunicationManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
     private static final int MAX_COMMAND_TRIES = 3;
     private static final int DEFAULT_TIMEOUT = 2000;
     private static final long RILEYLINK_TIMEOUT = 15 * 60 * 1000; // 15 min

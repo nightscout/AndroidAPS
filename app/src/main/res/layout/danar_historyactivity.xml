@@ -77,7 +77,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/danar_history_recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/danar_history_reload"
         android:layout_below="@+id/danar_history_status" />
 
     <Button

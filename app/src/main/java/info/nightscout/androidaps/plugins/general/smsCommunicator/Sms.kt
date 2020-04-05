@@ -27,13 +27,6 @@ class Sms {
         sent = true
     }
 
-    internal constructor(phoneNumber: String, textId: Int) {
-        this.phoneNumber = phoneNumber
-        text = MainApp.gs(textId)
-        date = DateUtil.now()
-        sent = true
-    }
-
     override fun toString(): String {
         return "SMS from $phoneNumber: $text"
     }

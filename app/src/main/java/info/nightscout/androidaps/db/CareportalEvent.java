@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +24,8 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
@@ -36,7 +36,7 @@ import info.nightscout.androidaps.utils.Translator;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_CAREPORTALEVENTS)
 public class CareportalEvent implements DataPointWithLabelInterface, Interval {
-    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;
@@ -149,7 +149,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
             CareportalEvent event = list.get(i);
             if (event.date <= time && event.date > (time - T.mins(5).msecs())) {
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("Found event for time: " + DateUtil.dateAndTimeFullString(time) + " " + event.toString());
+                    log.debug("Found event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
                 return true;
             }
         }
@@ -167,7 +167,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
 
     @Override
     public double getY() {
-        String units = ProfileFunctions.getSystemUnits();
+        String units = ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits();
         if (eventType.equals(MBG)) {
             double mbg = 0d;
             try {
@@ -260,7 +260,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
 
     @Override
     public float getSize() {
-        boolean isTablet = MainApp.sResources.getBoolean(R.bool.isTablet);
+        boolean isTablet = MainApp.resources().getBoolean(R.bool.isTablet);
         return isTablet ? 12 : 10;
     }
 

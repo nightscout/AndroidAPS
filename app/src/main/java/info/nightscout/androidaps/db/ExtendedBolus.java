@@ -11,7 +11,6 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
@@ -22,7 +21,8 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
@@ -38,7 +38,7 @@ import info.nightscout.androidaps.utils.Round;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_EXTENDEDBOLUSES)
 public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;
@@ -219,7 +219,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
     public IobTotal iobCalc(long time) {
         IobTotal result = new IobTotal(time);
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
+        InsulinInterface insulinInterface = PluginStore.Companion.getInstance().getActiveInsulin();
 
         double realDuration = getDurationToTime(time);
 
@@ -251,7 +251,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
     public IobTotal iobCalc(long time, Profile profile, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
         IobTotal result = new IobTotal(time);
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
+        InsulinInterface insulinInterface = PluginStore.Companion.getInstance().getActiveInsulin();
 
         double realDuration = getDurationToTime(time);
         double netBasalAmount = 0d;
@@ -325,8 +325,8 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     }
 
     public String toStringMedium() {
-        return "E " + DecimalFormatter.to2Decimal(absoluteRate()) + "U/h ("
-                + getRealDuration() + "/" + durationInMinutes + ") ";
+        return DecimalFormatter.to2Decimal(absoluteRate()) + "U/h "
+                + getRealDuration() + "/" + durationInMinutes + "'";
     }
 
     public String toStringTotal() {

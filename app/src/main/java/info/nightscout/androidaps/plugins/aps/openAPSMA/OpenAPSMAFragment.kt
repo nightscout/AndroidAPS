@@ -4,24 +4,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateGui
 import info.nightscout.androidaps.plugins.aps.openAPSMA.events.EventOpenAPSUpdateResultGui
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.JSONFormatter
-import info.nightscout.androidaps.utils.plusAssign
+import info.nightscout.androidaps.utils.extensions.plusAssign
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.openapsama_fragment.*
-import org.slf4j.LoggerFactory
+import javax.inject.Inject
 
-class OpenAPSMAFragment : Fragment() {
-    private val log = LoggerFactory.getLogger(L.APS)
+class OpenAPSMAFragment : DaggerFragment() {
     private var disposable: CompositeDisposable = CompositeDisposable()
+
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var openAPSMAPlugin: OpenAPSMAPlugin
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -32,7 +34,7 @@ class OpenAPSMAFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         openapsma_run.setOnClickListener {
-            OpenAPSMAPlugin.getPlugin().invoke("OpenAPSMA button", false)
+            openAPSMAPlugin.invoke("OpenAPSMA button", false)
         }
 
     }
@@ -41,22 +43,18 @@ class OpenAPSMAFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        disposable += RxBus
-                .toObservable(EventOpenAPSUpdateGui::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateGUI()
-                }, {
-                    FabricPrivacy.logException(it)
-                })
-        disposable += RxBus
-                .toObservable(EventOpenAPSUpdateResultGui::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    updateResultGUI(it.text)
-                }, {
-                    FabricPrivacy.logException(it)
-                })
+        disposable += rxBus
+            .toObservable(EventOpenAPSUpdateGui::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                updateGUI()
+            }, { fabricPrivacy.logException(it) })
+        disposable += rxBus
+            .toObservable(EventOpenAPSUpdateResultGui::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                updateResultGUI(it.text)
+            }, { fabricPrivacy.logException(it) })
         updateGUI()
     }
 
@@ -69,19 +67,19 @@ class OpenAPSMAFragment : Fragment() {
     @Synchronized
     private fun updateGUI() {
         if (openapsma_result == null) return
-        OpenAPSMAPlugin.getPlugin().lastAPSResult?.let { lastAPSResult ->
+        openAPSMAPlugin.lastAPSResult?.let { lastAPSResult ->
             openapsma_result.text = JSONFormatter.format(lastAPSResult.json)
             openapsma_request.text = lastAPSResult.toSpanned()
         }
-        OpenAPSMAPlugin.getPlugin().lastDetermineBasalAdapterMAJS?.let { determineBasalAdapterMAJS ->
+        openAPSMAPlugin.lastDetermineBasalAdapterMAJS?.let { determineBasalAdapterMAJS ->
             openapsma_glucosestatus.text = JSONFormatter.format(determineBasalAdapterMAJS.glucoseStatusParam)
             openapsma_currenttemp.text = JSONFormatter.format(determineBasalAdapterMAJS.currentTempParam)
             openapsma_iobdata.text = JSONFormatter.format(determineBasalAdapterMAJS.iobDataParam)
             openapsma_profile.text = JSONFormatter.format(determineBasalAdapterMAJS.profileParam)
             openapsma_mealdata.text = JSONFormatter.format(determineBasalAdapterMAJS.mealDataParam)
         }
-        if (OpenAPSMAPlugin.getPlugin().lastAPSRun != 0L) {
-            openapsma_lastrun.text = DateUtil.dateAndTimeString(OpenAPSMAPlugin.getPlugin().lastAPSRun)
+        if (openAPSMAPlugin.lastAPSRun != 0L) {
+            openapsma_lastrun.text = DateUtil.dateAndTimeString(openAPSMAPlugin.lastAPSRun)
         }
     }
 
