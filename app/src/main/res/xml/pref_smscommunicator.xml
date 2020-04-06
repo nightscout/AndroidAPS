@@ -49,14 +49,6 @@
             android:title="@string/smscommunicator_otp_pin"
             validate:testType="pinStrength" />
 
-        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
-            android:dependency="@string/key_smscommunicator_remotecommandsallowed"
-            android:key="@string/key_smscommunicator_otp_name"
-            android:summary="@string/smscommunicator_otp_name_summary"
-            android:title="@string/smscommunicator_otp_name"
-            validate:testType="personName" />
-
-
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
