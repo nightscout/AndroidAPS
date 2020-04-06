@@ -18,6 +18,7 @@ import javax.inject.Singleton
 @Singleton
 class EncryptedPrefsFormat @Inject constructor(
     private var resourceHelper: ResourceHelper,
+    private var cryptoUtil: CryptoUtil,
     private var storage: Storage
 ) : PrefsFormat {
 
@@ -58,14 +59,14 @@ class EncryptedPrefsFormat @Inject constructor(
             var encodedContent = ""
 
             if (encrypted) {
-                val salt = CryptoUtil.mineSalt()
+                val salt = cryptoUtil.mineSalt()
                 val rawContent = content.toString()
-                val contentAttempt = CryptoUtil.encrypt(masterPassword!!, salt, rawContent)
+                val contentAttempt = cryptoUtil.encrypt(masterPassword!!, salt, rawContent)
                 if (contentAttempt != null) {
                     encodedContent = contentAttempt
                     security.put("algorithm", "v1")
                     security.put("salt", salt.toHex())
-                    security.put("content_hash", CryptoUtil.sha256(rawContent))
+                    security.put("content_hash", cryptoUtil.sha256(rawContent))
                 } else {
                     // fallback when encryption does not work
                     encrypted = false
@@ -80,7 +81,7 @@ class EncryptedPrefsFormat @Inject constructor(
             container.put("content", if (encrypted) encodedContent else content)
 
             var fileContents = container.toString(2)
-            val fileHash = CryptoUtil.hmac256(fileContents, KEY_CONSCIENCE)
+            val fileHash = cryptoUtil.hmac256(fileContents, KEY_CONSCIENCE)
 
             fileContents = fileContents.replace(Regex("(\\\"file_hash\\\"\\s*\\:\\s*\\\")(--to-be-calculated--)(\\\")"), "$1" + fileHash + "$3")
 
@@ -102,7 +103,7 @@ class EncryptedPrefsFormat @Inject constructor(
 
             val jsonBody = storage.getFileContents(file)
             val fileContents = jsonBody.replace(Regex("(?is)(\\\"file_hash\\\"\\s*\\:\\s*\\\")([^\"]*)(\\\")"), "$1--to-be-calculated--$3")
-            val calculatedFileHash = CryptoUtil.hmac256(fileContents, KEY_CONSCIENCE)
+            val calculatedFileHash = cryptoUtil.hmac256(fileContents, KEY_CONSCIENCE)
             val container = JSONObject(jsonBody)
 
             if (container.has(PrefsMetadataKey.FILE_FORMAT.key) && container.has("security") && container.has("content") && container.has("metadata")) {
@@ -144,11 +145,11 @@ class EncryptedPrefsFormat @Inject constructor(
                         if (security.has("salt") && security.has("content_hash")) {
 
                             val salt = security.getString("salt").hexStringToByteArray()
-                            val decrypted = CryptoUtil.decrypt(masterPassword!!, salt, container.getString("content"))
+                            val decrypted = cryptoUtil.decrypt(masterPassword!!, salt, container.getString("content"))
 
                             if (decrypted != null) {
                                 try {
-                                    val contentHash = CryptoUtil.sha256(decrypted)
+                                    val contentHash = cryptoUtil.sha256(decrypted)
 
                                     if (contentHash == security.getString("content_hash")) {
                                         contentJsonObj = JSONObject(decrypted)

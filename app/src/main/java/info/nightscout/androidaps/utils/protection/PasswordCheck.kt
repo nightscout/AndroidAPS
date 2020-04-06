@@ -19,7 +19,10 @@ import javax.inject.Singleton
 val AUTOFILL_HINT_NEW_PASSWORD = "newPassword"
 
 @Singleton
-class PasswordCheck @Inject constructor(val sp: SP) {
+class PasswordCheck @Inject constructor(
+    val sp: SP,
+    val cryptoUtil: CryptoUtil
+) {
 
     @SuppressLint("InflateParams")
     fun queryPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ( (String) -> Unit)?, cancel: (()->Unit)? = null, fail: (()->Unit)? = null) {
@@ -45,7 +48,7 @@ class PasswordCheck @Inject constructor(val sp: SP) {
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
             .setPositiveButton(context.getString(R.string.ok)) { _, _ ->
                 val enteredPassword = userInput.text.toString()
-                if (CryptoUtil.checkPassword(enteredPassword, password)) ok?.invoke(enteredPassword)
+                if (cryptoUtil.checkPassword(enteredPassword, password)) ok?.invoke(enteredPassword)
                 else {
                     ToastUtils.errorToast(context, context.getString(R.string.wrongpassword))
                     fail?.invoke()
@@ -80,7 +83,7 @@ class PasswordCheck @Inject constructor(val sp: SP) {
             .setPositiveButton(context.getString(R.string.ok)) { _, _ ->
                 val enteredPassword = userInput.text.toString()
                 if (enteredPassword.isNotEmpty()) {
-                    sp.putString(preference, CryptoUtil.hashPassword(enteredPassword))
+                    sp.putString(preference, cryptoUtil.hashPassword(enteredPassword))
                     ToastUtils.okToast(context, context.getString(R.string.password_set))
                     ok?.invoke(enteredPassword)
                 } else {
