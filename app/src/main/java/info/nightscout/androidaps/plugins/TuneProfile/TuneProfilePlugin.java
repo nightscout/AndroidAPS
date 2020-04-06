@@ -772,10 +772,8 @@ public class TuneProfilePlugin extends PluginBase {
             basalGlucoseData.addAll(UAMGlucoseData);
             //log.debug(basalGlucoseData);
             // if too much data is excluded as UAM, add in the UAM deviations, but then discard the highest 50%
-            // Todo: Try to sort it here
-            /*basalGlucoseData.sort(function (a, b) {
-                return a.deviation - b.deviation;
-            });*/
+            // Philoul: sort function added here
+            Collections.sort(basalGlucoseData, (o1, o2) -> (int) (o1.deviation  - o2.deviation) );
             List<BGDatum> newBasalGlucose = new ArrayList<BGDatum>();;
             for(int i=0;i < basalGlucoseData.size()/2;i++){
                 newBasalGlucose.add(basalGlucoseData.get(i));
@@ -1410,7 +1408,7 @@ public class TuneProfilePlugin extends PluginBase {
                 ProfileStore profileStore = new ProfileStore(json);
                 SP.putString("autotuneprofile", profileStore.getData().toString());
                 log.debug("Entered in ProfileStore "+profileStore.getSpecificProfile(MainApp.gs(R.string.tuneprofile_name)));
-// TODO: check line below modified by philoul (but I don't understand this line) => need to be verify...
+// TODO: check line below modified by philoul => need to be verify...
 //                RxBus.INSTANCE.send(new EventProfileStoreChanged());
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
