@@ -13,6 +13,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.PumpDescription
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
@@ -156,6 +157,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         `when`(virtualPumpPlugin.shortStatus(ArgumentMatchers.anyBoolean())).thenReturn("Virtual Pump")
         `when`(virtualPumpPlugin.isSuspended).thenReturn(false)
+        `when`(virtualPumpPlugin.pumpDescription).thenReturn(PumpDescription())
 
         `when`(treatmentsPlugin.lastCalculationTreatments).thenReturn(IobTotal(0))
         `when`(treatmentsPlugin.lastCalculationTempBasals).thenReturn(IobTotal(0))
