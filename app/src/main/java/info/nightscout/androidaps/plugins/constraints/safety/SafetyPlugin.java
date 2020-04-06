@@ -20,7 +20,6 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin;
-import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
@@ -42,7 +41,6 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
     private RxBusWrapper rxBus;
     private ConstraintChecker constraintChecker;
     private OpenAPSAMAPlugin openAPSAMAPlugin;
-    private OpenAPSMAPlugin openAPSMAPlugin;
     private OpenAPSSMBPlugin openAPSSMBPlugin;
     private SensitivityOref1Plugin sensitivityOref1Plugin;
     private ActivePluginProvider activePlugin;
@@ -59,7 +57,6 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
             RxBusWrapper rxBus,
             ConstraintChecker constraintChecker,
             OpenAPSAMAPlugin openAPSAMAPlugin,
-            OpenAPSMAPlugin openAPSMAPlugin,
             OpenAPSSMBPlugin openAPSSMBPlugin,
             SensitivityOref1Plugin sensitivityOref1Plugin,
             ActivePluginProvider activePlugin,
@@ -80,7 +77,6 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         this.rxBus = rxBus;
         this.constraintChecker = constraintChecker;
         this.openAPSAMAPlugin = openAPSAMAPlugin;
-        this.openAPSMAPlugin = openAPSMAPlugin;
         this.openAPSSMBPlugin = openAPSSMBPlugin;
         this.sensitivityOref1Plugin = sensitivityOref1Plugin;
         this.activePlugin = activePlugin;
@@ -276,8 +272,6 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
             maxIobPref = sp.getDouble(R.string.key_openapsma_max_iob, 1.5d);
         maxIob.setIfSmaller(getAapsLogger(), maxIobPref, String.format(getResourceHelper().gs(R.string.limitingiob), maxIobPref, getResourceHelper().gs(R.string.maxvalueinpreferences)), this);
 
-        if (openAPSMAPlugin.isEnabled(PluginType.APS))
-            maxIob.setIfSmaller(getAapsLogger(), hardLimits.maxIobAMA(), String.format(getResourceHelper().gs(R.string.limitingiob), hardLimits.maxIobAMA(), getResourceHelper().gs(R.string.hardlimit)), this);
         if (openAPSAMAPlugin.isEnabled(PluginType.APS))
             maxIob.setIfSmaller(getAapsLogger(), hardLimits.maxIobAMA(), String.format(getResourceHelper().gs(R.string.limitingiob), hardLimits.maxIobAMA(), getResourceHelper().gs(R.string.hardlimit)), this);
         if (openAPSSMBPlugin.isEnabled(PluginType.APS))

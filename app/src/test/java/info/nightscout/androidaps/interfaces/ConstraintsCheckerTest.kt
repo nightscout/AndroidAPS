@@ -7,7 +7,6 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
-import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
@@ -44,7 +43,7 @@ import java.util.*
  * Created by mike on 18.03.2018.
  */
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(MainApp::class, ConfigBuilderPlugin::class, ConstraintChecker::class, SP::class, Context::class, OpenAPSMAPlugin::class, OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class, TreatmentsPlugin::class, TreatmentService::class, VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, GlimpPlugin::class)
+@PrepareForTest(MainApp::class, ConfigBuilderPlugin::class, ConstraintChecker::class, SP::class, Context::class, OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class, TreatmentsPlugin::class, TreatmentService::class, VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, GlimpPlugin::class)
 class ConstraintsCheckerTest : TestBaseWithProfile() {
 
     @Mock lateinit var activePlugin: ActivePluginProvider
@@ -70,7 +69,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     private lateinit var insightPlugin: LocalInsightPlugin
     private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
-    private lateinit var openAPSMAPlugin: OpenAPSMAPlugin
     private lateinit var hardLimits: HardLimits
 
     val injector = HasAndroidInjector {
@@ -119,8 +117,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, treatmentsPlugin, sp, commandQueue, profileFunction, context)
         openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits)
         openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits)
-        openAPSMAPlugin = OpenAPSMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper, treatmentsPlugin)
+        safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper, treatmentsPlugin)
         val constraintsPluginsList = ArrayList<PluginBase?>()
         constraintsPluginsList.add(safetyPlugin)
         constraintsPluginsList.add(objectivesPlugin)
@@ -316,7 +313,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(sp.getDouble(R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
         `when`(sp.getString(R.string.key_age, "")).thenReturn("teenage")
         openAPSAMAPlugin.setPluginEnabled(PluginType.APS, true)
-        openAPSMAPlugin.setPluginEnabled(PluginType.APS, false)
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, false)
 
         // Apply all limits
@@ -333,7 +329,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(sp.getString(R.string.key_age, "")).thenReturn("teenage")
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         openAPSAMAPlugin.setPluginEnabled(PluginType.APS, false)
-        openAPSMAPlugin.setPluginEnabled(PluginType.APS, false)
 
         // Apply all limits
         val d = constraintChecker.getMaxIOBAllowed()

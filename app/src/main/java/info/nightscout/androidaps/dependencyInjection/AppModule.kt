@@ -22,8 +22,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.AAPSLoggerProduction
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.DetermineBasalResultAMA
-import info.nightscout.androidaps.plugins.aps.openAPSMA.DetermineBasalResultMA
-import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
+import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
@@ -121,7 +120,6 @@ open class AppModule {
 
         @ContributesAndroidInjector fun apsResultInjector(): APSResult
         @ContributesAndroidInjector fun determineBasalResultSMBInjector(): DetermineBasalResultSMB
-        @ContributesAndroidInjector fun determineBasalResultMAInjector(): DetermineBasalResultMA
         @ContributesAndroidInjector fun determineBasalResultAMAInjector(): DetermineBasalResultAMA
 
         @ContributesAndroidInjector
