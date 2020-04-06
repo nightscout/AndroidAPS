@@ -1,12 +1,11 @@
 package info.nightscout.androidaps.plugins.configBuilder
 
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 
 @Singleton
 class PluginStore @Inject constructor(
@@ -27,6 +26,7 @@ class PluginStore @Inject constructor(
             return pluginStore!!
         }
     }
+
     lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
 
     private var activeBgSource: BgSourceInterface? = null
@@ -83,14 +83,16 @@ class PluginStore @Inject constructor(
         var pluginsInCategory: ArrayList<PluginBase>?
 
         // PluginType.APS
-        pluginsInCategory = getSpecificPluginsList(PluginType.APS)
-        activeAPS = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APSInterface?
-        if (activeAPS == null) {
-            activeAPS = getDefaultPlugin(PluginType.APS) as APSInterface
-            (activeAPS as PluginBase).setPluginEnabled(PluginType.APS, true)
-            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
+        if (!Config.NSCLIENT && !Config.PUMPCONTROL) {
+            pluginsInCategory = getSpecificPluginsList(PluginType.APS)
+            activeAPS = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APSInterface?
+            if (activeAPS == null) {
+                activeAPS = getDefaultPlugin(PluginType.APS) as APSInterface
+                (activeAPS as PluginBase).setPluginEnabled(PluginType.APS, true)
+                aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting APSInterface")
+            }
+            setFragmentVisiblities((activeAPS as PluginBase).name, pluginsInCategory, PluginType.APS)
         }
-        setFragmentVisiblities((activeAPS as PluginBase).name, pluginsInCategory, PluginType.APS)
 
         // PluginType.INSULIN
         pluginsInCategory = getSpecificPluginsList(PluginType.INSULIN)

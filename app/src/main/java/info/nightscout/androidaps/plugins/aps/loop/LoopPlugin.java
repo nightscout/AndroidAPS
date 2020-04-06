@@ -13,6 +13,7 @@ import android.os.SystemClock;
 
 import androidx.core.app.NotificationCompat;
 
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -104,7 +105,7 @@ public class LoopPlugin extends PluginBase {
         public PumpEnactResult tbrSetByPump = null;
         public PumpEnactResult smbSetByPump = null;
         public String source = null;
-        public Date lastAPSRun = null;
+        public long  lastAPSRun = DateUtil.now();
         public long lastTBREnact = 0;
         public long lastSMBEnact = 0;
         public long lastTBRRequest = 0;
@@ -112,7 +113,7 @@ public class LoopPlugin extends PluginBase {
         public long lastOpenModeAccept;
     }
 
-    public LastRun lastRun = null;
+    @Nullable public LastRun lastRun = null;
 
     @Inject
     public LoopPlugin(
@@ -381,7 +382,6 @@ public class LoopPlugin extends PluginBase {
             if (lastRun == null) lastRun = new LastRun();
             lastRun.request = result;
             lastRun.constraintsProcessed = resultAfterConstraints;
-            lastRun.lastAPSRun = new Date();
             lastRun.source = ((PluginBase) usedAPS).getName();
             lastRun.tbrSetByPump = null;
             lastRun.smbSetByPump = null;
@@ -423,7 +423,7 @@ public class LoopPlugin extends PluginBase {
                         public void run() {
                             if (result.enacted || result.success) {
                                 lastRun.tbrSetByPump = result;
-                                lastRun.lastTBRRequest = lastRun.lastAPSRun.getTime();
+                                lastRun.lastTBRRequest = lastRun.lastAPSRun;
                                 lastRun.lastTBREnact = DateUtil.now();
                                 rxBus.send(new EventLoopUpdateGui());
                                 applySMBRequest(resultAfterConstraints, new Callback() {
@@ -432,7 +432,7 @@ public class LoopPlugin extends PluginBase {
                                         //Callback is only called if a bolus was acutally requested
                                         if (result.enacted || result.success) {
                                             lastRun.smbSetByPump = result;
-                                            lastRun.lastSMBRequest = lastRun.lastAPSRun.getTime();
+                                            lastRun.lastSMBRequest = lastRun.lastAPSRun;
                                             lastRun.lastSMBEnact = DateUtil.now();
                                         } else {
                                             new Thread(() -> {
@@ -512,7 +512,7 @@ public class LoopPlugin extends PluginBase {
             public void run() {
                 if (result.enacted) {
                     lastRun.tbrSetByPump = result;
-                    lastRun.lastTBRRequest = lastRun.lastAPSRun.getTime();
+                    lastRun.lastTBRRequest = lastRun.lastAPSRun;
                     lastRun.lastTBREnact = DateUtil.now();
                     lastRun.lastOpenModeAccept = DateUtil.now();
                     NSUpload.uploadDeviceStatus(lp, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump());

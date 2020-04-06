@@ -167,7 +167,7 @@ abstract class PluginsModule {
     abstract fun bindMDIPlugin(plugin: MDIPlugin): PluginBase
 
     @Binds
-    @NotNSClient
+    @AllConfigs
     @IntoMap
     @IntKey(180)
     abstract fun bindVirtualPumpPlugin(plugin: VirtualPumpPlugin): PluginBase

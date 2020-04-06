@@ -28,6 +28,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventCustomCalculationFinished;
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
@@ -35,6 +36,7 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.OverviewFragment;
+import info.nightscout.androidaps.plugins.general.overview.OverviewMenus;
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
@@ -60,6 +62,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
     @Inject ActivePluginProvider activePlugin;
     @Inject BuildHelper buildHelper;
     @Inject FabricPrivacy fabricPrivacy;
+    @Inject OverviewMenus overviewMenus;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -171,7 +174,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
         iobGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
         iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
 
-        setupChartMenu();
+        overviewMenus.setupChartMenu(findViewById(R.id.overview_chartMenuButton));
     }
 
     @Override
@@ -194,7 +197,7 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
                             updateGUI("EventAutosensCalculationFinished");
                         }
                     }
-                }, exception -> fabricPrivacy.logException(exception))
+                }, fabricPrivacy::logException)
         );
         disposable.add(rxBus
                 .toObservable(EventIobCalculationProgress.class)
@@ -203,6 +206,11 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
                     if (iobCalculationProgressView != null)
                         iobCalculationProgressView.setText(event.getProgress());
                 }, exception -> fabricPrivacy.logException(exception))
+        );
+        disposable.add(rxBus
+                .toObservable(EventRefreshOverview.class)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(event ->  updateGUI("EventRefreshOverview") , fabricPrivacy::logException)
         );
         // set start of current day
         Calendar calendar = Calendar.getInstance();
@@ -367,124 +375,4 @@ public class HistoryBrowseActivity extends NoSplashAppCompatActivity {
             });
         }).start();
     }
-
-    private void setupChartMenu() {
-        chartButton = findViewById(R.id.overview_chartMenuButton);
-        chartButton.setOnClickListener(v -> {
-            MenuItem item, dividerItem;
-            CharSequence title;
-            int titleMaxChars = 0;
-            SpannableString s;
-            PopupMenu popup = new PopupMenu(v.getContext(), v);
-
-
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.BAS.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_basals));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.basal, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(showBasal);
-
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.ACTPRIM.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_activity));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.activity, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(showActPrim);
-
-            dividerItem = popup.getMenu().add("");
-            dividerItem.setEnabled(false);
-
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.IOB.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_iob));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.iob, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(showIob);
-
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.COB.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_cob));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.cob, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(showCob);
-
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.DEV.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_deviations));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.deviations, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(showDev);
-
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.SEN.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_sensitivity));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.ratio, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(showRat);
-
-            item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.ACTSEC.ordinal(), Menu.NONE, resourceHelper.gs(R.string.overview_show_activity));
-            title = item.getTitle();
-            if (titleMaxChars < title.length()) titleMaxChars = title.length();
-            s = new SpannableString(title);
-            s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.activity, null)), 0, s.length(), 0);
-            item.setTitle(s);
-            item.setCheckable(true);
-            item.setChecked(showActSec);
-
-
-            if (buildHelper.isDev()) {
-                item = popup.getMenu().add(Menu.NONE, OverviewFragment.CHARTTYPE.DEVSLOPE.ordinal(), Menu.NONE, "Deviation slope");
-                title = item.getTitle();
-                if (titleMaxChars < title.length()) titleMaxChars = title.length();
-                s = new SpannableString(title);
-                s.setSpan(new ForegroundColorSpan(ResourcesCompat.getColor(getResources(), R.color.devslopepos, null)), 0, s.length(), 0);
-                item.setTitle(s);
-                item.setCheckable(true);
-                item.setChecked(showDevslope);
-            }
-
-            // Fairly good guestimate for required divider text size...
-            title = new String(new char[titleMaxChars + 10]).replace("\0", "_");
-            dividerItem.setTitle(title);
-
-            popup.setOnMenuItemClickListener(item1 -> {
-                if (item1.getItemId() == OverviewFragment.CHARTTYPE.BAS.ordinal()) {
-                    sp.putBoolean("hist_showbasals", !item1.isChecked());
-                } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.IOB.ordinal()) {
-                    sp.putBoolean("hist_showiob", !item1.isChecked());
-                } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.COB.ordinal()) {
-                    sp.putBoolean("hist_showcob", !item1.isChecked());
-                } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.DEV.ordinal()) {
-                    sp.putBoolean("hist_showdeviations", !item1.isChecked());
-                } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.SEN.ordinal()) {
-                    sp.putBoolean("hist_showratios", !item1.isChecked());
-                } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.ACTPRIM.ordinal()) {
-                    sp.putBoolean("hist_showactivityprimary", !item1.isChecked());
-                } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.ACTSEC.ordinal()) {
-                    sp.putBoolean("hist_showactivitysecondary", !item1.isChecked());
-                } else if (item1.getItemId() == OverviewFragment.CHARTTYPE.DEVSLOPE.ordinal()) {
-                    sp.putBoolean("hist_showdevslope", !item1.isChecked());
-                }
-                updateGUI("onGraphCheckboxesCheckedChanged");
-                return true;
-            });
-            chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp);
-            popup.setOnDismissListener(menu -> chartButton.setImageResource(R.drawable.ic_arrow_drop_down_white_24dp));
-            popup.show();
-        });
-    }
-
 }

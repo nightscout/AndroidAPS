@@ -276,7 +276,7 @@
     <string name="metadata_label_created_at">Created at</string>
     <string name="metadata_label_aaps_version">AAPS Version</string>
     <string name="metadata_label_aaps_flavour">Build Variant</string>
-    <string name="metadata_label_device_name">Exporting device name</string>
+    <string name="metadata_label_device_name">Exporting device patient name</string>
     <string name="metadata_label_device_model">Exporting device model</string>
     <string name="metadata_label_encryption">File encryption</string>
 
@@ -612,6 +612,10 @@
     <string name="key_adult" translatable="false">adult</string>
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="patientage_summary">Please select patient age to setup safety limits</string>
+    <string name="patient_name">Patient name</string>
+    <string name="patient_name_summary">Please provide patient name or nickname to differentiate among multiple setups</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>
+    <string name="key_patient_name" translatable="false">patient_name</string>
     <string name="key_i_understand" translatable="false">I_understand</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s needs battery optimalization whitelisting for proper performance</string>
@@ -863,8 +867,15 @@
     <string name="bgsource_upload">BG upload settings</string>
     <string name="wear_detailed_delta_title">Show detailed delta</string>
     <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
+    <string name="key_smbinterval" translatable="false">smbinterval</string>
+    <string name="smbinterval_summary">How frequently SMBs will be given in min</string>
     <string name="smbmaxminutes">SMB max minutes</string>
     <string name="smbmaxminutes_summary">Max minutes of basal to limit SMB to</string>
+    <string name="uamsmbmaxminutes">UAM SMB max minutes</string>
+    <string name="uamsmbmaxminutes_summary">Max minutes of basal to limit SMB to for UAM</string>
+    <string name="key_carbsReqThreshold" translatable="false">carbsReqThreshold</string>
+    <string name="carbsReqThreshold">Carb suggestion threshold</string>
+    <string name="carbsReqThreshold_summary">When Carbs are suggested, how many carbs will prompt a notification</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>
     <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
     <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
@@ -1181,6 +1192,12 @@
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Raise sensitivity for temptargets >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Low temptarget lowers sensitivity</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lower sensitivity for temptargets < 100]]></string>
+    <string name="key_resistance_lowers_target" translatable="false">resistance_lowers_target</string>
+    <string name="resistance_lowers_target_title">Resistance lowers target</string>
+    <string name="resistance_lowers_target_summary">When resistance is detected, lower the target glucose</string>
+    <string name="key_sensitivity_raises_target" translatable="false">sensitivity_raises_target</string>
+    <string name="sensitivity_raises_target_title">Sensitivity raises target</string>
+    <string name="sensitivity_raises_target_summary">When sensitivity is detected, raise the target glucose</string>
     <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named QUICK INFO using the 360 configuration software.</string>
     <string name="custom">Custom</string>
     <string name="largetimedifftitle">Large Time Difference</string>
@@ -1385,6 +1402,7 @@
     <string name="tidepool_upload_bg">Upload BG tests</string>
 
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
+    <string name="key_uamsmbmaxminutes" translatable="false">uamsmbmaxminutes</string>
     <string name="dst_plugin_name" translatable="false">Daylight Saving time</string>
     <string name="dst_in_24h_warning">Daylight Saving time change in 24h or less</string>
     <string name="dst_loop_disabled_warning">Daylight Saving time change less than 3 hours ago - Closed loop disabled</string>
@@ -1760,19 +1778,15 @@
     <!-- SMS Communicator & OTP Authenticator -->
 
     <string name="key_smscommunicator_otp_enabled" translatable="false">smscommunicator_otp_enabled</string>
-    <string name="key_smscommunicator_otp_name" translatable="false">smscommunicator_otp_name</string>
     <string name="key_smscommunicator_otp_password" translatable="false">smscommunicator_otp_password</string>
     <string name="key_smscommunicator_otp_secret" translatable="false">smscommunicator_otp_secret</string>
 
-    <string name="smscommunicator_default_user_display_name" comment="This is default user display name, shown by Authenticators">User</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">from Authenticator app for: %1$s</string>
 
     <string name="smscommunicator_otp_enabled">Enable Authenticator</string>
     <string name="smscommunicator_otp_enabled_summary">Authenticate commands using One Time Passwords generated by Google Authenticator or similar 2FA apps.</string>
     <string name="smscommunicator_otp_pin">Additional PIN at token end</string>
     <string name="smscommunicator_otp_pin_summary">Additional digits that should be memorised and glued at end of each generated One Time Password</string>
-    <string name="smscommunicator_otp_name">User name for Authenticator</string>
-    <string name="smscommunicator_otp_name_summary">User name displayed along with generated OTP on Authenticator App</string>
 
     <string name="smscomunicator_tab_otp_label">Authenticator setup</string>
 

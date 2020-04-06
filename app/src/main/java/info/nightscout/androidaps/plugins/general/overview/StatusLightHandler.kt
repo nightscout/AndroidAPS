@@ -89,9 +89,9 @@ class StatusLightHandler @Inject constructor(
     /**
      * applies the extended statusLight subview on the overview fragment
      */
-    fun extendedStatusLight(cageView: TextView, iAgeView: TextView,
-                            reservoirView: TextView, sageView: TextView,
-                            batteryView: TextView) {
+    fun extendedStatusLight(cageView: TextView?, iAgeView: TextView?,
+                            reservoirView: TextView?, sageView: TextView?,
+                            batteryView: TextView?) {
         val pump = activePlugin.activePump
         handleAge("cage", CareportalEvent.SITECHANGE, cageView, "CAN ",
             48, 72)
@@ -112,11 +112,11 @@ class StatusLightHandler @Inject constructor(
         }
     }
 
-    private fun handleAge(nsSettingPlugin: String, eventName: String, view: TextView, text: String,
+    private fun handleAge(nsSettingPlugin: String, eventName: String, view: TextView?, text: String,
                           defaultWarnThreshold: Int, defaultUrgentThreshold: Int) {
         val urgent = nsSettingsStatus.getExtendedWarnValue(nsSettingPlugin, "urgent", defaultUrgentThreshold.toDouble())
         val warn = nsSettingsStatus.getExtendedWarnValue(nsSettingPlugin, "warn", defaultWarnThreshold.toDouble())
-        handleAge(view, text, eventName, warn, urgent, true)
+        handleAge(view, text, eventName, warn, urgent)
     }
 
     private fun handleLevel(criticalSetting: Int, criticalDefaultValue: Double,
@@ -132,14 +132,14 @@ class StatusLightHandler @Inject constructor(
     }
 
     private fun handleAge(age: TextView?, eventType: String, warnThreshold: Double, urgentThreshold: Double) =
-        handleAge(age, "", eventType, warnThreshold, urgentThreshold, OverviewFragment.shorttextmode)
+        handleAge(age, "", eventType, warnThreshold, urgentThreshold)
 
-    fun handleAge(age: TextView?, prefix: String, eventType: String, warnThreshold: Double, urgentThreshold: Double, useShortText: Boolean) {
-        val notavailable = if (useShortText) "-" else resourceHelper.gs(R.string.notavailable)
+    fun handleAge(age: TextView?, prefix: String, eventType: String, warnThreshold: Double, urgentThreshold: Double) {
+        val notavailable = if (resourceHelper.shortTextMode()) "-" else resourceHelper.gs(R.string.notavailable)
         val careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(eventType)
         if (careportalEvent != null) {
             age?.setTextColor(determineTextColor(careportalEvent, warnThreshold, urgentThreshold))
-            age?.text = prefix + careportalEvent.age(useShortText)
+            age?.text = prefix + careportalEvent.age(resourceHelper.shortTextMode())
         } else {
             age?.text = notavailable
         }

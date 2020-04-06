@@ -35,6 +35,7 @@
     <string name="objectives_useloop">Inhoud van loop plugin weergeven</string>
     <string name="objectives_usescale">Gebruik de schaalfunctie: houd de BG grafiek lang ingedrukt</string>
     <string name="objectives_button_enter">Enter</string>
+    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Als je ten minste 3 maanden closed loop ervaring hebt met een ander doe-het-zelf systeem dan kun je wellicht een code aanvragen om doelen over te slaan. Zie https://androidaps.readthedocs.io/en/latest/CROWDIN/nl/Usage/Objectives.html#doelen-overslaan voor details.</string>
     <string name="codeaccepted">Code geaccepteerd</string>
     <string name="codeinvalid">Code ongeldig</string>
     <string name="objectives_exam_objective">Bewijs je kennis</string>

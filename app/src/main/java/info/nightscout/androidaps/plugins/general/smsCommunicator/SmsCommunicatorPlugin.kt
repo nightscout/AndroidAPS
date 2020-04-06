@@ -719,20 +719,28 @@ class SmsCommunicatorPlugin @Inject constructor(
                 override fun run() {
                     val detailedBolusInfo = DetailedBolusInfo()
                     detailedBolusInfo.carbs = anInteger().toDouble()
+                    detailedBolusInfo.source = Source.USER
                     detailedBolusInfo.date = secondLong()
-                    commandQueue.bolus(detailedBolusInfo, object : Callback() {
-                        override fun run() {
-                            if (result.success) {
-                                var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
-                                replyText += "\n" + activePlugin.activePump.shortStatus(true)
-                                sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                            } else {
-                                var replyText = resourceHelper.gs(R.string.smscommunicator_carbsfailed)
-                                replyText += "\n" + activePlugin.activePump.shortStatus(true)
-                                sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                    if (activePlugin.activePump.pumpDescription.storesCarbInfo) {
+                        commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                            override fun run() {
+                                if (result.success) {
+                                    var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
+                                    replyText += "\n" + activePlugin.activePump.shortStatus(true)
+                                    sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                                } else {
+                                    var replyText = resourceHelper.gs(R.string.smscommunicator_carbsfailed)
+                                    replyText += "\n" + activePlugin.activePump.shortStatus(true)
+                                    sendSMS(Sms(receivedSms.phoneNumber, replyText))
+                                }
                             }
-                        }
-                    })
+                        })
+                    } else {
+                        activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, true)
+                        var replyText = String.format(resourceHelper.gs(R.string.smscommunicator_carbsset), anInteger)
+                        replyText += "\n" + activePlugin.activePump.shortStatus(true)
+                        sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                    }
                 }
             })
         }

@@ -26,6 +26,7 @@ public class GlucoseStatus {
     private HasAndroidInjector injector;
 
     public double glucose = 0d;
+    public double noise = 0d;
     public double delta = 0d;
     public double avgdelta = 0d;
     public double short_avgdelta = 0d;
@@ -35,6 +36,7 @@ public class GlucoseStatus {
 
     public String log() {
         return "Glucose: " + DecimalFormatter.to0Decimal(glucose) + " mg/dl " +
+                "Noise: " + DecimalFormatter.to0Decimal(noise) + " " +
                 "Delta: " + DecimalFormatter.to0Decimal(delta) + " mg/dl" +
                 "Short avg. delta: " + " " + DecimalFormatter.to2Decimal(short_avgdelta) + " mg/dl " +
                 "Long avg. delta: " + DecimalFormatter.to2Decimal(long_avgdelta) + " mg/dl";
@@ -47,6 +49,7 @@ public class GlucoseStatus {
 
     public GlucoseStatus round() {
         this.glucose = Round.roundTo(this.glucose, 0.1);
+        this.noise = Round.roundTo(this.noise, 0.01);
         this.delta = Round.roundTo(this.delta, 0.01);
         this.avgdelta = Round.roundTo(this.avgdelta, 0.01);
         this.short_avgdelta = Round.roundTo(this.short_avgdelta, 0.01);
@@ -93,6 +96,7 @@ public class GlucoseStatus {
             if (sizeRecords == 1) {
                 GlucoseStatus status = new GlucoseStatus(injector);
                 status.glucose = now.value;
+                status.noise = 0d;
                 status.short_avgdelta = 0d;
                 status.delta = 0d;
                 status.long_avgdelta = 0d;
@@ -150,6 +154,7 @@ public class GlucoseStatus {
             GlucoseStatus status = new GlucoseStatus(injector);
             status.glucose = now.value;
             status.date = now_date;
+            status.noise = 0d; //for now set to nothing as not all CGMs report noise
 
             status.short_avgdelta = average(short_deltas);
 
