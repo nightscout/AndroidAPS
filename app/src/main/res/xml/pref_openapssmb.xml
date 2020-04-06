@@ -73,12 +73,40 @@
             android:summary="@string/enablesmbaftercarbs_summary"
             android:title="@string/enablesmbaftercarbs" />
 
-        <ListPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:defaultValue="3"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:key="key_smbinterval"
+            android:maxLines="20"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/smbinterval_summary"
+            validate:maxNumber="10"
+            validate:minNumber="1"
+            validate:testType="numericRange" />
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="30"
             android:entries="@array/smbMaxMinutes"
             android:entryValues="@array/smbMaxMinutes"
             android:key="@string/key_smbmaxminutes"
             android:title="@string/smbmaxminutes_summary" />
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:defaultValue="30"
+            android:dialogMessage="@string/uamsmbmaxminutes"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:key="@string/key_uamsmbmaxminutes"
+            android:maxLines="20"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/uamsmbmaxminutes_summary"
+            validate:maxNumber="120"
+            validate:minNumber="15"
+            validate:testType="numericRange" />
+
 
         <SwitchPreference
             android:defaultValue="false"
@@ -87,6 +115,18 @@
             android:title="@string/enableuam" />
 
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_sensitivity_raises_target"
+            android:summary="@string/sensitivity_raises_target_summary"
+            android:title="@string/sensitivity_raises_target_title"
+            />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_resistance_lowers_target"
+            android:summary="@string/resistance_lowers_target_summary"
+            android:title="@string/resistance_lowers_target_title"
+            />
         <!-- TODO AS-FIX -->
         <SwitchPreference
             android:defaultValue="false"
@@ -102,6 +142,20 @@
             android:key="@string/key_low_temptarget_lowers_sensitivity"
             android:summary="@string/low_temptarget_lowers_sensitivity_summary"
             android:title="@string/low_temptarget_lowers_sensitivity_title" />
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:key="@string/key_carbsReqThreshold"
+            android:title="@string/carbsReqThreshold"
+            android:defaultValue="1"
+            android:dialogMessage="@string/carbsReqThreshold_summary"
+            android:digits="0123456789"
+            android:inputType="number"
+            android:maxLines="20"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            validate:maxNumber="10"
+            validate:minNumber="1"
+            validate:testType="numericRange"/>
 
         <androidx.preference.PreferenceScreen
             android:key="absorption_smb_advanced"
