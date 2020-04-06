@@ -43,6 +43,7 @@
     <string name="description_pump_mdi">Ovládač pumpy pre užívateľov používajúcich k liečbe diabetu inzulínové perá</string>
     <string name="description_pump_virtual">Ovládač pumpy pre užívateľov bez podporovanej pumpy (Otvorený okruh)</string>
     <string name="description_sensitivity_aaps">Citlivosť je počítaná tým istým spôsobom ako v Oref0, ale je možné špecifikovať časové okno do minulosti. Minimálne vstrebávanie sacharidov je počítané dynamicky z maximálnej doby vstrebávania, definovanej v nastaveniach.</string>
+    <string name="description_sensitivity_oref0">Citlivosť je počítaná za posledných 24h a sacharidy (ak sú ešte nevstrebané), sú orezané po čase definovanom v nastaveniach.</string>
     <string name="description_sensitivity_oref1">Citlivosť je počítaná za posledných 8h a sacharidy (pokiaľ nie sú vstrebané), sú orezané po čase definovanom v nastaveniach. Modul tiež počíta s UAM (neoznámené jedlo).</string>
     <string name="description_sensitivity_weighted_average">Citlivosť je počítaná ako vážený priemer z odchýlok. Novšie majú vyššiu prioritu. Minimálna vstrebateľnosť sacharidov je počítaná dynamicky z maximálnej doby vstrebateľnosti definovanej v nastaveniach. Tento algoritmus je najrýchlejší v sledovaní zmien citlivosti.</string>
     <string name="description_source_eversense">Získavať glykémie z upravenej Eversense aplikácie.</string>
@@ -601,6 +602,7 @@
     <string name="configbuilder_sensitivity">Detekcia citlivosti</string>
     <string name="configbuilder_sensitivity_description">Aký druh algoritmu pre detekciu citlivosti má byť použitý?</string>
     <string name="sensitivity_shortname">SENZ</string>
+    <string name="sensitivityoref0">Senzitivita Oref0</string>
     <string name="sensitivityoref1">Senzitivita Oref1</string>
     <string name="sensitivityaaps">Senzitivita AAPS</string>
     <string name="absorptionsettings_title">Nastavenie vstrebávania sacharidov</string>

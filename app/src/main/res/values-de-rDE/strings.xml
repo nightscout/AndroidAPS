@@ -43,6 +43,7 @@
     <string name="description_pump_mdi">Pumpen-Integration für Personen, die täglich mehrere Injektionen für ihre Diabetestherapie vornehmen</string>
     <string name="description_pump_virtual">Pumpen-Integration für Pumpen, die noch nicht über einen Treiber verfügen (Open Loop)</string>
     <string name="description_sensitivity_aaps">Die Sensitivität wird genauso wie bei Oref0 berechnet, aber Du kannst dafür ein Zeitfenster bestimmen. Die minimale Kohlenhydrat-Absorptionsrate wird aus der maximalen Absorptionsdauer aus den Einstellungen abgeleitet.</string>
+    <string name="description_sensitivity_oref0">Die Sensitivität wird aus den Daten der letzten 24 Stunden berechnet und Kohlenhydrate (falls nicht bereits absorbiert) werden nach der in den Einstellungen angegebenen Zeit als absorbiert betrachtet.</string>
     <string name="description_sensitivity_oref1">Die Sensitivität wird aus den Daten der letzten 8 Stunden berechnet und Kohlenhydrate (falls nicht bereits absorbiert) werden nach der in den Einstellungen angegebenen Zeit als absorbiert betrachtet. Das Plugin bezieht Zeiträume, in denen UAM annimmt, dass Kohlenhydrate aktiv waren, nicht mit in die Berechnung ein.</string>
     <string name="description_sensitivity_weighted_average">Die Sensitivität wird aus den Abweichungen errechnet. Dabei werden neuere Abweichungen stärker gewichtet als ältere. Die minimale Kohlenhydrat-Aufnahme wird aus der in den Präferenzen angegebenen maximalen Kohlenhydrat-Resorptionszeit abgeleitet. Dieser Algorithmus reagiert am schnellsten auf Änderungen der Empfindlichkeit.</string>
     <string name="description_source_eversense">Empfange BZ-Werte von der gepatchten Eversense App.</string>
@@ -601,6 +602,7 @@
     <string name="configbuilder_sensitivity">Sensitivitätserkennung</string>
     <string name="configbuilder_sensitivity_description">Welcher Sensitivitäts-Algorithmus soll verwendet werden?</string>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivityoref0">Sensitivität Oref0</string>
     <string name="sensitivityoref1">Sensitivität Oref1</string>
     <string name="sensitivityaaps">Sensitivität AAPS</string>
     <string name="absorptionsettings_title">Resorptions-Einstellungen</string>

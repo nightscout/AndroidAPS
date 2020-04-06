@@ -40,6 +40,7 @@
     <string name="description_pump_mdi">Diyabet tedavisi için günde birden fazla enjeksiyon yapan kişiler için pompa entegrasyonu</string>
     <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
     <string name="description_sensitivity_aaps">Duyarlılık, Oref0 gibi aynı şekilde hesaplanır ancak geçmiş zaman çerçevesi belirtebilirsiniz. Minimal karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır.</string>
+    <string name="description_sensitivity_oref0">Duyarlılık geçmiş 24 saatlik verilerden hesaplanır ve karbonhidratlar (eğer emilmediyse) tercihlerde belirtilen süreden sonra kesilir.</string>
     <string name="description_sensitivity_oref1">Duyarlılık geçmişte 8 saatlik verilerden hesaplanır ve karbonhidratlar (eğer emilmezse) tercihlerde belirtilen süreden sonra kesilir. Eklenti ayrıca UAM\'yi hesaplar.</string>
     <string name="description_sensitivity_weighted_average">Duyarlılık, sapmalardan ağırlıklı ortalama olarak hesaplanır. Daha yeni sapmalar daha ağırdır. Minimal karbonhidrat emilimi, tercihlerden maksimum karbon emilim süresinden hesaplanır. Bu algoritma, aşağıdaki duyarlılık değişikliklerinden daha hızlıdır.</string>
     <string name="description_source_glimp">Glimp\'ten KŞ değerleri alır.</string>
@@ -538,6 +539,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="configbuilder_sensitivity">Duyarlılık algılaması</string>
     <string name="configbuilder_sensitivity_description">Hangi duyarlılık algoritması kullanılmalıdır?</string>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivityoref0">Oref0 duyarlılık</string>
     <string name="sensitivityoref1">Oref1 duyarlılık</string>
     <string name="sensitivityaaps">AAPS duyarlılık</string>
     <string name="absorptionsettings_title">Emilim ayarları</string>

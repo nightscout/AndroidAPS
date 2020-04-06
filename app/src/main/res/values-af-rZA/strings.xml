@@ -42,6 +42,7 @@
     <string name="description_pump_mdi">Pomp integrasie vir mense wat veelvoudige daaglikse inspuitings doen vir hul diabetes terapie/regime</string>
     <string name="description_pump_virtual">Pomp integrasie vir pompe wat nog nie enige drywer het nie (oop lus)</string>
     <string name="description_sensitivity_aaps">Sensitiwiteit word bereken op dieselfde manier as Oref0, maar jy kan die tydsraamwerk spesifiseer in die verlede. Minimale karb absorpsie is bereken uit maks karb absorpsie tyd vanaf voorkeure.</string>
+    <string name="description_sensitivity_oref0">Sensitiwiteit word bereken vanaf 24h data in die verlede en koolhidrate (indien nie geabsorbeer) is na die tyd vermeld in voorkeure afgesny.</string>
     <string name="description_sensitivity_oref1">Sensitiwiteit word bereken uit 8h data in die verlede en koolhidrate (indien nie geabsorbeer) is na die tyd vermeld in voorkeure gesny. Plugin bereken ook UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensitiwiteit word bereken as \'n geweegde gemiddelde van dwalinge. Nuwer dwalinge het hoër gewig. Minimale karb absorpsie is bereken uit max karb absorpsie tyd vanaf voorkeure. Hierdie algoritme is die vinnigste om sensitiwiteit veranderinge te volg.</string>
     <string name="description_source_eversense">Ontvang BG waardes uit die gelapte Eversense toep.</string>
@@ -568,6 +569,7 @@
     <string name="configbuilder_sensitivity">Sensitiwiteit opsporing</string>
     <string name="configbuilder_sensitivity_description">Watter sensitiwiteit algoritme moet gebruik word?</string>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivityoref0">Sensitiwiteit Oref0</string>
     <string name="sensitivityoref1">Sensitiwiteit Oref1</string>
     <string name="sensitivityaaps">Sensitiwiteit AAPS</string>
     <string name="absorptionsettings_title">Absorpsie instellings</string>

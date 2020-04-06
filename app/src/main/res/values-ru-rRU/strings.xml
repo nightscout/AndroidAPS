@@ -43,6 +43,7 @@
     <string name="description_pump_mdi">Интеграция с помпой для тех, кто делает многочисленные подколки для компенсации диабета</string>
     <string name="description_pump_virtual">Интеграция с помпами, еще не имеющими драйвера (незамкнутый цикл)</string>
     <string name="description_sensitivity_aaps">Чувствительность вычисляется аналогично алгоритму oref0, но можно включить период прошлого. Минимальное усвоение углеводов вычисляется на основе макс усвоения из настроек.</string>
+    <string name="description_sensitivity_oref0">Чувствительность рассчитывается на основе данных за прошедшие 24 часа и (неусвоенные) углеводы не учитываются после времени указанного в настройках.</string>
     <string name="description_sensitivity_oref1">Чувствительность рассчитывается на основе данных за прошедшие 8 часов и (неусвоенные) углеводы не учитываются после времени указанного в настройках. Плагин также вычисляет UAM.</string>
     <string name="description_sensitivity_weighted_average">Чувствительность рассчитывается как средневзвешенное от отклонений (deviations). Более поздние отклонения имеют больший вес. Минимальное усвоение углеводов рассчитывается на основе макс времени усвоения углеводов в настройках. Этот алгоритм быстрее всего отслеживает изменения чувствительности.</string>
     <string name="description_source_eversense">Получать данные гликемии от пропатченного приложения Eversense.</string>
@@ -601,6 +602,7 @@
     <string name="configbuilder_sensitivity">определение чувствительности</string>
     <string name="configbuilder_sensitivity_description">Какой алгоритм чувствительности следует использовать?</string>
     <string name="sensitivity_shortname">ЧУВСТВ</string>
+    <string name="sensitivityoref0">Чувствительность Oref0</string>
     <string name="sensitivityoref1">Чувствительность Oref1</string>
     <string name="sensitivityaaps">Чувствительность AAPS</string>
     <string name="absorptionsettings_title">Настройки усваиваемости</string>

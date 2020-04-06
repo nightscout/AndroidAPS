@@ -43,6 +43,7 @@
     <string name="description_pump_mdi">Intégration pompe pour les personnes qui font des injections quotidiennes multiples pour le traitement de leur diabète</string>
     <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
     <string name="description_sensitivity_aaps">La sensibilité est calculée de la même manière que Oref0, mais vous pouvez spécifier la période concernée. L\'absorption minimale des glucides est calculée à partir des temps d’absorption max des glucides du menu préférences.</string>
+    <string name="description_sensitivity_oref0">La sensibilité est calculée à partir des données sur les dernières 24h et les glucides (si non absorbés) ne sont plus pris en compte après l’heure spécifiée dans les préférences.</string>
     <string name="description_sensitivity_oref1">La sensibilité est calculée à partir des données des dernières 8 heures et les glucides (si non absorbés) ne sont plus pris en compte après le temps spécifié dans les préférences. Le plugin calcule également les RNS (UAM).</string>
     <string name="description_sensitivity_weighted_average">La sensibilité est calculée comme une moyenne pondérée des écarts. Les écarts les plus récents ont un poids plus élevé. L\'absorption minimale des glucides est calculée à partir des temps d’absorption des glucides max du menu préférences. Cet algorithme est le plus rapide pour s\'adapter aux changements de sensibilité.</string>
     <string name="description_source_eversense">Recevoir les valeurs de glycémie de l’app Eversense patchée.</string>
@@ -602,6 +603,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="configbuilder_sensitivity">Estimation de Sensibilité</string>
     <string name="configbuilder_sensitivity_description">Quel algorithme de Sensibilité doit être utilisé ?</string>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivityoref0">Sensibilité Oref0</string>
     <string name="sensitivityoref1">Sensibilité Oref1</string>
     <string name="sensitivityaaps">Sensibilité AAPS </string>
     <string name="absorptionsettings_title">Paramètres d’absorption</string>

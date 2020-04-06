@@ -43,6 +43,7 @@
     <string name="description_pump_mdi">Integração para as pessoas que fazem múltiplas injeções diárias para a sua terapia de diabetes</string>
     <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
     <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas você pode especificar o período de tempo para o passado. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências.</string>
+    <string name="description_sensitivity_oref0">A sensibilidade é calculada a partir de dados de 24h no passado e os carboidratos (se não absorvidos) são cortados após o tempo especificado nas preferências.</string>
     <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados de 8h no passado e os hidratos de carbono (se não absorvidos) são cortados após o tempo especificado nas preferências. O plug-in também calcula o UAM.</string>
     <string name="description_sensitivity_weighted_average">A sensibilidade é calculada como uma média ponderada de desvios. Desvios mais recentes têm maior peso. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências. Este algoritmo é o mais rápido em seguir as mudanças de sensibilidade.</string>
     <string name="description_source_eversense">Receber valores de Glicose da aplicação Eversense modificada.</string>
@@ -601,6 +602,7 @@
     <string name="configbuilder_sensitivity">Detecção sensibilidade</string>
     <string name="configbuilder_sensitivity_description">Que algoritmo de sensibilidade deve ser usado?</string>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivityoref0">Sensibilidade Oref0</string>
     <string name="sensitivityoref1">Sensibilidade Oref1</string>
     <string name="sensitivityaaps">Sensibilidade AAPS</string>
     <string name="absorptionsettings_title">Configurações de absorção</string>

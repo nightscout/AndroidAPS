@@ -43,6 +43,7 @@
     <string name="description_pump_mdi">Integracja pompy dla pacjentów podających insulinę w formie wielu zastrzyków dziennie</string>
     <string name="description_pump_virtual">Integracja z pompami, które nie posiadają jeszcze żadnego sterownika (Open Loop)</string>
     <string name="description_sensitivity_aaps">Wrażliwość jest obliczana w taki sam sposób, jak algorytm Oref0, ale możliwe jest podanie okresu z przeszłości. Minimalne wchłanianie węglowodanów jest obliczana na podstawie czasu wchłaniania max carb, określonego w ustawieniu.</string>
+    <string name="description_sensitivity_oref0">Wrażliwość jest obliczana na podstawie danych z ostatnich 24 godzin, a węglowodany niewchłonięte nie są brane pod uwagę, po czasie określonym w ustawieniach.</string>
     <string name="description_sensitivity_oref1">Wrażliwość jest obliczana na podstawie danych z ostatnich 8 godzin, a węglowodany niewchłonięte nie są brane pod uwagę, po czasie określonym w ustawieniach. Wtyczka oblicza również UAM (posiłek nie wprowadzony do AAPS).</string>
     <string name="description_sensitivity_weighted_average">Wrażliwość jest obliczana jako średnia ważona z odchyleń. Nowsze wartości mają większą wagę. Minimalne wchłanianie węglowodanów jest obliczana na podstawie czasu wchłaniania max carb, określonego w ustawieniu. Algorytm ten najszybciej śledzi zmiany wrażliwości.</string>
     <string name="description_source_eversense">Pobieraj wartości BG ze spatchowanej aplikacji Eversense.</string>
@@ -602,6 +603,7 @@
     <string name="configbuilder_sensitivity">Detekcja wrażliwości (sensitivity)</string>
     <string name="configbuilder_sensitivity_description">Który algorytm wrażliwości powinien być używany?</string>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivityoref0">Wrażliwość Oref0</string>
     <string name="sensitivityoref1">Wrażliwość Oref1</string>
     <string name="sensitivityaaps">Wrażliwość AAPS</string>
     <string name="absorptionsettings_title">Ustawienia wchłaniania</string>

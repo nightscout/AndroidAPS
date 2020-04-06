@@ -43,6 +43,7 @@
     <string name="description_pump_mdi">Integracija žmonėms, naudojantiems insulino injektorius</string>
     <string name="description_pump_virtual">Integracija pompoms, kurios dar neturi reikalingo valdiklio (Atviras Ciklas)</string>
     <string name="description_sensitivity_aaps">Jautrumas insulinui apskaičiuojamas taip pat kaip ir Oref0, tačiau jūs galite nustatyti, koks praeities laikotarpis bus naudojamas. Minimalus angliavandenių įsisavinimo greitis apskaičiuojamas remiantis maksimaliu angliavandenių įsisavinimo greičiu, kuris įvestas Nustatymuose.</string>
+    <string name="description_sensitivity_oref0">Jautrumas insulinui apskaičiuojamas remiantis praėjusių 24 val. duomenimis, o (neįsisavinti) angliavandeniai neįtraukiami į skaičiavimus praėjus Nustatymuose nurodytam laikui.</string>
     <string name="description_sensitivity_oref1">Jautrumas insulinui apskaičiuojamas remiantis praėjusių 8 val. duomenimis, o (neįsisavinti) angliavandeniai neįtraukiami į skaičiavimus praėjus Nustatymuose nurodytam laikui. Įskiepis taip pat įskaičiuoja NM (neįrašytą maistą).</string>
     <string name="description_sensitivity_weighted_average">Jautrumas insulinui apskaičiuojamas kaip nuokrypių svertinis vidurkis. Naujausių nuokrypių svoris yra didesnis. Minimalus angliavandenių įsisavinimo greitis apskaičiuojamas iš maksimalaus angliavandenių įsisavinimo greičio, kuris nurodytas Nustatymuose. Šis algoritmas greičiausiai aptinka pasikeitusį jautrumą insulinui.</string>
     <string name="description_source_eversense">Gauti kraujo gliukozės vertes iš modifikuotos Eversense programėlės.</string>
@@ -601,6 +602,7 @@
     <string name="configbuilder_sensitivity">Jautrumo nustatymas</string>
     <string name="configbuilder_sensitivity_description">Kurį jautrumo nustatymo algoritmą naudoti?</string>
     <string name="sensitivity_shortname">JAUTR</string>
+    <string name="sensitivityoref0">Jautrumo nustatymo algoritmas Oref0</string>
     <string name="sensitivityoref1">Jautrumo nustatymo algoritmas Oref1</string>
     <string name="sensitivityaaps">Jautrumo nustatymo algoritmas AAPS</string>
     <string name="absorptionsettings_title">Angliavandenių įsisavinimo parametrai</string>

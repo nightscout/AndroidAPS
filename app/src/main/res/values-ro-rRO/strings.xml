@@ -43,6 +43,7 @@
     <string name="description_pump_mdi">Integrare cu pompă virtuală, pentru persoanele ce folosesc terapia cu pen</string>
     <string name="description_pump_virtual">Integrare cu pompele ce nu au încă un driver software disponibil (Buclă Deschisă)</string>
     <string name="description_sensitivity_aaps">Sensibilitatea este calculată la fel ca în algoritmul Oref0, dar se poate specifica un interval de timp în trecut. Absorbția minimă de carbohidrați este calculată din parametrul echivalent, stabilit în preferințe.</string>
+    <string name="description_sensitivity_oref0">Sensibilitatea este calcuată din datele disponibile în ultimele 24 de ore, iar carbohidrații (când nu sunt absorbiți) sunt ignorați după timpul specificat în preferințe.</string>
     <string name="description_sensitivity_oref1">Sensibilitatea este calculată folosind datele din ultimele 8 ore, iar cabohidrații (când nu sunt absorbiți) sunt ignorați după timpul specificat în preferințe. Se calculează, de asemenea, UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensibilitatea este calculată ca o medie ponderată a deviațiilor. Deviațiile noi au o importanță mai mare. Absorbția minimă de carbohidrați este calculată în funcție de parametrul absorbție maximă de carbohidrați, stabilit în preferințe. Acest algoritm este cel mai rapid atunci când sensibilitatea la insulină este fluctuantă.</string>
     <string name="description_source_eversense">Primește valorile glicemiei din aplicația Eversense modificată.</string>
@@ -572,6 +573,7 @@
     <string name="configbuilder_sensitivity">Detectare sensibilitate</string>
     <string name="configbuilder_sensitivity_description">Ce algoritm de detecție a sensibilității doriți să folosiți?</string>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivityoref0">Sensibilitate Oref0</string>
     <string name="sensitivityoref1">Sensibilitate Oref1</string>
     <string name="sensitivityaaps">Sensibilitate AAPS</string>
     <string name="absorptionsettings_title">Setări absorbție</string>
