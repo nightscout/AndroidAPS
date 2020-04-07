@@ -763,7 +763,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 val fromTime: Long
                 val endTime: Long
                 val apsResult = if (Config.APS) lastRun?.constraintsProcessed else NSDeviceStatus.getAPSResult(injector)
-                if (predictionsAvailable && apsResult != null && sp.getBoolean("showprediction", false)) {
+                if (predictionsAvailable && apsResult != null && overviewMenus.setting[0][OverviewMenus.CharType.PRE.ordinal]) {
                     var predHours = (ceil(apsResult.latestPredictionsTime - System.currentTimeMillis().toDouble()) / (60 * 60 * 1000)).toInt()
                     predHours = min(2, predHours)
                     predHours = max(0, predHours)
