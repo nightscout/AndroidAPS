@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils
 
+import info.nightscout.androidaps.logging.AAPSLogger
 import org.spongycastle.util.encoders.Base64
 import java.nio.ByteBuffer
 import java.security.MessageDigest
@@ -12,6 +13,8 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
+import javax.inject.Inject
+import javax.inject.Singleton
 
 private val HEX_CHARS = "0123456789abcdef"
 private val HEX_CHARS_ARRAY = "0123456789abcdef".toCharArray()
@@ -45,15 +48,21 @@ fun ByteArray.toHex() : String{
     return result.toString()
 }
 
-object CryptoUtil {
+@Singleton
+class CryptoUtil @Inject constructor(
+    val aapsLogger: AAPSLogger
+)  {
 
-    private const val IV_LENGTH_BYTE = 12
-    private const val TAG_LENGTH_BIT = 128
-    private const val AES_KEY_SIZE_BIT = 256
-    private const val PBKDF2_ITERATIONS = 50000 // check delays it cause on real device
-    private const val SALT_SIZE_BYTE = 32
+    companion object {
+        private const val IV_LENGTH_BYTE = 12
+        private const val TAG_LENGTH_BIT = 128
+        private const val AES_KEY_SIZE_BIT = 256
+        private const val PBKDF2_ITERATIONS = 50000 // check delays it cause on real device
+        private const val SALT_SIZE_BYTE = 32
+    }
 
     private val secureRandom: SecureRandom = SecureRandom()
+    var lastException: Exception? = null
 
     fun sha256(source: String): String {
         val digest = MessageDigest.getInstance("SHA-256")
@@ -85,6 +94,7 @@ object CryptoUtil {
         val iv: ByteArray?
         val encrypted: ByteArray?
         return try {
+            lastException = null
             iv = ByteArray(IV_LENGTH_BYTE)
             secureRandom.nextBytes(iv)
             val cipherEnc: Cipher = Cipher.getInstance("AES/GCM/NoPadding")
@@ -96,7 +106,9 @@ object CryptoUtil {
             byteBuffer.put(encrypted)
             String(Base64.encode(byteBuffer.array()))
         } catch (e: Exception) {
-           null
+            lastException = e
+            aapsLogger.error("Encryption failed due to technical exception: ${e}")
+            null
         }
     }
 
@@ -104,6 +116,7 @@ object CryptoUtil {
         val iv: ByteArray?
         val encrypted: ByteArray?
         return try {
+            lastException = null
             val byteBuffer = ByteBuffer.wrap(Base64.decode(encryptedData))
             val ivLength = byteBuffer.get().toInt()
             iv = ByteArray(ivLength)
@@ -115,6 +128,8 @@ object CryptoUtil {
             val dec = cipherDec.doFinal(encrypted)
             String(dec)
         } catch (e: Exception) {
+            lastException = e
+            aapsLogger.error("Decryption failed due to technical exception: ${e}")
             null
         }
     }

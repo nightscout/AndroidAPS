@@ -50,6 +50,7 @@ import info.nightscout.androidaps.queue.commands.*
 import info.nightscout.androidaps.setupwizard.SWEventListener
 import info.nightscout.androidaps.setupwizard.SWScreen
 import info.nightscout.androidaps.setupwizard.elements.*
+import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
@@ -261,6 +262,7 @@ open class AppModule {
 
         @ContributesAndroidInjector fun graphDataInjector(): GraphData
 
+        @ContributesAndroidInjector fun cryptoUtilInjector(): CryptoUtil
         @ContributesAndroidInjector fun importExportPrefsInjector(): ImportExportPrefs
         @ContributesAndroidInjector fun encryptedPrefsFormatInjector(): EncryptedPrefsFormat
         @ContributesAndroidInjector fun classicPrefsFormatInjector(): ClassicPrefsFormat
