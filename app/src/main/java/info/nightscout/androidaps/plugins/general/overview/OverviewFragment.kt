@@ -91,6 +91,10 @@ import kotlinx.android.synthetic.main.overview_fragment.overview_temptarget
 import kotlinx.android.synthetic.main.overview_fragment.overview_treatmentbutton
 import kotlinx.android.synthetic.main.overview_fragment.overview_wizardbutton
 import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
@@ -741,114 +745,112 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
 
         // ****** GRAPH *******
-        Thread(Runnable {
-
-            // align to hours
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = System.currentTimeMillis()
-            calendar[Calendar.MILLISECOND] = 0
-            calendar[Calendar.SECOND] = 0
-            calendar[Calendar.MINUTE] = 0
-            calendar.add(Calendar.HOUR, 1)
-            val hoursToFetch: Int
-            val toTime: Long
-            val fromTime: Long
-            val endTime: Long
-            val apsResult = if (Config.APS) lastRun?.constraintsProcessed else NSDeviceStatus.getAPSResult(injector)
-            if (predictionsAvailable && apsResult != null && sp.getBoolean("showprediction", false)) {
-                var predHours = (ceil(apsResult.latestPredictionsTime - System.currentTimeMillis().toDouble()) / (60 * 60 * 1000)).toInt()
-                predHours = min(2, predHours)
-                predHours = max(0, predHours)
-                hoursToFetch = rangeToDisplay - predHours
-                toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific
-                fromTime = toTime - T.hours(hoursToFetch.toLong()).msecs()
-                endTime = toTime + T.hours(predHours.toLong()).msecs()
-            } else {
-                hoursToFetch = rangeToDisplay
-                toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific
-                fromTime = toTime - T.hours(hoursToFetch.toLong()).msecs()
-                endTime = toTime
-            }
-            val now = System.currentTimeMillis()
-
-            //  ------------------ 1st graph
+        GlobalScope.launch(Dispatchers.Main) {
             val graphData = GraphData(injector, overview_bggraph, iobCobCalculatorPlugin)
-
-            // **** In range Area ****
-            graphData.addInRangeArea(fromTime, endTime, lowLine, highLine)
-
-            // **** BG ****
-            if (predictionsAvailable && overviewMenus.setting[0][OverviewMenus.CharType.PRE.ordinal])
-                graphData.addBgReadings(fromTime, toTime, lowLine, highLine, apsResult?.predictions)
-            else graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null)
-
-            // set manual x bounds to have nice steps
-            graphData.formatAxis(fromTime, endTime)
-
-            // Treatments
-            graphData.addTreatments(fromTime, endTime)
-            if (overviewMenus.setting[0][OverviewMenus.CharType.ACT.ordinal])
-                graphData.addActivity(fromTime, endTime, false, 0.8)
-
-            // add basal data
-            if (pump.pumpDescription.isTempBasalCapable && overviewMenus.setting[0][OverviewMenus.CharType.BAS.ordinal])
-                graphData.addBasals(fromTime, now, lowLine / graphData.maxY / 1.2)
-
-            // add target line
-            graphData.addTargetLine(fromTime, toTime, profile, loopPlugin.lastRun)
-
-            // **** NOW line ****
-            graphData.addNowLine(now)
-
-            // ------------------ 2nd graph
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
-            for (g in 0 until secondaryGraphs.size) {
-                val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin)
-                var useIobForScale = false
-                var useCobForScale = false
-                var useDevForScale = false
-                var useRatioForScale = false
-                var useDSForScale = false
-                var useIAForScale = false
-                when {
-                    overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
-                    overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
-                    overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
-                    overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
-                    overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
-                    overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
-                }
 
-                if (overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, now, useIobForScale, 1.0, overviewMenus.setting[g + 1][OverviewMenus.CharType.PRE.ordinal])
-                if (overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
-                if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0)
-                if (overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
-                if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, endTime, useIAForScale, 0.8)
-                if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
+            // do preparation in different thread
+            withContext(Dispatchers.Default) {
+                // align to hours
+                val calendar = Calendar.getInstance()
+                calendar.timeInMillis = System.currentTimeMillis()
+                calendar[Calendar.MILLISECOND] = 0
+                calendar[Calendar.SECOND] = 0
+                calendar[Calendar.MINUTE] = 0
+                calendar.add(Calendar.HOUR, 1)
+                val hoursToFetch: Int
+                val toTime: Long
+                val fromTime: Long
+                val endTime: Long
+                val apsResult = if (Config.APS) lastRun?.constraintsProcessed else NSDeviceStatus.getAPSResult(injector)
+                if (predictionsAvailable && apsResult != null && sp.getBoolean("showprediction", false)) {
+                    var predHours = (ceil(apsResult.latestPredictionsTime - System.currentTimeMillis().toDouble()) / (60 * 60 * 1000)).toInt()
+                    predHours = min(2, predHours)
+                    predHours = max(0, predHours)
+                    hoursToFetch = rangeToDisplay - predHours
+                    toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific
+                    fromTime = toTime - T.hours(hoursToFetch.toLong()).msecs()
+                    endTime = toTime + T.hours(predHours.toLong()).msecs()
+                } else {
+                    hoursToFetch = rangeToDisplay
+                    toTime = calendar.timeInMillis + 100000 // little bit more to avoid wrong rounding - GraphView specific
+                    fromTime = toTime - T.hours(hoursToFetch.toLong()).msecs()
+                    endTime = toTime
+                }
+                val now = System.currentTimeMillis()
+
+                //  ------------------ 1st graph
+
+                // **** In range Area ****
+                graphData.addInRangeArea(fromTime, endTime, lowLine, highLine)
+
+                // **** BG ****
+                if (predictionsAvailable && overviewMenus.setting[0][OverviewMenus.CharType.PRE.ordinal])
+                    graphData.addBgReadings(fromTime, toTime, lowLine, highLine, apsResult?.predictions)
+                else graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null)
 
                 // set manual x bounds to have nice steps
-                secondGraphData.formatAxis(fromTime, endTime)
-                secondGraphData.addNowLine(now)
-                secondaryGraphsData.add(secondGraphData)
-            }
+                graphData.formatAxis(fromTime, endTime)
 
-            // do GUI update
-            val activity = activity
-            activity?.runOnUiThread {
-                // finally enforce drawing of graphs
-                graphData.performUpdate()
+                // Treatments
+                graphData.addTreatments(fromTime, endTime)
+                if (overviewMenus.setting[0][OverviewMenus.CharType.ACT.ordinal])
+                    graphData.addActivity(fromTime, endTime, false, 0.8)
+
+                // add basal data
+                if (pump.pumpDescription.isTempBasalCapable && overviewMenus.setting[0][OverviewMenus.CharType.BAS.ordinal])
+                    graphData.addBasals(fromTime, now, lowLine / graphData.maxY / 1.2)
+
+                // add target line
+                graphData.addTargetLine(fromTime, toTime, profile, loopPlugin.lastRun)
+
+                // **** NOW line ****
+                graphData.addNowLine(now)
+
+                // ------------------ 2nd graph
                 for (g in 0 until secondaryGraphs.size) {
-                    secondaryGraphs[g].visibility = (
-                        overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
-                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
-                        ).toVisibility()
-                    secondaryGraphsData[g].performUpdate()
+                    val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin)
+                    var useIobForScale = false
+                    var useCobForScale = false
+                    var useDevForScale = false
+                    var useRatioForScale = false
+                    var useDSForScale = false
+                    var useIAForScale = false
+                    when {
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
+                    }
+
+                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, now, useIobForScale, 1.0, overviewMenus.setting[g + 1][OverviewMenus.CharType.PRE.ordinal])
+                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
+                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0)
+                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
+                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, endTime, useIAForScale, 0.8)
+                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
+
+                    // set manual x bounds to have nice steps
+                    secondGraphData.formatAxis(fromTime, endTime)
+                    secondGraphData.addNowLine(now)
+                    secondaryGraphsData.add(secondGraphData)
                 }
             }
-        }).start()
+            // finally enforce drawing of graphs in UI thread
+            graphData.performUpdate()
+            for (g in 0 until secondaryGraphs.size) {
+                secondaryGraphs[g].visibility = (
+                    overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
+                    ).toVisibility()
+                secondaryGraphsData[g].performUpdate()
+            }
+        }
     }
 }
