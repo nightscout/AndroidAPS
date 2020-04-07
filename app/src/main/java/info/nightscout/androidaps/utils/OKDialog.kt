@@ -11,8 +11,6 @@ import info.nightscout.androidaps.utils.alertDialogs.AlertDialogHelper
 
 object OKDialog {
     @SuppressLint("InflateParams")
-    @JvmStatic
-    @JvmOverloads
     fun show(context: Context, title: String, message: String, runnable: Runnable? = null) {
         var notEmptytitle = title
         if (notEmptytitle.isEmpty()) notEmptytitle = context.getString(R.string.message)

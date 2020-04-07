@@ -644,7 +644,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         } finally {
             pump.activity = null;
             rxBus.send(new EventComboPumpUpdateGUI());
-            rxBus.send(new EventRefreshOverview("Bolus"));
+            rxBus.send(new EventRefreshOverview("Bolus", false));
             cancelBolus = false;
         }
     }

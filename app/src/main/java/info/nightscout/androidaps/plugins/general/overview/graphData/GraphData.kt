@@ -61,7 +61,7 @@ class GraphData(injector: HasAndroidInjector, private val graph: GraphView, priv
         var maxBgValue = Double.MIN_VALUE
         bgReadingsArray = iobCobCalculatorPlugin.bgReadings
         if (bgReadingsArray?.isEmpty() != false) {
-            aapsLogger.debug(LTag.OVERVIEW, "No BG data.")
+            aapsLogger.debug("No BG data.")
             maxY = 10.0
             minY = 0.0
             return

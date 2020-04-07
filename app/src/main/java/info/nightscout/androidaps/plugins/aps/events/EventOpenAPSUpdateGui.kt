@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.aps.openAPSMA.events
+package info.nightscout.androidaps.plugins.aps.events
 
 import info.nightscout.androidaps.events.EventUpdateGui
 

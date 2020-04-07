@@ -56,7 +56,7 @@ class VersionCheckerUtils @Inject constructor(
             }
         }.start()
     } else
-        aapsLogger.debug(LTag.CORE, "Github master version no checked. No connectivity")
+        aapsLogger.debug(LTag.CORE, "Github master version not checked. No connectivity")
 
     @Suppress("SameParameterValue")
     fun compareWithCurrentVersion(newVersion: String?, currentVersion: String) {

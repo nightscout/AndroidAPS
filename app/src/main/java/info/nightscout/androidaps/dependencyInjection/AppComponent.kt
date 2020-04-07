@@ -12,8 +12,7 @@ import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.plugins.aps.loop.APSResult
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.DetermineBasalResultAMA
-import info.nightscout.androidaps.plugins.aps.openAPSMA.DetermineBasalResultMA
-import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback
+import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.*
@@ -55,7 +54,6 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectPumpEnactResult(pumpEnactResult: PumpEnactResult)
     fun injectAPSResult(apsResult: APSResult)
     fun injectDetermineBasalResultSMB(determineBasalResultSMB: DetermineBasalResultSMB)
-    fun injectDetermineBasalResultMA(determineBasalResultMA: DetermineBasalResultMA)
     fun injectDetermineBasalResultAMA(determineBasalResultAMA: DetermineBasalResultAMA)
     fun injectDetermineBasalAdapterSMBJS(determineBasalAdapterSMBJS: DetermineBasalAdapterSMBJS)
 

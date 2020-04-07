@@ -125,13 +125,13 @@ class ImportExportPrefs @Inject constructor(
         val n5 = Settings.Secure.getString(context.contentResolver, "lock_screen_owner_info")
         val n6 = Settings.Global.getString(context.contentResolver, "device_name")
 
-        // name we use for SMS OTP token in communicator
-        val otpName = otp.name().trim()
-        val defaultOtpName = resourceHelper.gs(R.string.smscommunicator_default_user_display_name)
+        // name provided (hopefully) by user
+        val patientName = sp.getString(R.string.key_patient_name, "")
+        val defaultPatientName = resourceHelper.gs(R.string.patient_name_default)
 
         // name we detect from OS
-        val systemName = n1 ?: n2 ?: n3 ?: n4 ?: n5 ?: n6 ?: defaultOtpName
-        val name = if (otpName.length > 0 && otpName != defaultOtpName) otpName else systemName
+        val systemName = n1 ?: n2 ?: n3 ?: n4 ?: n5 ?: n6 ?: defaultPatientName
+        val name = if (patientName.isNotEmpty() && patientName != defaultPatientName) patientName else systemName
         return name
     }
 

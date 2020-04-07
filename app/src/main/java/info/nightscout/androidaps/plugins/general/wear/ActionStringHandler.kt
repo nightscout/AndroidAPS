@@ -291,11 +291,12 @@ class ActionStringHandler @Inject constructor(
         } else if ("changeRequest" == act[0]) { ////////////////////////////////////////////// CHANGE REQUEST
             rTitle = resourceHelper.gs(R.string.openloop_newsuggestion)
             rAction = "changeRequest"
-            val finalLastRun = loopPlugin.lastRun
-            rMessage += finalLastRun.constraintsProcessed
-            wearPlugin.requestChangeConfirmation(rTitle, rMessage, rAction)
-            lastSentTimestamp = System.currentTimeMillis()
-            lastConfirmActionString = rAction
+            loopPlugin.lastRun?.let {
+                rMessage += it.constraintsProcessed
+                wearPlugin.requestChangeConfirmation(rTitle, rMessage, rAction)
+                lastSentTimestamp = System.currentTimeMillis()
+                lastConfirmActionString = rAction
+            }
             return
         } else if ("cancelChangeRequest" == act[0]) { ////////////////////////////////////////////// CANCEL CHANGE REQUEST NOTIFICATION
             rAction = "cancelChangeRequest"
@@ -406,9 +407,10 @@ class ActionStringHandler @Inject constructor(
                 }
                 val aps = activePlugin.activeAPS
                 ret += "APS: " + (aps as PluginBase).name
-                if (loopPlugin.lastRun != null) {
-                    if (loopPlugin.lastRun.lastAPSRun != null) ret += "\nLast Run: " + DateUtil.timeString(loopPlugin.lastRun.lastAPSRun)
-                    if (loopPlugin.lastRun.lastTBREnact != 0L) ret += "\nLast Enact: " + DateUtil.timeString(loopPlugin.lastRun.lastTBREnact)
+                val lastRun = loopPlugin.lastRun
+                if (lastRun != null) {
+                    ret += "\nLast Run: " + DateUtil.timeString(lastRun.lastAPSRun)
+                    if (lastRun.lastTBREnact != 0L) ret += "\nLast Enact: " + DateUtil.timeString(lastRun.lastTBREnact)
                 }
             } else {
                 ret += "LOOP DISABLED\n"
