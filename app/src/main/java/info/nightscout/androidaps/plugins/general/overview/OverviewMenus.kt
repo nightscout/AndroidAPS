@@ -10,8 +10,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
+import androidx.annotation.ColorRes
+import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentManager
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
@@ -38,6 +42,7 @@ import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import java.lang.reflect.Type
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -57,131 +62,95 @@ class OverviewMenus @Inject constructor(
     private val loopPlugin: LoopPlugin
 ) {
 
-    enum class CharType {
-        PRE, BAS, IOB, COB, DEV, SEN, ACTPRIM, ACTSEC, DEVSLOPE
+    enum class CharType(@StringRes val nameId: Int, @ColorRes val colorId: Int, val primary: Boolean, val secondary: Boolean) {
+        PRE(R.string.overview_show_predictions, R.color.prediction, primary = true, secondary = false),
+        BAS(R.string.overview_show_basals, R.color.basal, primary = true, secondary = false),
+        IOB(R.string.overview_show_iob, R.color.iob, primary = false, secondary = true),
+        COB(R.string.overview_show_cob, R.color.cob, primary = false, secondary = true),
+        DEV(R.string.overview_show_deviations, R.color.deviations, primary = false, secondary = true),
+        SEN(R.string.overview_show_sensitivity, R.color.ratio, primary = false, secondary = true),
+        ACT(R.string.overview_show_activity, R.color.activity, primary = true, secondary = true),
+        DEVSLOPE(R.string.overview_show_deviationslope, R.color.devslopepos, primary = false, secondary = true)
+    }
+
+    companion object {
+        const val MAX_GRAPHS = 5 // including main
+    }
+    var setting: MutableList<Array<Boolean>> = ArrayList()
+
+    private fun storeGraphConfig() {
+        val sts = Gson().toJson(setting)
+        sp.putString(R.string.key_graphconfig, sts)
+        aapsLogger.debug(sts)
+    }
+
+    private fun loadGraphConfig() {
+        val sts = sp.getString(R.string.key_graphconfig, "")
+        if (sts.isNotEmpty())
+            setting = Gson().fromJson(sts, Array<Array<Boolean>>::class.java).toMutableList()
+        else {
+            setting = ArrayList()
+            setting.add(Array(CharType.values().size) { true })
+        }
     }
 
     fun setupChartMenu(chartButton: ImageButton) {
+        loadGraphConfig()
+        val numOfGraphs = setting.size // 1 main + x secondary
+
         chartButton.setOnClickListener { v: View ->
             val predictionsAvailable: Boolean = when {
                 Config.APS      -> loopPlugin.lastRun?.request?.hasPredictions ?: false
                 Config.NSCLIENT -> true
                 else            -> false
             }
-            //var item: MenuItem
-            val dividerItem: MenuItem
-            //var title: CharSequence
-            var titleMaxChars = 0
-            //var s: SpannableString
             val popup = PopupMenu(v.context, v)
-            if (predictionsAvailable) {
-                val item = popup.menu.add(Menu.NONE, CharType.PRE.ordinal, Menu.NONE, "Predictions")
-                val title = item.title
-                if (titleMaxChars < title.length) titleMaxChars = title.length
-                val s = SpannableString(title)
-                s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.prediction)), 0, s.length, 0)
-                item.title = s
-                item.isCheckable = true
-                item.isChecked = sp.getBoolean("showprediction", true)
+
+            for (g in 0 until numOfGraphs) {
+                if (g != 0 && g < numOfGraphs) {
+                    val dividerItem = popup.menu.add(Menu.NONE, g, Menu.NONE, "------- " + "Graph" + " " + g + " -------")
+                    dividerItem.isCheckable = true
+                    dividerItem.isChecked = true
+                }
+                CharType.values().forEach { m ->
+                    if (g == 0 && !m.primary) return@forEach
+                    if (g > 0 && !m.secondary) return@forEach
+                    var insert = true
+                    if (m == CharType.PRE) insert = predictionsAvailable
+                    if (m == CharType.DEVSLOPE) insert = buildHelper.isDev()
+                    if (insert) {
+                        val item = popup.menu.add(Menu.NONE, m.ordinal + 100 * (g + 1), Menu.NONE, resourceHelper.gs(m.nameId))
+                        val title = item.title
+                        val s = SpannableString(title)
+                        s.setSpan(ForegroundColorSpan(resourceHelper.gc(m.colorId)), 0, s.length, 0)
+                        item.title = s
+                        item.isCheckable = true
+                        item.isChecked = setting[g][m.ordinal]
+                    }
+                }
             }
-            run {
-                val item = popup.menu.add(Menu.NONE, CharType.BAS.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_basals))
-                val title = item.title
-                if (titleMaxChars < title.length) titleMaxChars = title.length
-                val s = SpannableString(title)
-                s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.basal)), 0, s.length, 0)
-                item.title = s
-                item.isCheckable = true
-                item.isChecked = sp.getBoolean("showbasals", true)
-            }
-            run {
-                val item = popup.menu.add(Menu.NONE, CharType.ACTPRIM.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_activity))
-                val title = item.title
-                if (titleMaxChars < title.length) titleMaxChars = title.length
-                val s = SpannableString(title)
-                s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.activity)), 0, s.length, 0)
-                item.title = s
-                item.isCheckable = true
-                item.isChecked = sp.getBoolean("showactivityprimary", true)
-                dividerItem = popup.menu.add("")
-                dividerItem.isEnabled = false
-            }
-            run {
-                val item = popup.menu.add(Menu.NONE, CharType.IOB.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_iob))
-                val title = item.title
-                if (titleMaxChars < title.length) titleMaxChars = title.length
-                val s = SpannableString(title)
-                s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.iob)), 0, s.length, 0)
-                item.title = s
-                item.isCheckable = true
-                item.isChecked = sp.getBoolean("showiob", true)
-            }
-            run {
-                val item = popup.menu.add(Menu.NONE, CharType.COB.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_cob))
-                val title = item.title
-                if (titleMaxChars < title.length) titleMaxChars = title.length
-                val s = SpannableString(title)
-                s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.cob)), 0, s.length, 0)
-                item.title = s
-                item.isCheckable = true
-                item.isChecked = sp.getBoolean("showcob", true)
-            }
-            run {
-                val item = popup.menu.add(Menu.NONE, CharType.DEV.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_deviations))
-                val title = item.title
-                if (titleMaxChars < title.length) titleMaxChars = title.length
-                val s = SpannableString(title)
-                s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.deviations)), 0, s.length, 0)
-                item.title = s
-                item.isCheckable = true
-                item.isChecked = sp.getBoolean("showdeviations", false)
-            }
-            run {
-                val item = popup.menu.add(Menu.NONE, CharType.SEN.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_sensitivity))
-                val title = item.title
-                if (titleMaxChars < title.length) titleMaxChars = title.length
-                val s = SpannableString(title)
-                s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.ratio)), 0, s.length, 0)
-                item.title = s
-                item.isCheckable = true
-                item.isChecked = sp.getBoolean("showratios", false)
-            }
-            run {
-                val item = popup.menu.add(Menu.NONE, CharType.ACTSEC.ordinal, Menu.NONE, resourceHelper.gs(R.string.overview_show_activity))
-                val title = item.title
-                if (titleMaxChars < title.length) titleMaxChars = title.length
-                val s = SpannableString(title)
-                s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.activity)), 0, s.length, 0)
-                item.title = s
-                item.isCheckable = true
-                item.isChecked = sp.getBoolean("showactivitysecondary", true)
-            }
-            if (buildHelper.isDev()) {
-                val item = popup.menu.add(Menu.NONE, CharType.DEVSLOPE.ordinal, Menu.NONE, "Deviation slope")
-                val title = item.title
-                if (titleMaxChars < title.length) titleMaxChars = title.length
-                val s = SpannableString(title)
-                s.setSpan(ForegroundColorSpan(resourceHelper.gc(R.color.devslopepos)), 0, s.length, 0)
-                item.title = s
-                item.isCheckable = true
-                item.isChecked = sp.getBoolean("showdevslope", false)
+            if (numOfGraphs < MAX_GRAPHS) {
+                val dividerItem = popup.menu.add(Menu.NONE, numOfGraphs, Menu.NONE, "------- " + "Graph" + " " + numOfGraphs + " -------")
+                dividerItem.isCheckable = true
+                dividerItem.isChecked = false
             }
 
-            // Fairly good estimate for required divider text size...
-            dividerItem.title = String(CharArray(titleMaxChars + 10)).replace("\u0000", "_")
             popup.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    CharType.PRE.ordinal      -> sp.putBoolean("showprediction", !it.isChecked)
-                    CharType.BAS.ordinal      -> sp.putBoolean("showbasals", !it.isChecked)
-                    CharType.IOB.ordinal      -> sp.putBoolean("showiob", !it.isChecked)
-                    CharType.COB.ordinal      -> sp.putBoolean("showcob", !it.isChecked)
-                    CharType.DEV.ordinal      -> sp.putBoolean("showdeviations", !it.isChecked)
-                    CharType.SEN.ordinal      -> sp.putBoolean("showratios", !it.isChecked)
-                    CharType.ACTPRIM.ordinal  -> sp.putBoolean("showactivityprimary", !it.isChecked)
-                    CharType.ACTSEC.ordinal   -> sp.putBoolean("showactivitysecondary", !it.isChecked)
-                    CharType.DEVSLOPE.ordinal -> sp.putBoolean("showdevslope", !it.isChecked)
+                // id < 100 graph header - divider 1, 2, 3 .....
+                if (it.itemId == numOfGraphs) {
+                    // add new empty
+                    setting.add(Array(CharType.values().size) { false })
+                } else if (it.itemId < 100) {
+                    // remove graph
+                    setting.removeAt(it.itemId)
+                } else {
+                    val graphNumber = it.itemId / 100 - 1
+                    val item = it.itemId % 100
+                    setting[graphNumber][item] = !it.isChecked
                 }
-                rxBus.send(EventRefreshOverview("OnMenuItemClickListener"))
+                storeGraphConfig()
+                setupChartMenu(chartButton)
+                rxBus.send(EventRefreshOverview("OnMenuItemClickListener", now = true))
                 return@setOnMenuItemClickListener true
             }
             chartButton.setImageResource(R.drawable.ic_arrow_drop_up_white_24dp)

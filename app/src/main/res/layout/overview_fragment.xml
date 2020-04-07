@@ -452,10 +452,11 @@
                 app:layout_constraintTop_toTopOf="@+id/overview_bggraph" />
 
 
-            <com.jjoe64.graphview.GraphView
+            <LinearLayout
                 android:id="@+id/overview_iobgraph"
                 android:layout_width="0dp"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

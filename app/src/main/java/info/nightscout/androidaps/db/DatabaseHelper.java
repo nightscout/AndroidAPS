@@ -234,7 +234,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 new java.util.TimerTask() {
                     @Override
                     public void run() {
-                        RxBus.Companion.getINSTANCE().send(new EventRefreshOverview("resetDatabases"));
+                        RxBus.Companion.getINSTANCE().send(new EventRefreshOverview("resetDatabases", false));
                     }
                 },
                 3000

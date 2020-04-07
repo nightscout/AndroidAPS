@@ -1813,4 +1813,7 @@
     <string name="invalidpairing">Invalid pairing information. Requesting new pairing</string>
     <string name="onconnect">On connect</string>
     <string name="ondisconnect">On disconnect</string>
+    <string name="overview_show_predictions">Predictions</string>
+    <string name="overview_show_deviationslope">Deviation slope</string>
+    <string name="key_graphconfig" translatable="false">graphconfig</string>
 </resources>

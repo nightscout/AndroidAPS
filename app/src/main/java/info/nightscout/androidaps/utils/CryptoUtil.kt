@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils
 
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.utils.extensions.toHex
 import org.spongycastle.util.encoders.Base64
 import java.nio.ByteBuffer
@@ -13,16 +14,24 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object CryptoUtil {
+@Singleton
+class CryptoUtil @Inject constructor(
+    val aapsLogger: AAPSLogger
+) {
 
-    private const val IV_LENGTH_BYTE = 12
-    private const val TAG_LENGTH_BIT = 128
-    private const val AES_KEY_SIZE_BIT = 256
-    private const val PBKDF2_ITERATIONS = 50000 // check delays it cause on real device
-    private const val SALT_SIZE_BYTE = 32
+    companion object {
+        private const val IV_LENGTH_BYTE = 12
+        private const val TAG_LENGTH_BIT = 128
+        private const val AES_KEY_SIZE_BIT = 256
+        private const val PBKDF2_ITERATIONS = 50000 // check delays it cause on real device
+        private const val SALT_SIZE_BYTE = 32
+    }
 
     private val secureRandom: SecureRandom = SecureRandom()
+    var lastException: Exception? = null
 
     fun sha256(source: String): String {
         val digest = MessageDigest.getInstance("SHA-256")
@@ -31,29 +40,30 @@ object CryptoUtil {
     }
 
     fun hmac256(str: String, secret: String): String? {
-        val sha256_HMAC = Mac.getInstance("HmacSHA256")
+        val sha256HMAC = Mac.getInstance("HmacSHA256")
         val secretKey = SecretKeySpec(secret.toByteArray(), "HmacSHA256")
-        sha256_HMAC.init(secretKey)
-        return sha256_HMAC.doFinal(str.toByteArray()).toHex()
+        sha256HMAC.init(secretKey)
+        return sha256HMAC.doFinal(str.toByteArray()).toHex()
     }
 
-    private fun prepCipherKey(passPhrase: String, salt:ByteArray, iterationCount:Int = PBKDF2_ITERATIONS, keyStrength:Int = AES_KEY_SIZE_BIT): SecretKeySpec {
+    private fun prepCipherKey(passPhrase: String, salt: ByteArray, iterationCount: Int = PBKDF2_ITERATIONS, keyStrength: Int = AES_KEY_SIZE_BIT): SecretKeySpec {
         val factory: SecretKeyFactory = SecretKeyFactory.getInstance("PBKDF2withHmacSHA1")
         val spec: KeySpec = PBEKeySpec(passPhrase.toCharArray(), salt, iterationCount, keyStrength)
         val tmp: SecretKey = factory.generateSecret(spec)
-        return SecretKeySpec(tmp.getEncoded(), "AES")
+        return SecretKeySpec(tmp.encoded, "AES")
     }
 
-    fun mineSalt(len :Int = SALT_SIZE_BYTE): ByteArray {
+    fun mineSalt(len: Int = SALT_SIZE_BYTE): ByteArray {
         val salt = ByteArray(len)
         secureRandom.nextBytes(salt)
         return salt
     }
 
-    fun encrypt(passPhrase: String, salt:ByteArray, rawData: String ): String? {
+    fun encrypt(passPhrase: String, salt: ByteArray, rawData: String): String? {
         val iv: ByteArray?
         val encrypted: ByteArray?
         return try {
+            lastException = null
             iv = ByteArray(IV_LENGTH_BYTE)
             secureRandom.nextBytes(iv)
             val cipherEnc: Cipher = Cipher.getInstance("AES/GCM/NoPadding")
@@ -65,14 +75,17 @@ object CryptoUtil {
             byteBuffer.put(encrypted)
             String(Base64.encode(byteBuffer.array()))
         } catch (e: Exception) {
-           null
+            lastException = e
+            aapsLogger.error("Encryption failed due to technical exception: $e")
+            null
         }
     }
 
-    fun decrypt(passPhrase: String, salt:ByteArray, encryptedData: String): String? {
+    fun decrypt(passPhrase: String, salt: ByteArray, encryptedData: String): String? {
         val iv: ByteArray?
         val encrypted: ByteArray?
         return try {
+            lastException = null
             val byteBuffer = ByteBuffer.wrap(Base64.decode(encryptedData))
             val ivLength = byteBuffer.get().toInt()
             iv = ByteArray(ivLength)
@@ -84,6 +97,8 @@ object CryptoUtil {
             val dec = cipherDec.doFinal(encrypted)
             String(dec)
         } catch (e: Exception) {
+            lastException = e
+            aapsLogger.error("Decryption failed due to technical exception: $e")
             null
         }
     }

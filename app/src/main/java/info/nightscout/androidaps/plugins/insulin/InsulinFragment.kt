@@ -25,6 +25,6 @@ class InsulinFragment : DaggerFragment() {
         insulin_name?.setText(activePlugin.getActiveInsulin().getFriendlyName())
         insulin_comment?.setText(activePlugin.getActiveInsulin().getComment())
         insulin_dia?.text = resourceHelper.gs(R.string.dia) + ":  " + activePlugin.getActiveInsulin().getDia() + "h"
-        insuling_graph?.show(activePlugin.getActiveInsulin())
+        insulin_graph?.show(activePlugin.getActiveInsulin())
     }
 }

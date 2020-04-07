@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.aps.openAPSMA;
+package info.nightscout.androidaps.plugins.aps.logger;
 
 import org.mozilla.javascript.ScriptableObject;
 
