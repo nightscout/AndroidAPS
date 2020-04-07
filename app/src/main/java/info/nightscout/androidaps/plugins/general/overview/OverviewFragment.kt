@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.os.Handler
@@ -17,7 +18,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.Config
@@ -93,6 +96,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.max
@@ -130,12 +134,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private var smallWidth = false
     private var smallHeight = false
     private lateinit var dm: DisplayMetrics
+    private var axisWidth: Int = 0
     private var rangeToDisplay = 6 // for graph
     private var loopHandler = Handler()
     private var refreshLoop: Runnable? = null
 
     private val worker = Executors.newSingleThreadScheduledExecutor()
     private var scheduledUpdate: ScheduledFuture<*>? = null
+
+    private val secondaryGraphs = ArrayList<GraphView>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -173,15 +180,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         overview_notifications?.setHasFixedSize(false)
         overview_notifications?.layoutManager = LinearLayoutManager(view.context)
-        val axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
+        axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
         overview_bggraph?.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
         overview_bggraph?.gridLabelRenderer?.reloadStyles()
-        overview_iobgraph?.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
-        overview_iobgraph?.gridLabelRenderer?.reloadStyles()
-        overview_iobgraph?.gridLabelRenderer?.isHorizontalLabelsVisible = false
         overview_bggraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
-        overview_iobgraph?.gridLabelRenderer?.labelVerticalWidth = axisWidth
-        overview_iobgraph?.gridLabelRenderer?.numVerticalLabels = 3
+
         rangeToDisplay = sp.getInt(R.string.key_rangetodisplay, 6)
 
         overview_bggraph?.setOnLongClickListener {
@@ -193,6 +196,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             false
         }
         overviewMenus.setupChartMenu(overview_chartMenuButton)
+        prepareGraphs()
 
         overview_accepttempbutton?.setOnClickListener(this)
         overview_treatmentbutton?.setOnClickListener(this)
@@ -218,8 +222,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         super.onResume()
         disposable.add(rxBus
             .toObservable(EventRefreshOverview::class.java)
-            .observeOn(Schedulers.io())
-            .subscribe({ scheduleUpdateGUI(it.from) }) { fabricPrivacy.logException(it) })
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                prepareGraphs()
+                if (it.now) updateGUI(it.from)
+                else scheduleUpdateGUI(it.from)
+            }) { fabricPrivacy.logException(it) })
         disposable.add(rxBus
             .toObservable(EventExtendedBolusChange::class.java)
             .observeOn(Schedulers.io())
@@ -461,6 +469,30 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val dexcomIsSource = dexcomPlugin.isEnabled(PluginType.BGSOURCE)
         overview_calibrationbutton?.visibility = ((xDripIsBgSource || dexcomIsSource) && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
         overview_cgmbutton?.visibility = (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
+
+    }
+
+    private fun prepareGraphs() {
+        val numOfGraphs = overviewMenus.setting.size
+
+        if (numOfGraphs != secondaryGraphs.size - 1) {
+            //aapsLogger.debug("New secondary graph count ${numOfGraphs-1}")
+            // rebuild needed
+            secondaryGraphs.clear()
+            overview_iobgraph.removeAllViews()
+            for (i in 1 until numOfGraphs) {
+                val graph = GraphView(context)
+                graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, 0, 0, resourceHelper.dpToPx(10)) }
+                graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
+                graph.gridLabelRenderer?.reloadStyles()
+                graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
+                graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
+                graph.gridLabelRenderer?.numVerticalLabels = 3
+                graph.viewport.backgroundColor = Color.argb(20, 255, 255, 255) // 8% of gray
+                overview_iobgraph.addView(graph)
+                secondaryGraphs.add(graph)
+            }
+        }
 
     }
 
@@ -746,19 +778,20 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             graphData.addInRangeArea(fromTime, endTime, lowLine, highLine)
 
             // **** BG ****
-            if (predictionsAvailable && sp.getBoolean("showprediction", false)) graphData.addBgReadings(fromTime, toTime, lowLine, highLine,
-                apsResult?.predictions) else graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null)
+            if (predictionsAvailable && overviewMenus.setting[0][OverviewMenus.CharType.PRE.ordinal])
+                graphData.addBgReadings(fromTime, toTime, lowLine, highLine, apsResult?.predictions)
+            else graphData.addBgReadings(fromTime, toTime, lowLine, highLine, null)
 
             // set manual x bounds to have nice steps
             graphData.formatAxis(fromTime, endTime)
 
             // Treatments
             graphData.addTreatments(fromTime, endTime)
-            if (sp.getBoolean("showactivityprimary", true))
+            if (overviewMenus.setting[0][OverviewMenus.CharType.ACT.ordinal])
                 graphData.addActivity(fromTime, endTime, false, 0.8)
 
             // add basal data
-            if (pump.pumpDescription.isTempBasalCapable && sp.getBoolean("showbasals", true))
+            if (pump.pumpDescription.isTempBasalCapable && overviewMenus.setting[0][OverviewMenus.CharType.BAS.ordinal])
                 graphData.addBasals(fromTime, now, lowLine / graphData.maxY / 1.2)
 
             // add target line
@@ -768,57 +801,53 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             graphData.addNowLine(now)
 
             // ------------------ 2nd graph
-            val secondGraphData = GraphData(injector, overview_iobgraph, iobCobCalculatorPlugin)
-            var useIobForScale = false
-            var useCobForScale = false
-            var useDevForScale = false
-            var useRatioForScale = false
-            var useDSForScale = false
-            var useIAForScale = false
-            // finally enforce drawing of graphs
-            when {
-                sp.getBoolean("showiob", true)                ->
-                    useIobForScale = true
-                sp.getBoolean("showcob", true)                ->
-                    useCobForScale = true
-                sp.getBoolean("showdeviations", false)        ->
-                    useDevForScale = true
-                sp.getBoolean("showratios", false)            ->
-                    useRatioForScale = true
-                sp.getBoolean("showactivitysecondary", false) ->
-                    useIAForScale = true
-                sp.getBoolean("showdevslope", false)          ->
-                    useDSForScale = true
+            val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
+            for (g in 0 until secondaryGraphs.size) {
+                val secondGraphData = GraphData(injector, secondaryGraphs[g], iobCobCalculatorPlugin)
+                var useIobForScale = false
+                var useCobForScale = false
+                var useDevForScale = false
+                var useRatioForScale = false
+                var useDSForScale = false
+                var useIAForScale = false
+                when {
+                    overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
+                    overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
+                    overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
+                    overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
+                    overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
+                    overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
+                }
+
+                if (overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]) secondGraphData.addIob(fromTime, now, useIobForScale, 1.0, overviewMenus.setting[g + 1][OverviewMenus.CharType.PRE.ordinal])
+                if (overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
+                if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0)
+                if (overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
+                if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, endTime, useIAForScale, 0.8)
+                if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
+
+                // set manual x bounds to have nice steps
+                secondGraphData.formatAxis(fromTime, endTime)
+                secondGraphData.addNowLine(now)
+                secondaryGraphsData.add(secondGraphData)
             }
-
-            if (sp.getBoolean("showiob", true)) secondGraphData.addIob(fromTime, now, useIobForScale, 1.0, sp.getBoolean("showprediction", false))
-            if (sp.getBoolean("showcob", true)) secondGraphData.addCob(fromTime, now, useCobForScale, if (useCobForScale) 1.0 else 0.5)
-            if (sp.getBoolean("showdeviations", false)) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0)
-            if (sp.getBoolean("showratios", false)) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
-            if (sp.getBoolean("showactivitysecondary", true)) secondGraphData.addActivity(fromTime, endTime, useIAForScale, 0.8)
-            if (sp.getBoolean("showdevslope", false) && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
-
-            // **** NOW line ****
-            // set manual x bounds to have nice steps
-            secondGraphData.formatAxis(fromTime, endTime)
-            secondGraphData.addNowLine(now)
 
             // do GUI update
             val activity = activity
             activity?.runOnUiThread {
-                if (sp.getBoolean("showiob", true)
-                    || sp.getBoolean("showcob", true)
-                    || sp.getBoolean("showdeviations", false)
-                    || sp.getBoolean("showratios", false)
-                    || sp.getBoolean("showactivitysecondary", false)
-                    || sp.getBoolean("showdevslope", false)) {
-                    overview_iobgraph?.visibility = View.VISIBLE
-                } else {
-                    overview_iobgraph?.visibility = View.GONE
-                }
                 // finally enforce drawing of graphs
                 graphData.performUpdate()
-                secondGraphData.performUpdate()
+                for (g in 0 until secondaryGraphs.size) {
+                    secondaryGraphs[g].visibility = (
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
+                            overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
+                        ).toVisibility()
+                    secondaryGraphsData[g].performUpdate()
+                }
             }
         }).start()
     }

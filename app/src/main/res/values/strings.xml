@@ -1801,4 +1801,7 @@
     <string name="smscommunicator_otp_reset_warning">By reseting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
     <string name="onconnect">On connect</string>
     <string name="ondisconnect">On disconnect</string>
+    <string name="overview_show_predictions">Predictions</string>
+    <string name="overview_show_deviationslope">Deviation slope</string>
+    <string name="key_graphconfig" translatable="false">graphconfig</string>
 </resources>

@@ -464,7 +464,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         lastUpdated = System.currentTimeMillis();
         new Handler(Looper.getMainLooper()).post(() -> {
             rxBus.send(new EventLocalInsightUpdateGUI());
-            rxBus.send(new EventRefreshOverview("LocalInsightPlugin::fetchStatus"));
+            rxBus.send(new EventRefreshOverview("LocalInsightPlugin::fetchStatus", false));
         });
     }
 
@@ -1215,7 +1215,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         } catch (Exception e) {
             aapsLogger.error("Exception while reading history", e);
         }
-        new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventRefreshOverview("LocalInsightPlugin::readHistory")));
+        new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventRefreshOverview("LocalInsightPlugin::readHistory", false)));
     }
 
     private void processHistoryEvents(String serial, List<HistoryEvent> historyEvents) {
@@ -1662,7 +1662,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             activeTBR = null;
             activeBoluses = null;
             tbrOverNotificationBlock = null;
-            new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventRefreshOverview("LocalInsightPlugin::onStateChanged")));
+            new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventRefreshOverview("LocalInsightPlugin::onStateChanged", false)));
         }
         new Handler(Looper.getMainLooper()).post(() -> rxBus.send(new EventLocalInsightUpdateGUI()));
     }

@@ -35,7 +35,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <info.nightscout.androidaps.plugins.insulin.ActivityGraph
-                android:id="@+id/insuling_graph"
+                android:id="@+id/insulin_graph"
                 android:layout_width="match_parent"
                 android:layout_margin="20dp"
                 android:layout_height="200dip" />
