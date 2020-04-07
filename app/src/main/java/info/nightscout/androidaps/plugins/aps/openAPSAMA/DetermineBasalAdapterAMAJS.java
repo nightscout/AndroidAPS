@@ -29,7 +29,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.ScriptReader;
-import info.nightscout.androidaps.plugins.aps.openAPSMA.LoggerCallback;
+import info.nightscout.androidaps.plugins.aps.logger.LoggerCallback;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;

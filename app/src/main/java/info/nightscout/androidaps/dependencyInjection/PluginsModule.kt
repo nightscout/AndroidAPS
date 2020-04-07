@@ -11,7 +11,6 @@ import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
-import info.nightscout.androidaps.plugins.aps.openAPSMA.OpenAPSMAPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.constraints.dstHelper.DstHelperPlugin
@@ -188,36 +187,30 @@ abstract class PluginsModule {
     @APS
     @IntoMap
     @IntKey(210)
-    abstract fun bindOpenAPSMAPlugin(plugin: OpenAPSMAPlugin): PluginBase
-
-    @Binds
-    @APS
-    @IntoMap
-    @IntKey(220)
     abstract fun bindOpenAPSAMAPlugin(plugin: OpenAPSAMAPlugin): PluginBase
 
     @Binds
     @APS
     @IntoMap
-    @IntKey(230)
+    @IntKey(220)
     abstract fun bindOpenAPSSMBPlugin(plugin: OpenAPSSMBPlugin): PluginBase
 
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(240)
+    @IntKey(230)
     abstract fun bindNSProfilePlugin(plugin: NSProfilePlugin): PluginBase
 
     @Binds
     @NotNSClient
     @IntoMap
-    @IntKey(250)
+    @IntKey(240)
     abstract fun bindLocalProfilePlugin(plugin: LocalProfilePlugin): PluginBase
 
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(255)
+    @IntKey(250)
     abstract fun bindAutomationPlugin(plugin: AutomationPlugin): PluginBase
 
     @Binds
