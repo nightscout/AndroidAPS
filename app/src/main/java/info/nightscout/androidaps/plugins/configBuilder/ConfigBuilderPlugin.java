@@ -29,7 +29,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.events.EventConfigBuilderUpdateGui;
-import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 

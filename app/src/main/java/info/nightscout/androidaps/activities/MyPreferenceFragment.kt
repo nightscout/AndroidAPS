@@ -49,7 +49,7 @@ import info.nightscout.androidaps.plugins.source.EversensePlugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.plugins.source.PoctechPlugin
 import info.nightscout.androidaps.plugins.source.TomatoPlugin
-import info.nightscout.androidaps.utils.OKDialog.show
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck

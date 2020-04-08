@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.general.tidepool.messages.DatasetReply
 import info.nightscout.androidaps.plugins.general.tidepool.messages.OpenDatasetRequestMessage
 import info.nightscout.androidaps.plugins.general.tidepool.messages.UploadReplyMessage
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.OKDialog
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP

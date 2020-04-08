@@ -51,7 +51,7 @@ import info.nightscout.androidaps.tabs.TabPageAdapter
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.LocaleHelper.update
-import info.nightscout.androidaps.utils.OKDialog.show
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
