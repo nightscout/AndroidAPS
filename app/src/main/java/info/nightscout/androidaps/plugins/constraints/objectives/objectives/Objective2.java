@@ -130,14 +130,12 @@ public class Objective2 extends Objective {
         );
         tasks.add(new ExamTask(R.string.sensitivity_label, R.string.sensitivity_which,"sensitivity")
                 .option(new Option(R.string.sensitivityweightedaverage, true))
-                .option(new Option(R.string.sensitivityoref0, false))
                 .option(new Option(R.string.sensitivityoref1, false))
                 .option(new Option(R.string.sensitivityaaps, true))
                 .hint(new Hint(R.string.sensitivity_hint1))
         );
         tasks.add(new ExamTask(R.string.sensitivity_label, R.string.sensitivityuam_which,"sensitivityuam")
                 .option(new Option(R.string.sensitivityweightedaverage, false))
-                .option(new Option(R.string.sensitivityoref0, false))
                 .option(new Option(R.string.sensitivityoref1, true))
                 .option(new Option(R.string.sensitivityaaps, false))
                 .hint(new Hint(R.string.sensitivity_hint1))

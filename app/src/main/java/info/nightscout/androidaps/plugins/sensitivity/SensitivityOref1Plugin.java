@@ -27,6 +27,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
+
 /**
  * Created by mike on 19.06.2018.
  */
@@ -49,7 +50,8 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
                         .shortName(R.string.sensitivity_shortname)
                         .enableByDefault(true)
                         .preferencesId(R.xml.pref_absorption_oref1)
-                        .description(R.string.description_sensitivity_oref1),
+                        .description(R.string.description_sensitivity_oref1)
+                        .setDefault(),
                 injector, aapsLogger, resourceHelper, sp
         );
         this.profileFunction = profileFunction;
@@ -83,8 +85,18 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         List<CareportalEvent> siteChanges = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime, CareportalEvent.SITECHANGE, true);
         List<ProfileSwitch> profileSwitches = MainApp.getDbHelper().getProfileSwitchEventsFromTime(fromTime, true);
 
-        List<Double> deviationsArray = new ArrayList<>();
-        String pastSensitivity = "";
+        //[0] = 8 hour
+        //[1] = 24 hour
+        //Deviationshour has DeviationsArray
+        List<ArrayList> deviationsHour = Arrays.asList(new ArrayList(),new ArrayList());
+        List<String> pastSensitivityArray = Arrays.asList("","");
+        List<String> sensResultArray = Arrays.asList("","");
+        List<Double> ratioArray = Arrays.asList(0d,0d);
+        List<Double> deviationCategory = Arrays.asList(96d,288d);
+        List<String> ratioLimitArray = Arrays.asList("","");
+        List<Double> hoursDetection = Arrays.asList(8d,24d);
+
+
         int index = 0;
         while (index < autosensDataTable.size()) {
             AutosensData autosensData = autosensDataTable.valueAt(index);
@@ -98,98 +110,133 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
                 index++;
                 continue;
             }
+            int hoursegment = 0;
+            //hoursegment = 0 = 8 hour
+            //hoursegment = 1 = 24 hour
+            while (hoursegment < deviationsHour.size()){
+                ArrayList deviationsArray = deviationsHour.get(hoursegment);
+                String pastSensitivity = pastSensitivityArray.get(hoursegment);
 
-            // reset deviations after site change
-            if (CareportalEvent.isEvent5minBack(siteChanges, autosensData.time)) {
-                deviationsArray.clear();
-                pastSensitivity += "(SITECHANGE)";
-            }
+                // reset deviations after site change
+                if (CareportalEvent.isEvent5minBack(siteChanges, autosensData.time)) {
+                    deviationsArray.clear();
+                    pastSensitivity += "(SITECHANGE)";
+                }
 
-            // reset deviations after profile switch
-            if (ProfileSwitch.isEvent5minBack(getAapsLogger(), profileSwitches, autosensData.time, true)) {
-                deviationsArray.clear();
-                pastSensitivity += "(PROFILESWITCH)";
-            }
+                // reset deviations after profile switch
+                if (ProfileSwitch.isEvent5minBack(getAapsLogger(),profileSwitches, autosensData.time, true)) {
+                    deviationsArray.clear();
+                    pastSensitivity += "(PROFILESWITCH)";
+                }
 
-            double deviation = autosensData.deviation;
+                double deviation = autosensData.deviation;
 
-            //set positive deviations to zero if bg < 80
-            if (autosensData.bg < 80 && deviation > 0)
-                deviation = 0;
+                //set positive deviations to zero if bg < 80
+                if (autosensData.bg < 80 && deviation > 0)
+                    deviation = 0;
 
-            if (autosensData.validDeviation)
-                deviationsArray.add(deviation);
+                if (autosensData.validDeviation)
+                    if (autosensData.time > toTime - hoursDetection.get(hoursegment) * 60 * 60 * 1000L)
+                        deviationsArray.add(deviation);
 
-            for (int i = 0; i < autosensData.extraDeviation.size(); i++)
-                deviationsArray.add(autosensData.extraDeviation.get(i));
-            if (deviationsArray.size() > 96)
-                deviationsArray.remove(0);
 
-            pastSensitivity += autosensData.pastSensitivity;
-            int secondsFromMidnight = Profile.secondsFromMidnight(autosensData.time);
-            if (secondsFromMidnight % 3600 < 2.5 * 60 || secondsFromMidnight % 3600 > 57.5 * 60) {
-                pastSensitivity += "(" + Math.round(secondsFromMidnight / 3600d) + ")";
-            }
-            index++;
+                for (int i = 0; i < autosensData.extraDeviation.size(); i++)
+                    deviationsArray.add(autosensData.extraDeviation.get(i));
+
+                if (deviationsArray.size() > deviationCategory.get(hoursegment)){
+                    deviationsArray.remove(0);
+                }
+
+                pastSensitivity += autosensData.pastSensitivity;
+                int secondsFromMidnight = Profile.secondsFromMidnight(autosensData.time);
+
+                if (secondsFromMidnight % 3600 < 2.5 * 60 || secondsFromMidnight % 3600 > 57.5 * 60) {
+                    pastSensitivity += "(" + Math.round(secondsFromMidnight / 3600d) + ")";
+                }
+
+                //Update the data back to the parent
+                deviationsHour.set(hoursegment,deviationsArray);
+                pastSensitivityArray.set(hoursegment,pastSensitivity);
+                hoursegment++;
+              }
+              index++;
         }
 
-        // when we have less than 8h worth of deviation data, add up to 90m of zero deviations
+        // when we have less than 8h/24 worth of deviation data, add up to 90m of zero deviations
         // this dampens any large sensitivity changes detected based on too little data, without ignoring them completely
-        getAapsLogger().debug(LTag.AUTOSENS, "Using most recent " + deviationsArray.size() + " deviations");
-        if (deviationsArray.size() < 96) {
-            int pad = (int) Math.round((1 - (double) deviationsArray.size() / 96) * 18);
-            getAapsLogger().debug(LTag.AUTOSENS, "Adding " + pad + " more zero deviations");
-            for (int d = 0; d < pad; d++) {
-                //process.stderr.write(".");
-                deviationsArray.add(0d);
+
+        for (int i = 0; i < deviationsHour.size(); i++) {
+            ArrayList deviations = deviationsHour.get(i);
+            getAapsLogger().debug(LTag.AUTOSENS,"Using most recent " + deviations.size() + " deviations");
+            if (deviations.size() < deviationCategory.get(i)) {
+                int pad = (int) Math.round((1 - (double) deviations.size() / deviationCategory.get(i)) * 18);
+                    getAapsLogger().debug(LTag.AUTOSENS,"Adding " + pad + " more zero deviations");
+                for (int d = 0; d < pad; d++) { ;
+                    deviations.add(0d);
+                }
             }
+            //Update the data back to the parent
+            deviationsHour.set(i,deviations);
+
         }
 
-        Double[] deviations = new Double[deviationsArray.size()];
-        deviations = deviationsArray.toArray(deviations);
-
-        double sens = profile.getIsfMgdl();
-
-        double ratio = 1;
-        String ratioLimit = "";
-        String sensResult = "";
-
-        getAapsLogger().debug(LTag.AUTOSENS, "Records: " + index + "   " + pastSensitivity);
-
-        Arrays.sort(deviations);
-        /* Not used in calculation
-        for (double i = 0.9; i > 0.1; i = i - 0.01) {
-            if (IobCobCalculatorPlugin.percentile(deviations, (i + 0.01)) >= 0 && IobCobCalculatorPlugin.percentile(deviations, i) < 0) {
-                if (L.isEnabled(L.AUTOSENS))
-                    log.debug(Math.round(100 * i) + "% of non-meal deviations negative (>50% = sensitivity)");
+        int hourused = 0;
+        while (hourused < deviationsHour.size()){
+            ArrayList deviationsArray = deviationsHour.get(hourused);
+            String pastSensitivity = pastSensitivityArray.get(hourused);
+            String sensResult = "(8 hours) ";
+            String senstime = sensResult;
+            if (hourused == 1){
+                senstime = "(24 hours) ";
+                sensResult = senstime;
             }
-            if (IobCobCalculatorPlugin.percentile(deviations, (i + 0.01)) > 0 && IobCobCalculatorPlugin.percentile(deviations, i) <= 0) {
-                if (L.isEnabled(L.AUTOSENS))
-                    log.debug(Math.round(100 * i) + "% of non-meal deviations positive (>50% = resistance)");
+            String ratioLimit = "";
+
+            Double[] deviations = new Double[deviationsArray.size()];
+            deviations = (Double[]) deviationsArray.toArray(deviations);
+
+            double sens = profile.getIsfMgdl();
+
+
+            getAapsLogger().debug(LTag.AUTOSENS,"Records: " + index + "   " + pastSensitivity);
+
+            Arrays.sort(deviations);
+            double pSensitive = IobCobCalculatorPlugin.percentile(deviations, 0.50);
+            double pResistant = IobCobCalculatorPlugin.percentile(deviations, 0.50);
+
+            double basalOff = 0;
+
+            if (pSensitive < 0) { // sensitive
+                basalOff = pSensitive * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
+                sensResult+= "Excess insulin sensitivity detected";
+            } else if (pResistant > 0) { // resistant
+                basalOff = pResistant * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
+                sensResult+= "Excess insulin resistance detected";
+            } else {
+                sensResult+= "Sensitivity normal";
             }
-        }
-        */
-        double pSensitive = IobCobCalculatorPlugin.percentile(deviations, 0.50);
-        double pResistant = IobCobCalculatorPlugin.percentile(deviations, 0.50);
 
-        double basalOff = 0;
+            getAapsLogger().debug(LTag.AUTOSENS,sensResult);
 
-        if (pSensitive < 0) { // sensitive
-            basalOff = pSensitive * (60 / 5.0) / sens;
-            sensResult = "Excess insulin sensitivity detected";
-        } else if (pResistant > 0) { // resistant
-            basalOff = pResistant * (60 / 5.0) / sens;
-            sensResult = "Excess insulin resistance detected";
-        } else {
-            sensResult = "Sensitivity normal";
+            double ratio = 1 + (basalOff / profile.getMaxDailyBasal());
+
+            //Update the data back to the parent
+            sensResultArray.set(hourused,sensResult);
+            ratioArray.set(hourused,ratio);
+            ratioLimitArray.set(hourused,ratioLimit);
+            hourused++;
         }
 
-        getAapsLogger().debug(LTag.AUTOSENS, sensResult);
-
-        ratio = 1 + (basalOff / profile.getMaxDailyBasal());
-
-        AutosensResult output = fillResult(ratio, current.cob, pastSensitivity, ratioLimit,
-                sensResult, deviationsArray.size());
+        int key = 1;
+        String comparison = " 8 h ratio " +ratioArray.get(0)+" vs 24h ratio "+ratioArray.get(1);
+        //use 24 hour ratio by default
+        //if the 8 hour ratio is less than the 24 hour ratio, the 8 hour ratio is used
+        if(ratioArray.get(0) < ratioArray.get(1)){
+          key = 0;
+        }
+        String message = hoursDetection.get(key)+" of sensitivity used";
+        AutosensResult output = fillResult(ratioArray.get(key), current.cob, pastSensitivityArray.get(key), ratioLimitArray.get(key),
+                sensResultArray.get(key)+comparison, deviationsHour.get(key).size());
 
         getAapsLogger().debug(LTag.AUTOSENS, "Sensitivity to: "
                 + DateUtil.dateAndTimeString(toTime) +
