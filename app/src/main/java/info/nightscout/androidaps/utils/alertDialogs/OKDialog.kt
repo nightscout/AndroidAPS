@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.androidaps.utils.alertDialogs
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -7,7 +7,7 @@ import android.content.DialogInterface
 import android.os.SystemClock
 import android.text.Spanned
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.alertDialogs.AlertDialogHelper
+import info.nightscout.androidaps.utils.extensions.runOnUiThread
 
 object OKDialog {
     @SuppressLint("InflateParams")

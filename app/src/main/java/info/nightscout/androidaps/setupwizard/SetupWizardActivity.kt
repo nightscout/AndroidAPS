@@ -21,8 +21,8 @@ import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.LocaleHelper.update
-import info.nightscout.androidaps.utils.OKDialog.show
-import info.nightscout.androidaps.utils.OKDialog.showConfirmation
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog.showConfirmation
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers

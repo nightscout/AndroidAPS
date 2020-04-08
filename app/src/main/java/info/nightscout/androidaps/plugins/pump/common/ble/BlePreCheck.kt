@@ -11,8 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.utils.OKDialog
-import info.nightscout.androidaps.utils.OKDialog.showConfirmation
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -81,7 +80,7 @@ class BlePreCheck @Inject constructor(
         }
 
         // Shamelessly borrowed from http://stackoverflow.com/a/10311877/868533
-        showConfirmation(activity, resourceHelper.gs(R.string.location_not_found_title), resourceHelper.gs(R.string.location_not_found_message), Runnable {
+        OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.location_not_found_title), resourceHelper.gs(R.string.location_not_found_message), Runnable {
             activity.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
         })
     }
