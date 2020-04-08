@@ -530,7 +530,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overview_looplayout?.visibility = View.GONE
             return
         }
-        notificationStore.updateNotifications(overview_notifications)
+        overview_notifications?.let { notificationStore.updateNotifications(it) }
         overview_pumpstatuslayout?.visibility = View.GONE
         overview_looplayout?.visibility = View.VISIBLE
 
