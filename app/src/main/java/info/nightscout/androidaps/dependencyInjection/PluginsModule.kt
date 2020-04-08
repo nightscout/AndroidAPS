@@ -47,7 +47,6 @@ import info.nightscout.androidaps.plugins.pump.mdi.MDIPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref0Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.androidaps.plugins.source.*
@@ -97,90 +96,84 @@ abstract class PluginsModule {
     @AllConfigs
     @IntoMap
     @IntKey(60)
-    abstract fun bindSensitivityOref0Plugin(plugin: SensitivityOref0Plugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
-    @IntKey(70)
     abstract fun bindSensitivityAAPSPlugin(plugin: SensitivityAAPSPlugin): PluginBase
 
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(80)
+    @IntKey(70)
     abstract fun bindSensitivityWeightedAveragePlugin(plugin: SensitivityWeightedAveragePlugin): PluginBase
 
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(90)
+    @IntKey(80)
     abstract fun bindSensitivityOref1Plugin(plugin: SensitivityOref1Plugin): PluginBase
 
     @Binds
     @PumpDriver
     @IntoMap
-    @IntKey(100)
+    @IntKey(90)
     abstract fun bindDanaRPlugin(plugin: DanaRPlugin): PluginBase
 
     @Binds
     @PumpDriver
     @IntoMap
-    @IntKey(110)
+    @IntKey(100)
     abstract fun bindDanaRKoreanPlugin(plugin: DanaRKoreanPlugin): PluginBase
 
     @Binds
     @PumpDriver
     @IntoMap
-    @IntKey(120)
+    @IntKey(110)
     abstract fun bindDanaRv2Plugin(plugin: DanaRv2Plugin): PluginBase
 
     @Binds
     @PumpDriver
     @IntoMap
-    @IntKey(130)
+    @IntKey(120)
     abstract fun bindDanaRSPlugin(plugin: DanaRSPlugin): PluginBase
 
     @Binds
     @PumpDriver
     @IntoMap
-    @IntKey(140)
+    @IntKey(130)
     abstract fun bindLocalInsightPlugin(plugin: LocalInsightPlugin): PluginBase
 
     @Binds
     @PumpDriver
     @IntoMap
-    @IntKey(150)
+    @IntKey(140)
     abstract fun bindComboPlugin(plugin: ComboPlugin): PluginBase
 
     @Binds
     @PumpDriver
     @IntoMap
-    @IntKey(160)
+    @IntKey(150)
     abstract fun bindMedtronicPumpPlugin(plugin: MedtronicPumpPlugin): PluginBase
 
     @Binds
     @NotNSClient
     @IntoMap
-    @IntKey(170)
+    @IntKey(160)
     abstract fun bindMDIPlugin(plugin: MDIPlugin): PluginBase
 
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(180)
+    @IntKey(170)
     abstract fun bindVirtualPumpPlugin(plugin: VirtualPumpPlugin): PluginBase
 
     @Binds
     @NotNSClient
     @IntoMap
-    @IntKey(190)
+    @IntKey(180)
     abstract fun bindCareportalPlugin(plugin: CareportalPlugin): PluginBase
 
     @Binds
     @APS
     @IntoMap
-    @IntKey(200)
+    @IntKey(190)
     abstract fun bindLoopPlugin(plugin: LoopPlugin): PluginBase
 
     @Binds
