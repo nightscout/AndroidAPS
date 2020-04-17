@@ -1,4 +1,6 @@
+var percentile = require('../percentile')
 
+// does three things - tunes basals, ISF, and CSF
 
 function tuneAllTheThings (inputs) {
 
@@ -16,6 +18,17 @@ function tuneAllTheThings (inputs) {
     var carbRatio = previousAutotune.carb_ratio;
     //console.error(carbRatio);
     var CSF = ISF / carbRatio;
+    var DIA = previousAutotune.dia;
+    var peak = previousAutotune.insulinPeakTime;
+    if (! previousAutotune.useCustomPeakTime === true) {
+        if ( previousAutotune.curve === "ultra-rapid" ) {
+            peak = 55;
+        } else {
+            peak = 75;
+        }
+    }
+    //console.error(DIA, peak);
+
     // conditional on there being a pump profile; if not then skip
     if (pumpProfile) { var pumpISFProfile = pumpProfile.isfProfile; }
     if (pumpISFProfile && pumpISFProfile.sensitivities[0]) {
@@ -36,41 +49,132 @@ function tuneAllTheThings (inputs) {
     //console.error(basalGlucose[0]);
     var CRData = preppedGlucose.CRData;
     //console.error(CRData);
+    var diaDeviations = preppedGlucose.diaDeviations;
+    //console.error(diaDeviations);
+    var peakDeviations = preppedGlucose.peakDeviations;
+    //console.error(peakDeviations);
 
-        // Calculate carb ratio (CR) independently of CSF and ISF
-        // Use the time period from meal bolus/carbs until COB is zero and IOB is < currentBasal/2
-        // For now, if another meal IOB/COB stacks on top of it, consider them together
-        // Compare beginning and ending BGs, and calculate how much more/less insulin is needed to neutralize
-        // Use entered carbs vs. starting IOB + delivered insulin + needed-at-end insulin to directly calculate CR.
+    // tune DIA
+    var newDIA = DIA;
+    if (diaDeviations) {
+        var currentDIAMeanDev = diaDeviations[2].meanDeviation;
+        var currentDIARMSDev = diaDeviations[2].RMSDeviation;
+        //console.error(DIA,currentDIAMeanDev,currentDIARMSDev);
+        var minMeanDeviations = 1000000;
+        var minRMSDeviations = 1000000;
+        var meanBest = 2;
+        var RMSBest = 2;
+        for (var i=0; i < diaDeviations.length; i++) {
+            var meanDeviations = diaDeviations[i].meanDeviation;
+            var RMSDeviations = diaDeviations[i].RMSDeviation;
+            if (meanDeviations < minMeanDeviations) {
+                minMeanDeviations = Math.round(meanDeviations*1000)/1000;
+                meanBest = i;
+            }
+            if (RMSDeviations < minRMSDeviations) {
+                minRMSDeviations = Math.round(RMSDeviations*1000)/1000;
+                RMSBest = i;
+            }
+        }
+        console.error("Best insulinEndTime for meanDeviations:",diaDeviations[meanBest].dia,"hours");
+        console.error("Best insulinEndTime for RMSDeviations:",diaDeviations[RMSBest].dia,"hours");
+        if ( meanBest < 2 && RMSBest < 2 ) {
+            if ( diaDeviations[1].meanDeviation < currentDIAMeanDev * 0.99 && diaDeviations[1].RMSDeviation < currentDIARMSDev * 0.99 ) {
+                newDIA = diaDeviations[1].dia;
+            }
+        } else if ( meanBest > 2 && RMSBest > 2 ) {
+            if ( diaDeviations[3].meanDeviation < currentDIAMeanDev * 0.99 && diaDeviations[3].RMSDeviation < currentDIARMSDev * 0.99 ) {
+                newDIA = diaDeviations[3].dia;
+            }
+        }
+        if ( newDIA > 12 ) {
+            console.error("insulinEndTime maximum is 12h: not raising further");
+            newDIA=12;
+        }
+        if ( newDIA !== DIA ) {
+            console.error("Adjusting insulinEndTime from",DIA,"to",newDIA,"hours");
+        } else {
+            console.error("Leaving insulinEndTime unchanged at",DIA,"hours");
+        }
+    }
+
+    // tune insulinPeakTime
+    var newPeak = peak;
+    if (peakDeviations && peakDeviations[2]) {
+        var currentPeakMeanDev = peakDeviations[2].meanDeviation;
+        var currentPeakRMSDev = peakDeviations[2].RMSDeviation;
+        //console.error(currentPeakMeanDev);
+        minMeanDeviations = 1000000;
+        minRMSDeviations = 1000000;
+        meanBest = 2;
+        RMSBest = 2;
+        for (i=0; i < peakDeviations.length; i++) {
+            meanDeviations = peakDeviations[i].meanDeviation;
+            RMSDeviations = peakDeviations[i].RMSDeviation;
+            if (meanDeviations < minMeanDeviations) {
+                minMeanDeviations = Math.round(meanDeviations*1000)/1000;
+                meanBest = i;
+            }
+            if (RMSDeviations < minRMSDeviations) {
+                minRMSDeviations = Math.round(RMSDeviations*1000)/1000;
+                RMSBest = i;
+            }
+        }
+        console.error("Best insulinPeakTime for meanDeviations:",peakDeviations[meanBest].peak,"minutes");
+        console.error("Best insulinPeakTime for RMSDeviations:",peakDeviations[RMSBest].peak,"minutes");
+        if ( meanBest < 2 && RMSBest < 2 ) {
+            if ( peakDeviations[1].meanDeviation < currentPeakMeanDev * 0.99 && peakDeviations[1].RMSDeviation < currentPeakRMSDev * 0.99 ) {
+                newPeak = peakDeviations[1].peak;
+            }
+        } else if ( meanBest > 2 && RMSBest > 2 ) {
+            if ( peakDeviations[3].meanDeviation < currentPeakMeanDev * 0.99 && peakDeviations[3].RMSDeviation < currentPeakRMSDev * 0.99 ) {
+                newPeak = peakDeviations[3].peak;
+            }
+        }
+        if ( newPeak !== peak ) {
+            console.error("Adjusting insulinPeakTime from",peak,"to",newPeak,"minutes");
+        } else {
+            console.error("Leaving insulinPeakTime unchanged at",peak);
+        }
+    }
+
+
+
+    // Calculate carb ratio (CR) independently of CSF and ISF
+    // Use the time period from meal bolus/carbs until COB is zero and IOB is < currentBasal/2
+    // For now, if another meal IOB/COB stacks on top of it, consider them together
+    // Compare beginning and ending BGs, and calculate how much more/less insulin is needed to neutralize
+    // Use entered carbs vs. starting IOB + delivered insulin + needed-at-end insulin to directly calculate CR.
 
     var CRTotalCarbs = 0;
     var CRTotalInsulin = 0;
     CRData.forEach(function(CRDatum) {
-        CRBGChange = CRDatum.CREndBG - CRDatum.CRInitialBG;
-        CRInsulinReq = CRBGChange / ISF;
-        CRIOBChange = CRDatum.CREndIOB - CRDatum.CRInitialIOB;
+        var CRBGChange = CRDatum.CREndBG - CRDatum.CRInitialBG;
+        var CRInsulinReq = CRBGChange / ISF;
+        var CRIOBChange = CRDatum.CREndIOB - CRDatum.CRInitialIOB;
         CRDatum.CRInsulinTotal = CRDatum.CRInitialIOB + CRDatum.CRInsulin + CRInsulinReq;
-        //console.error(CRDatum.CRInitialIOB, CRDatum.CRInsulin, CRInsulinReq, CRInsulinTotal);
-        CR = Math.round( CRDatum.CRCarbs / CRDatum.CRInsulinTotal * 1000 )/1000;
-        //console.error(CRBGChange, CRInsulinReq, CRIOBChange, CRInsulinTotal);
-        //console.error("CRCarbs:",CRDatum.CRCarbs,"CRInsulin:",CRDatum.CRInsulinTotal,"CR:",CR);
-        if (CRDatum.CRInsulin > 0) {
+        //console.error(CRDatum.CRInitialIOB, CRDatum.CRInsulin, CRInsulinReq, CRDatum.CRInsulinTotal);
+        var CR = Math.round( CRDatum.CRCarbs / CRDatum.CRInsulinTotal * 1000 )/1000;
+        //console.error(CRBGChange, CRInsulinReq, CRIOBChange, CRDatum.CRInsulinTotal);
+        //console.error("CRCarbs:",CRDatum.CRCarbs,"CRInsulin:",CRDatum.CRInsulin,"CRDatum.CRInsulinTotal:",CRDatum.CRInsulinTotal,"CR:",CR);
+        if (CRDatum.CRInsulinTotal > 0) {
             CRTotalCarbs += CRDatum.CRCarbs;
             CRTotalInsulin += CRDatum.CRInsulinTotal;
+            //console.error("CRTotalCarbs:",CRTotalCarbs,"CRTotalInsulin:",CRTotalInsulin);
         }
     });
     CRTotalInsulin = Math.round(CRTotalInsulin*1000)/1000;
-    totalCR = Math.round( CRTotalCarbs / CRTotalInsulin * 1000 )/1000;
+    var totalCR = Math.round( CRTotalCarbs / CRTotalInsulin * 1000 )/1000;
     console.error("CRTotalCarbs:",CRTotalCarbs,"CRTotalInsulin:",CRTotalInsulin,"totalCR:",totalCR);
 
     // convert the basal profile to hourly if it isn't already
     var hourlyBasalProfile = [];
     var hourlyPumpProfile = [];
-    for (var i=0; i < 24; i++) {
+    for (i=0; i < 24; i++) {
         // autotuned basal profile
         for (var j=0; j < basalProfile.length; ++j) {
             if (basalProfile[j].minutes <= i * 60) {
-                if (basalProfile[j].rate == 0) {
+                if (basalProfile[j].rate === 0) {
                     console.error("ERROR: bad basalProfile",basalProfile[j]);
                     return;
                 }
@@ -84,9 +188,9 @@ function tuneAllTheThings (inputs) {
         hourlyBasalProfile[i].rate=Math.round(hourlyBasalProfile[i].rate*1000)/1000
         // pump basal profile
         if (pumpBasalProfile && pumpBasalProfile[0]) {
-            for (var j=0; j < pumpBasalProfile.length; ++j) {
+            for (j=0; j < pumpBasalProfile.length; ++j) {
                 //console.error(pumpBasalProfile[j]);
-                if (pumpBasalProfile[j].rate == 0) {
+                if (pumpBasalProfile[j].rate === 0) {
                     console.error("ERROR: bad pumpBasalProfile",pumpBasalProfile[j]);
                     return;
                 }
@@ -106,21 +210,21 @@ function tuneAllTheThings (inputs) {
     // look at net deviations for each hour
     for (var hour=0; hour < 24; hour++) {
         var deviations = 0;
-        for (var i=0; i < basalGlucose.length; ++i) {
+        for (i=0; i < basalGlucose.length; ++i) {
             var BGTime;
 
             if (basalGlucose[i].date) {
                 BGTime = new Date(basalGlucose[i].date);
             } else if (basalGlucose[i].displayTime) {
                 BGTime = new Date(basalGlucose[i].displayTime.replace('T', ' '));
-            } else if (basalGuclose[i].dateString) {
+            } else if (basalGlucose[i].dateString) {
                 BGTime = new Date(basalGlucose[i].dateString);
             } else {
                 console.error("Could not determine last BG time");
             }
 
             var myHour = BGTime.getHours();
-            if (hour == myHour) {
+            if (hour === myHour) {
                 //console.error(basalGlucose[i].deviation);
                 deviations += parseFloat(basalGlucose[i].deviation);
             }
@@ -145,14 +249,14 @@ function tuneAllTheThings (inputs) {
         // and adjust all of them downward proportionally
         } else if (basalNeeded < 0) {
             var threeHourBasal = 0;
-            for (var offset=-3; offset < 0; offset++) {
+            for (offset=-3; offset < 0; offset++) {
                 offsetHour = hour + offset;
                 if (offsetHour < 0) { offsetHour += 24; }
                 threeHourBasal += newHourlyBasalProfile[offsetHour].rate;
             }
             var adjustmentRatio = 1.0 + basalNeeded / threeHourBasal;
             //console.error(adjustmentRatio);
-            for (var offset=-3; offset < 0; offset++) {
+            for (offset=-3; offset < 0; offset++) {
                 offsetHour = hour + offset;
                 if (offsetHour < 0) { offsetHour += 24; }
                 newHourlyBasalProfile[offsetHour].rate = newHourlyBasalProfile[offsetHour].rate * adjustmentRatio;
@@ -161,11 +265,19 @@ function tuneAllTheThings (inputs) {
         }
     }
     if (pumpBasalProfile && pumpBasalProfile[0]) {
-        for (var hour=0; hour < 24; hour++) {
+        for (hour=0; hour < 24; hour++) {
             //console.error(newHourlyBasalProfile[hour],hourlyPumpProfile[hour].rate*1.2);
             // cap adjustments at autosens_max and autosens_min
-            var autotuneMax = pumpProfile.autosens_max;
-            var autotuneMin = pumpProfile.autosens_min;
+            if (typeof pumpProfile.autosens_max !== 'undefined') {
+                var autotuneMax = pumpProfile.autosens_max;
+            } else {
+                var autotuneMax = 1.2;
+            }
+            if (typeof pumpProfile.autosens_min !== 'undefined') {
+                var autotuneMin = pumpProfile.autosens_min;
+            } else {
+                var autotuneMin = 0.7;
+            }
             var maxRate = hourlyPumpProfile[hour].rate * autotuneMax;
             var minRate = hourlyPumpProfile[hour].rate * autotuneMin;
             if (newHourlyBasalProfile[hour].rate > maxRate ) {
@@ -187,7 +299,7 @@ function tuneAllTheThings (inputs) {
 
     var lastAdjustedHour = 0;
     // scan through newHourlyBasalProfile and find hours where the rate is unchanged
-    for (var hour=0; hour < 24; hour++) {
+    for (hour=0; hour < 24; hour++) {
         if (hourlyBasalProfile[hour].rate === newHourlyBasalProfile[hour].rate) {
             var nextAdjustedHour = 23;
             for (var nextHour = hour; nextHour < 24; nextHour++) {
@@ -200,6 +312,10 @@ function tuneAllTheThings (inputs) {
             }
             //console.error(hour, newHourlyBasalProfile);
             newHourlyBasalProfile[hour].rate = Math.round( (0.8*hourlyBasalProfile[hour].rate + 0.1*newHourlyBasalProfile[lastAdjustedHour].rate + 0.1*newHourlyBasalProfile[nextAdjustedHour].rate)*1000 )/1000;
+			if (newHourlyBasalProfile[hour].untuned)
+				newHourlyBasalProfile[hour].untuned++;
+			else
+				newHourlyBasalProfile[hour].untuned = 1;
             console.error("Adjusting hour",hour,"basal from",hourlyBasalProfile[hour].rate,"to",newHourlyBasalProfile[hour].rate,"based on hour",lastAdjustedHour,"=",newHourlyBasalProfile[lastAdjustedHour].rate,"and hour",nextAdjustedHour,"=",newHourlyBasalProfile[nextAdjustedHour].rate);
         } else {
             lastAdjustedHour = hour;
@@ -227,7 +343,7 @@ function tuneAllTheThings (inputs) {
     var fullNewCSF;
     //console.error(CSFGlucose[0].mealAbsorption);
     //console.error(CSFGlucose[0]);
-    for (var i=0; i < CSFGlucose.length; ++i) {
+    for (i=0; i < CSFGlucose.length; ++i) {
         //console.error(CSFGlucose[i].mealAbsorption, i);
         if ( CSFGlucose[i].mealAbsorption === "start" ) {
             deviations = 0;
@@ -249,10 +365,10 @@ function tuneAllTheThings (inputs) {
     }
     // at midnight, write down the mealcarbs as total meal carbs (to prevent special case of when only one meal and it not finishing absorbing by midnight)
     // TODO: figure out what to do with dinner carbs that don't finish absorbing by midnight
-    if (totalMealCarbs == 0) { totalMealCarbs += mealCarbs; }
-    if (totalDeviations == 0) { totalDeviations += deviations; }
+    if (totalMealCarbs === 0) { totalMealCarbs += mealCarbs; }
+    if (totalDeviations === 0) { totalDeviations += deviations; }
     //console.error(totalDeviations, totalMealCarbs);
-    if (totalMealCarbs == 0) {
+    if (totalMealCarbs === 0) {
         // if no meals today, CSF is unchanged
         fullNewCSF = CSF;
     } else {
@@ -273,7 +389,7 @@ function tuneAllTheThings (inputs) {
             newCSF = minCSF;
         } //else { console.error("newCSF",newCSF,"is close enough to",pumpCSF); }
     }
-    oldCSF = Math.round( CSF * 1000 ) / 1000;
+    var oldCSF = Math.round( CSF * 1000 ) / 1000;
     newCSF = Math.round( newCSF * 1000 ) / 1000;
     totalDeviations = Math.round ( totalDeviations * 1000 )/1000;
     console.error("totalMealCarbs:",totalMealCarbs,"totalDeviations:",totalDeviations,"oldCSF",oldCSF,"fullNewCSF:",fullNewCSF,"newCSF:",newCSF);
@@ -282,17 +398,20 @@ function tuneAllTheThings (inputs) {
         CSF = newCSF;
     }
 
-    if (totalCR == 0) {
+    if (totalCR === 0) {
         // if no meals today, CR is unchanged
-        fullNewCR = carbRatio;
+        var fullNewCR = carbRatio;
     } else {
         // how much change would be required to account for all of the deviations
         fullNewCR = totalCR;
     }
+    // don't tune CR out of bounds
+    var maxCR = pumpCarbRatio * autotuneMax;
+    if (maxCR > 150) { maxCR = 150 }
+    var minCR = pumpCarbRatio * autotuneMin;
+    if (minCR < 3) { minCR = 3 }
     // safety cap fullNewCR
     if (typeof(pumpCarbRatio) !== 'undefined') {
-        var maxCR = pumpCarbRatio * autotuneMax;
-        var minCR = pumpCarbRatio * autotuneMin;
         if (fullNewCR > maxCR) {
             console.error("Limiting fullNewCR from",fullNewCR,"to",maxCR.toFixed(2),"(which is",autotuneMax,"* pump CR of",pumpCarbRatio,")");
             fullNewCR = maxCR;
@@ -302,11 +421,9 @@ function tuneAllTheThings (inputs) {
         } //else { console.error("newCR",newCR,"is close enough to",pumpCarbRatio); }
     }
     // only adjust by 20%
-    newCR = ( 0.8 * carbRatio ) + ( 0.2 * fullNewCR );
+    var newCR = ( 0.8 * carbRatio ) + ( 0.2 * fullNewCR );
     // safety cap newCR
     if (typeof(pumpCarbRatio) !== 'undefined') {
-        var maxCR = pumpCarbRatio * autotuneMax;
-        var minCR = pumpCarbRatio * autotuneMin;
         if (newCR > maxCR) {
             console.error("Limiting CR to",maxCR.toFixed(2),"(which is",autotuneMax,"* pump CR of",pumpCarbRatio,")");
             newCR = maxCR;
@@ -331,8 +448,7 @@ function tuneAllTheThings (inputs) {
     var BGIs = [];
     var avgDeltas = [];
     var ratios = [];
-    var count = 0;
-    for (var i=0; i < ISFGlucose.length; ++i) {
+    for (i=0; i < ISFGlucose.length; ++i) {
         deviation = parseFloat(ISFGlucose[i].deviation);
         deviations.push(deviation);
         var BGI = parseFloat(ISFGlucose[i].BGI);
@@ -342,7 +458,6 @@ function tuneAllTheThings (inputs) {
         var ratio = 1 + deviation / BGI;
         //console.error("Deviation:",deviation,"BGI:",BGI,"avgDelta:",avgDelta,"ratio:",ratio);
         ratios.push(ratio);
-        count++;
     }
     avgDeltas.sort(function(a, b){return a-b});
     BGIs.sort(function(a, b){return a-b});
@@ -351,14 +466,16 @@ function tuneAllTheThings (inputs) {
     var p50deviation = percentile(deviations, 0.50);
     var p50BGI = percentile(BGIs, 0.50);
     var p50ratios = Math.round( percentile(ratios, 0.50) * 1000)/1000;
-    if (count < 10) {
+    var fullNewISF = ISF;
+    if (ISFGlucose.length < 10) {
         // leave ISF unchanged if fewer than 5 ISF data points
-        var fullNewISF = ISF;
+        console.error ("Only found",ISFGlucose.length,"ISF data points, leaving ISF unchanged at",ISF);
     } else {
         // calculate what adjustments to ISF would have been necessary to bring median deviation to zero
         fullNewISF = ISF * p50ratios;
     }
     fullNewISF = Math.round( fullNewISF * 1000 ) / 1000;
+    //console.error("p50ratios:",p50ratios,"fullNewISF:",fullNewISF,ratios[Math.floor(ratios.length/2)]);
     // adjust the target ISF to be a weighted average of fullNewISF and pumpISF
     var adjustmentFraction;
 
@@ -376,7 +493,7 @@ function tuneAllTheThings (inputs) {
         if ( fullNewISF < 0 ) {
             var adjustedISF = ISF;
         } else {
-            var adjustedISF = adjustmentFraction*fullNewISF + (1-adjustmentFraction)*pumpISF;
+            adjustedISF = adjustmentFraction*fullNewISF + (1-adjustmentFraction)*pumpISF;
         }
         // cap adjustedISF before applying 10%
         //console.error(adjustedISF, maxISF, minISF);
@@ -405,7 +522,7 @@ function tuneAllTheThings (inputs) {
     p50deviation = Math.round( p50deviation * 1000 ) / 1000;
     p50BGI = Math.round( p50BGI * 1000 ) / 1000;
     adjustedISF = Math.round( adjustedISF * 1000 ) / 1000;
-    console.error("p50deviation:",p50deviation,"p50BGI",p50BGI,"p50ratios:",p50ratios,"Old ISF:",ISF,"fullNewISF:",fullNewISF,"adjustedISF:",adjustedISF,"newISF:",newISF);
+    console.error("p50deviation:",p50deviation,"p50BGI",p50BGI,"p50ratios:",p50ratios,"Old ISF:",ISF,"fullNewISF:",fullNewISF,"adjustedISF:",adjustedISF,"newISF:",newISF,"newDIA:",newDIA,"newPeak:",newPeak);
 
     if (newISF) {
         ISF = newISF;
@@ -422,42 +539,13 @@ function tuneAllTheThings (inputs) {
     //carbRatio = ISF / CSF;
     carbRatio = Math.round( carbRatio * 1000 ) / 1000;
     autotuneOutput.carb_ratio = carbRatio;
+    autotuneOutput.dia = newDIA;
+    autotuneOutput.insulinPeakTime = newPeak;
+    if (diaDeviations || peakDeviations) {
+        autotuneOutput.useCustomPeakTime = true;
+    }
 
     return autotuneOutput;
 }
 
 exports = module.exports = tuneAllTheThings;
-
-// From https://gist.github.com/IceCreamYou/6ffa1b18c4c8f6aeaad2
-// Returns the value at a given percentile in a sorted numeric array.
-// "Linear interpolation between closest ranks" method
-function percentile(arr, p) {
-    if (arr.length === 0) return 0;
-    if (typeof p !== 'number') throw new TypeError('p must be a number');
-    if (p <= 0) return arr[0];
-    if (p >= 1) return arr[arr.length - 1];
-
-    var index = arr.length * p,
-        lower = Math.floor(index),
-        upper = lower + 1,
-        weight = index % 1;
-
-    if (upper >= arr.length) return arr[lower];
-    return arr[lower] * (1 - weight) + arr[upper] * weight;
-}
-
-// Returns the percentile of the given value in a sorted numeric array.
-function percentRank(arr, v) {
-    if (typeof v !== 'number') throw new TypeError('v must be a number');
-    for (var i = 0, l = arr.length; i < l; i++) {
-        if (v <= arr[i]) {
-            while (i < l && v === arr[i]) i++;
-            if (i === 0) return 0;
-            if (v !== arr[i-1]) {
-                i += (v - arr[i-1]) / (arr[i] - arr[i-1]);
-            }
-            return i / l;
-        }
-    }
-    return 1;
-}
