@@ -105,14 +105,14 @@ public class TuneProfilePlugin extends PluginBase {
 
     static TuneProfilePlugin tuneProfilePlugin;
 
-    static public TuneProfilePlugin getPlugin() throws IOException{
+    static public TuneProfilePlugin getPlugin() {
         if (tuneProfilePlugin == null) {
             tuneProfilePlugin = new TuneProfilePlugin();
         }
         return tuneProfilePlugin;
     }
 
-    public TuneProfilePlugin() throws IOException {
+    public TuneProfilePlugin()  {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
                 .fragmentClass(TuneProfileFragment.class.getName())
@@ -158,11 +158,7 @@ public class TuneProfilePlugin extends PluginBase {
     }
 
     public static synchronized Double getBasal(Integer hour){
-        try{
-            getPlugin().getProfile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        getPlugin().getProfile();
         if(profile.equals(null))
             return 0d;
         Calendar c = Calendar.getInstance();
@@ -276,12 +272,9 @@ public class TuneProfilePlugin extends PluginBase {
         }
         IobTotal bolusIob = null;
         IobTotal basalIob = null;
-        try {
-            bolusIob = getPlugin().getCalculationToTimeTreatments(time).round();
-            basalIob = getPlugin().getCalculationToTimeTempBasals(time).round();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+        bolusIob = getPlugin().getCalculationToTimeTreatments(time).round();
+        basalIob = getPlugin().getCalculationToTimeTempBasals(time).round();
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
         if (time < System.currentTimeMillis()) {

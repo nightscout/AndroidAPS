@@ -53,7 +53,7 @@ class NSService extends AsyncTask <Void,Void,Void> {
     Date lastProfileChange;
     public boolean jobFinished = false;
 
-    public NSService() throws IOException {
+    public NSService() {
     }
 
 

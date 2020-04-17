@@ -130,9 +130,11 @@ public class IobTotal implements DataPointWithLabelInterface {
             json.put("lastBolusTime", lastBolusTime);
             json.put("time", DateUtil.toISOString(new Date(time)));
             /*
+
             This is requested by SMB determine_basal but by based on Scott's info
             it's MDT specific safety check only
             It's causing rounding issues in determine_basal
+
             JSONObject lastTemp = new JSONObject();
             lastTemp.put("date", lastTempDate);
             lastTemp.put("rate", lastTempRate);
