@@ -1,10 +1,7 @@
 package info.nightscout.androidaps.plugins.TuneProfile;
 
-import android.content.res.Resources;
 import android.util.LongSparseArray;
-import android.widget.TextView;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Intervals;
@@ -13,11 +10,9 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
-import info.nightscout.androidaps.events.EventProfileStoreChanged;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
-import info.nightscout.androidaps.db.BGDatum;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;

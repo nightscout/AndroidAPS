@@ -1,4 +1,6 @@
-package info.nightscout.androidaps.db;
+package info.nightscout.androidaps.plugins.TuneProfile;
+
+import info.nightscout.androidaps.db.BgReading;
 
 /**
  * Created by Rumen Georgiev on 2/24/2018.

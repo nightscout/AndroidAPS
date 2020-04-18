@@ -248,10 +248,11 @@ class NSService extends AsyncTask <Void,Void,Void> {
         }
         // SGV values returned by NS are in descending order we need to put them in ascending
         // reverse the list
-        /*List<BgReading> reversedSGV = new ArrayList<BgReading>();
+        List<BgReading> reversedSGV = new ArrayList<BgReading>();
         for(int i=sgv.size()-1; i>-1; i--){
             reversedSGV.add(sgv.get(i));
-        }*/
+        }
+        //return reversedSGV;
         return sgv;
     }
 
@@ -304,10 +305,11 @@ class NSService extends AsyncTask <Void,Void,Void> {
         }
         // SGV values returned by NS are in descending order we need to put them in ascending
         // reverse the list
-/*        List<Treatment> reversedTreatments = new ArrayList<Treatment>();
+        List<Treatment> reversedTreatments = new ArrayList<Treatment>();
         for(int i=treatments.size()-1; i>-1; i--){
             reversedTreatments.add(treatments.get(i));
-        }*/
+        }
+        //return reversedTreatments;
         return treatments;
     }
 
