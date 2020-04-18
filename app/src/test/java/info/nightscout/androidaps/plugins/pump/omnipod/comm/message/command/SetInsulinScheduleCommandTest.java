@@ -176,7 +176,7 @@ public class SetInsulinScheduleCommandTest {
                 new BasalScheduleEntry(0.5, Duration.standardMinutes(510)), //
                 new BasalScheduleEntry(0.65, Duration.standardMinutes(570)), //
                 new BasalScheduleEntry(0.15, Duration.standardMinutes(930)), //
-                new BasalScheduleEntry(0.8, Duration.standardMinutes(978)) //
+                new BasalScheduleEntry(0.8, Duration.standardMinutes(990)) //
         );
 
         BasalSchedule basalSchedule = new BasalSchedule(entries);
