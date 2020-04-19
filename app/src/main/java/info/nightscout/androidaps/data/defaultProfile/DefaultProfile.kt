@@ -1,13 +1,17 @@
 package info.nightscout.androidaps.data.defaultProfile
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.utils.Round
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
+class DefaultProfile @Inject constructor(val injector: HasAndroidInjector) {
 
-class DefaultProfile {
     var oneToFive: TreeMap<Double, Array<Double>> = TreeMap()
     var sixToEleven: TreeMap<Double, Array<Double>> = TreeMap()
     var twelveToSeventeen: TreeMap<Double, Array<Double>> = TreeMap()
@@ -18,24 +22,24 @@ class DefaultProfile {
         if (age >= 1 && age < 6) {
             val _tdd = if (tdd == 0.0) 0.6 * weight else tdd
             closest(oneToFive, _tdd * 0.3)?.let { array -> profile.put("basal", arrayToJson(array)) }
-            val ic =  Round.roundTo(250.0 / _tdd, 1.0)
-            profile.put("carbratio", singleValueArray(ic, arrayOf( 0.0, -4.0, -1.0, -2.0, -4.0, 0.0, -4.0)))
+            val ic = Round.roundTo(250.0 / _tdd, 1.0)
+            profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -4.0, -1.0, -2.0, -4.0, 0.0, -4.0)))
             val isf = Round.roundTo(200.0 / _tdd, 0.1)
-            profile.put("sens", singleValueArray(isf, arrayOf( 0.0, -2.0, -0.0, -0.0, -2.0, 0.0, -2.0)))
+            profile.put("sens", singleValueArray(isf, arrayOf(0.0, -2.0, -0.0, -0.0, -2.0, 0.0, -2.0)))
         } else if (age >= 6 && age < 12) {
             val _tdd = if (tdd == 0.0) 0.8 * weight else tdd
             closest(sixToEleven, _tdd * 0.4)?.let { array -> profile.put("basal", arrayToJson(array)) }
-            val ic =  Round.roundTo(375.0 / _tdd, 1.0)
-            profile.put("carbratio", singleValueArray(ic, arrayOf( 0.0, -3.0, 0.0, -1.0, -3.0, 0.0, -2.0)))
+            val ic = Round.roundTo(375.0 / _tdd, 1.0)
+            profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -3.0, 0.0, -1.0, -3.0, 0.0, -2.0)))
             val isf = Round.roundTo(170.0 / _tdd, 0.1)
-            profile.put("sens", singleValueArray(isf, arrayOf( 0.0, -1.0, -0.0, -0.0, -1.0, 0.0, -1.0)))
+            profile.put("sens", singleValueArray(isf, arrayOf(0.0, -1.0, -0.0, -0.0, -1.0, 0.0, -1.0)))
         } else if (age >= 12 && age < 17) {
             val _tdd = if (tdd == 0.0) 1.0 * weight else tdd
             closest(twelveToSeventeen, _tdd * 0.5)?.let { array -> profile.put("basal", arrayToJson(array)) }
-            val ic =  Round.roundTo(500.0 / _tdd, 1.0)
-            profile.put("carbratio", singleValueArray(ic, arrayOf( 0.0, -1.0, 0.0, 0.0, -1.0, 0.0, -1.0)))
+            val ic = Round.roundTo(500.0 / _tdd, 1.0)
+            profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -1.0, 0.0, 0.0, -1.0, 0.0, -1.0)))
             val isf = Round.roundTo(100.0 / _tdd, 0.1)
-            profile.put("sens", singleValueArray(isf, arrayOf( 0.2, 0.0, 0.2, 0.2, 0.0, 0.2, 0.2)))
+            profile.put("sens", singleValueArray(isf, arrayOf(0.2, 0.0, 0.2, 0.2, 0.0, 0.2, 0.2)))
         } else if (age >= 18) {
 
         }
@@ -45,7 +49,7 @@ class DefaultProfile {
         profile.put("timezone", TimeZone.getDefault().getID())
         profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
         profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
-        return Profile(profile, units)
+        return Profile(injector, profile, units)
     }
 
     init {

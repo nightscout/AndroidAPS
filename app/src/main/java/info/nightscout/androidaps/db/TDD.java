@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.utils.DateUtil;
 
@@ -19,7 +20,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TDDS)
 public class TDD {
-    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;

@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.events
 
+import android.content.res.Resources
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 class EventPreferenceChange : Event {
     private var changedKey: String? = null
@@ -9,11 +11,11 @@ class EventPreferenceChange : Event {
         changedKey = key
     }
 
-    constructor(resourceID: Int) {
-        changedKey = MainApp.gs(resourceID)
+    constructor(resourceHelper: ResourceHelper, resourceID: Int) {
+        changedKey = resourceHelper.gs(resourceID)
     }
 
-    fun isChanged(id: Int): Boolean {
-        return changedKey == MainApp.gs(id)
+    fun isChanged(resourceHelper: ResourceHelper, id: Int): Boolean {
+        return changedKey == resourceHelper.gs(id)
     }
 }

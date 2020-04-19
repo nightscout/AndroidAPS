@@ -66,8 +66,7 @@
     <string name="description_pump_mdi">Pump integration for people who do multiple daily injections for their diabetes therapy</string>
     <string name="description_pump_virtual">Pump integration for pumps which don\'t have any driver yet (Open Loop)</string>
     <string name="description_sensitivity_aaps">Sensitivity is calculated the same way like Oref0, but you can specify timeframe to the past. Minimal carb absorption is calculated from max carb absorption time from preferences.</string>
-    <string name="description_sensitivity_oref0">Sensitivity is calculated from 24h data in the past and carbs (if not absorbed) are cut after time specified in preferences.</string>
-    <string name="description_sensitivity_oref1">Sensitivity is calculated from 8h data in the past and carbs (if not absorbed) are cut after time specified in preferences. Plugin also calculates UAM.</string>
+    <string name="description_sensitivity_oref1">Sensitivity is calculated from 8h or 24h data in the past (using either which is more sensitive). Carbs (if not absorbed) are cut after time specified in preferences. Plugin also calculates UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensitivity is calculated as a weighted average from deviations. Newer deviations have higher weight. Minimal carb absorption is calculated from max carb absorption time from preferences. This algorithm is the fastest in following sensitivity changes.</string>
     <string name="description_source_eversense">Receive BG values from the patched Eversense app.</string>
     <string name="description_source_glimp">Receive BG values from Glimp.</string>
@@ -194,9 +193,7 @@
     <string name="enableloop">Enable loop</string>
 
     <string name="openloop_newsuggestion">New suggestion available</string>
-    <string name="unsupportedclientver">Unsupported version of NSClient</string>
     <string name="unsupportednsversion">Unsupported version of Nightscout</string>
-    <string name="nsclientnotinstalled">NSClient not installed. Record lost!</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="bolusconstraintapplied">Bolus constraint applied</string>
@@ -254,6 +251,51 @@
     <string name="openapsma_maxiob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once.</string>
     <string name="dismiss">DISMISS</string>
     <string name="language" translatable="false">Language</string>
+
+    <string name="password_preferences_encrypt_prompt">You will be asked for master password, which will be used to encrypt exported preferences.</string>
+    <string name="password_preferences_decrypt_prompt">You will be asked for master password, which is needed to decrypt imported preferences.</string>
+    <string name="preferences_export_canceled">Export canceled! Preferences were NOT exported!</string>
+    <string name="preferences_import_canceled">Import canceled! Preferences were NOT imported!</string>
+
+    <string name="check_preferences_before_import">Please check preferences before importing:</string>
+    <string name="check_preferences_cannot_import">Preferences cannot be imported!</string>
+    <string name="check_preferences_dangerous_import">Preferences should not be imported!</string>
+    <string name="check_preferences_details_btn">Explain import issues…</string>
+    <string name="check_preferences_details_title">Import issues details</string>
+    <string name="check_preferences_import_btn">Import</string>
+    <string name="check_preferences_import_anyway_btn">Import anyway (DANGEROUS!)</string>
+
+    <string name="metadata_warning_different_flavour">Preferences were created with different variant of AAPS (%1$s) while you have: %2$s.\n\nSome settings may be missing or invalid - after importing please check and update your preferences.</string>
+    <string name="metadata_warning_different_device">Preferences were created on a different device. It is OK if you are importing from older/different phone, but make sure imported preferences are correct!</string>
+    <string name="metadata_warning_outdated_format">You are using the outdated legacy format from old versions of AAPS, which is not secure! Only use it as a last resort, if you do not have an export in current, JSON format.</string>
+    <string name="metadata_warning_old_export">Imported preferences are already %1$s days old! Maybe you have more up-to-date preferences or you choose the wrong file? Remember to export preferences regularly!</string>
+    <string name="metadata_warning_date_format">Invalid date-time format!</string>
+
+    <string name="metadata_label_format">File format</string>
+    <string name="metadata_label_created_at">Created at</string>
+    <string name="metadata_label_aaps_version">AAPS Version</string>
+    <string name="metadata_label_aaps_flavour">Build Variant</string>
+    <string name="metadata_label_device_name">Exporting device patient name</string>
+    <string name="metadata_label_device_model">Exporting device model</string>
+    <string name="metadata_label_encryption">File encryption</string>
+
+    <string name="metadata_format_old">Old export format</string>
+    <string name="metadata_format_new">New encrypted format</string>
+    <string name="metadata_format_debug">New debug format (unencrypted)</string>
+    <string name="metadata_format_other">Unknown export format</string>
+
+    <string name="prefdecrypt_settings_tampered">Settings file tampered</string>
+    <string name="prefdecrypt_settings_secure">Settings file is secure</string>
+    <string name="prefdecrypt_settings_unencrypted">Using not secure, unencrypted settings format</string>
+    <string name="prefdecrypt_wrong_json">JSON format error, missing required field (format, content, metadata or security)</string>
+    <string name="prefdecrypt_wrong_password">Decryption error, the given password cannot decrypt the file</string>
+
+    <string name="prefdecrypt_issue_missing_file_hash">File checksum (hash) missing, cannot verify the authenticity of settings!</string>
+    <string name="prefdecrypt_issue_modified">File was modified after export!</string>
+    <string name="prefdecrypt_issue_parsing">Decryption error, parsing preferences failed!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Decryption error, the provided password is invalid or settings file was modified! It may happen that the imported file was exported with a different Master password.</string>
+    <string name="prefdecrypt_issue_wrong_format">Missing encryption configuration, settings format is invalid!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Unsupported or not specified encryption algorithm!</string>
 
     <string name="danarpump">DanaR</string>
     <string name="connecting">Connecting</string>
@@ -503,10 +545,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Default value: 3.0 (AMA) or 8.0 (SMB). This is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Attention!\nNormally you do not have to change these values below. Please CLICK HERE and READ the text and make sure you UNDERSTAND it before change any of these values.</string>
     <string name="openapsama_link_to_preferncejson_doc" translatable="false">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
-    <string name="error_only_numeric_digits_allowed">Only numeric digits are allowed.</string>
-    <string name="error_only_numeric_digits_range_allowed">Only numeric digits within the range %1$s - %2$s are allowed.</string>
-    <string name="error_field_must_not_be_empty">The field must not be empty</string>
-    <string name="error_phone_not_valid">Phone number not valid</string>
     <string name="smscommunicator_invalidphonennumber">Invalid SMS phone number</string>
     <string name="overview_calibration">Calibration</string>
     <string name="send_calibration">Send calibration %1$.1f to xDrip?</string>
@@ -526,8 +564,6 @@
     <string name="virtualpump_settings">Virtual pump settings</string>
     <string name="virtualpump_uploadstatus_title">Upload status to NS</string>
     <string name="wrongpassword">Wrong password</string>
-    <string name="settings_password">Password for settings</string>
-    <string name="unlock_settings">Unlock settings</string>
     <string name="approachingdailylimit">Approaching insulin daily limit</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
@@ -552,7 +588,6 @@
     <string name="key_danar_password" translatable="false">danar_password</string>
     <string name="key_danar_useextended" translatable="false">danar_useextended</string>
     <string name="key_danar_visualizeextendedaspercentage" translatable="false">danar_visualizeextendedaspercentage"</string>
-    <string name="key_danarprofile_dia" translatable="false">danarprofile_dia</string>
     <string name="clearlog">Clear log</string>
     <string name="key_nsclientinternal_autoscroll" translatable="false">nsclientinternal_autoscroll</string>
     <string name="key_nsclientinternal_paused" translatable="false">nsclientinternal_paused</string>
@@ -575,6 +610,10 @@
     <string name="key_adult" translatable="false">adult</string>
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="patientage_summary">Please select patient age to setup safety limits</string>
+    <string name="patient_name">Patient name</string>
+    <string name="patient_name_summary">Please provide patient name or nickname to differentiate among multiple setups</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>
+    <string name="key_patient_name" translatable="false">patient_name</string>
     <string name="key_i_understand" translatable="false">I_understand</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s needs battery optimalization whitelisting for proper performance</string>
@@ -822,8 +861,15 @@
     <string name="bgsource_upload">BG upload settings</string>
     <string name="wear_detailed_delta_title">Show detailed delta</string>
     <string name="wear_detailed_delta_summary">Show delta with one more decimal place</string>
+    <string name="key_smbinterval" translatable="false">smbinterval</string>
+    <string name="smbinterval_summary">How frequently SMBs will be given in min</string>
     <string name="smbmaxminutes">SMB max minutes</string>
     <string name="smbmaxminutes_summary">Max minutes of basal to limit SMB to</string>
+    <string name="uamsmbmaxminutes">UAM SMB max minutes</string>
+    <string name="uamsmbmaxminutes_summary">Max minutes of basal to limit SMB to for UAM</string>
+    <string name="key_carbsReqThreshold" translatable="false">carbsReqThreshold</string>
+    <string name="carbsReqThreshold">Carb suggestion threshold</string>
+    <string name="carbsReqThreshold_summary">When Carbs are suggested, how many carbs will prompt a notification</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>
     <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
     <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
@@ -892,6 +938,7 @@
     <string name="ago">ago</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d mins</string>
+    <string name="format_mins_short">%1$dm</string>
     <string name="key_enableSMB_always" translatable="false">enableSMB_always</string>
     <string name="key_enableSMB_with_COB" translatable="false">enableSMB_with_COB</string>
     <string name="key_enableSMB_with_temptarget" translatable="false">enableSMB_with_temptarget</string>
@@ -1139,6 +1186,12 @@
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Raise sensitivity for temptargets >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Low temptarget lowers sensitivity</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lower sensitivity for temptargets < 100]]></string>
+    <string name="key_resistance_lowers_target" translatable="false">resistance_lowers_target</string>
+    <string name="resistance_lowers_target_title">Resistance lowers target</string>
+    <string name="resistance_lowers_target_summary">When resistance is detected, lower the target glucose</string>
+    <string name="key_sensitivity_raises_target" translatable="false">sensitivity_raises_target</string>
+    <string name="sensitivity_raises_target_title">Sensitivity raises target</string>
+    <string name="sensitivity_raises_target_summary">When sensitivity is detected, raise the target glucose</string>
     <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named QUICK INFO using the 360 configuration software.</string>
     <string name="custom">Custom</string>
     <string name="largetimedifftitle">Large Time Difference</string>
@@ -1149,7 +1202,9 @@
     <string name="allow_hardware_pump_text">Attention: If you activate and connect to a hardware pump, AndroidAPS will copy the basal settings from the profile to the pump, overwriting the existing basal rate stored on the pump. Make sure you have the correct basal setting in AndroidAPS. If you are not sure or don\'t want to overwrite the basal settings on your pump, press cancel and repeat switching to the pump at a later time.</string>
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
     <string name="maintenance_settings">Maintenance Settings</string>
-    <string name="maintenance_email">Email</string>
+    <string name="maintenance_email">Email recipient</string>
+    <string name="key_maintenance_encrypt_exported_prefs">maintenance_encrypt_exported_prefs</string>
+    <string name="maintenance_encrypt_exported_prefs">Encrypt exported settings</string>
     <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
     <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
     <string name="key_logshipper_amount" translatable="false">logshipper_amount</string>
@@ -1181,7 +1236,7 @@
     <string name="insulinlimitviolation">Insulin limit violation</string>
     <string name="key_loop_openmode_min_change" translatable="false">loop_openmode_min_change</string>
     <string name="loop_openmode_min_change">Minimal request change [%]</string>
-    <string name="loop_openmode_min_change_summary">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
     <string name="pairfirst">Please pair your pump with your phone!</string>
     <string name="searching_for_devices">Searching for devices…</string>
@@ -1341,6 +1396,7 @@
     <string name="tidepool_upload_bg">Upload BG tests</string>
 
     <string name="key_smbmaxminutes" translatable="false">smbmaxminutes</string>
+    <string name="key_uamsmbmaxminutes" translatable="false">uamsmbmaxminutes</string>
     <string name="dst_plugin_name" translatable="false">Daylight Saving time</string>
     <string name="dst_in_24h_warning">Daylight Saving time change in 24h or less</string>
     <string name="dst_loop_disabled_warning">Daylight Saving time change less than 3 hours ago - Closed loop disabled</string>
@@ -1390,6 +1446,8 @@
     <string name="exists">exists</string>
     <string name="notexists">not exists</string>
     <string name="temptargetcompared">Temp target %1$s</string>
+    <string name="btdevicecompared">Bluetooth connection to device %1$s %2$s</string>
+    <string name="btdevice">Connection to Bluetooth device </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -1449,6 +1507,7 @@
     <string name="key_medtronic_pump_battery_alkaline" translatable="false">medtronic_pump_battery_alkaline</string>
     <string name="key_medtronic_pump_battery_lithium" translatable="false">medtronic_pump_battery_lithium</string>
     <string name="key_medtronic_pump_battery_nizn" translatable="false">medtronic_pump_battery_nizn</string>
+    <string name="key_medtronic_pump_battery_nimh" translatable="false">medtronic_pump_battery_nimh</string>
 
     <string name="medtronic_serial_number">Pump Serial Number</string>
     <string name="medtronic_pump_type">Pump Type</string>
@@ -1469,6 +1528,7 @@
     <string name="medtronic_pump_battery_alkaline">Alkaline (Extended view)</string>
     <string name="medtronic_pump_battery_lithium">Lithium (Extended view)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Extended view)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (Extended view)</string>
     <string name="medtronic_bolus_debugging">Bolus/Treatments Debugging</string>
 
     <!-- RL BLE Scanning -->
@@ -1688,16 +1748,59 @@
     <string name="alreadyset">Already set</string>
     <string name="message">Message</string>
     <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
+    <string name="key_xdripstatus_detailediob" translatable="false">xdripstatus_detailediob</string>
+    <string name="key_xdripstatus_showbgi" translatable="false">xdripstatus_showbgi</string>
+    <string name="key_wear_detailed_delta" translatable="false">wear_detailed_delta</string>
+    <string name="key_snoozedTo" translatable="false">snoozedTo</string>
+    <string name="key_snooze_dst_in24h" translatable="false">snooze_dst_in24h</string>
+    <string name="key_snooze_loopdisabled" translatable="false">snooze_loopdisabled</string>
+    <string name="key_enable_fabric">enable_fabric</string>
+    <string name="sixdigitnumber">^\\d{6}</string>
     <string name="ebstopsloop">Use of Extended bolus feature will stop closed loop mode for the time of running extended bolus. Do you really want it?</string>
     <string name="closed_loop_disabled_with_eb">Closed loop disabled because of running Extended bolus</string>
     <string name="extended_bolus_short">EB</string>
     <string name="phonechecker">\"PhoneChecker\"</string>
     <string name="chartmenu">Chart menu</string>
     <string name="sensitivity_short">AS</string>
+    <string name="databroadcaster" translatable="false">Data Broadcaster</string>
     <string name="loop_smbrequest_time_label">SMB request time</string>
     <string name="loop_smbexecution_time_label">SMB execution time</string>
     <string name="loop_tbrrequest_time_label">Temp basal request time</string>
     <string name="loop_tbrexecution_time_label">Temp basal execution time</string>
     <string name="insight_alert_notification_channel">Insight Pump Alerts</string>
 
+    <!-- SMS Communicator & OTP Authenticator -->
+
+    <string name="key_smscommunicator_otp_enabled" translatable="false">smscommunicator_otp_enabled</string>
+    <string name="key_smscommunicator_otp_password" translatable="false">smscommunicator_otp_password</string>
+    <string name="key_smscommunicator_otp_secret" translatable="false">smscommunicator_otp_secret</string>
+
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">from Authenticator app for: %1$s</string>
+
+    <string name="smscommunicator_otp_enabled">Enable Authenticator</string>
+    <string name="smscommunicator_otp_enabled_summary">Authenticate commands using One Time Passwords generated by Google Authenticator or similar 2FA apps.</string>
+    <string name="smscommunicator_otp_pin">Additional PIN at token end</string>
+    <string name="smscommunicator_otp_pin_summary">Additional digits that should be memorised and glued at end of each generated One Time Password</string>
+
+    <string name="smscomunicator_tab_otp_label">Authenticator setup</string>
+
+    <string name="smscommunicator_otp_verify_label">OTP to check:</string>
+    <string name="smscommunicator_otp_reset_btn">Reset Authenticators</string>
+    <string name="smscommunicator_otp_reset_title">Reset Authenticator Key</string>
+    <string name="smscommunicator_otp_reset_prompt">Are you sure to reset Authenticator key? It will render all currently configured Authenticators invalid, and you will need to set them up again.</string>
+    <string name="smscommunicator_otp_reset_successful">New Authenticator Key was generated! Please use updated QRCode to provision authenticators.</string>
+
+    <string name="smscommunicator_otp_step1_install_header">1. Install Authenticator</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scan code to setup AndroidAPS OTP codes</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Test One-Time-Password</string>
+    <string name="smscommunicator_otp_reset_header">Reset Authenticators</string>
+
+    <string name="smscommunicator_otp_install_info">On each follower phone install Authenticator app that support RFC 6238 TOTP tokens. Popular free apps are:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_provisioning_warning">DO NOT SHARE this code online!\nUse it only to setup Authenticator App on follower phones.</string>
+    <string name="smscommunicator_otp_reset_warning">By reseting authenticator you make all already provisioned authenticators invalid. You will need to set up them again!</string>
+    <string name="onconnect">On connect</string>
+    <string name="ondisconnect">On disconnect</string>
+    <string name="overview_show_predictions">Predictions</string>
+    <string name="overview_show_deviationslope">Deviation slope</string>
+    <string name="key_graphconfig" translatable="false">graphconfig</string>
 </resources>

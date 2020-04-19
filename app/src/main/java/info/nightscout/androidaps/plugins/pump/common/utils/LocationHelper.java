@@ -7,7 +7,7 @@ import android.location.LocationManager;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 
 /**
  * Helper for checking if location services are enabled on the device.

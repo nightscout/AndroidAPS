@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.utils.CRC;
 
 /*
@@ -22,8 +23,8 @@ import info.nightscout.androidaps.utils.CRC;
  */
 
 public class MessageBase {
-    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
-    protected byte[] buffer = new byte[512];
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
+    public byte[] buffer = new byte[512];
     private int position = 6;
 
     public boolean received = false;
@@ -91,7 +92,7 @@ public class MessageBase {
     }
 
     public String getMessageName() {
-        return MessageOriginalNames.getName(getCommand());
+        return MessageOriginalNames.INSTANCE.getName(getCommand());
     }
 
     public void handleMessage(byte[] bytes) {

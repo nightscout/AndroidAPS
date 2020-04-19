@@ -8,13 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
  * Created by mike on 20.02.2017.
  */
 
 public class BatteryLevel {
-    private static Logger log = LoggerFactory.getLogger(BatteryLevel.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(BatteryLevel.class);
     static public int lastUploadedLevel = 0;
 
     static public int getBatteryLevel() {

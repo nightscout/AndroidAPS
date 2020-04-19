@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.ui;
 
 import android.content.Context;
-import android.preference.Preference;
+import androidx.preference.Preference;
 import android.util.AttributeSet;
 
 import info.nightscout.androidaps.MainApp;

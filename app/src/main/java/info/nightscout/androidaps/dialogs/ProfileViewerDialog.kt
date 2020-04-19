@@ -6,18 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import androidx.fragment.app.DialogFragment
+import dagger.android.HasAndroidInjector
+import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.close.*
 import kotlinx.android.synthetic.main.dialog_profileviewer.*
 import org.json.JSONObject
+import javax.inject.Inject
 
-class ProfileViewerDialog : DialogFragment() {
+class ProfileViewerDialog : DaggerDialogFragment() {
+    @Inject lateinit var injector: HasAndroidInjector
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+
     private var time: Long = 0
 
     enum class Mode(val i: Int) {
@@ -59,15 +65,15 @@ class ProfileViewerDialog : DialogFragment() {
         val date: String?
         when (mode) {
             Mode.RUNNING_PROFILE -> {
-                profile = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(time)?.profileObject
-                profileName = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(time)?.customizedName
-                date = DateUtil.dateAndTimeString(TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(time)?.date
+                profile = treatmentsPlugin.getProfileSwitchFromHistory(time)?.profileObject
+                profileName = treatmentsPlugin.getProfileSwitchFromHistory(time)?.customizedName
+                date = DateUtil.dateAndTimeString(treatmentsPlugin.getProfileSwitchFromHistory(time)?.date
                     ?: 0)
                 profileview_datelayout.visibility = View.VISIBLE
             }
 
             Mode.CUSTOM_PROFILE  -> {
-                profile = Profile(JSONObject(customProfileJson), customProfileUnits)
+                profile = Profile(injector, JSONObject(customProfileJson), customProfileUnits)
                 profileName = customProfileName
                 date = ""
                 profileview_datelayout.visibility = View.GONE
@@ -77,7 +83,7 @@ class ProfileViewerDialog : DialogFragment() {
 
         profile?.let {
             profileview_units.text = it.units
-            profileview_dia.text = MainApp.gs(R.string.format_hours, it.dia)
+            profileview_dia.text = resourceHelper.gs(R.string.format_hours, it.dia)
             profileview_activeprofile.text = profileName
             profileview_date.text = date
             profileview_ic.text = it.icList

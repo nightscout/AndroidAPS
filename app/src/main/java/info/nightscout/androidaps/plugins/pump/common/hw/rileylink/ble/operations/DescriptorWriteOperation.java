@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattDescriptor;
 import android.os.SystemClock;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 
 /**
@@ -17,7 +18,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLink
  */
 public class DescriptorWriteOperation extends BLECommOperation {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DescriptorWriteOperation.class);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(DescriptorWriteOperation.class);
 
     private BluetoothGattDescriptor descr;
 

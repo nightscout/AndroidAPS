@@ -152,7 +152,7 @@ public class BLEScanActivity extends NoSplashAppCompatActivity {
                 SP.putString(R.string.key_danars_address, item.device.getAddress());
                 SP.putString(R.string.key_danars_name, mName.getText().toString());
                 item.device.createBond();
-                RxBus.INSTANCE.send(new EventDanaRSDeviceChange());
+                RxBus.Companion.getINSTANCE().send(new EventDanaRSDeviceChange());
                 finish();
             }
 

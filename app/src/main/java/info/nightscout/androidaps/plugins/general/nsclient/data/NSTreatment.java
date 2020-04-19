@@ -8,9 +8,10 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 public class NSTreatment {
-    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
 
     private JSONObject data;
     private String action = null; // "update", "remove" or null (add)

@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import io.socket.client.Ack;
 
@@ -14,7 +15,7 @@ import io.socket.client.Ack;
  * Created by mike on 21.02.2016.
  */
 public class NSUpdateAck extends Event implements Ack {
-    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
     public boolean result = false;
     public String _id;
     public String action;
@@ -28,7 +29,7 @@ public class NSUpdateAck extends Event implements Ack {
                     result = true;
                     log.debug("Internal error: Missing _id returned on dbUpdate ack");
                 }
-                RxBus.INSTANCE.send(this);
+                RxBus.Companion.getINSTANCE().send(this);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }

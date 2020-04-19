@@ -98,8 +98,8 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:gravity="center_vertical|center_horizontal"
-                        android:paddingBottom="3dp"
                         android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
                         android:text="@string/initializing"
                         android:textAppearance="?android:attr/textAppearanceSmall" />
                 </LinearLayout>
@@ -208,8 +208,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0"
                                     android:gravity="center_horizontal"
-                                    android:paddingEnd="2dp"
                                     android:paddingStart="2dp"
+                                    android:paddingEnd="2dp"
                                     android:text=":"
                                     android:textSize="14sp" />
 
@@ -230,10 +230,10 @@
                             <View
                                 android:layout_width="fill_parent"
                                 android:layout_height="2dip"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp"
                                 android:layout_marginTop="5dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginBottom="5dp"
                                 android:background="@color/listdelimiter" />
 
 
@@ -256,8 +256,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0"
                                     android:gravity="center_horizontal"
-                                    android:paddingEnd="2dp"
                                     android:paddingStart="2dp"
+                                    android:paddingEnd="2dp"
                                     android:text=":"
                                     android:textSize="14sp" />
 
@@ -278,10 +278,10 @@
                             <View
                                 android:layout_width="fill_parent"
                                 android:layout_height="2dip"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp"
                                 android:layout_marginTop="5dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginBottom="5dp"
                                 android:background="@color/listdelimiter" />
 
 
@@ -304,8 +304,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0"
                                     android:gravity="center_horizontal"
-                                    android:paddingEnd="2dp"
                                     android:paddingStart="2dp"
+                                    android:paddingEnd="2dp"
                                     android:text=":"
                                     android:textSize="14sp" />
 
@@ -326,10 +326,10 @@
                             <View
                                 android:layout_width="fill_parent"
                                 android:layout_height="2dip"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp"
                                 android:layout_marginTop="5dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginBottom="5dp"
                                 android:background="@color/listdelimiter" />
 
                             <LinearLayout
@@ -351,8 +351,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="0"
                                     android:gravity="center_horizontal"
-                                    android:paddingEnd="2dp"
                                     android:paddingStart="2dp"
+                                    android:paddingEnd="2dp"
                                     android:text=":"
                                     android:textSize="14sp" />
 
@@ -373,10 +373,10 @@
                             <View
                                 android:layout_width="fill_parent"
                                 android:layout_height="2dip"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp"
                                 android:layout_marginTop="5dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginBottom="5dp"
                                 android:background="@color/listdelimiter" />
 
                         </LinearLayout>
@@ -425,10 +425,10 @@
                         <View
                             android:layout_width="fill_parent"
                             android:layout_height="2dip"
-                            android:layout_marginBottom="5dp"
                             android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
                             android:layout_marginTop="5dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginBottom="5dp"
                             android:background="@color/listdelimiter" />
 
 
@@ -454,10 +454,10 @@
                         <View
                             android:layout_width="fill_parent"
                             android:layout_height="2dip"
-                            android:layout_marginBottom="5dp"
                             android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
                             android:layout_marginTop="5dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginBottom="5dp"
                             android:background="@color/listdelimiter" />
 
                         <LinearLayout
@@ -482,10 +482,10 @@
                         <View
                             android:layout_width="fill_parent"
                             android:layout_height="2dip"
-                            android:layout_marginBottom="5dp"
                             android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
                             android:layout_marginTop="5dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginBottom="5dp"
                             android:background="@color/listdelimiter" />
 
                     </LinearLayout>
@@ -512,8 +512,8 @@
                             android:id="@+id/overview_chartMenuButton"
                             android:layout_width="30dp"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
                             android:paddingTop="5dp"
                             app:srcCompat="@drawable/ic_arrow_drop_down_white_24dp" />
 
@@ -526,10 +526,11 @@
 
                     </RelativeLayout>
 
-                    <com.jjoe64.graphview.GraphView
+                    <LinearLayout
                         android:id="@+id/overview_iobgraph"
                         android:layout_width="wrap_content"
-                        android:layout_height="100dp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
 
                 </LinearLayout>
 

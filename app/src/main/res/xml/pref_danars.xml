@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="@string/danarspump">
+    <PreferenceCategory
+        android:title="@string/danarspump"
+        app:initialExpandedChildrenCount="0">
 
         <Preference
             android:key="blescannner"
@@ -16,10 +20,13 @@
             android:summary=""
             android:title="@string/selectedpump" />
 
-        <EditTextPreference
-            android:inputType="textCapCharacters"
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:inputType="numberPassword"
             android:key="@string/key_danar_password"
-            android:title="@string/danar_password_title"/>
+            android:title="@string/danar_password_title"
+            validate:customRegexp="@string/fourdigitnumber"
+            validate:testErrorString="@string/error_mustbe4digitnumber"
+            validate:testType="regexp" />
 
         <ListPreference
             android:defaultValue="0"
@@ -28,7 +35,9 @@
             android:key="@string/key_danars_bolusspeed"
             android:title="@string/bolusspeed" />
 
-        <PreferenceScreen android:title="@string/advancedsettings_title">
+        <androidx.preference.PreferenceScreen
+            android:key="absorption_danars_advanced"
+            android:title="@string/advancedsettings_title">
 
             <PreferenceCategory android:title="@string/bluetooth">
 
@@ -40,8 +49,8 @@
 
             </PreferenceCategory>
 
-        </PreferenceScreen>
+        </androidx.preference.PreferenceScreen>
 
     </PreferenceCategory>
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

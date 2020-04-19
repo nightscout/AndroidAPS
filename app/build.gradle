@@ -13,6 +13,7 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'io.fabric'
 apply plugin: 'jacoco-android'
@@ -24,10 +25,12 @@ jacoco {
 }
 
 ext {
-    supportLibraryVersion = "28.0.0"
     ormLiteVersion = "4.46"
     powermockVersion = "1.7.3"
     dexmakerVersion = "1.2"
+    retrofit2Version = '2.8.1'
+    okhttp3Version = '4.5.0'
+    coroutinesVersion = '1.3.5'
 }
 
 
@@ -79,6 +82,23 @@ def isMaster = { ->
     return !version.contains('-')
 }
 
+def gitAvailable = { ->
+    StringBuilder stringBuilder = new StringBuilder()
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', '--version'
+            standardOutput = stdout
+        }
+        String commitObject = stdout.toString().trim()
+        stringBuilder.append(commitObject)
+    } catch (ignored) {
+        return false // NoGitSystemAvailable
+    }
+    return !stringBuilder.toString().isEmpty()
+
+}
+
 def allCommited = { ->
     StringBuilder stringBuilder = new StringBuilder()
     try {
@@ -109,7 +129,7 @@ android {
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.6.1.2"
+        version "2.6.5"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -125,12 +145,6 @@ android {
         jvmTarget = '1.8'
     }
     lintOptions {
-        // TODO remove once wear dependency com.google.android.gms:play-services-wearable:7.3.0
-        // has been upgraded (requiring significant code changes), which currently fails release
-        // build with a deprecation warning
-        // abortOnError false
-        // (disabled entirely to avoid reports on the error, which would still be displayed
-        //  and it's easy to overlook that it's ignored)
         checkReleaseBuilds false
         disable 'MissingTranslation'
         disable 'ExtraTranslation'
@@ -208,6 +222,10 @@ android {
     }
 
     useLibrary "org.apache.http.legacy"
+
+    configurations.all {
+        resolutionStrategy.force 'com.google.code.findbugs:jsr305:1.3.9'
+    }
 }
 
 allprojects {
@@ -225,9 +243,10 @@ dependencies {
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'
-    implementation 'com.google.firebase:firebase-core:17.2.1'
-    implementation 'com.google.firebase:firebase-auth:19.2.0'
-    implementation 'com.google.firebase:firebase-database:19.2.0'
+    implementation "com.google.android.gms:play-services-location:17.0.0"
+    implementation 'com.google.firebase:firebase-core:17.3.0'
+    implementation 'com.google.firebase:firebase-auth:19.3.0'
+    implementation 'com.google.firebase:firebase-database:19.2.1'
     implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
         transitive = true;
     }
@@ -236,10 +255,12 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v13:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.biometric:biometric:1.0.1'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
+    implementation "androidx.preference:preference-ktx:1.1.0"
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.wdullaer:materialdatetimepicker:4.2.3'
 
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
@@ -250,12 +271,11 @@ dependencies {
         exclude group: "com.google.android", module: "android"
     }
     implementation "org.apache.commons:commons-lang3:3.9"
-    implementation "org.slf4j:slf4j-api:1.7.29"
+    implementation 'org.slf4j:slf4j-api:1.7.30'
     // Graphview cannot be upgraded
     implementation "com.jjoe64:graphview:4.0.1"
     implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation(name: "android-edittext-validator-v1.3.4-mod", ext: "aar")
     implementation 'com.madgag.spongycastle:core:1.58.0.0'
 
     implementation("com.google.android:flexbox:0.3.0") {
@@ -277,6 +297,9 @@ dependencies {
 
     implementation 'com.github.DavidProdinger:weekdays-selector:1.1.0'
 
+    implementation 'com.github.kenglxn.QRGen:android:2.6.0'
+    implementation 'com.eatthepath:java-otp:0.2.0'
+
     testImplementation "junit:junit:4.12"
     testImplementation "org.json:json:20190722"
     testImplementation "org.mockito:mockito-core:2.8.47"
@@ -285,28 +308,24 @@ dependencies {
     testImplementation "org.powermock:powermock-module-junit4-rule:${powermockVersion}"
     testImplementation "org.powermock:powermock-module-junit4:${powermockVersion}"
     testImplementation "joda-time:joda-time:2.10.5"
-    testImplementation("com.google.truth:truth:0.39") {
+    testImplementation('com.google.truth:truth:1.0.1') {
         exclude group: "com.google.guava", module: "guava"
         exclude group: "com.google.code.findbugs", module: "jsr305"
     }
     testImplementation "org.skyscreamer:jsonassert:1.5.0"
     testImplementation "org.hamcrest:hamcrest-all:1.3"
-/*
-    testImplementation("uk.org.lidalia:slf4j-test:1.2.0") {
-        exclude group: "com.google.guava", module: "guava"
-    }
-*/
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
 
     // new for tidepool
-    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
-    implementation "com.squareup.retrofit2:retrofit:2.6.2"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.2"
-    implementation "com.squareup.retrofit2:converter-gson:2.6.2"
+    implementation "com.squareup.okhttp3:okhttp:$okhttp3Version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3Version"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit2Version"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit2Version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit2Version"
 
     // Phone checker
     implementation 'com.scottyab:rootbeer-lib:0.0.7'
@@ -315,6 +334,19 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test:rules:1.3.0-alpha03'
     androidTestImplementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+    /* Dagger2 - We are going to use dagger.android which includes
+    * support for Activity and fragment injection so we need to include
+    * the following dependencies */
+    implementation 'com.google.dagger:dagger-android:2.25.2'
+    implementation 'com.google.dagger:dagger-android-support:2.25.2'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.25.2'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.25.2'
+    kapt 'com.google.dagger:dagger-android-processor:2.25.2'
+
+    /* Dagger2 - default dependency */
+    kapt 'com.google.dagger:dagger-compiler:2.25.2'
+
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }
 
@@ -378,9 +410,13 @@ preBuild.dependsOn copyLibs
 
 printf('--------------\n')
 printf('isMaster: %s\n', isMaster().toString())
+printf('gitAvailable: %s\n', gitAvailable().toString())
 printf('allCommited: %s\n', allCommited().toString())
 printf('--------------\n')
+if (isMaster() && !gitAvailable()) {
+    throw new GradleException('GIT system is not available. On Windows try to run Android Studio as an Administrator. Check if GIT is installed and Studio have permissions to use it')
+}
 if (isMaster() && !allCommited()) {
-    throw new GradleException('There are uncommitted changes or git system is not available. Clone sources again as described in wiki and do not allow gradle update')
+    throw new GradleException('There are uncommitted changes. Clone sources again as described in wiki and do not allow gradle update')
 }
 
