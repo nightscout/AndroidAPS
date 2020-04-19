@@ -35,6 +35,18 @@
             android:key="@string/key_danars_bolusspeed"
             android:title="@string/bolusspeed" />
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_rs_loginsulinchange"
+            android:summary="@string/rs_loginsulinchange_summary"
+            android:title="@string/rs_loginsulinchange_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_rs_logcanulachange"
+            android:summary="@string/rs_logcanulachange_summary"
+            android:title="@string/rs_logcanulachange_title" />
+
         <androidx.preference.PreferenceScreen
             android:key="absorption_danars_advanced"
             android:title="@string/advancedsettings_title">

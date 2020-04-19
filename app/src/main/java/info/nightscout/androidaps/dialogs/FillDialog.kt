@@ -25,6 +25,7 @@ import info.nightscout.androidaps.utils.HtmlHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.SafeParse
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import kotlinx.android.synthetic.main.dialog_fill.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
@@ -121,12 +122,12 @@ class FillDialog : DialogFragmentWithDate() {
                     }
                     if (siteChange) {
                         aapsLogger.debug("USER ENTRY: SITE CHANGE")
-                        generateCareportalEvent(CareportalEvent.SITECHANGE, eventTime, notes)
+                        generateCareportalEvent(CareportalEvent.SITECHANGE, eventTime, notes, resourceHelper, sp)
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
                         aapsLogger.debug("USER ENTRY: INSULIN CHANGE")
-                        generateCareportalEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes)
+                        generateCareportalEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes, resourceHelper, sp)
                     }
                 }, null)
             }
@@ -160,27 +161,28 @@ class FillDialog : DialogFragmentWithDate() {
         })
     }
 
-    private fun generateCareportalEvent(eventType: String, time: Long, notes: String) {
-        val careportalEvent = CareportalEvent()
-        careportalEvent.source = Source.USER
-        careportalEvent.date = time
-        careportalEvent.json = generateJson(eventType, time, notes).toString()
-        careportalEvent.eventType = eventType
-        MainApp.getDbHelper().createOrUpdate(careportalEvent)
-        NSUpload.uploadEvent(eventType, time, notes)
-    }
-
-    private fun generateJson(careportalEvent: String, time: Long, notes: String): JSONObject {
-        val data = JSONObject()
-        try {
-            data.put("eventType", careportalEvent)
-            data.put("created_at", DateUtil.toISOString(time))
-            data.put("mills", time)
-            data.put("enteredBy", sp.getString("careportal_enteredby", resourceHelper.gs(R.string.app_name)))
-            if (notes.isNotEmpty()) data.put("notes", notes)
-        } catch (ignored: JSONException) {
+    companion object {
+        fun generateCareportalEvent(eventType: String, time: Long, notes: String, resourceHelper: ResourceHelper, sp: SP) {
+            val careportalEvent = CareportalEvent()
+            careportalEvent.source = Source.USER
+            careportalEvent.date = time
+            careportalEvent.json = generateJson(eventType, time, notes, resourceHelper, sp).toString()
+            careportalEvent.eventType = eventType
+            MainApp.getDbHelper().createOrUpdate(careportalEvent)
+            NSUpload.uploadEvent(eventType, time, notes)
         }
-        return data
-    }
 
+        private fun generateJson(careportalEvent: String, time: Long, notes: String, resourceHelper: ResourceHelper, sp: SP): JSONObject {
+            val data = JSONObject()
+            try {
+                data.put("eventType", careportalEvent)
+                data.put("created_at", DateUtil.toISOString(time))
+                data.put("mills", time)
+                data.put("enteredBy", sp.getString("careportal_enteredby", resourceHelper.gs(R.string.app_name)))
+                if (notes.isNotEmpty()) data.put("notes", notes)
+            } catch (ignored: JSONException) {
+            }
+            return data
+        }
+    }
 }

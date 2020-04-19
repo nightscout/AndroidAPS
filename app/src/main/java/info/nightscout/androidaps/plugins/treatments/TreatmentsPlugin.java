@@ -288,7 +288,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     /**
      * Returns all Treatments after specified timestamp. Also returns invalid entries (required to
-     * map "Fill Canulla" entries to history (and not to add double bolus for it)
+     * map "Fill Canula" entries to history (and not to add double bolus for it)
      *
      * @param fromTimestamp
      * @return

@@ -1815,4 +1815,10 @@
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_deviationslope">Deviation slope</string>
     <string name="key_graphconfig" translatable="false">graphconfig</string>
+    <string name="key_rs_loginsulinchange" translatable="false">rs_loginsulinchange</string>
+    <string name="rs_loginsulinchange_title">Log reservoir change</string>
+    <string name="rs_loginsulinchange_summary">Add \"Insulin Change\" event to careportal when detected in history</string>
+    <string name="key_rs_logcanulachange" translatable="false">rs_logcanulachange</string>
+    <string name="rs_logcanulachange_title">Log canula change</string>
+    <string name="rs_logcanulachange_summary">Add \"Site Change\" event to careportal when detected in history</string>
 </resources>

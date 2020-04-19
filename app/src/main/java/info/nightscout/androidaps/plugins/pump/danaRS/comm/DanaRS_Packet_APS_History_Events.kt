@@ -2,9 +2,11 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
+import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.ExtendedBolus
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TemporaryBasal
+import info.nightscout.androidaps.dialogs.FillDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -15,6 +17,7 @@ import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
 
 open class DanaRS_Packet_APS_History_Events(
@@ -24,6 +27,7 @@ open class DanaRS_Packet_APS_History_Events(
     private val activePlugin: ActivePluginProvider,
     private val danaRPump: DanaRPump,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
+    private val sp: SP,
     private var from: Long
 ) : DanaRS_Packet() {
 
@@ -156,11 +160,15 @@ open class DanaRS_Packet_APS_History_Events(
 
             DanaRPump.REFILL            -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT REFILL (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
+                if (sp.getBoolean(R.string.key_rs_loginsulinchange, true))
+                    FillDialog.generateCareportalEvent(CareportalEvent.INSULINCHANGE, datetime, resourceHelper.gs(R.string.danarspump), resourceHelper, sp)
                 status = "REFILL " + DateUtil.timeString(datetime)
             }
 
             DanaRPump.PRIME             -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT PRIME (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
+                if (sp.getBoolean(R.string.key_rs_logcanulachange, true))
+                    FillDialog.generateCareportalEvent(CareportalEvent.SITECHANGE, datetime, resourceHelper.gs(R.string.danarspump), resourceHelper, sp)
                 status = "PRIME " + DateUtil.timeString(datetime)
             }
 
