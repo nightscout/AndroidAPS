@@ -43,8 +43,6 @@
     <string name="description_pump_mdi">Писалки - За хората, които правят множество ежедневни инжекции ( интензифицирано лечение с писалки)</string>
     <string name="description_pump_virtual">За помпи, който все още не работят с AndroidAPS(Open Loop)</string>
     <string name="description_sensitivity_aaps">Чувствителността се изчислява по същия начин като в Oref0, но можете да зададете времева рамка. Минимална въглехидрати абсорбция се изчислява от Макс време за усвояване на въглехидратите в опциите.</string>
-    <string name="description_sensitivity_oref0">Чувствителността се изчислява за 24 часа назад в миналото, а въглехидрати (ако не са се абсорбирали) изчезват след изтичане на срока от настройките.</string>
-    <string name="description_sensitivity_oref1">Чувствителността се изчислява за 8 часа назад в миналото, а въглехидрати (ако не са се абсорбирали) изчезват след изтичане на срока от настройките. Също така се изчисляват и необявени хранения (UAM).</string>
     <string name="description_sensitivity_weighted_average">Чувствителността се изчислява като среднопретеглена стойност от отклоненията. По-новите отклонения имат по-високо тегло. Минималната абсорбция на въглехидрати се изчислява от Време за макс усвояване на въглехидрати от опциите. Този алгоритъм е най-бързият при проследяването на промени в чувствителността.</string>
     <string name="description_source_eversense">Получава данни за КЗ от модифицираното приложение на Eversense.</string>
     <string name="description_source_glimp">Получава данни за КЗ от Glimp.</string>
@@ -164,9 +162,7 @@
     <string name="disableloop">Изключи Loop</string>
     <string name="enableloop">Включи Loop</string>
     <string name="openloop_newsuggestion">Има ново предложение</string>
-    <string name="unsupportedclientver">Несъвместима версия на NSClient</string>
     <string name="unsupportednsversion">Несъвместима версия на Nightscout</string>
-    <string name="nsclientnotinstalled">NSClient не е открит. Записът е загубен!</string>
     <string name="loopdisabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
     <string name="treatments_wizard_basaliob_label">Базален IOB</string>
     <string name="bolusconstraintapplied">Приложено ограничение на болус</string>
@@ -461,10 +457,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">По подразбиране: 2\nBolus snooze се активира след като поставите болус за основно хранене, така Loop няма да пуснка/намаля базалите веднага след като сте се хранили. Примерът тук е с 2; така при 3 часа DIA това ще означава че bolus snooze ще бъде внимателно изместен 1.5 часа (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Стойност по подразбиране: 3.0 (АМА) или 8.0 (SMB). Това е настройка на количеството на покачване на КЗ при усвояване на въглехидратите за всеки 5 минути. По подразбиране 3мг/дл за 5мин. Това се отразява на това колко бързо се усвояват COB според алгоритъма, и как това се отразява в предвиждането на КЗ, когато тя не се покачва или пада с различен темп от очакваното.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Внимание! Обикновено Вие не трябва да променяте тези стойности. Моля НАТИСНЕТЕ ТУК, прочетете текста и бъдете сигурни, че го РАЗБИРАТЕ преди да направите каквито и да е промени!</string>
-    <string name="error_only_numeric_digits_allowed">Позволени са само числа</string>
-    <string name="error_only_numeric_digits_range_allowed">Позволени са числа между %1$s - %2$s</string>
-    <string name="error_field_must_not_be_empty">Полето не може  да бъде празно</string>
-    <string name="error_phone_not_valid">Телефонният номер не е валиден</string>
     <string name="smscommunicator_invalidphonennumber">Грешен тел номер за SMS</string>
     <string name="overview_calibration">Калибрация</string>
     <string name="send_calibration">Изпрати калибрация %1$.1f към xDrip?</string>
@@ -484,8 +476,6 @@
     <string name="virtualpump_settings">Настойки Виртуална Помпа</string>
     <string name="virtualpump_uploadstatus_title">Качва статуса в NS</string>
     <string name="wrongpassword">Грешна парола</string>
-    <string name="settings_password">Парола за настройки</string>
-    <string name="unlock_settings">Отключи настройките</string>
     <string name="approachingdailylimit">Близо до максмалния дневен инсулин</string>
     <string name="nsclientinternal">Вътрешен NS клиент</string>
     <string name="nsclientinternal_shortname">NSКЛ</string>
@@ -989,7 +979,6 @@
     <string name="allow_hardware_pump_text">Внимание: Ако активирате и свържете с хардуерна помпа, AndroidAPS ще копира основните настройки от профила в помпата, като презапише съществуващата базова скорост, съхранявана на помпата. Уверете се, че имате правилните основни настройки в AndroidAPS. Ако не сте сигурни или не искате да презапишете основните настройки на помпата, натиснете Cancel и повторете превключването към помпата по-късно.</string>
     <string name="error_adding_treatment_title">Данните за лечението не са пълни</string>
     <string name="maintenance_settings">Настройки за поддръжка</string>
-    <string name="maintenance_email">Имейл</string>
     <string name="maintenance_amount">Брой логове за изпращане</string>
     <string name="maintenance">Поддръжка</string>
     <string name="maintenance_shortname">ПОДДР</string>
@@ -1015,7 +1004,7 @@
     <string name="speederror">Скорост грешка</string>
     <string name="insulinlimitviolation">Нарушение на макс дневен инсулин</string>
     <string name="loop_openmode_min_change">Минимална стойност за промяна [%]</string>
-    <string name="loop_openmode_min_change_summary">AndroidAPS ще покаже запитването за промяна на базала само ако е по-голямо от тази стойност.(Стандартно 20%)</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">AndroidAPS ще покаже запитването за промяна на базала само ако е по-голямо от тази стойност.(Стандартно 20%)</string>
     <string name="pairfirst">Моля първо свържете помпата с телефона от Bluetooth настройките </string>
     <string name="searching_for_devices">Търсене на устройства...</string>
     <string name="please_wait">Моля изчакайте...</string>
@@ -1453,4 +1442,5 @@
     <string name="loop_smbexecution_time_label">Макс. време за изпълнение за SMB</string>
     <string name="loop_tbrrequest_time_label">Диапазон между временни базали</string>
     <string name="loop_tbrexecution_time_label">Продължителност на временни базали</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

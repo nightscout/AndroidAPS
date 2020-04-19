@@ -43,8 +43,6 @@
     <string name="description_pump_mdi">Integracja pompy dla pacjentów podających insulinę w formie wielu zastrzyków dziennie</string>
     <string name="description_pump_virtual">Integracja z pompami, które nie posiadają jeszcze żadnego sterownika (Open Loop)</string>
     <string name="description_sensitivity_aaps">Wrażliwość jest obliczana w taki sam sposób, jak algorytm Oref0, ale możliwe jest podanie okresu z przeszłości. Minimalne wchłanianie węglowodanów jest obliczana na podstawie czasu wchłaniania max carb, określonego w ustawieniu.</string>
-    <string name="description_sensitivity_oref0">Wrażliwość jest obliczana na podstawie danych z ostatnich 24 godzin, a węglowodany niewchłonięte nie są brane pod uwagę, po czasie określonym w ustawieniach.</string>
-    <string name="description_sensitivity_oref1">Wrażliwość jest obliczana na podstawie danych z ostatnich 8 godzin, a węglowodany niewchłonięte nie są brane pod uwagę, po czasie określonym w ustawieniach. Wtyczka oblicza również UAM (posiłek nie wprowadzony do AAPS).</string>
     <string name="description_sensitivity_weighted_average">Wrażliwość jest obliczana jako średnia ważona z odchyleń. Nowsze wartości mają większą wagę. Minimalne wchłanianie węglowodanów jest obliczana na podstawie czasu wchłaniania max carb, określonego w ustawieniu. Algorytm ten najszybciej śledzi zmiany wrażliwości.</string>
     <string name="description_source_eversense">Pobieraj wartości BG ze spatchowanej aplikacji Eversense.</string>
     <string name="description_source_glimp">Pobieraj wartości BG z Glimp.</string>
@@ -164,9 +162,7 @@
     <string name="disableloop">Wyłącz pętle</string>
     <string name="enableloop">Włącz pętle</string>
     <string name="openloop_newsuggestion">Dostępna nowa sugestia</string>
-    <string name="unsupportedclientver">Niewspierana wersja NSClient</string>
     <string name="unsupportednsversion">Niewspierana wersja Nightscout</string>
-    <string name="nsclientnotinstalled">NSClient nie zainstalowany. Zapis stracony!</string>
     <string name="loopdisabled">PĘTLA WYLĄCZONA Z UWAGI NA OGRANICZENIA</string>
     <string name="treatments_wizard_basaliob_label">Bazowa IOB</string>
     <string name="bolusconstraintapplied">Ograniczenia bolusa wprowadzone</string>
@@ -461,10 +457,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">Wartość domyślna: 2\nBolus snooze jest uruchamiany po wykonaniu bolusa posiłkowego, tak by pętla nie przeciwdziałała niskim wartościom tymczasowym zaraz po posiłku. Jako przykład: wartość domyślna ustawiona jest 2; więc 3 godzinne DIA oznacza, że bolus snooze będzie stopniowo wycofany po 1.5 godziny (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Wartość domyślna: 3.0 (AMA) lub 8.0 (SMB). To jest ustawienie domyślnego wpływu wchłaniania węglowodanów w czasie 5 min. Wartością domyślną jest spodziewane 3mg/dl/5min. Ma to wpływ na szybkość zaniku COB, oraz jak duże wchłanianie węglowodanów będzie przyjęte do obliczeń przyszłych przewidywanych wartości BG, jeżeli BG obniża się bardziej niż w założono, lub nie wzrasta tak szybko jak się spodziewano.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">UWAGA!\nZwykle nie trzeba zmieniać tych wartości. Proszę NACIŚNIJ TUTAJ i PRZECZYTAJ tekst i upewnij się, że ROZUMIESZ go przed zmianą którejś z tych wartości.</string>
-    <string name="error_only_numeric_digits_allowed">Dozwolone są tylko cyfry.</string>
-    <string name="error_only_numeric_digits_range_allowed">Dozwolone są tylko cyfry w zakresie %1$s - %2$s.</string>
-    <string name="error_field_must_not_be_empty">Pole nie może być puste</string>
-    <string name="error_phone_not_valid">Nieprawidłowy numer telefonu</string>
     <string name="smscommunicator_invalidphonennumber">Nieprawidłowy numer telefonu SMS</string>
     <string name="overview_calibration">Kalibracja</string>
     <string name="send_calibration">Wysłać kalibrację %1$.1f do xDrip?</string>
@@ -484,8 +476,6 @@
     <string name="virtualpump_settings">Ustawienia pompy wirtualnej</string>
     <string name="virtualpump_uploadstatus_title">Przesyłaj status do NS</string>
     <string name="wrongpassword">Złe hasło</string>
-    <string name="settings_password">Hasło do ustawień</string>
-    <string name="unlock_settings">Odblokuj ustawienia</string>
     <string name="approachingdailylimit">Zbliżam się do dziennego limitu insuliny</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
@@ -989,7 +979,6 @@
     <string name="allow_hardware_pump_text">Uwaga: Jeśli aktywujesz połączenie z pompą inną niż wirtualna, AndroidAPS skopiuje ustawienia bazy do profilu pompy, zastępując istniejące ustawienia w niej zapisane. Upewnij się, że ustawienia bazy w AndroidAPS są poprawne. Jeśli nie jesteś pewien lub nie chcesz nadpisywać podstawowych ustawień pompy, naciśnij przycisk anuluj i połącz ponownie w innym czasie.</string>
     <string name="error_adding_treatment_title">Niekompletne dane leczenie</string>
     <string name="maintenance_settings">Ustawienia Konserwacji</string>
-    <string name="maintenance_email">Email</string>
     <string name="maintenance_amount">Liczba logów do wysłania</string>
     <string name="maintenance">Konserwacja</string>
     <string name="maintenance_shortname">MAINT</string>
@@ -1015,7 +1004,7 @@
     <string name="speederror">Błąd prędkości</string>
     <string name="insulinlimitviolation">Przekroczono limit insuliny</string>
     <string name="loop_openmode_min_change">Minimalna żądana zmiana [%]</string>
-    <string name="loop_openmode_min_change_summary">Otwarta pętla wprowadzi żądanie zmiany tylko w przypadku, gdy będzie ona większa niż ta wartość w %. Wartość domyślna to 20%</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">Otwarta pętla wprowadzi żądanie zmiany tylko w przypadku, gdy będzie ona większa niż ta wartość w %. Wartość domyślna to 20%</string>
     <string name="pairfirst">Proszę sparować swoją pompę z telefonem!</string>
     <string name="searching_for_devices">Wyszukiwanie urządzeń…</string>
     <string name="please_wait">Proszę czekać…</string>
@@ -1443,4 +1432,5 @@
     <string name="alreadyset">Już ustawiono</string>
     <string name="message">Wiadomość</string>
     <string name="clearqueueconfirm">Wyczyścić kolejkę? Wszystkie dane w kolejce zostaną utracone!</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

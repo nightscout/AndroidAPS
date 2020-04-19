@@ -40,8 +40,6 @@
     <string name="description_pump_mdi">Diyabet tedavisi için günde birden fazla enjeksiyon yapan kişiler için pompa entegrasyonu</string>
     <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
     <string name="description_sensitivity_aaps">Duyarlılık, Oref0 gibi aynı şekilde hesaplanır ancak geçmiş zaman çerçevesi belirtebilirsiniz. Minimal karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır.</string>
-    <string name="description_sensitivity_oref0">Duyarlılık geçmiş 24 saatlik verilerden hesaplanır ve karbonhidratlar (eğer emilmediyse) tercihlerde belirtilen süreden sonra kesilir.</string>
-    <string name="description_sensitivity_oref1">Duyarlılık geçmişte 8 saatlik verilerden hesaplanır ve karbonhidratlar (eğer emilmezse) tercihlerde belirtilen süreden sonra kesilir. Eklenti ayrıca UAM\'yi hesaplar.</string>
     <string name="description_sensitivity_weighted_average">Duyarlılık, sapmalardan ağırlıklı ortalama olarak hesaplanır. Daha yeni sapmalar daha ağırdır. Minimal karbonhidrat emilimi, tercihlerden maksimum karbon emilim süresinden hesaplanır. Bu algoritma, aşağıdaki duyarlılık değişikliklerinden daha hızlıdır.</string>
     <string name="description_source_glimp">Glimp\'ten KŞ değerleri alır.</string>
     <string name="description_source_mm640g">600SeriesAndroidUploader\'dan KŞ değerleri alın.</string>
@@ -158,9 +156,7 @@
     <string name="disableloop">Döngü devre dışı bırak</string>
     <string name="enableloop">Döngü etkinleştir</string>
     <string name="openloop_newsuggestion">Yeni öneri mevcut</string>
-    <string name="unsupportedclientver">NSClient\'in desteklenmeyen sürümü</string>
     <string name="unsupportednsversion">Nightscout\'un desteklenmeyen sürümü</string>
-    <string name="nsclientnotinstalled">NSClient yüklü değil. Kayıt kaybedildi!</string>
     <string name="loopdisabled">DÖNGÜ KISITLAMALARDAN İPTAL EDİLDİ</string>
     <string name="treatments_wizard_basaliob_label">Bazal IOB</string>
     <string name="bolusconstraintapplied">Bolus kısıtlaması uygulandı</string>
@@ -409,10 +405,6 @@
     <string name="openapsama_min_5m_carbimpact_summary">Varsayılan değer: 3.0 (AMA) Gelişmiş Yemek Asistanı veya 8.0 (SMB) Super Micro Bolus. Bu 5 dakika başına varsayılan karbonhidrat emilimi için bir ayardır. Standart değer AMA için 3mg/dl/5dk aynı şekilde SMB 8mg/dl/5dk dir.
 Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla düştüğü veya beklenildiği kadar yükselmediği zamanlarda gelecekte yapılacak tahminlerde KŞ\'nin hesaplanmasında ne kadar karbonhidrat emilimi gerçekleşeceğini öngörür.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Dikkat!\nNormalde aşağıdaki bu değerleri değiştirmek zorunda değilsiniz. Lütfen burayı TIKLAYIN ve metni OKUYUN ve bu değerlerden herhangi birini değiştirmeden önce ANLADIĞINIZDAN emin olun.</string>
-    <string name="error_only_numeric_digits_allowed">Yalnızca sayısal rakam girebilirsiniz.</string>
-    <string name="error_only_numeric_digits_range_allowed">%1$s - %2$s aralığında yalnızca sayısal rakamlar kullanılabilir.</string>
-    <string name="error_field_must_not_be_empty">Alan boş olmamalı</string>
-    <string name="error_phone_not_valid">Telefon numarası geçerli değil</string>
     <string name="smscommunicator_invalidphonennumber">Geçersiz SMS telefon numarası</string>
     <string name="overview_calibration">Kalibrasyon</string>
     <string name="xdripnotinstalled">xDrip+ uygulaması yüklenmemiş</string>
@@ -431,8 +423,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="virtualpump_settings">Sanal pompa ayarları</string>
     <string name="virtualpump_uploadstatus_title">Nightscout\'a durum aktar</string>
     <string name="wrongpassword">Hatalı parola</string>
-    <string name="settings_password">Ayarları için parola</string>
-    <string name="unlock_settings">Kilit açma ayarları</string>
     <string name="approachingdailylimit">Günlük İnsülin limitine yaklaşıldı</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCl</string>
@@ -900,7 +890,6 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="allow_hardware_pump_text">Dikkat: Eğer bir donanım pompasını etkinleştirir ve bağlarsanız, AndroidAPS, bazal ayarları profilden pompaya aktaracaktır ve pompada kayıtlı mevcut bazal oranlarının üzerine yazacaktır. AndroidAPS\'de doğru ayarların olduğundan emin olun. Emin değilseniz veya pompanızdaki bazal ayarların üzerine yazmak istemiyorsanız, iptal tuşuna basın ve daha sonra tekrar deneyin.</string>
     <string name="error_adding_treatment_title">Tedavi verileri eksik</string>
     <string name="maintenance_settings">Bakım ayarları</string>
-    <string name="maintenance_email">E-Posta</string>
     <string name="maintenance_amount">Gönderilecek loglar Yok</string>
     <string name="maintenance">Bakım</string>
     <string name="maintenance_shortname">BAKIM</string>
@@ -944,4 +933,5 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <!-- MDT History -->
     <!-- MDT Pump Status -->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

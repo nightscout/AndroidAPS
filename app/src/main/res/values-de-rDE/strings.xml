@@ -43,8 +43,6 @@
     <string name="description_pump_mdi">Pumpen-Integration für Personen, die täglich mehrere Injektionen für ihre Diabetestherapie vornehmen</string>
     <string name="description_pump_virtual">Pumpen-Integration für Pumpen, die noch nicht über einen Treiber verfügen (Open Loop)</string>
     <string name="description_sensitivity_aaps">Die Sensitivität wird genauso wie bei Oref0 berechnet, aber Du kannst dafür ein Zeitfenster bestimmen. Die minimale Kohlenhydrat-Absorptionsrate wird aus der maximalen Absorptionsdauer aus den Einstellungen abgeleitet.</string>
-    <string name="description_sensitivity_oref0">Die Sensitivität wird aus den Daten der letzten 24 Stunden berechnet und Kohlenhydrate (falls nicht bereits absorbiert) werden nach der in den Einstellungen angegebenen Zeit als absorbiert betrachtet.</string>
-    <string name="description_sensitivity_oref1">Die Sensitivität wird aus den Daten der letzten 8 Stunden berechnet und Kohlenhydrate (falls nicht bereits absorbiert) werden nach der in den Einstellungen angegebenen Zeit als absorbiert betrachtet. Das Plugin bezieht Zeiträume, in denen UAM annimmt, dass Kohlenhydrate aktiv waren, nicht mit in die Berechnung ein.</string>
     <string name="description_sensitivity_weighted_average">Die Sensitivität wird aus den Abweichungen errechnet. Dabei werden neuere Abweichungen stärker gewichtet als ältere. Die minimale Kohlenhydrat-Aufnahme wird aus der in den Präferenzen angegebenen maximalen Kohlenhydrat-Resorptionszeit abgeleitet. Dieser Algorithmus reagiert am schnellsten auf Änderungen der Empfindlichkeit.</string>
     <string name="description_source_eversense">Empfange BZ-Werte von der gepatchten Eversense App.</string>
     <string name="description_source_glimp">Empfange Blutzucker-Werte von Glimp.</string>
@@ -164,9 +162,7 @@
     <string name="disableloop">Deaktiviere Loop</string>
     <string name="enableloop">Aktiviere Loop</string>
     <string name="openloop_newsuggestion">Neue Empfehlung verfügbar</string>
-    <string name="unsupportedclientver">Nicht unterstützte Version des Nightscout-Clients</string>
     <string name="unsupportednsversion">Nicht unterstütze Nightscout-Version</string>
-    <string name="nsclientnotinstalled">Nightscout-Client ist nicht installiert. Eintrag verloren!</string>
     <string name="loopdisabled">LOOP DEAKTIVIERT DURCH BESCHRÄNKUNGEN</string>
     <string name="treatments_wizard_basaliob_label">Basal-IOB</string>
     <string name="bolusconstraintapplied">Bolus-Beschränkung angewendet</string>
@@ -461,10 +457,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">Standarwert: 2\nBolus snooze (\"Bolus-Schlummer\") bremst den Loop nach einem Mahleiten-Bolus, damit dieser nicht mit niedrigen TBR reagiert, wenn Du gerade gegessen hast. Beispiel: Der Standardwert 2 bewirkt, dass bei einem 3 Stunden DIA der Bolus snooze während 1.5 Stunden nach dem Bolus linear ausläuft (3 h Dia / 2 = 1.5 h Bolus snooze).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Standardwert: 3.0 (AMA) or 8.0 (SMB)\nDies ist eine Einstellung für die Standard-Kohlenhydrat-Absorptionswirkung pro 5 Minuten. Der Standardwert ist 3 mg/dl/5min (AMA) bzw. 8 mg/dl/5min (SMB). Dies wirkt sich darauf aus, wie schnell der COB-Wert fällt und wieviel KH-Absorption bei der Berechnung des vorhergesagten BZ angenommen wird, wenn der BZ stärker als erwartet fällt oder nicht so stark wie erwartet steigt.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Achtung!\nNormalerweise musst Du diese Werte nicht ändern. Bitte KLICKE HIER und LESE den Text. Verändere Werte erst, wenn Du den Inhalt des Textes verstanden hast.</string>
-    <string name="error_only_numeric_digits_allowed">Bitte verwende nur Ziffern.</string>
-    <string name="error_only_numeric_digits_range_allowed">Bitte verwende nur Ziffern von %1$s - %2$s.</string>
-    <string name="error_field_must_not_be_empty">Pflichtfeld</string>
-    <string name="error_phone_not_valid">Telefonnummer ist nicht gültig</string>
     <string name="smscommunicator_invalidphonennumber">Falsche/ungültige Telefonnummer</string>
     <string name="overview_calibration">Kalibrierung</string>
     <string name="send_calibration">Kalibrierung %1$.1f an xDrip+ senden?</string>
@@ -484,8 +476,6 @@
     <string name="virtualpump_settings">Einstellungen der virtuellen Pumpe</string>
     <string name="virtualpump_uploadstatus_title">Status zu Nightscout hochladen</string>
     <string name="wrongpassword">Falsches Passwort</string>
-    <string name="settings_password">Passwort für die Einstellungen</string>
-    <string name="unlock_settings">Einstellungen freischalten</string>
     <string name="approachingdailylimit">Tagesinsulin-Limit wird bald erreicht</string>
     <string name="nsclientinternal">Nightscout-Client</string>
     <string name="nsclientinternal_shortname">NSCl</string>
@@ -989,7 +979,6 @@
     <string name="allow_hardware_pump_text">WARNUNG: Wenn Du eine echte Pumpe aktivierst und anschließt, kopiert AndroidAPS die Basaleinstellungen vom aktiven Profil zur Pumpe (und behält sie bei). Die Einstellungen in der Pumpe werden hierbei überschrieben. Wenn Du Dir nicht sicher bist oder die Basaleinstellungen in der Pumpe nicht überschreiben möchten, drücke \"Abbrechen\" und vollziehe den Wechsel zur Pumpe später.</string>
     <string name="error_adding_treatment_title">Behandlungsdaten unvollständig</string>
     <string name="maintenance_settings">Wartungseinstellungen</string>
-    <string name="maintenance_email">E-Mail</string>
     <string name="maintenance_amount">Anzahl der zu sendenden Logs</string>
     <string name="maintenance">Wartung</string>
     <string name="maintenance_shortname">WRTNG</string>
@@ -1016,7 +1005,7 @@ Unerwartetes Verhalten.</string>
     <string name="speederror">Geschwindigkeits-Fehler</string>
     <string name="insulinlimitviolation">Insulin-Beschränkung verletzt</string>
     <string name="loop_openmode_min_change">Minimaler Wert zur Anfrage einer Änderung [%]</string>
-    <string name="loop_openmode_min_change_summary">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
     <string name="pairfirst">Bitte kopple deine Pumpe mit deinem Telefon!</string>
     <string name="searching_for_devices">Geräte werden gesucht…</string>
     <string name="please_wait">Bitte warten…</string>
@@ -1455,4 +1444,5 @@ Unerwartetes Verhalten.</string>
     <string name="loop_tbrrequest_time_label">Temp. BR Anfragezeit</string>
     <string name="loop_tbrexecution_time_label">Temp. BR Ausführungszeit</string>
     <string name="insight_alert_notification_channel">Insight Pumpenalarme</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

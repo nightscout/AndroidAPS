@@ -43,8 +43,6 @@
     <string name="description_pump_mdi">Intégration pompe pour les personnes qui font des injections quotidiennes multiples pour le traitement de leur diabète</string>
     <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
     <string name="description_sensitivity_aaps">La sensibilité est calculée de la même manière que Oref0, mais vous pouvez spécifier la période concernée. L\'absorption minimale des glucides est calculée à partir des temps d’absorption max des glucides du menu préférences.</string>
-    <string name="description_sensitivity_oref0">La sensibilité est calculée à partir des données sur les dernières 24h et les glucides (si non absorbés) ne sont plus pris en compte après l’heure spécifiée dans les préférences.</string>
-    <string name="description_sensitivity_oref1">La sensibilité est calculée à partir des données des dernières 8 heures et les glucides (si non absorbés) ne sont plus pris en compte après le temps spécifié dans les préférences. Le plugin calcule également les RNS (UAM).</string>
     <string name="description_sensitivity_weighted_average">La sensibilité est calculée comme une moyenne pondérée des écarts. Les écarts les plus récents ont un poids plus élevé. L\'absorption minimale des glucides est calculée à partir des temps d’absorption des glucides max du menu préférences. Cet algorithme est le plus rapide pour s\'adapter aux changements de sensibilité.</string>
     <string name="description_source_eversense">Recevoir les valeurs de glycémie de l’app Eversense patchée.</string>
     <string name="description_source_glimp">Recevoir les glycémies depuis Glimp.</string>
@@ -164,9 +162,7 @@
     <string name="disableloop">Désactiver la Boucle</string>
     <string name="enableloop">Activer la Boucle</string>
     <string name="openloop_newsuggestion">Nouvelle recommendation disponible</string>
-    <string name="unsupportedclientver">Version incompatible du NSClient</string>
     <string name="unsupportednsversion">Version incompatible de Nightscout</string>
-    <string name="nsclientnotinstalled">NSClient non installé. Enregistrement perdu !</string>
     <string name="loopdisabled">BOUCLE DÉSACTIVÉE PAR RESTRICTIONS</string>
     <string name="treatments_wizard_basaliob_label">Basal IA</string>
     <string name="bolusconstraintapplied">Restriction du Bolus appliquée</string>
@@ -462,10 +458,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="openapsama_bolussnooze_dia_divisor_summary">Valeur par défaut : 2\nBolus snooze est activé apres votre bolus de repas, la boucle ne réagira pas avec des valeurs basses temporaire quand vous venez juste de manger. L’exemple ici et la valeur par défaut est 2 ; donc avec une Durée d\'Action (DIA) de 3 heures signifie que snooze bolus sera graduellement éliminé après 1,5 heures (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Valeur par défaut : 3.0 (AMA) ou 8.0 (SMB). Il s’agit d’un paramètre décrivant l’absorption des glucides par 5 minutes. La valeur par défaut est de 3mg/dl/5min. Cela influe sur la vitesse calculée de disparition des Glucides Actifs (GA), et comment sera estimée la consommation des glucides pour calculer les valeurs futures de glycémies, lorsque la glycémie chute plus que prévu ou n\'augmente pas autant que calculé.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Attention !\nNormalement vous n\'avez pas à changer les valeurs mentionnées ci-dessous. SVP CLIQUEZ ICI et LISEZ bien le texte. Assurez-vous de bien le COMPRENDRE avant de changer n’importe laquelle de ces valeurs.</string>
-    <string name="error_only_numeric_digits_allowed">Seuls les chiffres sont autorisés.</string>
-    <string name="error_only_numeric_digits_range_allowed">Seuls les chiffres qui se trouvent dans la fourchette %1$s - %2$s sont autorisés.</string>
-    <string name="error_field_must_not_be_empty">Le champ ne doit pas être vide</string>
-    <string name="error_phone_not_valid">Le numéro de tél est invalide</string>
     <string name="smscommunicator_invalidphonennumber">Num tél du SMS est invalide</string>
     <string name="overview_calibration">Étalonnage</string>
     <string name="send_calibration">Envoyer la calibration %1$.1f à xDrip ?</string>
@@ -485,8 +477,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="virtualpump_settings">Paramètres pompe virtuelle</string>
     <string name="virtualpump_uploadstatus_title">Remontée des informations vers NS</string>
     <string name="wrongpassword">Mauvais mot de passe</string>
-    <string name="settings_password">Mot de passe pour paramètres</string>
-    <string name="unlock_settings">Déverrouiller les paramètres</string>
     <string name="approachingdailylimit">L\'insuline journalière s\'approche de la limite</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
@@ -990,7 +980,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AndroidAPS copiera les paramètres Basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres Basal dans AndroidAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres Basal sur votre pompe, appuyez sur Annuler et reporter le passage à la pompe à une date ultérieure.</string>
     <string name="error_adding_treatment_title">Données de traitement incomplètes</string>
     <string name="maintenance_settings">Paramètres de maintenance</string>
-    <string name="maintenance_email">E-mail</string>
     <string name="maintenance_amount">Nombre de journaux (Logs) à envoyer</string>
     <string name="maintenance">Maintenance</string>
     <string name="maintenance_shortname">MAINT</string>
@@ -1016,7 +1005,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="speederror">Erreur de vitesse</string>
     <string name="insulinlimitviolation">Violation d\'une limite d\'insuline</string>
     <string name="loop_openmode_min_change">Changement minimum [%]</string>
-    <string name="loop_openmode_min_change_summary">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
     <string name="pairfirst">Appairez SVP votre pompe avec votre téléphone !</string>
     <string name="searching_for_devices">Recherche d\'appareils en cours…</string>
     <string name="please_wait">Merci de patienter...</string>
@@ -1455,4 +1444,5 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="loop_tbrrequest_time_label">Heure de demande basal temp</string>
     <string name="loop_tbrexecution_time_label">Heure d\'exécution basal temp</string>
     <string name="insight_alert_notification_channel">Alertes Pompe Insight</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>
