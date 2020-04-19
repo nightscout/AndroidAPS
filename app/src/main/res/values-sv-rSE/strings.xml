@@ -319,7 +319,7 @@ Eversense-appen.</string>
     <string name="overview_bolusprogress_goingtodeliver">Kommer att leverera %1$.2f enheter</string>
     <string name="youareonallowedlimit">Du har nått din tillåtna gräns</string>
     <string name="noprofileselected">Ingen profil vald</string>
-    <string name="smscommunicator_loophasbeendisabled">Loop stängdes av</string>
+    <string name="smscommunicator_loophasbeendisabled">Loop stängdes av. </string>
     <string name="smscommunicator_loophasbeenenabled">Loop aktiverades</string>
     <string name="smscommunicator_loopisdisabled">Loop är avstängd</string>
     <string name="smscommunicator_loopisenabled">Loop är aktiverad</string>
@@ -537,7 +537,7 @@ Eversense-appen.</string>
     <string name="resume">Återuppta</string>
     <string name="reconnect">Återanslut Pump</string>
     <string name="smscommunicator_wrongduration">Fel duration</string>
-    <string name="smscommunicator_loopsuspended">Loop pausad</string>
+    <string name="smscommunicator_loopsuspended">Loop pausad. </string>
     <string name="smscommunicator_loopresumed">Loop återupptagen</string>
     <string name="treatments_wizard_bgtrend_label">15 min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
