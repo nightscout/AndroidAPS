@@ -1203,7 +1203,7 @@
     <string name="error_adding_treatment_title">Treatment data incomplete</string>
     <string name="maintenance_settings">Maintenance Settings</string>
     <string name="maintenance_email">Email recipient</string>
-    <string name="key_maintenance_encrypt_exported_prefs">maintenance_encrypt_exported_prefs</string>
+    <string name="key_maintenance_encrypt_exported_prefs" translatable="false">maintenance_encrypt_exported_prefs</string>
     <string name="maintenance_encrypt_exported_prefs">Encrypt exported settings</string>
     <string name="key_maintenance_logs_email" translatable="false">maintenance_logs_email</string>
     <string name="key_maintenance_logs_amount" translatable="false">maintenance_logs_amount</string>
