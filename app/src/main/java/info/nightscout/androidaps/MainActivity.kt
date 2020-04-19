@@ -51,7 +51,7 @@ import info.nightscout.androidaps.tabs.TabPageAdapter
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.LocaleHelper.update
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
@@ -160,7 +160,13 @@ class MainActivity : NoSplashAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null, Runnable { finish() }, Runnable { finish() })
+        protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null,
+            Runnable {
+                OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() })
+            },
+            Runnable {
+                OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() })
+            })
     }
 
     private fun setWakeLock() {
@@ -226,7 +232,7 @@ class MainActivity : NoSplashAppCompatActivity() {
             if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
                 when (requestCode) {
                     AndroidPermission.CASE_STORAGE                                                                                                                                        ->                         //show dialog after permission is granted
-                        show(this, "", resourceHelper.gs(R.string.alert_dialog_storage_permission_text))
+                        OKDialog.show(this, "", resourceHelper.gs(R.string.alert_dialog_storage_permission_text))
 
                     AndroidPermission.CASE_LOCATION, AndroidPermission.CASE_SMS, AndroidPermission.CASE_BATTERY, AndroidPermission.CASE_PHONE_STATE, AndroidPermission.CASE_SYSTEM_WINDOW -> {
                     }

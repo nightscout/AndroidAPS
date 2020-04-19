@@ -1803,4 +1803,5 @@
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_deviationslope">Deviation slope</string>
     <string name="key_graphconfig" translatable="false">graphconfig</string>
+    <string name="authorizationfailed">Authorization failed</string>
 </resources>

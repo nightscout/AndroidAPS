@@ -21,18 +21,22 @@ object BiometricCheck {
                     BiometricConstants.ERROR_LOCKOUT,
                     BiometricConstants.ERROR_VENDOR,
                     BiometricConstants.ERROR_LOCKOUT_PERMANENT,
-                    BiometricConstants.ERROR_USER_CANCELED   -> {
+                    BiometricConstants.ERROR_USER_CANCELED        -> {
                         ToastUtils.showToastInUiThread(activity.baseContext, errString.toString())
                         fail?.run()
                     }
 
-                    BiometricConstants.ERROR_NEGATIVE_BUTTON ->
+                    BiometricConstants.ERROR_NEGATIVE_BUTTON      ->
                         cancel?.run()
+
+                    BiometricConstants.ERROR_NO_DEVICE_CREDENTIAL ->
+                        // call ok, because it's not possible to bypass it when biometrics is setup, hw not present and no pin set
+                        ok?.run()
+
                     BiometricConstants.ERROR_NO_SPACE,
                     BiometricConstants.ERROR_HW_UNAVAILABLE,
                     BiometricConstants.ERROR_HW_NOT_PRESENT,
-                    BiometricConstants.ERROR_NO_DEVICE_CREDENTIAL,
-                    BiometricConstants.ERROR_NO_BIOMETRICS   ->
+                    BiometricConstants.ERROR_NO_BIOMETRICS        ->
                         // call ok, because it's not possible to bypass it when biometrics fail
                         // ok?.run()
                         // changed to fail as you can use PIN instead with setDeviceCredentialAllowed enabled

@@ -37,7 +37,7 @@
                 />
 
             <ListPreference
-                android:defaultValue="1"
+                android:defaultValue="0"
                 android:entries="@array/protectiontype"
                 android:entryValues="@array/protectiontypeValues"
                 android:key="@string/key_settings_protection"
@@ -49,7 +49,7 @@
                 android:title="@string/settings_password" />
 
             <ListPreference
-                android:defaultValue="1"
+                android:defaultValue="0"
                 android:entries="@array/protectiontype"
                 android:entryValues="@array/protectiontypeValues"
                 android:key="@string/key_application_protection"
@@ -61,7 +61,7 @@
                 android:title="@string/application_password" />
 
             <ListPreference
-                android:defaultValue="1"
+                android:defaultValue="0"
                 android:entries="@array/protectiontype"
                 android:entryValues="@array/protectiontypeValues"
                 android:key="@string/key_bolus_protection"
