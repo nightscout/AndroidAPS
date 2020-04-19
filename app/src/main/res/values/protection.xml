@@ -29,19 +29,4 @@
     <string name="key_settings_protection" translatable="false">settings_protection</string>
     <string name="key_application_protection" translatable="false">application_protection</string>
     <string name="key_bolus_protection" translatable="false">bolus_protection</string>
-
-    <string-array name="protectiontype">
-        <item>@string/noprotection</item>
-        <item>@string/biometric</item>
-        <item>@string/master_password</item>
-        <item>@string/custom_password</item>
-    </string-array>
-
-    <string-array name="protectiontypeValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
 </resources>
