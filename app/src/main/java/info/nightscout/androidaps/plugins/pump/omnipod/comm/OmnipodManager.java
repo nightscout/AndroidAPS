@@ -15,7 +15,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AcknowledgeAl
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AssignAddressAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.BolusAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.CancelDeliveryAction;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.ConfigurePodAction;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.SetupPodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.DeactivatePodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.GetPodInfoAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.GetStatusAction;
@@ -93,7 +93,7 @@ public class OmnipodManager {
             }
 
             if (SetupProgress.ADDRESS_ASSIGNED.equals(podState.getSetupProgress())) {
-                communicationService.executeAction(new ConfigurePodAction(podState));
+                communicationService.executeAction(new SetupPodAction(podState));
             }
 
             communicationService.executeAction(new PrimeAction(new PrimeService(), podState));
