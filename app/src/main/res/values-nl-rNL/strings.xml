@@ -544,7 +544,7 @@
     <string name="ns_logappstartedevent">Log app start naar NS</string>
     <string name="restartingapp">Sluiten van applicatie om instellingen bij te werken.</string>
     <string name="danarv2pump">DanaRv2</string>
-    <string name="configbuilder_insulin">Insuline curve</string>
+    <string name="configbuilder_insulin">Insuline</string>
     <string name="configbuilder_insulin_description">Welk soort insuline gebruik je?</string>
     <string name="fastactinginsulin">Snel werkende insuline</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
@@ -1453,4 +1453,5 @@
     <string name="loop_smbexecution_time_label">SMB uitvoeringstijd</string>
     <string name="loop_tbrrequest_time_label">Tijdelijk basaal aanvraag tijd</string>
     <string name="loop_tbrexecution_time_label">Tijdelijke basaal uitvoering tijd</string>
+    <string name="insight_alert_notification_channel">Insight pomp waarschuwingen</string>
 </resources>

@@ -315,7 +315,7 @@
     <string name="overview_bolusprogress_stop">Parar</string>
     <string name="overview_bolusprogress_stoppressed">STOP PRESSIONADO</string>
     <string name="waitingforpump">À espera da bomba</string>
-    <string name="overview_bolusprogress_goingtodeliver">Vão ser administradas %1$.2fU</string>
+    <string name="overview_bolusprogress_goingtodeliver">Vai ser administrada %1$.2fU</string>
     <string name="youareonallowedlimit">Atingiu o limite autorizado</string>
     <string name="noprofileselected">Nenhum perfil seleccionado</string>
     <string name="smscommunicator_loophasbeendisabled">Loop foi desactivado</string>

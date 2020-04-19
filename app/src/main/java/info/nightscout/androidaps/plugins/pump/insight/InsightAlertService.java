@@ -104,8 +104,10 @@ public class InsightAlertService extends Service implements InsightConnectionSer
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if ("mute".equals(intent.getStringExtra("command"))) {
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        if (intent == null) {
+            // service is being restarted
+        } else if ("mute".equals(intent.getStringExtra("command"))) {
             mute();
         } else if ("confirm".equals(intent.getStringExtra("command"))) {
             dismissNotification();
