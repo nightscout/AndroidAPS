@@ -178,7 +178,7 @@ class DanaRFragment : DaggerFragment() {
         if (pump.lastConnection != 0L) {
             val agoMsec = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMsec.toDouble() / 60.0 / 1000.0).toInt()
-            danar_lastconnection.text = DateUtil.timeString(pump.lastConnection) + " (" + resourceHelper.gs(R.string.minago, agoMin) + ")"
+            danar_lastconnection?.text = DateUtil.timeString(pump.lastConnection) + " (" + resourceHelper.gs(R.string.minago, agoMin) + ")"
             SetWarnColor.setColor(danar_lastconnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {
@@ -186,46 +186,46 @@ class DanaRFragment : DaggerFragment() {
             val agoHours = agoMsec.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
-                danar_lastbolus.text = DateUtil.timeString(pump.lastBolusTime) + " " + DateUtil.sinceString(pump.lastBolusTime, resourceHelper) + " " + resourceHelper.gs(R.string.formatinsulinunits, pump.lastBolusAmount)
+                danar_lastbolus?.text = DateUtil.timeString(pump.lastBolusTime) + " " + DateUtil.sinceString(pump.lastBolusTime, resourceHelper) + " " + resourceHelper.gs(R.string.formatinsulinunits, pump.lastBolusAmount)
             else
-                danar_lastbolus.text = ""
+                danar_lastbolus?.text = ""
         }
 
-        danar_dailyunits.text = resourceHelper.gs(R.string.reservoirvalue, pump.dailyTotalUnits, pump.maxDailyTotalUnits)
+        danar_dailyunits?.text = resourceHelper.gs(R.string.reservoirvalue, pump.dailyTotalUnits, pump.maxDailyTotalUnits)
         SetWarnColor.setColor(danar_dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9)
-        danar_basabasalrate.text = "( " + (pump.activeProfile + 1) + " )  " + resourceHelper.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
+        danar_basabasalrate?.text = "( " + (pump.activeProfile + 1) + " )  " + resourceHelper.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
         // DanaRPlugin, DanaRKoreanPlugin
         if (activePlugin.activePump.isFakingTempsByExtendedBoluses == true) {
-            danar_tempbasal.text = activePlugin.activeTreatments.getRealTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
+            danar_tempbasal?.text = activePlugin.activeTreatments.getRealTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
                 ?: ""
         } else {
             // v2 plugin
-            danar_tempbasal.text = activePlugin.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
+            danar_tempbasal?.text = activePlugin.activeTreatments.getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull()
                 ?: ""
         }
-        danar_extendedbolus.text = activePlugin.activeTreatments.getExtendedBolusFromHistory(System.currentTimeMillis())?.toString()
+        danar_extendedbolus?.text = activePlugin.activeTreatments.getExtendedBolusFromHistory(System.currentTimeMillis())?.toString()
             ?: ""
-        danar_reservoir.text = resourceHelper.gs(R.string.reservoirvalue, pump.reservoirRemainingUnits, 300)
+        danar_reservoir?.text = resourceHelper.gs(R.string.reservoirvalue, pump.reservoirRemainingUnits, 300)
         SetWarnColor.setColorInverse(danar_reservoir, pump.reservoirRemainingUnits, 50.0, 20.0)
-        danar_battery.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"
+        danar_battery?.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"
         SetWarnColor.setColorInverse(danar_battery, pump.batteryRemaining.toDouble(), 51.0, 26.0)
-        danar_iob.text = resourceHelper.gs(R.string.formatinsulinunits, pump.iob)
-        danar_firmware.text = resourceHelper.gs(R.string.danar_model, pump.modelFriendlyName(), pump.hwModel, pump.protocol, pump.productCode)
-        danar_basalstep.text = pump.basalStep.toString()
-        danar_bolusstep.text = pump.bolusStep.toString()
-        danar_serialnumber.text = pump.serialNumber
+        danar_iob?.text = resourceHelper.gs(R.string.formatinsulinunits, pump.iob)
+        danar_firmware?.text = resourceHelper.gs(R.string.dana_model, pump.modelFriendlyName(), pump.hwModel, pump.protocol, pump.productCode)
+        danar_basalstep?.text = pump.basalStep.toString()
+        danar_bolusstep?.text = pump.bolusStep.toString()
+        danar_serialnumber?.text = pump.serialNumber
         val status = commandQueue.spannedStatus()
         if (status.toString() == "") {
-            danar_queue.visibility = View.GONE
+            danar_queue?.visibility = View.GONE
         } else {
-            danar_queue.visibility = View.VISIBLE
-            danar_queue.text = status
+            danar_queue?.visibility = View.VISIBLE
+            danar_queue?.text = status
         }
         //hide user options button if not an RS pump or old firmware
         // also excludes pump with model 03 because of untested error
         val isKorean = danaRKoreanPlugin.isEnabled(PluginType.PUMP)
         if (isKorean || pump.hwModel == 0 || pump.hwModel == 3) {
-            danar_user_options.visibility = View.GONE
+            danar_user_options?.visibility = View.GONE
         }
     }
 }
