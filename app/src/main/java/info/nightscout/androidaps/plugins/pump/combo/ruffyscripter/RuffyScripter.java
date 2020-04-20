@@ -160,7 +160,7 @@ public class RuffyScripter implements RuffyCommands {
         }
 
         if (!boundSucceeded) {
-            log.error("No connection to ruffy. Pump control unavailable.");
+            log.info("No connection to ruffy. Pump control unavailable.");
         }
     }
 
@@ -262,7 +262,7 @@ public class RuffyScripter implements RuffyCommands {
                         long cmdEndTime = System.currentTimeMillis();
                         log.debug("Executing " + cmd + " took " + (cmdEndTime - cmdStartTime) + "ms");
                     } catch (CommandException e) {
-                        log.error("CommandException running command", e);
+                        log.info("CommandException running command", e);
                         cmd.getResult().success = false;
                     } catch (Exception e) {
                         log.error("Unexpected exception running cmd", e);

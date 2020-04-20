@@ -377,6 +377,40 @@ class GraphData(injector: HasAndroidInjector, private val graph: GraphView, priv
     }
 
     // scale in % of vertical size (like 0.3)
+    fun addAbsIob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
+        val iobSeries: FixedLineGraphSeries<ScaledDataPoint?>
+        val iobArray: MutableList<ScaledDataPoint> = ArrayList()
+        var maxIobValueFound = Double.MIN_VALUE
+        var lastIob = 0.0
+        val iobScale = Scale()
+        var time = fromTime
+        while (time <= toTime) {
+            val profile = profileFunction.getProfile(time)
+            var iob = 0.0
+            if (profile != null) iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(time, profile).iob
+            if (abs(lastIob - iob) > 0.02) {
+                if (abs(lastIob - iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, iobScale))
+                iobArray.add(ScaledDataPoint(time, iob, iobScale))
+                maxIobValueFound = max(maxIobValueFound, abs(iob))
+                lastIob = iob
+            }
+            time += 5 * 60 * 1000L
+        }
+        iobSeries = FixedLineGraphSeries(Array(iobArray.size) { i -> iobArray[i] }).also {
+            it.isDrawBackground = true
+            it.backgroundColor = -0x7f000001 and resourceHelper.gc(R.color.iob) //50%
+            it.color = resourceHelper.gc(R.color.iob)
+            it.thickness = 3
+        }
+        if (useForScale) {
+            maxY = maxIobValueFound
+            minY = -maxIobValueFound
+        }
+        iobScale.setMultiplier(maxY * scale / maxIobValueFound)
+        addSeries(iobSeries)
+    }
+
+    // scale in % of vertical size (like 0.3)
     fun addCob(fromTime: Long, toTime: Long, useForScale: Boolean, scale: Double) {
         val minFailOverActiveList: MutableList<DataPointWithLabelInterface> = ArrayList()
         val cobArray: MutableList<ScaledDataPoint> = ArrayList()

@@ -43,8 +43,7 @@
     <string name="description_pump_mdi">Ovladač pumpy pro uživatele inzulínových per</string>
     <string name="description_pump_virtual">Ovladač pumpy pro uživatele bez podporované pumpy (Otevřená smyčka)</string>
     <string name="description_sensitivity_aaps">Citlivost je počítána stejným způsobem jako v Oref0, ale je možné specifikovat dobu do minulosti. Minimální absorpce sacharidů je počítána dynamicky z maximální doby absorpce definované v nastavení.</string>
-    <string name="description_sensitivity_oref0">Citlivost je počítána za 24h a sacharidy, pokud nejsou absorbované, jsou oříznuty po čase definovaném v nastavení.</string>
-    <string name="description_sensitivity_oref1">Citlivost je počítána za 8h a sacharidy, pokud nejsou absorbované, jsou oříznuty po čase definovaném v nastavení. Je také zároveň vyhodnocováno UAM (neoznámené jídlo).</string>
+    <string name="description_sensitivity_oref1">Citlivost je počítána za 8h nebo 24h (použita je vyšší citlivost). Sacharidy, pokud nejsou absorbované, jsou oříznuty po čase definovaném v nastavení. Je také zároveň vyhodnocováno UAM (neoznámené jídlo).</string>
     <string name="description_sensitivity_weighted_average">Citlivost je počítána jako vážený průměr z odchylek. Novější mají vyšší prioritu. Minimální absorpce sacharidů je počítána dynamicky z maximální doby absorpce definované v nastavení. Tento algoritmus sleduje nejrychleji změny citlivosti.</string>
     <string name="description_source_eversense">Příjem glykémií z modifikované Eversense aplikace.</string>
     <string name="description_source_glimp">Příjem glykémií z Glimpu.</string>
@@ -164,9 +163,7 @@
     <string name="disableloop">Zakázat smyčku</string>
     <string name="enableloop">Povolit smyčku</string>
     <string name="openloop_newsuggestion">Dostupné nové doporučení</string>
-    <string name="unsupportedclientver">Nepodporovaná verze NSClient</string>
     <string name="unsupportednsversion">Nepodporovaná verze Nightscoutu</string>
-    <string name="nsclientnotinstalled">NSClient není nainstalován. Záznam je ztracen!</string>
     <string name="loopdisabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
     <string name="treatments_wizard_basaliob_label">Bazální IOB</string>
     <string name="bolusconstraintapplied">Aplikováno omezení bolusu</string>
@@ -222,6 +219,44 @@
     <string name="openapsma_maxiob_title">Maximální bazální IOB [U]</string>
     <string name="openapsma_maxiob_summary">Tato hodnota je v kontextu OpenAPS nazývána max IOB</string>
     <string name="dismiss">POTVRDIT</string>
+    <string name="password_preferences_encrypt_prompt">Zobrazí se výzva k zadání hlavního hesla, které bude použito k šifrování exportovaných předvoleb.</string>
+    <string name="password_preferences_decrypt_prompt">Zobrazí se výzva k zadání hlavního hesla, které bude použito k dešifrování importovaných předvoleb.</string>
+    <string name="preferences_export_canceled">Export zrušen! Předvolby NEBYLY exportovány!</string>
+    <string name="preferences_import_canceled">Import zrušen! Předvolby NEBYLY importovány!</string>
+    <string name="check_preferences_before_import">Před importem zkontrolujte předvolby:</string>
+    <string name="check_preferences_cannot_import">Předvolby nelze importovat!</string>
+    <string name="check_preferences_dangerous_import">Předvolby by neměly být importovány!</string>
+    <string name="check_preferences_details_btn">Vysvětlení problémy při importu…</string>
+    <string name="check_preferences_details_title">Detaily problémů importu</string>
+    <string name="check_preferences_import_btn">Import</string>
+    <string name="check_preferences_import_anyway_btn">Přesto importovat (NEBEZPEČNÉ!)</string>
+    <string name="metadata_warning_different_flavour">Předvolby byly vytvořeny s jinou variantou AAPS (%1$s) a když máte: %2$s.\n\nNěkterá nastavení mohou chybět nebo mohou být neplatná - po importu zkontrolujte konfiguraci a aktualizujte předvolby.</string>
+    <string name="metadata_warning_different_device">Předvolby byly vytvořeny na jiném zařízení. Je to v pořádku, pokud importujete ze staršího/jiného telefonu, ale ujistěte se, že importované předvolby jsou správné!</string>
+    <string name="metadata_warning_outdated_format">Používáte zastaralý formát od starých verzí AAPS, který není zabezpečený! Použijte jej pouze jako poslední možnost, pokud nemáte exporty v aktuálním formátu JSON.</string>
+    <string name="metadata_warning_old_export">Importované předvolby jsou staré již %1$s dní! Možná máte aktualnější export nebo jste vybral špatný soubor? Nezapomeňte předvolby pravidelně exportovat!</string>
+    <string name="metadata_warning_date_format">Neplatný formát datumu!</string>
+    <string name="metadata_label_format">Formát souboru</string>
+    <string name="metadata_label_created_at">Vytvořeno</string>
+    <string name="metadata_label_aaps_version">Verze AAPS</string>
+    <string name="metadata_label_aaps_flavour">Varianta sestavení</string>
+    <string name="metadata_label_device_name">Jméno pacienta použité při exportu</string>
+    <string name="metadata_label_device_model">Model zaříení použitý při exportu</string>
+    <string name="metadata_label_encryption">Šifrování souboru</string>
+    <string name="metadata_format_old">Starý formát exportu</string>
+    <string name="metadata_format_new">Nový zašifrovaný formát</string>
+    <string name="metadata_format_debug">Nový formát pro ladění (nešifrovaný)</string>
+    <string name="metadata_format_other">Neznámý formát souboru</string>
+    <string name="prefdecrypt_settings_tampered">Soubor s nastavením poškozen</string>
+    <string name="prefdecrypt_settings_secure">Soubor nastavení je zabezpečen</string>
+    <string name="prefdecrypt_settings_unencrypted">Použití nezabezpečeného, nešifrovaného formátu nastavení</string>
+    <string name="prefdecrypt_wrong_json">Chyba formátu JSON, chybí povinné pole (formát, obsah, metadata nebo zabezpečení)</string>
+    <string name="prefdecrypt_wrong_password">Chyba dešifrování, dané heslo nemůže dešifrovat soubor</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Chybí kontrolní součet souboru (hash), nelze ověřit pravost nastavení!</string>
+    <string name="prefdecrypt_issue_modified">Soubor byl po exportu změněn!</string>
+    <string name="prefdecrypt_issue_parsing">Chyba dešifrování, analýza předvoleb se nezdařila!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Chyba dešifrování, zadané heslo je neplatné, nebo byl soubor nastavení změněn! Může se stát, že importovaný soubor byl exportován s jiným hlavním heslem.</string>
+    <string name="prefdecrypt_issue_wrong_format">Chybí konfigurace šifrování, formát nastavení je neplatný!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný nebo neurčený šifrovací algoritmus!</string>
     <string name="danarpump">DanaR</string>
     <string name="connecting">Připojuji</string>
     <string name="connected">Připojeno</string>
@@ -461,10 +496,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">Výchozí hodnota: 2\nToto nastavení říká, po jakou část z hodnoty DIA smyčka po bolusu čeká a nereaguje na změny glykémií (zde 3DIA/2 = 1,5h).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Výchozí hodnota: 3.0 (AMA) nebo 8.0 (SMB) mg/dl/5min. Tato hodnota definuje minimální část strávených sacharidů za každých 5 min. Tato hodnota ovlivňuje výpočet COB.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Pozor!\nZa normálních okolností tyto hodnoty nemusíte měnit. Klikněte ZDE, PŘEČTĚTE si informace a UJISTĚTE se, že jim rozumíte dříve, než je začnete měnit.</string>
-    <string name="error_only_numeric_digits_allowed">Povoleny pouze číslice.</string>
-    <string name="error_only_numeric_digits_range_allowed">Povoleny pouze čísla v rozsahu %1$s - %2$s.</string>
-    <string name="error_field_must_not_be_empty">Toto pole nesmí být prázdné</string>
-    <string name="error_phone_not_valid">Neplatné telefonní číslo</string>
     <string name="smscommunicator_invalidphonennumber">Špatné telefonní číslo</string>
     <string name="overview_calibration">Kalibrace</string>
     <string name="send_calibration">Poslat do xDripu kalibraci %1$.1f?</string>
@@ -484,8 +515,6 @@
     <string name="virtualpump_settings">Nastavení virtuální pumpy</string>
     <string name="virtualpump_uploadstatus_title">Nahrávat status do NS</string>
     <string name="wrongpassword">Chybné heslo</string>
-    <string name="settings_password">Heslo do nastavení</string>
-    <string name="unlock_settings">Odemknout nastavení</string>
     <string name="approachingdailylimit">Blíží se denní limit inzulínu</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCl</string>
@@ -517,6 +546,9 @@
     <string name="adult">Dospělý</string>
     <string name="resistantadult">Dospělý s nízkou citlivostí</string>
     <string name="patientage_summary">Vyberte věk pacienta pro nastavení bezpečnostních limitů</string>
+    <string name="patient_name">Jméno pacienta</string>
+    <string name="patient_name_summary">Zadejte jméno pacienta nebo přezdívku pro rozlišení mezi více nastaveními</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Uživatel</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s potřebuje vypnout optimalizace baterie pro optimální výkon</string>
     <string name="loopsuspended">Smyčka pozastavena</string>
@@ -714,8 +746,13 @@
     <string name="bgsource_upload">Nastavení nahrávání glykémií</string>
     <string name="wear_detailed_delta_title">Zobrazovat detailní změny</string>
     <string name="wear_detailed_delta_summary">Zobrazovat rozdíl s jedním desetinným místem navíc</string>
+    <string name="smbinterval_summary">Jak často budou SMB podávány v minutách</string>
     <string name="smbmaxminutes">Max. minut SMB</string>
     <string name="smbmaxminutes_summary">Maximální počet minut bazálu, ke kterým se limituje SMB</string>
+    <string name="uamsmbmaxminutes">UAM SMB max. minut</string>
+    <string name="uamsmbmaxminutes_summary">Maximální počet minut bazálu, ke kterým se limituje SMB pro UAM</string>
+    <string name="carbsReqThreshold">Prahová hodnota doporučení sacharidů</string>
+    <string name="carbsReqThreshold_summary">Po navržení sacharidů, kolik sacharidů vyvolá upozornění</string>
     <string name="unsupportedfirmware">Nepodporovaný firmware v pumpě</string>
     <string name="dexcomg5_xdripupload_title">Odesílat data do xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">V xDrip+ vyberte zdroj dat 640g/Eversense</string>
@@ -782,6 +819,7 @@
     <string name="ago">zpět</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="format_mins_short">%1$dm</string>
     <string name="enablesmbalways">Vždy povolit SMB</string>
     <string name="enablesmbalways_summary">Povolit SMB nezávisle na bolusech. Možno pouze se zdroji glykémií s dobrým filtrováním dat, jako např. G5</string>
     <string name="enablesmbaftercarbs">Povolit SMB po jídle</string>
@@ -980,6 +1018,10 @@
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Zvýšení senzitivity pro dočasné cíle >= 5.5]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Nízký dočasný cíl sníží senzitivitu</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Nižší senzitivita pro dočasné cíle < 5.5]]></string>
+    <string name="resistance_lowers_target_title">Rezistence snižuje cíl</string>
+    <string name="resistance_lowers_target_summary">Je-li zjištěna rezistence, snížit cílovou hladinu glukózy</string>
+    <string name="sensitivity_raises_target_title">Citlivost zvyšuje cíl</string>
+    <string name="sensitivity_raises_target_summary">Je-li zjištěna vyšší citlivost, zvýší cílovou hladinu glukózy</string>
     <string name="combo_invalid_setup">Chybné nastavení pumpy. Projděte si dokumentaci a přesvědčete se, že menu Quick Info se jmenuje QUICK INFO, za použití 360 configuration software.</string>
     <string name="custom">Volitelný</string>
     <string name="largetimedifftitle">Velký rozdíl v času</string>
@@ -989,7 +1031,8 @@
     <string name="allow_hardware_pump_text">POZOR: Pokud aktivuje a připojíte skutečnou pumpu, AndroidAPS nakopíruje (a bude udržovat) nastavení bazálu z aktivního profilu do pumpy. Nastavení bazálu v pumpě bude přepsáno. Pokud si nejste jistí nebo nechcete přepsat bazály v pumpě, stiskněte Zrušit a opakujte přepnutí na jinou pumpu později.</string>
     <string name="error_adding_treatment_title">Data ošetření neúplná</string>
     <string name="maintenance_settings">Nastavení údržby</string>
-    <string name="maintenance_email">E-mail</string>
+    <string name="maintenance_email">Příjemce e-mailu</string>
+    <string name="maintenance_encrypt_exported_prefs">Šifrovat exportované nastavení</string>
     <string name="maintenance_amount">Počet logů k odeslání</string>
     <string name="maintenance">Údržba</string>
     <string name="maintenance_shortname">ÚDRŽBA</string>
@@ -1015,7 +1058,7 @@
     <string name="speederror">Chyba rychlosti</string>
     <string name="insulinlimitviolation">Překročen limit inzulínu</string>
     <string name="loop_openmode_min_change">Minimální změna pro výzvu [%]</string>
-    <string name="loop_openmode_min_change_summary">Otevřená smyčka vytvoří novou žádost o změnu pouze v případě, že změna je větší než tato hodnota. Výchozí hodnota je 20 %</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">Otevřená smyčka vytvoří novou žádost o změnu pouze v případě, že změna je větší než tato hodnota. Výchozí hodnota je 20 %</string>
     <string name="pairfirst">Spárujte pumpu s telefonem!</string>
     <string name="searching_for_devices">Vyhledávání zařízení…</string>
     <string name="please_wait">Počkejte prosím…</string>
@@ -1197,6 +1240,8 @@
     <string name="exists">existuje</string>
     <string name="notexists">neexistuje</string>
     <string name="temptargetcompared">Dočasný cíl %1$s</string>
+    <string name="btdevicecompared">Připojení Bluetooth k zařízení %1$s %2$s</string>
+    <string name="btdevice">Připojení k zařízení Bluetooth </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -1251,6 +1296,7 @@
     <string name="medtronic_pump_battery_alkaline">Alkalické (Rozšířené)</string>
     <string name="medtronic_pump_battery_lithium">Lithiové (Rozšířené)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Rozšířené)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (Rozšířené)</string>
     <string name="medtronic_bolus_debugging">Bolus/Ošetření ladění</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">VYHLEDAT</string>
@@ -1454,4 +1500,27 @@
     <string name="loop_tbrrequest_time_label">Čas požadavku dočasného bazálu</string>
     <string name="loop_tbrexecution_time_label">Čas provedení dočasného bazálu</string>
     <string name="insight_alert_notification_channel">Upozornění pumpy Insight</string>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">z aplikace Authenticator pro: %1$s</string>
+    <string name="smscommunicator_otp_enabled">Povolit Autentikátor</string>
+    <string name="smscommunicator_otp_enabled_summary">Ověření příkazů pomocí jednočasových hesel generovaných Google Authenticator nebo podobných 2FA aplikací.</string>
+    <string name="smscommunicator_otp_pin">Další PIN na konci tokenu</string>
+    <string name="smscommunicator_otp_pin_summary">Další číslice, které by měly být zapamatovány a přidány na konec každého vygenerovaného jednorázového hesla</string>
+    <string name="smscomunicator_tab_otp_label">Nastavení Autentikátoru</string>
+    <string name="smscommunicator_otp_verify_label">OTP pro kontrolu:</string>
+    <string name="smscommunicator_otp_reset_btn">Resetovat autentikátory</string>
+    <string name="smscommunicator_otp_reset_title">Resetovat klíč pro autentikátory</string>
+    <string name="smscommunicator_otp_reset_prompt">Opravdu chcete obnovit ověřovací klíč? Vyresetujete všechny aktuálně nakonfigurované autentikátory a budete je muset znovu nastavit.</string>
+    <string name="smscommunicator_otp_reset_successful">Byl vygenerován nový klíč autentikátoru! Prosím, použijte aktualizovaný QR kód pro nastavení autentikátorů.</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Nainstalujte Autentikátor</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Naskenujte kód pro nastavení kódů OTP AndroidAPS</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Otestujte jednorázové heslo</string>
+    <string name="smscommunicator_otp_reset_header">Resetovat autentikátory</string>
+    <string name="smscommunicator_otp_install_info">Na každém sledovacím telefonu nainstalujte Authentikátor, který podporuje tokeny TOTP RFC 6238. Nejoblíbenější bezplatné aplikace jsou:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_provisioning_warning">Nesdílejí tento kód on-line!\nPoužít pouze k nastavení Authentikátoru na sledujících telefonech.</string>
+    <string name="smscommunicator_otp_reset_warning">Obnovením autentikátoru uděláte všechny již poskytnuté autentikátory neplatné. Budete je muset znovu nastavit!</string>
+    <string name="onconnect">Při připojení</string>
+    <string name="ondisconnect">Při odpojení</string>
+    <string name="overview_show_predictions">Predikce</string>
+    <string name="overview_show_deviationslope">Odchylka sklonu</string>
 </resources>

@@ -71,6 +71,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private LongSparseArray<IobTotal> iobTable = new LongSparseArray<>(); // oldest at index 0
+    private LongSparseArray<IobTotal> absIobTable = new LongSparseArray<>(); // oldest at index 0, absolute insulin in the body
     private LongSparseArray<AutosensData> autosensDataTable = new LongSparseArray<>(); // oldest at index 0
     private LongSparseArray<BasalData> basalDataTable = new LongSparseArray<>(); // oldest at index 0
 
@@ -487,6 +488,27 @@ public class IobCobCalculatorPlugin extends PluginBase {
         return iobTotal;
     }
 
+    public IobTotal calculateAbsInsulinFromTreatmentsAndTempsSynchronized(long time, Profile profile) {
+        synchronized (dataLock) {
+            long now = System.currentTimeMillis();
+            time = roundUpTime(time);
+            if (time < now && absIobTable.get(time) != null) {
+                //og.debug(">>> calculateFromTreatmentsAndTemps Cache hit " + new Date(time).toLocaleString());
+                return absIobTable.get(time);
+            } else {
+                //log.debug(">>> calculateFromTreatmentsAndTemps Cache miss " + new Date(time).toLocaleString());
+            }
+            IobTotal bolusIob = treatmentsPlugin.getCalculationToTimeTreatments(time).round();
+            IobTotal basalIob = treatmentsPlugin.getAbsoluteIOBTempBasals(time).round();
+
+            IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
+            if (time < System.currentTimeMillis()) {
+                absIobTable.put(time, iobTotal);
+            }
+            return iobTotal;
+        }
+    }
+
     private IobTotal calculateFromTreatmentsAndTemps(long time, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
         long now = DateUtil.now();
 
@@ -805,6 +827,14 @@ public class IobCobCalculatorPlugin extends PluginBase {
                 if (iobTable.keyAt(index) > time) {
                     getAapsLogger().debug(LTag.AUTOSENS, "Removing from iobTable: " + DateUtil.dateAndTimeString(iobTable.keyAt(index)));
                     iobTable.removeAt(index);
+                } else {
+                    break;
+                }
+            }
+            for (int index = absIobTable.size() - 1; index >= 0; index--) {
+                if (absIobTable.keyAt(index) > time) {
+                    getAapsLogger().debug(LTag.AUTOSENS, "Removing from absIobTable: " + DateUtil.dateAndTimeString(absIobTable.keyAt(index)));
+                    absIobTable.removeAt(index);
                 } else {
                     break;
                 }

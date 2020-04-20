@@ -116,6 +116,7 @@ class NotificationStore @Inject constructor(
             .setSmallIcon(smallIcon)
             .setLargeIcon(largeIcon)
             .setContentText(n.text)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(n.text))
             .setPriority(NotificationCompat.PRIORITY_MAX)
             .setDeleteIntent(deleteIntent(n.id))
         if (n.level == Notification.URGENT) {

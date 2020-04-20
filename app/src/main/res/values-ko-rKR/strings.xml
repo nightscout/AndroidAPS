@@ -43,8 +43,6 @@
     <string name="description_pump_mdi">다회요법으로 관리하는 사용자를 위한 설정</string>
     <string name="description_pump_virtual">가상용 펌프를 위한 설정(Open Loop)</string>
     <string name="description_sensitivity_aaps">Oref0와 동일한 방법으로 민감도가 계산되지만, 과거 시간을 지정할 수 있습니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다.</string>
-    <string name="description_sensitivity_oref0">민감도가 과거 24시간의 데이터로 부터 계산됩니다. (흡수되지 않은 경우) 탄수화물은 설정에서 설정된 시간이 지나면 없어집니다.</string>
-    <string name="description_sensitivity_oref1">민감도가 과거 8시간의 데이터로 부터 계산됩니다. (흡수되지 않은 경우) 탄수화물은 설정에서 설정된 시간이 지나면 없어집니다. UAM(알리지 않은 음식)도 계산합니다.</string>
     <string name="description_sensitivity_weighted_average">민감도가 편차의 가중평균으로 계산됩니다. 최근의 편차가 더 가중됩니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다. 이 알고리즘의 민감도가 가장 빠릅니다.</string>
     <string name="description_source_eversense">패치된 Eversense 앱에서 혈당값 받기</string>
     <string name="description_source_glimp">Glimp에서 혈당값 받기</string>
@@ -164,9 +162,7 @@
     <string name="disableloop">Loop 중지하기</string>
     <string name="enableloop">Loop 실행하기</string>
     <string name="openloop_newsuggestion">새로운 제안이 있습니다</string>
-    <string name="unsupportedclientver">지원하지 않는 NSClient 버전입니다</string>
     <string name="unsupportednsversion">지원하지 않는 Nightscout 버전입니다</string>
-    <string name="nsclientnotinstalled">NSClient 가 설치되지 않았습니다. 기록이 삭제됩니다!</string>
     <string name="loopdisabled">제한으로 인해 LOOP가 사용불가합니다.</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="bolusconstraintapplied">Bolus 제한이 적용되었습니다</string>
@@ -461,10 +457,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">기본값: 2\n식사주입 후 Bolus snooze가 수행되게 되고, 따라서 식사주입 직후엔 loop가 low temp에 대응하지 않게 됩니다. 기본값이 2일때 예제는 다음과 같습니다; DIA가 3시간일 경우  bolus snooz는 점차적으로 1.5시간에 걸쳐 단계적으로 사라지게 됩니다.(3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">기본값: 3.0 (AMA) 또는 8.0 (SMB). 5분당 탄수화물이 얼만큼 흡수되었는지에 대한 기본값 설정입니다. 기본값은 3mg/dl / 5분 입니다. 이는 혈당이 예상보다 빨리 떨어지거나 혹은 예상보다 오르지 않을때, COB가 얼마나 빨리 사라지게 되는지에 영향을 주게 되고, 추정된 탄수화물 흡수량이 미래 혈당 예측 계산시에도 영향을 주게 됩니다.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">주의!\n보통의 경우 아래의 값을 변경하면 안됩니다. 이 값들을 변경하기 전에 반드시 이곳을 클릭하고 글을 정독해서 확실하게 이해를 하여야 합니다.</string>
-    <string name="error_only_numeric_digits_allowed">숫자만 입력가능합니다.</string>
-    <string name="error_only_numeric_digits_range_allowed">이 범위(%1$s - %2$s)안에 해당하는 숫자만 입력가능합니다.</string>
-    <string name="error_field_must_not_be_empty">필수 입력 항목입니다.</string>
-    <string name="error_phone_not_valid">폰번호가 유효하지 않습니다</string>
     <string name="smscommunicator_invalidphonennumber">SMS폰번호가 유효하지 않습니다</string>
     <string name="overview_calibration">보정</string>
     <string name="send_calibration">보정값 %1$.1f을 xDrip에 전송하시겠습니까?</string>
@@ -484,8 +476,6 @@
     <string name="virtualpump_settings">가상펌프 설정</string>
     <string name="virtualpump_uploadstatus_title">NS에 상태 업로드하기</string>
     <string name="wrongpassword">잘못된 비밀번호</string>
-    <string name="settings_password">설정 비밀번호</string>
-    <string name="unlock_settings">설정 잠금해제</string>
     <string name="approachingdailylimit">인슐린 일 허용량에 근접중</string>
     <string name="nsclientinternal">내장 NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
@@ -989,7 +979,6 @@
     <string name="allow_hardware_pump_text">주의: 활성화하고 펌프에 연결하게되면, AndroidAPS는 프로파일의 Basal설정을 복사해서 기존에 펌프에 저장되어 있던 Basal설정을 덮어쓰게 될것입니다. AndroidAPS의 Basal설정이 올바른지 반드시 확인하세요. 만약 확실치 않거나 Basal설정을 덮어씌우길 원치않는다면, 취소버튼을 누르고 나중에 다시 연결하세요.</string>
     <string name="error_adding_treatment_title">관리 데이터가 불완전합니다</string>
     <string name="maintenance_settings">정비 설정</string>
-    <string name="maintenance_email">Email</string>
     <string name="maintenance_amount">전송할 로그 수</string>
     <string name="maintenance">정비</string>
     <string name="maintenance_shortname">MAINT</string>
@@ -1015,7 +1004,7 @@
     <string name="speederror">속도 오류</string>
     <string name="insulinlimitviolation">인슐린 제한 위반</string>
     <string name="loop_openmode_min_change">최소 요청 변화 [%]</string>
-    <string name="loop_openmode_min_change_summary">Open Loop가 %단위로 이 값보다 변화가 더 클 경우에만 새 변경 요청을 팝업합니다. 기본값은 20 %입니다</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">Open Loop가 %단위로 이 값보다 변화가 더 클 경우에만 새 변경 요청을 팝업합니다. 기본값은 20 %입니다</string>
     <string name="pairfirst">펌프를 폰과 동기화 하십시오</string>
     <string name="searching_for_devices">장치 검색중...</string>
     <string name="please_wait">잠시 기다려 주세요...</string>
@@ -1453,4 +1442,5 @@
     <string name="loop_smbexecution_time_label">SMB 실행시간</string>
     <string name="loop_tbrrequest_time_label">임시 Basal 요청시간</string>
     <string name="loop_tbrexecution_time_label">임시 Basal 실행시간</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

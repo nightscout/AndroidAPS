@@ -9,7 +9,10 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.AAPSLoggerTest
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.json.JSONObject
@@ -23,6 +26,8 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var fabricPrivacy: FabricPrivacy
+    @Mock lateinit var profileFunction: ProfileFunction
+    @Mock lateinit var defaultValueHelper: DefaultValueHelper
 
     val rxBus = RxBusWrapper()
 
@@ -39,6 +44,12 @@ open class TestBaseWithProfile : TestBase() {
                 it.treatmentsPlugin = treatmentsPlugin
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
+                it.resourceHelper = resourceHelper
+            }
+            if (it is Treatment) {
+                it.activePlugin = activePluginProvider
+                it.profileFunction = profileFunction
+                it.defaultValueHelper = defaultValueHelper
                 it.resourceHelper = resourceHelper
             }
         }

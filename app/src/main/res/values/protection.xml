@@ -22,26 +22,11 @@
     <string name="password_cleared">Password cleared!</string>
     <string name="password_hint">Enter password here</string>
 
-    <string name="key_master_password">master_password</string>
+    <string name="key_master_password" translatable="false">master_password</string>
     <string name="key_settings_password" translatable="false">settings_password</string>
     <string name="key_application_password" translatable="false">application_password</string>
-    <string name="key_bolus_password">translatable="false"bolus_password</string>
+    <string name="key_bolus_password" translatable="false">bolus_password</string>
     <string name="key_settings_protection" translatable="false">settings_protection</string>
     <string name="key_application_protection" translatable="false">application_protection</string>
     <string name="key_bolus_protection" translatable="false">bolus_protection</string>
-
-    <string-array name="protectiontype">
-        <item>@string/noprotection</item>
-        <item>@string/biometric</item>
-        <item>@string/master_password</item>
-        <item>@string/custom_password</item>
-    </string-array>
-
-    <string-array name="protectiontypeValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
 </resources>

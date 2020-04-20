@@ -70,12 +70,23 @@ class OverviewMenus @Inject constructor(
         DEV(R.string.overview_show_deviations, R.color.deviations, primary = false, secondary = true),
         SEN(R.string.overview_show_sensitivity, R.color.ratio, primary = false, secondary = true),
         ACT(R.string.overview_show_activity, R.color.activity, primary = true, secondary = true),
+        ABS(R.string.overview_show_absinsulin, R.color.iob, primary = false, secondary = true),
         DEVSLOPE(R.string.overview_show_deviationslope, R.color.devslopepos, primary = false, secondary = true)
     }
 
     companion object {
         const val MAX_GRAPHS = 5 // including main
     }
+
+    fun enabledTypes(graph: Int): String {
+        val r = StringBuilder()
+        for (type in CharType.values()) if (setting[graph][type.ordinal]) {
+            r.append(type.name)
+            r.append(" ")
+        }
+        return r.toString()
+    }
+
     var setting: MutableList<Array<Boolean>> = ArrayList()
 
     private fun storeGraphConfig() {
@@ -86,9 +97,15 @@ class OverviewMenus @Inject constructor(
 
     private fun loadGraphConfig() {
         val sts = sp.getString(R.string.key_graphconfig, "")
-        if (sts.isNotEmpty())
+        if (sts.isNotEmpty()) {
             setting = Gson().fromJson(sts, Array<Array<Boolean>>::class.java).toMutableList()
-        else {
+            // reset when new CharType added
+            for (s in setting)
+                if (s.size != CharType.values().size) {
+                    setting = ArrayList()
+                    setting.add(Array(CharType.values().size) { true })
+                }
+        } else {
             setting = ArrayList()
             setting.add(Array(CharType.values().size) { true })
         }

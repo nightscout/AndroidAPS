@@ -29,7 +29,6 @@ class DanaRSPluginTest : DanaRSTestBase() {
 
     @Mock lateinit var context: Context
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
 

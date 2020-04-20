@@ -59,6 +59,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryDa
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
@@ -438,6 +439,27 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             totalExt.netbasalinsulin = totalExt.extendedBolusInsulin;
             totalExt.hightempinsulin = totalExt.extendedBolusInsulin;
             total.plus(totalExt);
+        }
+        return total;
+    }
+
+    public IobTotal getAbsoluteIOBTempBasals(long time) {
+        IobTotal total = new IobTotal(time);
+
+        for (long i = time - range(); i < time; i += T.mins(5).msecs()) {
+            Profile profile = profileFunction.getProfile(i);
+            double basal = profile.getBasal(i);
+            TemporaryBasal runningTBR = getTempBasalFromHistory(i);
+            double running = basal;
+            if (runningTBR != null) {
+               running = runningTBR.tempBasalConvertedToAbsolute(i, profile);
+            }
+            Treatment treatment = new Treatment(getInjector());
+            treatment.date = i;
+            treatment.insulin = running * 5.0 / 60.0; // 5 min chunk
+            Iob iob = treatment.iobCalc(i, profile.getDia());
+            total.iob += iob.iobContrib;
+            total.activity += iob.activityContrib;
         }
         return total;
     }

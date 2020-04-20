@@ -30,7 +30,6 @@ open class ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var loopPlugin: LoopPlugin
     @Mock lateinit var activePlugin: ActivePluginProvider
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var localProfilePlugin : LocalProfilePlugin
     @Mock lateinit var smsCommunicatorPlugin : SmsCommunicatorPlugin
 

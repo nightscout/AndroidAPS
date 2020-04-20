@@ -19,6 +19,7 @@ import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
@@ -149,6 +150,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private var scheduledUpdate: ScheduledFuture<*>? = null
 
     private val secondaryGraphs = ArrayList<GraphView>()
+    private val secondaryGraphsLabel = ArrayList<TextView>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -485,8 +487,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             //aapsLogger.debug("New secondary graph count ${numOfGraphs-1}")
             // rebuild needed
             secondaryGraphs.clear()
+            secondaryGraphsLabel.clear()
             overview_iobgraph.removeAllViews()
             for (i in 1 until numOfGraphs) {
+                val label = TextView(context)
+                label.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).also { it.setMargins(100, 0, 0, -50) }
+                overview_iobgraph.addView(label)
+                secondaryGraphsLabel.add(label)
                 val graph = GraphView(context)
                 graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, resourceHelper.dpToPx(100)).also { it.setMargins(0, 0, 0, resourceHelper.dpToPx(10)) }
                 graph.gridLabelRenderer?.gridColor = resourceHelper.gc(R.color.graphgrid)
@@ -530,7 +537,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overview_looplayout?.visibility = View.GONE
             return
         }
-        notificationStore.updateNotifications(overview_notifications)
+        overview_notifications?.let { notificationStore.updateNotifications(it) }
         overview_pumpstatuslayout?.visibility = View.GONE
         overview_looplayout?.visibility = View.VISIBLE
 
@@ -818,12 +825,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     var useRatioForScale = false
                     var useDSForScale = false
                     var useIAForScale = false
+                    var useABSForScale = false
                     when {
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal]      -> useIobForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal]      -> useCobForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]      -> useDevForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]      -> useRatioForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]      -> useIAForScale = true
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]      -> useABSForScale = true
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] -> useDSForScale = true
                     }
 
@@ -832,6 +841,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal]) secondGraphData.addDeviations(fromTime, now, useDevForScale, 1.0)
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal]) secondGraphData.addRatio(fromTime, now, useRatioForScale, 1.0)
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal]) secondGraphData.addActivity(fromTime, endTime, useIAForScale, 0.8)
+                    if (overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal]) secondGraphData.addAbsIob(fromTime, now, useABSForScale, 1.0)
                     if (overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] && buildHelper.isDev()) secondGraphData.addDeviationSlope(fromTime, now, useDSForScale, 1.0)
 
                     // set manual x bounds to have nice steps
@@ -843,12 +853,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             // finally enforce drawing of graphs in UI thread
             graphData.performUpdate()
             for (g in 0 until secondaryGraphs.size) {
+                secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
                 secondaryGraphs[g].visibility = (
                     overviewMenus.setting[g + 1][OverviewMenus.CharType.IOB.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.COB.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.ACT.ordinal] ||
+                        overviewMenus.setting[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
                         overviewMenus.setting[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
                     ).toVisibility()
                 secondaryGraphsData[g].performUpdate()
