@@ -1804,4 +1804,5 @@
     <string name="overview_show_deviationslope">Deviation slope</string>
     <string name="key_graphconfig" translatable="false">graphconfig</string>
     <string name="authorizationfailed">Authorization failed</string>
+    <string name="overview_show_absinsulin">Absolute insulin</string>
 </resources>
