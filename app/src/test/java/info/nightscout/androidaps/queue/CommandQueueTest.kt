@@ -36,7 +36,6 @@ import java.util.*
 class CommandQueueTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var lazyActivePlugin: Lazy<ActivePluginProvider>
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var context: Context

@@ -22,9 +22,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(RxBusWrapper::class)
 class DanaRS_Packet_Notify_Delivery_CompleteTest : DanaRSTestBase() {
 
-    @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var danaRSPlugin: DanaRSPlugin
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePlugin: ActivePluginProvider
 
     private var treatmentInjector: HasAndroidInjector = HasAndroidInjector {

@@ -446,8 +446,6 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public IobTotal getAbsoluteIOBTempBasals(long time) {
         IobTotal total = new IobTotal(time);
 
-        PumpInterface pumpInterface = activePlugin.getActivePump();
-
         for (long i = time - range(); i < time; i += T.mins(5).msecs()) {
             Profile profile = profileFunction.getProfile(i);
             double basal = profile.getBasal(i);
@@ -456,7 +454,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             if (runningTBR != null) {
                running = runningTBR.tempBasalConvertedToAbsolute(i, profile);
             }
-            Treatment treatment = new Treatment();
+            Treatment treatment = new Treatment(getInjector());
             treatment.date = i;
             treatment.insulin = running * 5.0 / 60.0; // 5 min chunk
             Iob iob = treatment.iobCalc(i, profile.getDia());

@@ -33,7 +33,6 @@ class APSResultTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var sp: SP
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
 
     private var closedLoopEnabled = Constraint(false)

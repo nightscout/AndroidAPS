@@ -22,7 +22,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 @PrepareForTest(LastLocationDataContainer::class, AutomationPlugin::class)
 open class TriggerTestBase : TestBaseWithProfile() {
 
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var sp: SP
     @Mock lateinit var locationDataContainer: LastLocationDataContainer
     @Mock lateinit var activePlugin: ActivePluginProvider

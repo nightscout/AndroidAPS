@@ -50,13 +50,11 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var constraintChecker: ConstraintChecker
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var commandQueue: CommandQueueProvider
     @Mock lateinit var loopPlugin: LoopPlugin
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
-    @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var localProfilePlugin: LocalProfilePlugin
     @Mock lateinit var treatmentService: TreatmentService
     @Mock lateinit var otp: OneTimePassword
