@@ -18,6 +18,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.automation.actions.*
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationDataChanged
 import info.nightscout.androidaps.plugins.general.automation.events.EventAutomationUpdateGui
@@ -50,6 +51,7 @@ class AutomationPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val loopPlugin: LoopPlugin,
     private val rxBus: RxBusWrapper,
+    private val constraintChecker: ConstraintChecker,
     aapsLogger: AAPSLogger
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
@@ -179,6 +181,11 @@ class AutomationPlugin @Inject constructor(
             return
         if (loopPlugin.isSuspended || !loopPlugin.isEnabled(PluginType.LOOP)) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")
+            return
+        }
+        val enabled = constraintChecker.isAutomationEnabled()
+        if (!enabled.value()) {
+            executionLog.add(enabled.getMostLimitedReasons(aapsLogger))
             return
         }
 

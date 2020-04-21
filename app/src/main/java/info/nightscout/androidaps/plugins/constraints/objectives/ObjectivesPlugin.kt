@@ -50,6 +50,7 @@ class ObjectivesPlugin @Inject constructor(
         const val AUTOSENS_OBJECTIVE = 7
         const val AMA_OBJECTIVE = 8
         const val SMB_OBJECTIVE = 9
+        const val AUTO_OBJECTIVE = 10
     }
 
     public override fun onStart() {
@@ -94,6 +95,7 @@ class ObjectivesPlugin @Inject constructor(
         objectives.add(Objective7(injector))
         objectives.add(Objective8(injector))
         objectives.add(Objective9(injector))
+        objectives.add(Objective10(injector))
     }
 
     fun reset() {
@@ -133,11 +135,21 @@ class ObjectivesPlugin @Inject constructor(
             sp.putLong("Objectives_" + "ama" + "_accomplished", DateUtil.now())
             sp.putLong("Objectives_" + "smb" + "_started", DateUtil.now())
             sp.putLong("Objectives_" + "smb" + "_accomplished", DateUtil.now())
+            sp.putLong("Objectives_" + "auto" + "_started", DateUtil.now())
+            sp.putLong("Objectives_" + "auto" + "_accomplished", DateUtil.now())
             setupObjectives()
             OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeaccepted))
         } else {
             OKDialog.show(activity, resourceHelper.gs(R.string.objectives), resourceHelper.gs(R.string.codeinvalid))
         }
+    }
+
+    fun allPriorAccomplished(position: Int) : Boolean {
+        var accomplished = true
+        for (i in 0 until position) {
+            accomplished = accomplished && objectives[i].isAccomplished
+        }
+        return accomplished
     }
 
     /**
@@ -177,5 +189,11 @@ class ObjectivesPlugin @Inject constructor(
         if (objectives[MAXIOB_ZERO_CL_OBJECTIVE].isStarted && !objectives[MAXIOB_ZERO_CL_OBJECTIVE].isAccomplished)
             maxIob.set(aapsLogger, 0.0, String.format(resourceHelper.gs(R.string.objectivenotfinished), MAXIOB_ZERO_CL_OBJECTIVE + 1), this)
         return maxIob
+    }
+
+    override fun isAutomationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        if (!objectives[AUTO_OBJECTIVE].isStarted)
+            value.set(aapsLogger, false, String.format(resourceHelper.gs(R.string.objectivenotstarted), AUTO_OBJECTIVE + 1), this)
+        return value
     }
 }

@@ -54,6 +54,9 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
     fun getMaxIOBAllowed(): Constraint<Double> =
         applyMaxIOBConstraints(Constraint(Constants.REALLYHIGHIOB))
 
+    fun isAutomationEnabled(): Constraint<Boolean> =
+        isAutomationEnabled(Constraint(true))
+
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
         for (p in constraintsPlugins) {
@@ -192,5 +195,15 @@ class ConstraintChecker @Inject constructor(private val activePlugin: ActivePlug
             constrain.applyMaxIOBConstraints(maxIob)
         }
         return maxIob
+    }
+
+    override fun isAutomationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(ConstraintsInterface::class.java)
+        for (p in constraintsPlugins) {
+            val constraint = p as ConstraintsInterface
+            if (!p.isEnabled(PluginType.CONSTRAINTS)) continue
+            constraint.isAutomationEnabled(value)
+        }
+        return value
     }
 }

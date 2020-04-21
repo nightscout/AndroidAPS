@@ -184,9 +184,7 @@ class ActionsFragment : DaggerFragment() {
 
     @Synchronized
     fun updateGui() {
-        actions_profileswitch?.visibility =
-            if (activePlugin.activeProfileInterface.profile != null) View.VISIBLE
-            else View.GONE
+        actions_profileswitch?.visibility = (activePlugin.activeProfileInterface.profile != null).toVisibility()
 
         val profile = profileFunction.getProfile()
         val pump = activePlugin.activePump
