@@ -1346,11 +1346,11 @@ public class TuneProfilePlugin extends PluginBase {
                 }
             }
             DecimalFormat df = new DecimalFormat("0.000");
-            String line = "----------------------------------------------------\n";
+            String line = "------------------------------------------\n";
             Date lastRun = new Date();
             lastRuntxt=""+lastRun.toLocaleString();
             result = line;
-            result += "| Hour | Profile | Autotune |  %  |\n";
+            result += "|Hour|Profile|Autotune|   %   |\n";
             result += line;
             for (int i = 0; i < 24; i++) {
                 if(tunedProfile.size() < i || tunedProfile.size() == 0)
@@ -1361,25 +1361,25 @@ public class TuneProfilePlugin extends PluginBase {
                 int percentageChangeValue = (int) ((tunedProfile.get(i)/getBasal(i)) * 100 - 100) ;
                 String percentageChange;
                 if (percentageChangeValue == 0)
-                    percentageChange = "  0  ";
+                    percentageChange = "   0  ";
                 else if (percentageChangeValue < 0)
                     percentageChange = "  " + percentageChangeValue;
                 else
                     percentageChange = "+" + percentageChangeValue;
                 if (percentageChangeValue != 0)
                     percentageChange += "%";
-                String hourString = i < 10 ? "0"+ i : "  " + i ;
+                String hourString = i < 10 ? " 0"+ i : " " + i ;
 
                 result += "| " + hourString + "  |  " + basalString + "  |  " +tunedString+"  |"+percentageChange+" |\n";
 
             }
             result += line;
             // show ISF CR and CSF
-            result += "|  ISF  |  "+round(profile.getIsfMgdl()/toMgDl, 3) +"  |  "+round(previousResult.optDouble("sens", 0d)/toMgDl,3)+"   |\n";
+            result += "|   ISF  |   "+round(profile.getIsfMgdl()/toMgDl, 3) +"   |    "+round(previousResult.optDouble("sens", 0d)/toMgDl,3)+"   |\n";
             result += line;
-            result += "|   CR   |  "+profile.getIc()+"  |  "+round(previousResult.optDouble("carb_ratio", 0d),3)+"     |\n";
+            result += "|   CR  |    "+profile.getIc()+"  |      "+round(previousResult.optDouble("carb_ratio", 0d),3)+"     |\n";
             result += line;
-            result += "|  CSF  |  "+round(profile.getIsfMgdl()/profile.getIc()/toMgDl,3)+"  |  "+round(previousResult.optDouble("csf", 0d)/toMgDl,3)+"   |\n";
+            result += "|  CSF  |  "+round(profile.getIsfMgdl()/profile.getIc()/toMgDl,3)+"   |  "+round(previousResult.optDouble("csf", 0d)/toMgDl,3)+"   |\n";
             result += line;
 
             // trying to create new profile ready for switch
