@@ -652,8 +652,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             context.startActivity(i);
 
             Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "TreatmentClash");
-            bundle.putString(FirebaseAnalytics.Param.VALUE, status);
+            bundle.putString(FirebaseAnalytics.Param.ITEM_LIST_ID, "TreatmentClash");
+            bundle.putString(FirebaseAnalytics.Param.ITEM_LIST_NAME, status);
             fabricPrivacy.logCustom(bundle);
         }
 
