@@ -755,6 +755,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         // ****** GRAPH *******
         GlobalScope.launch(Dispatchers.Main) {
+            overview_bggraph?: return@launch
             val graphData = GraphData(injector, overview_bggraph, iobCobCalculatorPlugin)
             val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
