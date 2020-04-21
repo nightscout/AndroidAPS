@@ -76,6 +76,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
             tuneProfileSwitch.setOnClickListener(this);
             warningView.setText("Don't run tune for more than 5 days back! It will cause app crashes and too much data usage! Don't even try to run without WiFi connectivity!");
             resultView.setText(TuneProfilePlugin.result);
+            lastRunView.setText(TuneProfilePlugin.lastRuntxt);
             updateGUI();
             return view;
         } catch (Exception e) {

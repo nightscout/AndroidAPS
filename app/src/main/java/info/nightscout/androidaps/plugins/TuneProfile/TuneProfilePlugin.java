@@ -21,6 +21,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 
@@ -1375,11 +1376,11 @@ public class TuneProfilePlugin extends PluginBase {
             }
             result += line;
             // show ISF CR and CSF
-            result += "|  ISF |   "+round(profile.getIsfMgdl()/toMgDl, 3) +"   |    "+round(previousResult.optDouble("sens", 0d)/toMgDl,3)+"   |\n";
+            result += "|  ISF |   "+ Round.roundTo(profile.getIsfMgdl()/toMgDl, 0.001) +"   |    "+ Round.roundTo(previousResult.optDouble("sens", 0d)/toMgDl,0.001)+"   |\n";
             result += line;
-            result += "|  CR  |      "+profile.getIc()+"   |      "+round(previousResult.optDouble("carb_ratio", 0d),3)+"   |\n";
+            result += "|  CR  |     "+profile.getIc()+"   |      "+round(previousResult.optDouble("carb_ratio", 0d),3)+"   |\n";
             result += line;
-            result += "| CSF |  "+round(profile.getIsfMgdl()/profile.getIc()/toMgDl,3)+"   |  "+round(previousResult.optDouble("csf", 0d)/toMgDl,3)+"   |\n";
+            result += "| CSF | "+ Round.roundTo(profile.getIsfMgdl() / profile.getIc() / toMgDl, 0.001)+"  |  "+Round.roundTo(previousResult.optDouble("csf", 0d)/toMgDl,0.001)+"  |\n";
             result += line;
 
             // trying to create new profile ready for switch
