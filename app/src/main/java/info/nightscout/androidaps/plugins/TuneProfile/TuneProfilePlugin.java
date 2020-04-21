@@ -92,7 +92,7 @@ public class TuneProfilePlugin extends PluginBase {
     private static Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
     private static Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
     private NSService nsService = new NSService();
-
+    public static String result ="";
     public boolean nsDataDownloaded = false;
 
 //    public TuneProfile() throws IOException {

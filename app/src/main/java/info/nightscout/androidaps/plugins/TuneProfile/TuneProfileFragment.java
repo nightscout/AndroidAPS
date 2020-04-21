@@ -54,10 +54,10 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
 // disabled by philoul to build AAPS
 //    @BindView(R.id.tune_profileswitch)
     Button tuneProfileSwitch;
-    static TextView warningView;
-    static TextView resultView;
-    static TextView lastRunView;
-    static EditText tune_days;
+    TextView warningView;
+    TextView resultView;
+    TextView lastRunView;
+    EditText tune_days;
     //TuneProfile tuneProfile = new TuneProfile();
 
     @Override
@@ -75,7 +75,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
             tuneProfileSwitch.setVisibility(View.GONE);
             tuneProfileSwitch.setOnClickListener(this);
             warningView.setText("Don't run tune for more than 5 days back! It will cause app crashes and too much data usage! Don't even try to run without WiFi connectivity!");
-            //resultView.setText("Press run");
+            resultView.setText(TuneProfilePlugin.result);
             updateGUI();
             return view;
         } catch (Exception e) {
