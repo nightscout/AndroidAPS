@@ -10,6 +10,7 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
@@ -20,7 +21,7 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var sp: info.nightscout.androidaps.utils.sharedPreferences.SP
+    @Inject lateinit var sp: SP
 
     private val eventWorker = Executors.newSingleThreadScheduledExecutor()
     private var scheduledEventPost: ScheduledFuture<*>? = null
@@ -55,7 +56,7 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
         return this
     }
 
-    fun save(value: String, updateDelay: Long) {
+    open fun save(value: String, updateDelay: Long) {
         sp.putString(preferenceId, value)
         scheduleChange(updateDelay)
     }
@@ -69,7 +70,7 @@ open class SWItem(val injector: HasAndroidInjector, var type: Type) {
     open fun generateDialog(layout: LinearLayout) {}
     open fun processVisibility() {}
 
-    private fun scheduleChange(updateDelay: Long) {
+    fun scheduleChange(updateDelay: Long) {
         class PostRunnable : Runnable {
             override fun run() {
                 aapsLogger.debug(LTag.CORE, "Firing EventPreferenceChange")
