@@ -5,10 +5,11 @@ import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.extensions.runOnUiThread
 import java.util.concurrent.Executors
 
 object BiometricCheck {
-    fun biometricPrompt(activity: FragmentActivity, title: Int, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null) {
+    fun biometricPrompt(activity: FragmentActivity, title: Int, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null, passwordCheck: PasswordCheck) {
         val executor = Executors.newSingleThreadExecutor()
 
         val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
@@ -23,24 +24,31 @@ object BiometricCheck {
                     BiometricConstants.ERROR_LOCKOUT_PERMANENT,
                     BiometricConstants.ERROR_USER_CANCELED        -> {
                         ToastUtils.showToastInUiThread(activity.baseContext, errString.toString())
-                        fail?.run()
+                        // fallback to master password
+                        runOnUiThread(Runnable {
+                            passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        })
                     }
 
                     BiometricConstants.ERROR_NEGATIVE_BUTTON      ->
                         cancel?.run()
 
-                    BiometricConstants.ERROR_NO_DEVICE_CREDENTIAL ->
-                        // call ok, because it's not possible to bypass it when biometrics is setup, hw not present and no pin set
-                        ok?.run()
+                    BiometricConstants.ERROR_NO_DEVICE_CREDENTIAL -> {
+                        ToastUtils.showToastInUiThread(activity.baseContext, errString.toString())
+                        // no pin set
+                        // fallback to master password
+                        runOnUiThread(Runnable {
+                            passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        })
+                    }
 
                     BiometricConstants.ERROR_NO_SPACE,
                     BiometricConstants.ERROR_HW_UNAVAILABLE,
                     BiometricConstants.ERROR_HW_NOT_PRESENT,
                     BiometricConstants.ERROR_NO_BIOMETRICS        ->
-                        // call ok, because it's not possible to bypass it when biometrics fail
-                        // ok?.run()
-                        // changed to fail as you can use PIN instead with setDeviceCredentialAllowed enabled
-                        fail?.run()
+                        runOnUiThread(Runnable {
+                            passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        })
                 }
             }
 
@@ -60,8 +68,8 @@ object BiometricCheck {
         val promptInfo = BiometricPrompt.PromptInfo.Builder()
             .setTitle(activity.getString(title))
             .setDescription(activity.getString(R.string.biometric_title))
-//            .setNegativeButtonText(activity.getString(R.string.cancel)) // not possible with setDeviceCredentialAllowed
-            .setDeviceCredentialAllowed(true)
+            .setNegativeButtonText(activity.getString(R.string.cancel)) // not possible with setDeviceCredentialAllowed
+//            .setDeviceCredentialAllowed(true) // setDeviceCredentialAllowed creates new activity when PIN is requested, activity.fragmentManager crash afterwards
             .build()
 
         biometricPrompt.authenticate(promptInfo)

@@ -56,7 +56,7 @@ class ProtectionCheck @Inject constructor(
             ProtectionType.NONE      ->
                 ok?.run()
             ProtectionType.BIOMETRIC ->
-                BiometricCheck.biometricPrompt(activity, titleResourceIDs[protection.ordinal], ok, cancel, fail)
+                BiometricCheck.biometricPrompt(activity, titleResourceIDs[protection.ordinal], ok, cancel, fail, passwordCheck)
             ProtectionType.MASTER_PASSWORD  ->
                 passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
             ProtectionType.CUSTOM_PASSWORD  ->

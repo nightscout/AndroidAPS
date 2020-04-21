@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin
 import info.nightscout.androidaps.setupwizard.elements.*
 import info.nightscout.androidaps.setupwizard.events.EventSWUpdate
 import info.nightscout.androidaps.utils.AndroidPermission
+import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.LocaleHelper.update
 import info.nightscout.androidaps.utils.extensions.isRunningTest
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
@@ -60,7 +61,8 @@ class SWDefinition @Inject constructor(
     private val nsProfilePlugin: NSProfilePlugin,
     private val protectionCheck: ProtectionCheck,
     private val importExportPrefs: ImportExportPrefs,
-    private val androidPermission: AndroidPermission
+    private val androidPermission: AndroidPermission,
+    private val cryptoUtil: CryptoUtil
 ) {
 
     lateinit var activity: AppCompatActivity
@@ -203,9 +205,18 @@ class SWDefinition @Inject constructor(
         .add(SWInfotext(injector)
             .label(R.string.patient_name_summary))
         .add(SWEditString(injector)
-            .validator(SWTextValidator { text: String -> text.length > 0 })
-            .preferenceId(R.string.key_patient_name)
-            .updateDelay(5))
+            .validator(SWTextValidator(String::isNotEmpty))
+            .preferenceId(R.string.key_patient_name))
+    private val screenMasterPassword = SWScreen(injector, R.string.master_password)
+        .skippable(false)
+        .add(SWInfotext(injector)
+            .label(R.string.master_password))
+        .add(SWEditEncryptedPassword(injector, cryptoUtil)
+            .preferenceId(R.string.key_master_password))
+        .add(SWBreak(injector))
+        .add(SWInfotext(injector)
+            .label(R.string.master_password_summary))
+        .validator(SWValidator { !cryptoUtil.checkPassword("", sp.getString(R.string.key_master_password, "")) })
     private val screenAge = SWScreen(injector, R.string.patientage)
         .skippable(false)
         .add(SWBreak(injector))
@@ -393,6 +404,7 @@ class SWDefinition @Inject constructor(
             .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
             .add(screenPermissionBt)
             .add(screenPermissionStore)
+            .add(screenMasterPassword)
             .add(screenImport)
             .add(screenUnits)
             .add(displaySettings)
@@ -420,6 +432,7 @@ class SWDefinition @Inject constructor(
             .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
             .add(screenPermissionBt)
             .add(screenPermissionStore)
+            .add(screenMasterPassword)
             .add(screenImport)
             .add(screenUnits)
             .add(displaySettings)
@@ -442,6 +455,7 @@ class SWDefinition @Inject constructor(
             .add(screenEula)
             .add(if (isRunningTest()) null else screenPermissionBattery) // cannot mock ask battery optimization
             .add(screenPermissionStore)
+            .add(screenMasterPassword)
             .add(screenImport)
             .add(screenUnits)
             .add(displaySettings)
