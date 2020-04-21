@@ -5,6 +5,7 @@ import androidx.biometric.BiometricPrompt
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.ToastUtils
+import info.nightscout.androidaps.utils.extensions.runOnUiThread
 import java.util.concurrent.Executors
 
 object BiometricCheck {
@@ -24,7 +25,9 @@ object BiometricCheck {
                     BiometricConstants.ERROR_USER_CANCELED        -> {
                         ToastUtils.showToastInUiThread(activity.baseContext, errString.toString())
                         // fallback to master password
-                        passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        runOnUiThread(Runnable {
+                            passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        })
                     }
 
                     BiometricConstants.ERROR_NEGATIVE_BUTTON      ->
@@ -34,7 +37,9 @@ object BiometricCheck {
                         ToastUtils.showToastInUiThread(activity.baseContext, errString.toString())
                         // no pin set
                         // fallback to master password
-                        passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        runOnUiThread(Runnable {
+                            passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                        })
                     }
 
                     BiometricConstants.ERROR_NO_SPACE,
