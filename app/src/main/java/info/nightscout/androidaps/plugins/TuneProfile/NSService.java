@@ -43,7 +43,7 @@ import info.nightscout.androidaps.utils.SP;
  *
  */
 
-class NSService extends AsyncTask <Void,Void,Void> {
+public class NSService extends AsyncTask <Void,Void,Void> {
     private static Logger log = LoggerFactory.getLogger(NSService.class);
     public List<BgReading> sgv = new ArrayList<BgReading>();
     public List<Treatment> treatments = new ArrayList<Treatment>();

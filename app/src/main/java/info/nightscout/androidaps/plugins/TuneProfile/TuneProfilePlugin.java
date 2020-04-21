@@ -1289,9 +1289,13 @@ public class TuneProfilePlugin extends PluginBase {
 //        Date lastProfileChange = NSService.lastProfileChange();
         Date lastProfileChange = new Date(TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(endTime).date);
         int toMgDl = 1;
+        Opts opts=new Opts();
+        opts.categorize_uam_as_basal = SP.getBoolean("categorize_uam_as_basal", false);
+
         getProfile();
         if(profile.equals(null))
             return null;
+        opts.profile=profile;
         tunedProfileResult = profile;
 // TODO: Philoul retrieve the units from the main app parameters instead of the profile
         if(profile.getUnits().equals("mmol"))
@@ -1310,6 +1314,7 @@ public class TuneProfilePlugin extends PluginBase {
         } else {
             //todo: philoul I think we should remain as close as possible to OAPS code, only one call of categorizeBGDatums with all data
             // I don't understand today why here these is a loop for each day...
+
             for (int i = daysBack; i > 0; i--) {
 //                tunedBasalsInit();
                 long timeBack = (i-1) * 24 * 60 * 60 * 1000L;
@@ -1324,6 +1329,9 @@ public class TuneProfilePlugin extends PluginBase {
                 }
             }
         }
+
+
+
         if(previousResult != null) {
             String previousAutotune = previousResult.optString("basalProfile");
             previousAutotune = previousAutotune.substring(0, previousAutotune.length() - 1);
