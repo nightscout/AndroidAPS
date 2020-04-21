@@ -322,7 +322,9 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         context?.let { context ->
             if (preference != null) {
                 if (preference.key == resourceHelper.gs(R.string.key_master_password)) {
-                    passwordCheck.setPassword(context, R.string.master_password, R.string.key_master_password)
+                    passwordCheck.queryPassword(context, R.string.current_master_password, R.string.key_master_password, {
+                        passwordCheck.setPassword(context, R.string.master_password, R.string.key_master_password)
+                    })
                     return true
                 }
                 if (preference.key == resourceHelper.gs(R.string.key_settings_password)) {

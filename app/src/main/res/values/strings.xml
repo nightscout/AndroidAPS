@@ -1823,4 +1823,7 @@
     <string name="rs_logcanulachange_summary">Add \"Site Change\" event to careportal when detected in history</string>
     <string name="authorizationfailed">Authorization failed</string>
     <string name="overview_show_absinsulin">Absolute insulin</string>
+    <string name="master_password_summary">Master password is used for backup encryption and to override security in application. Remember it or store on a safe place.</string>
+    <string name="passwords_dont_match">Passwords don\'t match</string>
+    <string name="current_master_password">Current master password</string>
 </resources>

@@ -246,6 +246,7 @@ open class AppModule {
         @ContributesAndroidInjector fun swButtonInjector(): SWButton
         @ContributesAndroidInjector fun swEditNumberWithUnitsInjector(): SWEditNumberWithUnits
         @ContributesAndroidInjector fun swEditStringInjector(): SWEditString
+        @ContributesAndroidInjector fun swEditEncryptedPasswordInjector(): SWEditEncryptedPassword
         @ContributesAndroidInjector fun swEditUrlInjector(): SWEditUrl
         @ContributesAndroidInjector fun swFragmentInjector(): SWFragment
         @ContributesAndroidInjector fun swHtmlLinkInjector(): SWHtmlLink

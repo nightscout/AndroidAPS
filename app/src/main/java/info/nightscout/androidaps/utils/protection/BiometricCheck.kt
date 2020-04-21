@@ -8,7 +8,7 @@ import info.nightscout.androidaps.utils.ToastUtils
 import java.util.concurrent.Executors
 
 object BiometricCheck {
-    fun biometricPrompt(activity: FragmentActivity, title: Int, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null) {
+    fun biometricPrompt(activity: FragmentActivity, title: Int, ok: Runnable?, cancel: Runnable? = null, fail: Runnable? = null, passwordCheck: PasswordCheck) {
         val executor = Executors.newSingleThreadExecutor()
 
         val biometricPrompt = BiometricPrompt(activity, executor, object : BiometricPrompt.AuthenticationCallback() {
@@ -23,15 +23,19 @@ object BiometricCheck {
                     BiometricConstants.ERROR_LOCKOUT_PERMANENT,
                     BiometricConstants.ERROR_USER_CANCELED        -> {
                         ToastUtils.showToastInUiThread(activity.baseContext, errString.toString())
-                        fail?.run()
+                        // fallback to master password
+                        passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                     }
 
                     BiometricConstants.ERROR_NEGATIVE_BUTTON      ->
                         cancel?.run()
 
-                    BiometricConstants.ERROR_NO_DEVICE_CREDENTIAL ->
-                        // call ok, because it's not possible to bypass it when biometrics is setup, hw not present and no pin set
-                        ok?.run()
+                    BiometricConstants.ERROR_NO_DEVICE_CREDENTIAL -> {
+                        ToastUtils.showToastInUiThread(activity.baseContext, errString.toString())
+                        // no pin set
+                        // fallback to master password
+                        passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                    }
 
                     BiometricConstants.ERROR_NO_SPACE,
                     BiometricConstants.ERROR_HW_UNAVAILABLE,

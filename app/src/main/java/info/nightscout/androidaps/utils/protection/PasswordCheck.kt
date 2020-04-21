@@ -16,19 +16,19 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 // since androidx.autofill.HintConstants are not available
-val AUTOFILL_HINT_NEW_PASSWORD = "newPassword"
+const val AUTOFILL_HINT_NEW_PASSWORD = "newPassword"
 
 @Singleton
 class PasswordCheck @Inject constructor(
     val sp: SP,
-    val cryptoUtil: CryptoUtil
+    private val cryptoUtil: CryptoUtil
 ) {
 
     @SuppressLint("InflateParams")
-    fun queryPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ( (String) -> Unit)?, cancel: (()->Unit)? = null, fail: (()->Unit)? = null) {
+    fun queryPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ((String) -> Unit)?, cancel: (() -> Unit)? = null, fail: (() -> Unit)? = null) {
         val password = sp.getString(preference, "")
         if (password == "") {
-                ok?.invoke("")
+            ok?.invoke("")
             return
         }
 
@@ -36,7 +36,11 @@ class PasswordCheck @Inject constructor(
         val alertDialogBuilder = AlertDialogHelper.Builder(context)
         alertDialogBuilder.setView(promptsView)
 
-        val userInput = promptsView.findViewById<View>(R.id.passwordprompt_pass) as EditText
+        val userInput = promptsView.findViewById<View>(R.id.password_prompt_pass) as EditText
+        val userInput2 = promptsView.findViewById<View>(R.id.password_prompt_pass_confirm) as EditText
+
+        userInput2.visibility = View.GONE
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val autoFillHintPasswordKind = context.getString(preference)
             userInput.setAutofillHints(View.AUTOFILL_HINT_PASSWORD, "aaps_${autoFillHintPasswordKind}")
@@ -64,12 +68,13 @@ class PasswordCheck @Inject constructor(
     }
 
     @SuppressLint("InflateParams")
-    fun setPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ( (String) -> Unit)? = null, cancel: (()->Unit)? = null, clear: (()->Unit)? = null) {
+    fun setPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ((String) -> Unit)? = null, cancel: (() -> Unit)? = null, clear: (() -> Unit)? = null) {
         val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
         val alertDialogBuilder = AlertDialogHelper.Builder(context)
         alertDialogBuilder.setView(promptsView)
 
-        val userInput = promptsView.findViewById<View>(R.id.passwordprompt_pass) as EditText
+        val userInput = promptsView.findViewById<View>(R.id.password_prompt_pass) as EditText
+        val userInput2 = promptsView.findViewById<View>(R.id.password_prompt_pass_confirm) as EditText
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val autoFillHintPasswordKind = context.getString(preference)
@@ -82,7 +87,10 @@ class PasswordCheck @Inject constructor(
             .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
             .setPositiveButton(context.getString(R.string.ok)) { _, _ ->
                 val enteredPassword = userInput.text.toString()
-                if (enteredPassword.isNotEmpty()) {
+                val enteredPassword2 = userInput2.text.toString()
+                if (enteredPassword != enteredPassword2) {
+                    ToastUtils.errorToast(context, context.getString(R.string.passwords_dont_match))
+                } else if (enteredPassword.isNotEmpty()) {
                     sp.putString(preference, cryptoUtil.hashPassword(enteredPassword))
                     ToastUtils.okToast(context, context.getString(R.string.password_set))
                     ok?.invoke(enteredPassword)

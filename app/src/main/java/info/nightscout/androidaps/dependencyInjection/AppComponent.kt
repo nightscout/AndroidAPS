@@ -165,6 +165,7 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectSWButton(swButton: SWButton)
     fun injectSWEditNumberWithUnits(swEditNumberWithUnits: SWEditNumberWithUnits)
     fun injectSWEditString(swEditString: SWEditString)
+    fun injectSWEditEncryptedPassword(swSWEditEncryptedPassword: SWEditEncryptedPassword)
     fun injectSWEditUrl(swEditUrl: SWEditUrl)
     fun injectSWFragment(swFragment: SWFragment)
     fun injectSSWHtmlLink(swHtmlLink: SWHtmlLink)
