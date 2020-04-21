@@ -104,7 +104,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.tune_run) {
-            Date lastRun = new Date();
+
             int daysBack = Integer.parseInt(tune_days.getText().toString());
             if (daysBack > 0)
 //            resultView.setText(TuneProfile.bgReadings(daysBack));
@@ -121,7 +121,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
                 resultView.setText("Set days between 1 and 10!!!");
             // lastrun in minutes ???
             warningView.setText("You already pressed RUN - NO WARNING NEEDED!");
-            lastRunView.setText(""+lastRun.toLocaleString());
+            lastRunView.setText(TuneProfilePlugin.lastRuntxt);
         } else if (id == R.id.tune_profileswitch){
             String name = MainApp.gs(R.string.tuneprofile_name);
             ProfileStore profile = null;

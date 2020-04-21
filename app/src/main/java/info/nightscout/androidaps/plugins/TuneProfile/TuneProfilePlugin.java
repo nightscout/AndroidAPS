@@ -92,7 +92,8 @@ public class TuneProfilePlugin extends PluginBase {
     private static Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
     private static Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
     private NSService nsService = new NSService();
-    public static String result ="";
+    public static String result ="Press Run";
+    public static String lastRuntxt="";
     public boolean nsDataDownloaded = false;
 
 //    public TuneProfile() throws IOException {
@@ -1346,6 +1347,8 @@ public class TuneProfilePlugin extends PluginBase {
             }
             DecimalFormat df = new DecimalFormat("0.000");
             String line = "----------------------------------------------------\n";
+            Date lastRun = new Date();
+            lastRuntxt=""+lastRun.toLocaleString();
             result = line;
             result += "| Hour | Profile | Autotune |  %  |\n";
             result += line;
@@ -1357,25 +1360,26 @@ public class TuneProfilePlugin extends PluginBase {
                 String tunedString = df.format(tunedProfile.get(i));
                 int percentageChangeValue = (int) ((tunedProfile.get(i)/getBasal(i)) * 100 - 100) ;
                 String percentageChange;
-                if (percentageChangeValue <= 0)
-                    percentageChange = "" + percentageChangeValue;
+                if (percentageChangeValue == 0)
+                    percentageChange = "  0  ";
+                else if (percentageChangeValue < 0)
+                    percentageChange = "  " + percentageChangeValue;
                 else
                     percentageChange = "+" + percentageChangeValue;
                 if (percentageChangeValue != 0)
                     percentageChange += "%";
-                String hourString = ""+i;
-                if(i<10)
-                    hourString = i+"  ";
-                result += "|   " + hourString + "    |  " + basalString + "  |    " +tunedString+"    | "+percentageChange+" |\n";
+                String hourString = i < 10 ? "0"+ i : "  " + i ;
+
+                result += "| " + hourString + "  |  " + basalString + "  |  " +tunedString+"  |"+percentageChange+" |\n";
 
             }
             result += line;
             // show ISF CR and CSF
-            result += "|  ISF    |    "+round(profile.getIsfMgdl()/toMgDl, 3) +"    |    "+round(previousResult.optDouble("sens", 0d)/toMgDl,3)+"     |\n";
+            result += "|  ISF  |  "+round(profile.getIsfMgdl()/toMgDl, 3) +"  |  "+round(previousResult.optDouble("sens", 0d)/toMgDl,3)+"   |\n";
             result += line;
-            result += "|   CR   |    "+profile.getIc()+"    |    "+round(previousResult.optDouble("carb_ratio", 0d),3)+"     |\n";
+            result += "|   CR   |  "+profile.getIc()+"  |  "+round(previousResult.optDouble("carb_ratio", 0d),3)+"     |\n";
             result += line;
-            result += "|  CSF  |    "+round(profile.getIsfMgdl()/profile.getIc()/toMgDl,3)+"    |    "+round(previousResult.optDouble("csf", 0d)/toMgDl,3)+"     |\n";
+            result += "|  CSF  |  "+round(profile.getIsfMgdl()/profile.getIc()/toMgDl,3)+"  |  "+round(previousResult.optDouble("csf", 0d)/toMgDl,3)+"   |\n";
             result += line;
 
             // trying to create new profile ready for switch
