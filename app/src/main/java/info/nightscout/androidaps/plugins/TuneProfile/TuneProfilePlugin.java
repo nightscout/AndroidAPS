@@ -1346,7 +1346,7 @@ public class TuneProfilePlugin extends PluginBase {
             }
             DecimalFormat df = new DecimalFormat("0.000");
             String line = "----------------------------------------------------\n";
-            String result = line;
+            result = line;
             result += "| Hour | Profile | Autotune |  %  |\n";
             result += line;
             for (int i = 0; i < 24; i++) {
