@@ -48,7 +48,7 @@ class FabricPrivacy @Inject constructor(
     fun logCustom(event: Bundle) {
         try {
             if (fabricEnabled()) {
-                mainApp.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, event)
+                mainApp.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_ITEM, event)
             } else {
                 aapsLogger.debug(LTag.CORE, "Ignoring recently opted-out event: $event")
             }
