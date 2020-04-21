@@ -382,6 +382,7 @@ public class LoopPlugin extends PluginBase {
             if (lastRun == null) lastRun = new LastRun();
             lastRun.request = result;
             lastRun.constraintsProcessed = resultAfterConstraints;
+            lastRun.lastAPSRun = DateUtil.now();
             lastRun.source = ((PluginBase) usedAPS).getName();
             lastRun.tbrSetByPump = null;
             lastRun.smbSetByPump = null;

@@ -165,7 +165,7 @@ public class NSUpload {
         Profile profile = profileFunction.getProfile();
         String profileName = profileFunction.getProfileName();
 
-        if (profile == null || profileName == null) {
+        if (profile == null) {
             log.error("Profile is null. Skipping upload");
             return;
         }

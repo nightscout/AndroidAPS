@@ -29,7 +29,7 @@ class NetworkChangeReceiver : DaggerBroadcastReceiver() {
         val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networks: Array<Network> = cm.allNetworks
         networks.forEach {
-            val capabilities = cm.getNetworkCapabilities(it)
+            val capabilities = cm.getNetworkCapabilities(it) ?: return@forEach
             event.wifiConnected = event.wifiConnected || (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
                 || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET))
             event.mobileConnected = event.mobileConnected || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
