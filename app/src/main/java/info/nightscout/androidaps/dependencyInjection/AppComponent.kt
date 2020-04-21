@@ -80,12 +80,13 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectObjective1(objective1: Objective1)
     fun injectObjective2(objective2: Objective2)
     fun injectObjective3(objective3: Objective3)
-    fun injectObjective3(objective4: Objective4)
+    fun injectObjective4(objective4: Objective4)
     fun injectObjective5(objective5: Objective5)
     fun injectObjective6(objective6: Objective6)
-    fun injectObjective6(objective7: Objective7)
-    fun injectObjective6(objective8: Objective8)
-    fun injectObjective6(objective9: Objective9)
+    fun injectObjective7(objective7: Objective7)
+    fun injectObjective8(objective8: Objective8)
+    fun injectObjective9(objective9: Objective9)
+    fun injectObjective10(objective10: Objective10)
 
     fun injectAutomationEvent(automationEvent: AutomationEvent)
 

@@ -76,4 +76,9 @@ interface ConstraintsInterface {
     fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         return maxIob
     }
+
+    @JvmDefault
+    fun isAutomationEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        return value
+    }
 }
