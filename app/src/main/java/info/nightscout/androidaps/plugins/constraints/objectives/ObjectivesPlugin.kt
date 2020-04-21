@@ -144,6 +144,14 @@ class ObjectivesPlugin @Inject constructor(
         }
     }
 
+    fun allPriorAccomplished(position: Int) : Boolean {
+        var accomplished = true
+        for (i in 0 until position) {
+            accomplished = accomplished && objectives[i].isAccomplished
+        }
+        return accomplished
+    }
+
     /**
      * Constraints interface
      */

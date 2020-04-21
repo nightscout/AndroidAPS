@@ -161,7 +161,7 @@ class ObjectivesFragment : DaggerFragment() {
                 holder.accomplished.visibility = View.GONE
                 holder.unFinish.visibility = View.GONE
                 holder.unStart.visibility = View.GONE
-                if (position == 0 || objectivesPlugin.objectives[position - 1].isAccomplished)
+                if (position == 0 || objectivesPlugin.allPriorAccomplished(position))
                     holder.start.visibility = View.VISIBLE
                 else
                     holder.start.visibility = View.GONE
