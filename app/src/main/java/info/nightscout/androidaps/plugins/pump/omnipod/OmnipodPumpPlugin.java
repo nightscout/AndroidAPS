@@ -19,6 +19,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import info.nightscout.androidaps.BuildConfig;
