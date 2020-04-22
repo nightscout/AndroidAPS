@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistor
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
+import info.nightscout.androidaps.utils.DateUtil;
 
 /**
  * Created by andy on 5/19/18.
@@ -131,7 +132,7 @@ public class RileyLinkStatusHistory extends Fragment implements RefreshableInter
             RLHistoryItem item = historyList.get(position);
 
             if (item != null) {
-                holder.timeView.setText(StringUtil.toDateTimeString(item.getDateTime()));
+                holder.timeView.setText(DateUtil.dateAndTimeAndSecondsString(item.getDateTime().toDateTime().getMillis()));
                 holder.typeView.setText(item.getSource().getDesc());
                 holder.valueView.setText(item.getDescription());
             }

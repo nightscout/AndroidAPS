@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.utils;
 
 
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,7 +11,9 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import info.AAPSMocker;
 import info.nightscout.androidaps.MainApp;
@@ -87,6 +92,49 @@ public class DateUtilTest {
     @Test
     public void timeFrameStringTest() {
         Assert.assertEquals("(1h 1')", DateUtil.timeFrameString((T.hours(1).msecs() + T.mins(1).msecs())));
+    }
+
+    @Test
+    public void dateTimeFormat() {
+        int style = DateFormat.SHORT;
+        //Also try with style = DateFormat.FULL and DateFormat.SHORT
+        Date date = new Date();
+        DateFormat df;
+        df = DateFormat.getDateInstance(style, Locale.UK);
+        System.out.println("United Kingdom: " + df.format(date));
+        df = DateFormat.getDateInstance(style, Locale.US);
+        System.out.println("USA: " + df.format(date));
+        df = DateFormat.getDateInstance(style, Locale.FRANCE);
+        System.out.println("France: " + df.format(date));
+        df = DateFormat.getDateInstance(style, Locale.ITALY);
+        System.out.println("Italy: " + df.format(date));
+        df = DateFormat.getDateInstance(style, Locale.JAPAN);
+        System.out.println("Japan: " + df.format(date));
+        df = DateFormat.getDateInstance(style, Locale.UK);
+        System.out.println("United Kingdom: " + df.format(date));
+
+        int styles[] = { DateFormat.DEFAULT, DateFormat.FULL, DateFormat.LONG, DateFormat.MEDIUM, DateFormat.SHORT};
+
+        for (int styleX : styles) {
+            df = DateFormat.getDateInstance(styleX, new Locale("en"));
+            System.out.println("English: style=" +  styleX + ", result=" + df.format(date));
+        }
+
+        DateTimeFormatter dateTimeFormat = DateTimeFormat.shortDate();
+
+        LocalDateTime lcd = new LocalDateTime();
+
+
+        System.out.println("English: LocalDateTime=" +  dateTimeFormat.print(lcd));
+
+
+//        public static final int DEFAULT = 2;
+//        public static final int FULL = 0;
+//        public static final int LONG = 1;
+//        public static final int MEDIUM = 2;
+//        public static final int SHORT = 3;
+
+
     }
 
     @Before
