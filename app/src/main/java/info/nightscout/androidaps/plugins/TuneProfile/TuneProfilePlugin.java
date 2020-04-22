@@ -12,6 +12,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -31,6 +32,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -93,8 +95,9 @@ public class TuneProfilePlugin extends PluginBase {
     private static Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
     private static Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
     private NSService nsService = new NSService();
+    public static File autotune_path;
     public static String result ="Press Run";
-    public static String lastRuntxt="";
+    public static Date lastRun=null;
     public boolean nsDataDownloaded = false;
 
 //    public TuneProfile() throws IOException {
@@ -117,6 +120,12 @@ public class TuneProfilePlugin extends PluginBase {
                 .shortName(R.string.autotune_shortname)
                 .preferencesId(R.xml.pref_tuneprofile)
         );
+        //create autotune subfolder for autotune files
+        String extFilesDir = LoggerUtils.getLogDirectory();
+        autotune_path = new File(extFilesDir, "autotune");
+        if (! (autotune_path.exists() && autotune_path.isDirectory())) {
+            autotune_path.mkdir();
+        }
     }
 
 //    @Override
@@ -1280,12 +1289,13 @@ public class TuneProfilePlugin extends PluginBase {
         basalsResultInit();
         long now = System.currentTimeMillis();
         Calendar c = Calendar.getInstance();
+        //todo: philoul set current day if after 4PM or previous day
         c.setTimeInMillis(now - ((daysBack-1) * 24 * 60 * 60 * 1000L));
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
-        // midnight
+
         long endTime = c.getTimeInMillis();
         long starttime = endTime - (24 * 60 * 60 * 1000L);
 //        Date lastProfileChange = NSService.lastProfileChange();
@@ -1314,12 +1324,18 @@ public class TuneProfilePlugin extends PluginBase {
         if(daysBack < 1){
             return "Sorry I cannot do it for less than 1 day!";
         } else {
-            //todo: philoul I think we should remain as close as possible to OAPS code, only one call of categorizeBGDatums with all data
-            // I don't understand today why here these is a loop for each day...
+            //     # to capture UTC-dated treatments, we need to capture an extra 12h on either side, plus the DIA lookback
+            //    # 18h = 12h for timezones + 6h for DIA; 40h = 28h for 4am + 12h for timezones
+            long treatmentsStart = starttime - (daysBack-1) * 24 * 60 * 60 * 1000L - 18 * 60 * 60 * 1000L;
+            opts.treatments=TreatmentsPlugin.getPlugin().getTreatmentsFromHistoryAfterTimestamp(treatmentsStart);
 
             for (int i = daysBack; i > 0; i--) {
 //                tunedBasalsInit();
                 long timeBack = (i-1) * 24 * 60 * 60 * 1000L;
+                long glucoseStart = starttime - timeBack + 4 * 24 * 60 *60 *1000L;
+                long glucoseEnd = starttime - timeBack + 28 * 24 * 60 *60 *1000L;
+                opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
+
                 try {
                     log.debug("Day "+i+" of "+daysBack);
                     log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
@@ -1348,8 +1364,8 @@ public class TuneProfilePlugin extends PluginBase {
             }
             DecimalFormat df = new DecimalFormat("0.000");
             String line = "------------------------------------------\n";
-            Date lastRun = new Date();
-            lastRuntxt=""+lastRun.toLocaleString();
+            lastRun = new Date();
+
             result = line;
             result += "|Hour| Profile | Tuned |   %   |\n";
             result += line;
@@ -1376,11 +1392,11 @@ public class TuneProfilePlugin extends PluginBase {
             }
             result += line;
             // show ISF CR and CSF
-            result += "|  ISF |   "+ Round.roundTo(profile.getIsfMgdl()/toMgDl, 0.001) +"   |    "+ Round.roundTo(previousResult.optDouble("sens", 0d)/toMgDl,0.001)+"   |\n";
+            result += "|  ISF |   "+ Round.roundTo(profile.getIsfMgdl()/toMgDl, 0.001) +"   |   "+ Round.roundTo(previousResult.optDouble("sens", 0d)/toMgDl,0.001)+"   |\n";
             result += line;
-            result += "|  CR  |     "+profile.getIc()+"   |      "+round(previousResult.optDouble("carb_ratio", 0d),3)+"   |\n";
+            result += "|  CR  |     "+profile.getIc()+"   |     "+round(previousResult.optDouble("carb_ratio", 0d),3)+"   |\n";
             result += line;
-            result += "| CSF | "+ Round.roundTo(profile.getIsfMgdl() / profile.getIc() / toMgDl, 0.001)+"  |  "+Round.roundTo(previousResult.optDouble("csf", 0d)/toMgDl,0.001)+"  |\n";
+            result += "| CSF | "+ Round.roundTo(profile.getIsfMgdl() / profile.getIc() / toMgDl, 0.001)+"  | "+Round.roundTo(previousResult.optDouble("csf", 0d)/toMgDl,0.001)+"  |\n";
             result += line;
 
             // trying to create new profile ready for switch

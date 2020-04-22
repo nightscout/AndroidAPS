@@ -94,7 +94,7 @@ public class NSService extends AsyncTask <Void,Void,Void> {
             nsURL = nsURL + '/';
 
         try {
-            URL url = new URL(nsURL + sgvValues + "&[count]=400");
+            URL url = new URL(nsURL + sgvValues + "&[count]=1500");
             log.debug("URL is:" + url.toString());
             List<BgReading> sgv = new ArrayList<BgReading>();
             HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
@@ -106,7 +106,7 @@ public class NSService extends AsyncTask <Void,Void,Void> {
                 total.append(line);
             }
             JSONArray values = new JSONArray(total.toString());
-            log.debug("Returnd values after query: " +values.length());
+            log.debug("Returned values after query: " +values.length());
             for (int i = 0; i < values.length(); i++) {
                 JSONObject sgvJson = new JSONObject(values.get(i).toString());
                 BgReading bgReading = new BgReading();
@@ -130,7 +130,7 @@ public class NSService extends AsyncTask <Void,Void,Void> {
             fromDateString = fromDate.toString();
             toDateString = toDate.toString();
             String treatmentsValues = "api/v1/treatments.json?find[created_at][$gte]="+dateFormat.format(fromDate)+"&find[created_at][$lte]="+dateFormat.format(toDate);
-            url = new URL(nsURL+treatmentsValues+"&[count]=400");
+            url = new URL(nsURL+treatmentsValues+"&[count]=1500");
             urlConnection = (HttpsURLConnection) url.openConnection();
             in = new BufferedInputStream(urlConnection.getInputStream());
             r = new BufferedReader(new InputStreamReader(in));
@@ -212,6 +212,7 @@ public class NSService extends AsyncTask <Void,Void,Void> {
         if((nsURL.charAt(nsURL.length() - 1)) != '/')
             nsURL = nsURL + '/';
         // URL should look like http://localhost:1337/api/v1/entries/sgv.json?find[dateString][$gte]=2015-08-28&find[dateString][$lte]=2015-08-30
+        // Todo Philoul new URL : https://xxxxxxxxxx.herokuapp.com entries/sgv.json find[date][$gte]=1587261600000&find[date][&lte]=1587348000000&count=1500
         String sgvValues = "api/v1/entries/sgv.json?find[date][$gte]="+from+"&find[date][$lte]="+to;
         URL url = new URL(nsURL+sgvValues+"&[count]=400");
         log.debug("URL is:"+nsURL+sgvValues);

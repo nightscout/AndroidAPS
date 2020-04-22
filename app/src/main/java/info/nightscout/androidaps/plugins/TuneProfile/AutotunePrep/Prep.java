@@ -91,9 +91,6 @@ public class Prep {
 
         log.debug("NSService should receive " + new Date(opts.start) + " to " + new Date(opts.end));
 
-        List<BgReading> sgv = new ArrayList<BgReading>();
-
-
         int boluses = 0;
         int maxCarbs = 0;
 
@@ -108,54 +105,6 @@ public class Prep {
         List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> UAMGlucoseData = new ArrayList<BGDatum>();
         List<CRDatum> CRData = new ArrayList<CRDatum>();
-
-/*
-        bucketedData[0] = JSON.parse(JSON.stringify(glucoseData[0]));
-        var j=0;
-        var k=0; // index of first value used by bucket
-        //for loop to validate and bucket the data
-        for (var i=1; i < glucoseData.length; ++i) {
-            var BGTime = glucoseData[i].date;
-            var lastBGTime = glucoseData[k].date;
-            var elapsedMinutes = (BGTime - lastBGTime)/(60*1000);
-
-            if(Math.abs(elapsedMinutes) >= 2) {
-                j++; // move to next bucket
-                k=i; // store index of first value used by bucket
-                bucketedData[j]=JSON.parse(JSON.stringify(glucoseData[i]));
-            } else {
-                // average all readings within time deadband
-                var glucoseTotal = glucoseData.slice(k, i+1).reduce(function(total, entry) {
-                    return total + entry.glucose;
-                }, 0);
-                bucketedData[j].glucose = glucoseTotal / (i-k+1);
-            }
-        }
-
- */
-
-        if (useNSData) {
-            //glucosedata is sgv
-            NSService nsService = new NSService();
-            log.debug("(2)NSService should receive " + new Date(opts.start) + " to " + new Date(opts.end));
-            nsService.setPeriod(opts.start, opts.end);
-            nsService.execute();
-
-            while (!nsService.jobFinished) {
-                // wait for the background job to finish before asking for SGV
-                nsDataDownloaded = nsService.jobFinished;
-            }
-            nsDataDownloaded = true;
-            sgv = nsService.getSgv();
-        } else {
-            sgv = MainApp.getDbHelper().getBgreadingsDataFromTime(opts.start, opts.end, false);
-        }
-
-        if (sgv.size() < 1) {
-            log.debug("No SGV data");
-            return null;
-        }
-
 
         log.debug("Treatmets size: " + treatments.size());
         //trim treatments size
@@ -188,40 +137,28 @@ public class Prep {
 //        bucketedData.add(basalGlucoseData.get(0));
         int j = 0;
         //for loop to validate and bucket the data
-        for (int i = 1; i < sgv.size(); ++i) {
+        for (int i = 1; i < glucoseData.size(); ++i) {
             long BGTime = 0;
             long lastBGTime = 0;
-            if (sgv.get(i).date != 0) {
-                BGTime = new Date(sgv.get(i).date).getTime();
-            } /* We don't need these checks as we get the glucose from NS
-
-            else if (sgv.get(i).displayTime) {
-                BGTime = new Date(glucoseData[i].displayTime.replace('T', ' '));
-            } else if (glucoseData[i].dateString) {
-                BGTime = new Date(glucoseData[i].dateString);
-            } else { log.debug("Could not determine BG time"); }
-            if (glucoseData[i-1].date) {
-                lastBGTime = new Date(glucoseData[i-1].date);
-            } else if (glucoseData[i-1].displayTime) {
-                lastBGTime = new Date(glucoseData[i-1].displayTime.replace('T', ' '));
-            } else if (glucoseData[i-1].dateString) {
-                lastBGTime = new Date(glucoseData[i-1].dateString);*/ else {
+            if (glucoseData.get(i).date != 0) {
+                BGTime = new Date(glucoseData.get(i).date).getTime();
+            } else {
                 log.error("Could not determine last BG time");
             }
             if (i > 1) {
-                if (sgv.get(i).value < 39 || sgv.get(i - 1).value < 39) {
+                if (glucoseData.get(i).value < 39 || glucoseData.get(i - 1).value < 39) {
                     continue;
                 }
-            } else if (sgv.get(i).value < 39) {
+            } else if (glucoseData.get(i).value < 39) {
                 continue;
             }
             long elapsedMinutes = (BGTime - lastBGTime) / (60 * 1000);
             if (Math.abs(elapsedMinutes) > 2) {
                 j++;
                 if (bucketedData.size() < j)
-                    bucketedData.add(new BGDatum(sgv.get(i)));
+                    bucketedData.add(new BGDatum(glucoseData.get(i)));
                 else
-                    bucketedData.set(j, new BGDatum(sgv.get(i)));
+                    bucketedData.set(j, new BGDatum(glucoseData.get(i)));
 //                bucketedData<j>.date = BGTime;
                 /*if (! bucketedData[j].dateString) {
                     bucketedData[j].dateString = BGTime.toISOString();
@@ -230,7 +167,7 @@ public class Prep {
                 // if duplicate, average the two
                 BgReading average = new BgReading();
                 average.copyFrom(bucketedData.get(j));
-                average.value = (bucketedData.get(j).value + sgv.get(i).value) / 2;
+                average.value = (bucketedData.get(j).value + glucoseData.get(i).value) / 2;
                 bucketedData.set(j, new BGDatum(average));
             }
         }
@@ -678,15 +615,6 @@ public class Prep {
 
     // index.js // opts = inputs
     public PrepOutput generate (Opts opts) throws JSONException, ParseException, IOException {
-
-        //console.error(inputs);
-        List<Treatment> treatments;
-        if (useNSData) {
-            treatments = nsService.getTreatments();
-        } else {
-            treatments = TreatmentsPlugin.getPlugin().getTreatmentsFromHistory();
-        }
-        opts.treatments=treatments;
 
         PrepOutput autotune_prep_output = categorizeBGDatums(opts);
 
