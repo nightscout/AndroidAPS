@@ -28,11 +28,4 @@ public class GetStatusCommandTest {
 
         assertArrayEquals(ByteUtil.fromHexString("0e0102"), getStatusCommand.getRawData());
     }
-
-    @Test
-    public void testPodInfoTypeResetStatus() {
-        GetStatusCommand getStatusCommand = new GetStatusCommand(PodInfoType.LOW_FLASH_DUMP_LOG);
-
-        assertArrayEquals(ByteUtil.fromHexString("0e0146"), getStatusCommand.getRawData());
-    }
 }

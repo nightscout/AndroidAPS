@@ -5,10 +5,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.pod
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoDataLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoFaultAndInitializationTime;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoFaultEvent;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoLowFlashLogDump;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoOlderPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoTestValues;
 
 public enum PodInfoType {
     NORMAL((byte) 0x00),
@@ -16,8 +14,6 @@ public enum PodInfoType {
     FAULT_EVENT((byte) 0x02),
     DATA_LOG((byte) 0x03), // Similar to types $50 & $51. Returns up to the last 60 dwords of data.
     FAULT_AND_INITIALIZATION_TIME((byte) 0x05),
-    HARDCODED_TEST_VALUES((byte) 0x06),
-    LOW_FLASH_DUMP_LOG((byte) 0x46), // Starting at $4000
     RECENT_PULSE_LOG((byte) 0x50),  // Starting at $4200
     OLDER_PULSE_LOG((byte) 0x51); // Starting at $4200 but dumps entries before the last 50
 
@@ -54,10 +50,6 @@ public enum PodInfoType {
                 return new PodInfoDataLog(encodedData, bodyLength);
             case FAULT_AND_INITIALIZATION_TIME:
                 return new PodInfoFaultAndInitializationTime(encodedData);
-            case HARDCODED_TEST_VALUES:
-                return new PodInfoTestValues(encodedData);
-            case LOW_FLASH_DUMP_LOG:
-                return new PodInfoLowFlashLogDump(encodedData);
             case RECENT_PULSE_LOG:
                 return new PodInfoRecentPulseLog(encodedData, bodyLength);
             case OLDER_PULSE_LOG:
