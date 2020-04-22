@@ -78,7 +78,8 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
             tune_days.setText(SP.getString("autotune_default_tune_days","5"));
             warningView.setText("Don't run tune for more than 5 days back! It will cause app crashes and too much data usage! Don't even try to run without WiFi connectivity!");
             resultView.setText(TuneProfilePlugin.result);
-            lastRunView.setText(TuneProfilePlugin.lastRun.toLocaleString());
+            String latRunTxt = TuneProfilePlugin.lastRun != null ? TuneProfilePlugin.lastRun.toLocaleString() : "";
+            lastRunView.setText(latRunTxt);
             updateGUI();
             return view;
         } catch (Exception e) {
@@ -124,7 +125,8 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
                 resultView.setText("Set days between 1 and 10!!!");
             // lastrun in minutes ???
             warningView.setText("You already pressed RUN - NO WARNING NEEDED!");
-            lastRunView.setText(TuneProfilePlugin.lastRun.toLocaleString());
+            String latRunTxt = TuneProfilePlugin.lastRun != null ? TuneProfilePlugin.lastRun.toLocaleString() : "";
+            lastRunView.setText(latRunTxt);
         } else if (id == R.id.tune_profileswitch){
             String name = MainApp.gs(R.string.tuneprofile_name);
             ProfileStore profile = null;
