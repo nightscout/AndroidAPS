@@ -125,7 +125,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
                 resultView.setText("Set days between 1 and 10!!!");
             // lastrun in minutes ???
             warningView.setText("You already pressed RUN - NO WARNING NEEDED!");
-            String latRunTxt = TuneProfilePlugin.lastRun != null ? TuneProfilePlugin.lastRun.toLocaleString() : "";
+            String latRunTxt = TuneProfilePlugin.lastRun != null ? "" + TuneProfilePlugin.lastRun.getTime() : "";
             lastRunView.setText(latRunTxt);
         } else if (id == R.id.tune_profileswitch){
             String name = MainApp.gs(R.string.tuneprofile_name);

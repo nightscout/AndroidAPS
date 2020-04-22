@@ -22,6 +22,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.TuneProfile.AutotunePrep.Meal;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
@@ -120,12 +121,8 @@ public class TuneProfilePlugin extends PluginBase {
                 .shortName(R.string.autotune_shortname)
                 .preferencesId(R.xml.pref_tuneprofile)
         );
-        //create autotune subfolder for autotune files
-        String extFilesDir = LoggerUtils.getLogDirectory();
-        autotune_path = new File(extFilesDir, "autotune");
-        if (! (autotune_path.exists() && autotune_path.isDirectory())) {
-            autotune_path.mkdir();
-        }
+        //create autotune subfolder for autotune files if not exists
+        FS.createAutotuneFolder();
     }
 
 //    @Override
@@ -1283,7 +1280,8 @@ public class TuneProfilePlugin extends PluginBase {
     }
 
     public String result(int daysBack) throws IOException, ParseException {
-
+        //clean autotune folder before run
+        FS.deleteAutotuneFiles();
         int tunedISF = 0;
         double isfResult = 0;
         basalsResultInit();
@@ -1327,7 +1325,7 @@ public class TuneProfilePlugin extends PluginBase {
             //     # to capture UTC-dated treatments, we need to capture an extra 12h on either side, plus the DIA lookback
             //    # 18h = 12h for timezones + 6h for DIA; 40h = 28h for 4am + 12h for timezones
             long treatmentsStart = starttime - (daysBack-1) * 24 * 60 * 60 * 1000L - 18 * 60 * 60 * 1000L;
-            opts.treatments=TreatmentsPlugin.getPlugin().getTreatmentsFromHistoryAfterTimestamp(treatmentsStart);
+            opts.pumpHistory=TreatmentsPlugin.getPlugin().getTreatmentsFromHistoryAfterTimestamp(treatmentsStart);
 
             for (int i = daysBack; i > 0; i--) {
 //                tunedBasalsInit();
@@ -1335,6 +1333,7 @@ public class TuneProfilePlugin extends PluginBase {
                 long glucoseStart = starttime - timeBack + 4 * 24 * 60 *60 *1000L;
                 long glucoseEnd = starttime - timeBack + 28 * 24 * 60 *60 *1000L;
                 opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
+                opts.treatments= Meal.generateMeal(opts);
 
                 try {
                     log.debug("Day "+i+" of "+daysBack);
@@ -1392,12 +1391,14 @@ public class TuneProfilePlugin extends PluginBase {
             }
             result += line;
             // show ISF CR and CSF
-            result += "|  ISF |   "+ Round.roundTo(profile.getIsfMgdl()/toMgDl, 0.001) +"   |   "+ Round.roundTo(previousResult.optDouble("sens", 0d)/toMgDl,0.001)+"   |\n";
+            result += "|  ISF |   "+ Round.roundTo(profile.getIsfMgdl()/toMgDl, 0.001) +"   |    "+ Round.roundTo(previousResult.optDouble("sens", 0d)/toMgDl,0.001)+"   |\n";
             result += line;
-            result += "|  CR  |     "+profile.getIc()+"   |     "+round(previousResult.optDouble("carb_ratio", 0d),3)+"   |\n";
+            result += "|  CR  |     "+profile.getIc()+"   |      "+round(previousResult.optDouble("carb_ratio", 0d),3)+"   |\n";
             result += line;
-            result += "| CSF | "+ Round.roundTo(profile.getIsfMgdl() / profile.getIc() / toMgDl, 0.001)+"  | "+Round.roundTo(previousResult.optDouble("csf", 0d)/toMgDl,0.001)+"  |\n";
+            result += "| CSF | "+ Round.roundTo(profile.getIsfMgdl() / profile.getIc() / toMgDl, 0.001)+"  |  "+Round.roundTo(previousResult.optDouble("csf", 0d)/toMgDl,0.001)+"  |\n";
             result += line;
+
+            FS.createAutotunefile(FS.RECOMMENDATIONS,result);
 
             // trying to create new profile ready for switch
             JSONObject json = new JSONObject();
@@ -1421,6 +1422,9 @@ public class TuneProfilePlugin extends PluginBase {
                 convertedProfile.put("target_low", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", profile.getTargetLowMgdl())));
                 convertedProfile.put("target_high", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", profile.getTargetHighMgdl())));
                 convertedProfile.put("units", profile.getUnits());
+
+                FS.createAutotunefile(FS.profilName(null), convertedProfile.toString());
+
                 store.put(MainApp.gs(R.string.tuneprofile_name), convertedProfile);
                 ProfileStore profileStore = new ProfileStore(json);
                 SP.putString("autotuneprofile", profileStore.getData().toString());
@@ -1430,6 +1434,9 @@ public class TuneProfilePlugin extends PluginBase {
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }
+
+            // zip all autotune files created during the run
+            FS.zipAutotune(lastRun);
 
             return result;
         } else
