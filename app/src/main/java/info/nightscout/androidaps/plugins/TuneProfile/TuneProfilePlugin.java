@@ -1471,7 +1471,8 @@ public class TuneProfilePlugin extends PluginBase {
         Date endDate = new Date(runDate.getTime()-endDateOffset* 24 * 60 * 60 * 1000L);
         Date startDate = new Date(runDate.getTime()-(nbDays+endDateOffset-1) * 24 * 60 * 60 * 1000L);
         try {
-            jsonSettings.put("datestring",DateUtil.toISOString(runDate));
+            jsonSettings.put("datestring",DateUtil.toISOString(runDate,null,null));
+            jsonSettings.put("dateutc",DateUtil.toISOString(runDate));
             jsonSettings.put("date",runDate.getTime());
             jsonSettings.put("url_nightscout",SP.getString(R.string.key_nsclientinternal_url, ""));
             jsonSettings.put("nbdays", nbDays);
