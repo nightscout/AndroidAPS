@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.TuneProfile.AutotunePrep.Meal;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
+import info.nightscout.androidaps.utils.DateUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -1283,7 +1284,7 @@ public class TuneProfilePlugin extends PluginBase {
         //clean autotune folder before run
         //FS.deleteAutotuneFiles();
         lastRun = new Date();
-        FS.createAutotunefile("settings",settings(lastRun,daysBack));
+        FS.createAutotunefile(FS.SETTINGS,settings(lastRun,daysBack));
         int tunedISF = 0;
         double isfResult = 0;
         basalsResultInit();
@@ -1468,9 +1469,9 @@ public class TuneProfilePlugin extends PluginBase {
         if(runDate.getHours()<4)
             endDateOffset++;
         Date endDate = new Date(runDate.getTime()-endDateOffset* 24 * 60 * 60 * 1000L);
-        Date startDate = new Date(runDate.getTime()-(nbDays+endDateOffset) * 24 * 60 * 60 * 1000L);
+        Date startDate = new Date(runDate.getTime()-(nbDays+endDateOffset-1) * 24 * 60 * 60 * 1000L);
         try {
-            jsonSettings.put("datestring",runDate.toLocaleString());
+            jsonSettings.put("datestring",DateUtil.toISOString(runDate));
             jsonSettings.put("date",runDate.getTime());
             jsonSettings.put("url_nightscout",SP.getString(R.string.key_nsclientinternal_url, ""));
             jsonSettings.put("nbdays", nbDays);

@@ -23,6 +23,7 @@ public class FS {
     static final int BUFFER_SIZE = 2048;
     static final String AUTOTUNEFOLDER = "autotune";
     static final String RECOMMENDATIONS = "autotune_recommendations.log";
+    static final String SETTINGS = "settings.js";
     static final String PROFIL = "profil";
 
     static File autotune_path;
