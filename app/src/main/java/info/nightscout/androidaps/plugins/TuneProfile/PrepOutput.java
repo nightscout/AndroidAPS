@@ -8,4 +8,5 @@ public class PrepOutput {
     public List<BGDatum> CSFGlucoseData = new ArrayList<BGDatum>();
     public List<BGDatum> ISFGlucoseData = new ArrayList<BGDatum>();
     public List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
+    public String JSONString;
 }

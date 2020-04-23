@@ -1,6 +1,11 @@
 package info.nightscout.androidaps.plugins.TuneProfile;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.utils.DateUtil;
 
 /**
  * Created by Rumen Georgiev on 2/24/2018.
@@ -28,5 +33,20 @@ public class BGDatum extends BgReading {
         raw = bgReading.raw;
         direction = bgReading.direction;
         _id = bgReading._id;
+    }
+
+    public JSONObject toJSON() throws JSONException {
+        JSONObject bgjson = new JSONObject();
+        try {
+            bgjson.put("_id",_id);
+            bgjson.put("date",date);
+            bgjson.put("dateString", DateUtil.toISOString(date));
+            bgjson.put("sgv",value);
+            bgjson.put("direction",direction);
+            bgjson.put("type","sgv");
+            bgjson.put("systime", DateUtil.toISOString(date));
+            bgjson.put("utcOffset", (int) DateUtil.getTimeZoneOffsetMs()/60/1000L);
+        } catch (JSONException e) {}
+        return bgjson;
     }
 }

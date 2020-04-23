@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.TuneProfile.AutotunePrep;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -105,6 +106,7 @@ public class Prep {
         List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> UAMGlucoseData = new ArrayList<BGDatum>();
         List<CRDatum> CRData = new ArrayList<CRDatum>();
+        JSONArray CRDataJson = new JSONArray();
 
         log.debug("Treatmets size: " + treatments.size());
         //trim treatments size
@@ -515,6 +517,7 @@ public class Prep {
             dosedOpts.start = crDatum.CRInitialCarbTime;
             dosedOpts.end = crDatum.CREndTime;
             crDatum.CRInsulin = dosed(dosedOpts);
+            CRDataJson.put(crDatum);
         }
 
 // categorize.js Lines 384-436
@@ -587,6 +590,15 @@ public class Prep {
         log.debug("BasalGlucoseData: "+basalGlucoseData.size());
 //        String returnJSON = "{\"CRData\":"+CRData.toString()+",\"CSFGlucoseData\": "+CSFGlucoseData.toString()+",\"ISFGlucoseData\": "+ISFGlucoseData.toString()+",\"basalGlucoseData\": "+basalGlucoseData.toString()+"}";
 //        log.debug("Returning: "+returnJSON);
+        JSONObject autotuneprep = new JSONObject();
+        try {
+            autotuneprep.put("CRData",CRDataJson);
+            autotuneprep.put("CSFGlucoseData",CSFGlucoseData.toString());
+            autotuneprep.put("ISFGlucoseData",ISFGlucoseData.toString());
+            autotuneprep.put("basalGlucoseData",basalGlucoseData.toString());
+        } catch (JSONException e ) {}
+        prepOutput.JSONString = autotuneprep.toString(4);
+
         return prepOutput;
     }
 
