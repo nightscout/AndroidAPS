@@ -31,9 +31,8 @@ public class FS {
      ****************************************************************************/
     public static void createAutotuneFolder() {
         //create autotune subfolder for autotune files if not exists
-        //String extFilesDir = LoggerUtils.getLogDirectory();
-        TuneProfilePlugin.autotune_path = new File(logDirectory, AUTOTUNEFOLDER);
-        autotune_path = TuneProfilePlugin.autotune_path;
+        String extFilesDir = LoggerUtils.getLogDirectory();
+        autotune_path = new File(logDirectory, AUTOTUNEFOLDER);
         if (! (autotune_path.exists() && autotune_path.isDirectory())) {
             autotune_path.mkdir();
         }

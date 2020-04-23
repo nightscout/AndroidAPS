@@ -96,7 +96,7 @@ public class TuneProfilePlugin extends PluginBase {
     private static Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
     private static Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
     private NSService nsService = new NSService();
-    public static File autotune_path;
+
     public static String result ="Press Run";
     public static Date lastRun=null;
     public boolean nsDataDownloaded = false;
