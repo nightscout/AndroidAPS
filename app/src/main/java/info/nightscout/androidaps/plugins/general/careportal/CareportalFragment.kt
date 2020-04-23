@@ -133,6 +133,6 @@ class CareportalFragment : DaggerFragment(), View.OnClickListener {
     }
 
     private fun updateGUI() {
-        statusLightHandler.updateAge(careportal_sensorage, careportal_insulinage, careportal_canulaage, careportal_pbage)
+        statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, careportal_pbage, null)
     }
 }

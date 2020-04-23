@@ -117,7 +117,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/overview_statuslights_nscl"
+                app:layout_constraintBottom_toTopOf="@+id/overview_statuslights"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/overview_pumpstatuslayout">
@@ -362,23 +362,22 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
-                android:id="@+id/overview_statuslights_nscl"
+                android:id="@+id/overview_statuslights"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/colorControlHighlight"
                 android:orientation="horizontal"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                app:layout_constraintBottom_toTopOf="@+id/overview_pump"
+                app:layout_constraintBottom_toTopOf="@+id/overview_bggraph"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/bg_tbr_layout">
 
-
                 <ImageView
-                    android:layout_width="30dp"
+                    android:layout_width="45dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingStart="2dp"
                     android:paddingEnd="1dp"
@@ -387,7 +386,7 @@
 
                 <TextView
                     android:id="@+id/careportal_canulaage"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
@@ -396,9 +395,9 @@
                     android:textSize="14sp" />
 
                 <ImageView
-                    android:layout_width="30dp"
+                    android:layout_width="45dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingStart="2dp"
                     android:paddingEnd="1dp"
@@ -407,7 +406,7 @@
 
                 <TextView
                     android:id="@+id/careportal_insulinage"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
@@ -415,9 +414,18 @@
                     android:paddingEnd="2dp"
                     android:textSize="14sp" />
 
+                <TextView
+                    android:id="@+id/careportal_reservoirlevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:textSize="14sp" />
+
                 <ImageView
-                    android:layout_width="30dp"
+                    android:layout_width="45dp"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingStart="2dp"
                     android:paddingEnd="1dp"
@@ -426,7 +434,7 @@
 
                 <TextView
                     android:id="@+id/careportal_sensorage"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
@@ -435,9 +443,9 @@
                     android:textSize="14sp" />
 
                 <ImageView
-                    android:layout_width="30dp"
+                    android:layout_width="45dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0"
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingStart="2dp"
                     android:paddingEnd="1dp"
@@ -446,12 +454,22 @@
 
                 <TextView
                     android:id="@+id/careportal_pbage"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingStart="1dp"
                     android:paddingEnd="1dp"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/careportal_batterylevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:paddingStart="1dp"
+                    android:paddingEnd="2dp"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -468,7 +486,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/overview_openaps"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/overview_statuslights_nscl" />
+                app:layout_constraintTop_toBottomOf="@+id/overview_statuslights" />
 
             <TextView
                 android:id="@+id/overview_openaps"

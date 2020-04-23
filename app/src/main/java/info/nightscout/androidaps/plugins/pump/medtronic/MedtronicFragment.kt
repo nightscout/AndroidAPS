@@ -38,8 +38,8 @@ import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
-import info.nightscout.androidaps.utils.SetWarnColor
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -56,6 +56,7 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
+    @Inject lateinit var warnColors: WarnColors
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -325,11 +326,11 @@ class MedtronicFragment : DaggerFragment() {
         } else {
             medtronic_pumpstate_battery.text = "{fa-battery-" + pumpStatus.batteryRemaining / 25 + "}  " + pumpStatus.batteryRemaining + "%" + String.format("  (%.2f V)", pumpStatus.batteryVoltage)
         }
-        SetWarnColor.setColorInverse(medtronic_pumpstate_battery, pumpStatus.batteryRemaining.toDouble(), 25.0, 10.0)
+        warnColors.setColorInverse(medtronic_pumpstate_battery, pumpStatus.batteryRemaining.toDouble(), 25.0, 10.0)
 
         // reservoir
         medtronic_reservoir.text = resourceHelper.gs(R.string.reservoirvalue, pumpStatus.reservoirRemainingUnits, pumpStatus.reservoirFullUnits)
-        SetWarnColor.setColorInverse(medtronic_reservoir, pumpStatus.reservoirRemainingUnits, 50.0, 20.0)
+        warnColors.setColorInverse(medtronic_reservoir, pumpStatus.reservoirRemainingUnits, 50.0, 20.0)
 
         medtronic_errors.text = pumpStatus.errorInfo
     }

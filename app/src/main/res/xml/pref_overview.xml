@@ -301,13 +301,6 @@
                 android:key="@string/key_show_statuslights"
                 android:title="@string/show_statuslights" />
 
-            <SwitchPreference
-                android:defaultValue="false"
-                android:dependency="@string/key_show_statuslights"
-                android:key="@string/key_show_statuslights_extended"
-                android:summary="@string/show_statuslights_extended_summary"
-                android:title="@string/show_statuslights_extended" />
-
             <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="80"
                 android:dependency="@string/key_show_statuslights"
