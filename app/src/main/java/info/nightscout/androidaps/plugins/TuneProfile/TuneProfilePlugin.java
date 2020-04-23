@@ -1281,7 +1281,7 @@ public class TuneProfilePlugin extends PluginBase {
 
     public String result(int daysBack) throws IOException, ParseException {
         //clean autotune folder before run
-        FS.deleteAutotuneFiles();
+        //FS.deleteAutotuneFiles();
         int tunedISF = 0;
         double isfResult = 0;
         basalsResultInit();
@@ -1398,7 +1398,7 @@ public class TuneProfilePlugin extends PluginBase {
             result += "| CSF | "+ Round.roundTo(profile.getIsfMgdl() / profile.getIc() / toMgDl, 0.001)+"  |  "+Round.roundTo(previousResult.optDouble("csf", 0d)/toMgDl,0.001)+"  |\n";
             result += line;
 
-            FS.createAutotunefile(FS.RECOMMENDATIONS,result);
+            //FS.createAutotunefile(FS.RECOMMENDATIONS,result);
 
             // trying to create new profile ready for switch
             JSONObject json = new JSONObject();
@@ -1436,7 +1436,7 @@ public class TuneProfilePlugin extends PluginBase {
             }
 
             // zip all autotune files created during the run
-            FS.zipAutotune(lastRun);
+            //FS.zipAutotune(lastRun);
 
             return result;
         } else
