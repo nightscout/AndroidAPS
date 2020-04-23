@@ -1279,11 +1279,11 @@ public class TuneProfilePlugin extends PluginBase {
         return autotuneOutput.toString();
     }
 
-    public String result(int daysBack) throws IOException, ParseException,JSONException {
+    public String result(int daysBack) throws IOException, ParseException {
         //clean autotune folder before run
         //FS.deleteAutotuneFiles();
         lastRun = new Date();
-        FS.createAutotunefile("settings",settings(lastRun,daysBack).toString(4));
+        FS.createAutotunefile("settings",settings(lastRun,daysBack));
         int tunedISF = 0;
         double isfResult = 0;
         basalsResultInit();
@@ -1461,9 +1461,10 @@ public class TuneProfilePlugin extends PluginBase {
 
     }
 
-    private JSONObject settings (Date runDate, int nbDays) {
+    private String settings (Date runDate, int nbDays) {
         JSONObject jsonSettings = new JSONObject();
         int endDateOffset = 1;
+        String jsonString="";
         if(runDate.getHours()<4)
             endDateOffset++;
         Date endDate = new Date(runDate.getTime()-endDateOffset* 24 * 60 * 60 * 1000L);
@@ -1477,11 +1478,12 @@ public class TuneProfilePlugin extends PluginBase {
             jsonSettings.put("enddate",FS.formatDate(endDate));
             jsonSettings.put("categorize_uam_as_basal",SP.getBoolean("categorize_uam_as_basal", false));
             jsonSettings.put("tune_insulin_curve",false);
+            jsonString = jsonSettings.toString(4);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
 
-        return jsonSettings;
+        return jsonString;
     }
 
     public String formatDate(Date date){
