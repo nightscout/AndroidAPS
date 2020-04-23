@@ -1284,7 +1284,6 @@ public class TuneProfilePlugin extends PluginBase {
         //clean autotune folder before run
         //FS.deleteAutotuneFiles();
         lastRun = new Date();
-        FS.createAutotunefile(FS.SETTINGS,settings(lastRun,daysBack));
         int tunedISF = 0;
         double isfResult = 0;
         basalsResultInit();
@@ -1299,6 +1298,8 @@ public class TuneProfilePlugin extends PluginBase {
 
         long endTime = c.getTimeInMillis();
         long starttime = endTime - (24 * 60 * 60 * 1000L);
+        FS.createAutotunefile(FS.SETTINGS,settings(lastRun,daysBack,new Date(starttime),new Date(endTime)));
+
 //        Date lastProfileChange = NSService.lastProfileChange();
         Date lastProfileChange = new Date(TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(endTime).date);
         int toMgDl = 1;
@@ -1462,7 +1463,7 @@ public class TuneProfilePlugin extends PluginBase {
 
     }
 
-    private String settings (Date runDate, int nbDays) {
+    private String settings (Date runDate, int nbDays,Date firstloopstart, Date fisrtloopend) {
         JSONObject jsonSettings = new JSONObject();
         int endDateOffset = 1;
         String jsonString="";
@@ -1470,9 +1471,12 @@ public class TuneProfilePlugin extends PluginBase {
             endDateOffset++;
         Date endDate = new Date(runDate.getTime()-endDateOffset* 24 * 60 * 60 * 1000L);
         Date startDate = new Date(runDate.getTime()-(nbDays+endDateOffset-1) * 24 * 60 * 60 * 1000L);
+
         try {
             jsonSettings.put("datestring",DateUtil.toISOString(runDate,null,null));
             jsonSettings.put("dateutc",DateUtil.toISOString(runDate));
+            jsonSettings.put("firstloopstartlocal",DateUtil.dateAndTimeString(firstloopstart));
+            jsonSettings.put("firstloopendiso",DateUtil.toISOString(firstloopstart));
             jsonSettings.put("date",runDate.getTime());
             jsonSettings.put("url_nightscout",SP.getString(R.string.key_nsclientinternal_url, ""));
             jsonSettings.put("nbdays", nbDays);
