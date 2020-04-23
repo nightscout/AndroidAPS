@@ -97,7 +97,7 @@ public class TuneProfilePlugin extends PluginBase {
     private static Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
     private static Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
     private NSService nsService = new NSService();
-
+    public static final int autotuneStartHour = 4;
     public static String result ="Press Run";
     public static Date lastRun=null;
     public boolean nsDataDownloaded = false;
@@ -1298,10 +1298,14 @@ public class TuneProfilePlugin extends PluginBase {
 
         long endTime = c.getTimeInMillis();
         long starttime = endTime - (24 * 60 * 60 * 1000L);
+
+        endTime = endTime(lastRun);
+        starttime = endTime - daysBack * 24 * 60 *  60 * 1000L;
+
         FS.createAutotunefile(FS.SETTINGS,settings(lastRun,daysBack,new Date(starttime),new Date(endTime)));
 
 //        Date lastProfileChange = NSService.lastProfileChange();
-        Date lastProfileChange = new Date(TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(endTime).date);
+//        Date lastProfileChange = new Date(TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(endTime).date);
         int toMgDl = 1;
         Opts opts=new Opts();
         opts.categorize_uam_as_basal = SP.getBoolean("categorize_uam_as_basal", false);
@@ -1320,30 +1324,35 @@ public class TuneProfilePlugin extends PluginBase {
            // return "READ THE WARNING!";
 //        }
         // check if daysBack goes before the last profile switch
-        if((System.currentTimeMillis() - (daysBack * 24 * 60 * 60 * 1000L)) < lastProfileChange.getTime()){
+//        if((System.currentTimeMillis() - (daysBack * 24 * 60 * 60 * 1000L)) < lastProfileChange.getTime()){
             //return "ERROR -> I cannot tune before the last profile switch!("+(System.currentTimeMillis() - lastProfileChange.getTime()) / (24 * 60 * 60 * 1000L)+" days ago)";
-        }
+//        }
         if(daysBack < 1){
             return "Sorry I cannot do it for less than 1 day!";
         } else {
             //     # to capture UTC-dated treatments, we need to capture an extra 12h on either side, plus the DIA lookback
             //    # 18h = 12h for timezones + 6h for DIA; 40h = 28h for 4am + 12h for timezones
-            long treatmentsStart = starttime - (daysBack-1) * 24 * 60 * 60 * 1000L - 18 * 60 * 60 * 1000L;
+            //long treatmentsStart = starttime - (daysBack-1) * 24 * 60 * 60 * 1000L - 18 * 60 * 60 * 1000L;
+            long treatmentsStart = starttime - 6 * 60 * 60 * 1000L;     // 6 hour before first BG value of first day
             opts.pumpHistory=TreatmentsPlugin.getPlugin().getTreatmentsFromHistoryAfterTimestamp(treatmentsStart);
 
-            for (int i = daysBack; i > 0; i--) {
+//            for (int i = daysBack; i > 0; i--) {
+             for (int i = 0; i < daysBack; i++) {
 //                tunedBasalsInit();
-                long timeBack = (i-1) * 24 * 60 * 60 * 1000L;
-                long glucoseStart = starttime - timeBack + 4 * 24 * 60 *60 *1000L;
-                long glucoseEnd = starttime - timeBack + 28 * 24 * 60 *60 *1000L;
+                long timeBack = i * 24 * 60 * 60 * 1000L;
+//                long glucoseStart = starttime - timeBack + 4 * 24 * 60 *60 *1000L;
+//                long glucoseEnd = starttime - timeBack + 28 * 24 * 60 *60 *1000L;
+                 long glucoseStart = starttime + timeBack;
+                 long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
                 opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
                 //opts.treatments= Meal.generateMeal(opts);
                 opts.treatments = opts.pumpHistory;
 
                 try {
                     log.debug("Day "+i+" of "+daysBack);
+                    //log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
                     log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
-                    categorizeBGDatums(starttime-timeBack, endTime-timeBack);
+                    categorizeBGDatums(glucoseStart, glucoseEnd);
 //                    categorizeBGDatums(starttime, endTime);
                     tuneAllTheThings();
                 } catch (JSONException e) {
@@ -1463,7 +1472,7 @@ public class TuneProfilePlugin extends PluginBase {
 
     }
 
-    private String settings (Date runDate, int nbDays,Date firstloopstart, Date fisrtloopend) {
+    private String settings (Date runDate, int nbDays,Date firstloopstart, Date firstloopend) {
         JSONObject jsonSettings = new JSONObject();
         int endDateOffset = 1;
         String jsonString="";
@@ -1476,7 +1485,7 @@ public class TuneProfilePlugin extends PluginBase {
             jsonSettings.put("datestring",DateUtil.toISOString(runDate,null,null));
             jsonSettings.put("dateutc",DateUtil.toISOString(runDate));
             jsonSettings.put("firstloopstartlocal",DateUtil.dateAndTimeString(firstloopstart));
-            jsonSettings.put("firstloopendiso",DateUtil.toISOString(firstloopstart));
+            jsonSettings.put("utcOffset",(int) (DateUtil.getTimeZoneOffsetMs()/1000/60/60));
             jsonSettings.put("date",runDate.getTime());
             jsonSettings.put("url_nightscout",SP.getString(R.string.key_nsclientinternal_url, ""));
             jsonSettings.put("nbdays", nbDays);
@@ -1490,6 +1499,16 @@ public class TuneProfilePlugin extends PluginBase {
         }
 
         return jsonString;
+    }
+
+    private long endTime(Date dateRun) {
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(dateRun.getTime());
+        c.set(Calendar.HOUR_OF_DAY, autotuneStartHour);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        return c.getTimeInMillis() < dateRun.getTime() ? c.getTimeInMillis()  : c.getTimeInMillis() - 24 * 60 * 60 * 1000L;
     }
 
     public String formatDate(Date date){
