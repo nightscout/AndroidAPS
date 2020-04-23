@@ -29,8 +29,8 @@ import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.SetWarnColor
 import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -51,6 +51,7 @@ class DanaRFragment : DaggerFragment() {
     @Inject lateinit var danaRPump: DanaRPump
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var sp: SP
+    @Inject lateinit var warnColors: WarnColors
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -179,7 +180,7 @@ class DanaRFragment : DaggerFragment() {
             val agoMsec = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMsec.toDouble() / 60.0 / 1000.0).toInt()
             danar_lastconnection?.text = DateUtil.timeString(pump.lastConnection) + " (" + resourceHelper.gs(R.string.minago, agoMin) + ")"
-            SetWarnColor.setColor(danar_lastconnection, agoMin.toDouble(), 16.0, 31.0)
+            warnColors.setColor(danar_lastconnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {
             val agoMsec = System.currentTimeMillis() - pump.lastBolusTime
@@ -192,7 +193,7 @@ class DanaRFragment : DaggerFragment() {
         }
 
         danar_dailyunits?.text = resourceHelper.gs(R.string.reservoirvalue, pump.dailyTotalUnits, pump.maxDailyTotalUnits)
-        SetWarnColor.setColor(danar_dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9)
+        warnColors.setColor(danar_dailyunits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9)
         danar_basabasalrate?.text = "( " + (pump.activeProfile + 1) + " )  " + resourceHelper.gs(R.string.pump_basebasalrate, plugin.baseBasalRate)
         // DanaRPlugin, DanaRKoreanPlugin
         if (activePlugin.activePump.isFakingTempsByExtendedBoluses == true) {
@@ -206,9 +207,9 @@ class DanaRFragment : DaggerFragment() {
         danar_extendedbolus?.text = activePlugin.activeTreatments.getExtendedBolusFromHistory(System.currentTimeMillis())?.toString()
             ?: ""
         danar_reservoir?.text = resourceHelper.gs(R.string.reservoirvalue, pump.reservoirRemainingUnits, 300)
-        SetWarnColor.setColorInverse(danar_reservoir, pump.reservoirRemainingUnits, 50.0, 20.0)
+        warnColors.setColorInverse(danar_reservoir, pump.reservoirRemainingUnits, 50.0, 20.0)
         danar_battery?.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"
-        SetWarnColor.setColorInverse(danar_battery, pump.batteryRemaining.toDouble(), 51.0, 26.0)
+        warnColors.setColorInverse(danar_battery, pump.batteryRemaining.toDouble(), 51.0, 26.0)
         danar_iob?.text = resourceHelper.gs(R.string.formatinsulinunits, pump.iob)
         danar_firmware?.text = resourceHelper.gs(R.string.dana_model, pump.modelFriendlyName(), pump.hwModel, pump.protocol, pump.productCode)
         danar_basalstep?.text = pump.basalStep.toString()

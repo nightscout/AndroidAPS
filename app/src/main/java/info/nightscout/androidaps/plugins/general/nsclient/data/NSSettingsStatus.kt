@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.nsclient.data
 
+import android.content.Context
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -10,7 +11,9 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.JsonHelper
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -111,10 +114,12 @@ class NSSettingsStatus @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val resourceHelper: ResourceHelper,
     private val rxBus: RxBusWrapper,
-    private val defaultValueHelper: DefaultValueHelper
+    private val defaultValueHelper: DefaultValueHelper,
+    private val sp: SP
 ) {
 
     var nightscoutVersionName = ""
+
     // ***** PUMP STATUS ******
     var data: JSONObject? = null
 
@@ -133,6 +138,7 @@ class NSSettingsStatus @Inject constructor(
         val targetlow = getSettingsThreshold("bgTargetBottom")
         if (targetHigh != null) defaultValueHelper.bgTargetHigh = targetHigh
         if (targetlow != null) defaultValueHelper.bgTargetLow = targetlow
+        copyStatusLightsNsSettings(null)
     }
 
     fun getName(): String? =
@@ -152,10 +158,14 @@ class NSSettingsStatus @Inject constructor(
 
     // valid property is "warn" or "urgent"
     // plugings "iage" "sage" "cage" "pbage"
-    fun getExtendedWarnValue(plugin: String, property: String, defaultValue: Double): Double {
-        val extendedSettings = getExtendedSettings() ?: return defaultValue
-        val pluginJson = extendedSettings.optJSONObject(plugin) ?: return defaultValue
-        return pluginJson.optDouble(property, defaultValue)
+    fun getExtendedWarnValue(plugin: String, property: String): Double? {
+        val extendedSettings = getExtendedSettings() ?: return null
+        val pluginJson = extendedSettings.optJSONObject(plugin) ?: return null
+        try {
+            return pluginJson.getDouble(property)
+        } catch (e: Exception) {
+            return null
+        }
     }
 
     // "bgHigh": 252,
@@ -210,5 +220,21 @@ class NSSettingsStatus @Inject constructor(
     fun openAPSEnabledAlerts(): Boolean {
         val openaps = JsonHelper.safeGetJSONObject(getExtendedSettings(), "openaps", null)
         return JsonHelper.safeGetBoolean(openaps, "enableAlerts")
+    }
+
+    fun copyStatusLightsNsSettings(context: Context?) {
+        val action = Runnable {
+            getExtendedWarnValue("cage", "warn")?.let { sp.putDouble(R.string.key_statuslights_cage_warning, it) }
+            getExtendedWarnValue("cage", "urgent")?.let { sp.putDouble(R.string.key_statuslights_cage_critical, it) }
+            getExtendedWarnValue("iage", "warn")?.let { sp.putDouble(R.string.key_statuslights_iage_warning, it) }
+            getExtendedWarnValue("iage", "urgent")?.let { sp.putDouble(R.string.key_statuslights_iage_critical, it) }
+            getExtendedWarnValue("sage", "warn")?.let { sp.putDouble(R.string.key_statuslights_sage_warning, it) }
+            getExtendedWarnValue("sage", "urgent")?.let { sp.putDouble(R.string.key_statuslights_sage_critical, it) }
+            getExtendedWarnValue("bage", "warn")?.let { sp.putDouble(R.string.key_statuslights_bage_warning, it) }
+            getExtendedWarnValue("bage", "urgent")?.let { sp.putDouble(R.string.key_statuslights_bage_critical, it) }
+        }
+
+        if (context != null) OKDialog.showConfirmation(context, resourceHelper.gs(R.string.statuslights), resourceHelper.gs(R.string.copyexistingvalues), action)
+        else action.run()
     }
 }

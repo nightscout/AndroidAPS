@@ -274,39 +274,117 @@
             android:title="@string/overview_show_notes_field_in_dialogs_title" />
 
         <androidx.preference.PreferenceScreen
-            android:key="absorption_overview_advanced"
-            android:title="@string/advancedsettings_title">
-
-            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
-                android:defaultValue="100"
-                android:dialogMessage="@string/deliverpartofboluswizard"
-                android:inputType="number"
-                android:key="@string/key_boluswizard_percentage"
-                android:maxLines="1"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/partialboluswizard"
-                validate:maxNumber="100"
-                validate:minNumber="10"
-                validate:testType="numericRange" />
+            android:key="@string/key_statuslights_overview_advanced"
+            android:title="@string/statuslights">
 
             <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_usesuperbolus"
-                android:summary="@string/enablesuperbolus_summary"
-                android:title="@string/enablesuperbolus" />
-
-            <SwitchPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="@string/key_show_statuslights"
                 android:title="@string/show_statuslights" />
 
-            <SwitchPreference
-                android:defaultValue="false"
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="48"
                 android:dependency="@string/key_show_statuslights"
-                android:key="@string/key_show_statuslights_extended"
-                android:summary="@string/show_statuslights_extended_summary"
-                android:title="@string/show_statuslights_extended" />
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_cage_warning"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_cage_warning"
+                validate:maxNumber="120"
+                validate:minNumber="24"
+                validate:testType="numericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="72"
+                android:dependency="@string/key_show_statuslights"
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_cage_critical"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_cage_critical"
+                validate:maxNumber="120"
+                validate:minNumber="24"
+                validate:testType="numericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="72"
+                android:dependency="@string/key_show_statuslights"
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_iage_warning"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_iage_warning"
+                validate:maxNumber="240"
+                validate:minNumber="24"
+                validate:testType="numericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="144"
+                android:dependency="@string/key_show_statuslights"
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_iage_critical"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_iage_critical"
+                validate:maxNumber="240"
+                validate:minNumber="24"
+                validate:testType="numericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="216"
+                android:dependency="@string/key_show_statuslights"
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_sage_warning"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_sage_warning"
+                validate:maxNumber="720"
+                validate:minNumber="24"
+                validate:testType="numericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="240"
+                android:dependency="@string/key_show_statuslights"
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_sage_critical"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_sage_critical"
+                validate:maxNumber="720"
+                validate:minNumber="24"
+                validate:testType="numericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="216"
+                android:dependency="@string/key_show_statuslights"
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_bage_warning"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_bage_warning"
+                validate:maxNumber="1000"
+                validate:minNumber="24"
+                validate:testType="numericRange" />
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="240"
+                android:dependency="@string/key_show_statuslights"
+                android:inputType="numberSigned"
+                android:key="@string/key_statuslights_bage_critical"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/statuslights_bage_critical"
+                validate:maxNumber="1000"
+                validate:minNumber="24"
+                validate:testType="numericRange" />
 
             <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="80"
@@ -359,6 +437,37 @@
                 validate:maxNumber="100"
                 validate:minNumber="0"
                 validate:testType="numericRange" />
+
+            <Preference
+                android:key="@string/key_statuslights_copy_ns"
+                android:dependency="@string/key_show_statuslights"
+                android:title="@string/statuslights_copy_ns">
+            </Preference>
+
+        </androidx.preference.PreferenceScreen>
+
+        <androidx.preference.PreferenceScreen
+            android:key="overview_advanced"
+            android:title="@string/advancedsettings_title">
+
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+                android:defaultValue="100"
+                android:dialogMessage="@string/deliverpartofboluswizard"
+                android:inputType="number"
+                android:key="@string/key_boluswizard_percentage"
+                android:maxLines="1"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/partialboluswizard"
+                validate:maxNumber="100"
+                validate:minNumber="10"
+                validate:testType="numericRange" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_usesuperbolus"
+                android:summary="@string/enablesuperbolus_summary"
+                android:title="@string/enablesuperbolus" />
 
         </androidx.preference.PreferenceScreen>
 

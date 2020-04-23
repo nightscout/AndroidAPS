@@ -28,6 +28,7 @@ import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
 import info.nightscout.androidaps.plugins.general.careportal.CareportalPlugin
 import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
 import info.nightscout.androidaps.plugins.general.nsclient.NSClientPlugin
+import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.plugins.general.tidepool.TidepoolPlugin
 import info.nightscout.androidaps.plugins.general.wear.WearPlugin
@@ -49,8 +50,8 @@ import info.nightscout.androidaps.plugins.source.EversensePlugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.plugins.source.PoctechPlugin
 import info.nightscout.androidaps.plugins.source.TomatoPlugin
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -97,6 +98,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var maintenancePlugin: MaintenancePlugin
 
     @Inject lateinit var passwordCheck: PasswordCheck
+    @Inject lateinit var nsSettingStatus: NSSettingsStatus
 
     @Inject lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
@@ -337,6 +339,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                 }
                 if (preference.key == resourceHelper.gs(R.string.key_application_password)) {
                     passwordCheck.setPassword(context, R.string.application_password, R.string.key_application_password)
+                    return true
+                }
+                // NSClient copy settings
+                if (preference.key == resourceHelper.gs(R.string.key_statuslights_copy_ns)) {
+                    nsSettingStatus.copyStatusLightsNsSettings(context)
                     return true
                 }
             }
