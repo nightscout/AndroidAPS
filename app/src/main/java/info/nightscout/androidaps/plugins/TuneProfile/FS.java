@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -75,8 +76,7 @@ public class FS {
         String prefixe = "";
         if (dayrun != null) {
             prefixe = "new";
-            strdate= "." + dayrun.getTime();
-            strdate = strdate.substring(0,10);
+            strdate= "." + formatDate(dayrun);
         }
         return prefixe + PROFIL + strdate + ".json";
     }
@@ -114,5 +114,12 @@ public class FS {
             out.closeEntry();
         }
     }
+
+
+    public static String formatDate(Date date){
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(date);
+    }
+
 
 }

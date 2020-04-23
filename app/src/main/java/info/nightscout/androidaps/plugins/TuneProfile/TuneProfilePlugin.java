@@ -1279,9 +1279,11 @@ public class TuneProfilePlugin extends PluginBase {
         return autotuneOutput.toString();
     }
 
-    public String result(int daysBack) throws IOException, ParseException {
+    public String result(int daysBack) throws IOException, ParseException,JSONException {
         //clean autotune folder before run
         //FS.deleteAutotuneFiles();
+        lastRun = new Date();
+        FS.createAutotunefile("settings",settings(lastRun,daysBack).toString(4));
         int tunedISF = 0;
         double isfResult = 0;
         basalsResultInit();
@@ -1364,7 +1366,7 @@ public class TuneProfilePlugin extends PluginBase {
             }
             DecimalFormat df = new DecimalFormat("0.000");
             String line = "------------------------------------------\n";
-            lastRun = new Date();
+
 
             result = line;
             result += "|Hour| Profile | Tuned |   %   |\n";
@@ -1457,6 +1459,29 @@ public class TuneProfilePlugin extends PluginBase {
             }
         }
 
+    }
+
+    private JSONObject settings (Date runDate, int nbDays) {
+        JSONObject jsonSettings = new JSONObject();
+        int endDateOffset = 1;
+        if(runDate.getHours()<4)
+            endDateOffset++;
+        Date endDate = new Date(runDate.getTime()-endDateOffset* 24 * 60 * 60 * 1000L);
+        Date startDate = new Date(runDate.getTime()-(nbDays+endDateOffset) * 24 * 60 * 60 * 1000L);
+        try {
+            jsonSettings.put("datestring",runDate.toLocaleString());
+            jsonSettings.put("date",runDate.getTime());
+            jsonSettings.put("url_nightscout",SP.getString(R.string.key_nsclientinternal_url, ""));
+            jsonSettings.put("nbdays", nbDays);
+            jsonSettings.put("startdate",FS.formatDate(startDate));
+            jsonSettings.put("enddate",FS.formatDate(endDate));
+            jsonSettings.put("categorize_uam_as_basal",SP.getBoolean("categorize_uam_as_basal", false));
+            jsonSettings.put("tune_insulin_curve",false);
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
+
+        return jsonSettings;
     }
 
     public String formatDate(Date date){
