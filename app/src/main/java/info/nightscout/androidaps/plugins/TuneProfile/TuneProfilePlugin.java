@@ -1472,7 +1472,7 @@ public class TuneProfilePlugin extends PluginBase {
 
     }
 
-    private String settings (Date runDate, int nbDays,Date firstloopstart, Date firstloopend) {
+    private String settings (Date runDate, int nbDays,Date firstloopstart, Date lastloopend) {
         JSONObject jsonSettings = new JSONObject();
         int endDateOffset = 1;
         String jsonString="";
@@ -1485,12 +1485,12 @@ public class TuneProfilePlugin extends PluginBase {
             jsonSettings.put("datestring",DateUtil.toISOString(runDate,null,null));
             jsonSettings.put("dateutc",DateUtil.toISOString(runDate));
             jsonSettings.put("firstloopstartlocal",DateUtil.dateAndTimeString(firstloopstart));
+            jsonSettings.put("lastloopendlocal",DateUtil.dateAndTimeString(lastloopend));
             jsonSettings.put("utcOffset",(int) (DateUtil.getTimeZoneOffsetMs()/1000/60/60));
-            jsonSettings.put("date",runDate.getTime());
             jsonSettings.put("url_nightscout",SP.getString(R.string.key_nsclientinternal_url, ""));
             jsonSettings.put("nbdays", nbDays);
-            jsonSettings.put("startdate",FS.formatDate(startDate));
-            jsonSettings.put("enddate",FS.formatDate(endDate));
+            jsonSettings.put("startdate",DateUtil.dateString(firstloopstart));
+            jsonSettings.put("enddate",DateUtil.dateString(lastloopend.getTime()-24*60*60*1000L));
             jsonSettings.put("categorize_uam_as_basal",SP.getBoolean("categorize_uam_as_basal", false));
             jsonSettings.put("tune_insulin_curve",false);
             jsonString = jsonSettings.toString(4);
