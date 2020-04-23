@@ -720,7 +720,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
 
         // Status lights
-        overview_statuslights?.visibility = (sp.getBoolean(R.string.key_show_statuslights, false) || Config.NSCLIENT).toVisibility()
+        overview_statuslights?.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || Config.NSCLIENT).toVisibility()
         statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, careportal_reservoirlevel, careportal_sensorage, careportal_pbage, careportal_batterylevel)
 
         // cob

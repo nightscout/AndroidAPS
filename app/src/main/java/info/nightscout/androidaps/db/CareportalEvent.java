@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphExtensions.Point
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.Translator;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_CAREPORTALEVENTS)
 public class CareportalEvent implements DataPointWithLabelInterface, Interval {
@@ -93,15 +94,15 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
         return (System.currentTimeMillis() - date) / (60 * 60 * 1000.0);
     }
 
-    public String age(boolean useShortText) {
+    public String age(boolean useShortText, ResourceHelper resourceHelper) {
         Map<TimeUnit, Long> diff = computeDiff(date, System.currentTimeMillis());
 
-        String days = " " + MainApp.gs(R.string.days) + " ";
-        String hours = " " + MainApp.gs(R.string.hours) + " ";
+        String days = " " + resourceHelper.gs(R.string.days) + " ";
+        String hours = " " + resourceHelper.gs(R.string.hours) + " ";
 
         if (useShortText) {
-            days = MainApp.gs(R.string.shortday);
-            hours = MainApp.gs(R.string.shorthour);
+            days = resourceHelper.gs(R.string.shortday);
+            hours = resourceHelper.gs(R.string.shorthour);
         }
 
         return diff.get(TimeUnit.DAYS) + days + diff.get(TimeUnit.HOURS) + hours;

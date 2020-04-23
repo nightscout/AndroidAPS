@@ -185,14 +185,7 @@ public class NSClientPlugin extends PluginBase {
         super.preprocessPreferences(preferenceFragment);
 
         if (Config.NSCLIENT) {
-            PreferenceScreen scrnAdvancedSettings = preferenceFragment.findPreference(resourceHelper.gs(R.string.key_advancedsettings));
-            if (scrnAdvancedSettings != null) {
-                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(resourceHelper.gs(R.string.key_statuslights_res_warning)));
-                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(resourceHelper.gs(R.string.key_statuslights_res_critical)));
-                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(resourceHelper.gs(R.string.key_statuslights_bat_warning)));
-                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(resourceHelper.gs(R.string.key_statuslights_bat_critical)));
-                scrnAdvancedSettings.removePreference(preferenceFragment.findPreference(resourceHelper.gs(R.string.key_show_statuslights)));
-            }
+            preferenceFragment.findPreference(resourceHelper.gs(R.string.key_statuslights_overview_advanced));
         }
     }
 

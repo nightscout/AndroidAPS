@@ -651,15 +651,31 @@
     <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
-    <string name="key_show_statuslights" translatable="false">key_show_statuslights</string>
+    <string name="key_show_statuslights" translatable="false">show_statuslights</string>
     <string name="show_statuslights">Show status lights on home screen</string>
-    <string name="key_statuslights_res_warning" translatable="false">key_statuslights_res_warning</string>
+    <string name="key_statuslights_cage_warning" translatable="false">statuslights_cage_warning</string>
+    <string name="statuslights_cage_warning">Threshold warning canula age [h]</string>
+    <string name="key_statuslights_cage_critical" translatable="false">statuslights_cage_critical</string>
+    <string name="statuslights_cage_critical">Threshold critical canula age [h]</string>
+    <string name="key_statuslights_iage_warning" translatable="false">statuslights_iage_warning</string>
+    <string name="statuslights_iage_warning">Threshold warning insulin age [h]</string>
+    <string name="key_statuslights_iage_critical" translatable="false">statuslights_iage_critical</string>
+    <string name="statuslights_iage_critical">Threshold critical insulin age [h]</string>
+    <string name="key_statuslights_sage_warning" translatable="false">statuslights_sage_warning</string>
+    <string name="statuslights_sage_warning">Threshold warning sensor age [h]</string>
+    <string name="key_statuslights_sage_critical" translatable="false">statuslights_sage_critical</string>
+    <string name="statuslights_sage_critical">Threshold critical sensor age [h]</string>
+    <string name="key_statuslights_bage_warning" translatable="false">statuslights_bage_warning</string>
+    <string name="statuslights_bage_warning">Threshold warning battery age [h]</string>
+    <string name="key_statuslights_bage_critical" translatable="false">statuslights_bage_critical</string>
+    <string name="statuslights_bage_critical">Threshold critical battery age [h]</string>
+    <string name="key_statuslights_res_warning" translatable="false">statuslights_res_warning</string>
     <string name="statuslights_res_warning">Threshold warning reservoir level [U]</string>
-    <string name="key_statuslights_res_critical" translatable="false">key_statuslights_res_critical</string>
+    <string name="key_statuslights_res_critical" translatable="false">statuslights_res_critical</string>
     <string name="statuslights_res_critical">Threshold critical reservoir level [U]</string>
-    <string name="key_statuslights_bat_warning" translatable="false">key_statuslights_bat_warning</string>
+    <string name="key_statuslights_bat_warning" translatable="false">statuslights_bat_warning</string>
     <string name="statuslights_bat_warning">Threshold warning battery level [%]</string>
-    <string name="key_statuslights_bat_critical" translatable="false">key_statuslights_bat_critical</string>
+    <string name="key_statuslights_bat_critical" translatable="false">statuslights_bat_critical</string>
     <string name="statuslights_bat_critical">Threshold critical battery level [%]</string>
     <string name="iob">IOB</string>
     <string name="cob">COB</string>
@@ -1804,4 +1820,9 @@
     <string name="master_password_summary">Master password is used for backup encryption and to override security in application. Remember it or store on a safe place.</string>
     <string name="passwords_dont_match">Passwords don\'t match</string>
     <string name="current_master_password">Current master password</string>
+    <string name="statuslights">Status lights</string>
+    <string name="statuslights_copy_ns">Copy settings from NS</string>
+    <string name="key_statuslights_copy_ns">statuslights_copy_ns</string>
+    <string name="copyexistingvalues">Copy NS settins (if exists)?</string>
+    <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
 </resources>

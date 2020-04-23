@@ -365,6 +365,8 @@
                 android:id="@+id/overview_statuslights"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:layout_marginBottom="3dp"
                 android:background="?android:attr/colorControlHighlight"
                 android:orientation="horizontal"
                 android:paddingTop="4dp"
@@ -375,12 +377,10 @@
                 app:layout_constraintTop_toBottomOf="@id/bg_tbr_layout">
 
                 <ImageView
-                    android:layout_width="45dp"
+                    android:layout_width="40dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:paddingStart="2dp"
-                    android:paddingEnd="1dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_cp_age_canula" />
 
@@ -388,19 +388,16 @@
                     android:id="@+id/careportal_canulaage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingStart="1dp"
                     android:paddingEnd="2dp"
                     android:textSize="14sp" />
 
                 <ImageView
-                    android:layout_width="45dp"
+                    android:layout_width="40dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:paddingStart="2dp"
-                    android:paddingEnd="1dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_cp_age_insulin" />
 
@@ -408,7 +405,6 @@
                     android:id="@+id/careportal_insulinage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingStart="1dp"
                     android:paddingEnd="2dp"
@@ -418,17 +414,14 @@
                     android:id="@+id/careportal_reservoirlevel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:textSize="14sp" />
 
                 <ImageView
-                    android:layout_width="45dp"
+                    android:layout_width="40dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:paddingStart="2dp"
-                    android:paddingEnd="1dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_cp_age_sensor" />
 
@@ -436,19 +429,16 @@
                     android:id="@+id/careportal_sensorage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingStart="1dp"
                     android:paddingEnd="2dp"
                     android:textSize="14sp" />
 
                 <ImageView
-                    android:layout_width="45dp"
+                    android:layout_width="40dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:paddingStart="2dp"
-                    android:paddingEnd="1dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/icon_cp_age_battery" />
 
@@ -456,7 +446,6 @@
                     android:id="@+id/careportal_pbage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingStart="1dp"
                     android:paddingEnd="1dp"
@@ -466,7 +455,6 @@
                     android:id="@+id/careportal_batterylevel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:paddingStart="1dp"
                     android:paddingEnd="2dp"
