@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatm
 import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.services.Intents;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 
@@ -78,7 +79,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
             tune_days.setText(SP.getString("autotune_default_tune_days","5"));
             warningView.setText("Don't run tune for more than 5 days back! It will cause app crashes and too much data usage! Don't even try to run without WiFi connectivity!");
             resultView.setText(TuneProfilePlugin.result);
-            String latRunTxt = TuneProfilePlugin.lastRun != null ? TuneProfilePlugin.lastRun.toLocaleString() : "";
+            String latRunTxt = TuneProfilePlugin.lastRun != null ? DateUtil.dateAndTimeString(TuneProfilePlugin.lastRun) : "";
             lastRunView.setText(latRunTxt);
             updateGUI();
             return view;
@@ -125,7 +126,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
                 resultView.setText("Set days between 1 and 10!!!");
             // lastrun in minutes ???
             warningView.setText("You already pressed RUN - NO WARNING NEEDED!");
-            String latRunTxt = TuneProfilePlugin.lastRun != null ? "" + TuneProfilePlugin.lastRun.toLocaleString() : "";
+            String latRunTxt = TuneProfilePlugin.lastRun != null ? "" + DateUtil.dateAndTimeString(TuneProfilePlugin.lastRun) : "";
             lastRunView.setText(latRunTxt);
         } else if (id == R.id.tune_profileswitch){
             String name = MainApp.gs(R.string.tuneprofile_name);
