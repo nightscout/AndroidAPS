@@ -1333,7 +1333,8 @@ public class TuneProfilePlugin extends PluginBase {
                 long glucoseStart = starttime - timeBack + 4 * 24 * 60 *60 *1000L;
                 long glucoseEnd = starttime - timeBack + 28 * 24 * 60 *60 *1000L;
                 opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
-                opts.treatments= Meal.generateMeal(opts);
+                //opts.treatments= Meal.generateMeal(opts);
+                opts.treatments = opts.pumpHistory;
 
                 try {
                     log.debug("Day "+i+" of "+daysBack);
