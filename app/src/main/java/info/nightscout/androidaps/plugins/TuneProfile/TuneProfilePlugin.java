@@ -1284,7 +1284,7 @@ public class TuneProfilePlugin extends PluginBase {
 
     public String result(int daysBack) throws IOException, ParseException {
         //clean autotune folder before run
-        //FS.deleteAutotuneFiles();
+        FS.deleteAutotuneFiles();
         lastRun = new Date();
         int tunedISF = 0;
         double isfResult = 0;
@@ -1452,7 +1452,7 @@ public class TuneProfilePlugin extends PluginBase {
             }
 
             // zip all autotune files created during the run
-            FS.zipAutotune(lastRun);
+            //FS.zipAutotune(lastRun);
 
             return result;
         } else
