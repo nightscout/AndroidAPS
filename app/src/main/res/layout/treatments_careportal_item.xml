@@ -23,33 +23,39 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:gravity="center_vertical|right"
-                android:paddingLeft="10dp"
-                android:paddingRight="5dp"
+                android:gravity="center_vertical|end"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
                 android:text="{fa-clock-o}" />
 
             <TextView
                 android:id="@+id/careportal_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
                 android:text="1.1.2000 18:00"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/careportal_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingEnd="10dp"/>
 
             <TextView
                 android:id="@+id/careportal_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
                 android:text=""
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:text="" />
 
@@ -57,7 +63,7 @@
                 android:id="@+id/ns_sign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="NS"
                 android:textColor="@color/colorSetTempButton" />
 
@@ -70,19 +76,19 @@
 
             <TextView
                 android:id="@+id/careportal_note"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingEnd="10dp"
                 android:text="Activity" />
 
             <TextView
                 android:id="@+id/careportal_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:text="@string/overview_quickwizard_item_remove_button"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/holo_orange_light" />
@@ -92,10 +98,9 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="2dip"
-            android:layout_alignParentBottom="true"
             android:layout_marginBottom="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_marginTop="5dp"
             android:background="@color/listdelimiter" />
 

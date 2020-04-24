@@ -149,7 +149,7 @@
     <string name="profileswitch_targethigher">Cíl bude o 10 % vyšší.</string>
     <string name="profileswitch_targetlower">Cíl bude o 10 % nižší.</string>
     <string name="profileswitch_targetbottom">Pouze dolní cíl bude o 10 % nižší.</string>
-    <string name="profileswitch_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Profiles.html?highlight=p%C5%99epnut%C3%AD%20profilu</string>
+    <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Profiles.html?highlight=p%C5%99epnut%C3%AD%20profilu</string>
     <string name="profileswitchtime_iwant">Pokud se probudíte o 1h dříve než obvykle, jak byste měli oznámit AAPS tuto změnu?</string>
     <string name="profileswitchtime_1">Proveďte přepnutí profilu s posunem času 1</string>
     <string name="profileswitchtime__1">Proveďte přepnutí profilu s posunem času -1</string>

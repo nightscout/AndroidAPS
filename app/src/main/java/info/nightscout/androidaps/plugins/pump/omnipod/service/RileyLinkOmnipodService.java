@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.service;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -11,8 +12,12 @@ import com.google.gson.Gson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
@@ -23,6 +28,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
@@ -31,7 +37,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
+
 
 /**
  * Created by andy on 4.8.2019
@@ -39,7 +46,12 @@ import info.nightscout.androidaps.utils.SP;
  */
 public class RileyLinkOmnipodService extends RileyLinkService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    @Inject AAPSLogger aapsLogger;
+    @Inject Context context;
+    @Inject OmnipodPumpPlugin omnipodPumpPlugin;
+    @Inject SP sp;
+    
+    //private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private static RileyLinkOmnipodService instance;
 
@@ -49,13 +61,13 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
 
     public RileyLinkOmnipodService() {
-        super(MainApp.instance().getApplicationContext());
+        super();
         instance = this;
         if (isLogEnabled())
-            LOG.debug("RileyLinkOmnipodService newly constructed");
+            aapsLogger.debug(LTag.PUMPCOMM,"RileyLinkOmnipodService newly constructed");
         OmnipodUtil.setOmnipodService(this);
         pumpStatus = (OmnipodPumpStatus) OmnipodPumpPlugin.getPlugin().getPumpStatusData();
-        //LOG.debug("RRRRRRRRRR: " + pumpStatus);
+        //aapsLogger.debug(LTag.PUMPCOMM,"RRRRRRRRRR: " + pumpStatus);
     }
 
 
@@ -72,7 +84,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         if (isLogEnabled())
-            LOG.warn("onConfigurationChanged");
+            aapsLogger.warn(LTag.PUMPCOMM,"onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
     }
 
@@ -100,7 +112,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         RileyLinkUtil.setTargetDevice(RileyLinkTargetDevice.Omnipod);
 
         // get most recently used RileyLink address
-        rileyLinkServiceData.rileylinkAddress = SP.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+        rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
         rileyLinkBLE = new RileyLinkBLE(this.context); // or this
         rfspy = new RFSpy(rileyLinkBLE);
@@ -116,15 +128,15 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     private void initializeErosOmnipodManager() {
         if (AapsOmnipodManager.getInstance() == null) {
             PodSessionState podState = null;
-            if (SP.contains(OmnipodConst.Prefs.PodState)) {
+            if (sp.contains(OmnipodConst.Prefs.PodState)) {
                 try {
                     Gson gson = OmnipodUtil.getGsonInstance();
-                    String storedPodState = SP.getString(OmnipodConst.Prefs.PodState, null);
-                    LOG.info("PodSessionState-SP: loaded from SharedPreferences: " + storedPodState);
+                    String storedPodState = sp.getString(OmnipodConst.Prefs.PodState, null);
+                    aapsLogger.info(LTag.PUMPCOMM,"PodSessionState-SP: loaded from SharedPreferences: " + storedPodState);
                     podState = gson.fromJson(storedPodState, PodSessionState.class);
                     OmnipodUtil.setPodSessionState(podState);
                 } catch (Exception ex) {
-                    LOG.error("Could not deserialize Pod state", ex);
+                    aapsLogger.error(LTag.PUMPCOMM,"Could not deserialize Pod state", ex);
                 }
             }
             OmnipodCommunicationService omnipodCommunicationService = new OmnipodCommunicationService(rfspy);

@@ -14,6 +14,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
@@ -24,8 +28,13 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventRefreshOverview;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -73,10 +82,19 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodFaultEx
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodReturnedErrorResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import io.reactivex.disposables.Disposable;
 
+
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
+
+    @Inject AAPSLogger aapsLogger;
+    @Inject RxBusWrapper rxBus;
+    @Inject ResourceHelper resourceHelper;
+    @Inject HasAndroidInjector injector;
+    @Inject ActivePluginProvider activePlugin;
+
+    //private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
     private final OmnipodManager delegate;
 
     private static AapsOmnipodManager instance;
@@ -110,7 +128,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 pumpStatus.pumpStatusType = PumpStatusType.Suspended;
                 sendEvent(new EventOmnipodAcknowledgeAlertsChanged());
                 sendEvent(new EventOmnipodPumpValuesChanged());
-                sendEvent(new EventRefreshOverview("Omnipod Pump"));
+                sendEvent(new EventRefreshOverview("Omnipod Pump", false));
             } else {
                 // Update active alerts
                 if (podSessionState.hasActiveAlerts()) {
@@ -143,7 +161,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                     sendEvent(new EventOmnipodPumpValuesChanged());
 
                     if (podSessionState.isSuspended() != PumpStatusType.Suspended.equals(pumpStatus.pumpStatusType)) {
-                        sendEvent(new EventRefreshOverview("Omnipod Pump"));
+                        sendEvent(new EventRefreshOverview("Omnipod Pump", false));
                     }
                 }
             }
@@ -170,12 +188,12 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             try {
                 Disposable disposable = delegate.pairAndPrime().subscribe(res -> //
                         handleSetupActionResult(podInitActionType, podInitReceiver, res, time, null));
-                return new PumpEnactResult().success(true).enacted(true);
+                return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (Exception ex) {
                 String comment = handleAndTranslateException(ex);
                 podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
                 addFailureToHistory(time, PodHistoryEntryType.PairAndPrime, comment);
-                return new PumpEnactResult().success(false).enacted(false).comment(comment);
+                return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
             }
         } else if (PodInitActionType.FillCannulaSetBasalProfileWizardStep.equals(podInitActionType)) {
             try {
@@ -187,16 +205,16 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 }
                 Disposable disposable = delegate.insertCannula(basalSchedule).subscribe(res -> //
                         handleSetupActionResult(podInitActionType, podInitReceiver, res, time, profile));
-                return new PumpEnactResult().success(true).enacted(true);
+                return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (Exception ex) {
                 String comment = handleAndTranslateException(ex);
                 podInitReceiver.returnInitTaskStatus(podInitActionType, false, comment);
                 addFailureToHistory(time, PodHistoryEntryType.FillCannulaSetBasalProfile, comment);
-                return new PumpEnactResult().success(false).enacted(false).comment(comment);
+                return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
             }
         }
 
-        return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_illegal_init_action_type, podInitActionType.name()));
+        return new PumpEnactResult(injector).success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_illegal_init_action_type, podInitActionType.name()));
     }
 
     @Override
@@ -205,11 +223,11 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         try {
             StatusResponse statusResponse = delegate.getPodStatus();
             addSuccessToHistory(time, PodHistoryEntryType.GetPodStatus, statusResponse);
-            return new PumpEnactResult().success(true).enacted(false);
+            return new PumpEnactResult(injector).success(true).enacted(false);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             addFailureToHistory(time, PodHistoryEntryType.GetPodStatus, comment);
-            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
     }
 
@@ -222,7 +240,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             String comment = handleAndTranslateException(ex);
             podInitReceiver.returnInitTaskStatus(PodInitActionType.DeactivatePodWizardStep, false, comment);
             addFailureToHistory(time, PodHistoryEntryType.DeactivatePod, comment);
-            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
         reportImplicitlyCanceledTbr();
@@ -233,7 +251,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
         OmnipodUtil.setPodSessionState(null);
 
-        return new PumpEnactResult().success(true).enacted(true);
+        return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
     @Override
@@ -254,16 +272,16 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
                 reportImplicitlyCanceledTbr();
                 addToHistory(time, PodHistoryEntryType.SetBasalSchedule, "Uncertain failure", false);
-                return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_basal_failed_uncertain));
+                return new PumpEnactResult(injector).success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_basal_failed_uncertain));
             }
             String comment = handleAndTranslateException(ex);
             reportImplicitlyCanceledTbr();
             addFailureToHistory(time, PodHistoryEntryType.SetBasalSchedule, comment);
-            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
 
-        return new PumpEnactResult().success(true).enacted(true);
+        return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
     @Override
@@ -276,7 +294,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
         addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.ResetPodState, null);
 
-        return new PumpEnactResult().success(true).enacted(true);
+        return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
     @Override
@@ -299,7 +317,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             addFailureToHistory(System.currentTimeMillis(), PodHistoryEntryType.SetBolus, comment);
-            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
         if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus())) {
@@ -326,13 +344,13 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         detailedBolusInfo.pumpId = pumpId;
         detailedBolusInfo.source = Source.PUMP;
 
-        TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
+        activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
 
         if (delegate.getPodState().hasFaultEvent()) {
             showPodFaultErrorDialog(delegate.getPodState().getFaultEvent().getFaultEventType(), R.raw.urgentalarm);
         }
 
-        return new PumpEnactResult().success(true).enacted(true).bolusDelivered(unitsDelivered);
+        return new PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(unitsDelivered);
     }
 
     @Override
@@ -343,18 +361,18 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             try {
                 delegate.cancelBolus(isBolusBeepsEnabled());
                 addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
-                return new PumpEnactResult().success(true).enacted(true);
+                return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (PodFaultException ex) {
                 showPodFaultErrorDialog(ex.getFaultEvent().getFaultEventType(), null);
                 addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
-                return new PumpEnactResult().success(true).enacted(true);
+                return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (Exception ex) {
                 comment = handleAndTranslateException(ex);
             }
         }
 
         addFailureToHistory(time, PodHistoryEntryType.CancelBolus, comment);
-        return new PumpEnactResult().success(false).enacted(false).comment(comment);
+        return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
     }
 
     @Override
@@ -367,11 +385,11 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         } catch (Exception ex) {
             if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
                 addToHistory(time, PodHistoryEntryType.SetTemporaryBasal, "Uncertain failure", false);
-                return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_temp_basal_failed_uncertain));
+                return new PumpEnactResult(injector).success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_temp_basal_failed_uncertain));
             }
             String comment = handleAndTranslateException(ex);
             addFailureToHistory(time, PodHistoryEntryType.SetTemporaryBasal, comment);
-            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
         reportImplicitlyCanceledTbr();
@@ -391,9 +409,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 .pumpId(pumpId)
                 .source(Source.PUMP);
 
-        TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempStart);
+        activePlugin.getActiveTreatments().addToHistoryTempBasal(tempStart);
 
-        return new PumpEnactResult().success(true).enacted(true);
+        return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
     @Override
@@ -405,10 +423,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             addFailureToHistory(time, PodHistoryEntryType.CancelTemporaryBasalForce, comment);
-            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
-        return new PumpEnactResult().success(true).enacted(true);
+        return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
     @Override
@@ -420,9 +438,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             addFailureToHistory(time, PodHistoryEntryType.AcknowledgeAlerts, comment);
-            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
-        return new PumpEnactResult().success(true).enacted(true);
+        return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
     @Override
@@ -442,11 +460,11 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             // We use StatusResponses for that, which can be obtained from the getPodStatus method
             PodInfoResponse podInfo = delegate.getPodInfo(podInfoType);
             addSuccessToHistory(time, PodHistoryEntryType.GetPodInfo, podInfo);
-            return new PumpEnactResult().success(true).enacted(true);
+            return new PumpEnactResult(injector).success(true).enacted(true);
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
             addFailureToHistory(time, PodHistoryEntryType.GetPodInfo, comment);
-            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
     }
 
@@ -455,10 +473,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             delegate.suspendDelivery(isBasalBeepsEnabled());
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
-            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
-        return new PumpEnactResult().success(true).enacted(true);
+        return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
     public PumpEnactResult resumeDelivery() {
@@ -466,10 +484,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             delegate.resumeDelivery(isBasalBeepsEnabled());
         } catch (Exception ex) {
             String comment = handleAndTranslateException(ex);
-            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
-        return new PumpEnactResult().success(true).enacted(true);
+        return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
@@ -485,15 +503,15 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             if ((ex instanceof OmnipodException) && !((OmnipodException) ex).isCertainFailure()) {
                 reportImplicitlyCanceledTbr();
                 addFailureToHistory(time, PodHistoryEntryType.SetTime, "Uncertain failure");
-                return new PumpEnactResult().success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_time_failed_uncertain));
+                return new PumpEnactResult(injector).success(false).enacted(false).comment(getStringResource(R.string.omnipod_error_set_time_failed_uncertain));
             }
             String comment = handleAndTranslateException(ex);
             reportImplicitlyCanceledTbr();
             addFailureToHistory(time, PodHistoryEntryType.SetTime, comment);
-            return new PumpEnactResult().success(false).enacted(false).comment(comment);
+            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
 
-        return new PumpEnactResult().success(true).enacted(true);
+        return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
     public PodInfoRecentPulseLog readPulseLog() {
@@ -518,10 +536,11 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     private void reportImplicitlyCanceledTbr() {
-        TreatmentsPlugin plugin = TreatmentsPlugin.getPlugin();
+        //TreatmentsPlugin plugin = TreatmentsPlugin.getPlugin();
+        TreatmentsInterface plugin = activePlugin.getActiveTreatments();
         if (plugin.isTempBasalInProgress()) {
             if (isLoggingEnabled()) {
-                LOG.debug("Reporting implicitly cancelled TBR to Treatments plugin");
+                aapsLogger.debug(LTag.PUMP,"Reporting implicitly cancelled TBR to Treatments plugin");
             }
 
             long time = System.currentTimeMillis() - 1000;
@@ -574,13 +593,13 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         switch (res.getResultType()) {
             case FAILURE:
                 if (isLoggingEnabled()) {
-                    LOG.error("Setup action failed: illegal setup progress: {}", res.getSetupProgress());
+                    aapsLogger.error(LTag.PUMP,"Setup action failed: illegal setup progress: {}", res.getSetupProgress());
                 }
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_progress_state, res.getSetupProgress());
                 break;
             case VERIFICATION_FAILURE:
                 if (isLoggingEnabled()) {
-                    LOG.error("Setup action verification failed: caught exception", res.getException());
+                    aapsLogger.error(LTag.PUMP,"Setup action verification failed: caught exception", res.getException());
                 }
                 comment = getStringResource(R.string.omnipod_driver_error_setup_action_verification_failed);
                 break;
@@ -631,12 +650,12 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 comment = getStringResource(R.string.omnipod_driver_error_unexpected_exception_type, ex.getClass().getName());
             }
             if (isLoggingEnabled()) {
-                LOG.error(String.format("Caught OmnipodException[certainFailure=%s] from OmnipodManager (user-friendly error message: %s)", ((OmnipodException) ex).isCertainFailure(), comment), ex);
+                aapsLogger.error(LTag.PUMP,String.format("Caught OmnipodException[certainFailure=%s] from OmnipodManager (user-friendly error message: %s)", ((OmnipodException) ex).isCertainFailure(), comment), ex);
             }
         } else {
             comment = getStringResource(R.string.omnipod_driver_error_unexpected_exception_type, ex.getClass().getName());
             if (isLoggingEnabled()) {
-                LOG.error(String.format("Caught unexpected exception type[certainFailure=false] from OmnipodManager (user-friendly error message: %s)", comment), ex);
+                aapsLogger.error(LTag.PUMP,String.format("Caught unexpected exception type[certainFailure=false] from OmnipodManager (user-friendly error message: %s)", comment), ex);
             }
         }
 
@@ -651,7 +670,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     private void sendEvent(Event event) {
-        RxBus.INSTANCE.send(event);
+        rxBus.send(event);
     }
 
     private void showPodFaultErrorDialog(FaultEventType faultEventType, Integer sound) {

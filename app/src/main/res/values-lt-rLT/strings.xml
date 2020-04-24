@@ -43,8 +43,6 @@
     <string name="description_pump_mdi">Integracija žmonėms, naudojantiems insulino injektorius</string>
     <string name="description_pump_virtual">Integracija pompoms, kurios dar neturi reikalingo valdiklio (Atviras Ciklas)</string>
     <string name="description_sensitivity_aaps">Jautrumas insulinui apskaičiuojamas taip pat kaip ir Oref0, tačiau jūs galite nustatyti, koks praeities laikotarpis bus naudojamas. Minimalus angliavandenių įsisavinimo greitis apskaičiuojamas remiantis maksimaliu angliavandenių įsisavinimo greičiu, kuris įvestas Nustatymuose.</string>
-    <string name="description_sensitivity_oref0">Jautrumas insulinui apskaičiuojamas remiantis praėjusių 24 val. duomenimis, o (neįsisavinti) angliavandeniai neįtraukiami į skaičiavimus praėjus Nustatymuose nurodytam laikui.</string>
-    <string name="description_sensitivity_oref1">Jautrumas insulinui apskaičiuojamas remiantis praėjusių 8 val. duomenimis, o (neįsisavinti) angliavandeniai neįtraukiami į skaičiavimus praėjus Nustatymuose nurodytam laikui. Įskiepis taip pat įskaičiuoja NM (neįrašytą maistą).</string>
     <string name="description_sensitivity_weighted_average">Jautrumas insulinui apskaičiuojamas kaip nuokrypių svertinis vidurkis. Naujausių nuokrypių svoris yra didesnis. Minimalus angliavandenių įsisavinimo greitis apskaičiuojamas iš maksimalaus angliavandenių įsisavinimo greičio, kuris nurodytas Nustatymuose. Šis algoritmas greičiausiai aptinka pasikeitusį jautrumą insulinui.</string>
     <string name="description_source_eversense">Gauti kraujo gliukozės vertes iš modifikuotos Eversense programėlės.</string>
     <string name="description_source_glimp">Gauti kraujo gliukozės vertes iš Glimp.</string>
@@ -164,9 +162,7 @@
     <string name="disableloop">Išjungti Ciklą</string>
     <string name="enableloop">Įjungti Ciklą</string>
     <string name="openloop_newsuggestion">Gautas naujas pasiūlymas</string>
-    <string name="unsupportedclientver">Nepalaikoma NSClient versija</string>
     <string name="unsupportednsversion">Nepalaikoma Nightscout versija</string>
-    <string name="nsclientnotinstalled">Neįdiegtas NSClient. Įrašai prarasti!</string>
     <string name="loopdisabled">CIKLAS NEAKTYVUS DĖL APRIBOJIMŲ</string>
     <string name="treatments_wizard_basaliob_label">Bazės AIO</string>
     <string name="bolusconstraintapplied">Pritaikytas boluso apribojimas</string>
@@ -461,10 +457,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">Numatytoji reikšmė: 2\nBoluso snaudimas aktyvuojamas iškart po to, kai susileidžiate bolusą maistui. Ši funkcija neleidžia sistemai nustatyti mažų LBD iškart po valgio. Pvz.: jei IVT yra 3 val, tai boluso snaudimas pamažu deaktyvuojamas per 1,5 val (3 val. / 2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Numatytoji reikšmė: 3.0 (AMA) arba 8.0 (SMB). Tai parametras, nurodantis angliavandenių poveikį kraujo gliukozei kas 5 minutes nuo jų suvartojimo. Numatytoji reikšmė yra 3 mg/dl per 5min. Šis skaičius turi įtakos apskaičiavimams, kaip greitai mažės AAO, kokia bus kraujo gliukozės kitimo prognozė, ypač kai ji krenta daugiau nei tikėtasi, arba nedidėja tiek, kiek tikėtasi.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Dėmesio!\nPaprastai neturėtumėte keisti šių, žemiau esančių, reikšmių. Prašome PASPAUSTI ČIA ir PERSKAITYKITE tekstą ir įsitikinkite, kad SUPRANTATE prieš keisdami bet kurią iš šių verčių.</string>
-    <string name="error_only_numeric_digits_allowed">Galimi tik skaičiai.</string>
-    <string name="error_only_numeric_digits_range_allowed">Galimi tik skaičiai intervale %1$s - %2$s.</string>
-    <string name="error_field_must_not_be_empty">Laukas negali būti tuščias</string>
-    <string name="error_phone_not_valid">Telefono numeris negalioja</string>
     <string name="smscommunicator_invalidphonennumber">Neteisingas SMS telefono numeris</string>
     <string name="overview_calibration">Kalibravimas</string>
     <string name="send_calibration">Siųsti kalibraciją %1$.1f į xDrip?</string>
@@ -484,8 +476,6 @@
     <string name="virtualpump_settings">Virtualios pompos nustatymai</string>
     <string name="virtualpump_uploadstatus_title">Perduoti būsenos duomenis į NS</string>
     <string name="wrongpassword">Neteisingas slaptažodis</string>
-    <string name="settings_password">Nustatymų slaptažodis</string>
-    <string name="unlock_settings">Atrakinti nustatymus</string>
     <string name="approachingdailylimit">Artėja paros insulino limitas</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
@@ -988,7 +978,6 @@
     <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite prie aparatinės pompos, AndroidAPS nukopijuos bazės nustatymus iš profilio į pompą, pakeisdamas esančius nustatymus pompoje. Įsitikinkite, kad turimi bazės nustatymai AndroidAPS yra teisingi. Jei nesate tikri arba nenorite iš naujo keisti bazės nustatymų jūsų pompoje, paspauskite atšaukti ir pakartokite prijungimą prie pompos kitą kartą.</string>
     <string name="error_adding_treatment_title">Terapijos duomenys nepilni</string>
     <string name="maintenance_settings">Serviso nustatymai</string>
-    <string name="maintenance_email">El. paštas</string>
     <string name="maintenance_amount">Siunčiamų įrašų skaičius</string>
     <string name="maintenance">Servisas</string>
     <string name="maintenance_shortname">Serv</string>
@@ -1014,7 +1003,7 @@
     <string name="speederror">Greičio klaida</string>
     <string name="insulinlimitviolation">Pažeistas insulino dozės limitas</string>
     <string name="loop_openmode_min_change">Minimalaus pokyčio užklausa [%]</string>
-    <string name="loop_openmode_min_change_summary">Atviras Ciklas parodys naujų pakeitimų užklausą tik tada, kai pokytis bus didesnis nei ši vertė %. Numatytoji vertė yra 20%</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">Atviras Ciklas parodys naujų pakeitimų užklausą tik tada, kai pokytis bus didesnis nei ši vertė %. Numatytoji vertė yra 20%</string>
     <string name="pairfirst">Atnaujinkite pompos ir telefono ryšį!</string>
     <string name="searching_for_devices">Ieškoma įrenginių…</string>
     <string name="please_wait">Palaukite…</string>
@@ -1445,4 +1434,5 @@
     <string name="ebstopsloop">Ištęsto boluso funkcija sustabdys uždaro ciklo režimą ištęsto boluso veikimo metu. Ar tikrai norite patvirtinti savo pasirinkimą?</string>
     <string name="closed_loop_disabled_with_eb">Uždara ciklas išjungtas dėl ištęsto boluso veikimo</string>
     <string name="extended_bolus_short">IB (Ištęstas bolusas)</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

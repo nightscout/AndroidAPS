@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
@@ -31,7 +32,7 @@ import info.nightscout.androidaps.utils.SP;
  */
 public abstract class RileyLinkCommunicationManager {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
     private static final int SCAN_TIMEOUT = 1500;
     private static final int ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000; // 10 minutes

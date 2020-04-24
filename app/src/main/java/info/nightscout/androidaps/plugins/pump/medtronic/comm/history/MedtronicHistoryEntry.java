@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
@@ -24,7 +25,7 @@ public abstract class MedtronicHistoryEntry implements MedtronicHistoryEntryInte
 
     protected List<Byte> rawData;
 
-    public static final Logger LOG = LoggerFactory.getLogger(MedtronicHistoryEntry.class);
+    public static final Logger LOG = StacktraceLoggerWrapper.getLogger(MedtronicHistoryEntry.class);
 
     protected int[] sizes = new int[3];
 

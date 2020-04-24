@@ -1,28 +1,34 @@
 package info.nightscout.androidaps.plugins.general.overview.dialogs
 
-
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
+import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.fragment.app.DialogFragment
+import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.QuickWizard
-import info.nightscout.androidaps.data.QuickWizardEntry
-import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.utils.wizard.QuickWizard
+import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.SafeParse
 import kotlinx.android.synthetic.main.okcancel.*
 import kotlinx.android.synthetic.main.overview_editquickwizard_dialog.*
 import org.json.JSONException
-import org.slf4j.LoggerFactory
 import java.util.*
+import javax.inject.Inject
 
+class EditQuickWizardDialog : DaggerDialogFragment() {
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var quickWizard: QuickWizard
 
-class EditQuickWizardDialog : DialogFragment() {
-    private val log = LoggerFactory.getLogger(EditQuickWizardDialog::class.java)
-    internal var entry = QuickWizard.newEmptyItem()
+    var position = -1
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -34,6 +40,10 @@ class EditQuickWizardDialog : DialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        (arguments ?: savedInstanceState)?.let { bundle ->
+            position = bundle.getInt("position", -1)
+        }
+        val entry = if (position ==-1) quickWizard.newEmptyItem() else quickWizard[position]
         ok.setOnClickListener {
             if (overview_editquickwizard_from_spinner.selectedItem == null) return@setOnClickListener
             if (overview_editquickwizard_to_spinner.selectedItem == null) return@setOnClickListener
@@ -52,11 +62,11 @@ class EditQuickWizardDialog : DialogFragment() {
                 entry.storage.put("useSuperBolus", overview_editquickwizard_usesuperbolus_spinner.selectedItemPosition)
                 entry.storage.put("useTempTarget", overview_editquickwizard_usetemptarget_spinner.selectedItemPosition)
             } catch (e: JSONException) {
-                log.error("Unhandled exception", e)
+                aapsLogger.error("Unhandled exception", e)
             }
 
-            QuickWizard.addOrUpdate(entry)
-            RxBus.send(EventQuickWizardChange())
+            quickWizard.addOrUpdate(entry)
+            rxBus.send(EventQuickWizardChange())
             dismiss()
         }
         cancel.setOnClickListener { dismiss() }
@@ -102,6 +112,11 @@ class EditQuickWizardDialog : DialogFragment() {
     override fun onResume() {
         super.onResume()
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt("position", position)
     }
 
     private fun processCob() {

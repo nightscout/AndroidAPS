@@ -7,6 +7,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
@@ -25,7 +26,7 @@ public class OmnipodUIComm {
         return ocmInstance;
     }
 
-    public OmnipodUIComm(OmnipodCommunicationManagerInterface communicationManager, OmnipodPumpPlugin plugin, OmnipodPumpStatus status) {
+    public OmnipodUIComm(OmnipodCommunicationManagerInterface communicationManager, OmnipodPumpPluginInterface plugin, OmnipodPumpStatus status) {
         ocmInstance = communicationManager;
         uiPostprocessor = new OmnipodUIPostprocessor(plugin, status);
     }

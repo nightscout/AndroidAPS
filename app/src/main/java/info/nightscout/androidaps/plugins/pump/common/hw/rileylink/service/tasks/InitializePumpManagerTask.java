@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
@@ -26,7 +27,7 @@ public class InitializePumpManagerTask extends ServiceTask {
 
     private static final String TAG = "InitPumpManagerTask";
     private RileyLinkTargetDevice targetDevice;
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
     public InitializePumpManagerTask(RileyLinkTargetDevice targetDevice) {
         super();

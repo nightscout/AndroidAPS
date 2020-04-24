@@ -198,15 +198,15 @@ public class OmnipodUITask {
             statusChange = new EventOmnipodDeviceStatusChange(PodDeviceState.ErrorWhenCommunicating,
                     "Unsupported command in OmnipodUITask");
             OmnipodUtil.getPumpStatus().setLastFailedCommunicationToNow();
-            RxBus.INSTANCE.send(statusChange);
+            postprocessor.getRxBus().send(statusChange);
         } else if (responseType == PodResponseType.Error) {
             statusChange = new EventOmnipodDeviceStatusChange(PodDeviceState.ErrorWhenCommunicating,
                     errorDescription);
             OmnipodUtil.getPumpStatus().setLastFailedCommunicationToNow();
-            RxBus.INSTANCE.send(statusChange);
+            postprocessor.getRxBus().send(statusChange);
         } else {
             OmnipodUtil.getPumpStatus().setLastCommunicationToNow();
-            RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
+            postprocessor.getRxBus().send(new EventOmnipodPumpValuesChanged());
         }
 
         OmnipodUtil.setPodDeviceState(PodDeviceState.Sleeping);

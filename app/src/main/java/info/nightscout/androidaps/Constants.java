@@ -87,4 +87,20 @@ public class Constants {
     public static final double STATS_RANGE_HIGH_MMOL = 10.0;
 
 
+    // One Time Password
+
+    /**
+     * Size of generated key for TOTP Authenticator token, in bits
+     * rfc6238 suggest at least 160 for SHA1 based TOTP, but it ts too weak
+     * with 512 generated QRCode to provision authenticator is too detailed
+     * 256 is chosen as both secure enough and small enough for easy-scannable QRCode
+     */
+    public static final int OTP_GENERATED_KEY_LENGTH_BITS = 256;
+
+    /**
+     * How many old TOTP tokens still accept.
+     * Each token is 30s valid, but copying and SMS transmision of it can take additional seconds,
+     * so we add leeway to still accept given amount of older tokens
+     */
+    public static final int OTP_ACCEPT_OLD_TOKENS_COUNT = 1;
 }

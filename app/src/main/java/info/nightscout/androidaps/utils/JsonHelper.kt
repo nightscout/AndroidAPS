@@ -4,6 +4,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 object JsonHelper {
+
     @JvmStatic
     fun safeGetObject(json: JSONObject?, fieldName: String, defaultValue: Any): Any {
         var result = defaultValue
@@ -77,6 +78,18 @@ object JsonHelper {
     }
 
     @JvmStatic
+    fun safeGetDoubleAllowNull(json: JSONObject?, fieldName: String): Double? {
+        var result: Double? = null
+        if (json != null && json.has(fieldName)) {
+            try {
+                result = json.getDouble(fieldName)
+            } catch (ignored: JSONException) {
+            }
+        }
+        return result
+    }
+
+    @JvmStatic
     fun safeGetDouble(json: JSONObject?, fieldName: String, defaultValue: Double): Double {
         var result = defaultValue
         if (json != null && json.has(fieldName)) {
@@ -89,8 +102,12 @@ object JsonHelper {
     }
 
     @JvmStatic
-    fun safeGetInt(json: JSONObject?, fieldName: String): Int {
-        var result = 0
+    fun safeGetInt(json: JSONObject?, fieldName: String): Int =
+        safeGetInt(json, fieldName, 0)
+
+    @JvmStatic
+    fun safeGetInt(json: JSONObject?, fieldName: String, defaultValue: Int): Int {
+        var result = defaultValue
         if (json != null && json.has(fieldName)) {
             try {
                 result = json.getInt(fieldName)

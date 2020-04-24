@@ -10,7 +10,13 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.events.EventRefreshOverview
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBus
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
+import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.defs.PodActionType
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.model.FullInitPodWizardModel
@@ -21,13 +27,24 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
-import info.nightscout.androidaps.utils.OKDialog
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.omnipod_pod_mgmt.*
+import javax.inject.Inject
 
 /**
  * Created by andy on 30/08/2019
  */
 class PodManagementActivity : NoSplashAppCompatActivity() {
+
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var commandQueue: CommandQueueProvider
+
 
     private var initPodChanged = false
     private var podSessionFullyInitalized = false
@@ -64,8 +81,8 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         super.onDestroy()
 
         if (initPodChanged) {
-            RxBus.send(EventOmnipodPumpValuesChanged())
-            RxBus.send(EventRefreshOverview("Omnipod Pod Management"))
+            rxBus.send(EventOmnipodPumpValuesChanged())
+            rxBus.send(EventRefreshOverview("Omnipod Pod Management"))
         }
     }
 

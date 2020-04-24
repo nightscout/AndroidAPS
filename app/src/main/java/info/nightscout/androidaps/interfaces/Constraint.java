@@ -1,25 +1,21 @@
 package info.nightscout.androidaps.interfaces;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 
 /**
  * Created by mike on 19.03.2018.
  */
 
 public class Constraint<T extends Comparable> {
-    private static Logger log = LoggerFactory.getLogger(L.CONSTRAINTS);
+    private T value;
+    private T originalValue;
 
-    T value;
-    T originalValue;
-
-    List<String> reasons = new ArrayList<>();
-    List<String> mostLimiting = new ArrayList<>();
+    private List<String> reasons = new ArrayList<>();
+    private List<String> mostLimiting = new ArrayList<>();
 
     public Constraint(T value) {
         this.value = value;
@@ -34,27 +30,24 @@ public class Constraint<T extends Comparable> {
         return originalValue;
     }
 
-    public Constraint<T> set(T value) {
+    public Constraint<T> set(AAPSLogger aapsLogger, T value) {
         this.value = value;
         this.originalValue = value;
-        if (L.isEnabled(L.CONSTRAINTS))
-            log.debug("Setting value " + value);
+        aapsLogger.debug(LTag.CONSTRAINTS, "Setting value " + value);
         return this;
     }
 
-    public Constraint<T> set(T value, String reason, Object from) {
-        if (L.isEnabled(L.CONSTRAINTS))
-            log.debug("Setting value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
+    public Constraint<T> set(AAPSLogger aapsLogger, T value, String reason, Object from) {
+        aapsLogger.debug(LTag.CONSTRAINTS, "Setting value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
         this.value = value;
         addReason(reason, from);
         addMostLimingReason(reason, from);
         return this;
     }
 
-    public Constraint<T> setIfDifferent(T value, String reason, Object from) {
+    public Constraint<T> setIfDifferent(AAPSLogger aapsLogger, T value, String reason, Object from) {
         if (!this.value.equals(value)) {
-            if (L.isEnabled(L.CONSTRAINTS))
-                log.debug("Setting because of different value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
+            aapsLogger.debug(LTag.CONSTRAINTS, "Setting because of different value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
             this.value = value;
             addReason(reason, from);
             addMostLimingReason(reason, from);
@@ -62,10 +55,9 @@ public class Constraint<T extends Comparable> {
         return this;
     }
 
-    public Constraint<T> setIfSmaller(T value, String reason, Object from) {
+    public Constraint<T> setIfSmaller(AAPSLogger aapsLogger, T value, String reason, Object from) {
         if (value.compareTo(this.value) < 0) {
-            if (L.isEnabled(L.CONSTRAINTS))
-                log.debug("Setting because of smaller value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
+            aapsLogger.debug(LTag.CONSTRAINTS, "Setting because of smaller value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
             this.value = value;
             mostLimiting.clear();
             addMostLimingReason(reason, from);
@@ -76,10 +68,9 @@ public class Constraint<T extends Comparable> {
         return this;
     }
 
-    public Constraint<T> setIfGreater(T value, String reason, Object from) {
+    public Constraint<T> setIfGreater(AAPSLogger aapsLogger, T value, String reason, Object from) {
         if (value.compareTo(this.value) > 0) {
-            if (L.isEnabled(L.CONSTRAINTS))
-                log.debug("Setting because of greater value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
+            aapsLogger.debug(LTag.CONSTRAINTS, "Setting because of greater value " + this.value + " -> " + value + " (" + reason + ")[" + translateFrom(from) + "]");
             this.value = value;
             mostLimiting.clear();
             addMostLimingReason(reason, from);
@@ -104,15 +95,14 @@ public class Constraint<T extends Comparable> {
         return this;
     }
 
-    public String getReasons() {
+    public String getReasons(AAPSLogger aapsLogger) {
         StringBuilder sb = new StringBuilder();
         int count = 0;
         for (String r : reasons) {
             if (count++ != 0) sb.append("\n");
             sb.append(r);
         }
-        if (L.isEnabled(L.CONSTRAINTS))
-            log.debug("Limiting origial value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
+        aapsLogger.debug(LTag.CONSTRAINTS, "Limiting origial value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
         return sb.toString();
     }
 
@@ -120,15 +110,14 @@ public class Constraint<T extends Comparable> {
         return reasons;
     }
 
-    public String getMostLimitedReasons() {
+    public String getMostLimitedReasons(AAPSLogger aapsLogger) {
         StringBuilder sb = new StringBuilder();
         int count = 0;
         for (String r : mostLimiting) {
             if (count++ != 0) sb.append("\n");
             sb.append(r);
         }
-        if (L.isEnabled(L.CONSTRAINTS))
-            log.debug("Limiting origial value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
+        aapsLogger.debug(LTag.CONSTRAINTS, "Limiting origial value: " + originalValue + " to " + value + ". Reason: " + sb.toString());
         return sb.toString();
     }
 

@@ -37,6 +37,7 @@ import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
@@ -52,7 +53,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
-    private static Logger log = LoggerFactory.getLogger(L.DATATREATMENTS);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.DATATREATMENTS);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final ScheduledExecutorService treatmentEventWorker = Executors.newSingleThreadScheduledExecutor();
@@ -61,7 +62,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     public TreatmentService() {
         onCreate();
         dbInitialize();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(RxBus.Companion.getINSTANCE()
                 .toObservable(EventNsTreatment.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -73,7 +74,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     } else { // EventNsTreatment.REMOVE
                         this.deleteNS(payload);
                     }
-                }, FabricPrivacy::logException)
+                }, exception -> FabricPrivacy.getInstance().logException(exception))
         );
     }
 
@@ -185,11 +186,11 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             public void run() {
                 if (L.isEnabled(L.DATATREATMENTS))
                     log.debug("Firing EventReloadTreatmentData");
-                RxBus.INSTANCE.send(event);
+                RxBus.Companion.getINSTANCE().send(event);
                 if (DatabaseHelper.earliestDataChange != null) {
                     if (L.isEnabled(L.DATATREATMENTS))
                         log.debug("Firing EventNewHistoryData");
-                    RxBus.INSTANCE.send(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
+                    RxBus.Companion.getINSTANCE().send(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
                 }
                 DatabaseHelper.earliestDataChange = null;
                 callback.setPost(null);
@@ -212,11 +213,11 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         if (runImmediately) {
             if (L.isEnabled(L.DATATREATMENTS))
                 log.debug("Firing EventReloadTreatmentData");
-            RxBus.INSTANCE.send(new EventReloadTreatmentData(new EventTreatmentChange(treatment)));
+            RxBus.Companion.getINSTANCE().send(new EventReloadTreatmentData(new EventTreatmentChange(treatment)));
             if (DatabaseHelper.earliestDataChange != null) {
                 if (L.isEnabled(L.DATATREATMENTS))
                     log.debug("Firing EventNewHistoryData");
-                RxBus.INSTANCE.send(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
+                RxBus.Companion.getINSTANCE().send(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
             }
             DatabaseHelper.earliestDataChange = null;
         } else {
@@ -280,6 +281,10 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
     // return true if new record is created
     public UpdateReturn createOrUpdate(Treatment treatment) {
+        if (treatment != null && treatment.source == Source.NONE) {
+            log.error("Coder error: source is not set for treatment: " + treatment, new Exception());
+            //FabricPrivacy.logException(new Exception("Coder error: source is not set for treatment: " + treatment));
+        }
         try {
             Treatment old;
             treatment.date = DatabaseHelper.roundDateToSec(treatment.date);

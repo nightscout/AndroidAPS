@@ -43,8 +43,7 @@
     <string name="description_pump_mdi">Per le persone in terapia multi-iniettiva</string>
     <string name="description_pump_virtual">Per microinfusori che non hanno ancora alcun driver (Loop aperto)</string>
     <string name="description_sensitivity_aaps">La sensibilità è calcolata allo stesso modo di Oref0, ma puoi specificare l\'intervallo di tempo al passato. L\'assorbimento minimo dei carboidrati è calcolato da \'max tempo assorbimento pasto\' nelle preferenze.</string>
-    <string name="description_sensitivity_oref0">La sensibilità è calcolata dai dati delle ultime 24h e i carboidrati (se non assorbiti) vengono tagliati fuori dopo il tempo specificato nelle preferenze.</string>
-    <string name="description_sensitivity_oref1">La sensibilità è calcolata dai dati delle ultime 8h e i carboidrati (se non assorbiti) vengono tagliati fuori dopo il tempo specificato nelle preferenze. Il Plugin calcola anche UAM.</string>
+    <string name="description_sensitivity_oref1">La sensibilità è calcolata dai dati delle ultime 8h o 24h (utilizzando tra i due periodi il più sensibile) e i carboidrati (se non assorbiti) vengono tagliati fuori dopo il tempo specificato nelle preferenze. Il Plugin calcola anche UAM.</string>
     <string name="description_sensitivity_weighted_average">La sensibilità è calcolata come media ponderata dalle deviazioni. Le deviazioni più recenti hanno peso maggiore. L\'assorbimento minimo dei carboidrati è calcolato da \'max tempo assorbimento pasto\' nelle preferenze. Questo algoritmo è il più veloce nel seguire i cambiamenti di sensibilità.</string>
     <string name="description_source_eversense">Ricevi valori glicemia dall\'app Eversense modificata.</string>
     <string name="description_source_glimp">Ricevi valori glicemia da Glimp.</string>
@@ -164,9 +163,7 @@
     <string name="disableloop">Disabilita Loop</string>
     <string name="enableloop">Abilita Loop</string>
     <string name="openloop_newsuggestion">Nuovo suggerimento disponibile</string>
-    <string name="unsupportedclientver">Versione non supportata di NSClient</string>
     <string name="unsupportednsversion">Versione non supportata di Nightscout</string>
-    <string name="nsclientnotinstalled">NSClient non installato. Record perduto!</string>
     <string name="loopdisabled">LOOP DISABILITATO DAI VINCOLI</string>
     <string name="treatments_wizard_basaliob_label">IOB da basale</string>
     <string name="bolusconstraintapplied">Vincolo bolo applicato</string>
@@ -222,6 +219,9 @@
     <string name="openapsma_maxiob_title">Max IOB da basale a cui limitare OpenAPS [U]</string>
     <string name="openapsma_maxiob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nIndica l\'insulina massima in [U] che APS può erogare in contemporanea.</string>
     <string name="dismiss">RIMUOVI</string>
+    <string name="password_preferences_encrypt_prompt">Ti verrà richiesta la password principale, che verrà utilizzata per crittografare le preferenze esportate.</string>
+    <string name="check_preferences_cannot_import">Le preferenze non possono essere importate!</string>
+    <string name="check_preferences_dangerous_import">Le preferenze non dovrebbero essere importate!</string>
     <string name="danarpump">DanaR</string>
     <string name="connecting">Connessione</string>
     <string name="connected">Connesso</string>
@@ -461,10 +461,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">[Valore predefinito: 2]\nBolus snooze è attivato dopo un bolo pasto per fare in modo che il loop non imposti basali temporanee basse quando hai appena mangiato. AndroidAPS non imposterà velocità basali troppo basse nel periodo corrispondente a DIA diviso il parametro bolus snooze - divisore DIA. Con DIA di 3 ore \"bolus snooze\" durerà 1.5 ore (3/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">[Valore predefinito: 3.0 (AMA) o 8.0 (SMB)]. Questa è un\'impostazione per l\'impatto di assorbimento predefinito dei carboidrati in 5 minuti. L\'impostazione predefinita è una previsione di 3mg/dl/5min. Ha effetto sulla velocità di decadimento dei COB (carboidrati attivi) e su quanto il loro assorbimento incide nella previsione dell’andamento glicemico, quando la glicemia sta scendendo più del previsto o non sta salendo quanto previsto.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Attenzione!\nNormalmente non dovresti modificare questi valori. FAI CLICK QUI e leggi il testo e assicurati di AVERLO CAPITO prima di cambiare uno di questi valori.</string>
-    <string name="error_only_numeric_digits_allowed">Sono consentite solo cifre numeriche.</string>
-    <string name="error_only_numeric_digits_range_allowed">Sono consentite solo cifre numeriche nel range %1$s - %2$s.</string>
-    <string name="error_field_must_not_be_empty">Il campo non deve essere vuoto</string>
-    <string name="error_phone_not_valid">Numero di telefono non valido</string>
     <string name="smscommunicator_invalidphonennumber">Numero di telefono SMS non valido</string>
     <string name="overview_calibration">Calibrazione</string>
     <string name="send_calibration">Inviare calibrazione %1$.1f a xDrip?</string>
@@ -484,8 +480,6 @@
     <string name="virtualpump_settings">Impostazioni micro virtuale</string>
     <string name="virtualpump_uploadstatus_title">Carica stato in NS</string>
     <string name="wrongpassword">Password Errata</string>
-    <string name="settings_password">Password per le impostazioni</string>
-    <string name="unlock_settings">Sblocca impostazioni</string>
     <string name="approachingdailylimit">Si avvicina il limite giornaliero di insulina</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
@@ -989,7 +983,6 @@
     <string name="allow_hardware_pump_text">Attenzione: se attivi e connetti un micro, AndroidAPS copierà le impostazioni della basale dal profilo al micro, sovrascrivendo la velocità basale esistente memorizzata sul micro. Assicurati di avere la giusta impostazione della basale in AndroidAPS. Se non sei sicuro o non vuoi sovrascrivere le impostazioni della basale sul micro, premi annulla e ripeti il processo in un altro momento.</string>
     <string name="error_adding_treatment_title">Dati trattamento incompleti</string>
     <string name="maintenance_settings">Impostazioni manutenzione</string>
-    <string name="maintenance_email">Email</string>
     <string name="maintenance_amount">Numero di log da inviare</string>
     <string name="maintenance">Manutenzione</string>
     <string name="maintenance_shortname">MANUT</string>
@@ -1015,7 +1008,7 @@
     <string name="speederror">Errore velocità</string>
     <string name="insulinlimitviolation">Violazione limite insulina</string>
     <string name="loop_openmode_min_change">Richiesta minima di modifica [%]</string>
-    <string name="loop_openmode_min_change_summary">Il loop aperto mostrerà una nuova richiesta di modifica solo se la modifica è maggiore di questo valore in %. Il valore predefinito è 20%</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">Il loop aperto mostrerà una nuova richiesta di modifica solo se la modifica è maggiore di questo valore in %. Il valore predefinito è 20%</string>
     <string name="pairfirst">Associa il micro con il tuo telefono!</string>
     <string name="searching_for_devices">Ricerca dispositivi…</string>
     <string name="please_wait">Attendi…</string>
@@ -1454,4 +1447,5 @@
     <string name="loop_tbrrequest_time_label">Richiesta basale temporanea (momento)</string>
     <string name="loop_tbrexecution_time_label">Esecuzione basale temporanea (momento)</string>
     <string name="insight_alert_notification_channel">Avvisi micro Insight</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

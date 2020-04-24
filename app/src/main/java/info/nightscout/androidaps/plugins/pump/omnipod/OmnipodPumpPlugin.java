@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
 
@@ -19,10 +19,12 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
-import info.nightscout.androidaps.BuildConfig;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
@@ -33,11 +35,14 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshOverview;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
@@ -69,10 +74,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefres
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.TimeChangeType;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -81,6 +86,7 @@ import io.reactivex.schedulers.Schedulers;
  *
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
+@Singleton
 public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPumpPluginInterface {
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
@@ -112,7 +118,17 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private long nextPodCheck = 0L;
     //OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
 
-    private OmnipodPumpPlugin() {
+    @Inject
+    public OmnipodPumpPlugin(
+            HasAndroidInjector injector,
+            AAPSLogger aapsLogger,
+            RxBusWrapper rxBus,
+            Context context,
+            ResourceHelper resourceHelper,
+            ActivePluginProvider activePlugin,
+            info.nightscout.androidaps.utils.sharedPreferences.SP sp,
+            CommandQueueProvider commandQueue,
+            FabricPrivacy fabricPrivacy) {
 
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
@@ -121,7 +137,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                         .shortName(R.string.omnipod_name_short) //
                         .preferencesId(R.xml.pref_omnipod) //
                         .description(R.string.description_pump_omnipod), //
-                PumpType.Insulet_Omnipod
+                PumpType.Insulet_Omnipod,
+                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy
         );
 
         displayConnectionMessages = false;
@@ -138,20 +155,19 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 //        // TODO ccc
 
 
-
         serviceConnection = new ServiceConnection() {
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                if (isLoggingEnabled())
-                    LOG.debug("RileyLinkOmnipodService is disconnected");
+
+                aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is disconnected");
                 omnipodService = null;
             }
 
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                if (isLoggingEnabled())
-                    LOG.debug("RileyLinkOmnipodService is connected");
+
+                aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is connected");
                 RileyLinkOmnipodService.LocalBinder mLocalBinder = (RileyLinkOmnipodService.LocalBinder) service;
                 omnipodService = mLocalBinder.getServiceInstance();
 
@@ -160,8 +176,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                     for (int i = 0; i < 20; i++) {
 
                         if (pumpStatusLocal != null) {
-                            if (isLoggingEnabled())
-                                LOG.debug("Starting OmniPod-RileyLink service");
+
+                            aapsLogger.debug(LTag.PUMP, "Starting OmniPod-RileyLink service");
                             if (OmnipodUtil.getPumpStatus().setNotInPreInit()) {
                                 if (omnipodCommunicationManager == null) {
                                     omnipodCommunicationManager = AapsOmnipodManager.getInstance();
@@ -186,13 +202,23 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         };
     }
 
-    protected OmnipodPumpPlugin(PluginDescription pluginDescription, PumpType pumpType) {
-        super(pluginDescription, pumpType);
+    protected OmnipodPumpPlugin(PluginDescription pluginDescription, PumpType pumpType,
+                                HasAndroidInjector injector,
+                                AAPSLogger aapsLogger,
+                                RxBusWrapper rxBus,
+                                Context context,
+                                ResourceHelper resourceHelper,
+                                ActivePluginProvider activePlugin,
+                                info.nightscout.androidaps.utils.sharedPreferences.SP sp,
+                                CommandQueueProvider commandQueue,
+                                FabricPrivacy fabricPrivacy) {
+        super(pluginDescription, pumpType, injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy);
     }
 
+    @Deprecated
     public static OmnipodPumpPlugin getPlugin() {
         if (plugin == null)
-            plugin = new OmnipodPumpPlugin();
+            throw new IllegalStateException("Plugin not injected jet");
         return plugin;
     }
 
@@ -200,18 +226,18 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @Override
     protected void onStart() {
         super.onStart();
-        disposable.add(RxBus.INSTANCE
+        disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    if ((event.isChanged(R.string.key_omnipod_beep_basal_enabled)) ||
-                            (event.isChanged(R.string.key_omnipod_beep_bolus_enabled)) ||
-                            (event.isChanged(R.string.key_omnipod_beep_tbr_enabled)) ||
-                            (event.isChanged(R.string.key_omnipod_pod_debugging_options_enabled)) ||
-                            (event.isChanged(R.string.key_omnipod_beep_smb_enabled)) ||
-                            (event.isChanged(R.string.key_omnipod_timechange_enabled)))
+                    if ((event.isChanged(getResourceHelper(), R.string.key_omnipod_beep_basal_enabled)) ||
+                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_beep_bolus_enabled)) ||
+                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_beep_tbr_enabled)) ||
+                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_pod_debugging_options_enabled)) ||
+                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_beep_smb_enabled)) ||
+                            (event.isChanged(getResourceHelper(), R.string.key_omnipod_timechange_enabled)))
                         refreshConfiguration();
-                }, FabricPrivacy::logException)
+                }, fabricPrivacy::logException)
         );
         refreshConfiguration();
     }
@@ -254,8 +280,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         pumpStatusLocal.refreshConfiguration();
 
-        if (isLoggingEnabled())
-            LOG.debug("initPumpStatusData: {}", this.pumpStatusLocal);
+
+        aapsLogger.debug(LTag.PUMP, "initPumpStatusData: {}", this.pumpStatusLocal);
 
         this.pumpStatus = pumpStatusLocal;
 
@@ -281,9 +307,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                 }
 
                 if (!this.omnipodStatusRequestList.isEmpty() || this.hasTimeDateOrTimeZoneChanged) {
-                    if (!ConfigBuilderPlugin.getPlugin().getCommandQueue().statusInQueue()) {
-                        ConfigBuilderPlugin.getPlugin().getCommandQueue()
-                                .readStatus("Status Refresh Requested", null);
+                    if (!getCommandQueue().statusInQueue()) {
+                        getCommandQueue().readStatus("Status Refresh Requested", null);
                     }
                 }
 
@@ -299,9 +324,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         if (System.currentTimeMillis() > this.nextPodCheck) {
             if (OmnipodUtil.getDriverState() == OmnipodDriverState.Initalized_NoPod) {
                 Notification notification = new Notification(Notification.OMNIPOD_POD_NOT_ATTACHED, MainApp.gs(R.string.omnipod_error_pod_not_attached), Notification.NORMAL);
-                RxBus.INSTANCE.send(new EventNewNotification(notification));
+                rxBus.send(new EventNewNotification(notification));
             } else {
-                RxBus.INSTANCE.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
+                rxBus.send(new EventDismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED));
             }
 
             this.nextPodCheck = DateTimeUtil.getTimeInFutureFromMinutes(15);
@@ -330,16 +355,16 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public boolean isInitialized() {
-        if (isLoggingEnabled() && displayConnectionMessages)
-            LOG.debug(getLogPrefix() + "isInitialized");
+        if (displayConnectionMessages)
+            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isInitialized");
         return isServiceSet() && isInitialized;
     }
 
 
     @Override
     public boolean isBusy() {
-        if (isLoggingEnabled() && displayConnectionMessages)
-            LOG.debug(getLogPrefix() + "isBusy");
+        if (displayConnectionMessages)
+            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isBusy");
 
         if (isServiceSet()) {
 
@@ -387,16 +412,16 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public boolean isConnected() {
-        if (isLoggingEnabled() && displayConnectionMessages)
-            LOG.debug(getLogPrefix() + "isConnected");
+        if (displayConnectionMessages)
+            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isConnected");
         return isServiceSet() && omnipodService.isInitialized();
     }
 
 
     @Override
     public boolean isConnecting() {
-        if (isLoggingEnabled() && displayConnectionMessages)
-            LOG.debug(getLogPrefix() + "isConnecting");
+        if (displayConnectionMessages)
+            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isConnecting");
         return !isServiceSet() || !omnipodService.isInitialized();
     }
 
@@ -435,9 +460,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                     PodInfoRecentPulseLog result = (PodInfoRecentPulseLog) omnipodUITask.returnDataObject;
 
                     if (result == null) {
-                        LOG.warn("Result was null.");
+                        aapsLogger.warn(LTag.PUMP, "Result was null.");
                     } else {
-                        LOG.warn("Result was NOT null.");
+                        aapsLogger.warn(LTag.PUMP, "Result was NOT null.");
 
                         Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
                         i.putExtra("soundid", 0);
@@ -470,7 +495,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                         Notification.TIME_OR_TIMEZONE_CHANGE,
                         MainApp.gs(R.string.time_or_timezone_change),
                         Notification.INFO, 60);
-                RxBus.INSTANCE.send(new EventNewNotification(notification));
+                rxBus.send(new EventNewNotification(notification));
 
             } else {
                 timeChangeRetries++;
@@ -491,7 +516,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     private void getPodPumpStatus() {
         // TODO read pod status
-        LOG.error("getPodPumpStatus() NOT IMPLEMENTED");
+        aapsLogger.error(LTag.PUMP, "getPodPumpStatus() NOT IMPLEMENTED");
 
         //getPodPumpStatusObject().driverState = OmnipodDriverState.Initalized_PodAvailable;
         //driverState = OmnipodDriverState.Initalized_PodAvailable;
@@ -523,14 +548,14 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
 
     private void setRefreshButtonEnabled(boolean enabled) {
-        RxBus.INSTANCE.send(new EventOmnipodRefreshButtonState(enabled));
+        rxBus.send(new EventOmnipodRefreshButtonState(enabled));
     }
 
 
     private void initializePump(boolean realInit) {
 
-        if (isLoggingEnabled())
-            LOG.info(getLogPrefix() + "initializePump - start");
+
+        aapsLogger.info(LTag.PUMP, getLogPrefix() + "initializePump - start");
 
         // TODO ccc
         //OmnipodPumpStatus podPumpStatus = getPodPumpStatusObject();
@@ -544,7 +569,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         } else {
             String podState = SP.getString(OmnipodConst.Prefs.PodState, null);
 
-            LOG.info("PodSessionState-SP: loaded from SharedPreferences: " + podState);
+            aapsLogger.info(LTag.PUMP, "PodSessionState-SP: loaded from SharedPreferences: " + podState);
 
             if (podState != null) {
                 podSessionState = OmnipodUtil.getGsonInstance().fromJson(podState, PodSessionState.class);
@@ -554,7 +579,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
 
         if (podSessionState != null) {
-            LOG.debug("PodSessionState (saved): " + podSessionState);
+            aapsLogger.debug(LTag.PUMP, "PodSessionState (saved): " + podSessionState);
 
             if (!isRefresh) {
                 pumpState = PumpDriverState.Initialized;
@@ -564,20 +589,20 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             getPodPumpStatus();
 
         } else {
-            LOG.debug("No PodSessionState found. Pod probably not running.");
+            aapsLogger.debug(LTag.PUMP, "No PodSessionState found. Pod probably not running.");
             //podPumpStatus.driverState = OmnipodDriverState.Initalized_NoPod;
             OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod);
         }
 
         finishAction("Omnipod Pump");
 
-        if (!sentIdToFirebase) {
-            Bundle params = new Bundle();
-            params.putString("version", BuildConfig.VERSION);
-            MainApp.getFirebaseAnalytics().logEvent("OmnipodPumpInit", params);
-
-            sentIdToFirebase = true;
-        }
+//        if (!sentIdToFirebase) {
+//            Bundle params = new Bundle();
+//            params.putString("version", BuildConfig.VERSION);
+//            MainApp.getFirebaseAnalytics().logEvent("OmnipodPumpInit", params);
+//
+//            sentIdToFirebase = true;
+//        }
 
         isInitialized = true;
 
@@ -595,7 +620,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             return true;
         }
 
-        return (currentProfile.isProfileTheSame(profile));
+        return (currentProfile.areProfileBasalPatternsSame(profile));
     }
 
 
@@ -638,8 +663,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     protected OmnipodPumpStatus getPodPumpStatusObject() {
         if (pumpStatusLocal == null) {
             // FIXME I don't know why this happens
-            if (isLoggingEnabled())
-                LOG.warn("!!!! Reset Pump Status Local");
+
+            aapsLogger.warn(LTag.PUMP, "!!!! Reset Pump Status Local");
             pumpStatusLocal = OmnipodUtil.getPumpStatus();
             if (omnipodCommunicationManager != null) {
                 omnipodCommunicationManager.setPumpStatus(pumpStatusLocal);
@@ -652,7 +677,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     protected void triggerUIChange() {
-        RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
+        rxBus.send(new EventOmnipodPumpValuesChanged());
     }
 
 
@@ -666,7 +691,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @NonNull
     protected PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
 
-        LOG.info(getLogPrefix() + "deliverBolus - {}", detailedBolusInfo);
+        aapsLogger.info(LTag.PUMP, getLogPrefix() + "deliverBolus - {}", detailedBolusInfo);
 
         setRefreshButtonEnabled(false);
 
@@ -701,7 +726,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public void stopBolusDelivering() {
-        LOG.info(getLogPrefix() + "stopBolusDelivering");
+        aapsLogger.info(LTag.PUMP, getLogPrefix() + "stopBolusDelivering");
 
         setRefreshButtonEnabled(false);
 
@@ -711,7 +736,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         //setRefreshButtonEnabled(true);
 
-        LOG.info(getLogPrefix() + "stopBolusDelivering - wasSuccess={}", result.success);
+        aapsLogger.info(LTag.PUMP, getLogPrefix() + "stopBolusDelivering - wasSuccess={}", result.success);
 
         //finishAction("Bolus");
     }
@@ -734,31 +759,31 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         setRefreshButtonEnabled(false);
 
-        if (isLoggingEnabled())
-            LOG.info(getLogPrefix() + "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
+
+        aapsLogger.info(LTag.PUMP, getLogPrefix() + "setTempBasalAbsolute: rate: {}, duration={}", absoluteRate, durationInMinutes);
 
         // read current TBR
         TempBasalPair tbrCurrent = readTBR();
 
         if (tbrCurrent != null) {
-            if (isLoggingEnabled())
-                LOG.info(getLogPrefix() + "setTempBasalAbsolute: Current Basal: duration: {} min, rate={}",
-                        tbrCurrent.getDurationMinutes(), tbrCurrent.getInsulinRate());
+
+            aapsLogger.info(LTag.PUMP, getLogPrefix() + "setTempBasalAbsolute: Current Basal: duration: {} min, rate={}",
+                    tbrCurrent.getDurationMinutes(), tbrCurrent.getInsulinRate());
         }
 
         if (tbrCurrent != null && !enforceNew) {
             if (OmnipodUtil.isSame(tbrCurrent.getInsulinRate(), absoluteRate)) {
-                if (isLoggingEnabled())
-                    LOG.info(getLogPrefix() + "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
+
+                aapsLogger.info(LTag.PUMP, getLogPrefix() + "setTempBasalAbsolute - No enforceNew and same rate. Exiting.");
                 finishAction("TBR");
-                return new PumpEnactResult().success(true).enacted(false);
+                return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
         }
 
         // if TBR is running we will cancel it.
 //        if (tbrCurrent != null) {
-//            if (isLoggingEnabled())
-//                LOG.info(getLogPrefix() + "setTempBasalAbsolute - TBR running - so canceling it.");
+//            
+//                aapsLogger.info(LTag.PUMP,getLogPrefix() + "setTempBasalAbsolute - TBR running - so canceling it.");
 //
 //            // CANCEL
 //            OmnipodUITask responseTask2 = omnipodUIComm.executeCommand(OmnipodCommandType.CancelTemporaryBasal);
@@ -766,11 +791,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 //            PumpEnactResult result = responseTask2.getResult();
 //
 //            if (result.success) {
-//                if (isLoggingEnabled())
-//                    LOG.info(getLogPrefix() + "setTempBasalAbsolute - Current TBR cancelled.");
+//                
+//                    aapsLogger.info(LTag.PUMP,getLogPrefix() + "setTempBasalAbsolute - Current TBR cancelled.");
 //            } else {
-//                if (isLoggingEnabled())
-//                    LOG.error(getLogPrefix() + "setTempBasalAbsolute - Cancel TBR failed.");
+//                
+//                    aapsLogger.error(LTag.PUMP,getLogPrefix() + "setTempBasalAbsolute - Cancel TBR failed.");
 //
 //                finishAction("TBR");
 //
@@ -784,8 +809,8 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         PumpEnactResult result = responseTask.getResult();
 
-        if (isLoggingEnabled())
-            LOG.info(getLogPrefix() + "setTempBasalAbsolute - setTBR. Response: " + result.success);
+
+        aapsLogger.info(LTag.PUMP, getLogPrefix() + "setTempBasalAbsolute - setTBR. Response: " + result.success);
 
         if (result.success) {
             incrementStatistics(OmnipodConst.Statistics.TBRsSet);
@@ -810,7 +835,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     protected void finishAction(String overviewKey) {
         if (overviewKey != null)
-            RxBus.INSTANCE.send(new EventRefreshOverview(overviewKey));
+            rxBus.send(new EventRefreshOverview(overviewKey, false));
 
         triggerUIChange();
 
@@ -821,20 +846,16 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
 
-        if (isLoggingEnabled())
-            LOG.info(getLogPrefix() + "cancelTempBasal - started");
+        aapsLogger.info(LTag.PUMP, getLogPrefix() + "cancelTempBasal - started");
 
         setRefreshButtonEnabled(false);
 
         TempBasalPair tbrCurrent = readTBR();
 
         if (tbrCurrent == null) {
-
-            if (isLoggingEnabled())
-                LOG.info(getLogPrefix() + "cancelTempBasal - TBR already canceled.");
+            aapsLogger.info(LTag.PUMP, getLogPrefix() + "cancelTempBasal - TBR already canceled.");
             finishAction("TBR");
-            return new PumpEnactResult().success(true).enacted(false);
-
+            return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }
 
         OmnipodUITask responseTask2 = omnipodUIComm.executeCommand(OmnipodCommandType.CancelTemporaryBasal);
@@ -844,18 +865,18 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         finishAction("TBR");
 
         if (result.success) {
-            if (isLoggingEnabled())
-                LOG.info(getLogPrefix() + "cancelTempBasal - Cancel TBR successful.");
+
+            aapsLogger.info(LTag.PUMP, getLogPrefix() + "cancelTempBasal - Cancel TBR successful.");
 
             TemporaryBasal tempBasal = new TemporaryBasal() //
                     .date(System.currentTimeMillis()) //
                     .duration(0) //
                     .source(Source.USER);
 
-            TreatmentsPlugin.getPlugin().addToHistoryTempBasal(tempBasal);
+            activePlugin.getActiveTreatments().addToHistoryTempBasal(tempBasal);
         } else {
-            if (isLoggingEnabled())
-                LOG.info(getLogPrefix() + "cancelTempBasal - Cancel TBR failed.");
+
+            aapsLogger.info(LTag.PUMP, getLogPrefix() + "cancelTempBasal - Cancel TBR failed.");
         }
 
         return result;
@@ -868,12 +889,12 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        if (isLoggingEnabled())
-            LOG.info(getLogPrefix() + "setNewBasalProfile");
+
+        aapsLogger.info(LTag.PUMP, getLogPrefix() + "setNewBasalProfile");
 
         // this shouldn't be needed, but let's do check if profile setting we are setting is same as current one
-        if (this.currentProfile != null && this.currentProfile.isProfileTheSame(profile)) {
-            return new PumpEnactResult() //
+        if (this.currentProfile != null && this.currentProfile.areProfileBasalPatternsSame(profile)) {
+            return new PumpEnactResult(getInjector()) //
                     .success(true) //
                     .enacted(false) //
                     .comment(MainApp.gs(R.string.medtronic_cmd_basal_profile_not_set_is_same));
@@ -886,17 +907,17 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         PumpEnactResult result = responseTask.getResult();
 
-        if (isLoggingEnabled())
-            LOG.info(getLogPrefix() + "Basal Profile was set: " + result.success);
+
+        aapsLogger.info(LTag.PUMP, getLogPrefix() + "Basal Profile was set: " + result.success);
 
         if (result.success) {
             this.currentProfile = profile;
 
             Notification notification = new Notification(Notification.PROFILE_SET_OK, MainApp.gs(R.string.profile_set_ok), Notification.INFO, 60);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            rxBus.send(new EventNewNotification(notification));
         } else {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.gs(R.string.failedupdatebasalprofile), Notification.URGENT);
-            RxBus.INSTANCE.send(new EventNewNotification(notification));
+            rxBus.send(new EventNewNotification(notification));
         }
 
         return result;
@@ -946,12 +967,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @Override
     public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
 
-        if (isLoggingEnabled())
-            LOG.warn(getLogPrefix() + "Time, Date and/or TimeZone changed. [changeType={}, eventHandlingEnabled={}]", timeChangeType.name(), pumpStatusLocal.timeChangeEventEnabled);
+        aapsLogger.warn(LTag.PUMP, getLogPrefix() + "Time, Date and/or TimeZone changed. [changeType=" + timeChangeType.name() + ", eventHandlingEnabled=" + pumpStatusLocal.timeChangeEventEnabled + "]");
 
         if (OmnipodUtil.getDriverState() == OmnipodDriverState.Initalized_PodAttached) {
             if (pumpStatusLocal.timeChangeEventEnabled) {
-                LOG.info(getLogPrefix() + "Time,and/or TimeZone changed event received and will be consumed by driver.");
+                aapsLogger.info(LTag.PUMP, getLogPrefix() + "Time,and/or TimeZone changed event received and will be consumed by driver.");
                 this.hasTimeDateOrTimeZoneChanged = true;
             }
         }
@@ -978,4 +998,12 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         return false;
     }
+
+
+    @Override
+    public RxBusWrapper getRxBus() {
+        return this.rxBus;
+    }
+
+
 }

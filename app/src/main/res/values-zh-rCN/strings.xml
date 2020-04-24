@@ -41,8 +41,6 @@
     <string name="description_pump_mdi">与用于糖尿病治疗的多次每日注射的泵集成</string>
     <string name="description_pump_virtual">与我们还没有其驱动的泵集成（开环）</string>
     <string name="description_sensitivity_aaps">灵敏度的计算方式与 Oref0 相同, 但可以指定过去的时间范围。碳水化合物吸收最小值是根据参数选项里的碳水化合物吸收时间最大值计算得来的</string>
-    <string name="description_sensitivity_oref0">灵敏度是根据过去的24小时数据计算出来的, 而碳水化合物 (如果不吸收) 则在参数选项里指定的时间后减掉</string>
-    <string name="description_sensitivity_oref1">灵敏度是根据过去的24小时数据计算出来的, 而碳水化合物 (如果不吸收) 则在参数选项里指定的时间后减掉。插件还计算 UAM。</string>
     <string name="description_sensitivity_weighted_average">灵敏度计算根据偏差的加权平均值。新的偏差有更高的权重。碳水化合物吸收最小值是根据参数选项里的碳水化合物吸收时间最大值计算得来的好。此算法在敏感度变化后最快。</string>
     <string name="description_source_eversense">从 Eversense 补丁app接收血糖值。</string>
     <string name="description_source_glimp">从 Glimp 接收血糖值。</string>
@@ -160,9 +158,7 @@
     <string name="disableloop">禁用闭环</string>
     <string name="enableloop">启用闭环</string>
     <string name="openloop_newsuggestion">新的建议可用</string>
-    <string name="unsupportedclientver">不支持的 NSClient 版本</string>
     <string name="unsupportednsversion">不支持的 Nightscout 版本</string>
-    <string name="nsclientnotinstalled">未安装 NSClient。记录丢失!</string>
     <string name="loopdisabled">按约束条件禁用循环</string>
     <string name="treatments_wizard_basaliob_label">基础 IOB</string>
     <string name="bolusconstraintapplied">大剂量约束条件应用了</string>
@@ -432,10 +428,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">默认值: 2 \n大剂量snooze是在输注餐时大剂量后开始生效的, 所以在你刚吃完饭的时候, 闭环不会因为你输注了大剂量而减少或停基础。这里的例子和缺省是 2; 因此, 3 小时的DIA(胰岛素持续作用时间) 意味着大剂量snooze将逐步在１. ５小时 (3 DIA/2) 后失效。</string>
     <string name="openapsama_min_5m_carbimpact_summary">默认值: 3.0  (AMA) 或者 8.0 (SMB)。这是默认的每5分钟碳水化合物吸收量。默认值为3毫克/dl/5 分钟。 当血糖的下降超过预期时, 或者不像预期的上升的那么多时，这个值就影响了活性碳水化合物的衰减速度, 以及在计算预测未来血糖时假设的碳水化合物吸收量,</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">注意! \n 正常地您不必在下面更改这些值。请点击这里, 阅读说明, 并确保您了解它之前不要更改任何这些值。</string>
-    <string name="error_only_numeric_digits_allowed">只允许数字。</string>
-    <string name="error_only_numeric_digits_range_allowed">仅允许在范围 %1$s - %2$s 内的数字。</string>
-    <string name="error_field_must_not_be_empty">此字段不能为空</string>
-    <string name="error_phone_not_valid">电话号码无效</string>
     <string name="smscommunicator_invalidphonennumber">无效的SMS手机号码</string>
     <string name="overview_calibration">校准</string>
     <string name="send_calibration">确认将校准值 %1$.1f 发送到 xDrip 吗？</string>
@@ -455,8 +447,6 @@
     <string name="virtualpump_settings">虚拟泵设置</string>
     <string name="virtualpump_uploadstatus_title">将状态上传到 NS</string>
     <string name="wrongpassword">密码错误</string>
-    <string name="settings_password">密码设置</string>
-    <string name="unlock_settings">解锁设置</string>
     <string name="approachingdailylimit">接近每日胰岛素的极限值</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCIient</string>
@@ -939,7 +929,6 @@
     <string name="allow_hardware_pump_text">注意：如果你激活并且连接到了一个硬件泵，AndroidAPS将会从配置文件复制基础率到泵上。覆盖泵上已有的基础率。请确定你已经在AndroidAPS上设置了正确的基础率。如果你不确定或者不想覆盖泵上的基础率设置，按取消键，以后再切换激活配置文件。</string>
     <string name="error_adding_treatment_title">治疗数据不完整</string>
     <string name="maintenance_settings">维护设置</string>
-    <string name="maintenance_email">电子邮箱</string>
     <string name="maintenance_amount">没有要发送的日志</string>
     <string name="maintenance">维护</string>
     <string name="maintenance_shortname">维护</string>
@@ -1090,4 +1079,5 @@
     <!-- MDT History -->
     <!-- MDT Pump Status -->
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod_dash;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import org.slf4j.Logger;
@@ -8,14 +9,21 @@ import org.slf4j.LoggerFactory;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
@@ -29,7 +37,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefres
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod_dash.comm.OmnipodDashCommunicationManager;
+import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.TimeChangeType;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by andy on 23.04.18.
@@ -58,8 +69,16 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
     private Profile currentProfile;
 
-
-    private OmnipodDashPumpPlugin() {
+    @Inject
+    public OmnipodDashPumpPlugin(HasAndroidInjector injector,
+                                  AAPSLogger aapsLogger,
+                                  RxBusWrapper rxBus,
+                                  Context context,
+                                  ResourceHelper resourceHelper,
+                                  ActivePluginProvider activePlugin,
+                                  SP sp,
+                                  CommandQueueProvider commandQueue,
+                                  FabricPrivacy fabricPrivacy) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
                         .fragmentClass(OmnipodFragment.class.getName()) //
@@ -67,7 +86,8 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
                         .shortName(R.string.omnipod_dash_name_short) //
                         .preferencesId(R.xml.pref_omnipod) //
                         .description(R.string.description_pump_omnipod_dash), //
-                PumpType.Insulet_Omnipod_Dash
+                PumpType.Insulet_Omnipod_Dash,
+                injector, aapsLogger, rxBus, context, resourceHelper, activePlugin, sp, commandQueue, fabricPrivacy
         );
 
         displayConnectionMessages = false;
@@ -115,10 +135,10 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 //        };
     }
 
-
+    @Deprecated
     public static OmnipodDashPumpPlugin getPlugin() {
         if (plugin == null)
-            plugin = new OmnipodDashPumpPlugin();
+            throw new IllegalStateException("Plugin not injected jet");
         return plugin;
     }
 
@@ -153,7 +173,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
     @Override
     public boolean isInitialized() {
-        if (isLoggingEnabled() && displayConnectionMessages)
+        if (displayConnectionMessages)
             LOG.debug(getLogPrefix() + "isInitialized");
         return isServiceSet() && isInitialized;
     }
@@ -161,7 +181,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
     @Override
     public boolean isConnected() {
-        if (isLoggingEnabled() && displayConnectionMessages)
+        if (displayConnectionMessages)
             LOG.debug(getLogPrefix() + "isConnected");
         return isServiceSet() && isServiceInitialized();
     }
@@ -169,7 +189,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
     @Override
     public boolean isConnecting() {
-        if (isLoggingEnabled() && displayConnectionMessages)
+        if (displayConnectionMessages)
             LOG.debug(getLogPrefix() + "isConnecting");
         return !isServiceSet() || !isServiceInitialized();
     }
@@ -201,14 +221,13 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
 
     private void setRefreshButtonEnabled(boolean enabled) {
-        RxBus.INSTANCE.send(new EventOmnipodRefreshButtonState(enabled));
+        rxBus.send(new EventOmnipodRefreshButtonState(enabled));
     }
 
 
     private void initializePump(boolean realInit) {
 
-        if (isLoggingEnabled())
-            LOG.info(getLogPrefix() + "initializePump - start");
+        LOG.info(getLogPrefix() + "initializePump - start");
 
         if (omnipodCommunicationManager == null) {
             omnipodCommunicationManager = OmnipodDashCommunicationManager.getInstance();
@@ -246,7 +265,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
         if (!sentIdToFirebase) {
             Bundle params = new Bundle();
             params.putString("version", BuildConfig.VERSION);
-            MainApp.getFirebaseAnalytics().logEvent("OmnipodPumpInit", params);
+            //fabricPrivacy.logCustom().logEvent("OmnipodPumpInit", params);
 
             sentIdToFirebase = true;
         }
@@ -259,7 +278,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
 
     protected void triggerUIChange() {
-        RxBus.INSTANCE.send(new EventOmnipodPumpValuesChanged());
+        rxBus.send(new EventOmnipodPumpValuesChanged());
     }
 
 

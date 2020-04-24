@@ -29,7 +29,7 @@ public class ResetRileyLinkConfigurationTask extends PumpTask {
 
     @Override
     public void run() {
-        RxBus.INSTANCE.send(new EventRefreshButtonState(false));
+        RxBus.Companion.getINSTANCE().send(new EventRefreshButtonState(false));
         if (MedtronicUtil.isMedtronicPump()) {
             MedtronicPumpPlugin.isBusy = true;
             RileyLinkMedtronicService.getInstance().resetRileyLinkConfiguration();
@@ -39,7 +39,7 @@ public class ResetRileyLinkConfigurationTask extends PumpTask {
             RileyLinkOmnipodService.getInstance().resetRileyLinkConfiguration();
             OmnipodPumpPlugin.isBusy = false;
         }
-        RxBus.INSTANCE.send(new EventRefreshButtonState(true));
+        RxBus.Companion.getINSTANCE().send(new EventRefreshButtonState(true));  
     }
 
 }

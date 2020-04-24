@@ -4,7 +4,9 @@ import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.view.View;
 
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import javax.inject.Inject;
+
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
 
@@ -13,6 +15,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodMa
  */
 public class InitPodTask extends AsyncTask<Void, Void, String> {
 
+    @Inject ProfileFunction profileFunction;
     private InitActionFragment initActionFragment;
 
     public InitPodTask(InitActionFragment initActionFragment) {
@@ -39,7 +42,7 @@ public class InitPodTask extends AsyncTask<Void, Void, String> {
             initActionFragment.callResult = AapsOmnipodManager.getInstance().initPod(
                     initActionFragment.podInitActionType,
                     initActionFragment.instance,
-                    ProfileFunctions.getInstance().getProfile()
+                    profileFunction.getProfile()
             );
         } else if (initActionFragment.podInitActionType == PodInitActionType.DeactivatePodWizardStep) {
             initActionFragment.callResult = AapsOmnipodManager.getInstance().deactivatePod(initActionFragment.instance);

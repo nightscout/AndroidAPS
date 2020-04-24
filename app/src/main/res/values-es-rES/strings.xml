@@ -43,8 +43,6 @@
     <string name="description_pump_mdi">Integración de bomba de insulina para personas que usan varias inyecciones diarias para su terapia de diabetes</string>
     <string name="description_pump_virtual">Integración para bombas de insulina que aún no tienen ningún controlador/driver (lazo abierto)</string>
     <string name="description_sensitivity_aaps">Sensibilidad calculada de la misma manera que Oref0, pero puede especificarse el rango de tiempo. Absorción de carbohidratos mínima se calcula con el máximo tiempo de absorción de carbohidratos en preferencias.</string>
-    <string name="description_sensitivity_oref0">La sensibilidad se calcula con las últimas 24 h y los carbohidratos (si no son absorbidos) se anulan después del tiempo indicado en preferencias.</string>
-    <string name="description_sensitivity_oref1">La sensibilidad se calcula con las últimas 8 h y los carbohidratos (si no son absorbidos) se anulan después del tiempo indicado en preferencias. El complemento también calcula UAM.</string>
     <string name="description_sensitivity_weighted_average">La sensibilidad se calcula como un promedio ampliado de las desviaciones. Desviaciones más recientes tienen mayor impacto. Absorción de carbohidratos mínima se calcula desde el tiempo de absorción de carbohidratos máximo en preferencias. Este algoritmo es el más rápido siguiendo los cambios de sensibilidad.</string>
     <string name="description_source_eversense">Recibir los valores de glucosa de la aplicación Eversense parcheada.</string>
     <string name="description_source_glimp">Recibir valores de glucosa de Glimp.</string>
@@ -164,9 +162,7 @@
     <string name="disableloop">Desactivar lazo</string>
     <string name="enableloop">Activar lazo</string>
     <string name="openloop_newsuggestion">Nueva propuesta disponible</string>
-    <string name="unsupportedclientver">Versión de NSClient no soportada</string>
     <string name="unsupportednsversion">Versión no aceptada de Nightscout</string>
-    <string name="nsclientnotinstalled">NSClient no instalado. ¡Registro perdido!</string>
     <string name="loopdisabled">LOOP DESACTIVADO POR RESTRICCIONES</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="bolusconstraintapplied">Restricción aplicada en bolo</string>
@@ -461,10 +457,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">Ajuste por defecto: 2 \nEl retardo del bolo se realiza después de suministrar un bolo de comida, por lo que el lazo no se contrarrestará con bajas temporales cuando acaba de comer. Con el valor predeterminado de 2 y siendo DIA de 3 horas, el retardo del del bolo se realizará gradualmente durante 1,5 horas (3 DIA / 2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Valor por defecto: 3.0 (AMA) o 8.0 (SMB). Este es un escenario de impacto de absorción de carbohidratos por defecto por 5 minutos. El valor predeterminado es un esperado 3mg/dl / 5min. Esto afecta la rapidez con la que los COB decaen, y cuánta absorción de carbohidratos se supone en el cálculo de futuras BG, cuando BG está cayendo más que esperado, o no aumento tanto como esperaba.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atención!\nNormalmente no tienes que editar los valores a continuación. Por favor PINCHA AQUI y LEE el texto y asegúrate que lo has ENTENDIDO antes de cambiar alguno de estos valores.</string>
-    <string name="error_only_numeric_digits_allowed">Sólo se permiten caracteres numéricos.</string>
-    <string name="error_only_numeric_digits_range_allowed">Sólo se permiten dígitos en el rango %1$s - %2$s</string>
-    <string name="error_field_must_not_be_empty">Este campo no puede estar vacío</string>
-    <string name="error_phone_not_valid">Número de teléfono inválido</string>
     <string name="smscommunicator_invalidphonennumber">Número de teléfono incorrecto para SMS</string>
     <string name="overview_calibration">Calibración</string>
     <string name="send_calibration">¿Enviar la calibración %1$.1f a xDrip?</string>
@@ -484,8 +476,6 @@
     <string name="virtualpump_settings">Ajustes bomba virtual</string>
     <string name="virtualpump_uploadstatus_title">Subir estado a NS</string>
     <string name="wrongpassword">Contraseña incorrecta</string>
-    <string name="settings_password">Contraseña para ajustes</string>
-    <string name="unlock_settings">Desbloquear ajustes</string>
     <string name="approachingdailylimit">Alcanzando el limite de insulina diario</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
@@ -988,7 +978,6 @@
     <string name="allow_hardware_pump_text">Atención: si activas y conectas al hardware de la bomba, AndroidAPS copiará los ajustes basales del perfil de la bomba, sobrescribiendo el actual perfil basal de la bomba. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite cambio de la bomba más tarde.</string>
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
     <string name="maintenance_settings">Ajustes de mantenimiento</string>
-    <string name="maintenance_email">Email</string>
     <string name="maintenance_amount">Ningún registro para enviar</string>
     <string name="maintenance">Mantenimiento</string>
     <string name="maintenance_shortname">MANT</string>
@@ -1014,7 +1003,7 @@
     <string name="speederror">Error de velocidad</string>
     <string name="insulinlimitviolation">Violación del límite de insulina</string>
     <string name="loop_openmode_min_change">Valor mínimo de cambio [%]</string>
-    <string name="loop_openmode_min_change_summary">El lazo abierto sólo mostrará una demanda de cambio si el cambio es mayor a este valor. El valor predeterminado es el 20 %</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">El lazo abierto sólo mostrará una demanda de cambio si el cambio es mayor a este valor. El valor predeterminado es el 20 %</string>
     <string name="pairfirst">Por favor, empareje su bomba con su teléfono!</string>
     <string name="searching_for_devices">Buscando dispositivos…</string>
     <string name="please_wait">Por favor, espere…</string>
@@ -1449,4 +1438,5 @@
     <string name="sensitivity_short">AS</string>
     <string name="loop_smbrequest_time_label">Tiempo requerido de SMB</string>
     <string name="loop_smbexecution_time_label">Tiempo de ejecución de SMB</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

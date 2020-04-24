@@ -2,24 +2,27 @@ package info.nightscout.androidaps.data;
 
 import androidx.collection.LongSparseArray;
 
+import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.TimeZone;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -27,9 +30,16 @@ import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.MidnightTime;
 import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class Profile {
-    private static Logger log = LoggerFactory.getLogger(Profile.class);
+    @Inject public AAPSLogger aapsLogger;
+    @Inject public ActivePluginProvider activePlugin;
+    @Inject public ResourceHelper resourceHelper;
+    @Inject public RxBusWrapper rxBus;
+    @Inject public FabricPrivacy fabricPrivacy;
+
+    private HasAndroidInjector injector;
 
     private JSONObject json;
     private String units;
@@ -52,8 +62,14 @@ public class Profile {
     protected boolean isValid;
     protected boolean isValidated;
 
-    // Default constructor for tests
-    protected Profile() {
+    // Default constructor for DB
+    public Profile() {
+        MainApp.instance().injector.androidInjector().inject(this);
+    }
+
+    protected Profile(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
+        this.injector = injector;
     }
 
     @Override
@@ -65,24 +81,27 @@ public class Profile {
     }
 
     // Constructor from profileStore JSON
-    public Profile(JSONObject json, String units) {
+    public Profile(HasAndroidInjector injector, JSONObject json, String units) {
+        this(injector);
         init(json, 100, 0);
         if (this.units == null) {
             if (units != null)
                 this.units = units;
             else {
-                FabricPrivacy.log("Profile failover failed too");
+                fabricPrivacy.log("Profile failover failed too");
                 this.units = Constants.MGDL;
             }
         }
     }
 
     // Constructor from profileStore JSON
-    public Profile(JSONObject json) {
+    public Profile(HasAndroidInjector injector, JSONObject json) {
+        this(injector);
         init(json, 100, 0);
     }
 
-    public Profile(JSONObject json, int percentage, int timeshift) {
+    public Profile(HasAndroidInjector injector, JSONObject json, int percentage, int timeshift) {
+        this(injector);
         init(json, percentage, timeshift);
     }
 
@@ -115,7 +134,7 @@ public class Profile {
             targetLow = json.getJSONArray("target_low");
             targetHigh = json.getJSONArray("target_high");
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
             isValid = false;
             isValidated = true;
         }
@@ -136,7 +155,7 @@ public class Profile {
             try {
                 json.put("units", units);
             } catch (JSONException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error("Unhandled exception", e);
             }
         return json;
     }
@@ -181,9 +200,9 @@ public class Profile {
                 double value = o.getDouble("value") * multiplier;
                 sparse.put(tas, value);
             } catch (Exception e) {
-                log.error("Unhandled exception", e);
-                log.error(json.toString());
-                FabricPrivacy.logException(e);
+                aapsLogger.error("Unhandled exception", e);
+                aapsLogger.error(json.toString());
+                fabricPrivacy.logException(e);
             }
         }
 
@@ -229,38 +248,31 @@ public class Profile {
 
         if (isValid) {
             // Check for hours alignment
-            PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
-            if (pump != null && !pump.getPumpDescription().is30minBasalRatesCapable) {
+            PumpInterface pump = activePlugin.getActivePump();
+            if (!pump.getPumpDescription().is30minBasalRatesCapable) {
                 for (int index = 0; index < basal_v.size(); index++) {
                     long secondsFromMidnight = basal_v.keyAt(index);
                     if (notify && secondsFromMidnight % 3600 != 0) {
                         if (Config.APS) {
-                            Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, String.format(MainApp.gs(R.string.basalprofilenotaligned), from), Notification.NORMAL);
-                            RxBus.INSTANCE.send(new EventNewNotification(notification));
+                            Notification notification = new Notification(Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS, resourceHelper.gs(R.string.basalprofilenotaligned, from), Notification.NORMAL);
+                            rxBus.send(new EventNewNotification(notification));
                         }
                     }
                 }
             }
 
             // Check for minimal basal value
-            if (pump != null) {
-                PumpDescription description = pump.getPumpDescription();
-                for (int i = 0; i < basal_v.size(); i++) {
-                    if (basal_v.valueAt(i) < description.basalMinimumRate) {
-                        basal_v.setValueAt(i, description.basalMinimumRate);
-                        if (notify)
-                            sendBelowMinimumNotification(from);
-                    } else if (basal_v.valueAt(i) > description.basalMaximumRate) {
-                        basal_v.setValueAt(i, description.basalMaximumRate);
-                        if (notify)
-                            sendAboveMaximumNotification(from);
-                    }
+            PumpDescription description = pump.getPumpDescription();
+            for (int i = 0; i < basal_v.size(); i++) {
+                if (basal_v.valueAt(i) < description.basalMinimumRate) {
+                    basal_v.setValueAt(i, description.basalMinimumRate);
+                    if (notify)
+                        sendBelowMinimumNotification(from);
+                } else if (basal_v.valueAt(i) > description.basalMaximumRate) {
+                    basal_v.setValueAt(i, description.basalMaximumRate);
+                    if (notify)
+                        sendAboveMaximumNotification(from);
                 }
-            } else {
-                // if pump not available (at start)
-                // do not store converted array
-                basal_v = null;
-                isValidated = false;
             }
 
         }
@@ -268,11 +280,11 @@ public class Profile {
     }
 
     protected void sendBelowMinimumNotification(String from) {
-        RxBus.INSTANCE.send(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.minimalbasalvaluereplaced), from), Notification.NORMAL)));
+        rxBus.send(new EventNewNotification(new Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, resourceHelper.gs(R.string.minimalbasalvaluereplaced, from), Notification.NORMAL)));
     }
 
     protected void sendAboveMaximumNotification(String from) {
-        RxBus.INSTANCE.send(new EventNewNotification(new Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, String.format(MainApp.gs(R.string.maximumbasalvaluereplaced), from), Notification.NORMAL)));
+        rxBus.send(new EventNewNotification(new Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, resourceHelper.gs(R.string.maximumbasalvaluereplaced, from), Notification.NORMAL)));
     }
 
     private void validate(LongSparseArray array) {
@@ -326,7 +338,7 @@ public class Profile {
         else if (array == basal_v)
             multiplier = percentage / 100d;
         else
-            log.error("Unknown array type");
+            aapsLogger.error("Unknown array type");
         return multiplier;
     }
 
@@ -344,7 +356,7 @@ public class Profile {
         else if (array == targetHigh)
             multiplier = 1d;
         else
-            log.error("Unknown array type");
+            aapsLogger.error("Unknown array type");
         return multiplier;
     }
 
@@ -407,7 +419,7 @@ public class Profile {
     public String getIsfList() {
         if (isf_v == null)
             isf_v = convertToSparseArray(isf);
-        return getValuesList(isf_v, null, new DecimalFormat("0.0"), getUnits() + MainApp.gs(R.string.profile_per_unit));
+        return getValuesList(isf_v, null, new DecimalFormat("0.0"), getUnits() + resourceHelper.gs(R.string.profile_per_unit));
     }
 
     public ProfileValue[] getIsfsMgdl() {
@@ -440,7 +452,7 @@ public class Profile {
     public String getIcList() {
         if (ic_v == null)
             ic_v = convertToSparseArray(ic);
-        return getValuesList(ic_v, null, new DecimalFormat("0.0"), MainApp.gs(R.string.profile_carbs_per_unit));
+        return getValuesList(ic_v, null, new DecimalFormat("0.0"), resourceHelper.gs(R.string.profile_carbs_per_unit));
     }
 
     public ProfileValue[] getIcs() {
@@ -474,7 +486,7 @@ public class Profile {
     public String getBasalList() {
         if (basal_v == null)
             basal_v = convertToSparseArray(basal);
-        return getValuesList(basal_v, null, new DecimalFormat("0.00"), MainApp.gs(R.string.profile_ins_units_per_hour));
+        return getValuesList(basal_v, null, new DecimalFormat("0.00"), resourceHelper.gs(R.string.profile_ins_units_per_hour));
     }
 
     public class ProfileValue {
@@ -485,6 +497,7 @@ public class Profile {
 
         public int timeAsSeconds;
         public double value;
+
 
         public boolean equals(Object otherObject) {
             if (!(otherObject instanceof ProfileValue)) {
@@ -608,13 +621,15 @@ public class Profile {
     }
 
     public static int secondsFromMidnight() {
-        long passed = DateUtil.now() - MidnightTime.calc();
+        // long passed = DateUtil.now() - MidnightTime.calc();
+        long passed = new DateTime().getMillisOfDay();
         return (int) (passed / 1000);
     }
 
     public static int secondsFromMidnight(long date) {
-        long midnight = MidnightTime.calc(date);
-        long passed = date - midnight;
+        //long midnight = MidnightTime.calc(date);
+        //long passed = date - midnight;
+        long passed = new DateTime(date).getMillisOfDay();
         return (int) (passed / 1000);
     }
 
@@ -654,16 +669,21 @@ public class Profile {
         else return (valueInMmol > 0 ? "+" : "") + DecimalFormatter.to1Decimal(valueInMmol);
     }
 
-    public static double toCurrentUnits(double anyBg) {
-        if (anyBg < 32) return fromMmolToUnits(anyBg, ProfileFunctions.getSystemUnits());
-        else return fromMgdlToUnits(anyBg, ProfileFunctions.getSystemUnits());
+    public static double toCurrentUnits(ProfileFunction profileFunction, double anyBg) {
+        if (anyBg < 32) return fromMmolToUnits(anyBg, profileFunction.getUnits());
+        else return fromMgdlToUnits(anyBg, profileFunction.getUnits());
     }
 
-    public static String toCurrentUnitsString(double anyBg) {
+    public static double toCurrentUnits(String units, double anyBg) {
+        if (anyBg < 32) return fromMmolToUnits(anyBg, units);
+        else return fromMgdlToUnits(anyBg, units);
+    }
+
+    public static String toCurrentUnitsString(ProfileFunction profileFunction, double anyBg) {
         if (anyBg < 32)
-            return toUnitsString(anyBg * Constants.MMOLL_TO_MGDL, anyBg, ProfileFunctions.getSystemUnits());
+            return toUnitsString(anyBg * Constants.MMOLL_TO_MGDL, anyBg, profileFunction.getUnits());
         else
-            return toUnitsString(anyBg, anyBg * Constants.MGDL_TO_MMOLL, ProfileFunctions.getSystemUnits());
+            return toUnitsString(anyBg, anyBg * Constants.MGDL_TO_MMOLL, profileFunction.getUnits());
     }
 
     // targets are stored in mg/dl but profile vary
@@ -807,12 +827,13 @@ public class Profile {
             o.put("target_high", target_high);
 
         } catch (JSONException e) {
-            log.error("Unhandled exception" + e);
+            aapsLogger.error("Unhandled exception" + e);
         }
-        return new Profile(o);
+        return new Profile(injector, o);
     }
 
-    public boolean isProfileTheSame(Profile otherProfile) {
+
+    public boolean areProfileBasalPatternsSame(Profile otherProfile) {
 
         if (!Round.isSame(this.baseBasalSum(), otherProfile.baseBasalSum()))
             return false;

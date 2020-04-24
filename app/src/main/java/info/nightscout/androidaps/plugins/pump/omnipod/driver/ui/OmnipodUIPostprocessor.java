@@ -8,8 +8,11 @@ import java.util.Date;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodResponseType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 
@@ -22,12 +25,14 @@ public class OmnipodUIPostprocessor {
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     private OmnipodPumpStatus pumpStatus;
-    private OmnipodPumpPlugin omnipodPumpPlugin;
+    private OmnipodPumpPluginInterface omnipodPumpPlugin;
+    private RxBusWrapper rxBus;
 
 
-    public OmnipodUIPostprocessor(OmnipodPumpPlugin plugin, OmnipodPumpStatus pumpStatus) {
+    public OmnipodUIPostprocessor(OmnipodPumpPluginInterface plugin, OmnipodPumpStatus pumpStatus) {
         this.pumpStatus = pumpStatus;
         this.omnipodPumpPlugin = plugin;
+        this.rxBus = plugin.getRxBus();
     }
 
 
@@ -105,4 +110,7 @@ public class OmnipodUIPostprocessor {
         return L.isEnabled(L.PUMP);
     }
 
+    public RxBusWrapper getRxBus() {
+        return this.rxBus;
+    }
 }

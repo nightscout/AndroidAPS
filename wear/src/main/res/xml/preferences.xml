@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <CheckBoxPreference
@@ -244,4 +244,4 @@
         android:key="version_number"
         android:summary="Input Design"
         android:title="@string/pref_version" />
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

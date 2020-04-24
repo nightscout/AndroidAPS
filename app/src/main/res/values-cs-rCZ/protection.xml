@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_title">Vyžadována autentizace</string>
+    <string name="biometric_description">Položte prst na čtečku otisků prstů pro ověření vaší totožnosti</string>
+    <string name="settings_protection">Ochrana nastavení</string>
+    <string name="application_protection">Ochrana aplikace</string>
+</resources>

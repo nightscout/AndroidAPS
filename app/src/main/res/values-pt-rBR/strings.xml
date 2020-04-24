@@ -43,8 +43,6 @@
     <string name="description_pump_mdi">Integração para as pessoas que fazem múltiplas injeções diárias para a sua terapia de diabetes</string>
     <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
     <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas você pode especificar o período de tempo para o passado. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências.</string>
-    <string name="description_sensitivity_oref0">A sensibilidade é calculada a partir de dados de 24h no passado e os carboidratos (se não absorvidos) são cortados após o tempo especificado nas preferências.</string>
-    <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados de 8h no passado e os hidratos de carbono (se não absorvidos) são cortados após o tempo especificado nas preferências. O plug-in também calcula o UAM.</string>
     <string name="description_sensitivity_weighted_average">A sensibilidade é calculada como uma média ponderada de desvios. Desvios mais recentes têm maior peso. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências. Este algoritmo é o mais rápido em seguir as mudanças de sensibilidade.</string>
     <string name="description_source_eversense">Receber valores de Glicose da aplicação Eversense modificada.</string>
     <string name="description_source_glimp">Receber valores BG do Glimp.</string>
@@ -164,9 +162,7 @@
     <string name="disableloop">Desativar loop</string>
     <string name="enableloop">Ativar loop</string>
     <string name="openloop_newsuggestion">Nova sugestão disponível</string>
-    <string name="unsupportedclientver">Versão não suportada do NSClient</string>
     <string name="unsupportednsversion">Versão não suportada do Nightscout</string>
-    <string name="nsclientnotinstalled">NSClient não instalado. Registro perdido!</string>
     <string name="loopdisabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
     <string name="treatments_wizard_basaliob_label">IOB Basal</string>
     <string name="bolusconstraintapplied">Restrição de bólus aplicada</string>
@@ -222,6 +218,17 @@
     <string name="openapsma_maxiob_title">Basal Máxima IOB que OpenAPS pode dar [U]</string>
     <string name="openapsma_maxiob_summary">Este valor é denominado Max IOB em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que APS pode dar de uma vez.</string>
     <string name="dismiss">Dispensar</string>
+    <string name="check_preferences_details_btn">Explicar problemas de importação…</string>
+    <string name="check_preferences_details_title">Detalhes de problemas de importação</string>
+    <string name="check_preferences_import_btn">Importar</string>
+    <string name="check_preferences_import_anyway_btn">Importar mesmo assim (PERIGOSO!)</string>
+    <string name="metadata_label_format">Formato do ficheiro</string>
+    <string name="metadata_label_created_at">Criado em</string>
+    <string name="metadata_label_aaps_version">Versão AAPS</string>
+    <string name="metadata_label_aaps_flavour">Variante de Compilação</string>
+    <string name="metadata_label_encryption">Encriptação do Ficheiro</string>
+    <string name="metadata_format_old">Antigo Formato de Exportação</string>
+    <string name="metadata_format_new">Novo formato de encriptação</string>
     <string name="danarpump">DanaR</string>
     <string name="connecting">Conectando</string>
     <string name="connected">Conectado</string>
@@ -461,10 +468,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">Valor padrão: 2\nBolus Snooze (pausa após bolus) é executado depois de realizar um bolus por refeição Desta maneira o algoritmo não irá contrariar com temporárias baixas logo depois da refeição. O valor padrão é 2; Então uma duração de acção da insulina (DIA) de 5h significa que o Bolus Snooze irá ser gradualmente reduzido ao longo de 2,5 horas = 5/2 = DIA/Valor padrão.</string>
     <string name="openapsama_min_5m_carbimpact_summary">Valor padrão: 3.0 para detecção avançada de refeições (AMA) ou 8.0 para super micro bolus (SMB). Esta é a configuração padrão para o calculo de quanto varia a cada 5 min a glucose no sangue (BG)  devido à absorção de hidratos de carbono. O padrão é  3mg/ dl / 5min. Isso afeta a rapidez com que decaem as calorias no corpo (COB), e quantos hidratos de carbono terão de ser considerados no cálculo da previsão de BG, quando é que a BG está baixando mais do que espectável ou não subindo como espectável.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Atenção!\n Normalmente não é necessário modificar os valores abaixo. Por favor PRESSIONE AQUI e LEIA o texto para garantir que ENTENDE as consequenciais antes de alterar algum destes valores.</string>
-    <string name="error_only_numeric_digits_allowed">Apenas dígitos numéricos são permitidos.</string>
-    <string name="error_only_numeric_digits_range_allowed">Apenas são permitidos valores entre %1$s e %2$s.</string>
-    <string name="error_field_must_not_be_empty">Este campo não deve estar vazio</string>
-    <string name="error_phone_not_valid">Número de telefone inválido</string>
     <string name="smscommunicator_invalidphonennumber">SMS número de telefone inválido</string>
     <string name="overview_calibration">Calibração</string>
     <string name="send_calibration">Enviar calibração %1$.1f para o xDrip?</string>
@@ -484,8 +487,6 @@
     <string name="virtualpump_settings">Definições da bomba virtual</string>
     <string name="virtualpump_uploadstatus_title">Enviar estado para NS</string>
     <string name="wrongpassword">Senha incorrecta</string>
-    <string name="settings_password">Senha para definições</string>
-    <string name="unlock_settings">Desbloquear configurações</string>
     <string name="approachingdailylimit">Aproximação do limite diario de insulina</string>
     <string name="nsclientinternal">NSCliente</string>
     <string name="nsclientinternal_shortname">NSCI</string>
@@ -517,6 +518,7 @@
     <string name="adult">Adulto</string>
     <string name="resistantadult">Adulto resistente insulina</string>
     <string name="patientage_summary">Por favor seleccione a idade do diabético para definir os limites de segurança</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizador</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s necessita de autorizar a não optimização da bateria para assegurar a performance necessária</string>
     <string name="loopsuspended">Loop suspenso</string>
@@ -782,6 +784,7 @@
     <string name="ago">atrás</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d mins</string>
+    <string name="format_mins_short">%1$dm</string>
     <string name="enablesmbalways">SMB sempre activado</string>
     <string name="enablesmbalways_summary">SMB sempre activo independentemente dos bolus. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
     <string name="enablesmbaftercarbs">Ativar SMB após carbos</string>
@@ -989,7 +992,6 @@
     <string name="allow_hardware_pump_text">Atenção: Se conectar à sua bomba física e activar o perfil, o AndroidAPS irá copiar as definições desse perfil para as definições da bomba, apagando o memorizado na bomba. Por favor verifique que o que preencheu no perfil da app tem os mesmos valores que estão na bomba. Em caso contrario pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>
     <string name="error_adding_treatment_title">Dados tratamento incompletos</string>
     <string name="maintenance_settings">Configurações de manutenção</string>
-    <string name="maintenance_email">Email</string>
     <string name="maintenance_amount">Nr. de registos a enviar</string>
     <string name="maintenance">Manutenção</string>
     <string name="maintenance_shortname">MANU</string>
@@ -1015,7 +1017,7 @@
     <string name="speederror">Erro velocidade</string>
     <string name="insulinlimitviolation">Transgressão limite insulina</string>
     <string name="loop_openmode_min_change">Pedido de mudança mínima [%]</string>
-    <string name="loop_openmode_min_change_summary">A app mostrará um pedido de alteração apenas se a mudança for superior a este valor em %. O valor padrão é 20%</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">A app mostrará um pedido de alteração apenas se a mudança for superior a este valor em %. O valor padrão é 20%</string>
     <string name="pairfirst">Emparelhe a sua bomba com o seu telefone!</string>
     <string name="searching_for_devices">A pesquisar dispositivos…</string>
     <string name="please_wait">Por favor aguarde…</string>
@@ -1251,6 +1253,7 @@
     <string name="medtronic_pump_battery_alkaline">Alcalina (Visão estendida)</string>
     <string name="medtronic_pump_battery_lithium">Lithium (visão estendida)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Vista Estendida)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (Visualização estendida)</string>
     <string name="medtronic_bolus_debugging">Depuração de Bólus/Tratamentos</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">PROCURAR</string>
@@ -1454,4 +1457,8 @@
     <string name="loop_tbrrequest_time_label">Hora de solicitação Basal Temp</string>
     <string name="loop_tbrexecution_time_label">Hora de execução Basal Temp</string>
     <string name="insight_alert_notification_channel">Alertas Bomba Insight</string>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="onconnect">Ao ligar</string>
+    <string name="ondisconnect">Ao desligar</string>
+    <string name="overview_show_predictions">Previsões</string>
 </resources>

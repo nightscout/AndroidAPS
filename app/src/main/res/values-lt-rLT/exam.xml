@@ -149,7 +149,7 @@
     <string name="profileswitch_targethigher">Tikslas bus 10% aukštesnis.</string>
     <string name="profileswitch_targetlower">Tikslas bus 10% žemesnis.</string>
     <string name="profileswitch_targetbottom">Tik apatinis tikslas bus 10% žemesnis.</string>
-    <string name="profileswitch_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
+    <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
     <string name="profileswitchtime_iwant">Jei atsibundate 1 valanda anksčiau nei įprastai, kaip turėtumėte pranešti AAPS apie savo tvarkaraščio pasikeitimą?</string>
     <string name="profileswitchtime_1">Perjunkite profilį su laiko poslinkiu +1</string>
     <string name="profileswitchtime__1">Perjunkite profilį su laiko poslinkiu -1</string>

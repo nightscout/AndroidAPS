@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
@@ -13,7 +14,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandTy
  */
 public class PumpMessage implements RLMessage {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
     public PacketType packetType = PacketType.Carelink;
     public byte[] address = new byte[]{0, 0, 0};

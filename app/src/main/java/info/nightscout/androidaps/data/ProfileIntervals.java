@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
  * Created by mike on 09.05.2017.
@@ -19,7 +20,7 @@ import info.nightscout.androidaps.interfaces.Interval;
 // When no interval match the lastest record without duration is used
 
 public class ProfileIntervals<T extends Interval> {
-    private static Logger log = LoggerFactory.getLogger(ProfileIntervals.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(ProfileIntervals.class);
 
     private LongSparseArray<T> rawData; // oldest at index 0
 

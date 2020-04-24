@@ -7,13 +7,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.Round;
 
 public class IobTotal implements DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(IobTotal.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(IobTotal.class);
 
     public double iob;
     public double activity;

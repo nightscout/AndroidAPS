@@ -38,7 +38,14 @@
         android:roundIcon="${appIconRound}"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher"
-        android:fullBackupContent="true">
+        android:fullBackupOnly="false"
+        android:backupAgent=".utils.SPBackupAgent"
+        android:restoreAnyVersion="true">
+
+        <meta-data
+            android:name="com.google.android.backup.api_key"
+            android:value="AEdPqrEAAAAI3JiApyMrbP2QFzZ2fYfCPsgjkRp53Dm2S1-zPQ" />
+
         <meta-data
             android:name="com.google.android.gms.car.application"
             android:resource="@xml/automotive_app_desc" />
@@ -76,7 +83,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".plugins.pump.danaRS.activities.PairingHelperActivity" />
-        <activity android:name=".activities.HistoryBrowseActivity" />
+        <activity android:name=".historyBrowser.HistoryBrowseActivity" />
         <activity android:name=".activities.SurveyActivity" />
         <activity android:name=".activities.StatsActivity" />
 
@@ -267,6 +274,13 @@
             android:label="@string/pairing_information"
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.RequestDexcomPermissionActivity" />
+        <activity android:name=".plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <!-- Medtronic service and activities -->
         <service

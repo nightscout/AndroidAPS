@@ -23,6 +23,12 @@ public class ScaledDataPoint implements DataPointInterface, Serializable {
         this.scale = scale;
     }
 
+    public ScaledDataPoint(long x, double y, Scale scale) {
+        this.x=x;
+        this.y=y;
+        this.scale = scale;
+    }
+
     public ScaledDataPoint(Date x, double y, Scale scale) {
         this.x = x.getTime();
         this.y = y;

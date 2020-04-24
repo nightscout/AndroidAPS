@@ -5,16 +5,15 @@ import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 
 import androidx.annotation.Nullable;
+import androidx.preference.PreferenceManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,6 +25,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DbRequest;
@@ -33,23 +33,26 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.utils.BatteryLevel;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 26.05.2017.
  */
-
 public class NSUpload {
-    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
 
     public static void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
         try {
@@ -74,7 +77,7 @@ public class NSUpload {
         try {
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
             boolean useAbsolute = SP.getBoolean("ns_sync_use_absolute", false);
-            Profile profile = ProfileFunctions.getInstance().getProfile(temporaryBasal.date);
+            Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile(temporaryBasal.date);
             double absoluteRate = 0;
             if (profile != null) {
                 absoluteRate = profile.getBasal(temporaryBasal.date) * temporaryBasal.percentRate / 100d;
@@ -158,19 +161,19 @@ public class NSUpload {
         }
     }
 
-    public static void uploadDeviceStatus() {
-        Profile profile = ProfileFunctions.getInstance().getProfile();
-        String profileName = ProfileFunctions.getInstance().getProfileName();
+    public static void uploadDeviceStatus(LoopPlugin loopPlugin, IobCobCalculatorPlugin iobCobCalculatorPlugin, ProfileFunction profileFunction, PumpInterface pumpInterface) {
+        Profile profile = profileFunction.getProfile();
+        String profileName = profileFunction.getProfileName();
 
-        if (profile == null || profileName == null) {
+        if (profile == null) {
             log.error("Profile is null. Skipping upload");
             return;
         }
 
         DeviceStatus deviceStatus = new DeviceStatus();
         try {
-            LoopPlugin.LastRun lastRun = LoopPlugin.lastRun;
-            if (lastRun != null && lastRun.lastAPSRun.getTime() > System.currentTimeMillis() - 300 * 1000L) {
+            LoopPlugin.LastRun lastRun = loopPlugin.lastRun;
+            if (lastRun != null && lastRun.lastAPSRun > System.currentTimeMillis() - 300 * 1000L) {
                 // do not send if result is older than 1 min
                 APSResult apsResult = lastRun.request;
                 apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
@@ -202,14 +205,14 @@ public class NSUpload {
             } else {
                 if (L.isEnabled(L.NSCLIENT))
                     log.debug("OpenAPS data too old to upload, sending iob only");
-                IobTotal[] iob = IobCobCalculatorPlugin.getPlugin().calculateIobArrayInDia(profile);
+                IobTotal[] iob = iobCobCalculatorPlugin.calculateIobArrayInDia(profile);
                 if (iob.length > 0) {
                     deviceStatus.iob = iob[0].json();
                     deviceStatus.iob.put("time", DateUtil.toISOString(DateUtil.now()));
                 }
             }
             deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
-            JSONObject pumpstatus = ConfigBuilderPlugin.getPlugin().getActivePump().getJSONStatus(profile, profileName);
+            JSONObject pumpstatus = pumpInterface.getJSONStatus(profile, profileName);
             if (pumpstatus != null) {
                 deviceStatus.pump = pumpstatus;
             }
@@ -268,9 +271,9 @@ public class NSUpload {
             data.put("duration", tempTarget.durationInMinutes);
             if (tempTarget.low > 0) {
                 data.put("reason", tempTarget.reason);
-                data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.low, ProfileFunctions.getSystemUnits()));
-                data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.high, ProfileFunctions.getSystemUnits()));
-                data.put("units", ProfileFunctions.getSystemUnits());
+                data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.low, ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits()));
+                data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.high, ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits()));
+                data.put("units", ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits());
             }
             data.put("created_at", DateUtil.toISOString(tempTarget.date));
             data.put("enteredBy", MainApp.gs(R.string.app_name));
@@ -462,6 +465,22 @@ public class NSUpload {
             log.error("Unhandled exception", e);
         }
 
+    }
+
+    public static void createNSTreatment(JSONObject data, ProfileStore profileStore, ProfileFunction profileFunction, long eventTime) {
+        if (JsonHelper.safeGetString(data, "eventType", "").equals(CareportalEvent.PROFILESWITCH)) {
+            ProfileSwitch profileSwitch = profileFunction.prepareProfileSwitch(
+                    profileStore,
+                    JsonHelper.safeGetString(data, "profile"),
+                    JsonHelper.safeGetInt(data, "duration"),
+                    JsonHelper.safeGetInt(data, "percentage"),
+                    JsonHelper.safeGetInt(data, "timeshift"),
+                    eventTime
+            );
+            uploadProfileSwitch(profileSwitch);
+        } else {
+            uploadCareportalEntryToNS(data);
+        }
     }
 
     public static boolean isIdValid(String _id) {

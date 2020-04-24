@@ -13,13 +13,14 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
  * This is simple version of ATechDate, limited only to one format (yyyymmddHHMIss)
  */
 public class DateTimeUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
     /**
      * DateTime is packed as long: yyyymmddHHMMss

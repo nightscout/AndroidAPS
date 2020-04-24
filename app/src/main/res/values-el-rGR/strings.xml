@@ -43,8 +43,6 @@
     <string name="description_pump_mdi">Ολοκλήρωση αντλίας για ανθρώπους που κάνουν εντατικοποιημένο σχήμα ενέσεων για την θεραπεία τους</string>
     <string name="description_pump_virtual">Ολοκλήρωση αντλίας για αντλίες που δεν έχουν κανέναν οδηγό ακόμα (Ανοιχτό Κύκλωμα)</string>
     <string name="description_sensitivity_aaps">Η ευαισθησία υπολογίζεται με τον ίδιο τρόπο όπως το Oref0, αλλά μπορείτε να καθορίσετε το χρονικό διάστημα στο παρελθόν. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από την μέγιστη απορρόφηση υδατανθράκων από τις επιλογές.</string>
-    <string name="description_sensitivity_oref0">Η ευαισθησία υπολογίζεται από 24h δεδομένα στο παρελθόν και οι υδατάνθρακες (αν δεν έχουν απορροφηθεί) κόβονται μετά από χρονικό διάστημα που καθορίζεται στις επιλογές.</string>
-    <string name="description_sensitivity_oref1">Η ευαισθησία υπολογίζεται από 8h δεδομένα στο παρελθόν και οι υδατάνθρακες (αν δεν έχουν απορροφηθεί) κόβονται μετά από χρονικό διάστημα που καθορίζεται στις επιλογές. Η προσθήκη υπολογίζει ακόμα το UAM.</string>
     <string name="description_sensitivity_weighted_average">Η ευαισθησία υπολογίζεται ως ο σταθμισμένος μέσος όρος των αποκλίσεων. Νεότερες αποκλίσεις έχουν μεγαλύτερο βάρος. Η ελάχιστη απορρόφηση υδατανθράκων υπολογίζεται από τον χρόνο της μέγιστης απορρόφησης υδατανθράκων από τις επιλογές. Αυτός ο αλγόριθμος είναι ο πιο γρήγορος για να ακολουθεί τις αλλαγές της ευαισθησίας.</string>
     <string name="description_source_eversense">Λάβετε τις τιμές BG από την εφαρμογή του Eversense.</string>
     <string name="description_source_glimp">Λάβετε τις τιμές BG από το Glimp.</string>
@@ -163,9 +161,7 @@
     <string name="disableloop">Απενεργοποιήστε κύκλωμα</string>
     <string name="enableloop">Ενεργοποιήστε κύκλωμα</string>
     <string name="openloop_newsuggestion">Νέα πρόταση διαθέσιμη</string>
-    <string name="unsupportedclientver">Μη υποστηριζόμενη έκδοση NSClient</string>
     <string name="unsupportednsversion">Μη υποστηριζόμενη έκδοση Nightscout</string>
-    <string name="nsclientnotinstalled">NSClient δεν εγκαταστάθηκε. Τα δεδομένα χάθηκαν!</string>
     <string name="loopdisabled">ΤΟ ΚΥΚΛΩΜΑ ΑΠΕΝΕΡΓΟΠΟΙΗΘΗΚΕ ΑΠΟ ΠΕΡΙΟΡΙΣΜΟΥΣ</string>
     <string name="treatments_wizard_basaliob_label">Βασική ΙΟΒ</string>
     <string name="bolusconstraintapplied">Ενεργός Περιορισμός Bolus</string>
@@ -436,10 +432,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">Προεπιλεγμένη τιμή: 2\nΗ αναβολή Bolus ενεργοποιείται αφού κάνετε ένα γευματικό bolus, έτσι το κύκλωμα δεν θα εξουδετερώσει με χαμηλό προσωρινό μόλις έχετε φάει. Το παράδειγμα εδώ και η προεπιλογή είναι 2: έτσι μια τρίωρη DIA σημαίνει ότι το bolus αναβολής θα είναι σταδιακά πάνω από 1,5 ώρα (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Προεπιλεγμένη τιμή: 3.0 (AMA) ή 8.0 (SMB). Αυτό είναι μια ρύθμιση για την επίπτωση της προεπιλεγμένης απορρόφησης υδατανθράκων ανά 5 λεπτά. Η προεπιλογή είναι μια αναμενόμενη 3mg/dl/5min. Αυτό επηρεάζει το πόσο γρήγορα το COB ελλατώνεται, και πόση απορρόφηση υδατανθράκων θα υποθέτει για τον υπολογισμό της μελλοντικής πρόβλεψης BG, όταν το BG πέφτει περισσότερο από το αναμενόμενο ή δεν αυξάνεται όσο το αναμενόμενο.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Προσοχή!\nΣυνήθως δεν χρειάζεται να αλλάξετε αυτές τις τιμές. Κάντε κλικ ΕΔΩ, ΔΙΑΒΑΣΤΕ τις πληροφορίες και σιγουρευτείτε ότι τις καταλαβαίνετε πριν τις αλλάξετε.</string>
-    <string name="error_only_numeric_digits_allowed">Μόνο αριθμητικά ψηφία επιτρέπονται.</string>
-    <string name="error_only_numeric_digits_range_allowed">Μόνο αριθμητικά ψηφία μέσα στο εύρος %1$s - %2$s επιτρέπονται. </string>
-    <string name="error_field_must_not_be_empty">Το πεδίο αυτό δεν πρέπει να είναι κενό</string>
-    <string name="error_phone_not_valid">Μη έγκυρος αριθμός τηλεφώνου</string>
     <string name="smscommunicator_invalidphonennumber">Μη έγκυρος αριθμός τηλεφώνου για SMS</string>
     <string name="overview_calibration">Καλιμπράρισμα</string>
     <string name="send_calibration">Να σταλεί η βαθμονόμηση %1$.1f στο xDrip;</string>
@@ -459,8 +451,6 @@
     <string name="virtualpump_settings">Ρυθμίσεις Εικονικής αντλίας</string>
     <string name="virtualpump_uploadstatus_title">Φόρτωση κατάστασης στο NS</string>
     <string name="wrongpassword">Λάθος κωδικός</string>
-    <string name="settings_password">Κωδικός για ρυθμίσεις</string>
-    <string name="unlock_settings">Ξεκλείδωμα ρυθμίσεων</string>
     <string name="approachingdailylimit">Φτάνετε το ημερήσιο όριο ινσουλίνης</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
@@ -953,7 +943,6 @@
     <string name="allow_hardware_pump_text">Προσοχή: Εάν ενεργοποιήσετε και συνδεθείτε με μια αντλία, το AndroidAPS θα αντιγράψει τις ρυθμίσεις βασικού από το προφίλ στην αντλία, αντικαθιστώντας τον υπάρχων βασικό ρυθμό της αντλίας. Βεβαιωθείτε ότι έχετε τον σωστό βασικό ρυθμό στο AndroidAPS. Εάν δεν είστε βέβαιοι ή δεν θέλετε να αντικαταστήσετε τον βασικό ρυθμό στην αντλία σας, πατήστε Άκυρο και επαναλάβετε εναλλαγή προς την αντλία σε μεταγενέστερο χρόνο.</string>
     <string name="error_adding_treatment_title">Ελλιπή δεδομένα θεραπείας</string>
     <string name="maintenance_settings">Ρυθμίσεις συντήρησης</string>
-    <string name="maintenance_email">E-mail</string>
     <string name="maintenance_amount">Αριθμός αρχείων καταγραφής για αποστολή</string>
     <string name="maintenance">Συντήρηση</string>
     <string name="maintenance_shortname">ΣΥΝΤΗΡ</string>
@@ -979,7 +968,7 @@
     <string name="speederror">Σφάλμα ταχύτητας</string>
     <string name="insulinlimitviolation">Υπέρβαση του ορίου ινσουλίνης</string>
     <string name="loop_openmode_min_change">Ελάχιστο αίτημα για αλλαγή [%]</string>
-    <string name="loop_openmode_min_change_summary">Το Ανοιχτό κύκλωμα θα εμφανίσει νέο μήνυμα αλλαγής μόνο αν η αλλαγή είναι μεγαλύτερη από αυτήν τη τιμή %. Προεπιλεγμένη τιμή 20%</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">Το Ανοιχτό κύκλωμα θα εμφανίσει νέο μήνυμα αλλαγής μόνο αν η αλλαγή είναι μεγαλύτερη από αυτήν τη τιμή %. Προεπιλεγμένη τιμή 20%</string>
     <string name="pairfirst">Παρακαλώ συνδέστε την αντλία στο τηλέφωνο!</string>
     <string name="searching_for_devices">Αναζήτηση συσκευών…</string>
     <string name="please_wait">Περιμένετε…</string>
@@ -1338,4 +1327,5 @@
     <string name="boluswizard">Οδηγός Bolus</string>
     <string name="unit_minute_short">min</string>
     <string name="format_carbs">%1$dg</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

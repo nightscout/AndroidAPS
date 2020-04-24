@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.SystemClock;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
@@ -24,7 +25,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
  */
 public class RFSpyReader {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPBTCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPBTCOMM);
     private static AsyncTask<Void, Void, Void> readerTask;
     private RileyLinkBLE rileyLinkBle;
     private Semaphore waitForRadioData = new Semaphore(0, true);

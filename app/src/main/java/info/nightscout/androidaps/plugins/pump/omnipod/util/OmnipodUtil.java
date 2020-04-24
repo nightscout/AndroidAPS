@@ -17,11 +17,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
@@ -37,13 +40,15 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod_dash.OmnipodDashPumpPlugin;
-import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 
 /**
  * Created by andy on 4/8/19.
  */
 // FIXME
 public class OmnipodUtil extends RileyLinkUtil {
+
+    @Inject RxBusWrapper rxBus;
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
@@ -145,8 +150,8 @@ public class OmnipodUtil extends RileyLinkUtil {
 
 
     public static void displayNotConfiguredDialog(Context context) {
-        OKDialog.show(context, MainApp.gs(R.string.combo_warning),
-                MainApp.gs(R.string.omnipod_error_operation_not_possible_no_configuration), null);
+        OKDialog.showConfirmation(context, MainApp.gs(R.string.combo_warning),
+                MainApp.gs(R.string.omnipod_error_operation_not_possible_no_configuration), (Runnable)null);
     }
 
     public static OmnipodPumpStatus getPumpStatus() {
@@ -193,7 +198,7 @@ public class OmnipodUtil extends RileyLinkUtil {
 
     public static void setPodSessionState(PodSessionState podSessionState) {
         omnipodPumpStatus.podSessionState = podSessionState;
-        RxBus.INSTANCE.send(new EventOmnipodDeviceStatusChange(podSessionState));
+        omnipodPumpPlugin.getRxBus().send(new EventOmnipodDeviceStatusChange(podSessionState));
     }
 
 

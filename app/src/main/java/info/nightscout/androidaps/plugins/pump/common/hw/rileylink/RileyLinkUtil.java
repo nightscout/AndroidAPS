@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6b;
@@ -43,7 +44,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDe
 
 public class RileyLinkUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMP);
     protected static List<RLHistoryItem> historyRileyLink = new ArrayList<>();
     protected static RileyLinkCommunicationManager rileyLinkCommunicationManager;
     static ServiceTask currentTask;
@@ -124,7 +125,7 @@ public class RileyLinkUtil {
 
             RileyLinkUtil.historyRileyLink.add(new RLHistoryItem(RileyLinkUtil.rileyLinkServiceData.serviceState,
                     RileyLinkUtil.rileyLinkServiceData.errorCode, targetDevice));
-            RxBus.INSTANCE.send(new EventMedtronicDeviceStatusChange(newState, errorCode));
+            RxBus.Companion.getINSTANCE().send(new EventMedtronicDeviceStatusChange(newState, errorCode));
             return null;
 
         } else {

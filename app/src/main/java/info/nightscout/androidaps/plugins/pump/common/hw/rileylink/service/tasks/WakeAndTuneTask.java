@@ -25,10 +25,10 @@ public class WakeAndTuneTask extends PumpTask {
 
     @Override
     public void run() {
-        RxBus.INSTANCE.send(new EventRefreshButtonState(false));
+        RxBus.Companion.getINSTANCE().send(new EventRefreshButtonState(false));
         MedtronicPumpPlugin.isBusy = true;
         RileyLinkMedtronicService.getInstance().doTuneUpDevice();
         MedtronicPumpPlugin.isBusy = false;
-        RxBus.INSTANCE.send(new EventRefreshButtonState(true));
+        RxBus.Companion.getINSTANCE().send(new EventRefreshButtonState(true));
     }
 }

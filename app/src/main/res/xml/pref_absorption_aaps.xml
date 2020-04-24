@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:validate="http://schemas.android.com/apk/res-auto">
+<androidx.preference.PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:key="absorption"
-        android:title="@string/absorptionsettings_title">
+        android:title="@string/absorptionsettings_title"
+        app:initialExpandedChildrenCount="0">
 
-        <com.andreabaccega.widget.ValidatingEditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="6"
             android:dialogMessage="@string/absorption_maxtime_summary"
             android:digits="0123456789.,"
@@ -19,7 +21,7 @@
             validate:minNumber="4"
             validate:testType="numericRange" />
 
-        <com.andreabaccega.widget.ValidatingEditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="24"
             android:dialogMessage="@string/openapsama_autosens_period_summary"
             android:digits="0123456789"
@@ -33,9 +35,11 @@
             validate:minNumber="4"
             validate:testType="numericRange" />
 
-        <PreferenceScreen android:title="@string/advancedsettings_title">
+        <androidx.preference.PreferenceScreen
+            android:key="absorption_aaps_advanced"
+            android:title="@string/advancedsettings_title">
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="1.2"
                 android:dialogMessage="@string/openapsama_autosens_max_summary"
                 android:digits="0123456789.,"
@@ -49,7 +53,7 @@
                 validate:floatminNumber="0.5"
                 validate:testType="floatNumericRange" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="0.7"
                 android:dialogMessage="@string/openapsama_autosens_min_summary"
                 android:inputType="numberDecimal"
@@ -62,8 +66,8 @@
                 validate:floatminNumber="0.1"
                 validate:testType="floatNumericRange" />
 
-        </PreferenceScreen>
+        </androidx.preference.PreferenceScreen>
 
     </PreferenceCategory>
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>
