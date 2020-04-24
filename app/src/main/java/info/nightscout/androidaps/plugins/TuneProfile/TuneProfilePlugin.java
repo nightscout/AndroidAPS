@@ -1346,8 +1346,8 @@ public class TuneProfilePlugin extends PluginBase {
 //                long glucoseEnd = starttime - timeBack + 28 * 24 * 60 *60 *1000L;
                  long glucoseStart = starttime + timeBack;
                  long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
-                 long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
-                 long treatmentEnd = glucoseEnd;
+                 long treatmentStart = glucoseStart - 18 * 60 * 60 * 1000L;
+                 long treatmentEnd = glucoseEnd + 12 * 60 * 60 * 1000L;
                  opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
                  TreatmentService ts = new TreatmentService();
                  opts.treatments = ts.getTreatmentDataFromTime(treatmentStart,treatmentEnd,false);
