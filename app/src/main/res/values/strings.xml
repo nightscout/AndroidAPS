@@ -1822,7 +1822,7 @@
     <string name="current_master_password">Current master password</string>
     <string name="statuslights">Status lights</string>
     <string name="statuslights_copy_ns">Copy settings from NS</string>
-    <string name="key_statuslights_copy_ns">statuslights_copy_ns</string>
+    <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
     <string name="copyexistingvalues">Copy NS settins (if exists)?</string>
     <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
 </resources>
