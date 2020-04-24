@@ -10,6 +10,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
@@ -1338,28 +1339,43 @@ public class TuneProfilePlugin extends PluginBase {
             long treatmentsStart = starttime - 6 * 60 * 60 * 1000L;     // 6 hour before first BG value of first day
             opts.pumpHistory=MainApp.getDbHelper().getCareportalEventsFromTime(treatmentsStart,false);
             FS.createAutotunefile("aaps-treatmentsfull.json", opts.pumpHistory.toString());
+            List<ProfileSwitch> lp = MainApp.getDbHelper().getProfileSwitchData(starttime-30*24*60*60*1000,true);
+
 //            for (int i = daysBack; i > 0; i--) {
-             for (int i = 0; i < daysBack; i++) {
+            for (int i = 0; i < daysBack; i++) {
 //                tunedBasalsInit();
-                 long timeBack = i * 24 * 60 * 60 * 1000L;
+                long timeBack = i * 24 * 60 * 60 * 1000L;
 //                long glucoseStart = starttime - timeBack + 4 * 24 * 60 *60 *1000L;
 //                long glucoseEnd = starttime - timeBack + 28 * 24 * 60 *60 *1000L;
-                 long glucoseStart = starttime + timeBack;
-                 long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
-                 long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
-                 long treatmentEnd = glucoseEnd;
-                 opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
-                 TreatmentService ts = new TreatmentService();
-                 opts.treatments = ts.getTreatmentDataFromTime(treatmentStart,treatmentEnd,false);
-                 opts.pumpTempBasalHistory=MainApp.getDbHelper().getTemporaryBasalsDataFromTime(treatmentStart,treatmentEnd,false);
-                 opts.pumpExtBolusHistory=MainApp.getDbHelper().getExtendedBolusDataFromTime(treatmentStart,treatmentEnd,false);
-                 try {
-                     FS.createAutotunefile("aaps-entries." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(4));
-                     // treatments are get 6 hours (DIA duration) before first BG value
-                     FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatments.toString());
-                     FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistory.toString());
-                     FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpExtBolusHistory.toString());
-                 } catch (JSONException e) {}
+                long glucoseStart = starttime + timeBack;
+                long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
+                long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
+                long treatmentEnd = glucoseEnd;
+                opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
+                TreatmentService ts = new TreatmentService();
+                opts.treatments = ts.getTreatmentDataFromTime(treatmentStart,treatmentEnd,false);
+                opts.pumpTempBasalHistory=MainApp.getDbHelper().getTemporaryBasalsDataFromTime(treatmentStart,treatmentEnd,false);
+                for (ExtendedBolus eb: MainApp.getDbHelper().getExtendedBolusDataFromTime(treatmentStart,treatmentEnd,false) ) { opts.pumpTempBasalHistory.add(new TemporaryBasal(eb)); }
+
+                try {
+                    FS.createAutotunefile("aaps-entries." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(4));
+                    // treatments are get 6 hours (DIA duration) before first BG value
+                    FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatments.toString());
+                    FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistory.toString());
+
+                    for (TemporaryBasal tp:opts.pumpTempBasalHistory ) {
+                        int idx = 0;
+                        Profile ps = profile;
+                        if (lp!=null ) {
+                            while (lp.get(idx).date <= tp.date) {
+                                ps = lp.get(idx).getProfileObject();
+                            }
+                            tp.absoluteRate = tp.tempBasalConvertedToAbsolute(tp.date, ps);
+                        }
+                    }
+                    FS.createAutotunefile("aaps-tempbasalabs." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistory.toString());
+
+                } catch (JSONException e) {}
                  //opts.treatments= Meal.generateMeal(opts);
 
                  //opts.treatments = opts.pumpHistory;
