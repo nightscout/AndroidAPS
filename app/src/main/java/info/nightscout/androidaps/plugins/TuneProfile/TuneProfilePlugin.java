@@ -1369,6 +1369,7 @@ public class TuneProfilePlugin extends PluginBase {
                         if (lp!=null ) {
                             while (idx < lp.size() && lp.get(idx).date <= tp.date) {
                                 ps = lp.get(idx).getProfileObject();
+                                idx++;
                             }
                             tp.absoluteRate = tp.tempBasalConvertedToAbsolute(tp.date, ps);
                         }
