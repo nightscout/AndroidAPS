@@ -10,9 +10,11 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
+import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -1349,6 +1351,7 @@ public class TuneProfilePlugin extends PluginBase {
                 opts.treatments = opts.pumpHistory;
 
                 try {
+                    
                     log.debug("Day "+i+" of "+daysBack);
                     //log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
                     log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
@@ -1480,6 +1483,7 @@ public class TuneProfilePlugin extends PluginBase {
             endDateOffset++;
         Date endDate = new Date(runDate.getTime()-endDateOffset* 24 * 60 * 60 * 1000L);
         Date startDate = new Date(runDate.getTime()-(nbDays+endDateOffset-1) * 24 * 60 * 60 * 1000L);
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
 
         try {
             jsonSettings.put("datestring",DateUtil.toISOString(runDate,null,null));
@@ -1489,10 +1493,19 @@ public class TuneProfilePlugin extends PluginBase {
             jsonSettings.put("utcOffset",(int) (DateUtil.getTimeZoneOffsetMs()/1000/60/60));
             jsonSettings.put("url_nightscout",SP.getString(R.string.key_nsclientinternal_url, ""));
             jsonSettings.put("nbdays", nbDays);
-            jsonSettings.put("startdate",DateUtil.dateString(firstloopstart));
-            jsonSettings.put("enddate",DateUtil.dateString(lastloopend.getTime()-24*60*60*1000L));
+            jsonSettings.put("startdate",DateUtil.toISOString(firstloopstart,"yyyy-MM-dd",null));
+            jsonSettings.put("enddate",DateUtil.toISOString(new Date(lastloopend.getTime()-24*60*60*1000L),"yyyy-MM-dd",null));
             jsonSettings.put("categorize_uam_as_basal",SP.getBoolean("categorize_uam_as_basal", false));
             jsonSettings.put("tune_insulin_curve",false);
+            if (insulinInterface.getId() == InsulinInterface.OREF_ULTRA_RAPID_ACTING)
+                jsonSettings.put("curve","ultra-rapid");
+            else if (insulinInterface.getId() == InsulinInterface.OREF_RAPID_ACTING)
+                jsonSettings.put("curve","rapid-acting");
+            else if (insulinInterface.getId() == InsulinInterface.OREF_FREE_PEAK) {
+                jsonSettings.put("curve", "bilinear");
+                jsonSettings.put("insulinpeaktime",SP.getInt(MainApp.gs(R.string.key_insulin_oref_peak),75));
+            }
+
             jsonString = jsonSettings.toString(4);
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
