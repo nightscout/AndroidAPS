@@ -1451,7 +1451,7 @@ public class TuneProfilePlugin extends PluginBase {
             }
 
             // zip all autotune files created during the run
-            //FS.zipAutotune(lastRun);
+            FS.zipAutotune(lastRun);
 
             return result;
         } else

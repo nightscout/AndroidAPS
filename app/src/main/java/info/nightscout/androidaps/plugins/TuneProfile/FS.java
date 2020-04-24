@@ -17,6 +17,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
+import info.nightscout.androidaps.utils.DateUtil;
 
 public class FS {
     static final String logDirectory = LoggerUtils.getLogDirectory();
@@ -88,31 +89,36 @@ public class FS {
      *********************************************************************************/
     public static void zipAutotune(Date lastRun) throws IOException {
         if (lastRun!=null) {
-            String zipFileName = "autotune-" + lastRun.getTime() + ".zip";
-            File zipFile = new File(logDirectory,zipFileName);
-            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)));
-            zipDirectory(zipFile,zipFile.getName(),out);
-            out.flush();
-            out.close();
+            try {
+                String zipFileName = "autotune-" + DateUtil.toISOString(lastRun, "yyyy-MM-dd'T'HH-mm", null) + ".zip";
+                File zipFile = new File(logDirectory, zipFileName);
+                ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)));
+                zipDirectory(zipFile, zipFile.getName(), out);
+                out.flush();
+                out.close();
+            } catch (IOException e) {}
         }
     }
 
     private static void zipDirectory(File folder, String parentFolder, ZipOutputStream out) throws IOException {
         for (File file : folder.listFiles()) {
-            if (file.isDirectory()) {
-                zipDirectory(file, parentFolder + "/" + file.getName(), out);
-                continue;
-            }
-            out.putNextEntry(new ZipEntry(parentFolder + "/" + file.getName()));
-            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
-            //long bytesRead = 0;
-            byte[] bytesIn = new byte[BUFFER_SIZE];
-            int read = 0;
-            while ((read = bis.read(bytesIn)) != -1) {
-                out.write(bytesIn, 0, read);
-                //bytesRead += read;
-            }
-            out.closeEntry();
+            try {
+                if (file.isDirectory()) {
+                    zipDirectory(file, parentFolder + "/" + file.getName(), out);
+                    continue;
+                }
+                out.putNextEntry(new ZipEntry(parentFolder + "/" + file.getName()));
+                BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
+                //long bytesRead = 0;
+                byte[] bytesIn = new byte[BUFFER_SIZE];
+                int read = 0;
+                while ((read = bis.read(bytesIn)) != -1) {
+                    out.write(bytesIn, 0, read);
+                    //bytesRead += read;
+                }
+                out.closeEntry();
+            } catch (IOException e) {}
+
         }
     }
 
