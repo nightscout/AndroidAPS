@@ -13,13 +13,13 @@ class BTReceiver : DaggerBroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
-        val device : BluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+        val device: BluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
 
         when (intent.action) {
-            BluetoothDevice.ACTION_ACL_CONNECTED ->
-                rxBus.send(EventBTChange(EventBTChange.Change.CONNECT, device.name))
+            BluetoothDevice.ACTION_ACL_CONNECTED    ->
+                rxBus.send(EventBTChange(EventBTChange.Change.CONNECT, deviceName = device.name, deviceAddress = device.address))
             BluetoothDevice.ACTION_ACL_DISCONNECTED ->
-                rxBus.send(EventBTChange(EventBTChange.Change.DISCONNECT, device.name))
+                rxBus.send(EventBTChange(EventBTChange.Change.DISCONNECT, deviceName = device.name, deviceAddress = device.address))
         }
     }
 }
