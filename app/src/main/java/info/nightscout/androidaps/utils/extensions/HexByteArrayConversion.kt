@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.utils.extensions
 
-private val HEX_CHARS = "0123456789ABCDEF".toCharArray()
+import java.util.*
+
+private val HEX_CHARS = "0123456789abcdef".toCharArray()
 
 fun ByteArray.toHex() : String{
     val result = StringBuffer()
@@ -20,9 +22,10 @@ fun String.hexStringToByteArray() : ByteArray {
 
     val result = ByteArray(length / 2)
 
+    val lowerCased = this.toLowerCase(Locale.getDefault())
     for (i in 0 until length step 2) {
-        val firstIndex = HEX_CHARS.indexOf(this[i]);
-        val secondIndex = HEX_CHARS.indexOf(this[i + 1]);
+        val firstIndex = HEX_CHARS.indexOf(lowerCased[i]);
+        val secondIndex = HEX_CHARS.indexOf(lowerCased[i + 1]);
 
         val octet = firstIndex.shl(4).or(secondIndex)
         result.set(i.shr(1), octet.toByte())
