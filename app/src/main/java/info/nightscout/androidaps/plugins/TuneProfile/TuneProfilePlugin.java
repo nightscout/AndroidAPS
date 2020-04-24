@@ -1340,21 +1340,27 @@ public class TuneProfilePlugin extends PluginBase {
 //            for (int i = daysBack; i > 0; i--) {
              for (int i = 0; i < daysBack; i++) {
 //                tunedBasalsInit();
-                long timeBack = i * 24 * 60 * 60 * 1000L;
+                 long timeBack = i * 24 * 60 * 60 * 1000L;
 //                long glucoseStart = starttime - timeBack + 4 * 24 * 60 *60 *1000L;
 //                long glucoseEnd = starttime - timeBack + 28 * 24 * 60 *60 *1000L;
                  long glucoseStart = starttime + timeBack;
                  long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
-                opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
-                //opts.treatments= Meal.generateMeal(opts);
-                opts.treatments = opts.pumpHistory;
+                 opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
+                 FS.createAutotunefile("aaps-entries." + DateUtil.toISOString(new Date(glucoseStart),"yyyy-MM-dd",null) + ".json",opts.glucosetoJSON().toString());
+                 // treatments are get 6 hours (DIA duration) before first BG value
+                 long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
+                 long treatmentEnd = glucoseEnd;
+                 FS.createAutotunefile("aaps-treatments." + DateUtil.toISOString(new Date(glucoseStart),"yyyy-MM-dd",null) + ".json",opts.treatmentstoJSON(opts.pumpHistory,treatmentStart,treatmentEnd).toString());
+
+                 //opts.treatments= Meal.generateMeal(opts);
+
+                 opts.treatments = opts.pumpHistory;
 
                 try {
                     log.debug("Day "+i+" of "+daysBack);
                     //log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
-                    log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
+                    log.debug("NSService asked for data from "+formatDate(new Date(glucoseStart))+" \nto "+formatDate(new Date(glucoseEnd)));
                     categorizeBGDatums(glucoseStart, glucoseEnd);
-//                    categorizeBGDatums(starttime, endTime);
                     tuneAllTheThings();
                 } catch (JSONException e) {
                     log.error(e.getMessage());
@@ -1451,7 +1457,8 @@ public class TuneProfilePlugin extends PluginBase {
             }
 
             // zip all autotune files created during the run
-            FS.zipAutotune(lastRun);
+            //todo: AAPS freeze with line below don't understand why...
+            //FS.zipAutotune(lastRun);
 
             return result;
         } else
