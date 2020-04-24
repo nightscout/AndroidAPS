@@ -1372,8 +1372,10 @@ public class TuneProfilePlugin extends PluginBase {
                                 idx++;
                             }
                             tp.absoluteRate = tp.tempBasalConvertedToAbsolute(tp.date, ps);
+                            tp.durationInMinutes=tp.getRealDuration();
                         }
                     }
+                    Collections.sort(opts.pumpTempBasalHistory, (o1, o2) -> (int) (o1.date  - o2.date) );
                     FS.createAutotunefile("aaps-tempbasalabs." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistory.toString());
 
                 } catch (JSONException e) {}
