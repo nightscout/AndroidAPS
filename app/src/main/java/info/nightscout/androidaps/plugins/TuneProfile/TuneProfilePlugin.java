@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -1335,7 +1336,7 @@ public class TuneProfilePlugin extends PluginBase {
             //    # 18h = 12h for timezones + 6h for DIA; 40h = 28h for 4am + 12h for timezones
             //long treatmentsStart = starttime - (daysBack-1) * 24 * 60 * 60 * 1000L - 18 * 60 * 60 * 1000L;
             long treatmentsStart = starttime - 6 * 60 * 60 * 1000L;     // 6 hour before first BG value of first day
-            opts.pumpHistory=MainApp.getDbHelper().getCareportalEvents(treatmentsStart,endTime,false);
+            opts.pumpHistory=MainApp.getDbHelper().getCareportalEventsFromTime(treatmentsStart,false);
             FS.createAutotunefile("aaps-treatmentsfull.json", opts.pumpHistory.toString());
 //            for (int i = daysBack; i > 0; i--) {
              for (int i = 0; i < daysBack; i++) {
@@ -1345,13 +1346,16 @@ public class TuneProfilePlugin extends PluginBase {
 //                long glucoseEnd = starttime - timeBack + 28 * 24 * 60 *60 *1000L;
                  long glucoseStart = starttime + timeBack;
                  long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
+                 long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
+                 long treatmentEnd = glucoseEnd;
                  opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
+                 TreatmentService ts = new TreatmentService();
+                 opts.treatments = ts.getTreatmentDataFromTime(treatmentStart,treatmentEnd,false);
                  try {
                      FS.createAutotunefile("aaps-entries." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(4));
                      // treatments are get 6 hours (DIA duration) before first BG value
-                     long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
-                     long treatmentEnd = glucoseEnd;
-                     FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpHistorytoJSON(treatmentStart, treatmentEnd).toString(4));
+
+                     FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatments.toString());
                  } catch (JSONException e) {}
                  //opts.treatments= Meal.generateMeal(opts);
 
