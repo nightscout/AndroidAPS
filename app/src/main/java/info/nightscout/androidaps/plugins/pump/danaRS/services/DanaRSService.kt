@@ -211,10 +211,10 @@ class DanaRSService : DaggerService() {
         SystemClock.sleep(1000)
         val msg: DanaRS_Packet_APS_History_Events
         if (lastHistoryFetched == 0L) {
-            msg = DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRPump, detailedBolusInfoStorage, sp, 0)
+            msg = DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRPump, detailedBolusInfoStorage, sp, injector, 0)
             aapsLogger.debug(LTag.PUMPCOMM, "Loading complete event history")
         } else {
-            msg = DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRPump, detailedBolusInfoStorage, sp, lastHistoryFetched)
+            msg = DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRPump, detailedBolusInfoStorage, sp, injector, lastHistoryFetched)
             aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + DateUtil.dateAndTimeString(lastHistoryFetched))
         }
         sendMessage(msg)

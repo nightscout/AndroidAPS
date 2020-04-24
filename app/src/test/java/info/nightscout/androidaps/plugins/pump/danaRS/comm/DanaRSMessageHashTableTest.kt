@@ -27,7 +27,7 @@ class DanaRSMessageHashTableTest : DanaRSTestBase() {
     fun runTest() {
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
 
-        val danaRSMessageHashTable = DanaRSMessageHashTable(aapsLogger, rxBus, resourceHelper, danaRPump, activePlugin, constraintChecker, detailedBolusInfoStorage, sp)
+        val danaRSMessageHashTable = DanaRSMessageHashTable(aapsLogger, rxBus, resourceHelper, danaRPump, activePlugin, constraintChecker, detailedBolusInfoStorage, sp, injector)
         val forTesting: DanaRS_Packet = DanaRS_Packet_APS_Set_Event_History(aapsLogger, DanaRPump.CARBS, 0, 0, 0)
         val testPacket: DanaRS_Packet = danaRSMessageHashTable.findMessage(forTesting.command)
         Assert.assertEquals(BleEncryption.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY.toLong(), testPacket.getOpCode().toLong())

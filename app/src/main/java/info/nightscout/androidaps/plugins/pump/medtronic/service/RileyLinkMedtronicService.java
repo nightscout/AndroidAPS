@@ -36,10 +36,10 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 public class RileyLinkMedtronicService extends RileyLinkService {
 
-    @Inject AAPSLogger aapsLogger;
-    @Inject Context context;
+    //@Inject AAPSLogger aapsLogger;
+    //@Inject Context context;
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
-    @Inject SP sp;
+    //@Inject SP sp;
 
     private static RileyLinkMedtronicService instance;
     private static ServiceTask currentTask = null;
@@ -110,6 +110,11 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
         // init rileyLinkCommunicationManager
         medtronicCommunicationManager = new MedtronicCommunicationManager(context, rfspy);
+
+        aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed");
+        MedtronicUtil.setMedtronicService(this);
+        pumpStatus = (MedtronicPumpStatus) medtronicPumpPlugin.getPumpStatusData();
+
     }
 
 

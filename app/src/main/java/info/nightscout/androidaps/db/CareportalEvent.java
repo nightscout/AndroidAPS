@@ -8,7 +8,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,16 +17,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
-import info.nightscout.androidaps.plugins.general.overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -37,7 +38,10 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_CAREPORTALEVENTS)
 public class CareportalEvent implements DataPointWithLabelInterface, Interval {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.DATABASE);
+
+    @Inject ProfileFunction profileFunction;
+    @Inject ResourceHelper resourceHelper;
+    @Inject AAPSLogger aapsLogger;
 
     @DatabaseField(id = true)
     public long date;
@@ -77,7 +81,13 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
 
     public static final String MBG = "Mbg"; // comming from entries
 
+    @Deprecated
     public CareportalEvent() {
+        MainApp.instance().androidInjector().inject(this);
+    }
+
+    public CareportalEvent(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
     }
 
     public CareportalEvent(NSMbg mbg) {
@@ -90,7 +100,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
         return System.currentTimeMillis() - date;
     }
 
-    public double getHoursFromStart() {
+    private double getHoursFromStart() {
         return (System.currentTimeMillis() - date) / (60 * 60 * 1000.0);
     }
 
@@ -125,11 +135,11 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
     }
 
     //Map:{DAYS=1, HOURS=3, MINUTES=46, SECONDS=40, MILLISECONDS=0, MICROSECONDS=0, NANOSECONDS=0}
-    public static Map<TimeUnit, Long> computeDiff(long date1, long date2) {
+    private static Map<TimeUnit, Long> computeDiff(long date1, long date2) {
         long diffInMillies = date2 - date1;
-        List<TimeUnit> units = new ArrayList<TimeUnit>(EnumSet.allOf(TimeUnit.class));
+        List<TimeUnit> units = new ArrayList<>(EnumSet.allOf(TimeUnit.class));
         Collections.reverse(units);
-        Map<TimeUnit, Long> result = new LinkedHashMap<TimeUnit, Long>();
+        Map<TimeUnit, Long> result = new LinkedHashMap<>();
         long milliesRest = diffInMillies;
         for (TimeUnit unit : units) {
             long diff = unit.convert(milliesRest, TimeUnit.MILLISECONDS);
@@ -141,12 +151,12 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
     }
 
 
-    public static boolean isEvent5minBack(List<CareportalEvent> list, long time) {
+    public boolean isEvent5minBack(List<CareportalEvent> list, long time) {
         for (int i = 0; i < list.size(); i++) {
             CareportalEvent event = list.get(i);
             if (event.date <= time && event.date > (time - T.mins(5).msecs())) {
                 if (L.isEnabled(L.DATABASE))
-                    log.debug("Found event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
+                    aapsLogger.debug("Found event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
                 return true;
             }
         }
@@ -160,18 +170,18 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
         return date;
     }
 
-    double yValue = 0;
+    private double yValue = 0;
 
     @Override
     public double getY() {
-        String units = ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits();
+        String units = profileFunction.getUnits();
         if (eventType.equals(MBG)) {
             double mbg = 0d;
             try {
                 JSONObject object = new JSONObject(json);
                 mbg = object.getDouble("mgdl");
             } catch (JSONException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error("Unhandled exception", e);
             }
             return Profile.fromMgdlToUnits(mbg, units);
         }
@@ -184,7 +194,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
                 units = object.getString("units");
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         if (glucose != 0d) {
             double mmol = 0d;
@@ -215,7 +225,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
             if (object.has("notes"))
                 return StringUtils.abbreviate(object.getString("notes"), 40);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return Translator.translate(eventType);
     }
@@ -226,7 +236,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
             if (object.has("notes"))
                 return object.getString("notes");
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return "";
     }
@@ -257,14 +267,14 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
 
     @Override
     public float getSize() {
-        boolean isTablet = MainApp.resources().getBoolean(R.bool.isTablet);
+        boolean isTablet = resourceHelper.gb(R.bool.isTablet);
         return isTablet ? 12 : 10;
     }
 
     @Override
     public int getColor() {
         if (eventType.equals(ANNOUNCEMENT))
-            return MainApp.gc(R.color.notificationAnnouncement);
+            return resourceHelper.gc(R.color.notificationAnnouncement);
         if (eventType.equals(MBG))
             return Color.RED;
         if (eventType.equals(BGCHECK))
@@ -277,7 +287,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
     }
 
     // Interval interface
-    Long cuttedEnd = null;
+    private Long cuttedEnd = null;
 
     @Override
     public long durationInMsec() {
@@ -286,7 +296,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
             if (object.has("duration"))
                 return object.getInt("duration") * 60 * 1000L;
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return 0;
     }

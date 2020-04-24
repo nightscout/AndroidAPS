@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
@@ -22,8 +23,8 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.HtmlHelper
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.SafeParse
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import kotlinx.android.synthetic.main.dialog_fill.*
@@ -41,6 +42,7 @@ class FillDialog : DialogFragmentWithDate() {
     @Inject lateinit var ctx: Context
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var injector: HasAndroidInjector
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -122,12 +124,12 @@ class FillDialog : DialogFragmentWithDate() {
                     }
                     if (siteChange) {
                         aapsLogger.debug("USER ENTRY: SITE CHANGE")
-                        generateCareportalEvent(CareportalEvent.SITECHANGE, eventTime, notes, resourceHelper, sp)
+                        generateCareportalEvent(CareportalEvent.SITECHANGE, eventTime, notes, resourceHelper, sp, injector)
                     }
                     if (insulinChange) {
                         // add a second for case of both checked
                         aapsLogger.debug("USER ENTRY: INSULIN CHANGE")
-                        generateCareportalEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes, resourceHelper, sp)
+                        generateCareportalEvent(CareportalEvent.INSULINCHANGE, eventTime + 1000, notes, resourceHelper, sp, injector)
                     }
                 }, null)
             }
@@ -162,8 +164,8 @@ class FillDialog : DialogFragmentWithDate() {
     }
 
     companion object {
-        fun generateCareportalEvent(eventType: String, time: Long, notes: String, resourceHelper: ResourceHelper, sp: SP) {
-            val careportalEvent = CareportalEvent()
+        fun generateCareportalEvent(eventType: String, time: Long, notes: String, resourceHelper: ResourceHelper, sp: SP, injector: HasAndroidInjector) {
+            val careportalEvent = CareportalEvent(injector)
             careportalEvent.source = Source.USER
             careportalEvent.date = time
             careportalEvent.json = generateJson(eventType, time, notes, resourceHelper, sp).toString()

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
@@ -21,7 +22,8 @@ class DanaRSMessageHashTable @Inject constructor(
     activePlugin: ActivePluginProvider,
     constraintChecker: ConstraintChecker,
     detailedBolusInfoStorage: DetailedBolusInfoStorage,
-    sp: SP
+    sp: SP,
+    injector: HasAndroidInjector
 ) {
 
     var messages: HashMap<Int, DanaRS_Packet> = HashMap()
@@ -99,7 +101,7 @@ class DanaRSMessageHashTable @Inject constructor(
         put(DanaRS_Packet_History_Temporary(aapsLogger, rxBus))
         // APS
         put(DanaRS_Packet_APS_Basal_Set_Temporary_Basal(aapsLogger, 0))
-        put(DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRPump, detailedBolusInfoStorage, sp, 0))
+        put(DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRPump, detailedBolusInfoStorage, sp, injector, 0))
         put(DanaRS_Packet_APS_Set_Event_History(aapsLogger, 0, 0, 0, 0))
         // v3
         put(DanaRS_Packet_General_Get_Shipping_Version(aapsLogger, danaRPump))

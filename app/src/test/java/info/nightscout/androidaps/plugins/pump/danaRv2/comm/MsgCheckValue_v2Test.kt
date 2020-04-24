@@ -17,7 +17,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(DanaRKoreanPlugin::class, DanaRPlugin::class, DanaRv2Plugin::class)
+@PrepareForTest(DanaRKoreanPlugin::class, DanaRPlugin::class, DanaRv2Plugin::class, ConfigBuilderPlugin::class)
 class MsgCheckValue_v2Test : DanaRTestBase() {
 
     val rxBus = RxBusWrapper()

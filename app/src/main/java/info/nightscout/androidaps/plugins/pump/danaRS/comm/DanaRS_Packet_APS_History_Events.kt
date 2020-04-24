@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.db.CareportalEvent
@@ -28,6 +29,7 @@ open class DanaRS_Packet_APS_History_Events(
     private val danaRPump: DanaRPump,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val sp: SP,
+    private val injector: HasAndroidInjector,
     private var from: Long
 ) : DanaRS_Packet() {
 
@@ -78,7 +80,7 @@ open class DanaRS_Packet_APS_History_Events(
         val datetime = dateTimeSecFromBuff(data, 1) // 6 bytes
         val param1 = (intFromBuff(data, 7, 1) shl 8 and 0xFF00) + (intFromBuff(data, 8, 1) and 0xFF)
         val param2 = (intFromBuff(data, 9, 1) shl 8 and 0xFF00) + (intFromBuff(data, 10, 1) and 0xFF)
-        val temporaryBasal = TemporaryBasal().date(datetime).source(Source.PUMP).pumpId(datetime)
+        val temporaryBasal = TemporaryBasal(injector).date(datetime).source(Source.PUMP).pumpId(datetime)
         val extendedBolus = ExtendedBolus().date(datetime).source(Source.PUMP).pumpId(datetime)
         val status: String
         when (recordCode.toInt()) {
@@ -161,14 +163,14 @@ open class DanaRS_Packet_APS_History_Events(
             DanaRPump.REFILL            -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT REFILL (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
                 if (sp.getBoolean(R.string.key_rs_loginsulinchange, true))
-                    FillDialog.generateCareportalEvent(CareportalEvent.INSULINCHANGE, datetime, resourceHelper.gs(R.string.danarspump), resourceHelper, sp)
+                    FillDialog.generateCareportalEvent(CareportalEvent.INSULINCHANGE, datetime, resourceHelper.gs(R.string.danarspump), resourceHelper, sp, injector)
                 status = "REFILL " + DateUtil.timeString(datetime)
             }
 
             DanaRPump.PRIME             -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "EVENT PRIME (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
                 if (sp.getBoolean(R.string.key_rs_logcanulachange, true))
-                    FillDialog.generateCareportalEvent(CareportalEvent.SITECHANGE, datetime, resourceHelper.gs(R.string.danarspump), resourceHelper, sp)
+                    FillDialog.generateCareportalEvent(CareportalEvent.SITECHANGE, datetime, resourceHelper.gs(R.string.danarspump), resourceHelper, sp, injector)
                 status = "PRIME " + DateUtil.timeString(datetime)
             }
 

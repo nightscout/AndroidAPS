@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.events
 
-class EventBTChange constructor(val state: Change, val deviceName: String) : Event() {
+class EventBTChange(val state: Change, val deviceName: String?, val deviceAddress: String? = null) : Event() {
+
     enum class Change {
         CONNECT,
         DISCONNECT
