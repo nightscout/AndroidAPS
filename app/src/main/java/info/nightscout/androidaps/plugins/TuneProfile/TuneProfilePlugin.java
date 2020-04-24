@@ -1483,11 +1483,11 @@ public class TuneProfilePlugin extends PluginBase {
         Date endDate = new Date(runDate.getTime()-endDateOffset* 24 * 60 * 60 * 1000L);
         Date startDate = new Date(runDate.getTime()-(nbDays+endDateOffset-1) * 24 * 60 * 60 * 1000L);
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
-
+        int utcOffset = (int) ((DateUtil.fromISODateString(DateUtil.toISOString(runDate,null,null)).getTime()  - DateUtil.fromISODateString(DateUtil.toISOString(runDate)).getTime()) / (60 * 1000));
         try {
             jsonSettings.put("datestring",DateUtil.toISOString(runDate,null,null));
             jsonSettings.put("dateutc",DateUtil.toISOString(runDate));
-            jsonSettings.put("utcOffset",(int) (DateUtil.getTimeZoneOffsetMs()/1000/60));
+            jsonSettings.put("utcOffset",utcOffset);
             jsonSettings.put("url_nightscout",SP.getString(R.string.key_nsclientinternal_url, ""));
             jsonSettings.put("nbdays", nbDays);
             jsonSettings.put("startdate",DateUtil.toISOString(firstloopstart,"yyyy-MM-dd",null));
