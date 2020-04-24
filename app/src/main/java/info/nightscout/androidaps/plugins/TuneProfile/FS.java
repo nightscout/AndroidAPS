@@ -18,6 +18,7 @@ import java.util.zip.ZipOutputStream;
 
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
 import info.nightscout.androidaps.utils.DateUtil;
+import io.socket.client.IO;
 
 public class FS {
     static final String logDirectory = LoggerUtils.getLogDirectory();
@@ -87,7 +88,7 @@ public class FS {
     /**********************************************************************************
      * create a zip file with all autotune files in autotune folder at the end of run
      *********************************************************************************/
-    public static void zipAutotune(Date lastRun) throws IOException {
+    public static void zipAutotune(Date lastRun) {
         if (lastRun!=null) {
             try {
                 String zipFileName = "autotune-" + DateUtil.toISOString(lastRun, "yyyy-MM-dd'T'HH-mm", null) + ".zip";
@@ -100,13 +101,14 @@ public class FS {
         }
     }
 
-    private static void zipDirectory(File folder, String parentFolder, ZipOutputStream out) throws IOException {
+    private static void zipDirectory(File folder, String parentFolder, ZipOutputStream out) {
+
         for (File file : folder.listFiles()) {
+            if (file.isDirectory()) {
+                zipDirectory(file, parentFolder + "/" + file.getName(), out);
+                continue;
+            }
             try {
-                if (file.isDirectory()) {
-                    zipDirectory(file, parentFolder + "/" + file.getName(), out);
-                    continue;
-                }
                 out.putNextEntry(new ZipEntry(parentFolder + "/" + file.getName()));
                 BufferedInputStream bis = new BufferedInputStream(new FileInputStream(file));
                 //long bytesRead = 0;
@@ -118,9 +120,9 @@ public class FS {
                 }
                 out.closeEntry();
             } catch (IOException e) {}
-
         }
     }
+
 
 
     public static String formatDate(Date date){
