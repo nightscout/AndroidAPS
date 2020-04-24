@@ -1346,11 +1346,11 @@ public class TuneProfilePlugin extends PluginBase {
                  long glucoseStart = starttime + timeBack;
                  long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
                  opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
-                 FS.createAutotunefile("aaps-entries." + DateUtil.toISOString(new Date(glucoseStart),"yyyy-MM-dd",null) + ".json",opts.glucosetoJSON().toString());
+                 FS.createAutotunefile("aaps-entries." + FS.formatDate(new Date(glucoseStart)) + ".json",opts.glucosetoJSON().toString());
                  // treatments are get 6 hours (DIA duration) before first BG value
                  long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
                  long treatmentEnd = glucoseEnd;
-                 FS.createAutotunefile("aaps-treatments." + DateUtil.toISOString(new Date(glucoseStart),"yyyy-MM-dd",null) + ".json",opts.treatmentstoJSON(opts.pumpHistory,treatmentStart,treatmentEnd).toString());
+                 FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json",opts.treatmentstoJSON(opts.pumpHistory,treatmentStart,treatmentEnd).toString());
 
                  //opts.treatments= Meal.generateMeal(opts);
 
