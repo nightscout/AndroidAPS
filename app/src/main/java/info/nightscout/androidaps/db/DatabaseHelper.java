@@ -1239,6 +1239,22 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<ExtendedBolus>();
     }
 
+    public List<ExtendedBolus> getExtendedBolusDataFromTime(long from, long to, boolean ascending) {
+        try {
+            List<ExtendedBolus> extendedBoluses;
+            QueryBuilder<ExtendedBolus, Long> queryBuilder = getDaoExtendedBolus().queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            Where where = queryBuilder.where();
+            where.between("date", from, to);
+            PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
+            extendedBoluses = getDaoExtendedBolus().query(preparedQuery);
+            return extendedBoluses;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<ExtendedBolus>();
+    }
+
     public void deleteExtendedBolusById(String _id) {
         ExtendedBolus stored = findExtendedBolusById(_id);
         if (stored != null) {

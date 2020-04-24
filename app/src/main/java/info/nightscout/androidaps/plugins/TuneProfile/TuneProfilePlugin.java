@@ -1346,16 +1346,19 @@ public class TuneProfilePlugin extends PluginBase {
 //                long glucoseEnd = starttime - timeBack + 28 * 24 * 60 *60 *1000L;
                  long glucoseStart = starttime + timeBack;
                  long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
-                 long treatmentStart = glucoseStart - 18 * 60 * 60 * 1000L;
-                 long treatmentEnd = glucoseEnd + 12 * 60 * 60 * 1000L;
+                 long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
+                 long treatmentEnd = glucoseEnd;
                  opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
                  TreatmentService ts = new TreatmentService();
                  opts.treatments = ts.getTreatmentDataFromTime(treatmentStart,treatmentEnd,false);
+                 opts.pumpTempBasalHistory=MainApp.getDbHelper().getTemporaryBasalsDataFromTime(treatmentStart,treatmentEnd,false);
+                 opts.pumpExtBolusHistory=MainApp.getDbHelper().getExtendedBolusDataFromTime(treatmentStart,treatmentEnd,false);
                  try {
                      FS.createAutotunefile("aaps-entries." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(4));
                      // treatments are get 6 hours (DIA duration) before first BG value
-
                      FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatments.toString());
+                     FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistory.toString());
+                     FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpExtBolusHistory.toString());
                  } catch (JSONException e) {}
                  //opts.treatments= Meal.generateMeal(opts);
 

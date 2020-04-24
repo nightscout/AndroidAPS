@@ -12,6 +12,8 @@ import java.util.Date;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 
@@ -21,6 +23,8 @@ public class Opts {
     public static Profile pumpprofile;
     public List<BgReading> glucose;
     public List<CareportalEvent> pumpHistory;
+    public List<ExtendedBolus> pumpExtBolusHistory;
+    public List<TemporaryBasal> pumpTempBasalHistory;
     public long start;
     public long end;
     public boolean categorize_uam_as_basal;
