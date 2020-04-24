@@ -5,11 +5,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Date;
 
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 
@@ -18,7 +20,7 @@ public class Opts {
     public static Profile profile;
     public static Profile pumpprofile;
     public List<BgReading> glucose;
-    public List<Treatment> pumpHistory;
+    public List<CareportalEvent> pumpHistory;
     public long start;
     public long end;
     public boolean categorize_uam_as_basal;
@@ -35,11 +37,11 @@ public class Opts {
                 JSONObject bgjson = new JSONObject();
                 bgjson.put("_id",bgreading._id);
                 bgjson.put("date",bgreading.date);
-                bgjson.put("dateString", DateUtil.toISOString(bgreading.date));
+                bgjson.put("dateString", DateUtil.toISOAsUTC(bgreading.date));
                 bgjson.put("sgv",bgreading.value);
                 bgjson.put("direction",bgreading.direction);
                 bgjson.put("type","sgv");
-                bgjson.put("systime", DateUtil.toISOString(bgreading.date));
+                bgjson.put("systime", DateUtil.toISOAsUTC(bgreading.date));
                 bgjson.put("utcOffset", utcOffset);
                 glucoseJson.put(bgjson);
             }
@@ -48,16 +50,29 @@ public class Opts {
     }
 
     //For treatment export, add starttime and endtime to export dedicated files for each loop
-    public JSONArray treatmentstoJSON(List<Treatment> treatments, long starttime, long endtime)  {
-        JSONArray treatmentsJson = new JSONArray();
+    public JSONArray pumpHistorytoJSON(long starttime, long endtime)  {
+        JSONArray json = new JSONArray();
         try {
-            for (Treatment treatment:treatments ) {
-                JSONObject treatmentJson = treatment.createJson();
-                if(treatmentJson!=null && treatment.date >= starttime && treatment.date <= endtime)
-                    treatmentsJson.put(treatmentJson);
+            for (CareportalEvent cp:pumpHistory ) {
+                JSONObject cPjson = new JSONObject();
+
+                if(cp.date >= starttime && cp.date <= endtime && cp.isValid) {
+                    cPjson.put("_id", cp._id);
+                    cPjson.put("eventType",cp.eventType);
+                    cPjson.put("date",cp.date);
+                    cPjson.put("dateString",DateUtil.toISOAsUTC(cp.date));
+                    JSONObject object = new JSONObject(cp.json);
+                    Iterator it = object.keys();
+                    while (it.hasNext()) {
+                        String key = (String)it.next();
+                        cPjson.put(key, object.get(key));
+                    }
+                }
+                json.put(cPjson);
             }
         } catch (JSONException e) {}
-        return treatmentsJson;
+
+        return json;
     }
 
 }

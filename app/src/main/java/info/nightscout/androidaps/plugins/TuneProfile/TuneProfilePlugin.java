@@ -1335,7 +1335,7 @@ public class TuneProfilePlugin extends PluginBase {
             //    # 18h = 12h for timezones + 6h for DIA; 40h = 28h for 4am + 12h for timezones
             //long treatmentsStart = starttime - (daysBack-1) * 24 * 60 * 60 * 1000L - 18 * 60 * 60 * 1000L;
             long treatmentsStart = starttime - 6 * 60 * 60 * 1000L;     // 6 hour before first BG value of first day
-            opts.pumpHistory=TreatmentsPlugin.getPlugin().getTreatmentsFromHistoryAfterTimestamp(treatmentsStart);
+            opts.pumpHistory=MainApp.getDbHelper().getCareportalEvents(treatmentsStart,endTime,false);
             FS.createAutotunefile("aaps-treatmentsfull.json", opts.pumpHistory.toString());
 //            for (int i = daysBack; i > 0; i--) {
              for (int i = 0; i < daysBack; i++) {
@@ -1351,11 +1351,11 @@ public class TuneProfilePlugin extends PluginBase {
                      // treatments are get 6 hours (DIA duration) before first BG value
                      long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
                      long treatmentEnd = glucoseEnd;
-                     FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatmentstoJSON(opts.pumpHistory, treatmentStart, treatmentEnd).toString(4));
+                     FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpHistorytoJSON(treatmentStart, treatmentEnd).toString(4));
                  } catch (JSONException e) {}
                  //opts.treatments= Meal.generateMeal(opts);
 
-                 opts.treatments = opts.pumpHistory;
+                 //opts.treatments = opts.pumpHistory;
 
                 try {
                     log.debug("Day "+i+" of "+daysBack);
