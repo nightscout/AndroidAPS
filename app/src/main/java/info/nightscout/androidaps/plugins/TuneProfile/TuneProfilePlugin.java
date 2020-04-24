@@ -1351,7 +1351,6 @@ public class TuneProfilePlugin extends PluginBase {
                 opts.treatments = opts.pumpHistory;
 
                 try {
-                    
                     log.debug("Day "+i+" of "+daysBack);
                     //log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
                     log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
