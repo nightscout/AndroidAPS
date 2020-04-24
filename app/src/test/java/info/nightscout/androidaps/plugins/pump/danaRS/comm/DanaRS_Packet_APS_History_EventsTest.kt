@@ -24,7 +24,7 @@ class DanaRS_Packet_APS_History_EventsTest : DanaRSTestBase() {
     @Test fun runTest() {
         val now = DateUtil.now()
 
-        val testPacket = DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, now)
+        val testPacket = DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, injector, now)
         // test getRequestedParams
         val returnedValues = testPacket.requestParams
         val expectedValues = getCalender(now)

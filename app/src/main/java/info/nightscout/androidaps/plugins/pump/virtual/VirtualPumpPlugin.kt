@@ -239,7 +239,7 @@ class VirtualPumpPlugin @Inject constructor(
 
     override fun stopBolusDelivering() {}
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
-        val tempBasal = TemporaryBasal()
+        val tempBasal = TemporaryBasal(injector)
             .date(System.currentTimeMillis())
             .absolute(absoluteRate)
             .duration(durationInMinutes)
@@ -259,7 +259,7 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
-        val tempBasal = TemporaryBasal()
+        val tempBasal = TemporaryBasal(injector)
             .date(System.currentTimeMillis())
             .percent(percent)
             .duration(durationInMinutes)
@@ -307,7 +307,7 @@ class VirtualPumpPlugin @Inject constructor(
         result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
         if (treatmentsPlugin.isTempBasalInProgress) {
             result.enacted = true
-            val tempStop = TemporaryBasal().date(System.currentTimeMillis()).source(Source.USER)
+            val tempStop = TemporaryBasal(injector).date(System.currentTimeMillis()).source(Source.USER)
             treatmentsPlugin.addToHistoryTempBasal(tempStop)
             //tempBasal = null;
             aapsLogger.debug(LTag.PUMP, "Canceling temp basal: $result")

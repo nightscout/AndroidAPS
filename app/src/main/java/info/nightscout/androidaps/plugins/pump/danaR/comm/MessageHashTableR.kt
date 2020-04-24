@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -25,7 +26,8 @@ class MessageHashTableR @Inject constructor(
     danaRKoreanPlugin: DanaRKoreanPlugin,
     configBuilderPlugin: ConfigBuilderPlugin,
     commandQueue: CommandQueueProvider,
-    activePlugin: ActivePluginProvider
+    activePlugin: ActivePluginProvider,
+    injector: HasAndroidInjector
 ) : MessageHashTableBase {
 
     var messages: HashMap<Int, MessageBase> = HashMap()
@@ -36,7 +38,7 @@ class MessageHashTableR @Inject constructor(
         put(MsgBolusStartWithSpeed(aapsLogger, constraintChecker, danaRPump, 0.0, 0))       // 0x0104 CMD_MEALINS_START_DATA_SPEED
         put(MsgBolusProgress(aapsLogger, resourceHelper, rxBus, danaRPump))             // 0x0202 CMD_PUMP_THIS_REMAINDER_MEAL_INS
         put(MsgStatusProfile(aapsLogger, danaRPump))             // 0x0204 CMD_PUMP_CALCULATION_SETTING
-        put(MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin))           // 0x0205 CMD_PUMP_EXERCISE_MODE
+        put(MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin, injector))           // 0x0205 CMD_PUMP_EXERCISE_MODE
         put(MsgStatusBolusExtended(aapsLogger, danaRPump, activePlugin))       // 0x0207 CMD_PUMP_EXPANS_INS_I
         put(MsgStatusBasic(aapsLogger, danaRPump))               // 0x020A CMD_PUMP_INITVIEW_I
         put(MsgStatus(aapsLogger, danaRPump))                    // 0x020B CMD_PUMP_STATUS

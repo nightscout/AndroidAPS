@@ -102,7 +102,7 @@ class DexcomPlugin @Inject constructor(
                             jsonObject.put("glucose", meter.getInt("meterValue"))
                             jsonObject.put("units", Constants.MGDL)
 
-                            val careportalEvent = CareportalEvent()
+                            val careportalEvent = CareportalEvent(injector)
                             careportalEvent.date = timestamp
                             careportalEvent.source = Source.USER
                             careportalEvent.eventType = CareportalEvent.BGCHECK
@@ -122,7 +122,7 @@ class DexcomPlugin @Inject constructor(
                             jsonObject.put("enteredBy", "AndroidAPS-Dexcom$sensorType")
                             jsonObject.put("created_at", DateUtil.toISOString(sensorInsertionTime))
                             jsonObject.put("eventType", CareportalEvent.SENSORCHANGE)
-                            val careportalEvent = CareportalEvent()
+                            val careportalEvent = CareportalEvent(injector)
                             careportalEvent.date = sensorInsertionTime
                             careportalEvent.source = Source.USER
                             careportalEvent.eventType = CareportalEvent.SENSORCHANGE

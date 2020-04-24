@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -11,7 +12,8 @@ import kotlin.math.ceil
 class MsgStatusTempBasal(
     private val aapsLogger: AAPSLogger,
     private val danaRPump: DanaRPump,
-    private val activePlugin: ActivePluginProvider
+    private val activePlugin: ActivePluginProvider,
+    private val injector: HasAndroidInjector
 ) : MessageBase() {
 
     init {
@@ -52,10 +54,10 @@ class MsgStatusTempBasal(
             val tempBasal = activePlugin.activeTreatments.getRealTempBasalFromHistory(System.currentTimeMillis())
             if (danaRPump.isTempBasalInProgress) {
                 if (tempBasal.percentRate != danaRPump.tempBasalPercent) { // Close current temp basal
-                    val tempStop = TemporaryBasal().date(danaRPump.tempBasalStart - 1000).source(Source.USER)
+                    val tempStop = TemporaryBasal(injector).date(danaRPump.tempBasalStart - 1000).source(Source.USER)
                     activePlugin.activeTreatments.addToHistoryTempBasal(tempStop)
                     // Create new
-                    val newTempBasal = TemporaryBasal()
+                    val newTempBasal = TemporaryBasal(injector)
                         .date(danaRPump.tempBasalStart)
                         .percent(danaRPump.tempBasalPercent)
                         .duration(danaRPump.tempBasalTotalSec / 60)
@@ -63,12 +65,12 @@ class MsgStatusTempBasal(
                     activePlugin.activeTreatments.addToHistoryTempBasal(newTempBasal)
                 }
             } else { // Close current temp basal
-                val tempStop = TemporaryBasal().date(now).source(Source.USER)
+                val tempStop = TemporaryBasal(injector).date(now).source(Source.USER)
                 activePlugin.activeTreatments.addToHistoryTempBasal(tempStop)
             }
         } else {
             if (danaRPump.isTempBasalInProgress) { // Create new
-                val newTempBasal = TemporaryBasal()
+                val newTempBasal = TemporaryBasal(injector)
                     .date(danaRPump.tempBasalStart)
                     .percent(danaRPump.tempBasalPercent)
                     .duration(danaRPump.tempBasalTotalSec / 60)

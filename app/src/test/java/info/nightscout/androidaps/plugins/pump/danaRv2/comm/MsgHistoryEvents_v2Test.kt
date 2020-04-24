@@ -23,7 +23,7 @@ class MsgHistoryEvents_v2Test : DanaRTestBase() {
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
 
     @Test @Throws(Exception::class) fun runTest() {
-        var packet = MsgHistoryEvents_v2(aapsLogger, resourceHelper, detailedBolusInfoStorage, danaRv2Plugin, RxBusWrapper(), treatmentsPlugin, 0)
+        var packet = MsgHistoryEvents_v2(aapsLogger, resourceHelper, detailedBolusInfoStorage, danaRv2Plugin, RxBusWrapper(), treatmentsPlugin, injector, 0)
 
         // test message decoding
         val array = ByteArray(100)

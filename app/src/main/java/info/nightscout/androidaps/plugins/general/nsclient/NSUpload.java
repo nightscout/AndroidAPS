@@ -73,11 +73,10 @@ public class NSUpload {
         }
     }
 
-    public static void uploadTempBasalStartPercent(TemporaryBasal temporaryBasal) {
+    public static void uploadTempBasalStartPercent(TemporaryBasal temporaryBasal, Profile profile) {
         try {
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
             boolean useAbsolute = SP.getBoolean("ns_sync_use_absolute", false);
-            Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile(temporaryBasal.date);
             double absoluteRate = 0;
             if (profile != null) {
                 absoluteRate = profile.getBasal(temporaryBasal.date) * temporaryBasal.percentRate / 100d;
@@ -264,16 +263,16 @@ public class NSUpload {
         }
     }
 
-    public static void uploadTempTarget(TempTarget tempTarget) {
+    public static void uploadTempTarget(TempTarget tempTarget, ProfileFunction profileFunction) {
         try {
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPORARYTARGET);
             data.put("duration", tempTarget.durationInMinutes);
             if (tempTarget.low > 0) {
                 data.put("reason", tempTarget.reason);
-                data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.low, ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits()));
-                data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.high, ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits()));
-                data.put("units", ConfigBuilderPlugin.getPlugin().getProfileFunction().getUnits());
+                data.put("targetBottom", Profile.fromMgdlToUnits(tempTarget.low, profileFunction.getUnits()));
+                data.put("targetTop", Profile.fromMgdlToUnits(tempTarget.high, profileFunction.getUnits()));
+                data.put("units", profileFunction.getUnits());
             }
             data.put("created_at", DateUtil.toISOString(tempTarget.date));
             data.put("enteredBy", MainApp.gs(R.string.app_name));

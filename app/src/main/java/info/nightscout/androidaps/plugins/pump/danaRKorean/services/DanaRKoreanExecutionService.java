@@ -138,7 +138,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpstatus)));
             //MsgStatus_k statusMsg = new MsgStatus_k();
             MsgStatusBasic_k statusBasicMsg = new MsgStatusBasic_k(aapsLogger, danaRPump);
-            MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin);
+            MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin, injector);
             MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended(aapsLogger, danaRPump, activePlugin);
             MsgCheckValue_k checkValue = new MsgCheckValue_k(aapsLogger, danaRPump, danaRKoreanPlugin);
 
@@ -228,7 +228,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
         }
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStart(aapsLogger, percent, durationInHours));
-        mSerialIOThread.sendMessage(new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin));
+        mSerialIOThread.sendMessage(new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin, injector));
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }
@@ -237,7 +237,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStop(aapsLogger));
-        mSerialIOThread.sendMessage(new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin));
+        mSerialIOThread.sendMessage(new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin, injector));
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }

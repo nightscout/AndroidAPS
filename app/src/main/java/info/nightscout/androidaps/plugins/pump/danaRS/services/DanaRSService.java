@@ -271,10 +271,10 @@ public class DanaRSService extends DaggerService {
 
         DanaRS_Packet_APS_History_Events msg;
         if (lastHistoryFetched == 0) {
-            msg = new DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, 0);
+            msg = new DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, injector, 0);
             aapsLogger.debug(LTag.PUMPCOMM, "Loading complete event history");
         } else {
-            msg = new DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, lastHistoryFetched);
+            msg = new DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, injector, lastHistoryFetched);
             aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + DateUtil.dateAndTimeString(lastHistoryFetched));
         }
         bleComm.sendMessage(msg);

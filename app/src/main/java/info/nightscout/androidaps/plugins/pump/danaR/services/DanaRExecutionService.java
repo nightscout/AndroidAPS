@@ -11,6 +11,7 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -91,6 +92,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
     @Inject ActivePluginProvider activePlugin;
     @Inject ProfileFunction profileFunction;
     @Inject SP sp;
+    @Inject HasAndroidInjector injector;
 
     public DanaRExecutionService() {
     }
@@ -147,7 +149,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
             rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumpstatus)));
             MsgStatus statusMsg = new MsgStatus(aapsLogger, danaRPump);
             MsgStatusBasic statusBasicMsg = new MsgStatusBasic(aapsLogger, danaRPump);
-            MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin);
+            MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin, injector);
             MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended(aapsLogger, danaRPump, activePlugin);
             MsgCheckValue checkValue = new MsgCheckValue(aapsLogger, danaRPump, danaRPlugin);
 
@@ -239,7 +241,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         }
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStart(aapsLogger, percent, durationInHours));
-        mSerialIOThread.sendMessage(new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin));
+        mSerialIOThread.sendMessage(new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin, injector));
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }
@@ -248,7 +250,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStop(aapsLogger));
-        mSerialIOThread.sendMessage(new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin));
+        mSerialIOThread.sendMessage(new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin, injector));
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }

@@ -744,7 +744,7 @@ public class LoopPlugin extends PluginBase {
         } catch (JSONException e) {
             getAapsLogger().error("Unhandled exception", e);
         }
-        CareportalEvent event = new CareportalEvent();
+        CareportalEvent event = new CareportalEvent(getInjector());
         event.date = DateUtil.now();
         event.source = Source.USER;
         event.eventType = CareportalEvent.OPENAPSOFFLINE;
