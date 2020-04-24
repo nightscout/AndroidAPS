@@ -19,7 +19,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class)
+@PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class, ConfigBuilderPlugin::class)
 class MessageHashTableRKoreanTest : DanaRSTestBase() {
 
     @Mock lateinit var constraintChecker: ConstraintChecker
@@ -32,7 +32,7 @@ class MessageHashTableRKoreanTest : DanaRSTestBase() {
 
     @Test fun runTest() {
         Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
-        val messageHashTable = MessageHashTableRKorean(aapsLogger, rxBus, resourceHelper, constraintChecker, danaRPump, danaRPlugin, danaRKoreanPlugin, configBuilderPlugin, commandQueue, activePlugin)
+        val messageHashTable = MessageHashTableRKorean(aapsLogger, rxBus, resourceHelper, constraintChecker, danaRPump, danaRPlugin, danaRKoreanPlugin, configBuilderPlugin, commandQueue, activePlugin, injector)
         val testMessage = messageHashTable.findMessage(0x41f2)
         Assert.assertEquals("CMD_HISTORY_ALL", testMessage.messageName)
     }

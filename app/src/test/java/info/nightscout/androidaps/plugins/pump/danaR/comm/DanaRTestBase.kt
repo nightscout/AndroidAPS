@@ -1,8 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
+import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.db.TemporaryBasal
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
@@ -11,7 +13,15 @@ import org.mockito.Mock
 open class DanaRTestBase : TestBase() {
 
     @Mock lateinit var sp: SP
-    @Mock lateinit var injector: HasAndroidInjector
+    @Mock lateinit var profileFunction: ProfileFunction
+
+    val injector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is TemporaryBasal) {
+                it.profileFunction = profileFunction
+            }
+        }
+    }
 
     lateinit var danaRPump: DanaRPump
 

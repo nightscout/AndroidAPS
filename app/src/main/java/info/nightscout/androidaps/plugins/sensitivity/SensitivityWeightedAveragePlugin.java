@@ -111,7 +111,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
             }
 
             // reset deviations after site change
-            if (CareportalEvent.isEvent5minBack(siteChanges, autosensData.time)) {
+            if (new CareportalEvent(getInjector()).isEvent5minBack(siteChanges, autosensData.time)) {
                 data.clear();
                 pastSensitivity += "(SITECHANGE)";
             }

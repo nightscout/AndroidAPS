@@ -118,7 +118,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
                 String pastSensitivity = pastSensitivityArray.get(hoursegment);
 
                 // reset deviations after site change
-                if (CareportalEvent.isEvent5minBack(siteChanges, autosensData.time)) {
+                if (new CareportalEvent(getInjector()).isEvent5minBack(siteChanges, autosensData.time)) {
                     deviationsArray.clear();
                     pastSensitivity += "(SITECHANGE)";
                 }

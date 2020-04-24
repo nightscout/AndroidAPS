@@ -14,7 +14,9 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.ProfileStore
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.BgReading
+import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.ProfileSwitch
+import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PluginBase
@@ -37,6 +39,7 @@ import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.general.maintenance.ImportExportPrefs
 import info.nightscout.androidaps.plugins.general.maintenance.formats.ClassicPrefsFormat
 import info.nightscout.androidaps.plugins.general.maintenance.formats.EncryptedPrefsFormat
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.androidaps.plugins.general.smsCommunicator.AuthRequest
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
@@ -98,11 +101,14 @@ open class AppModule {
     fun providesPlugins(@PluginsModule.AllConfigs allConfigs: Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>,
                         @PluginsModule.PumpDriver pumpDrivers: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
                         @PluginsModule.NotNSClient notNsClient: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
-                        @PluginsModule.APS aps: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>): List<@JvmSuppressWildcards PluginBase> {
+                        @PluginsModule.NSClient nsClient: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>,
+                        @PluginsModule.APS aps: Lazy<Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>>)
+        : List<@JvmSuppressWildcards PluginBase> {
         val plugins = allConfigs.toMutableMap()
         if (Config.PUMPDRIVERS) plugins += pumpDrivers.get()
         if (Config.APS) plugins += aps.get()
         if (!Config.NSCLIENT) plugins += notNsClient.get()
+        if (Config.NSCLIENT) plugins += nsClient.get()
         return plugins.toList().sortedBy { it.first }.map { it.second }
     }
 
@@ -233,6 +239,8 @@ open class AppModule {
         @ContributesAndroidInjector fun bgReadingInjector(): BgReading
         @ContributesAndroidInjector fun treatmentInjector(): Treatment
         @ContributesAndroidInjector fun profileSwitchInjector(): ProfileSwitch
+        @ContributesAndroidInjector fun temporaryBasalInjector(): TemporaryBasal
+        @ContributesAndroidInjector fun careportalEventInjector(): CareportalEvent
 
         @ContributesAndroidInjector fun notificationWithActionInjector(): NotificationWithAction
 

@@ -1030,7 +1030,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             pumpStatusLocal.tempBasalAmount = absoluteRate;
             pumpStatusLocal.tempBasalLength = durationInMinutes;
 
-            TemporaryBasal tempStart = new TemporaryBasal() //
+            TemporaryBasal tempStart = new TemporaryBasal(getInjector()) //
                     .date(System.currentTimeMillis()) //
                     .duration(durationInMinutes) //
                     .absolute(absoluteRate) //
@@ -1371,7 +1371,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         if (response) {
             aapsLogger.info(LTag.PUMP, getLogPrefix() + "cancelTempBasal - Cancel TBR successful.");
 
-            TemporaryBasal tempBasal = new TemporaryBasal() //
+            TemporaryBasal tempBasal = new TemporaryBasal(getInjector()) //
                     .date(System.currentTimeMillis()) //
                     .duration(0) //
                     .source(Source.USER);

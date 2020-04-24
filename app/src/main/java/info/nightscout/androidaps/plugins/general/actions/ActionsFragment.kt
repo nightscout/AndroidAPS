@@ -240,7 +240,7 @@ class ActionsFragment : DaggerFragment() {
 
         actions_temptarget?.visibility = Config.APS.toVisibility()
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
-        statusLightHandler.updateAge(careportal_sensorage, careportal_insulinage, careportal_canulaage, careportal_pbage)
+        statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, careportal_pbage, null)
         checkPumpCustomActions()
     }
 

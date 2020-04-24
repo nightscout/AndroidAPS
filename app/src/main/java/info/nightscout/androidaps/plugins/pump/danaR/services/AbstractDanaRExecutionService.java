@@ -55,7 +55,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public abstract class AbstractDanaRExecutionService extends DaggerService {
-    @Inject HasAndroidInjector injector;
+    @Inject protected HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
     @Inject RxBusWrapper rxBus;
     @Inject SP sp;

@@ -776,7 +776,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         PumpState state = commandResult.state;
         if (state.tbrActive && state.tbrPercent == adjustedPercent
                 && (state.tbrRemainingDuration == durationInMinutes || state.tbrRemainingDuration == durationInMinutes - 1)) {
-            TemporaryBasal tempStart = new TemporaryBasal()
+            TemporaryBasal tempStart = new TemporaryBasal(getInjector())
                     .date(state.timestamp)
                     .duration(state.tbrRemainingDuration)
                     .percent(state.tbrPercent)
@@ -822,7 +822,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 return new PumpEnactResult(getInjector()).success(false).enacted(false);
             }
             if (!cancelResult.state.tbrActive) {
-                TemporaryBasal tempBasal = new TemporaryBasal()
+                TemporaryBasal tempBasal = new TemporaryBasal(getInjector())
                         .date(cancelResult.state.timestamp)
                         .duration(0)
                         .source(Source.USER);
@@ -973,7 +973,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             TemporaryBasal aapsTbr = treatmentsPlugin.getTempBasalFromHistory(now);
             if (aapsTbr == null || aapsTbr.percentRate != 0) {
                 getAapsLogger().debug(LTag.PUMP, "Creating 15m zero temp since pump is suspended");
-                TemporaryBasal newTempBasal = new TemporaryBasal()
+                TemporaryBasal newTempBasal = new TemporaryBasal(getInjector())
                         .date(now)
                         .percent(0)
                         .duration(15)
@@ -1099,7 +1099,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
         TemporaryBasal aapsTbr = treatmentsPlugin.getTempBasalFromHistory(now);
         if (aapsTbr == null && state.tbrActive && state.tbrRemainingDuration > 2) {
             getAapsLogger().debug(LTag.PUMP, "Creating temp basal from pump TBR");
-            TemporaryBasal newTempBasal = new TemporaryBasal()
+            TemporaryBasal newTempBasal = new TemporaryBasal(getInjector())
                     .date(now)
                     .percent(state.tbrPercent)
                     .duration(state.tbrRemainingDuration)
@@ -1107,7 +1107,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
             treatmentsPlugin.addToHistoryTempBasal(newTempBasal);
         } else if (aapsTbr != null && aapsTbr.getPlannedRemainingMinutes() > 2 && !state.tbrActive) {
             getAapsLogger().debug(LTag.PUMP, "Ending AAPS-TBR since pump has no TBR active");
-            TemporaryBasal tempStop = new TemporaryBasal()
+            TemporaryBasal tempStop = new TemporaryBasal(getInjector())
                     .date(now)
                     .duration(0)
                     .source(Source.USER);
@@ -1116,13 +1116,13 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
                 && (aapsTbr.percentRate != state.tbrPercent ||
                 Math.abs(aapsTbr.getPlannedRemainingMinutes() - state.tbrRemainingDuration) > 2)) {
             getAapsLogger().debug(LTag.PUMP, "AAPSs and pump-TBR differ; ending AAPS-TBR and creating new TBR based on pump TBR");
-            TemporaryBasal tempStop = new TemporaryBasal()
+            TemporaryBasal tempStop = new TemporaryBasal(getInjector())
                     .date(now - 1000)
                     .duration(0)
                     .source(Source.USER);
             treatmentsPlugin.addToHistoryTempBasal(tempStop);
 
-            TemporaryBasal newTempBasal = new TemporaryBasal()
+            TemporaryBasal newTempBasal = new TemporaryBasal(getInjector())
                     .date(now)
                     .percent(state.tbrPercent)
                     .duration(state.tbrRemainingDuration)

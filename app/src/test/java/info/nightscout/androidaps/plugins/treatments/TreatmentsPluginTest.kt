@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.treatments
 
 import android.content.Context
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.db.DatabaseHelper
@@ -32,6 +34,14 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
     @Mock lateinit var databaseHelper: DatabaseHelper
     @Mock lateinit var treatmentService: TreatmentService
 
+    val injector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is TemporaryBasal) {
+                it.profileFunction = profileFunction
+            }
+        }
+    }
+
     lateinit var insulinOrefRapidActingPlugin: InsulinOrefRapidActingPlugin
     lateinit var sot: TreatmentsPlugin
 
@@ -53,7 +63,7 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
     fun `zero TBR should produce zero absolute insulin`() {
         val now = DateUtil.now()
         val tbrs : MutableList<TemporaryBasal> = ArrayList()
-        tbrs.add(TemporaryBasal().date(now - T.hours(30). msecs()).duration(10000).percent(0))
+        tbrs.add(TemporaryBasal(injector).date(now - T.hours(30). msecs()).duration(10000).percent(0))
 
         `when`(databaseHelper.getTemporaryBasalsDataFromTime(ArgumentMatchers.anyLong(), ArgumentMatchers.anyBoolean())).thenReturn(tbrs)
         sot.initializeData(T.hours(30). msecs())
@@ -69,7 +79,7 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
         sot.initializeData(T.hours(30). msecs())
         val iob100pct = sot.getAbsoluteIOBTempBasals(now)
 
-        tbrs.add(TemporaryBasal().date(now - T.hours(30). msecs()).duration(10000).percent(90))
+        tbrs.add(TemporaryBasal(injector).date(now - T.hours(30). msecs()).duration(10000).percent(90))
         sot.initializeData(T.hours(30). msecs())
         val iob90pct = sot.getAbsoluteIOBTempBasals(now)
         Assert.assertTrue(iob100pct.iob > iob90pct.iob)
@@ -83,7 +93,7 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
         sot.initializeData(T.hours(30). msecs())
         val iob100pct = sot.getAbsoluteIOBTempBasals(now)
 
-        tbrs.add(TemporaryBasal().date(now - T.hours(30). msecs()).duration(10000).percent(110))
+        tbrs.add(TemporaryBasal(injector).date(now - T.hours(30). msecs()).duration(10000).percent(110))
         sot.initializeData(T.hours(30). msecs())
         val iob110pct = sot.getAbsoluteIOBTempBasals(now)
         Assert.assertEquals(1.1, iob110pct.iob / iob100pct.iob, 0.0001)

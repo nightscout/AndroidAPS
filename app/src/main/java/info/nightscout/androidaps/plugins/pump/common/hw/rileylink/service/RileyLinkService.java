@@ -33,9 +33,9 @@ import static info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyL
  */
 public abstract class RileyLinkService extends DaggerService {
 
-    @Inject AAPSLogger aapsLogger;
-    @Inject SP sp;
-    @Inject Context context;
+    @Inject protected AAPSLogger aapsLogger;
+    @Inject protected SP sp;
+    @Inject protected Context context;
 
 
     public RileyLinkBLE rileyLinkBLE; // android-bluetooth management

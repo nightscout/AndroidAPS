@@ -7,6 +7,10 @@ import org.slf4j.Logger;
 
 import java.util.Objects;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
@@ -15,8 +19,8 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -30,6 +34,9 @@ import info.nightscout.androidaps.utils.SP;
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TEMPORARYBASALS)
 public class TemporaryBasal implements Interval, DbObjectBase {
     private static Logger log = StacktraceLoggerWrapper.getLogger(L.DATABASE);
+
+    @Inject public ProfileFunction profileFunction;
+    private HasAndroidInjector injector;
 
     @DatabaseField(id = true)
     public long date;
@@ -59,7 +66,15 @@ public class TemporaryBasal implements Interval, DbObjectBase {
 
     public double netExtendedRate = 0d;
 
+    @Deprecated
     public TemporaryBasal() {
+        injector = MainApp.instance();
+        injector.androidInjector().inject(this);
+    }
+
+    public TemporaryBasal(HasAndroidInjector injector) {
+        this.injector = injector;
+        injector.androidInjector().inject(this);
     }
 
     public TemporaryBasal date(long date) {
@@ -95,7 +110,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
     }
 
     public TemporaryBasal(ExtendedBolus extendedBolus) {
-        double basal = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile(extendedBolus.date).getBasal(extendedBolus.date);
+        double basal = profileFunction.getProfile(extendedBolus.date).getBasal(extendedBolus.date);
         this.date = extendedBolus.date;
         this.isValid = extendedBolus.isValid;
         this.source = extendedBolus.source;
@@ -109,7 +124,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
     }
 
     public TemporaryBasal clone() {
-        TemporaryBasal t = new TemporaryBasal();
+        TemporaryBasal t = new TemporaryBasal(injector);
         t.date = date;
         t.isValid = isValid;
         t.source = source;
@@ -404,7 +419,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
     public String toStringFull() {
         if (isFakeExtended) {
 
-            Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile();
+            Profile profile = profileFunction.getProfile();
             if (profile == null)
                 return "null";
             Double currentBasalRate = profile.getBasal();
@@ -428,7 +443,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
 
             double rate;
             if (isFakeExtended) {
-                Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile();
+                Profile profile = profileFunction.getProfile();
                 if (profile == null)
                     return "null";
                 double currentBasalRate = profile.getBasal();
@@ -438,7 +453,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
             }
 
             if (SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)) {
-                Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile();
+                Profile profile = profileFunction.getProfile();
                 if (profile != null) {
                     double basal = profile.getBasal();
                     if (basal != 0) {
@@ -453,7 +468,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
     }
 
     private String getCalcuatedPercentageIfNeeded() {
-        Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile();
+        Profile profile = profileFunction.getProfile();
 
         if (profile == null)
             return "null";
@@ -479,7 +494,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
     }
 
     public String toStringVeryShort() {
-        Profile profile = ConfigBuilderPlugin.getPlugin().getProfileFunction().getProfile();
+        Profile profile = profileFunction.getProfile();
 
         if (profile == null)
             return "null";

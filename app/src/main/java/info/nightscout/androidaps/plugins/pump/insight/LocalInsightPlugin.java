@@ -1229,7 +1229,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             InsightPumpID stoppedEvent = MainApp.getDbHelper().getPumpStoppedEvent(pumpID.pumpSerial, pumpID.timestamp);
             if (stoppedEvent == null || stoppedEvent.eventType.equals("PumpPaused")) continue;
             long tbrStart = stoppedEvent.timestamp + 10000;
-            TemporaryBasal temporaryBasal = new TemporaryBasal();
+            TemporaryBasal temporaryBasal = new TemporaryBasal(getInjector());
             temporaryBasal.durationInMinutes = (int) ((pumpID.timestamp - tbrStart) / 60000);
             temporaryBasal.date = tbrStart;
             temporaryBasal.source = Source.PUMP;
@@ -1355,7 +1355,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         pumpID.timestamp = timestamp;
         pumpID.eventType = "StartOfTBR";
         MainApp.getDbHelper().createOrUpdate(pumpID);
-        TemporaryBasal temporaryBasal = new TemporaryBasal();
+        TemporaryBasal temporaryBasal = new TemporaryBasal(getInjector());
         temporaryBasal.durationInMinutes = event.getDuration();
         temporaryBasal.source = Source.PUMP;
         temporaryBasal.pumpId = pumpID.id;
@@ -1374,7 +1374,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         pumpID.eventType = "EndOfTBR";
         pumpID.timestamp = timestamp;
         MainApp.getDbHelper().createOrUpdate(pumpID);
-        TemporaryBasal temporaryBasal = new TemporaryBasal();
+        TemporaryBasal temporaryBasal = new TemporaryBasal(getInjector());
         temporaryBasal.durationInMinutes = 0;
         temporaryBasal.source = Source.PUMP;
         temporaryBasal.pumpId = pumpID.id;
@@ -1572,7 +1572,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             data.put("created_at", DateUtil.toISOString(date));
             data.put("eventType", CareportalEvent.NOTE);
             data.put("notes", note);
-            CareportalEvent careportalEvent = new CareportalEvent();
+            CareportalEvent careportalEvent = new CareportalEvent(getInjector());
             careportalEvent.date = date;
             careportalEvent.source = Source.USER;
             careportalEvent.eventType = CareportalEvent.NOTE;
@@ -1606,7 +1606,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
             data.put("created_at", DateUtil.toISOString(date));
             data.put("eventType", event);
-            CareportalEvent careportalEvent = new CareportalEvent();
+            CareportalEvent careportalEvent = new CareportalEvent(getInjector());
             careportalEvent.date = date;
             careportalEvent.source = Source.USER;
             careportalEvent.eventType = event;
