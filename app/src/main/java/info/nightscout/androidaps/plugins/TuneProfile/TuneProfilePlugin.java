@@ -1452,7 +1452,7 @@ public class TuneProfilePlugin extends PluginBase {
             }
 
             // zip all autotune files created during the run
-            //FS.zipAutotune(lastRun);
+            FS.zipAutotune(lastRun);
 
             return result;
         } else
@@ -1487,9 +1487,7 @@ public class TuneProfilePlugin extends PluginBase {
         try {
             jsonSettings.put("datestring",DateUtil.toISOString(runDate,null,null));
             jsonSettings.put("dateutc",DateUtil.toISOString(runDate));
-            jsonSettings.put("firstloopstartlocal",DateUtil.dateAndTimeString(firstloopstart));
-            jsonSettings.put("lastloopendlocal",DateUtil.dateAndTimeString(lastloopend));
-            jsonSettings.put("utcOffset",(int) (DateUtil.getTimeZoneOffsetMs()/1000/60/60));
+            jsonSettings.put("utcOffset",(int) (DateUtil.getTimeZoneOffsetMs()/1000/60));
             jsonSettings.put("url_nightscout",SP.getString(R.string.key_nsclientinternal_url, ""));
             jsonSettings.put("nbdays", nbDays);
             jsonSettings.put("startdate",DateUtil.toISOString(firstloopstart,"yyyy-MM-dd",null));
