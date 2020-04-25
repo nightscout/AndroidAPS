@@ -52,6 +52,8 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
     private final HardLimits hardLimits;
+    private final Profiler profiler;
+    private final FabricPrivacy fabricPrivacy;
 
     // last values
     DetermineBasalAdapterAMAJS lastDetermineBasalAdapterAMAJS = null;
@@ -71,7 +73,9 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
             ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
             IobCobCalculatorPlugin iobCobCalculatorPlugin,
-            HardLimits hardLimits
+            HardLimits hardLimits,
+            Profiler profiler,
+            FabricPrivacy fabricPrivacy
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.APS)
@@ -92,6 +96,8 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         this.treatmentsPlugin = treatmentsPlugin;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
         this.hardLimits = hardLimits;
+        this.profiler = profiler;
+        this.fabricPrivacy = fabricPrivacy;
     }
 
     @Override
@@ -161,11 +167,11 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
         long start = System.currentTimeMillis();
         long startPart = System.currentTimeMillis();
         IobTotal[] iobArray = iobCobCalculatorPlugin.calculateIobArrayInDia(profile);
-        Profiler.log(aapsLogger, LTag.APS, "calculateIobArrayInDia()", startPart);
+        profiler.log(LTag.APS, "calculateIobArrayInDia()", startPart);
 
         startPart = System.currentTimeMillis();
         MealData mealData = iobCobCalculatorPlugin.getMealData();
-        Profiler.log(aapsLogger, LTag.APS, "getMealData()", startPart);
+        profiler.log(LTag.APS, "getMealData()", startPart);
 
         double maxIob = constraintChecker.getMaxIOBAllowed().value();
 
@@ -206,8 +212,8 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
             lastAutosensResult = new AutosensResult();
             lastAutosensResult.sensResult = "autosens disabled";
         }
-        Profiler.log(aapsLogger, LTag.APS, "detectSensitivityandCarbAbsorption()", startPart);
-        Profiler.log(aapsLogger, LTag.APS, "AMA data gathering", start);
+        profiler.log(LTag.APS, "detectSensitivityandCarbAbsorption()", startPart);
+        profiler.log(LTag.APS, "AMA data gathering", start);
 
         start = System.currentTimeMillis();
 
@@ -217,13 +223,13 @@ public class OpenAPSAMAPlugin extends PluginBase implements APSInterface {
                     isTempTarget
             );
         } catch (JSONException e) {
-            FabricPrivacy.getInstance().logException(e);
+            fabricPrivacy.logException(e);
             return;
         }
 
 
         DetermineBasalResultAMA determineBasalResultAMA = determineBasalAdapterAMAJS.invoke();
-        Profiler.log(aapsLogger, LTag.APS, "AMA calculation", start);
+        profiler.log(LTag.APS, "AMA calculation", start);
         // Fix bug determine basal
         if (determineBasalResultAMA == null) {
             aapsLogger.error(LTag.APS, "SMB calculation returned null");

@@ -23,7 +23,6 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -66,6 +65,8 @@ public class IobCobOref1Thread extends Thread {
     @Inject SensitivityAAPSPlugin sensitivityAAPSPlugin;
     @Inject SensitivityWeightedAveragePlugin sensitivityWeightedAveragePlugin;
     @Inject BuildHelper buildHelper;
+    @Inject Profiler profiler;
+    @Inject FabricPrivacy fabricPrivacy;
 
     private final HasAndroidInjector injector;
     private boolean bgDataReload;
@@ -222,7 +223,7 @@ public class IobCobOref1Thread extends Thread {
                                 }
                             } catch (Exception e) {
                                 aapsLogger.error("Unhandled exception", e);
-                                FabricPrivacy.getInstance().logException(e);
+                                fabricPrivacy.logException(e);
                                 aapsLogger.debug(autosensDataTable.toString());
                                 aapsLogger.debug(bucketed_data.toString());
                                 aapsLogger.debug(iobCobCalculatorPlugin.getBgReadings().toString());
@@ -391,7 +392,7 @@ public class IobCobOref1Thread extends Thread {
             rxBus.send(new EventIobCalculationProgress(""));
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread ended: " + from);
             aapsLogger.debug(LTag.AUTOSENS, "Midnights: " + MidnightTime.log());
-            Profiler.log(aapsLogger, LTag.AUTOSENS, "IobCobOref1Thread", start);
+            profiler.log(LTag.AUTOSENS, "IobCobOref1Thread", start);
         }
     }
 }

@@ -62,6 +62,8 @@ public class IobCobThread extends Thread {
     @Inject SensitivityAAPSPlugin sensitivityAAPSPlugin;
     @Inject SensitivityWeightedAveragePlugin sensitivityWeightedAveragePlugin;
     @Inject BuildHelper buildHelper;
+    @Inject Profiler profiler;
+    @Inject FabricPrivacy fabricPrivacy;
 
     private final HasAndroidInjector injector;
     private boolean bgDataReload;
@@ -218,7 +220,7 @@ public class IobCobThread extends Thread {
                                 }
                             } catch (Exception e) {
                                 aapsLogger.error("Unhandled exception", e);
-                                FabricPrivacy.getInstance().logException(e);
+                                fabricPrivacy.logException(e);
                                 aapsLogger.debug(autosensDataTable.toString());
                                 aapsLogger.debug(bucketed_data.toString());
                                 aapsLogger.debug(iobCobCalculatorPlugin.getBgReadings().toString());
@@ -314,7 +316,7 @@ public class IobCobThread extends Thread {
             rxBus.send(new EventIobCalculationProgress(""));
             aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread ended: " + from);
             aapsLogger.debug(LTag.AUTOSENS, "Midnights: " + MidnightTime.log());
-            Profiler.log(aapsLogger, LTag.AUTOSENS, "IobCobThread", start);
+            profiler.log(LTag.AUTOSENS, "IobCobThread", start);
         }
     }
 
