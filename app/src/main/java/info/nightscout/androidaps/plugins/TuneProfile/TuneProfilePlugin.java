@@ -2,6 +2,12 @@ package info.nightscout.androidaps.plugins.TuneProfile;
 
 import android.util.LongSparseArray;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Intervals;
@@ -39,6 +45,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -1355,7 +1362,7 @@ public class TuneProfilePlugin extends PluginBase {
                 TreatmentService ts = new TreatmentService();
                 opts.treatments = ts.getTreatmentDataFromTime(treatmentStart,treatmentEnd,false);
                 opts.pumpTempBasalHistory=MainApp.getDbHelper().getTemporaryBasalsDataFromTime(treatmentStart,treatmentEnd,false);
-                for (ExtendedBolus eb: MainApp.getDbHelper().getExtendedBolusDataFromTime(treatmentStart,treatmentEnd,false) ) { opts.pumpTempBasalHistory.add(new TemporaryBasal(eb)); }
+                opts.pumpExtBolusHistory=MainApp.getDbHelper().getExtendedBolusDataFromTime(treatmentStart,treatmentEnd,false);
 
                 try {
                     FS.createAutotunefile("aaps-entries." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(4));
@@ -1372,11 +1379,16 @@ public class TuneProfilePlugin extends PluginBase {
                                 idx++;
                             }
                             tp.absoluteRate = tp.tempBasalConvertedToAbsolute(tp.date, ps);
-                            tp.durationInMinutes=tp.getRealDuration();
                         }
                     }
-                    Collections.sort(opts.pumpTempBasalHistory, (o1, o2) -> (int) (o1.date  - o2.date) );
+                    //todo: philoul first use seperate lists for basal Temp and extended temp
+                    //for (ExtendedBolus eb: opts.pumpExtBolusHistory ) { opts.pumpTempBasalHistory.add(new TemporaryBasal(eb)); }
+                    //Collections.sort(opts.pumpTempBasalHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
                     FS.createAutotunefile("aaps-tempbasalabs." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistory.toString());
+                    FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpExtBolusHistory.toString());
+                    AutotuneService testdao = new AutotuneService();
+                    List<TemporaryBasal> test = testdao.getTempBasalDataFromTime(treatmentStart,treatmentEnd,false);
+                    FS.createAutotunefile("aaps-testdao." + FS.formatDate(new Date(glucoseStart)) + ".json", test.toString());
 
                 } catch (JSONException e) {}
                  //opts.treatments= Meal.generateMeal(opts);
@@ -1568,4 +1580,6 @@ public class TuneProfilePlugin extends PluginBase {
         return (double) tmp / factor;
     }
     // end of TuneProfile Plugin
+
+
 }
