@@ -1307,15 +1307,10 @@ public class TuneProfilePlugin extends PluginBase {
         c.set(Calendar.MILLISECOND, 0);
 
         long endTime = c.getTimeInMillis();
-        long starttime = endTime - (24 * 60 * 60 * 1000L);
-
-        endTime = endTime(lastRun);
-        starttime = endTime - daysBack * 24 * 60 *  60 * 1000L;
+        long starttime = endTime - daysBack * 24 * 60 *  60 * 1000L;
 
         FS.createAutotunefile(FS.SETTINGS,settings(lastRun,daysBack,new Date(starttime),new Date(endTime)));
 
-//        Date lastProfileChange = NSService.lastProfileChange();
-//        Date lastProfileChange = new Date(TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(endTime).date);
         int toMgDl = 1;
         Opts opts=new Opts();
         opts.categorize_uam_as_basal = SP.getBoolean("categorize_uam_as_basal", false);
@@ -1325,29 +1320,17 @@ public class TuneProfilePlugin extends PluginBase {
             return null;
         opts.profile=profile;
         tunedProfileResult = profile;
+        try {
+            FS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(4));
+        } catch (JSONException e) {}
 // TODO: Philoul retrieve the units from the main app parameters instead of the profile
         if(profile.getUnits().equals("mmol"))
             toMgDl = 18;
         log.debug("ActiveProfile units: " + profile.getUnits()+" so divisor is "+toMgDl);
-        //Check if Wifi is Connected
-//        if(!nsService.isWifiConnected()){
-           // return "READ THE WARNING!";
-//        }
-        // check if daysBack goes before the last profile switch
-//        if((System.currentTimeMillis() - (daysBack * 24 * 60 * 60 * 1000L)) < lastProfileChange.getTime()){
-            //return "ERROR -> I cannot tune before the last profile switch!("+(System.currentTimeMillis() - lastProfileChange.getTime()) / (24 * 60 * 60 * 1000L)+" days ago)";
-//        }
+
         if(daysBack < 1){
             return "Sorry I cannot do it for less than 1 day!";
         } else {
-            //     # to capture UTC-dated treatments, we need to capture an extra 12h on either side, plus the DIA lookback
-            //    # 18h = 12h for timezones + 6h for DIA; 40h = 28h for 4am + 12h for timezones
-            //long treatmentsStart = starttime - (daysBack-1) * 24 * 60 * 60 * 1000L - 18 * 60 * 60 * 1000L;
-            long treatmentsStart = starttime - 6 * 60 * 60 * 1000L;     // 6 hour before first BG value of first day
-            opts.pumpHistory=MainApp.getDbHelper().getCareportalEventsFromTime(treatmentsStart,false);
-            FS.createAutotunefile("aaps-treatmentsfull.json", opts.pumpHistory.toString());
-            List<ProfileSwitch> lp = MainApp.getDbHelper().getProfileSwitchData(starttime-30*24*60*60*1000,true);
-
 //            for (int i = daysBack; i > 0; i--) {
             for (int i = 0; i < daysBack; i++) {
 //                tunedBasalsInit();
@@ -1358,42 +1341,32 @@ public class TuneProfilePlugin extends PluginBase {
                 long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
                 long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
                 long treatmentEnd = glucoseEnd;
-                opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
-                TreatmentService ts = new TreatmentService();
-                opts.treatments = ts.getTreatmentDataFromTime(treatmentStart,treatmentEnd,false);
-                opts.pumpTempBasalHistory=MainApp.getDbHelper().getTemporaryBasalsDataFromTime(treatmentStart,treatmentEnd,false);
-                opts.pumpExtBolusHistory=MainApp.getDbHelper().getExtendedBolusDataFromTime(treatmentStart,treatmentEnd,false);
 
+                // get 24 hours BG values from 4 AM to 4 AM next day
+                opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
+
+                // get treatments from 6 hours (DIA duration) before first BG value
+                opts.treatments = new TreatmentService().getTreatmentDataFromTime(treatmentStart,treatmentEnd,false);
+                // get basal temp and extended temp from 6 hours (DIA duration) before first BG value
+                opts.pumpTempBasalHistory=MainApp.getDbHelper().getTemporaryBasalsDataFromTime(treatmentStart,treatmentEnd,false);
+                for (TemporaryBasal tp:opts.pumpTempBasalHistory ) {
+                    Profile ps = ProfileFunctions.getInstance().getProfile(tp.date);
+                    if (ps!=null)
+                        tp.absoluteRate = tp.tempBasalConvertedToAbsolute(tp.date, ps);
+                }
+                opts.pumpHistory = opts.pumpTempBasalHistory;
+                opts.pumpExtBolusHistory=MainApp.getDbHelper().getExtendedBolusDataFromTime(treatmentStart,treatmentEnd,false);
+                // merge in pumpHistory Basal temp and extended temp but keep at this step both file for testing
+                opts.pumpHistory = opts.pumpTempBasalHistory;
+                for (ExtendedBolus eb: opts.pumpExtBolusHistory ) { opts.pumpHistory.add(new TemporaryBasal(eb)); }
+                Collections.sort(opts.pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
                 try {
                     FS.createAutotunefile("aaps-entries." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(4));
-                    // treatments are get 6 hours (DIA duration) before first BG value
-                    FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatments.toString());
-                    //FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistory.toString());
-
-                    for (TemporaryBasal tp:opts.pumpTempBasalHistory ) {
-                        int idx = 0;
-                        if (lp!=null ) {
-                            Profile ps = ProfileFunctions.getInstance().getProfile(tp.date);
-                            if (ps!=null)
-                                tp.absoluteRate = tp.tempBasalConvertedToAbsolute(tp.date, ps);
-                        }
-                    }
-                    //todo: philoul first use seperate lists for basal Temp and extended temp
-                    FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.tempBasaltoJSON(treatmentStart,treatmentEnd).toString(4));
-                    for (ExtendedBolus eb: opts.pumpExtBolusHistory ) { opts.pumpTempBasalHistory.add(new TemporaryBasal(eb)); }
-                    Collections.sort(opts.pumpTempBasalHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
-                    FS.createAutotunefile("aaps-tempbasalext." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.tempBasaltoJSON(treatmentStart,treatmentEnd).toString(4));
+                    FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatmentstoJSON().toString(4));
+                    FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistorytoJSON().toString(4));
+                    FS.createAutotunefile("aaps-pumphistory." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpHistorytoJSON().toString(4));
                     FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.extBolustoJSON(treatmentStart,treatmentEnd).toString(4));
-                    //NSService testdao = new NSService();
-                    //List<Treatment> test = testdao.getTreatments(treatmentStart,treatmentEnd);
-                    //FS.createAutotunefile("aaps-testdao." + FS.formatDate(new Date(glucoseStart)) + ".json", test.toString());
 
-                } catch (JSONException e) {}
-                 //opts.treatments= Meal.generateMeal(opts);
-
-                 //opts.treatments = opts.pumpHistory;
-
-                try {
                     log.debug("Day "+i+" of "+daysBack);
                     //log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
                     log.debug("NSService asked for data from "+formatDate(new Date(glucoseStart))+" \nto "+formatDate(new Date(glucoseEnd)));
@@ -1481,7 +1454,7 @@ public class TuneProfilePlugin extends PluginBase {
                 convertedProfile.put("target_high", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", profile.getTargetHighMgdl())));
                 convertedProfile.put("units", profile.getUnits());
 
-                FS.createAutotunefile(FS.profilName(null), convertedProfile.toString());
+                FS.createAutotunefile(FS.profilName(null), convertedProfile.toString(4));
 
                 store.put(MainApp.gs(R.string.tuneprofile_name), convertedProfile);
                 ProfileStore profileStore = new ProfileStore(json);
