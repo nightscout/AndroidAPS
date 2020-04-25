@@ -79,4 +79,26 @@ public class Opts {
         return json;
     }
 
+    //For treatment export, add starttime and endtime to export dedicated files for each loop
+    public JSONArray extBolustoJSON(long starttime, long endtime)  {
+        JSONArray json = new JSONArray();
+        try {
+            for (ExtendedBolus cp:pumpExtBolusHistory ) {
+                JSONObject cPjson = new JSONObject();
+
+                if(cp.date >= starttime && cp.date <= endtime && cp.isValid) {
+                    cPjson.put("_id", cp._id);
+                    cPjson.put("eventType","Extended Bolus");
+                    cPjson.put("date",cp.date);
+                    cPjson.put("dateString",DateUtil.toISOAsUTC(cp.date));
+                    cPjson.put("insulin",cp.insulin);
+                    cPjson.put("totalDuration",cp.durationInMinutes);
+                    cPjson.put("realDuration",cp.getRealDuration());
+                }
+                json.put(cPjson);
+            }
+        } catch (JSONException e) {}
+
+        return json;
+    }
 }
