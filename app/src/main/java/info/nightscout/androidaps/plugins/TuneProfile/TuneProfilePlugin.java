@@ -1368,24 +1368,22 @@ public class TuneProfilePlugin extends PluginBase {
                     FS.createAutotunefile("aaps-entries." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(4));
                     // treatments are get 6 hours (DIA duration) before first BG value
                     FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatments.toString());
-                    FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistory.toString());
+                    //FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistory.toString());
 
                     for (TemporaryBasal tp:opts.pumpTempBasalHistory ) {
                         int idx = 0;
-                        Profile ps = profile;
                         if (lp!=null ) {
-                            while (idx < lp.size() && lp.get(idx).date <= tp.date) {
-                                ps = lp.get(idx).getProfileObject();
-                                idx++;
-                            }
-                            tp.absoluteRate = tp.tempBasalConvertedToAbsolute(tp.date, ps);
+                            Profile ps = ProfileFunctions.getInstance().getProfile(tp.date);
+                            if (ps!=null)
+                                tp.absoluteRate = tp.tempBasalConvertedToAbsolute(tp.date, ps);
                         }
                     }
                     //todo: philoul first use seperate lists for basal Temp and extended temp
-                    //for (ExtendedBolus eb: opts.pumpExtBolusHistory ) { opts.pumpTempBasalHistory.add(new TemporaryBasal(eb)); }
-                    //Collections.sort(opts.pumpTempBasalHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
-                    FS.createAutotunefile("aaps-tempbasalabs." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistory.toString());
-                    FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.extBolustoJSON(treatmentStart,treatmentEnd).toString());
+                    FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.tempBasaltoJSON(treatmentStart,treatmentEnd).toString(4));
+                    for (ExtendedBolus eb: opts.pumpExtBolusHistory ) { opts.pumpTempBasalHistory.add(new TemporaryBasal(eb)); }
+                    Collections.sort(opts.pumpTempBasalHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
+                    FS.createAutotunefile("aaps-tempbasalext." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.tempBasaltoJSON(treatmentStart,treatmentEnd).toString(4));
+                    FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.extBolustoJSON(treatmentStart,treatmentEnd).toString(4));
                     //NSService testdao = new NSService();
                     //List<Treatment> test = testdao.getTreatments(treatmentStart,treatmentEnd);
                     //FS.createAutotunefile("aaps-testdao." + FS.formatDate(new Date(glucoseStart)) + ".json", test.toString());

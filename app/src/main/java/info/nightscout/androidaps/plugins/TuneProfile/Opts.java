@@ -92,7 +92,7 @@ public class Opts {
                     cPjson.put("date",cp.date);
                     cPjson.put("dateString",DateUtil.toISOAsUTC(cp.date));
                     cPjson.put("insulin",cp.insulin);
-                    cPjson.put("totalDuration",cp.durationInMinutes);
+                    cPjson.put("insulinrate",cp.absoluteRate());
                     cPjson.put("realDuration",cp.getRealDuration());
                 }
                 json.put(cPjson);
@@ -101,4 +101,30 @@ public class Opts {
 
         return json;
     }
+
+    //For treatment export, add starttime and endtime to export dedicated files for each loop
+    public JSONArray tempBasaltoJSON(long starttime, long endtime)  {
+        JSONArray json = new JSONArray();
+        try {
+            for (TemporaryBasal cp:pumpTempBasalHistory ) {
+                JSONObject cPjson = new JSONObject();
+
+                if(cp.date >= starttime && cp.date <= endtime && cp.isValid) {
+                    cPjson.put("_id", cp._id);
+                    cPjson.put("eventType","Temp Basal");
+                    cPjson.put("date",cp.date);
+                    cPjson.put("dateString",DateUtil.toISOAsUTC(cp.date));
+                    cPjson.put("absolute",cp.absoluteRate);
+                    cPjson.put("rate",cp.absoluteRate);
+                    cPjson.put("duration",cp.getRealDuration());
+                    cPjson.put("isEnding",cp.isEndingEvent());
+                    cPjson.put("isFakeExtended",cp.isFakeExtended);
+                }
+                json.put(cPjson);
+            }
+        } catch (JSONException e) {}
+
+        return json;
+    }
+
 }

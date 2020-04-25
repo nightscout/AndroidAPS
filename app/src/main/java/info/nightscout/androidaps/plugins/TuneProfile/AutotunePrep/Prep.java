@@ -503,6 +503,14 @@ public class Prep {
 //            log.debug(absorbing+" mealCOB: "+mealCOB+" mealCarbs: "+mealCarbs+" basalBGI: "+round(basalBGI,1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
 
+
+        /* Code template for IOB calculation trom tempBasal Object
+        IobTotal iob = new IobTotal(now);
+        Profile profile = ProfileFunctions.getInstance().getProfile(now);
+        if (profile != null)
+            iob = tempBasal.iobCalc(now, profile);
+
+         */
 //    IOBInputs = {
 //        profile: profileData
 //    ,   history: opts.pumpHistory
