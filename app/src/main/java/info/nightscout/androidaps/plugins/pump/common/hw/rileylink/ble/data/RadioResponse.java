@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
@@ -75,8 +74,8 @@ public class RadioResponse {
         }
         byte[] encodedPayload;
 
-        if (RileyLinkFirmwareVersion.isSameVersion(RileyLinkUtil.getRileyLinkServiceData().versionCC110,
-            RileyLinkFirmwareVersion.Version2)) {
+        if (RileyLinkFirmwareVersion.isSameVersion(RileyLinkUtil.getInstance().getRileyLinkServiceData().versionCC110,
+                RileyLinkFirmwareVersion.Version2)) {
             encodedPayload = ByteUtil.substring(rxData, 3, rxData.length - 3);
             rssi = rxData[1];
             responseNumber = rxData[2];
@@ -92,23 +91,23 @@ public class RadioResponse {
             // well, for non-radio commands we shouldn't even reach this point
             // but getVersion is kind of exception
             if (command != null && //
-                command.getCommandType() != RileyLinkCommandType.SendAndListen) {
+                    command.getCommandType() != RileyLinkCommandType.SendAndListen) {
                 decodedOK = true;
                 decodedPayload = encodedPayload;
                 return;
             }
 
-            switch (RileyLinkUtil.getEncoding()) {
+            switch (RileyLinkUtil.getInstance().getEncoding()) {
 
                 case Manchester:
                 case FourByteSixByteRileyLink: {
                     decodedOK = true;
                     decodedPayload = encodedPayload;
                 }
-                    break;
+                break;
 
                 case FourByteSixByteLocal: {
-                    byte[] decodeThis = RileyLinkUtil.getEncoding4b6b().decode4b6b(encodedPayload);
+                    byte[] decodeThis = RileyLinkUtil.getInstance().getEncoding4b6b().decode4b6b(encodedPayload);
 
                     if (decodeThis != null && decodeThis.length > 2) {
                         decodedOK = true;
@@ -118,17 +117,17 @@ public class RadioResponse {
                         byte calculatedCRC = CRC.crc8(decodedPayload);
                         if (receivedCRC != calculatedCRC) {
                             LOG.error(String.format("RadioResponse: CRC mismatch, calculated 0x%02x, received 0x%02x",
-                                calculatedCRC, receivedCRC));
+                                    calculatedCRC, receivedCRC));
                         }
                     } else {
                         throw new RileyLinkCommunicationException(RileyLinkBLEError.TooShortOrNullResponse);
                     }
                 }
-                    break;
+                break;
 
                 default:
-                    throw new NotImplementedException("this {" + RileyLinkUtil.getEncoding().toString()
-                        + "} encoding is not supported");
+                    throw new NotImplementedException("this {" + RileyLinkUtil.getInstance().getEncoding().toString()
+                            + "} encoding is not supported");
             }
         } catch (NumberFormatException e) {
             decodedOK = false;

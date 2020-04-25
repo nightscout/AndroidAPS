@@ -142,7 +142,7 @@ public class RileyLinkBLE {
 
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     if (status == BluetoothGatt.GATT_SUCCESS) {
-                        RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothConnected);
+                        RileyLinkUtil.getInstance().sendBroadcastMessage(RileyLinkConst.Intents.BluetoothConnected);
                     } else {
                         if (isLogEnabled())
                             LOG.debug("BT State connected, GATT status {} ({})", status, getGattStatusMessage(status));
@@ -153,7 +153,7 @@ public class RileyLinkBLE {
                     // LOG.debug("We are in {} state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" :
                     // "Disconnecting");
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnected);
+                    RileyLinkUtil.getInstance().sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnected);
                     if (manualDisconnect)
                         close();
                     LOG.warn("RileyLink Disconnected.");
@@ -240,19 +240,19 @@ public class RileyLinkBLE {
 
                     if (rileyLinkFound) {
                         mIsConnected = true;
-                        RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkReady);
+                        RileyLinkUtil.getInstance().sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkReady);
                         // RileyLinkUtil.sendNotification(new
                         // ServiceNotification(RileyLinkConst.Intents.RileyLinkReady), null);
                     } else {
                         mIsConnected = false;
-                        RileyLinkUtil.setServiceState(RileyLinkServiceState.RileyLinkError,
+                        RileyLinkUtil.getInstance().setServiceState(RileyLinkServiceState.RileyLinkError,
                                 RileyLinkError.DeviceIsNotRileyLink);
                     }
 
                 } else {
                     if (isLogEnabled())
                         LOG.debug("onServicesDiscovered " + getGattStatusMessage(status));
-                    RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkGattFailed);
+                    RileyLinkUtil.getInstance().sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkGattFailed);
                 }
             }
         };

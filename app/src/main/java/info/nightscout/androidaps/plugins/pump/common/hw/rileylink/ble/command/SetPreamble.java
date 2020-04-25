@@ -17,7 +17,7 @@ public class SetPreamble extends RileyLinkCommand {
         super();
 
         // this command was not supported before 2.0
-        if (!RileyLinkUtil.getFirmwareVersion().isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher)) {
+        if (!RileyLinkUtil.getInstance().getFirmwareVersion().isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher)) {
             throw new NotImplementedException("Old firmware does not support SetPreamble command");
         }
 

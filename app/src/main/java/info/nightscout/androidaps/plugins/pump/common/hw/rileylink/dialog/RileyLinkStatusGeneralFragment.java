@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,9 @@ import org.joda.time.LocalDateTime;
 
 import java.util.Locale;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
@@ -27,7 +29,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  * Created by andy on 5/19/18.
  */
 
-public class RileyLinkStatusGeneral extends Fragment implements RefreshableInterface {
+public class RileyLinkStatusGeneralFragment extends DaggerFragment implements RefreshableInterface {
+
+    @Inject RileyLinkUtil rileyLinkUtil;
 
     TextView connectionStatus;
     TextView configuredAddress;
@@ -58,7 +62,7 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
     @Override
     public void onStart() {
         super.onStart();
-        rileyLinkServiceData = RileyLinkUtil.getRileyLinkServiceData();
+        rileyLinkServiceData = rileyLinkUtil.getRileyLinkServiceData();
 
         this.connectionStatus = getActivity().findViewById(R.id.rls_t1_connection_status);
         this.configuredAddress = getActivity().findViewById(R.id.rls_t1_configured_address);
@@ -93,12 +97,12 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
 
     public void refreshData() {
 
-        RileyLinkTargetDevice targetDevice = RileyLinkUtil.getTargetDevice();
+        RileyLinkTargetDevice targetDevice = rileyLinkUtil.getTargetDevice();
 
-        if (RileyLinkUtil.getServiceState()==null)
+        if (rileyLinkUtil.getServiceState() == null)
             this.connectionStatus.setText(MainApp.gs(RileyLinkServiceState.NotStarted.getResourceId(targetDevice)));
         else
-            this.connectionStatus.setText(MainApp.gs(RileyLinkUtil.getServiceState().getResourceId(targetDevice)));
+            this.connectionStatus.setText(MainApp.gs(rileyLinkUtil.getServiceState().getResourceId(targetDevice)));
 
         if (rileyLinkServiceData != null) {
             this.configuredAddress.setText(rileyLinkServiceData.rileylinkAddress);
@@ -109,7 +113,7 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
 
             RileyLinkFirmwareVersion firmwareVersion = rileyLinkServiceData.versionCC110;
 
-            if (firmwareVersion==null) {
+            if (firmwareVersion == null) {
                 this.firmwareVersion.setText("BLE113: -\nCC110: -");
             } else {
                 this.firmwareVersion.setText("BLE113: " + rileyLinkServiceData.versionBLE113 + //

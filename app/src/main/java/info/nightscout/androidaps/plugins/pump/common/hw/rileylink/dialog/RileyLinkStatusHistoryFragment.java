@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
@@ -23,7 +26,9 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
  * Created by andy on 5/19/18.
  */
 
-public class RileyLinkStatusHistory extends Fragment implements RefreshableInterface {
+public class RileyLinkStatusHistoryFragment extends DaggerFragment implements RefreshableInterface {
+
+    @Inject RileyLinkUtil rileyLinkUtil;
 
     RecyclerView recyclerView;
     RecyclerViewAdapter recyclerViewAdapter;
@@ -59,8 +64,8 @@ public class RileyLinkStatusHistory extends Fragment implements RefreshableInter
 
     @Override
     public void refreshData() {
-        if (RileyLinkUtil.getRileyLinkHistory()!=null) {
-            recyclerViewAdapter.addItemsAndClean(RileyLinkUtil.getRileyLinkHistory());
+        if (rileyLinkUtil.getRileyLinkHistory()!=null) {
+            recyclerViewAdapter.addItemsAndClean(rileyLinkUtil.getRileyLinkHistory());
         }
     }
 

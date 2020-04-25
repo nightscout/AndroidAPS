@@ -87,8 +87,8 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
         rileyLinkServiceData = new RileyLinkServiceData(RileyLinkTargetDevice.MedtronicPump);
 
-        RileyLinkUtil.setRileyLinkServiceData(rileyLinkServiceData);
-        RileyLinkUtil.setTargetDevice(RileyLinkTargetDevice.MedtronicPump);
+        rileyLinkUtil.setRileyLinkServiceData(rileyLinkServiceData);
+        rileyLinkUtil.setTargetDevice(RileyLinkTargetDevice.MedtronicPump);
 
         setPumpIDString(sp.getString(MedtronicConst.Prefs.PumpSerial, "000000"));
 
@@ -99,7 +99,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         rfspy = new RFSpy(rileyLinkBLE);
         rfspy.startReader();
 
-        RileyLinkUtil.setRileyLinkBLE(rileyLinkBLE);
+        rileyLinkUtil.setRileyLinkBLE(rileyLinkBLE);
 
         // init rileyLinkCommunicationManager
         medtronicCommunicationManager = new MedtronicCommunicationManager(context, rfspy);
@@ -177,7 +177,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     // PumpInterface - REMOVE
 
     public boolean isInitialized() {
-        return RileyLinkServiceState.isReady(RileyLinkUtil.getRileyLinkServiceData().serviceState);
+        return RileyLinkServiceState.isReady(rileyLinkUtil.getRileyLinkServiceData().serviceState);
     }
 
 

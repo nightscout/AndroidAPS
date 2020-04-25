@@ -33,7 +33,7 @@ public class RadioPacket {
 
     public byte[] getEncoded() {
 
-        switch (RileyLinkUtil.getEncoding()) {
+        switch (RileyLinkUtil.getInstance().getEncoding()) {
             case Manchester: { // We have this encoding in RL firmware
                 return pkt;
             }
@@ -41,7 +41,7 @@ public class RadioPacket {
             case FourByteSixByteLocal: {
                 byte[] withCRC = getWithCRC();
 
-                byte[] encoded = RileyLinkUtil.getEncoding4b6b().encode4b6b(withCRC);
+                byte[] encoded = RileyLinkUtil.getInstance().getEncoding4b6b().encode4b6b(withCRC);
                 return ByteUtil.concat(encoded, (byte)0);
             }
 
@@ -50,7 +50,7 @@ public class RadioPacket {
             }
 
             default:
-                throw new NotImplementedException(("Encoding not supported: " + RileyLinkUtil.getEncoding().toString()));
+                throw new NotImplementedException(("Encoding not supported: " + RileyLinkUtil.getInstance().getEncoding().toString()));
         }
     }
 

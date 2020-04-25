@@ -19,7 +19,7 @@ public class RileyLinkSelectPreference extends Preference {
         super(context);
         setInitialSummaryValue();
 
-        MedtronicUtil.setRileyLinkSelectPreference(this);
+        MedtronicUtil.getInstance().setRileyLinkSelectPreference(this);
     }
 
 
@@ -27,7 +27,7 @@ public class RileyLinkSelectPreference extends Preference {
         super(context, attrs);
         setInitialSummaryValue();
 
-        MedtronicUtil.setRileyLinkSelectPreference(this);
+        MedtronicUtil.getInstance().setRileyLinkSelectPreference(this);
     }
 
 

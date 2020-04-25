@@ -57,6 +57,7 @@ class MedtronicFragment : DaggerFragment() {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
     @Inject lateinit var warnColors: WarnColors
+    @Inject lateinit var rileyLinkUtil: RileyLinkUtil
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -173,10 +174,10 @@ class MedtronicFragment : DaggerFragment() {
     private fun setDeviceStatus() {
         val pumpStatus: MedtronicPumpStatus = MedtronicUtil.getPumpStatus()
         pumpStatus.rileyLinkServiceState = checkStatusSet(pumpStatus.rileyLinkServiceState,
-            RileyLinkUtil.getServiceState()) as RileyLinkServiceState?
+            rileyLinkUtil.getServiceState()) as RileyLinkServiceState?
 
         val resourceId = pumpStatus.rileyLinkServiceState.getResourceId(RileyLinkTargetDevice.MedtronicPump)
-        val rileyLinkError = RileyLinkUtil.getError()
+        val rileyLinkError = rileyLinkUtil.getError()
         medtronic_rl_status.text =
             when {
                 pumpStatus.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
@@ -187,7 +188,7 @@ class MedtronicFragment : DaggerFragment() {
             }
         medtronic_rl_status.setTextColor(if (rileyLinkError != null) Color.RED else Color.WHITE)
 
-        pumpStatus.rileyLinkError = checkStatusSet(pumpStatus.rileyLinkError, RileyLinkUtil.getError()) as RileyLinkError?
+        pumpStatus.rileyLinkError = checkStatusSet(pumpStatus.rileyLinkError, rileyLinkUtil.getError()) as RileyLinkError?
 
         medtronic_errors.text =
             pumpStatus.rileyLinkError?.let {

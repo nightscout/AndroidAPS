@@ -53,6 +53,7 @@ import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
@@ -95,6 +96,7 @@ import static info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUt
 public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInterface {
 
     private final SP sp;
+    private final RileyLinkUtil rileyLinkUtil;
 
     protected static MedtronicPumpPlugin plugin = null;
     private RileyLinkMedtronicService medtronicService;
@@ -125,7 +127,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             ActivePluginProvider activePlugin,
             SP sp,
             CommandQueueProvider commandQueue,
-            FabricPrivacy fabricPrivacy
+            FabricPrivacy fabricPrivacy,
+            RileyLinkUtil rileyLinkUtil
     ) {
 
         super(new PluginDescription() //
@@ -139,7 +142,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         );
         this.plugin = this;
 
-        this.rxBus = rxBus;
+        this.rileyLinkUtil = rileyLinkUtil;
         this.sp = sp;
 
         displayConnectionMessages = false;
@@ -177,7 +180,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Override
     protected void onStart() {
         super.onStart();
-        medtronicUIComm = new MedtronicUIComm(aapsLogger, rxBus, getResourceHelper());
+        medtronicUIComm = new MedtronicUIComm(aapsLogger, rxBus, getResourceHelper(), rileyLinkUtil);
         medtronicHistoryData = new MedtronicHistoryData(aapsLogger, sp, activePlugin);
     }
 

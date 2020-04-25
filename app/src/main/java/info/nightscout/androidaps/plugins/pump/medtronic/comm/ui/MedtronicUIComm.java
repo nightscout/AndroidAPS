@@ -16,6 +16,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 public class MedtronicUIComm {
 
     private final AAPSLogger aapsLogger;
+    private final RileyLinkUtil rileyLinkUtil;
 
     MedtronicCommunicationManager mcmInstance = null;
     MedtronicUIPostprocessor uiPostprocessor;
@@ -23,9 +24,11 @@ public class MedtronicUIComm {
     public MedtronicUIComm(
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
-            ResourceHelper resourceHelper
+            ResourceHelper resourceHelper,
+            RileyLinkUtil rileyLinkUtil
     ) {
         this.aapsLogger = aapsLogger;
+        this.rileyLinkUtil = rileyLinkUtil;
 
         uiPostprocessor = new MedtronicUIPostprocessor(aapsLogger, rxBus, resourceHelper);
     }
@@ -108,6 +111,6 @@ public class MedtronicUIComm {
 
 
     public void startTunning() {
-        RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
+        rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
     }
 }

@@ -69,7 +69,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class MedtronicHistoryData {
 
-    private static AAPSLogger aapsLogger;
+    private AAPSLogger aapsLogger;
     private SP sp;
     private ActivePluginProvider activePlugin;
 
@@ -138,7 +138,7 @@ public class MedtronicHistoryData {
     }
 
 
-    private static void showLogs(String header, String data) {
+    private void showLogs(String header, String data) {
         if (header != null) {
             aapsLogger.debug(LTag.PUMP, header);
         }

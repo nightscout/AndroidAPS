@@ -55,8 +55,8 @@ public abstract class RileyLinkCommunicationManager {
     public RileyLinkCommunicationManager(Context context, RFSpy rfspy) {
         this.context = context;
         this.rfspy = rfspy;
-        this.rileyLinkServiceData = RileyLinkUtil.getRileyLinkServiceData();
-        RileyLinkUtil.setRileyLinkCommunicationManager(this);
+        this.rileyLinkServiceData = RileyLinkUtil.getInstance().getRileyLinkServiceData();
+        RileyLinkUtil.getInstance().setRileyLinkCommunicationManager(this);
 
         configurePumpSpecificSettings();
     }
@@ -178,7 +178,7 @@ public abstract class RileyLinkCommunicationManager {
 
 
     public double tuneForDevice() {
-        return scanForDevice(RileyLinkUtil.getRileyLinkTargetFrequency().getScanFrequencies());
+        return scanForDevice(RileyLinkUtil.getInstance().getRileyLinkTargetFrequency().getScanFrequencies());
     }
 
 
@@ -192,7 +192,7 @@ public abstract class RileyLinkCommunicationManager {
      */
     public boolean isValidFrequency(double frequency) {
 
-        double[] scanFrequencies = RileyLinkUtil.getRileyLinkTargetFrequency().getScanFrequencies();
+        double[] scanFrequencies = RileyLinkUtil.getInstance().getRileyLinkTargetFrequency().getScanFrequencies();
 
         if (scanFrequencies.length == 1) {
             return RileyLinkUtil.isSame(scanFrequencies[0], frequency);

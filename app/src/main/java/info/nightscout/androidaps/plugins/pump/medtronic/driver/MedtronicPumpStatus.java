@@ -211,7 +211,7 @@ public class MedtronicPumpStatus extends PumpStatus {
                             : RileyLinkTargetFrequency.Medtronic_WorldWide;
 
                     if (targetFrequency != newTargetFrequency) {
-                        RileyLinkUtil.setRileyLinkTargetFrequency(newTargetFrequency);
+                        RileyLinkUtil.getInstance().setRileyLinkTargetFrequency(newTargetFrequency);
                         targetFrequency = newTargetFrequency;
                         targetFrequencyChanged = true;
                     }
@@ -311,12 +311,12 @@ public class MedtronicPumpStatus extends PumpStatus {
             }
 
             if (rileyLinkAddressChanged) {
-                MedtronicUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet);
+                MedtronicUtil.getInstance().sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet);
                 rileyLinkAddressChanged = false;
             }
 
             if (encodingChanged) {
-                RileyLinkUtil.getRileyLinkService().changeRileyLinkEncoding(encodingType);
+                RileyLinkUtil.getInstance().getRileyLinkService().changeRileyLinkEncoding(encodingType);
                 encodingChanged = false;
             }
         }

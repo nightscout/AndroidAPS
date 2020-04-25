@@ -60,6 +60,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
     @Inject SP sp;
     @Inject RxBusWrapper rxBus;
     @Inject ResourceHelper resourceHelper;
+    @Inject RileyLinkUtil rileyLinkUtil;
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 30241; // arbitrary.
     private static final int REQUEST_ENABLE_BT = 30242; // arbitrary
@@ -108,7 +109,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
             sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
 
-            RileyLinkUtil.getRileyLinkSelectPreference().setSummary(bleAddress);
+            rileyLinkUtil.getRileyLinkSelectPreference().setSummary(bleAddress);
 
             MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
             pumpStatus.verifyConfiguration(); // force reloading of address
@@ -189,7 +190,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
         }
 
         // disable currently selected RL, so that we can discover it
-        RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect);
+        rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect);
     }
 
 

@@ -26,6 +26,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
 
     @Inject ResourceHelper resourceHelper;
+    @Inject RileyLinkUtil rileyLinkUtil;
 
     TextView connectionStatus;
     TextView configuredAddress;
@@ -76,7 +77,7 @@ public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
         this.connectedDevice = findViewById(R.id.rls_t1_connected_device);
         this.connectionError = findViewById(R.id.rls_t1_connection_error);
 
-        rileyLinkServiceData = RileyLinkUtil.getRileyLinkServiceData();
+        rileyLinkServiceData = rileyLinkUtil.getRileyLinkServiceData();
 
         // // 7-12
         // int[] ids = {R.id.rls_t1_tv02, R.id.rls_t1_tv03, R.id.rls_t1_tv04, R.id.rls_t1_tv05, R.id.rls_t1_tv07, //
@@ -114,8 +115,8 @@ public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        mSectionsPagerAdapter.addFragment(new RileyLinkStatusGeneral(), resourceHelper.gs(R.string.rileylink_settings_tab1));
-        mSectionsPagerAdapter.addFragment(new RileyLinkStatusHistory(), resourceHelper.gs(R.string.rileylink_settings_tab2));
+        mSectionsPagerAdapter.addFragment(new RileyLinkStatusGeneralFragment(), resourceHelper.gs(R.string.rileylink_settings_tab1));
+        mSectionsPagerAdapter.addFragment(new RileyLinkStatusHistoryFragment(), resourceHelper.gs(R.string.rileylink_settings_tab2));
         //mSectionsPagerAdapter.addFragment(new RileyLinkStatusDevice(), "Medtronic");
 
         mViewPager.setAdapter(mSectionsPagerAdapter);
