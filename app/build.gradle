@@ -123,6 +123,7 @@ tasks.matching { it instanceof Test }.all {
 
 android {
     compileSdkVersion 28
+    ndkVersion "21.1.6352462"
 
     defaultConfig {
         minSdkVersion 23
