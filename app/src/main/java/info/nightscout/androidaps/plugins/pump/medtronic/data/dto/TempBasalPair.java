@@ -127,4 +127,10 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
         }
     }
 
+
+    @Override
+    public String toString() {
+        return "TempBasalPair [" + "Rate=" + insulinRate + ", DurationMinutes=" + durationMinutes + ", IsPercent="
+                + isPercent + "]";
+    }
 }

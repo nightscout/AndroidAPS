@@ -2,20 +2,14 @@ package info.nightscout.androidaps.plugins.aps.loop
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.db.TemporaryBasal
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PumpDescription
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.JsonHelper.safeGetDouble
-import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -34,6 +28,8 @@ class APSResultTest : TestBaseWithProfile() {
     @Mock lateinit var constraintChecker: ConstraintChecker
     @Mock lateinit var sp: SP
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
+
+    private val injector = HasAndroidInjector { AndroidInjector { } }
 
     private var closedLoopEnabled = Constraint(false)
     private val pumpDescription = PumpDescription()
@@ -79,36 +75,36 @@ class APSResultTest : TestBaseWithProfile() {
         Assert.assertEquals(false, apsResult.isChangeRequested)
 
         // request equal temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().percent(70).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(70).duration(30))
         apsResult.tempBasalRequested(true).percent(70).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
 
         // request zero temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().percent(10).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(10).duration(30))
         apsResult.tempBasalRequested(true).percent(0).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // request high temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().percent(190).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(190).duration(30))
         apsResult.tempBasalRequested(true).percent(200).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // request slightly different temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().percent(70).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(70).duration(30))
         apsResult.tempBasalRequested(true).percent(80).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
 
         // request different temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().percent(70).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(70).duration(30))
         apsResult.tempBasalRequested(true).percent(120).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // it should work with absolute temps too
         // request different temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().absolute(1.0).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(1.0).duration(30))
         apsResult.tempBasalRequested(true).percent(100).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().absolute(2.0).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(2.0).duration(30))
         apsResult.tempBasalRequested(true).percent(50).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
@@ -124,39 +120,39 @@ class APSResultTest : TestBaseWithProfile() {
         Assert.assertEquals(false, apsResult.isChangeRequested)
 
         // request equal temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().absolute(2.0).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(2.0).duration(30))
         apsResult.tempBasalRequested(true).rate(2.0).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().percent(200).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(200).duration(30))
         apsResult.tempBasalRequested(true).rate(2.0).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
 
         // request zero temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().absolute(0.1).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(0.1).duration(30))
         apsResult.tempBasalRequested(true).rate(0.0).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // request high temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().absolute(34.9).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(34.9).duration(30))
         apsResult.tempBasalRequested(true).rate(35.0).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // request slightly different temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().absolute(1.1).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(1.1).duration(30))
         apsResult.tempBasalRequested(true).rate(1.2).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
 
         // request different temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().absolute(1.1).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).absolute(1.1).duration(30))
         apsResult.tempBasalRequested(true).rate(1.5).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
 
         // it should work with percent temps too
         // request different temp
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().percent(110).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(110).duration(30))
         apsResult.tempBasalRequested(true).rate(1.1).duration(30)
         Assert.assertEquals(false, apsResult.isChangeRequested)
-        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal().percent(200).duration(30))
+        `when`(treatmentsPlugin.getTempBasalFromHistory(ArgumentMatchers.anyLong())).thenReturn(TemporaryBasal(injector).percent(200).duration(30))
         apsResult.tempBasalRequested(true).rate(0.5).duration(30)
         Assert.assertEquals(true, apsResult.isChangeRequested)
     }
@@ -173,7 +169,7 @@ class APSResultTest : TestBaseWithProfile() {
                 it.resourceHelper = resourceHelper
             }
         apsResult.rate(10.0)
-        val apsResult2 = apsResult.newAndClone(HasAndroidInjector { AndroidInjector { Unit } })
+        val apsResult2 = apsResult.newAndClone(injector)
         Assert.assertEquals(apsResult.rate, apsResult2.rate, 0.0)
     }
 

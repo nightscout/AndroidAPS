@@ -470,7 +470,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         // OpenAPSSMB only
         // Add expected zero temp basal for next 240 mins
         IobTotal basalIobWithZeroTemp = basalIob.copy();
-        TemporaryBasal t = new TemporaryBasal()
+        TemporaryBasal t = new TemporaryBasal(injector)
                 .date(now + 60 * 1000L)
                 .duration(240)
                 .absolute(0);
@@ -517,7 +517,7 @@ public class IobCobCalculatorPlugin extends PluginBase {
         // OpenAPSSMB only
         // Add expected zero temp basal for next 240 mins
         IobTotal basalIobWithZeroTemp = basalIob.copy();
-        TemporaryBasal t = new TemporaryBasal()
+        TemporaryBasal t = new TemporaryBasal(injector)
                 .date(now + 60 * 1000L)
                 .duration(240)
                 .absolute(0);

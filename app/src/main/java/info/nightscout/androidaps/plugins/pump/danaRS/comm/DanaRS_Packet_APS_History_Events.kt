@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import com.cozmo.danar.util.BleCommandUtil
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.db.ExtendedBolus
@@ -25,6 +26,7 @@ open class DanaRS_Packet_APS_History_Events(
     private val activePlugin: ActivePluginProvider,
     private val danaRSPlugin: DanaRSPlugin,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
+    private val injector: HasAndroidInjector,
     private var from: Long
 ) : DanaRS_Packet() {
 
@@ -75,7 +77,7 @@ open class DanaRS_Packet_APS_History_Events(
         val datetime = dateTimeSecFromBuff(data, 1) // 6 bytes
         val param1 = (intFromBuff(data, 7, 1) shl 8 and 0xFF00) + (intFromBuff(data, 8, 1) and 0xFF)
         val param2 = (intFromBuff(data, 9, 1) shl 8 and 0xFF00) + (intFromBuff(data, 10, 1) and 0xFF)
-        val temporaryBasal = TemporaryBasal().date(datetime).source(Source.PUMP).pumpId(datetime)
+        val temporaryBasal = TemporaryBasal(injector).date(datetime).source(Source.PUMP).pumpId(datetime)
         val extendedBolus = ExtendedBolus().date(datetime).source(Source.PUMP).pumpId(datetime)
         val status: String
         when (recordCode.toInt()) {

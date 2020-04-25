@@ -33,9 +33,9 @@ import static info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyL
  */
 public abstract class RileyLinkService extends DaggerService {
 
-    @Inject AAPSLogger aapsLogger;
-    @Inject SP sp;
-    @Inject Context context;
+    @Inject protected AAPSLogger aapsLogger;
+    @Inject protected SP sp;
+    @Inject protected Context context;
 
 
     public RileyLinkBLE rileyLinkBLE; // android-bluetooth management
@@ -48,7 +48,6 @@ public abstract class RileyLinkService extends DaggerService {
     @Override
     public void onCreate() {
         super.onCreate();
-        //LOG.debug("onCreate");
 
         RileyLinkUtil.setContext(this.context);
         RileyLinkUtil.setRileyLinkService(this);
@@ -61,8 +60,6 @@ public abstract class RileyLinkService extends DaggerService {
 
         bluetoothStateReceiver = new RileyLinkBluetoothStateReceiver();
         bluetoothStateReceiver.registerBroadcasts(this);
-
-        //LOG.debug("onCreate(): It's ALIVE!");
     }
 
     /**

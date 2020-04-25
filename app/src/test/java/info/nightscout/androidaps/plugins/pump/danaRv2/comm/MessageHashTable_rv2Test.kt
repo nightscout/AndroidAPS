@@ -23,7 +23,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class)
+@PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class, ConfigBuilderPlugin::class)
 class MessageHashTable_rv2Test : DanaRTestBase() {
 
     @Mock lateinit var rxBus: RxBusWrapper
@@ -41,7 +41,7 @@ class MessageHashTable_rv2Test : DanaRTestBase() {
     @Test
     fun runTest() {
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
-        val messageHashTableRv2 = MessageHashTableRv2(aapsLogger, rxBus, resourceHelper, constraintChecker, danaRPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue, activePlugin, detailedBolusInfoStorage, treatmentsPlugin)
+        val messageHashTableRv2 = MessageHashTableRv2(aapsLogger, rxBus, resourceHelper, constraintChecker, danaRPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue, activePlugin, detailedBolusInfoStorage, treatmentsPlugin, injector)
         val forTesting: MessageBase = MsgStatusAPS_v2(aapsLogger, danaRPump)
         val testPacket: MessageBase = messageHashTableRv2.findMessage(forTesting.command)
         Assert.assertEquals(0xE001, testPacket.command.toLong())

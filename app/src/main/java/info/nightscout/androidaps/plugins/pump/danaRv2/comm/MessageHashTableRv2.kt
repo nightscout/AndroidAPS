@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRv2.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -32,7 +33,8 @@ class MessageHashTableRv2 @Inject constructor(
     commandQueue: CommandQueueProvider,
     activePlugin: ActivePluginProvider,
     detailedBolusInfoStorage: DetailedBolusInfoStorage,
-    treatmentsPlugin: TreatmentsPlugin
+    treatmentsPlugin: TreatmentsPlugin,
+    injector: HasAndroidInjector
 ) : MessageHashTableBase {
 
     var messages: HashMap<Int, MessageBase> = HashMap()
@@ -91,7 +93,7 @@ class MessageHashTableRv2 @Inject constructor(
         put(MsgCheckValue_v2(aapsLogger, rxBus, resourceHelper, danaRPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue))        // 0xF0F1 CMD_PUMP_CHECK_VALUE
         put(MsgStatusAPS_v2(aapsLogger, danaRPump))              // 0xE001 CMD_PUMPSTATUS_APS
         put(MsgSetAPSTempBasalStart_v2(aapsLogger, 0, false, false))   // 0xE002 CMD_PUMPSET_APSTEMP
-        put(MsgHistoryEvents_v2(aapsLogger, resourceHelper, detailedBolusInfoStorage, danaRv2Plugin, rxBus, treatmentsPlugin))          // 0xE003 CMD_GET_HISTORY
+        put(MsgHistoryEvents_v2(aapsLogger, resourceHelper, detailedBolusInfoStorage, danaRv2Plugin, rxBus, treatmentsPlugin, injector))          // 0xE003 CMD_GET_HISTORY
         put(MsgSetHistoryEntry_v2(aapsLogger, 0, 0, 0, 0))        // 0xE004 CMD_SET_HISTORY_ENTRY
     }
 

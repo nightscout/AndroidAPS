@@ -183,7 +183,7 @@ class CareDialog : DialogFragmentWithDate() {
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {
-                val careportalEvent = CareportalEvent()
+                val careportalEvent = CareportalEvent(injector)
                 careportalEvent.date = eventTime
                 careportalEvent.source = Source.USER
                 careportalEvent.eventType = when (options) {

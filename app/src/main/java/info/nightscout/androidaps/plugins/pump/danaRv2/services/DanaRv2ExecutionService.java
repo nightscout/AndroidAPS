@@ -455,7 +455,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected())
             return new PumpEnactResult(injector).success(false);
         SystemClock.sleep(300);
-        MsgHistoryEvents_v2 msg = new MsgHistoryEvents_v2(aapsLogger, resourceHelper, detailedBolusInfoStorage, danaRv2Plugin, rxBus, treatmentsPlugin, lastHistoryFetched);
+        MsgHistoryEvents_v2 msg = new MsgHistoryEvents_v2(aapsLogger, resourceHelper, detailedBolusInfoStorage, danaRv2Plugin, rxBus, treatmentsPlugin, injector, lastHistoryFetched);
         aapsLogger.debug(LTag.PUMP, "Loading event history from: " + DateUtil.dateAndTimeString(lastHistoryFetched));
 
         mSerialIOThread.sendMessage(msg);

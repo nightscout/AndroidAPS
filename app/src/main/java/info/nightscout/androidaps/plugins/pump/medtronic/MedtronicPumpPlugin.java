@@ -95,8 +95,6 @@ import static info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUt
 @Singleton
 public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInterface {
 
-    //private final SP sp;
-
     protected static MedtronicPumpPlugin plugin = null;
     private RileyLinkMedtronicService medtronicService;
     private MedtronicPumpStatus pumpStatusLocal = null;
@@ -1031,7 +1029,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             pumpStatusLocal.tempBasalAmount = absoluteRate;
             pumpStatusLocal.tempBasalLength = durationInMinutes;
 
-            TemporaryBasal tempStart = new TemporaryBasal() //
+            TemporaryBasal tempStart = new TemporaryBasal(getInjector()) //
                     .date(System.currentTimeMillis()) //
                     .duration(durationInMinutes) //
                     .absolute(absoluteRate) //
@@ -1372,7 +1370,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         if (response) {
             aapsLogger.info(LTag.PUMP, getLogPrefix() + "cancelTempBasal - Cancel TBR successful.");
 
-            TemporaryBasal tempBasal = new TemporaryBasal() //
+            TemporaryBasal tempBasal = new TemporaryBasal(getInjector()) //
                     .date(System.currentTimeMillis()) //
                     .duration(0) //
                     .source(Source.USER);
@@ -1576,10 +1574,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         this.hasTimeDateOrTimeZoneChanged = true;
     }
-
-//    private void refreshCustomActionsList() {
-//        rxBus.send(new EventCustomActionsChanged());
-//    }
 
 
     public void setEnableCustomAction(MedtronicCustomActionType customAction, boolean isEnabled) {

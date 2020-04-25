@@ -2,19 +2,13 @@ package info.nightscout.androidaps.receivers
 
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.PumpInterface
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
-import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.TimeChangeType
-import org.slf4j.LoggerFactory
 import java.util.*
 import javax.inject.Inject
 

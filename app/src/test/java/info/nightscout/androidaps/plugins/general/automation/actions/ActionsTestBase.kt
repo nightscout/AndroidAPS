@@ -21,7 +21,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.mockito.Mock
 import org.powermock.core.classloader.annotations.PrepareForTest
 
-@PrepareForTest(VirtualPumpPlugin::class, RxBusWrapper::class, LocalProfilePlugin::class, SmsCommunicatorPlugin::class)
+@PrepareForTest(VirtualPumpPlugin::class, RxBusWrapper::class, LocalProfilePlugin::class, SmsCommunicatorPlugin::class, ConfigBuilderPlugin::class)
 open class ActionsTestBase : TestBaseWithProfile() {
 
     @Mock lateinit var sp: SP

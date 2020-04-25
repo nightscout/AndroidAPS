@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRv2.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.db.ExtendedBolus
@@ -25,6 +26,7 @@ class MsgHistoryEvents_v2 constructor(
     val danaRv2Plugin: DanaRv2Plugin,
     val rxBus: RxBusWrapper,
     val treatmentsPlugin: TreatmentsPlugin,
+    private val injector: HasAndroidInjector,
     var from: Long = 0
 ) : MessageBase() {
 
@@ -61,7 +63,7 @@ class MsgHistoryEvents_v2 constructor(
         val datetime = dateTimeSecFromBuff(bytes, 1) // 6 bytes
         val param1 = intFromBuff(bytes, 7, 2)
         val param2 = intFromBuff(bytes, 9, 2)
-        val temporaryBasal = TemporaryBasal()
+        val temporaryBasal = TemporaryBasal(injector)
             .date(datetime)
             .source(Source.PUMP)
             .pumpId(datetime)

@@ -102,6 +102,10 @@ class SPImplementation @Inject constructor(
     override fun putDouble(key: String, value: Double) =
         sharedPreferences.edit().putString(key, value.toString()).apply()
 
+    override fun putDouble(resourceID: Int, value: Double) {
+        sharedPreferences.edit().putString(resourceHelper.gs(resourceID), value.toString()).apply()
+    }
+
     override fun putLong(key: String, value: Long) =
         sharedPreferences.edit().putLong(key, value).apply()
 

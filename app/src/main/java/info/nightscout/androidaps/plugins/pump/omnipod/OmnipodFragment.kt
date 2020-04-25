@@ -60,6 +60,7 @@ class OmnipodFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
+    @Inject lateinit var warnColors: WarnColors
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -443,7 +444,7 @@ class OmnipodFragment : DaggerFragment() {
             } else {
                 omnipod_reservoir.text = resourceHelper.gs(R.string.omnipod_reservoir_left, pumpStatus.reservoirRemainingUnits)
             }
-            SetWarnColor.setColorInverse(omnipod_reservoir, pumpStatus.reservoirRemainingUnits, 50.0, 20.0)
+            warnColors.setColorInverse(omnipod_reservoir, pumpStatus.reservoirRemainingUnits, 50.0, 20.0)
 
         } else {
             omnipod_basabasalrate.text = ""

@@ -94,8 +94,6 @@
         <item name="colorAccent">@color/errorAlertBackground</item>
     </style>
 
-
-
     <style name="WizardPagePodContent">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -126,9 +124,6 @@
         <item name="android:divider">@android:color/black</item>
         <item name="android:dividerHeight">1dp</item>
     </style>
-
-
-
 
 
 </resources>

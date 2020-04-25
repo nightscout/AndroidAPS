@@ -6,6 +6,7 @@ import android.content.ServiceConnection;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,10 +31,8 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
@@ -43,7 +42,6 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
-import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
@@ -78,6 +76,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     // protected boolean isInitialized = false;
     protected PumpDriverState pumpState = PumpDriverState.NotInitialized;
     protected boolean displayConnectionMessages = false;
+    protected PumpType pumpType;
 
 
     protected PumpPluginAbstract(
@@ -103,8 +102,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         this.sp = sp;
 
         pumpDescription.setPumpDescription(pumpType);
-
-        initPumpStatusData();
+        this.pumpType = pumpType;
 
     }
 
@@ -446,11 +444,35 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
     }
 
-	
-    // removed from dev
-//    public boolean isLoggingEnabled() {
-//        return L.isEnabled(L.PUMP);
-//    }
+
+    protected void refreshCustomActionsList() {
+        rxBus.send(new EventCustomActionsChanged());
+    }
+
+
+    public ManufacturerType manufacturer() {
+        return pumpType.getManufacturer() ;
+    }
+
+    @NotNull
+    public PumpType model() {
+        return pumpType;
+    }
+
+
+    public PumpType getPumpType() {
+        return pumpType;
+    }
+
+
+    public void setPumpType(PumpType pumpType) {
+        this.pumpType = pumpType;
+    }
+
+
+    public boolean canHandleDST() {
+        return false;
+    }
 
 
     protected abstract PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo);
@@ -460,38 +482,5 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
         return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(getResourceHelper().gs(resourceId));
     }
-
-
-    // removed from dev
-    @Override
-    public boolean canHandleDST() {
-        return false;
-    }
-
-
-    // removed from dev
-    @Override
-    public ManufacturerType manufacturer() {
-        return pumpStatus.pumpType.getManufacturer();
-    }
-
-    // removed from dev
-    @Override
-    public PumpType model() {
-        return pumpStatus.pumpType;
-    }
-
-
-    // removed from dev
-    @Override
-    public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
-    }
-
-
-    // removed from dev
-    public void refreshCustomActionsList() {
-        rxBus.send(new EventCustomActionsChanged());
-    }
-
 
 }

@@ -14,7 +14,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(DanaRKoreanPlugin::class, DanaRPlugin::class)
+@PrepareForTest(DanaRKoreanPlugin::class, DanaRPlugin::class, ConfigBuilderPlugin::class)
 class MsgInitConnStatusTimeTest : DanaRTestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper

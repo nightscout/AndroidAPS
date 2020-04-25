@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
@@ -40,6 +41,7 @@ class FillDialog : DialogFragmentWithDate() {
     @Inject lateinit var ctx: Context
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var injector: HasAndroidInjector
 
     override fun onSaveInstanceState(savedInstanceState: Bundle) {
         super.onSaveInstanceState(savedInstanceState)
@@ -161,7 +163,7 @@ class FillDialog : DialogFragmentWithDate() {
     }
 
     private fun generateCareportalEvent(eventType: String, time: Long, notes: String) {
-        val careportalEvent = CareportalEvent()
+        val careportalEvent = CareportalEvent(injector)
         careportalEvent.source = Source.USER
         careportalEvent.date = time
         careportalEvent.json = generateJson(eventType, time, notes).toString()

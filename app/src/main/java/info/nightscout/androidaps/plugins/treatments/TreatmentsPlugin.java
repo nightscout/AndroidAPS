@@ -402,7 +402,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 Profile profile = profileFunction.getProfile(t.date);
                 if (profile == null) continue;
                 if (truncate && t.end() > truncateTime) {
-                    TemporaryBasal dummyTemp = new TemporaryBasal();
+                    TemporaryBasal dummyTemp = new TemporaryBasal(getInjector());
                     dummyTemp.copyFrom(t);
                     dummyTemp.cutEndTo(truncateTime);
                     calc = dummyTemp.iobCalc(time, profile);
@@ -477,7 +477,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                 Profile profile = profileFunction.getProfile(t.date);
                 if (profile == null) continue;
                 if (t.end() > truncateTime) {
-                    TemporaryBasal dummyTemp = new TemporaryBasal();
+                    TemporaryBasal dummyTemp = new TemporaryBasal(getInjector());
                     dummyTemp.copyFrom(t);
                     dummyTemp.cutEndTo(truncateTime);
                     calc = dummyTemp.iobCalc(time, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget);
@@ -586,7 +586,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             else if (tempBasal.isAbsolute)
                 NSUpload.uploadTempBasalStartAbsolute(tempBasal, null);
             else
-                NSUpload.uploadTempBasalStartPercent(tempBasal);
+                NSUpload.uploadTempBasalStartPercent(tempBasal, profileFunction.getProfile(tempBasal.date));
         }
         return newRecordCreated;
     }
@@ -652,8 +652,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             context.startActivity(i);
 
             Bundle bundle = new Bundle();
-            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "TreatmentClash");
-            bundle.putString(FirebaseAnalytics.Param.VALUE, status);
+            bundle.putString(FirebaseAnalytics.Param.ITEM_LIST_ID, "TreatmentClash");
+            bundle.putString(FirebaseAnalytics.Param.ITEM_LIST_NAME, status);
             fabricPrivacy.logCustom(bundle);
         }
 
@@ -706,7 +706,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public void addToHistoryTempTarget(TempTarget tempTarget) {
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
         MainApp.getDbHelper().createOrUpdate(tempTarget);
-        NSUpload.uploadTempTarget(tempTarget);
+        NSUpload.uploadTempTarget(tempTarget, profileFunction);
     }
 
     @Override
