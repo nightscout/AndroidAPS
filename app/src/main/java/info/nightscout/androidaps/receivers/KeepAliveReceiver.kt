@@ -37,6 +37,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Inject lateinit var localAlertUtils: LocalAlertUtils
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var receiverStatusStore: ReceiverStatusStore
 
 
     companion object {
@@ -106,7 +107,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         else if (DateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
         if (DateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY) && shouldUploadStatus) {
             lastIobUpload = DateUtil.now()
-            NSUpload.uploadDeviceStatus(loopPlugin, iobCobCalculatorPlugin, profileFunction, activePlugin.activePump)
+            NSUpload.uploadDeviceStatus(loopPlugin, iobCobCalculatorPlugin, profileFunction, activePlugin.activePump, receiverStatusStore)
         }
     }
 

@@ -28,6 +28,9 @@ class ReceiverStatusStore @Inject constructor(val context: Context, val rxBus: R
     val isCharging: Boolean
         get() = lastChargingEvent?.isCharging ?: false
 
+    val batteryLevel: Int
+        get() = lastChargingEvent?.batterLevel ?: 0
+
     fun broadcastChargingState() {
         lastChargingEvent?.let { rxBus.send(it) }
     }

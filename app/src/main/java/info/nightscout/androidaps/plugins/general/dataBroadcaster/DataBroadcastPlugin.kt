@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.os.Bundle
-import dagger.Lazy
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
@@ -30,8 +29,8 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewB
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
+import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.services.Intents
-import info.nightscout.androidaps.utils.BatteryLevel
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -52,8 +51,10 @@ class DataBroadcastPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val defaultValueHelper: DefaultValueHelper,
     private val nsDeviceStatus: NSDeviceStatus,
-    private val lazyLoopPlugin: Lazy<LoopPlugin>,
-    private val activePlugin: ActivePluginProvider
+    private val loopPlugin: LoopPlugin,
+    private val activePlugin: ActivePluginProvider,
+    private var receiverStatusStore: ReceiverStatusStore
+
 
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
@@ -154,16 +155,16 @@ class DataBroadcastPlugin @Inject constructor(
 
     private fun loopStatus(bundle: Bundle) {
         //batteries
-        bundle.putInt("phoneBattery", BatteryLevel.getBatteryLevel())
+        bundle.putInt("phoneBattery", receiverStatusStore.batteryLevel)
         bundle.putInt("rigBattery", nsDeviceStatus.uploaderStatus.replace("%", "").trim { it <= ' ' }.toInt())
 
-        if (Config.APS && lazyLoopPlugin.get().lastRun?.lastTBREnact != 0L) { //we are AndroidAPS
-            bundle.putLong("suggestedTimeStamp", lazyLoopPlugin.get().lastRun?.lastAPSRun ?: -1L)
-            bundle.putString("suggested", lazyLoopPlugin.get().lastRun?.request?.json().toString())
-            if (lazyLoopPlugin.get().lastRun?.tbrSetByPump != null && lazyLoopPlugin.get().lastRun?.tbrSetByPump?.enacted == true) {
-                bundle.putLong("enactedTimeStamp", lazyLoopPlugin.get().lastRun?.lastTBREnact
+        if (Config.APS && loopPlugin.lastRun?.lastTBREnact != 0L) { //we are AndroidAPS
+            bundle.putLong("suggestedTimeStamp", loopPlugin.lastRun?.lastAPSRun ?: -1L)
+            bundle.putString("suggested", loopPlugin.lastRun?.request?.json().toString())
+            if (loopPlugin.lastRun?.tbrSetByPump != null && loopPlugin.lastRun?.tbrSetByPump?.enacted == true) {
+                bundle.putLong("enactedTimeStamp", loopPlugin.lastRun?.lastTBREnact
                     ?: -1L)
-                bundle.putString("enacted", lazyLoopPlugin.get().lastRun?.request?.json().toString())
+                bundle.putString("enacted", loopPlugin.lastRun?.request?.json().toString())
             }
         } else { //NSClient or remote
             val data = NSDeviceStatus.deviceStatusOpenAPSData
