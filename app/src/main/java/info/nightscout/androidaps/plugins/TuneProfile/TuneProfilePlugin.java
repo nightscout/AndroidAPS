@@ -1386,8 +1386,8 @@ public class TuneProfilePlugin extends PluginBase {
                     //Collections.sort(opts.pumpTempBasalHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
                     FS.createAutotunefile("aaps-tempbasalabs." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistory.toString());
                     FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpExtBolusHistory.toString());
-                    AutotuneService testdao = new AutotuneService();
-                    List<TemporaryBasal> test = testdao.getTempBasalDataFromTime(treatmentStart,treatmentEnd,false);
+                    NSService testdao = new NSService();
+                    List<Treatment> test = testdao.getTreatments(treatmentStart,treatmentEnd);
                     FS.createAutotunefile("aaps-testdao." + FS.formatDate(new Date(glucoseStart)) + ".json", test.toString());
 
                 } catch (JSONException e) {}
