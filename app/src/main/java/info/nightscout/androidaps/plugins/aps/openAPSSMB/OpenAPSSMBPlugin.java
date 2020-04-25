@@ -54,6 +54,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
     private final HardLimits hardLimits;
+    private final Profiler profiler;
+    private final FabricPrivacy fabricPrivacy;
 
     // last values
     DetermineBasalAdapterSMBJS lastDetermineBasalAdapterSMBJS = null;
@@ -73,7 +75,9 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
             ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
             IobCobCalculatorPlugin iobCobCalculatorPlugin,
-            HardLimits hardLimits
+            HardLimits hardLimits,
+            Profiler profiler,
+            FabricPrivacy fabricPrivacy
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.APS)
@@ -94,6 +98,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         this.treatmentsPlugin = treatmentsPlugin;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
         this.hardLimits = hardLimits;
+        this.profiler = profiler;
+        this.fabricPrivacy = fabricPrivacy;
     }
 
     @Override
@@ -168,7 +174,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         long startPart = System.currentTimeMillis();
 
         MealData mealData = iobCobCalculatorPlugin.getMealData();
-        Profiler.log(getAapsLogger(), LTag.APS, "getMealData()", startPart);
+       profiler.log(LTag.APS, "getMealData()", startPart);
 
         Constraint<Double> maxIOBAllowedConstraint = constraintChecker.getMaxIOBAllowed();
         inputConstraints.copyReasons(maxIOBAllowedConstraint);
@@ -213,7 +219,7 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         }
 
         IobTotal[] iobArray = iobCobCalculatorPlugin.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget);
-        Profiler.log(getAapsLogger(), LTag.APS, "calculateIobArrayInDia()", startPart);
+       profiler.log(LTag.APS, "calculateIobArrayInDia()", startPart);
 
         startPart = System.currentTimeMillis();
         Constraint<Boolean> smbAllowed = new Constraint<>(!tempBasalFallback);
@@ -228,8 +234,8 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
         constraintChecker.isUAMEnabled(uam);
         inputConstraints.copyReasons(uam);
 
-        Profiler.log(getAapsLogger(), LTag.APS, "detectSensitivityandCarbAbsorption()", startPart);
-        Profiler.log(getAapsLogger(), LTag.APS, "SMB data gathering", start);
+       profiler.log(LTag.APS, "detectSensitivityandCarbAbsorption()", startPart);
+       profiler.log(LTag.APS, "SMB data gathering", start);
 
         start = System.currentTimeMillis();
         try {
@@ -241,14 +247,14 @@ public class OpenAPSSMBPlugin extends PluginBase implements APSInterface, Constr
                     advancedFiltering.value()
             );
         } catch (JSONException e) {
-            FabricPrivacy.getInstance().logException(e);
+            fabricPrivacy.logException(e);
             return;
         }
 
         long now = System.currentTimeMillis();
 
         DetermineBasalResultSMB determineBasalResultSMB = determineBasalAdapterSMBJS.invoke();
-        Profiler.log(getAapsLogger(), LTag.APS, "SMB calculation", start);
+       profiler.log(LTag.APS, "SMB calculation", start);
         if (determineBasalResultSMB == null) {
             getAapsLogger().error(LTag.APS, "SMB calculation returned null");
             lastDetermineBasalAdapterSMBJS = null;
