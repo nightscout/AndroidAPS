@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm;
 
-import android.content.Context;
 import android.os.SystemClock;
 
 import org.joda.time.LocalDateTime;
@@ -72,8 +71,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     private boolean doWakeUpBeforeCommand = true;
 
 
-    public MedtronicCommunicationManager(Context context, RFSpy rfspy) {
-        super(context, rfspy);
+    public MedtronicCommunicationManager(RFSpy rfspy) {
+        super(rfspy);
         medtronicCommunicationManager = this;
         this.medtronicConverter = new MedtronicConverter();
         this.pumpHistoryDecoder = new MedtronicPumpHistoryDecoder();

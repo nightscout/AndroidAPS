@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump;
+package info.nightscout.androidaps.plugins.pump.common.defs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import info.nightscout.androidaps.R;
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
  * management and modified/extended for AAPS.
- *
+ * <p>
  * Author: Andy {andy.rozman@gmail.com}
  */
 

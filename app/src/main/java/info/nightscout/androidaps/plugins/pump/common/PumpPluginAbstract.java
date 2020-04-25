@@ -6,6 +6,7 @@ import android.content.ServiceConnection;
 
 import androidx.annotation.NonNull;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -20,6 +21,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventCustomActionsChanged;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -30,6 +32,7 @@ import info.nightscout.androidaps.interfaces.PumpPluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
@@ -40,6 +43,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -57,6 +61,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     protected ActivePluginProvider activePlugin;
     protected Context context;
     protected FabricPrivacy fabricPrivacy;
+    protected SP sp;
 
     /*
         protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
@@ -71,6 +76,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     // protected boolean isInitialized = false;
     protected PumpDriverState pumpState = PumpDriverState.NotInitialized;
     protected boolean displayConnectionMessages = false;
+    protected PumpType pumpType;
 
 
     protected PumpPluginAbstract(
@@ -82,6 +88,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             CommandQueueProvider commandQueue,
             RxBusWrapper rxBus,
             ActivePluginProvider activePlugin,
+            SP sp,
             Context context,
             FabricPrivacy fabricPrivacy
     ) {
@@ -92,8 +99,10 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         this.activePlugin = activePlugin;
         this.context = context;
         this.fabricPrivacy = fabricPrivacy;
+        this.sp = sp;
 
         pumpDescription.setPumpDescription(pumpType);
+        this.pumpType = pumpType;
 
     }
 
@@ -434,6 +443,37 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         }
 
     }
+
+
+    protected void refreshCustomActionsList() {
+        rxBus.send(new EventCustomActionsChanged());
+    }
+
+
+    public ManufacturerType manufacturer() {
+        return pumpType.getManufacturer() ;
+    }
+
+    @NotNull
+    public PumpType model() {
+        return pumpType;
+    }
+
+
+    public PumpType getPumpType() {
+        return pumpType;
+    }
+
+
+    public void setPumpType(PumpType pumpType) {
+        this.pumpType = pumpType;
+    }
+
+
+    public boolean canHandleDST() {
+        return false;
+    }
+
 
     protected abstract PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo);
 

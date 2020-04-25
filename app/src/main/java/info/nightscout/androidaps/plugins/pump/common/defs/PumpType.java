@@ -57,7 +57,14 @@ public enum PumpType {
             new DoseSettings(0.01d, 15, 24 * 60, 0.05d), //
             PumpTempBasalType.Percent,
             new DoseSettings(10, 15, 24 * 60, 0d, 250d), PumpCapability.BasalRate_Duration15and30minAllowed, //
-            0.02d, 0.01d, DoseStepSize.InsightBolus, PumpCapability.InsightCapabilities), //
+            0.02d, null, 0.01d, DoseStepSize.InsightBolus, PumpCapability.InsightCapabilities, false, false), //
+
+    AccuChekSolo("Accu-Chek Solo", ManufacturerType.Roche, "Solo", 0.01d, null, //
+            new DoseSettings(0.01d, 15, 24 * 60, 0.05d), //
+            PumpTempBasalType.Percent,
+            new DoseSettings(10, 15, 24 * 60, 0d, 250d), PumpCapability.BasalRate_Duration15and30minAllowed, //
+            0.02d, null, 0.01d, DoseStepSize.InsightBolus, PumpCapability.InsightCapabilities, false, false), //
+
 
     // Animas
     AnimasVibe("Animas Vibe", ManufacturerType.Animas, "Vibe", 0.05d, null, // AnimasBolus?
@@ -91,11 +98,17 @@ public enum PumpType {
 
 
     // Insulet
-    Insulet_Omnipod("Insulet Omnipod", ManufacturerType.Insulet, "Omnipod", 0.05d, null, //
+    Insulet_Omnipod("Insulet Omnipod", ManufacturerType.Insulet, "Omnipod (Eros)", 0.05d, null, //
             new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
             PumpTempBasalType.Absolute, //
-            new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, // cannot exceed max basal rate 30u/hr
-            0.05d, 0.05d, null, PumpCapability.VirtualPumpCapabilities),
+            new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, //
+            0.05d, null, 0.05d, null, PumpCapability.OmnipodCapabilities, true, true),
+
+    Insulet_Omnipod_Dash("Insulet Omnipod Dash", ManufacturerType.Insulet, "Omnipod Dash", 0.05d, null, //
+            new DoseSettings(0.05d, 30, 8 * 60, 0.05d), //
+            PumpTempBasalType.Absolute, //
+            new DoseSettings(0.05d, 30, 12 * 60, 0d, 30.0d), PumpCapability.BasalRate_Duration30minAllowed, // 
+            0.05d, null, 0.05d, null, PumpCapability.OmnipodCapabilities, true, true), // TODO just copied OmniPod for now
 
     // Medtronic
     Medtronic_512_712("Medtronic 512/712", ManufacturerType.Medtronic, "512/712", 0.1d, null, //
@@ -150,6 +163,8 @@ public enum PumpType {
     private double baseBasalStep; //
     private DoseStepSize baseBasalSpecialSteps; //
     private PumpCapability pumpCapability;
+    private boolean hasFixedUnreachableAlert;
+    private boolean hasCustomUnreachableAlertCheck;
 
     private PumpType parent;
     private static Map<String, PumpType> mapByDescription;
@@ -184,17 +199,58 @@ public enum PumpType {
         parent.model = model;
     }
 
-    PumpType(String description, ManufacturerType manufacturer, String model, double bolusSize, DoseStepSize specialBolusSize, //
+    PumpType(String description,
+             ManufacturerType manufacturer,
+             String model,
+             double bolusSize,
+             DoseStepSize specialBolusSize, //
              DoseSettings extendedBolusSettings, //
-             PumpTempBasalType pumpTempBasalType, DoseSettings tbrSettings, PumpCapability specialBasalDurations, //
-             double baseBasalMinValue, double baseBasalStep, DoseStepSize baseBasalSpecialSteps, PumpCapability pumpCapability) {
+             PumpTempBasalType pumpTempBasalType,
+             DoseSettings tbrSettings,
+             PumpCapability specialBasalDurations, //
+             double baseBasalMinValue,
+             double baseBasalStep,
+             DoseStepSize baseBasalSpecialSteps,
+             PumpCapability pumpCapability) {
         this(description, manufacturer, model, bolusSize, specialBolusSize, extendedBolusSettings, pumpTempBasalType, tbrSettings, specialBasalDurations, baseBasalMinValue, null, baseBasalStep, baseBasalSpecialSteps, pumpCapability);
     }
 
-    PumpType(String description, ManufacturerType manufacturer, String model, double bolusSize, DoseStepSize specialBolusSize, //
+    PumpType(String description,
+             ManufacturerType manufacturer,
+             String model,
+             double bolusSize,
+             DoseStepSize specialBolusSize, //
              DoseSettings extendedBolusSettings, //
-             PumpTempBasalType pumpTempBasalType, DoseSettings tbrSettings, PumpCapability specialBasalDurations, //
-             double baseBasalMinValue, Double baseBasalMaxValue, double baseBasalStep, DoseStepSize baseBasalSpecialSteps, PumpCapability pumpCapability) {
+             PumpTempBasalType pumpTempBasalType,
+             DoseSettings tbrSettings,
+             PumpCapability specialBasalDurations, //
+             double baseBasalMinValue,
+             Double baseBasalMaxValue,
+             double baseBasalStep,
+             DoseStepSize baseBasalSpecialSteps,
+             PumpCapability pumpCapability) {
+        this(description, manufacturer, model, bolusSize, specialBolusSize, extendedBolusSettings, pumpTempBasalType,
+                tbrSettings, specialBasalDurations, baseBasalMinValue, null, baseBasalStep,
+                baseBasalSpecialSteps, pumpCapability, false, false);
+    }
+
+
+    PumpType(String description,
+             ManufacturerType manufacturer,
+             String model,
+             double bolusSize,
+             DoseStepSize specialBolusSize, //
+             DoseSettings extendedBolusSettings, //
+             PumpTempBasalType pumpTempBasalType,
+             DoseSettings tbrSettings,
+             PumpCapability specialBasalDurations, //
+             double baseBasalMinValue,
+             Double baseBasalMaxValue,
+             double baseBasalStep,
+             DoseStepSize baseBasalSpecialSteps, //
+             PumpCapability pumpCapability,
+             boolean hasFixedUnreachableAlert,
+             boolean hasCustomUnreachableAlertCheck) {
         this.description = description;
         this.manufacturer = manufacturer;
         this.model = model;
@@ -209,8 +265,18 @@ public enum PumpType {
         this.baseBasalStep = baseBasalStep;
         this.baseBasalSpecialSteps = baseBasalSpecialSteps;
         this.pumpCapability = pumpCapability;
+        this.hasFixedUnreachableAlert = hasFixedUnreachableAlert;
+        this.hasCustomUnreachableAlertCheck = hasCustomUnreachableAlertCheck;
     }
 
+
+    public boolean getHasFixedUnreachableAlert() {
+        return hasFixedUnreachableAlert;
+    }
+
+    public boolean getHasCustomUnreachableAlertCheck() {
+        return hasFixedUnreachableAlert;
+    }
 
     public String getDescription() {
         return description;

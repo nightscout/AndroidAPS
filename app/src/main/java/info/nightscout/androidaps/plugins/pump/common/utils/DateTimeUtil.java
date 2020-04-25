@@ -120,6 +120,14 @@ public class DateTimeUtil {
     }
 
 
+    public static long toATechDate(long timeInMillis) {
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTimeInMillis(timeInMillis);
+
+        return toATechDate(gc);
+    }
+
+
     public static boolean isSameDay(LocalDateTime ldt1, LocalDateTime ldt2) {
 
         return (ldt1.getYear() == ldt2.getYear() && //
@@ -275,5 +283,22 @@ public class DateTimeUtil {
         return toATechDate(oldestEntryTime);
     }
 
+
+    public static long getTimeInFutureFromMinutes(long startTime, int minutes) {
+        return startTime + getTimeInMs(minutes);
+    }
+
+    public static long getTimeInFutureFromMinutes(int minutes) {
+        return System.currentTimeMillis() + getTimeInMs(minutes);
+    }
+
+
+    public static long getTimeInMs(int minutes) {
+        return getTimeInS(minutes) * 1000L;
+    }
+
+    public static int getTimeInS(int minutes) {
+        return minutes * 60;
+    }
 
 }

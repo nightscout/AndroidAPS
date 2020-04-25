@@ -81,6 +81,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtro
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
+import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -93,8 +94,6 @@ import static info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUt
  */
 @Singleton
 public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInterface {
-
-    private final SP sp;
 
     protected static MedtronicPumpPlugin plugin = null;
     private RileyLinkMedtronicService medtronicService;
@@ -135,7 +134,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         .shortName(R.string.medtronic_name_short) //
                         .preferencesId(R.xml.pref_medtronic).description(R.string.description_pump_medtronic), //
                 PumpType.Medtronic_522_722, // we default to most basic model, correct model from config is loaded later
-                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, context, fabricPrivacy
+                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy
         );
         this.plugin = this;
 
@@ -1569,15 +1568,11 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
     @Override
-    public void timeDateOrTimeZoneChanged() {
+    public void timezoneOrDSTChanged(TimeChangeType changeType) {
 
-        aapsLogger.warn(LTag.PUMP, getLogPrefix() + "Time, Date and/or TimeZone changed. ");
+        aapsLogger.warn(LTag.PUMP, getLogPrefix() + "Time or TimeZone changed. ");
 
         this.hasTimeDateOrTimeZoneChanged = true;
-    }
-
-    private void refreshCustomActionsList() {
-        rxBus.send(new EventCustomActionsChanged());
     }
 
 

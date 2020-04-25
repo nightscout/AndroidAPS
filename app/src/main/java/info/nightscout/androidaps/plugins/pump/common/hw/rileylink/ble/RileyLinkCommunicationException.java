@@ -27,4 +27,7 @@ public class RileyLinkCommunicationException extends Exception {
         // this.extendedErrorText = extendedErrorText;
     }
 
+    public RileyLinkBLEError getErrorCode() {
+        return errorCode;
+    }
 }
