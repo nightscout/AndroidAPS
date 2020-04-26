@@ -46,10 +46,10 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 public class RileyLinkOmnipodService extends RileyLinkService {
 
-    @Inject AAPSLogger aapsLogger;
-    @Inject Context context;
+//    @Inject AAPSLogger aapsLogger;
+//    @Inject Context context;
     @Inject OmnipodPumpPlugin omnipodPumpPlugin;
-    @Inject SP sp;
+//    @Inject SP sp;
     
     //private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
@@ -63,11 +63,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     public RileyLinkOmnipodService() {
         super();
         instance = this;
-        if (isLogEnabled())
-            aapsLogger.debug(LTag.PUMPCOMM,"RileyLinkOmnipodService newly constructed");
-        OmnipodUtil.setOmnipodService(this);
-        pumpStatus = (OmnipodPumpStatus) OmnipodPumpPlugin.getPlugin().getPumpStatusData();
-        //aapsLogger.debug(LTag.PUMPCOMM,"RRRRRRRRRR: " + pumpStatus);
     }
 
 
@@ -123,6 +118,12 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         // init rileyLinkCommunicationManager
         initializeErosOmnipodManager();
         // TODO Dash
+
+        if (isLogEnabled())
+            aapsLogger.debug(LTag.PUMPCOMM,"RileyLinkOmnipodService newly constructed");
+        OmnipodUtil.setOmnipodService(this);
+        pumpStatus = (OmnipodPumpStatus) OmnipodPumpPlugin.getPlugin().getPumpStatusData();
+        //aapsLogger.debug(LTag.PUMPCOMM,"RRRRRRRRRR: " + pumpStatus);
     }
 
     private void initializeErosOmnipodManager() {
