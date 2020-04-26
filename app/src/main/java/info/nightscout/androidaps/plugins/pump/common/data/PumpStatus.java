@@ -52,17 +52,17 @@ public abstract class PumpStatus {
     public int tempBasalRatio = 0;
     public int tempBasalRemainMin = 0;
     public Date tempBasalStart;
-    protected PumpDescription pumpDescription;
+    //protected PumpDescription pumpDescription;
 
 
-    public PumpStatus(PumpDescription pumpDescription) {
-        this.pumpDescription = pumpDescription;
+   public PumpStatus() {
+ //  public PumpStatus(PumpDescription pumpDescription) {
+ //       this.pumpDescription = pumpDescription;
 
-        this.initSettings();
+//        this.initSettings();
     }
 
 
-    public abstract void initSettings();
 
 
     public void setLastCommunicationToNow() {

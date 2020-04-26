@@ -138,7 +138,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         .fragmentClass(MedtronicFragment.class.getName()) //
                         .pluginName(R.string.medtronic_name) //
                         .shortName(R.string.medtronic_name_short) //
-                        .preferencesId(R.xml.pref_medtronic).description(R.string.description_pump_medtronic), //
+                        .preferencesId(R.xml.pref_medtronic)
+                        .description(R.string.description_pump_medtronic), //
                 PumpType.Medtronic_522_722, // we default to most basic model, correct model from config is loaded later
                 injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy
         );
@@ -609,17 +610,16 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Override
     public boolean isThisProfileSet(Profile profile) {
-        MedtronicPumpStatus mdtPumpStatus = medtronicPumpStatus;
-        aapsLogger.debug(LTag.PUMP, "isThisProfileSet: basalInitalized=" + mdtPumpStatus.basalProfileStatus);
+        aapsLogger.debug(LTag.PUMP, "isThisProfileSet: basalInitalized=" + medtronicPumpStatus.basalProfileStatus);
 
         if (!isInitialized)
             return true;
 
-        if (mdtPumpStatus.basalProfileStatus == BasalProfileStatus.NotInitialized) {
+        if (medtronicPumpStatus.basalProfileStatus == BasalProfileStatus.NotInitialized) {
             // this shouldn't happen, but if there was problem we try again
             getBasalProfiles();
             return isProfileSame(profile);
-        } else if (mdtPumpStatus.basalProfileStatus == BasalProfileStatus.ProfileChanged) {
+        } else if (medtronicPumpStatus.basalProfileStatus == BasalProfileStatus.ProfileChanged) {
             return false;
         } else {
 
@@ -674,7 +674,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Override
     public long lastDataTime() {
-        medtronicPumpStatus;
 
         if (medtronicPumpStatus.lastConnection != 0) {
             return medtronicPumpStatus.lastConnection;
@@ -778,14 +777,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         setRefreshButtonEnabled(false);
 
-        MedtronicPumpStatus mdtPumpStatus = medtronicPumpStatus;
-
-        if (detailedBolusInfo.insulin > mdtPumpStatus.reservoirRemainingUnits) {
+        if (detailedBolusInfo.insulin > medtronicPumpStatus.reservoirRemainingUnits) {
             return new PumpEnactResult(getInjector()) //
                     .success(false) //
                     .enacted(false) //
                     .comment(getResourceHelper().gs(R.string.medtronic_cmd_bolus_could_not_be_delivered_no_insulin,
-                            mdtPumpStatus.reservoirRemainingUnits,
+                            medtronicPumpStatus.reservoirRemainingUnits,
                             detailedBolusInfo.insulin));
         }
 
@@ -1447,14 +1444,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        MedtronicPumpStatus pumpStatus = medtronicPumpStatus;
-
-        if (pumpStatus.maxBasal == null)
+        if (medtronicPumpStatus.maxBasal == null)
             return null;
 
         for (BasalProfileEntry profileEntry : basalProfile.getEntries()) {
 
-            if (profileEntry.rate > pumpStatus.maxBasal) {
+            if (profileEntry.rate > medtronicPumpStatus.maxBasal) {
                 stringBuilder.append(profileEntry.startTime.toString("HH:mm"));
                 stringBuilder.append("=");
                 stringBuilder.append(profileEntry.rate);
@@ -1467,8 +1462,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @NonNull
     private BasalProfile convertProfileToMedtronicProfile(Profile profile) {
-
-        MedtronicPumpStatus pumpStatus = medtronicPumpStatus;
 
         PumpType pumpType = pumpStatus.pumpType;
 
