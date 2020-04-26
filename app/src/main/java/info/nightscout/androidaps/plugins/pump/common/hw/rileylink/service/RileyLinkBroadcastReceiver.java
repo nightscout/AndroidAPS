@@ -5,20 +5,22 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service;
  */
 
 import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
+import dagger.android.DaggerBroadcastReceiver;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -31,14 +33,17 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * I added this class outside of RileyLinkService, because for now it's very important part of RL framework and
  * where we get a lot of problems. Especially merging between AAPS and RileyLinkAAPS. I might put it back at
  * later time
  */
-public class RileyLinkBroadcastReceiver extends BroadcastReceiver {
+public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
+
+    @Inject RileyLinkUtil rileyLinkUtil;
+    @Inject SP sp;
 
     private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
@@ -88,6 +93,7 @@ public class RileyLinkBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
 
         if (intent == null) {
             LOG.error("onReceive: received null intent");
@@ -135,10 +141,9 @@ public class RileyLinkBroadcastReceiver extends BroadcastReceiver {
 
         if (action.equals(RileyLinkConst.Intents.RileyLinkDisconnected)) {
             if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-                RileyLinkUtil
-                        .setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.RileyLinkUnreachable);
+                rileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.RileyLinkUnreachable);
             } else {
-                RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.BluetoothDisabled);
+                rileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.BluetoothDisabled);
             }
 
             return true;
@@ -166,14 +171,14 @@ public class RileyLinkBroadcastReceiver extends BroadcastReceiver {
             LOG.debug("RfSpy Radio version (CC110): " + rlVersion.name());
             this.serviceInstance.rileyLinkServiceData.versionCC110 = rlVersion;
 
-            ServiceTask task = new InitializePumpManagerTask(RileyLinkUtil.getTargetDevice());
+            ServiceTask task = new InitializePumpManagerTask(rileyLinkUtil.getTargetDevice());
             ServiceTaskExecutor.startTask(task);
             if (isLoggingEnabled())
                 LOG.info("Announcing RileyLink open For business");
 
             return true;
         } else if (action.equals(RileyLinkConst.Intents.RileyLinkNewAddressSet)) {
-            String RileylinkBLEAddress = SP.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
+            String RileylinkBLEAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
             if (RileylinkBLEAddress.equals("")) {
                 LOG.error("No Rileylink BLE Address saved in app");
             } else {

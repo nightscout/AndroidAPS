@@ -58,7 +58,7 @@ public class RawHistoryPage {
             LOG.error("Stored CRC ({}) is different than calculated ({}), but ignored for now.", crcStored,
                 crcCalculated);
         } else {
-            if (MedtronicUtil.isLowLevelDebug())
+            if (MedtronicUtil.getInstance().isLowLevelDebug())
                 LOG.debug("CRC ok.");
         }
 

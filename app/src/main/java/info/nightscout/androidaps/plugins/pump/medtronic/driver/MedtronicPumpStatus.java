@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.driver;
 
 import org.joda.time.LocalDateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -10,11 +8,14 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -31,14 +32,17 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by andy on 4/28/18.
  */
 
+@Singleton
 public class MedtronicPumpStatus extends PumpStatus {
 
-    private static Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMP);
+    private final AAPSLogger aapsLogger;
+    private final ResourceHelper resourceHelper;
 
     public String errorDescription = null;
     public String serialNumber;
@@ -81,8 +85,15 @@ public class MedtronicPumpStatus extends PumpStatus {
     public BatteryType batteryType = BatteryType.None;
 
 
-    public MedtronicPumpStatus(PumpDescription pumpDescription) {
+    @Inject
+    public MedtronicPumpStatus(
+            AAPSLogger aapsLogger,
+            ResourceHelper resourceHelper,
+            PumpDescription pumpDescription
+    ) {
         super(pumpDescription);
+        this.aapsLogger = aapsLogger;
+        this.resourceHelper = resourceHelper;
     }
 
 
@@ -211,7 +222,7 @@ public class MedtronicPumpStatus extends PumpStatus {
                             : RileyLinkTargetFrequency.Medtronic_WorldWide;
 
                     if (targetFrequency != newTargetFrequency) {
-                        RileyLinkUtil.setRileyLinkTargetFrequency(newTargetFrequency);
+                        RileyLinkUtil.getInstance().setRileyLinkTargetFrequency(newTargetFrequency);
                         targetFrequency = newTargetFrequency;
                         targetFrequencyChanged = true;
                     }
@@ -222,15 +233,13 @@ public class MedtronicPumpStatus extends PumpStatus {
             String rileyLinkAddress = SP.getString(RileyLinkConst.Prefs.RileyLinkAddress, null);
 
             if (rileyLinkAddress == null) {
-                if (isLogEnabled())
-                    LOG.debug("RileyLink address invalid: null");
+                aapsLogger.debug(LTag.PUMP, "RileyLink address invalid: null");
                 this.errorDescription = MainApp.gs(R.string.medtronic_error_rileylink_address_invalid);
                 return false;
             } else {
                 if (!rileyLinkAddress.matches(regexMac)) {
                     this.errorDescription = MainApp.gs(R.string.medtronic_error_rileylink_address_invalid);
-                    if (isLogEnabled())
-                        LOG.debug("RileyLink address invalid: {}", rileyLinkAddress);
+                    aapsLogger.debug(LTag.PUMP, "RileyLink address invalid: {}", rileyLinkAddress);
                 } else {
                     if (!rileyLinkAddress.equals(this.rileyLinkAddress)) {
                         this.rileyLinkAddress = rileyLinkAddress;
@@ -276,11 +285,11 @@ public class MedtronicPumpStatus extends PumpStatus {
             if (batteryTypeStr == null)
                 return false;
 
-            BatteryType batteryType = BatteryType.getByDescription(batteryTypeStr);
+            BatteryType batteryType = getBatteryTypeByDescription(batteryTypeStr);
 
             if (this.batteryType != batteryType) {
                 this.batteryType = batteryType;
-                MedtronicUtil.setBatteryType(this.batteryType);
+                MedtronicUtil.getInstance().setBatteryType(this.batteryType);
             }
 
             String bolusDebugEnabled = SP.getString(MedtronicConst.Prefs.BolusDebugEnabled, null);
@@ -295,7 +304,7 @@ public class MedtronicPumpStatus extends PumpStatus {
 
         } catch (Exception ex) {
             this.errorDescription = ex.getMessage();
-            LOG.error("Error on Verification: " + ex.getMessage(), ex);
+            aapsLogger.error(LTag.PUMP, "Error on Verification: " + ex.getMessage(), ex);
             return false;
         }
     }
@@ -303,20 +312,20 @@ public class MedtronicPumpStatus extends PumpStatus {
 
     private boolean reconfigureService() {
 
-        if (!inPreInit && MedtronicUtil.getMedtronicService() != null) {
+        if (!inPreInit && MedtronicUtil.getInstance().getMedtronicService() != null) {
 
             if (serialChanged) {
-                MedtronicUtil.getMedtronicService().setPumpIDString(this.serialNumber); // short operation
+                MedtronicUtil.getInstance().getMedtronicService().setPumpIDString(this.serialNumber); // short operation
                 serialChanged = false;
             }
 
             if (rileyLinkAddressChanged) {
-                MedtronicUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet);
+                RileyLinkUtil.getInstance().sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet);
                 rileyLinkAddressChanged = false;
             }
 
             if (encodingChanged) {
-                RileyLinkUtil.getRileyLinkService().changeRileyLinkEncoding(encodingType);
+                RileyLinkUtil.getInstance().getRileyLinkService().changeRileyLinkEncoding(encodingType);
                 encodingChanged = false;
             }
         }
@@ -340,7 +349,7 @@ public class MedtronicPumpStatus extends PumpStatus {
         try {
             val = Double.parseDouble(value);
         } catch (Exception ex) {
-            LOG.error("Error parsing setting: {}, value found {}", key, value);
+            aapsLogger.error("Error parsing setting: {}, value found {}", key, value);
             val = defaultValueDouble;
         }
 
@@ -384,8 +393,20 @@ public class MedtronicPumpStatus extends PumpStatus {
         return 0;
     }
 
-    private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMP);
+    // Battery type
+    Map<String, BatteryType> mapByDescription;
+
+    public BatteryType getBatteryTypeByDescription(String batteryTypeStr) {
+        if (mapByDescription == null) {
+            mapByDescription = new HashMap<>();
+            for (BatteryType value : BatteryType.values()) {
+                mapByDescription.put(MainApp.gs(value.description), value);
+            }
+        }
+        if (mapByDescription.containsKey(batteryTypeStr)) {
+            return mapByDescription.get(batteryTypeStr);
+        }
+        return BatteryType.None;
     }
 
 }

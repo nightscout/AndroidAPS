@@ -24,7 +24,7 @@ public class CarelinkLongMessageBody extends MessageBody {
 
 
     public CarelinkLongMessageBody(List<Byte> payload) {
-        init(MedtronicUtil.createByteArray(payload));
+        init(MedtronicUtil.getInstance().createByteArray(payload));
     }
 
 

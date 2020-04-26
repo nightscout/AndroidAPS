@@ -70,6 +70,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
                 .enacted(false).comment(MainApp.gs(R.string.pump_operation_not_yet_supported_by_pump));
     */
     protected PumpDescription pumpDescription = new PumpDescription();
+    @Deprecated // TODO remove this reference
     protected PumpStatus pumpStatus;
     protected ServiceConnection serviceConnection = null;
     protected boolean serviceRunning = false;

@@ -32,7 +32,7 @@ public enum MedtronicStatusRefreshType {
 
     public MedtronicCommandType getCommandType() {
         if (this == Configuration) {
-            return MedtronicCommandType.getSettings(MedtronicUtil.getMedtronicPumpModel());
+            return MedtronicCommandType.getSettings(MedtronicUtil.getInstance().getMedtronicPumpModel());
         } else
             return commandType;
     }

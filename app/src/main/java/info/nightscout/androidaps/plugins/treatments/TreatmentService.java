@@ -265,9 +265,9 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             if (treatment != null) {
 
                 if (MedtronicHistoryData.doubleBolusDebug)
-                    log.debug("DoubleBolusDebug: createTreatmentFromJsonIfNotExists:: medtronicPump={}", MedtronicUtil.isMedtronicPump());
+                    log.debug("DoubleBolusDebug: createTreatmentFromJsonIfNotExists:: medtronicPump={}", MedtronicUtil.getInstance().isMedtronicPump());
 
-                if (!MedtronicUtil.isMedtronicPump())
+                if (!MedtronicUtil.getInstance().isMedtronicPump())
                     createOrUpdate(treatment);
                 else
                     createOrUpdateMedtronic(treatment, true);

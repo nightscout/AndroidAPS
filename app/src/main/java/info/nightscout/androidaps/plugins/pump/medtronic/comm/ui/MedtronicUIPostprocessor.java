@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 
@@ -20,7 +21,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
-import static info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.sendNotification;
 
 /**
  * Created by andy on 6/15/18.
@@ -28,20 +28,16 @@ import static info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUt
 
 class MedtronicUIPostprocessor {
 
-    private final AAPSLogger aapsLogger;
-    private final RxBusWrapper rxBus;
-    private final ResourceHelper resourceHelper;
+    @NotNull private final AAPSLogger aapsLogger;
+    @NotNull private final RxBusWrapper rxBus;
+    @NotNull private final ResourceHelper resourceHelper;
+    @NotNull private final MedtronicUtil medtronicUtil;
 
-
-    private MedtronicPumpStatus pumpStatus;
-
-
-
-    public MedtronicUIPostprocessor(AAPSLogger aapsLogger, RxBusWrapper rxBus, ResourceHelper resourceHelper) {
+    public MedtronicUIPostprocessor(AAPSLogger aapsLogger, RxBusWrapper rxBus, ResourceHelper resourceHelper, MedtronicUtil medtronicUtil) {
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
-        pumpStatus = MedtronicUtil.getPumpStatus();
+        this.medtronicUtil = medtronicUtil;
     }
 
 
@@ -57,7 +53,7 @@ class MedtronicUIPostprocessor {
                 if (response) {
                     BasalProfile basalProfile = (BasalProfile) uiTask.getParameter(0);
 
-                    pumpStatus.basalsByHour = basalProfile.getProfilesByHour();
+                    medtronicUtil.getPumpStatus().basalsByHour = basalProfile.getProfilesByHour();
                 }
             }
             break;
@@ -69,8 +65,8 @@ class MedtronicUIPostprocessor {
                     Double[] profilesByHour = basalProfile.getProfilesByHour();
 
                     if (profilesByHour != null) {
-                        pumpStatus.basalsByHour = profilesByHour;
-                        pumpStatus.basalProfileStatus = BasalProfileStatus.ProfileOK;
+                        medtronicUtil.getPumpStatus().basalsByHour = profilesByHour;
+                        medtronicUtil.getPumpStatus().basalProfileStatus = BasalProfileStatus.ProfileOK;
                     } else {
                         uiTask.responseType = MedtronicUIResponseType.Error;
                         uiTask.errorDescription = "No profile found.";
@@ -85,20 +81,20 @@ class MedtronicUIPostprocessor {
             break;
 
             case SetBolus: {
-                pumpStatus.lastBolusAmount = uiTask.getDoubleFromParameters(0);
-                pumpStatus.lastBolusTime = new Date();
+                medtronicUtil.getPumpStatus().lastBolusAmount = uiTask.getDoubleFromParameters(0);
+                medtronicUtil.getPumpStatus().lastBolusTime = new Date();
             }
             break;
 
             case GetRemainingInsulin: {
-                pumpStatus.reservoirRemainingUnits = (Float) uiTask.returnData;
+                medtronicUtil.getPumpStatus().reservoirRemainingUnits = (Float) uiTask.returnData;
             }
             break;
 
             case CancelTBR: {
-                pumpStatus.tempBasalStart = null;
-                pumpStatus.tempBasalAmount = null;
-                pumpStatus.tempBasalLength = null;
+                medtronicUtil.getPumpStatus().tempBasalStart = null;
+                medtronicUtil.getPumpStatus().tempBasalAmount = null;
+                medtronicUtil.getPumpStatus().tempBasalLength = null;
             }
             break;
 
@@ -113,7 +109,7 @@ class MedtronicUIPostprocessor {
                 aapsLogger.debug(LTag.PUMP, "New time was {} set.", response ? "" : "NOT");
 
                 if (response) {
-                    MedtronicUtil.getPumpTime().timeDifference = 0;
+                    medtronicUtil.getPumpTime().timeDifference = 0;
                 }
             }
             break;
@@ -122,10 +118,10 @@ class MedtronicUIPostprocessor {
             case GetBatteryStatus: {
                 BatteryStatusDTO batteryStatusDTO = (BatteryStatusDTO) uiTask.returnData;
 
-                pumpStatus.batteryRemaining = batteryStatusDTO.getCalculatedPercent(pumpStatus.batteryType);
+                medtronicUtil.getPumpStatus().batteryRemaining = batteryStatusDTO.getCalculatedPercent(medtronicUtil.getPumpStatus().batteryType);
 
                 if (batteryStatusDTO.voltage != null) {
-                    pumpStatus.batteryVoltage = batteryStatusDTO.voltage;
+                    medtronicUtil.getPumpStatus().batteryVoltage = batteryStatusDTO.voltage;
                 }
 
                 aapsLogger.debug(LTag.PUMP, "BatteryStatus: {}", batteryStatusDTO.toString());
@@ -134,9 +130,9 @@ class MedtronicUIPostprocessor {
             break;
 
             case PumpModel: {
-                if (pumpStatus.medtronicDeviceType != MedtronicUtil.getMedtronicPumpModel()) {
+                if (medtronicUtil.getPumpStatus().medtronicDeviceType != medtronicUtil.getMedtronicPumpModel()) {
                     aapsLogger.warn(LTag.PUMP, "Configured pump is different then pump detected !");
-                    sendNotification(MedtronicNotificationType.PumpTypeNotSame, resourceHelper, rxBus);
+                    medtronicUtil.sendNotification(MedtronicNotificationType.PumpTypeNotSame, resourceHelper, rxBus);
                 }
             }
             break;
@@ -166,7 +162,7 @@ class MedtronicUIPostprocessor {
 
         clockDTO.timeDifference = (int) dur.getStandardSeconds();
 
-        MedtronicUtil.setPumpTime(clockDTO);
+        medtronicUtil.setPumpTime(clockDTO);
 
         aapsLogger.debug(LTag.PUMP, "Pump Time: " + clockDTO.localDeviceTime + ", DeviceTime=" + clockDTO.pumpTime + //
                 ", diff: " + dur.getStandardSeconds() + " s");
@@ -190,29 +186,27 @@ class MedtronicUIPostprocessor {
 
         Map<String, PumpSettingDTO> settings = (Map<String, PumpSettingDTO>) uiTask.returnData;
 
-        MedtronicUtil.setSettings(settings);
+        medtronicUtil.setSettings(settings);
 
         PumpSettingDTO checkValue = null;
 
-        if (pumpStatus == null) {
+        if (medtronicUtil.getPumpStatus() == null) {
             aapsLogger.debug(LTag.PUMP, "Pump Status: was null");
-            pumpStatus = MedtronicUtil.getPumpStatus();
-            aapsLogger.debug(LTag.PUMP, "Pump Status: " + this.pumpStatus);
-        }
+         }
 
-        this.pumpStatus.verifyConfiguration();
+        medtronicUtil.getPumpStatus().verifyConfiguration();
 
         // check profile
         if (!"Yes".equals(settings.get("PCFG_BASAL_PROFILES_ENABLED").value)) {
             aapsLogger.error(LTag.PUMP, "Basal profiles are not enabled on pump.");
-            sendNotification(MedtronicNotificationType.PumpBasalProfilesNotEnabled, resourceHelper, rxBus);
+            medtronicUtil.sendNotification(MedtronicNotificationType.PumpBasalProfilesNotEnabled, resourceHelper, rxBus);
 
         } else {
             checkValue = settings.get("PCFG_ACTIVE_BASAL_PROFILE");
 
             if (!"STD".equals(checkValue.value)) {
                 aapsLogger.error("Basal profile set on pump is incorrect (must be STD).");
-                sendNotification(MedtronicNotificationType.PumpIncorrectBasalProfileSelected, resourceHelper, rxBus);
+                medtronicUtil.sendNotification(MedtronicNotificationType.PumpIncorrectBasalProfileSelected, resourceHelper, rxBus);
             }
         }
 
@@ -222,23 +216,23 @@ class MedtronicUIPostprocessor {
 
         if (!"Units".equals(checkValue.value)) {
             aapsLogger.error("Wrong TBR type set on pump (must be Absolute).");
-            sendNotification(MedtronicNotificationType.PumpWrongTBRTypeSet, resourceHelper, rxBus);
+            medtronicUtil.sendNotification(MedtronicNotificationType.PumpWrongTBRTypeSet, resourceHelper, rxBus);
         }
 
         // MAXes
 
         checkValue = settings.get("PCFG_MAX_BOLUS");
 
-        if (!MedtronicUtil.isSame(Double.parseDouble(checkValue.value), pumpStatus.maxBolus)) {
-            aapsLogger.error("Wrong Max Bolus set on Pump (current={}, required={}).", checkValue.value, pumpStatus.maxBolus);
-            sendNotification(MedtronicNotificationType.PumpWrongMaxBolusSet, resourceHelper, rxBus, pumpStatus.maxBolus);
+        if (!medtronicUtil.isSame(Double.parseDouble(checkValue.value), medtronicUtil.getPumpStatus().maxBolus)) {
+            aapsLogger.error("Wrong Max Bolus set on Pump (current={}, required={}).", checkValue.value, medtronicUtil.getPumpStatus().maxBolus);
+            medtronicUtil.sendNotification(MedtronicNotificationType.PumpWrongMaxBolusSet, resourceHelper, rxBus, medtronicUtil.getPumpStatus().maxBolus);
         }
 
         checkValue = settings.get("PCFG_MAX_BASAL");
 
-        if (!MedtronicUtil.isSame(Double.parseDouble(checkValue.value), pumpStatus.maxBasal)) {
-            aapsLogger.error("Wrong Max Basal set on Pump (current={}, required={}).", checkValue.value, pumpStatus.maxBasal);
-            sendNotification(MedtronicNotificationType.PumpWrongMaxBasalSet, resourceHelper, rxBus, pumpStatus.maxBasal);
+        if (!medtronicUtil.isSame(Double.parseDouble(checkValue.value), medtronicUtil.getPumpStatus().maxBasal)) {
+            aapsLogger.error("Wrong Max Basal set on Pump (current={}, required={}).", checkValue.value, medtronicUtil.getPumpStatus().maxBasal);
+            medtronicUtil.sendNotification(MedtronicNotificationType.PumpWrongMaxBasalSet, resourceHelper, rxBus, medtronicUtil.getPumpStatus().maxBasal);
         }
 
     }

@@ -73,7 +73,7 @@ public class BasalProfile {
 
         // if we have just one entry through all day it looks like just length 1
         if (data.length == 1) {
-            data = MedtronicUtil.createByteArray(data[0], (byte) 0, (byte) 0);
+            data = MedtronicUtil.getInstance().createByteArray(data[0], (byte) 0, (byte) 0);
         }
 
         if (data.length == MAX_RAW_DATA_SIZE) {
@@ -230,7 +230,7 @@ public class BasalProfile {
             if ((mRawData[i] == 0) && (mRawData[i + 1] == 0) && (mRawData[i + 2] == 0x3f))
                 break;
 
-            r = MedtronicUtil.makeUnsignedShort(mRawData[i + 1], mRawData[i]); // readUnsignedByte(mRawData[i]);
+            r = MedtronicUtil.getInstance().makeUnsignedShort(mRawData[i + 1], mRawData[i]); // readUnsignedByte(mRawData[i]);
             st = readUnsignedByte(mRawData[i + 2]);
 
             try {
@@ -265,14 +265,14 @@ public class BasalProfile {
 
         for (BasalProfileEntry profileEntry : listEntries) {
 
-            byte[] strokes = MedtronicUtil.getBasalStrokes(profileEntry.rate, true);
+            byte[] strokes = MedtronicUtil.getInstance().getBasalStrokes(profileEntry.rate, true);
 
             outData.add(profileEntry.rate_raw[0]);
             outData.add(profileEntry.rate_raw[1]);
             outData.add(profileEntry.startTime_raw);
         }
 
-        this.setRawData(MedtronicUtil.createByteArray(outData));
+        this.setRawData(MedtronicUtil.getInstance().createByteArray(outData));
 
         // return this.mRawData;
     }
@@ -305,7 +305,7 @@ public class BasalProfile {
 
         Double[] basalByHour = new Double[24];
 
-        PumpType pumpType = MedtronicUtil.getPumpStatus().pumpType;
+        PumpType pumpType = MedtronicUtil.getInstance().getPumpStatus().pumpType;
 
         for (int i = 0; i < entries.size(); i++) {
             BasalProfileEntry current = entries.get(i);

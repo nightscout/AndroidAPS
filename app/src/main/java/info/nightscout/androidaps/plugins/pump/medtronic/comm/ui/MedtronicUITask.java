@@ -70,7 +70,7 @@ public class MedtronicUITask {
 
             case GetRealTimeClock: {
                 returnData = communicationManager.getPumpTime();
-                MedtronicUtil.setPumpTime(null);
+                MedtronicUtil.getInstance().setPumpTime(null);
             }
             break;
 
@@ -200,10 +200,10 @@ public class MedtronicUITask {
                     errorDescription));
         } else {
             RxBus.Companion.getINSTANCE().send(new EventMedtronicPumpValuesChanged());
-            MedtronicUtil.getPumpStatus().setLastCommunicationToNow();
+            MedtronicUtil.getInstance().getPumpStatus().setLastCommunicationToNow();
         }
 
-        MedtronicUtil.setCurrentCommand(null);
+        MedtronicUtil.getInstance().setCurrentCommand(null);
     }
 
 

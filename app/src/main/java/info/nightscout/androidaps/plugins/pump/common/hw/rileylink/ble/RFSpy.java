@@ -91,7 +91,7 @@ public class RFSpy {
     public void initializeRileyLink() {
         bleVersion = getVersion();
         firmwareVersion = getFirmwareVersion();
-        RileyLinkUtil.setFirmwareVersion(firmwareVersion);
+        RileyLinkUtil.getInstance().setFirmwareVersion(firmwareVersion);
     }
 
 
@@ -296,7 +296,7 @@ public class RFSpy {
 
         this.currentFrequencyMHz = freqMHz;
 
-        configureRadioForRegion(RileyLinkUtil.getRileyLinkTargetFrequency());
+        configureRadioForRegion(RileyLinkUtil.getInstance().getRileyLinkTargetFrequency());
     }
 
 
@@ -403,7 +403,7 @@ public class RFSpy {
 
         if (resp.isOK()) {
             reader.setRileyLinkEncodingType(encoding);
-            RileyLinkUtil.setEncoding(encoding);
+            RileyLinkUtil.getInstance().setEncoding(encoding);
         }
 
         return resp;

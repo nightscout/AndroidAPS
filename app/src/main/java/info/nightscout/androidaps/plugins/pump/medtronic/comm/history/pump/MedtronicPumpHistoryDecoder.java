@@ -51,7 +51,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
         int counter = 0;
         int record = 0;
         boolean incompletePacket = false;
-        deviceType = MedtronicUtil.getMedtronicPumpModel();
+        deviceType = MedtronicUtil.getInstance().getMedtronicPumpModel();
 
         List<PumpHistoryEntry> outList = new ArrayList<PumpHistoryEntry>();
         String skipped = null;
@@ -408,7 +408,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
         Float rate = null;
         int index = entry.getHead()[0];
 
-        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(),
+        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getInstance().getMedtronicPumpModel(),
                 MedtronicDeviceType.Medtronic_523andHigher)) {
             rate = body[1] * 0.025f;
         }
@@ -435,7 +435,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
         float bolusStrokes = 10.0f;
 
-        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(),
+        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getInstance().getMedtronicPumpModel(),
                 MedtronicDeviceType.Medtronic_523andHigher)) {
             // https://github.com/ps2/minimed_rf/blob/master/lib/minimed_rf/log_entries/bolus_wizard.rb#L102
             bolusStrokes = 40.0f;
@@ -570,7 +570,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
         byte[] data = entry.getHead();
 
-        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(),
+        if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getInstance().getMedtronicPumpModel(),
                 MedtronicDeviceType.Medtronic_523andHigher)) {
             bolus.setRequestedAmount(ByteUtil.toInt(data[0], data[1]) / 40.0d);
             bolus.setDeliveredAmount(ByteUtil.toInt(data[2], data[3]) / 40.0d);

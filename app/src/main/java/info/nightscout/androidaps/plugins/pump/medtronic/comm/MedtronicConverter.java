@@ -44,7 +44,7 @@ public class MedtronicConverter {
         if (isLogEnabled())
             LOG.debug("Raw response before convert: " + ByteUtil.shortHexString(rawContent));
 
-        this.pumpModel = MedtronicUtil.getMedtronicPumpModel();
+        this.pumpModel = MedtronicUtil.getInstance().getMedtronicPumpModel();
 
         switch (commandType) {
 
@@ -117,8 +117,8 @@ public class MedtronicConverter {
             LOG.debug("PumpModel: [raw={}, resolved={}]", rawModel, pumpModel.name());
 
         if (pumpModel != MedtronicDeviceType.Unknown_Device) {
-            if (!MedtronicUtil.isModelSet()) {
-                MedtronicUtil.setMedtronicPumpModel(pumpModel);
+            if (!MedtronicUtil.getInstance().isModelSet()) {
+                MedtronicUtil.getInstance().setMedtronicPumpModel(pumpModel);
             }
         }
 
@@ -157,7 +157,7 @@ public class MedtronicConverter {
     protected Float decodeRemainingInsulin(byte[] rawData) {
         int startIdx = 0;
 
-        this.pumpModel = MedtronicUtil.getMedtronicPumpModel();
+        this.pumpModel = MedtronicUtil.getInstance().getMedtronicPumpModel();
 
         int strokes = pumpModel == null ? 10 : pumpModel.getBolusStrokes();
 

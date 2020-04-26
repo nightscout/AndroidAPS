@@ -25,8 +25,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
-import static info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil.getRileyLinkCommunicationManager;
-
 /**
  * Created by andy on 5/6/18.
  * Split from original file and renamed.
@@ -36,6 +34,8 @@ public abstract class RileyLinkService extends DaggerService {
     @Inject protected AAPSLogger aapsLogger;
     @Inject protected SP sp;
     @Inject protected Context context;
+    @Inject protected RileyLinkUtil rileyLinkUtil;
+    @Inject protected MedtronicUtil medtronicUtil;
 
 
     public RileyLinkBLE rileyLinkBLE; // android-bluetooth management
@@ -49,9 +49,8 @@ public abstract class RileyLinkService extends DaggerService {
     public void onCreate() {
         super.onCreate();
 
-        RileyLinkUtil.setContext(this.context);
-        RileyLinkUtil.setRileyLinkService(this);
-        RileyLinkUtil.setEncoding(getEncoding());
+        rileyLinkUtil.setRileyLinkService(this);
+        rileyLinkUtil.setEncoding(getEncoding());
         initRileyLinkServiceData();
 
         mBroadcastReceiver = new RileyLinkBroadcastReceiver(this, this.context);
@@ -131,27 +130,26 @@ public abstract class RileyLinkService extends DaggerService {
     // We've received a service startCommand, we grab the lock.
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        RileyLinkUtil.setContext(getApplicationContext());
         return (START_STICKY);
     }
 
 
     public boolean bluetoothInit() {
         aapsLogger.debug(LTag.PUMPCOMM, "bluetoothInit: attempting to get an adapter");
-        RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothInitializing);
+        rileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothInitializing);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter == null) {
             aapsLogger.error("Unable to obtain a BluetoothAdapter.");
-            RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
+            rileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.NoBluetoothAdapter);
         } else {
 
             if (!bluetoothAdapter.isEnabled()) {
                 aapsLogger.error("Bluetooth is not enabled.");
-                RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.BluetoothDisabled);
+                rileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothError, RileyLinkError.BluetoothDisabled);
             } else {
-                RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothReady);
+                rileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothReady);
                 return true;
             }
         }
@@ -164,11 +162,11 @@ public abstract class RileyLinkService extends DaggerService {
     public boolean reconfigureRileyLink(String deviceAddress) {
 
         if (rileyLinkBLE == null) {
-            RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothInitializing);
+            rileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothInitializing);
             return false;
         }
 
-        RileyLinkUtil.setServiceState(RileyLinkServiceState.RileyLinkInitializing);
+        rileyLinkUtil.setServiceState(RileyLinkServiceState.RileyLinkInitializing);
 
         if (rileyLinkBLE.isConnected()) {
             if (deviceAddress.equals(rileyLinkServiceData.rileylinkAddress)) {
@@ -189,10 +187,10 @@ public abstract class RileyLinkService extends DaggerService {
         } else {
             aapsLogger.debug(LTag.PUMPCOMM, "Using RL " + deviceAddress);
 
-            if (RileyLinkUtil.getServiceState() == RileyLinkServiceState.NotStarted) {
+            if (rileyLinkUtil.getServiceState() == RileyLinkServiceState.NotStarted) {
                 if (!bluetoothInit()) {
                     aapsLogger.error("RileyLink can't get activated, Bluetooth is not functioning correctly. {}",
-                            RileyLinkUtil.getError() != null ? RileyLinkUtil.getError().name() : "Unknown error (null)");
+                            rileyLinkUtil.getError() != null ? rileyLinkUtil.getError().name() : "Unknown error (null)");
                     return false;
                 }
             }
@@ -211,8 +209,8 @@ public abstract class RileyLinkService extends DaggerService {
     // FIXME: This needs to be run in a session so that is interruptable, has a separate thread, etc.
     public void doTuneUpDevice() {
 
-        RileyLinkUtil.setServiceState(RileyLinkServiceState.TuneUpDevice);
-        MedtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
+        rileyLinkUtil.setServiceState(RileyLinkServiceState.TuneUpDevice);
+        medtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
         double lastGoodFrequency = 0.0d;
 
@@ -236,11 +234,10 @@ public abstract class RileyLinkService extends DaggerService {
 
         if (newFrequency == 0.0d) {
             // error tuning pump, pump not present ??
-            RileyLinkUtil
-                    .setServiceState(RileyLinkServiceState.PumpConnectorError, RileyLinkError.TuneUpOfDeviceFailed);
+            rileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorError, RileyLinkError.TuneUpOfDeviceFailed);
         } else {
-            getRileyLinkCommunicationManager().clearNotConnectedCount();
-            RileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorReady);
+            rileyLinkUtil.getRileyLinkCommunicationManager().clearNotConnectedCount();
+            rileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorReady);
         }
     }
 
@@ -252,7 +249,7 @@ public abstract class RileyLinkService extends DaggerService {
             rileyLinkServiceData.rileylinkAddress = null;
         }
 
-        RileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothReady);
+        rileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothReady);
     }
 
 

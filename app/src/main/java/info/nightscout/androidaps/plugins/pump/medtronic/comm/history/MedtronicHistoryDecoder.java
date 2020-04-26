@@ -62,7 +62,7 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
         // return byteList;
         // }
 
-        if (MedtronicUtil.getMedtronicPumpModel() == null) {
+        if (MedtronicUtil.getInstance().getMedtronicPumpModel() == null) {
             LOG.error("Device Type is not defined.");
             return byteList;
         }

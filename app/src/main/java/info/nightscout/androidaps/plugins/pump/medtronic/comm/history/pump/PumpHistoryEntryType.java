@@ -380,7 +380,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
         int size = defaultValue;
 
         for (SpecialRule rule : rules) {
-            if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getMedtronicPumpModel(), rule.deviceType)) {
+            if (MedtronicDeviceType.isSameDevice(MedtronicUtil.getInstance().getMedtronicPumpModel(), rule.deviceType)) {
                 size = rule.size;
                 break;
             }

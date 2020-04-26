@@ -1,12 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.common.ui;
 
 import android.content.Context;
-import androidx.preference.Preference;
 import android.util.AttributeSet;
+
+import androidx.preference.Preference;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -19,7 +20,7 @@ public class RileyLinkSelectPreference extends Preference {
         super(context);
         setInitialSummaryValue();
 
-        MedtronicUtil.setRileyLinkSelectPreference(this);
+        RileyLinkUtil.getInstance().setRileyLinkSelectPreference(this);
     }
 
 
@@ -27,7 +28,7 @@ public class RileyLinkSelectPreference extends Preference {
         super(context, attrs);
         setInitialSummaryValue();
 
-        MedtronicUtil.setRileyLinkSelectPreference(this);
+        RileyLinkUtil.getInstance().setRileyLinkSelectPreference(this);
     }
 
 

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 
+import org.jetbrains.annotations.NotNull;
+
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -15,7 +17,9 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
  */
 public class MedtronicUIComm {
 
-    private final AAPSLogger aapsLogger;
+    @NotNull private final AAPSLogger aapsLogger;
+    @NotNull private final RileyLinkUtil rileyLinkUtil;
+    @NotNull private final MedtronicUtil medtronicUtil;
 
     MedtronicCommunicationManager mcmInstance = null;
     MedtronicUIPostprocessor uiPostprocessor;
@@ -23,11 +27,15 @@ public class MedtronicUIComm {
     public MedtronicUIComm(
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
-            ResourceHelper resourceHelper
+            ResourceHelper resourceHelper,
+            RileyLinkUtil rileyLinkUtil,
+            MedtronicUtil medtronicUtil
     ) {
         this.aapsLogger = aapsLogger;
+        this.rileyLinkUtil = rileyLinkUtil;
+        this.medtronicUtil = medtronicUtil;
 
-        uiPostprocessor = new MedtronicUIPostprocessor(aapsLogger, rxBus, resourceHelper);
+        uiPostprocessor = new MedtronicUIPostprocessor(aapsLogger, rxBus, resourceHelper, medtronicUtil);
     }
 
 
@@ -46,7 +54,7 @@ public class MedtronicUIComm {
 
         MedtronicUITask task = new MedtronicUITask(commandType, parameters);
 
-        MedtronicUtil.setCurrentCommand(commandType);
+        medtronicUtil.setCurrentCommand(commandType);
 
         // new Thread(() -> {
         // LOG.warn("@@@ Start Thread");
@@ -108,6 +116,6 @@ public class MedtronicUIComm {
 
 
     public void startTunning() {
-        RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
+        rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
     }
 }

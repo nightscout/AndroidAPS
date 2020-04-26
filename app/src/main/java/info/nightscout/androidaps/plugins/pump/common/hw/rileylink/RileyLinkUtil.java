@@ -5,8 +5,7 @@ import android.content.Intent;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -15,9 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6b;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff;
@@ -42,143 +44,160 @@ import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDe
  * Created by andy on 17/05/2018.
  */
 
+@Singleton
 public class RileyLinkUtil {
 
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMP);
-    protected static List<RLHistoryItem> historyRileyLink = new ArrayList<>();
-    protected static RileyLinkCommunicationManager rileyLinkCommunicationManager;
+    public List<RLHistoryItem> historyRileyLink = new ArrayList<>();
+    public RileyLinkCommunicationManager rileyLinkCommunicationManager;
     static ServiceTask currentTask;
-    private static Context context;
-    private static RileyLinkBLE rileyLinkBLE;
-    private static RileyLinkServiceData rileyLinkServiceData;
-    private static RileyLinkService rileyLinkService;
-    private static RileyLinkTargetFrequency rileyLinkTargetFrequency;
+    private RileyLinkBLE rileyLinkBLE;
+    private RileyLinkServiceData rileyLinkServiceData;
+    private RileyLinkService rileyLinkService;
+    private RileyLinkTargetFrequency rileyLinkTargetFrequency;
 
-    private static RileyLinkTargetDevice targetDevice;
-    private static RileyLinkEncodingType encoding;
-    private static RileyLinkSelectPreference rileyLinkSelectPreference;
-    private static Encoding4b6b encoding4b6b;
-    private static RileyLinkFirmwareVersion firmwareVersion;
+    private RileyLinkTargetDevice targetDevice;
+    private RileyLinkEncodingType encoding;
+    private RileyLinkSelectPreference rileyLinkSelectPreference;
+    private Encoding4b6b encoding4b6b;
+    private RileyLinkFirmwareVersion firmwareVersion;
 
 
-    public static void setContext(Context contextIn) {
-        RileyLinkUtil.context = contextIn;
+    @NotNull private final Context context;
+    @NotNull private final AAPSLogger aapsLogger;
+    @NotNull private final RxBusWrapper rxBus;
+
+    @Inject
+    public RileyLinkUtil(
+            Context context,
+            AAPSLogger aapsLogger,
+            RxBusWrapper rxBus
+
+    ) {
+        this.context = context;
+        this.aapsLogger = aapsLogger;
+        this.rxBus = rxBus;
+        instance = this;
     }
 
+    private static RileyLinkUtil instance;
 
-    public static RileyLinkEncodingType getEncoding() {
+    // TODO: replace by injection
+    @Deprecated
+    public static RileyLinkUtil getInstance() {
+        if (instance == null) throw new IllegalStateException("RileyLinkUtil not initialized");
+        return instance;
+    }
+
+    public RileyLinkEncodingType getEncoding() {
         return encoding;
     }
 
 
-    public static void setEncoding(RileyLinkEncodingType encoding) {
-        RileyLinkUtil.encoding = encoding;
+    public void setEncoding(RileyLinkEncodingType encoding) {
+        this.encoding = encoding;
 
         if (encoding == RileyLinkEncodingType.FourByteSixByteLocal) {
-            RileyLinkUtil.encoding4b6b = new Encoding4b6bGeoff();
+            this.encoding4b6b = new Encoding4b6bGeoff();
         }
     }
 
 
-    public static void sendBroadcastMessage(String message) {
-        if (context != null) {
-            Intent intent = new Intent(message);
-            LocalBroadcastManager.getInstance(RileyLinkUtil.context).sendBroadcast(intent);
-        }
+    public void sendBroadcastMessage(String message) {
+        Intent intent = new Intent(message);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
 
-    public static void setServiceState(RileyLinkServiceState newState) {
+    public void setServiceState(RileyLinkServiceState newState) {
         setServiceState(newState, null);
     }
 
 
-    public static RileyLinkError getError() {
-        if (RileyLinkUtil.rileyLinkServiceData != null)
-            return RileyLinkUtil.rileyLinkServiceData.errorCode;
+    public RileyLinkError getError() {
+        if (rileyLinkServiceData != null)
+            return rileyLinkServiceData.errorCode;
         else
             return null;
     }
 
 
-    public static RileyLinkServiceState getServiceState() {
+    public RileyLinkServiceState getServiceState() {
         return workWithServiceState(null, null, false);
     }
 
 
-    public static void setServiceState(RileyLinkServiceState newState, RileyLinkError errorCode) {
+    public void setServiceState(RileyLinkServiceState newState, RileyLinkError errorCode) {
         workWithServiceState(newState, errorCode, true);
     }
 
 
-    private static synchronized RileyLinkServiceState workWithServiceState(RileyLinkServiceState newState,
-                                                                           RileyLinkError errorCode, boolean set) {
+    private synchronized RileyLinkServiceState workWithServiceState(RileyLinkServiceState newState,
+                                                                    RileyLinkError errorCode, boolean set) {
 
         if (set) {
 
-            RileyLinkUtil.rileyLinkServiceData.serviceState = newState;
-            RileyLinkUtil.rileyLinkServiceData.errorCode = errorCode;
+            rileyLinkServiceData.serviceState = newState;
+            rileyLinkServiceData.errorCode = errorCode;
 
-            if (L.isEnabled(L.PUMP))
-                LOG.info("RileyLink State Changed: {} {}", newState, errorCode == null ? "" : " - Error State: "
-                        + errorCode.name());
+            aapsLogger.info(LTag.PUMP, "RileyLink State Changed: {} {}", newState, errorCode == null ? "" : " - Error State: "
+                    + errorCode.name());
 
-            RileyLinkUtil.historyRileyLink.add(new RLHistoryItem(RileyLinkUtil.rileyLinkServiceData.serviceState,
-                    RileyLinkUtil.rileyLinkServiceData.errorCode, targetDevice));
-            RxBus.Companion.getINSTANCE().send(new EventMedtronicDeviceStatusChange(newState, errorCode));
+            historyRileyLink.add(new RLHistoryItem(rileyLinkServiceData.serviceState,
+                    rileyLinkServiceData.errorCode, targetDevice));
+            rxBus.send(new EventMedtronicDeviceStatusChange(newState, errorCode));
             return null;
 
         } else {
-            return (RileyLinkUtil.rileyLinkServiceData == null || RileyLinkUtil.rileyLinkServiceData.serviceState == null) ? //
+            return (rileyLinkServiceData == null || rileyLinkServiceData.serviceState == null) ? //
                     RileyLinkServiceState.NotStarted
-                    : RileyLinkUtil.rileyLinkServiceData.serviceState;
+                    : rileyLinkServiceData.serviceState;
         }
 
     }
 
 
-    public static RileyLinkBLE getRileyLinkBLE() {
-        return RileyLinkUtil.rileyLinkBLE;
+    public RileyLinkBLE getRileyLinkBLE() {
+        return rileyLinkBLE;
     }
 
 
-    public static void setRileyLinkBLE(RileyLinkBLE rileyLinkBLEIn) {
-        RileyLinkUtil.rileyLinkBLE = rileyLinkBLEIn;
+    public void setRileyLinkBLE(RileyLinkBLE rileyLinkBLEIn) {
+        rileyLinkBLE = rileyLinkBLEIn;
     }
 
 
-    public static RileyLinkServiceData getRileyLinkServiceData() {
-        return RileyLinkUtil.rileyLinkServiceData;
+    public RileyLinkServiceData getRileyLinkServiceData() {
+        return rileyLinkServiceData;
     }
 
 
-    public static void setRileyLinkServiceData(RileyLinkServiceData rileyLinkServiceData) {
-        RileyLinkUtil.rileyLinkServiceData = rileyLinkServiceData;
+    public void setRileyLinkServiceData(RileyLinkServiceData rileyLinkServiceData) {
+        this.rileyLinkServiceData = rileyLinkServiceData;
     }
 
 
-    public static boolean hasPumpBeenTunned() {
-        return RileyLinkUtil.rileyLinkServiceData.tuneUpDone;
+    public boolean hasPumpBeenTunned() {
+        return rileyLinkServiceData.tuneUpDone;
     }
 
 
-    public static RileyLinkService getRileyLinkService() {
-        return RileyLinkUtil.rileyLinkService;
+    public RileyLinkService getRileyLinkService() {
+        return rileyLinkService;
     }
 
 
-    public static void setRileyLinkService(RileyLinkService rileyLinkService) {
-        RileyLinkUtil.rileyLinkService = rileyLinkService;
+    public void setRileyLinkService(RileyLinkService rileyLinkService) {
+        this.rileyLinkService = rileyLinkService;
     }
 
 
-    public static RileyLinkCommunicationManager getRileyLinkCommunicationManager() {
-        return RileyLinkUtil.rileyLinkCommunicationManager;
+    public RileyLinkCommunicationManager getRileyLinkCommunicationManager() {
+        return rileyLinkCommunicationManager;
     }
 
 
-    public static void setRileyLinkCommunicationManager(RileyLinkCommunicationManager rileyLinkCommunicationManager) {
-        RileyLinkUtil.rileyLinkCommunicationManager = rileyLinkCommunicationManager;
+    void setRileyLinkCommunicationManager(RileyLinkCommunicationManager rileyLinkCommunicationManager) {
+        this.rileyLinkCommunicationManager = rileyLinkCommunicationManager;
     }
 
 
@@ -222,13 +241,13 @@ public class RileyLinkUtil {
     }
 
 
-    public static RileyLinkTargetFrequency getRileyLinkTargetFrequency() {
-        return RileyLinkUtil.rileyLinkTargetFrequency;
+    public RileyLinkTargetFrequency getRileyLinkTargetFrequency() {
+        return rileyLinkTargetFrequency;
     }
 
 
-    public static void setRileyLinkTargetFrequency(RileyLinkTargetFrequency rileyLinkTargetFrequency) {
-        RileyLinkUtil.rileyLinkTargetFrequency = rileyLinkTargetFrequency;
+    public void setRileyLinkTargetFrequency(RileyLinkTargetFrequency rileyLinkTargetFrequency) {
+        this.rileyLinkTargetFrequency = rileyLinkTargetFrequency;
     }
 
 
@@ -286,44 +305,42 @@ public class RileyLinkUtil {
     }
 
 
-    public static List<RLHistoryItem> getRileyLinkHistory() {
+    public List<RLHistoryItem> getRileyLinkHistory() {
         return historyRileyLink;
     }
 
 
-    public static RileyLinkTargetDevice getTargetDevice() {
+    public RileyLinkTargetDevice getTargetDevice() {
         return targetDevice;
     }
 
 
-    public static void setTargetDevice(RileyLinkTargetDevice targetDevice) {
-        RileyLinkUtil.targetDevice = targetDevice;
+    public void setTargetDevice(RileyLinkTargetDevice targetDevice) {
+        this.targetDevice = targetDevice;
     }
 
 
-    public static void setRileyLinkSelectPreference(RileyLinkSelectPreference rileyLinkSelectPreference) {
-
-        RileyLinkUtil.rileyLinkSelectPreference = rileyLinkSelectPreference;
+    public void setRileyLinkSelectPreference(RileyLinkSelectPreference rileyLinkSelectPreference) {
+        this.rileyLinkSelectPreference = rileyLinkSelectPreference;
     }
 
 
-    public static RileyLinkSelectPreference getRileyLinkSelectPreference() {
-
+    public RileyLinkSelectPreference getRileyLinkSelectPreference() {
         return rileyLinkSelectPreference;
     }
 
 
-    public static Encoding4b6b getEncoding4b6b() {
-        return RileyLinkUtil.encoding4b6b;
+    public Encoding4b6b getEncoding4b6b() {
+        return encoding4b6b;
     }
 
 
-    public static void setFirmwareVersion(RileyLinkFirmwareVersion firmwareVersion) {
-        RileyLinkUtil.firmwareVersion = firmwareVersion;
+    public void setFirmwareVersion(RileyLinkFirmwareVersion firmwareVersion) {
+        this.firmwareVersion = firmwareVersion;
     }
 
 
-    public static RileyLinkFirmwareVersion getFirmwareVersion() {
+    public RileyLinkFirmwareVersion getFirmwareVersion() {
         return firmwareVersion;
     }
 }

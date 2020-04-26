@@ -36,11 +36,10 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 public class RileyLinkMedtronicService extends RileyLinkService {
 
-    //@Inject AAPSLogger aapsLogger;
-    //@Inject Context context;
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
-    //@Inject SP sp;
+    @Inject MedtronicUtil medtronicUtil;
 
+    @Deprecated // TEDO remove this reference
     private static RileyLinkMedtronicService instance;
     private static ServiceTask currentTask = null;
 
@@ -87,8 +86,8 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
         rileyLinkServiceData = new RileyLinkServiceData(RileyLinkTargetDevice.MedtronicPump);
 
-        RileyLinkUtil.setRileyLinkServiceData(rileyLinkServiceData);
-        RileyLinkUtil.setTargetDevice(RileyLinkTargetDevice.MedtronicPump);
+        rileyLinkUtil.setRileyLinkServiceData(rileyLinkServiceData);
+        rileyLinkUtil.setTargetDevice(RileyLinkTargetDevice.MedtronicPump);
 
         setPumpIDString(sp.getString(MedtronicConst.Prefs.PumpSerial, "000000"));
 
@@ -99,13 +98,13 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         rfspy = new RFSpy(rileyLinkBLE);
         rfspy.startReader();
 
-        RileyLinkUtil.setRileyLinkBLE(rileyLinkBLE);
+        rileyLinkUtil.setRileyLinkBLE(rileyLinkBLE);
 
         // init rileyLinkCommunicationManager
         medtronicCommunicationManager = new MedtronicCommunicationManager(rfspy);
 
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed");
-        MedtronicUtil.setMedtronicService(this);
+        medtronicUtil.setMedtronicService(this);
         pumpStatus = (MedtronicPumpStatus) medtronicPumpPlugin.getPumpStatusData();
 
     }
@@ -153,13 +152,13 @@ public class RileyLinkMedtronicService extends RileyLinkService {
             rileyLinkServiceData.setPumpID(pumpID, pumpIDBytes);
 
             if (oldId != null && !oldId.equals(pumpID)) {
-                MedtronicUtil.setMedtronicPumpModel(null); // if we change pumpId, model probably changed too
+                medtronicUtil.setMedtronicPumpModel(null); // if we change pumpId, model probably changed too
             }
 
             return;
         }
 
-        MedtronicUtil.setPumpDeviceState(PumpDeviceState.InvalidConfiguration);
+        medtronicUtil.setPumpDeviceState(PumpDeviceState.InvalidConfiguration);
 
         // LOG.info("setPumpIDString: saved pumpID " + idString);
     }
@@ -177,7 +176,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     // PumpInterface - REMOVE
 
     public boolean isInitialized() {
-        return RileyLinkServiceState.isReady(RileyLinkUtil.getRileyLinkServiceData().serviceState);
+        return RileyLinkServiceState.isReady(rileyLinkUtil.getRileyLinkServiceData().serviceState);
     }
 
 

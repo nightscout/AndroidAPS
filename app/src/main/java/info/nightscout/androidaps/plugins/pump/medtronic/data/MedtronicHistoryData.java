@@ -69,7 +69,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class MedtronicHistoryData {
 
-    private static AAPSLogger aapsLogger;
+    private AAPSLogger aapsLogger;
     private SP sp;
     private ActivePluginProvider activePlugin;
 
@@ -97,20 +97,12 @@ public class MedtronicHistoryData {
 
     public MedtronicHistoryData(AAPSLogger aapsLogger, SP sp, ActivePluginProvider activePlugin) {
         this.allHistory = new ArrayList<>();
-        this.gson = MedtronicUtil.gsonInstance;
-        this.gsonCore = MedtronicUtil.getGsonInstanceCore();
+        this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        this.gsonCore = new GsonBuilder().create();
 
         this.aapsLogger = aapsLogger;
         this.sp = sp;
         this.activePlugin = activePlugin;
-
-        if (this.gson == null) {
-            this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        }
-
-        if (this.gsonCore == null) {
-            this.gsonCore = new GsonBuilder().create();
-        }
     }
 
 
@@ -138,7 +130,7 @@ public class MedtronicHistoryData {
     }
 
 
-    private static void showLogs(String header, String data) {
+    private void showLogs(String header, String data) {
         if (header != null) {
             aapsLogger.debug(LTag.PUMP, header);
         }
@@ -321,7 +313,7 @@ public class MedtronicHistoryData {
 
         List<PumpHistoryEntry> items = getDataForPumpSuspends();
 
-        showLogs("isPumpSuspended: ", MedtronicUtil.gsonInstance.toJson(items));
+        showLogs("isPumpSuspended: ", gson.toJson(items));
 
         if (isCollectionNotEmpty(items)) {
 
@@ -432,7 +424,7 @@ public class MedtronicHistoryData {
             }
         }
 
-        pumpTime = MedtronicUtil.getPumpTime();
+        pumpTime = MedtronicUtil.getInstance().getPumpTime();
 
         // Bolus
         List<PumpHistoryEntry> treatments = getFilteredItems(PumpHistoryEntryType.Bolus);
@@ -594,8 +586,6 @@ public class MedtronicHistoryData {
     private void processBolusEntries(List<PumpHistoryEntry> entryList) {
 
         long oldestTimestamp = getOldestTimestamp(entryList);
-
-        Gson gson = MedtronicUtil.getGsonInstance();
 
         List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntriesByLastTimestamp(oldestTimestamp, ProcessHistoryRecord.Bolus);
 
@@ -976,7 +966,7 @@ public class MedtronicHistoryData {
             treatment.pumpId = bolus.getPumpId();
             treatment.insulin = bolusDTO.getDeliveredAmount();
 
-            TreatmentService.UpdateReturn updateReturn = ((TreatmentsPlugin)activePlugin.getActiveTreatments()).getService().createOrUpdateMedtronic(treatment, false);
+            TreatmentService.UpdateReturn updateReturn = ((TreatmentsPlugin) activePlugin.getActiveTreatments()).getService().createOrUpdateMedtronic(treatment, false);
 
             if (doubleBolusDebug)
                 aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: addBolus(tretament!=null): NewTreatment={}, UpdateReturn={}", treatment, updateReturn);
@@ -1370,11 +1360,11 @@ public class MedtronicHistoryData {
 
     private PumpHistoryEntryType getTDDType() {
 
-        if (MedtronicUtil.getMedtronicPumpModel() == null) {
+        if (MedtronicUtil.getInstance().getMedtronicPumpModel() == null) {
             return PumpHistoryEntryType.EndResultTotals;
         }
 
-        switch (MedtronicUtil.getMedtronicPumpModel()) {
+        switch (MedtronicUtil.getInstance().getMedtronicPumpModel()) {
 
             case Medtronic_515:
             case Medtronic_715:

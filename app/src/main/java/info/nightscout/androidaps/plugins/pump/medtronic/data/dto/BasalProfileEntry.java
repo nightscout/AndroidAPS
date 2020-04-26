@@ -25,14 +25,14 @@ public class BasalProfileEntry {
 
     public BasalProfileEntry() {
         rate = -9.999E6;
-        rate_raw = MedtronicUtil.getByteArrayFromUnsignedShort(0xFF, true);
+        rate_raw = MedtronicUtil.getInstance().getByteArrayFromUnsignedShort(0xFF, true);
         startTime = new LocalTime(0);
         startTime_raw = (byte)0xFF;
     }
 
 
     public BasalProfileEntry(double rate, int hour, int minutes) {
-        byte[] data = MedtronicUtil.getBasalStrokes(rate, true);
+        byte[] data = MedtronicUtil.getInstance().getBasalStrokes(rate, true);
 
         rate_raw = new byte[2];
         rate_raw[0] = data[1];
@@ -52,7 +52,7 @@ public class BasalProfileEntry {
     public BasalProfileEntry(int rateStrokes, int startTimeInterval) {
         // rateByte is insulin delivery rate, U/hr, in 0.025 U increments
         // startTimeByte is time-of-day, in 30 minute increments
-        rate_raw = MedtronicUtil.getByteArrayFromUnsignedShort(rateStrokes, true);
+        rate_raw = MedtronicUtil.getInstance().getByteArrayFromUnsignedShort(rateStrokes, true);
         rate = rateStrokes * 0.025;
         startTime_raw = (byte)startTimeInterval;
 
@@ -71,7 +71,7 @@ public class BasalProfileEntry {
     public BasalProfileEntry(byte rateByte, int startTimeByte) {
         // rateByte is insulin delivery rate, U/hr, in 0.025 U increments
         // startTimeByte is time-of-day, in 30 minute increments
-        rate_raw = MedtronicUtil.getByteArrayFromUnsignedShort(rateByte, true);
+        rate_raw = MedtronicUtil.getInstance().getByteArrayFromUnsignedShort(rateByte, true);
         rate = rateByte * 0.025;
         startTime_raw = (byte)startTimeByte;
         startTime = new LocalTime(startTimeByte / 2, (startTimeByte % 2) * 30);

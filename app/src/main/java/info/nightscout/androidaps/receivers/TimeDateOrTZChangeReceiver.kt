@@ -15,13 +15,12 @@ import javax.inject.Inject
 class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePluginProvider
-    var gson: Gson
+    val gson: Gson = Gson()
 
     private var isDST = false
 
     init {
         isDST = calculateDST()
-        gson = Gson()
     }
 
     private fun calculateDST(): Boolean {
@@ -38,10 +37,6 @@ class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
         super.onReceive(context, intent)
         val action = intent.action
         val activePump: PumpInterface = activePlugin.activePump
-        if (activePump == null) {
-            aapsLogger.debug(LTag.PUMP,"TimeDateOrTZChangeReceiver::Time and/or TimeZone changed. [action={}]. Pump is null, exiting.", action)
-            return
-        }
 
         aapsLogger.debug(LTag.PUMP,"TimeDateOrTZChangeReceiver::Date, Time and/or TimeZone changed. [action={}]", action)
         aapsLogger.debug(LTag.PUMP,"TimeDateOrTZChangeReceiver::Intent::{}", gson.toJson(intent))

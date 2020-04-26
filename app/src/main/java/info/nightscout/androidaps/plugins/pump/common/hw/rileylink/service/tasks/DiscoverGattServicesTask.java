@@ -23,8 +23,8 @@ public class DiscoverGattServicesTask extends ServiceTask {
     public void run() {
 
         if (needToConnect)
-            RileyLinkUtil.getRileyLinkBLE().connectGatt();
+            RileyLinkUtil.getInstance().getRileyLinkBLE().connectGatt();
 
-        RileyLinkUtil.getRileyLinkBLE().discoverServices();
+        RileyLinkUtil.getInstance().getRileyLinkBLE().discoverServices();
     }
 }
