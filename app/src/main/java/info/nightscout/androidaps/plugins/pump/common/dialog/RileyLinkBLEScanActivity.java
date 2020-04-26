@@ -62,6 +62,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
     @Inject ResourceHelper resourceHelper;
     @Inject RileyLinkUtil rileyLinkUtil;
     @Inject MedtronicUtil medtronicUtil;
+    @Inject MedtronicPumpStatus medtronicPumpStatus;
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 30241; // arbitrary.
     private static final int REQUEST_ENABLE_BT = 30242; // arbitrary
@@ -112,8 +113,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
             rileyLinkUtil.getRileyLinkSelectPreference().setSummary(bleAddress);
 
-            MedtronicPumpStatus pumpStatus = medtronicUtil.getPumpStatus();
-            pumpStatus.verifyConfiguration(); // force reloading of address
+            medtronicPumpStatus.verifyConfiguration(); // force reloading of address
 
             rxBus.send(new EventMedtronicPumpConfigurationChanged());
 

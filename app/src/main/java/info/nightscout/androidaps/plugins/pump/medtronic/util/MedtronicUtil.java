@@ -56,7 +56,6 @@ public class MedtronicUtil {
     private MedtronicDeviceType medtronicPumpModel;
     private RileyLinkMedtronicService medtronicService;
     @Deprecated // TODO remove this reference
-    private MedtronicPumpStatus medtronicPumpStatus;
     private MedtronicCommandType currentCommand;
     private Map<String, PumpSettingDTO> settings;
     private int BIG_FRAME_LENGTH = 65;
@@ -69,17 +68,20 @@ public class MedtronicUtil {
     @NotNull private final AAPSLogger aapsLogger;
     @NotNull private final RxBusWrapper rxBus;
     @NotNull private final RileyLinkUtil rileyLinkUtil;
+    @NotNull private final MedtronicPumpStatus medtronicPumpStatus;
 
     @Inject
     public MedtronicUtil(
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
-            RileyLinkUtil rileyLinkUtil
+            RileyLinkUtil rileyLinkUtil,
+            MedtronicPumpStatus medtronicPumpStatus
 
     ) {
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.rileyLinkUtil = rileyLinkUtil;
+        this.medtronicPumpStatus = medtronicPumpStatus;
         instance = this;
     }
 
@@ -465,15 +467,9 @@ public class MedtronicUtil {
 
 
     @Deprecated // TODO use singleton
-    public MedtronicPumpStatus getPumpStatus() {
+    public MedtronicPumpStatus getPumpStatus1() {
         return medtronicPumpStatus;
     }
-
-    @Deprecated // TODO use singleton
-    public void setPumpStatus(MedtronicPumpStatus medtronicPumpStatus) {
-        this.medtronicPumpStatus = medtronicPumpStatus;
-    }
-
 
     public MedtronicCommandType getCurrentCommand() {
         return this.currentCommand;

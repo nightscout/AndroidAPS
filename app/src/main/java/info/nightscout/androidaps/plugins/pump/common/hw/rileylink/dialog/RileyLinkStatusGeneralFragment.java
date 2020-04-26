@@ -13,7 +13,6 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
@@ -24,6 +23,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by andy on 5/19/18.
@@ -33,6 +33,8 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
     @Inject RileyLinkUtil rileyLinkUtil;
     @Inject MedtronicUtil medtronicUtil;
+    @Inject MedtronicPumpStatus medtronicPumpStatus;
+    @Inject ResourceHelper resourceHelper;
 
     TextView connectionStatus;
     TextView configuredAddress;
@@ -100,15 +102,15 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
         RileyLinkTargetDevice targetDevice = rileyLinkUtil.getTargetDevice();
 
         if (rileyLinkUtil.getServiceState() == null)
-            this.connectionStatus.setText(MainApp.gs(RileyLinkServiceState.NotStarted.getResourceId(targetDevice)));
+            this.connectionStatus.setText(resourceHelper.gs(RileyLinkServiceState.NotStarted.getResourceId(targetDevice)));
         else
-            this.connectionStatus.setText(MainApp.gs(rileyLinkUtil.getServiceState().getResourceId(targetDevice)));
+            this.connectionStatus.setText(resourceHelper.gs(rileyLinkUtil.getServiceState().getResourceId(targetDevice)));
 
         if (rileyLinkServiceData != null) {
             this.configuredAddress.setText(rileyLinkServiceData.rileylinkAddress);
             this.connectionError.setText(rileyLinkServiceData.errorCode == null ? //
                     "-"
-                    : MainApp.gs(rileyLinkServiceData.errorCode.getResourceId(targetDevice)));
+                    : resourceHelper.gs(rileyLinkServiceData.errorCode.getResourceId(targetDevice)));
 
 
             RileyLinkFirmwareVersion firmwareVersion = rileyLinkServiceData.versionCC110;
@@ -123,13 +125,12 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
         }
 
         // TODO add handling for Omnipod pump status
-        MedtronicPumpStatus medtronicPumpStatus = medtronicUtil.getPumpStatus();
 
         if (medtronicPumpStatus != null) {
-            this.deviceType.setText(MainApp.gs(RileyLinkTargetDevice.MedtronicPump.getResourceId()));
+            this.deviceType.setText(resourceHelper.gs(RileyLinkTargetDevice.MedtronicPump.getResourceId()));
             this.deviceModel.setText(medtronicPumpStatus.pumpType.getDescription());
             this.serialNumber.setText(medtronicPumpStatus.serialNumber);
-            this.pumpFrequency.setText(MainApp.gs(medtronicPumpStatus.pumpFrequency.equals("medtronic_pump_frequency_us_ca") ? R.string.medtronic_pump_frequency_us_ca : R.string.medtronic_pump_frequency_worldwide));
+            this.pumpFrequency.setText(resourceHelper.gs(medtronicPumpStatus.pumpFrequency.equals("medtronic_pump_frequency_us_ca") ? R.string.medtronic_pump_frequency_us_ca : R.string.medtronic_pump_frequency_worldwide));
 
             // TODO extend when Omnipod used
 

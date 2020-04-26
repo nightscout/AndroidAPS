@@ -2,6 +2,10 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -15,27 +19,32 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 /**
  * Created by andy on 6/14/18.
  */
+@Singleton
 public class MedtronicUIComm {
 
+    @NotNull private final HasAndroidInjector injector;
     @NotNull private final AAPSLogger aapsLogger;
     @NotNull private final RileyLinkUtil rileyLinkUtil;
     @NotNull private final MedtronicUtil medtronicUtil;
 
     MedtronicCommunicationManager mcmInstance = null;
-    MedtronicUIPostprocessor uiPostprocessor;
+    @NotNull private final MedtronicUIPostprocessor medtronicUIPostprocessor;
 
+    @Inject
     public MedtronicUIComm(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             ResourceHelper resourceHelper,
             RileyLinkUtil rileyLinkUtil,
-            MedtronicUtil medtronicUtil
+            MedtronicUtil medtronicUtil,
+            MedtronicUIPostprocessor medtronicUIPostprocessor
     ) {
+        this.injector = injector;
         this.aapsLogger = aapsLogger;
         this.rileyLinkUtil = rileyLinkUtil;
         this.medtronicUtil = medtronicUtil;
-
-        uiPostprocessor = new MedtronicUIPostprocessor(aapsLogger, rxBus, resourceHelper, medtronicUtil);
+        this.medtronicUIPostprocessor = medtronicUIPostprocessor;
     }
 
 
@@ -52,7 +61,7 @@ public class MedtronicUIComm {
 
         aapsLogger.warn(LTag.PUMP, "Execute Command: " + commandType.name());
 
-        MedtronicUITask task = new MedtronicUITask(commandType, parameters);
+        MedtronicUITask task = new MedtronicUITask(injector, commandType, parameters);
 
         medtronicUtil.setCurrentCommand(commandType);
 
@@ -88,7 +97,7 @@ public class MedtronicUIComm {
             aapsLogger.warn(LTag.PUMP, "Reply not received for " + commandType);
         }
 
-        task.postProcess(uiPostprocessor);
+        task.postProcess(medtronicUIPostprocessor);
 
         return task;
 

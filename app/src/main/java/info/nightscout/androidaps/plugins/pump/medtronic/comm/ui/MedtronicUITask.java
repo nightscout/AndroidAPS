@@ -1,10 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.MainApp;
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
@@ -15,6 +17,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicUIResponseType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
+import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
@@ -24,6 +27,10 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  */
 
 public class MedtronicUITask {
+
+    @Inject MedtronicPumpStatus medtronicPumpStatus;
+
+    @NotNull private final HasAndroidInjector injector;
 
     private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMP);
 
@@ -36,12 +43,16 @@ public class MedtronicUITask {
     MedtronicUIResponseType responseType;
 
 
-    public MedtronicUITask(MedtronicCommandType commandType) {
+    public MedtronicUITask(HasAndroidInjector injector, MedtronicCommandType commandType) {
+        this.injector = injector;
+        injector.androidInjector().inject(this);
         this.commandType = commandType;
     }
 
 
-    public MedtronicUITask(MedtronicCommandType commandType, Object... parameters) {
+    public MedtronicUITask(HasAndroidInjector injector, MedtronicCommandType commandType, Object... parameters) {
+        this.injector = injector;
+        injector.androidInjector().inject(this);
         this.commandType = commandType;
         this.parameters = parameters;
     }
@@ -200,7 +211,7 @@ public class MedtronicUITask {
                     errorDescription));
         } else {
             RxBus.Companion.getINSTANCE().send(new EventMedtronicPumpValuesChanged());
-            MedtronicUtil.getInstance().getPumpStatus().setLastCommunicationToNow();
+            medtronicPumpStatus.setLastCommunicationToNow();
         }
 
         MedtronicUtil.getInstance().setCurrentCommand(null);

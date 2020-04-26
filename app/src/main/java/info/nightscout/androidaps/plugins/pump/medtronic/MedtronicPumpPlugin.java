@@ -99,10 +99,10 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private final RileyLinkUtil rileyLinkUtil;
     private final MedtronicUtil medtronicUtil;
     private final MedtronicPumpStatus medtronicPumpStatus;
+    private final MedtronicUIComm medtronicUIComm;
 
     protected static MedtronicPumpPlugin plugin = null;
     private RileyLinkMedtronicService rileyLinkMedtronicService;
-    private MedtronicUIComm medtronicUIComm;
 
     // variables for handling statuses and history
     private boolean firstRun = true;
@@ -131,7 +131,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             FabricPrivacy fabricPrivacy,
             RileyLinkUtil rileyLinkUtil,
             MedtronicUtil medtronicUtil,
-            MedtronicPumpStatus medtronicPumpStatus
+            MedtronicPumpStatus medtronicPumpStatus,
+            MedtronicUIComm medtronicUIComm
     ) {
 
         super(new PluginDescription() //
@@ -150,6 +151,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         this.medtronicUtil = medtronicUtil;
         this.sp = sp;
         this.medtronicPumpStatus = medtronicPumpStatus;
+        this.medtronicUIComm = medtronicUIComm;
 
         displayConnectionMessages = false;
 
@@ -170,11 +172,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                     for (int i = 0; i < 20; i++) {
                         SystemClock.sleep(5000);
 
-                        if (medtronicUtil.getPumpStatus() != null) {
-                            aapsLogger.debug(LTag.PUMP, "Starting Medtronic-RileyLink service");
-                            if (medtronicUtil.getPumpStatus().setNotInPreInit()) {
-                                break;
-                            }
+                        aapsLogger.debug(LTag.PUMP, "Starting Medtronic-RileyLink service");
+                        if (medtronicPumpStatus.setNotInPreInit()) {
+                            break;
                         }
                     }
                 }).start();
@@ -186,7 +186,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Override
     protected void onStart() {
         super.onStart();
-        medtronicUIComm = new MedtronicUIComm(aapsLogger, rxBus, getResourceHelper(), rileyLinkUtil, medtronicUtil);
         medtronicHistoryData = new MedtronicHistoryData(aapsLogger, sp, activePlugin);
     }
 
@@ -210,8 +209,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @Override
     public void initPumpStatusData() {
-
-        medtronicUtil.setPumpStatus(medtronicPumpStatus);
 
         medtronicPumpStatus.lastConnection = sp.getLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
         medtronicPumpStatus.lastDataTime = medtronicPumpStatus.lastConnection;
@@ -1532,7 +1529,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         switch (mcat) {
 
             case WakeUpAndTune: {
-                if (medtronicUtil.getPumpStatus().verifyConfiguration()) {
+                if (medtronicPumpStatus.verifyConfiguration()) {
                     ServiceTaskExecutor.startTask(new WakeAndTuneTask(getInjector()));
                 } else {
                     Intent i = new Intent(context, ErrorHelperActivity.class);
@@ -1583,5 +1580,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         refreshCustomActionsList();
     }
 
+    @Deprecated
+    public MedtronicPumpStatus getMedtronicPumpStatus() {
+        return medtronicPumpStatus;
+    }
 
 }

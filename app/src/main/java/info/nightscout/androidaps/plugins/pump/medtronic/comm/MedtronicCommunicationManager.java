@@ -10,9 +10,12 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
@@ -45,8 +48,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
+import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.utils.SP;
 
 /**
  * Original file created by geoff on 5/30/16.
@@ -56,6 +59,8 @@ import info.nightscout.androidaps.utils.SP;
  * functionality added.
  */
 public class MedtronicCommunicationManager extends RileyLinkCommunicationManager {
+
+    @Inject MedtronicPumpStatus medtronicPumpStatus;
 
     private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
     private static final int MAX_COMMAND_TRIES = 3;
@@ -76,7 +81,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         medtronicCommunicationManager = this;
         this.medtronicConverter = new MedtronicConverter();
         this.pumpHistoryDecoder = new MedtronicPumpHistoryDecoder();
-        MedtronicUtil.getInstance().getPumpStatus().previousConnection = SP.getLong(
+        medtronicPumpStatus.previousConnection = sp.getLong(
                 RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
     }
 
@@ -84,13 +89,6 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     public static MedtronicCommunicationManager getInstance() {
         return medtronicCommunicationManager;
     }
-
-
-    @Override
-    protected void configurePumpSpecificSettings() {
-        pumpStatus = MedtronicUtil.getInstance().getPumpStatus();
-    }
-
 
     @Override
     public <E extends RLMessage> E createResponseMessage(byte[] payload, Class<E> clazz) {
@@ -141,7 +139,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         if (!canPreventTuneUp) {
 
-            long diff = System.currentTimeMillis() - MedtronicUtil.getInstance().getPumpStatus().lastConnection;
+            long diff = System.currentTimeMillis() - medtronicPumpStatus.lastConnection;
 
             if (diff > RILEYLINK_TIMEOUT) {
                 ServiceTaskExecutor.startTask(new WakeAndTuneTask(injector));
@@ -962,5 +960,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         return L.isEnabled(L.PUMPCOMM);
     }
 
-
+    @Override public PumpStatus getPumpStatus() {
+        return medtronicPumpStatus;
+    }
 }

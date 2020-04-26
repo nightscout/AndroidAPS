@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.service;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -10,11 +9,9 @@ import android.os.IBinder;
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
@@ -22,15 +19,12 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTask;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
-import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * RileyLinkMedtronicService is intended to stay running when the gui-app is closed.
@@ -41,12 +35,8 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
     @Inject MedtronicUtil medtronicUtil;
 
-    @Deprecated // TEDO remove this reference
-    private static ServiceTask currentTask = null;
-
     // cache of most recently received set of pump history pages. Probably shouldn't be here.
-    public MedtronicCommunicationManager medtronicCommunicationManager;
-    MedtronicPumpStatus pumpStatus = null;
+    private MedtronicCommunicationManager medtronicCommunicationManager;
     private IBinder mBinder = new LocalBinder();
 
 
@@ -100,8 +90,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed");
         medtronicUtil.setMedtronicService(this);
-        pumpStatus = (MedtronicPumpStatus) medtronicPumpPlugin.getPumpStatusData();
-
     }
 
 

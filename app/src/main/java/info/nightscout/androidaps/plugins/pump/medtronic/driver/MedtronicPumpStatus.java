@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.driver;
 
-import org.joda.time.LocalDateTime;
-
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -44,10 +42,10 @@ public class MedtronicPumpStatus extends PumpStatus {
     private final ResourceHelper resourceHelper;
     private final SP sp;
 
-    public String errorDescription = null;
+    private String errorDescription = null;
     public String serialNumber;
     public String pumpFrequency = null;
-    public String rileyLinkAddress = null;
+    private String rileyLinkAddress = null;
     public Double maxBolus;
     public Double maxBasal;
     private boolean inPreInit = true;

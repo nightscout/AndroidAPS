@@ -4,7 +4,6 @@ import com.google.gson.annotations.Expose;
 
 import org.joda.time.Instant;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 /**
@@ -305,7 +305,7 @@ public class BasalProfile {
 
         Double[] basalByHour = new Double[24];
 
-        PumpType pumpType = MedtronicUtil.getInstance().getPumpStatus().pumpType;
+        PumpType pumpType = MedtronicPumpPlugin.getPlugin().getMedtronicPumpStatus().pumpType;
 
         for (int i = 0; i < entries.size(); i++) {
             BasalProfileEntry current = entries.get(i);
