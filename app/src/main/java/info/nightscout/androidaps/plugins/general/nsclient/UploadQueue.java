@@ -18,6 +18,9 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientResend;
 import info.nightscout.androidaps.plugins.general.nsclient.services.NSClientService;
 import info.nightscout.androidaps.utils.SP;
 
@@ -25,7 +28,7 @@ import info.nightscout.androidaps.utils.SP;
  * Created by mike on 21.02.2016.
  */
 public class UploadQueue {
-    private static Logger log = LoggerFactory.getLogger(L.NSCLIENT);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
 
     public static String status() {
         return "QUEUE: " + MainApp.getDbHelper().size(DatabaseHelper.DATABASE_DBREQUESTS);
@@ -45,7 +48,6 @@ public class UploadQueue {
 
     public static void add(final DbRequest dbr) {
         if (SP.getBoolean(R.string.key_ns_noupload, false)) return;
-        startService();
         if (L.isEnabled(L.NSCLIENT))
             log.debug("Adding to queue: " + dbr.log());
         try {
@@ -53,10 +55,7 @@ public class UploadQueue {
         } catch (Exception e) {
             log.error("Unhandled exception", e);
         }
-        NSClientPlugin plugin = NSClientPlugin.getPlugin();
-        if (plugin != null) {
-            plugin.resend("newdata");
-        }
+        RxBus.getINSTANCE().send(new EventNSClientResend("newdata"));
     }
 
     static void clearQueue() {

@@ -42,8 +42,6 @@
     <string name="description_pump_mdi">Pomp integrasie vir mense wat veelvoudige daaglikse inspuitings doen vir hul diabetes terapie/regime</string>
     <string name="description_pump_virtual">Pomp integrasie vir pompe wat nog nie enige drywer het nie (oop lus)</string>
     <string name="description_sensitivity_aaps">Sensitiwiteit word bereken op dieselfde manier as Oref0, maar jy kan die tydsraamwerk spesifiseer in die verlede. Minimale karb absorpsie is bereken uit maks karb absorpsie tyd vanaf voorkeure.</string>
-    <string name="description_sensitivity_oref0">Sensitiwiteit word bereken vanaf 24h data in die verlede en koolhidrate (indien nie geabsorbeer) is na die tyd vermeld in voorkeure afgesny.</string>
-    <string name="description_sensitivity_oref1">Sensitiwiteit word bereken uit 8h data in die verlede en koolhidrate (indien nie geabsorbeer) is na die tyd vermeld in voorkeure gesny. Plugin bereken ook UAM.</string>
     <string name="description_sensitivity_weighted_average">Sensitiwiteit word bereken as \'n geweegde gemiddelde van dwalinge. Nuwer dwalinge het hoër gewig. Minimale karb absorpsie is bereken uit max karb absorpsie tyd vanaf voorkeure. Hierdie algoritme is die vinnigste om sensitiwiteit veranderinge te volg.</string>
     <string name="description_source_eversense">Ontvang BG waardes uit die gelapte Eversense toep.</string>
     <string name="description_source_glimp">Ontvang BG waardes vanaf Glimp.</string>
@@ -161,9 +159,7 @@
     <string name="disableloop">Skakel loop af</string>
     <string name="enableloop">Skakel loop aan</string>
     <string name="openloop_newsuggestion">Nuwe voorstel beskikbaar</string>
-    <string name="unsupportedclientver">Weergawe van NSClient nie ondersteun</string>
     <string name="unsupportednsversion">Weergawe van Nightscout nie ondersteun</string>
-    <string name="nsclientnotinstalled">NSClient nie gevind. Rekord verlore!</string>
     <string name="loopdisabled">LOOP UIT AKSIE GESTEL DEUR BEPERKINGS</string>
     <string name="treatments_wizard_basaliob_label">Basale IAB</string>
     <string name="bolusconstraintapplied">Bolus beperking toegepas</string>
@@ -433,10 +429,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">Verstek waarde: 2\nBolus sluimer is verorden nadat jy \'n maaltyd bolus gedoen het, so die lus sal nie werk met lae tydelike wanneer jy nou net geëet het nie. Die voorbeeld hier se verstek is 2; so \'n 3 uur DIA beteken dat bolus sluimer sal geleidelik uitgefaseer sal word oor 1.5 uur (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Verstek waarde: 3.0 (AMA) of 8.0 (SMB). Dit is \'n instelling vir verstek karb absorpsie impak per 5 minute. Die verstek is \'n verwagte 3mg/dl / 5min. Dit beïnvloed hoe vinnig KOB opgeneem word, en hoeveel karb absorpsie word aanvaar sodat in die berekening van toekomstige BG, voorspel wanneer BG val meer as verwagte, of nie soveel styg as verwag.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Aandag! \nNormaalweg hoef jy nie die waardes hieronder te verander nie. KLIEK HIER Asseblief en LEES die teks en maak seker jy verstaan dit voor enige verandering aan hierdie waardes.</string>
-    <string name="error_only_numeric_digits_allowed">Slegs numeriese syfers word toegelaat.</string>
-    <string name="error_only_numeric_digits_range_allowed">Slegs numeriese syfers binne die reeks %1$s - %2$s word toegelaat.</string>
-    <string name="error_field_must_not_be_empty">Hierdie veld moet nie leeg wees nie</string>
-    <string name="error_phone_not_valid">Telefoonnommer ongeldig</string>
     <string name="smscommunicator_invalidphonennumber">Ongeldige SMS selfoon nommer</string>
     <string name="overview_calibration">Kalibrasie</string>
     <string name="send_calibration">Stuur kalibrasie %1$.1f na xDrip?</string>
@@ -456,8 +448,6 @@
     <string name="virtualpump_settings">Virtuele pomp instellings</string>
     <string name="virtualpump_uploadstatus_title">Oplaaistatus aan NS</string>
     <string name="wrongpassword">Verkeerde wagwoord</string>
-    <string name="settings_password">Wagwoord vir instellings</string>
-    <string name="unlock_settings">Ontsluit instellings</string>
     <string name="approachingdailylimit">Naderende insulien daaglikse limiet</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
@@ -944,7 +934,6 @@
     <string name="allow_hardware_pump_text">Aandag: As jy aktiveer en koppel aan \'n hardeware pomp, AndroidAPS sal die basale instellings uit die profiel aan die pomp kopieer, die bestaande basale koers gestoor op die pomp sal oorskryf word. Maak seker jy het die korrekte basale instelling in AndroidAPS. As jy nie seker is of nie die basale instellings wil oorskryf op jou pomp, druk Kanselleer en herhaal oorskakel na die pomp op \'n later tyd.</string>
     <string name="error_adding_treatment_title">Behandeling data onvolledig</string>
     <string name="maintenance_settings">Onderhoud instellings</string>
-    <string name="maintenance_email">E-pos</string>
     <string name="maintenance_amount">Hoeveel Logs om te stuur</string>
     <string name="maintenance">Onderhoud</string>
     <string name="maintenance_shortname">MAINT</string>
@@ -970,7 +959,7 @@
     <string name="speederror">Spoedfout</string>
     <string name="insulinlimitviolation">Insulien limiet skending</string>
     <string name="loop_openmode_min_change">Minimale versoek verandering [%]</string>
-    <string name="loop_openmode_min_change_summary">Oop lus sal nuwe verandering versoek as die %. Verstek waarde is 20%</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">Oop lus sal nuwe verandering versoek as die %. Verstek waarde is 20%</string>
     <string name="pairfirst">Verbind asseblief jou pomp met jou selfoon!</string>
     <string name="searching_for_devices">Soek vir toestelle…</string>
     <string name="please_wait">Wag asseblief…</string>
@@ -1321,4 +1310,5 @@
     <string name="format_percent">%1$d%%</string>
     <string name="boluswizard">Bolus slimjan</string>
     <string name="unit_minute_short">min</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

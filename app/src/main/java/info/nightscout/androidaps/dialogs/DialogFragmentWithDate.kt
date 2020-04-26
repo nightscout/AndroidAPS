@@ -8,19 +8,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import androidx.fragment.app.DialogFragment
+import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.R
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.utils.DateUtil
-import info.nightscout.androidaps.utils.SP
-import info.nightscout.androidaps.utils.toVisibility
+import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.extensions.toVisibility
 import kotlinx.android.synthetic.main.datetime.*
 import kotlinx.android.synthetic.main.notes.*
 import kotlinx.android.synthetic.main.okcancel.*
-import org.slf4j.LoggerFactory
 import java.util.*
+import javax.inject.Inject
 
-abstract class DialogFragmentWithDate : DialogFragment() {
-    val log = LoggerFactory.getLogger(DialogFragmentWithDate::class.java)
+abstract class DialogFragmentWithDate : DaggerDialogFragment() {
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var sp: SP
 
     var eventTime = DateUtil.now()
     var eventTimeChanged = false
@@ -104,12 +107,12 @@ abstract class DialogFragmentWithDate : DialogFragment() {
             }
         }
 
-        notes_layout?.visibility = SP.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
+        notes_layout?.visibility = sp.getBoolean(R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
         ok.setOnClickListener {
             synchronized(okClicked) {
                 if (okClicked) {
-                    log.debug("guarding: ok already clicked")
+                    aapsLogger.warn(LTag.UI, "guarding: ok already clicked")
                 } else {
                     okClicked = true
                     if (submit()) dismiss()

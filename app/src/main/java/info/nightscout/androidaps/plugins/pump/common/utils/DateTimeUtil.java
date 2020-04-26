@@ -13,13 +13,14 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
  * This is simple version of ATechDate, limited only to one format (yyyymmddHHMIss)
  */
 public class DateTimeUtil {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
     /**
      * DateTime is packed as long: yyyymmddHHMMss
@@ -116,6 +117,14 @@ public class DateTimeUtil {
         atechDateTime += gc.get(Calendar.SECOND);
 
         return atechDateTime;
+    }
+
+
+    public static long toATechDate(long timeInMillis) {
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTimeInMillis(timeInMillis);
+
+        return toATechDate(gc);
     }
 
 
@@ -274,5 +283,22 @@ public class DateTimeUtil {
         return toATechDate(oldestEntryTime);
     }
 
+
+    public static long getTimeInFutureFromMinutes(long startTime, int minutes) {
+        return startTime + getTimeInMs(minutes);
+    }
+
+    public static long getTimeInFutureFromMinutes(int minutes) {
+        return System.currentTimeMillis() + getTimeInMs(minutes);
+    }
+
+
+    public static long getTimeInMs(int minutes) {
+        return getTimeInS(minutes) * 1000L;
+    }
+
+    public static int getTimeInS(int minutes) {
+        return minutes * 60;
+    }
 
 }

@@ -43,8 +43,6 @@
     <string name="description_pump_mdi">Integration för de som endast använder insulinpennor</string>
     <string name="description_pump_virtual">Integration för pumpar som ännu inte stöds av AndroidAPS (Open loop)</string>
     <string name="description_sensitivity_aaps">Känsligheten beräknas på samma sätt som i Oref0, men du kan specificera hur mycket av historiken som ska tas med i beräkningen. Minimalt upptag av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i Inställningar.</string>
-    <string name="description_sensitivity_oref0">Känsligheten beräknas från 24 timmars data från historiken och kolhydrater som inte redan tagits upp, ignoreras efter tiden som ställts in i inställningarna.</string>
-    <string name="description_sensitivity_oref1">Känsligheten beräknas från 8 timmars data från historiken och kolhydrater som ännu inte tagits upp ignoreras efter tiden som ställts in i inställningarna. Insticksprogrammet beräknar också icke inmatade måltider, UAM.</string>
     <string name="description_sensitivity_weighted_average">Känsligheten beräknas som ett viktat medelvärde av avvikelserna. Senare avvikelser får en högre vikt. Minimal upptagning av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i inställningarna. Den här algoritmen är den snabbaste att justera förändringar i känsligheten.</string>
     <string name="description_source_eversense">Ta emot BG-data från den modifierade
 Eversense-appen.</string>
@@ -165,9 +163,7 @@ Eversense-appen.</string>
     <string name="disableloop">Inaktivera loop</string>
     <string name="enableloop">Aktivera loop</string>
     <string name="openloop_newsuggestion">Ny rekommendation tillgänglig</string>
-    <string name="unsupportedclientver">Versionen av NSClient stöds inte</string>
     <string name="unsupportednsversion">Versionen av Nightscout stöds inte</string>
-    <string name="nsclientnotinstalled">NSClient är inte installerad. Data förlorad!</string>
     <string name="loopdisabled">LOOP STOPPAD PGA BEGRÄNSNINGAR</string>
     <string name="treatments_wizard_basaliob_label">IOB från basal</string>
     <string name="bolusconstraintapplied">Bolusspärr aktiverad</string>
@@ -462,10 +458,6 @@ Eversense-appen.</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Standardvärde: 2  Bolus snooze är aktivt efter att du givit en måltidsbolus, detta för att inte loop ska lågtempa när du just ätit. I detta exempel och grundvärde är 2; innebär att DIA på 3 tim kommer bolus snooze kommer att fasas ut under 1,5 tim (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Standardvärde: 3.0 (AMA) eller 8.0 (SMB). Detta är grundinställning för KH-absorption per 5 min. Detta styr hur snabbt COB minskar, dvs hur snabbt programmet kalkylerar att KH tagits upp, och påverkar BG framöver när BG faller mer än väntat, eller inte stiger som väntat.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Viktigt!\nNormalt behöver du inte ändra dessa värden. Vg KLICKA HÄR och LÄS texten och försäkra dig om att du FÖRSTÅTT innan du ändrar dessa värden.</string>
-    <string name="error_only_numeric_digits_allowed">Endast siffror tillåtna.</string>
-    <string name="error_only_numeric_digits_range_allowed">Endast siffror mellan %1$s - %2$s är tillåtna.</string>
-    <string name="error_field_must_not_be_empty">Detta fält får inte vara tomt</string>
-    <string name="error_phone_not_valid">Ogiltigt telefonnummer</string>
     <string name="smscommunicator_invalidphonennumber">Ogiltigt telefonnummer för SMS</string>
     <string name="overview_calibration">Kalibrering</string>
     <string name="send_calibration">Skicka kalibrering %1$.1f till xDrip?</string>
@@ -485,8 +477,6 @@ Eversense-appen.</string>
     <string name="virtualpump_settings">Inställningar för Virtuell pump</string>
     <string name="virtualpump_uploadstatus_title">Ladda upp status till Nightscout</string>
     <string name="wrongpassword">Fel lösenord</string>
-    <string name="settings_password">Lösenord för inställningar</string>
-    <string name="unlock_settings">Lås upp inställningar</string>
     <string name="approachingdailylimit">Maximal daglig dos snart nådd</string>
     <string name="nsclientinternal">NS Client</string>
     <string name="nsclientinternal_shortname">NSCl</string>
@@ -990,7 +980,6 @@ Eversense-appen.</string>
     <string name="allow_hardware_pump_text">Varning: Om du aktiverar och ansluter en pump, kommer AndroidAPS skriva över pumpens basalprofil med den aktiva profilen i AndroidAPS. Se till att ha rätt inställningar i appen innan du ansluter. Om du är osäker, tryck på Avbryt och anslut pumpen på nytt vid ett senare tillfälle.</string>
     <string name="error_adding_treatment_title">Behandlingsdata ofullständigt</string>
     <string name="maintenance_settings">Underhållsinställningar</string>
-    <string name="maintenance_email">e-post</string>
     <string name="maintenance_amount">Antal loggar att skicka</string>
     <string name="maintenance">Underhåll</string>
     <string name="maintenance_shortname">UH</string>
@@ -1016,7 +1005,7 @@ Eversense-appen.</string>
     <string name="speederror">Felaktig hastighet</string>
     <string name="insulinlimitviolation">Insulingräns nådd</string>
     <string name="loop_openmode_min_change">Minsta ändring som ger notifiering [%]</string>
-    <string name="loop_openmode_min_change_summary">I Open Loop-läge kommer AAPS bara att be om ändring ifall förändringen är större än detta värde. Standardvärdet är 20%</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">I Open Loop-läge kommer AAPS bara att be om ändring ifall förändringen är större än detta värde. Standardvärdet är 20%</string>
     <string name="pairfirst">Vänligen para ihop pumpen med telefonen.</string>
     <string name="searching_for_devices">Söker enheter…</string>
     <string name="please_wait">Var god vänta…</string>
@@ -1455,4 +1444,5 @@ Eversense-appen.</string>
     <string name="loop_tbrrequest_time_label">Basalförändring begärd</string>
     <string name="loop_tbrexecution_time_label">Basalförändring utförd</string>
     <string name="insight_alert_notification_channel">Pumpvarningar Insight</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

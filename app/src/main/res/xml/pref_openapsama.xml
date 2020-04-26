@@ -1,23 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory
-        android:key="openapsama"
-        android:title="@string/openapsama">
 
-        <EditTextPreference
+    <PreferenceCategory
+        android:title="@string/openapsama"
+        app:initialExpandedChildrenCount="0">
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="1"
             android:dialogMessage="@string/openapsma_maxbasal_summary"
+            android:inputType="numberDecimal"
             android:key="@string/key_openapsma_max_basal"
-            android:numeric="decimal"
-            android:title="@string/openapsma_maxbasal_title" />
+            android:title="@string/openapsma_maxbasal_title"
+            validate:floatmaxNumber="12.0"
+            validate:floatminNumber="0.1"
+            validate:testType="floatNumericRange" />
 
-        <EditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="1.5"
             android:dialogMessage="@string/openapsma_maxiob_summary"
+            android:inputType="numberDecimal"
             android:key="@string/key_openapsma_max_iob"
-            android:numeric="decimal"
-            android:title="@string/openapsma_maxiob_title" />
+            android:title="@string/openapsma_maxiob_title"
+            validate:floatmaxNumber="12.0"
+            validate:floatminNumber="0"
+            validate:testType="floatNumericRange" />
 
         <SwitchPreference
             android:defaultValue="false"
@@ -30,20 +38,20 @@
             android:summary="@string/openapsama_autosens_adjusttargets_summary"
             android:title="@string/openapsama_autosens_adjusttargets" />
 
-        <com.andreabaccega.widget.ValidatingEditTextPreference
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="3.0"
             android:dialogMessage="@string/openapsama_min_5m_carbimpact_summary"
             android:inputType="numberDecimal"
             android:key="@string/key_openapsama_min_5m_carbimpact"
-            android:maxLines="20"
             android:selectAllOnFocus="true"
-            android:singleLine="true"
             android:title="@string/openapsama_min_5m_carbimpact"
             validate:floatmaxNumber="12.0"
-            validate:floatminNumber="0.1"
+            validate:floatminNumber="1"
             validate:testType="floatNumericRange" />
 
-        <PreferenceScreen android:title="@string/advancedsettings_title">
+        <androidx.preference.PreferenceScreen
+            android:key="absorption_ama_advanced"
+            android:title="@string/advancedsettings_title">
 
             <Preference android:summary="@string/openapsama_link_to_preferncejson_doc_txt">
                 <intent
@@ -57,7 +65,7 @@
                 android:summary="@string/always_use_shortavg_summary"
                 android:title="@string/always_use_shortavg" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="3"
                 android:dialogMessage="@string/openapsama_max_daily_safety_multiplier_summary"
                 android:digits="0123456789.,"
@@ -70,7 +78,7 @@
                 validate:minNumber="1"
                 validate:testType="numericRange" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="4"
                 android:dialogMessage="@string/openapsama_current_basal_safety_multiplier_summary"
                 android:digits="0123456789.,"
@@ -84,7 +92,7 @@
                 validate:floatminNumber="1"
                 validate:testType="floatNumericRange" />
 
-            <com.andreabaccega.widget.ValidatingEditTextPreference
+            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
                 android:defaultValue="2"
                 android:dialogMessage="@string/openapsama_bolussnooze_dia_divisor_summary"
                 android:digits="0123456789.,"
@@ -98,8 +106,8 @@
                 validate:minNumber="1"
                 validate:testType="floatNumericRange" />
 
-        </PreferenceScreen>
+        </androidx.preference.PreferenceScreen>
 
     </PreferenceCategory>
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

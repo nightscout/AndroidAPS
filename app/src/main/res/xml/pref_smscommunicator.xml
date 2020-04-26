@@ -1,29 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory
-        android:key="smscommunicator"
-        android:title="@string/smscommunicator">
 
-        <EditTextPreference
+    <PreferenceCategory
+        android:title="@string/smscommunicator"
+        app:initialExpandedChildrenCount="0">
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:key="@string/key_smscommunicator_allowednumbers"
             android:summary="@string/smscommunicator_allowednumbers_summary"
-            android:title="@string/smscommunicator_allowednumbers" />
-        <com.andreabaccega.widget.ValidatingEditTextPreference
-            android:key="@string/key_smscommunicator_remotebolusmindistance"
-            android:defaultValue="15"
-            android:summary="@string/smscommunicator_remotebolusmindistance_summary"
-            android:title="@string/smscommunicator_remotebolusmindistance"
-            validate:minNumber="3"
-            validate:maxNumber="60"
-            validate:testType="numericRange"
-            android:singleLineTitle="false"
-            />
+            android:title="@string/smscommunicator_allowednumbers"
+            validate:testType="multiPhone" />
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_smscommunicator_remotecommandsallowed"
             android:title="@string/smscommunicator_remotecommandsallowed" />
 
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:defaultValue="15"
+            android:key="@string/key_smscommunicator_remotebolusmindistance"
+            android:summary="@string/smscommunicator_remotebolusmindistance_summary"
+            android:title="@string/smscommunicator_remotebolusmindistance"
+            validate:maxNumber="60"
+            validate:minNumber="3"
+            validate:testType="numericRange" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:enabled="false"
+            android:key="@string/key_smscommunicator_otp_enabled"
+            android:summary="@string/smscommunicator_otp_enabled_summary"
+            android:title="@string/smscommunicator_otp_enabled"
+            app:isPreferenceVisible="false" />
+
+        <Preference
+            android:dependency="@string/key_smscommunicator_remotecommandsallowed"
+            android:key="otpsetup"
+            android:title="@string/smscomunicator_tab_otp_label">
+            <intent android:action="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
+        </Preference>
+
+        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            android:dependency="@string/key_smscommunicator_remotecommandsallowed"
+            android:key="@string/key_smscommunicator_otp_password"
+            android:summary="@string/smscommunicator_otp_pin_summary"
+            android:title="@string/smscommunicator_otp_pin"
+            validate:testType="pinStrength" />
+
     </PreferenceCategory>
 
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

@@ -43,8 +43,6 @@
     <string name="description_pump_mdi">Интеграция с помпой для тех, кто делает многочисленные подколки для компенсации диабета</string>
     <string name="description_pump_virtual">Интеграция с помпами, еще не имеющими драйвера (незамкнутый цикл)</string>
     <string name="description_sensitivity_aaps">Чувствительность вычисляется аналогично алгоритму oref0, но можно включить период прошлого. Минимальное усвоение углеводов вычисляется на основе макс усвоения из настроек.</string>
-    <string name="description_sensitivity_oref0">Чувствительность рассчитывается на основе данных за прошедшие 24 часа и (неусвоенные) углеводы не учитываются после времени указанного в настройках.</string>
-    <string name="description_sensitivity_oref1">Чувствительность рассчитывается на основе данных за прошедшие 8 часов и (неусвоенные) углеводы не учитываются после времени указанного в настройках. Плагин также вычисляет UAM.</string>
     <string name="description_sensitivity_weighted_average">Чувствительность рассчитывается как средневзвешенное от отклонений (deviations). Более поздние отклонения имеют больший вес. Минимальное усвоение углеводов рассчитывается на основе макс времени усвоения углеводов в настройках. Этот алгоритм быстрее всего отслеживает изменения чувствительности.</string>
     <string name="description_source_eversense">Получать данные гликемии от пропатченного приложения Eversense.</string>
     <string name="description_source_glimp">Получать данные гликемии от Glimp.</string>
@@ -164,9 +162,7 @@
     <string name="disableloop">Деактивировать цикличность</string>
     <string name="enableloop">Активировать цикличность</string>
     <string name="openloop_newsuggestion">есть новое предложение</string>
-    <string name="unsupportedclientver">неподдерживаемая версия NSClient</string>
     <string name="unsupportednsversion">Неподдерживаемая версия Nightscout</string>
-    <string name="nsclientnotinstalled">отключите \"только передача в NS\" чтобы активировать эту опцию</string>
     <string name="loopdisabled">ЗЦ ОТМЕНЕН ОГРАНИЧЕНИЯМИ</string>
     <string name="treatments_wizard_basaliob_label">базал IOB</string>
     <string name="bolusconstraintapplied">применено ограничение болюса</string>
@@ -461,10 +457,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">значение по умолчанию :2 bolus snoose активируется после введения болюса на еду чтобы цикл не взаимодействовал с временными низкими СК сразу после еды. так, трехчасовой DIA при величине 2 означает постыпенное затихание bolus snooze после 1.5 часов (3DIA/2)</string>
     <string name="openapsama_min_5m_carbimpact_summary">Значение по умолчанию: 3.0 (AMA) или 8.0 (SMB). Эта настройка на усвоение углеводов за 5 мин. По умолчанию ожидается 3мг/дл/5мин. Влияет на скорость учета поглощения углеводов COB и усвоения в расчетах прогнозируемой гликемии, когда СК падает быстрее или не растет так как ожидается.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Внимание! Обычно нет необходимости изменять приведенные ниже величины. Нажмите ЗДЕСЬ, ПРОЧТИТЕ и убедитесь что вы ПОНИМАЕТЕ изложенное прежде чем менять какую-либо из этих величин</string>
-    <string name="error_only_numeric_digits_allowed">разрешены только цифровые значения</string>
-    <string name="error_only_numeric_digits_range_allowed">разрешены только цифровые значения в диапазоне %1$s - %2$s</string>
-    <string name="error_field_must_not_be_empty">поле не может быть пустым</string>
-    <string name="error_phone_not_valid">неверный номер телефона</string>
     <string name="smscommunicator_invalidphonennumber">неверный номер телефона для смс</string>
     <string name="overview_calibration">калибровка</string>
     <string name="send_calibration">Отправить калибровку %1$.1f на xDrip?</string>
@@ -484,8 +476,6 @@
     <string name="virtualpump_settings">настройки вирт помпы</string>
     <string name="virtualpump_uploadstatus_title">статус передачи данных в NS</string>
     <string name="wrongpassword">неверный пароль</string>
-    <string name="settings_password">пароль к настройкам</string>
-    <string name="unlock_settings">разрешить внести изменения в настройки</string>
     <string name="approachingdailylimit">приближается суточный лимит инсулина</string>
     <string name="nsclientinternal">клиент NS</string>
     <string name="nsclientinternal_shortname">КЛNS</string>
@@ -991,7 +981,6 @@ Context | Edit Context</string>
     <string name="allow_hardware_pump_text">Внимание: Если вы активируете подключение к невиртуальной помпе, AndroidAPS скопирует настройки базала в профиль помпы, перезаписывая существующие настройки, хранящиеся в ней. Убедитесь, что настройки базала в AndroidAPS корректны. Если вы не уверены или не хотите перезаписать настройки базала на помпу, нажмите отменить и повторите подключение в другое время.</string>
     <string name="error_adding_treatment_title">Данные терапии неполные</string>
     <string name="maintenance_settings">Параметры обслуживания</string>
-    <string name="maintenance_email">Адрес электронной почты</string>
     <string name="maintenance_amount">Количество логов для отправки</string>
     <string name="maintenance">Обслуживание</string>
     <string name="maintenance_shortname">ОБСЛУЖ</string>
@@ -1017,7 +1006,7 @@ Context | Edit Context</string>
     <string name="speederror">Ошибка в скорости</string>
     <string name="insulinlimitviolation">Нарушение ограничения инсулина</string>
     <string name="loop_openmode_min_change">Минимальный запрос на изменения [%]</string>
-    <string name="loop_openmode_min_change_summary">Алгоритм ИПЖ выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение в %. Значение по умолчанию — 20%</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">Алгоритм ИПЖ выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение в %. Значение по умолчанию — 20%</string>
     <string name="pairfirst">Выполните сопряжение помпы с телефоном!</string>
     <string name="searching_for_devices">Поиск устройств…</string>
     <string name="please_wait">Подождите…</string>
@@ -1456,4 +1445,5 @@ Context | Edit Context</string>
     <string name="loop_tbrrequest_time_label">Время запроса временной базальной скорости</string>
     <string name="loop_tbrexecution_time_label">Время выполнения временной базальной скорости</string>
     <string name="insight_alert_notification_channel">Оповещения помпы Insight</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

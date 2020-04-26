@@ -1,24 +1,34 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by andy on 6/14/18.
  */
 public class MedtronicUIComm {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    private final AAPSLogger aapsLogger;
 
     MedtronicCommunicationManager mcmInstance = null;
-    MedtronicUIPostprocessor uiPostprocessor = new MedtronicUIPostprocessor();
+    MedtronicUIPostprocessor uiPostprocessor;
+
+    public MedtronicUIComm(
+            AAPSLogger aapsLogger,
+            RxBusWrapper rxBus,
+            ResourceHelper resourceHelper
+    ) {
+        this.aapsLogger = aapsLogger;
+
+        uiPostprocessor = new MedtronicUIPostprocessor(aapsLogger, rxBus, resourceHelper);
+    }
 
 
     private MedtronicCommunicationManager getCommunicationManager() {
@@ -32,8 +42,7 @@ public class MedtronicUIComm {
 
     public synchronized MedtronicUITask executeCommand(MedtronicCommandType commandType, Object... parameters) {
 
-        if (isLogEnabled())
-            LOG.warn("Execute Command: " + commandType.name());
+        aapsLogger.warn(LTag.PUMP, "Execute Command: " + commandType.name());
 
         MedtronicUITask task = new MedtronicUITask(commandType, parameters);
 
@@ -67,8 +76,8 @@ public class MedtronicUIComm {
         // }
         // }
 
-        if (!task.isReceived() && isLogEnabled()) {
-            LOG.warn("Reply not received for " + commandType);
+        if (!task.isReceived()) {
+            aapsLogger.warn(LTag.PUMP, "Reply not received for " + commandType);
         }
 
         task.postProcess(uiPostprocessor);
@@ -101,9 +110,4 @@ public class MedtronicUIComm {
     public void startTunning() {
         RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
     }
-
-    private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMP);
-    }
-
 }

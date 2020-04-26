@@ -24,12 +24,13 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
  * Created by mike on 28.06.2016.
  */
 public class NumberPickerVertical extends NumberPicker {
-    private static Logger log = LoggerFactory.getLogger(NumberPickerVertical.class);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(NumberPickerVertical.class);
 
     public NumberPickerVertical(Context context) {
         super(context);

@@ -9,18 +9,20 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
@@ -30,10 +32,10 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.T;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_PROFILESWITCHES)
 public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
-    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;
@@ -67,6 +69,22 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     private Profile profile = null;
 
+    HasAndroidInjector injector;
+    @Inject public TreatmentsPlugin treatmentsPlugin;
+    @Inject public AAPSLogger aapsLogger;
+    @Inject public RxBusWrapper rxBus;
+    @Inject public ResourceHelper resourceHelper;
+
+    public ProfileSwitch() {
+        this.injector = MainApp.instance().injector;
+        injector.androidInjector().inject(this);
+    }
+
+    public ProfileSwitch(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
+        this.injector = injector;
+    }
+
     public ProfileSwitch date(long date) {
         this.date = date;
         return this;
@@ -96,10 +114,10 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     public Profile getProfileObject() {
         if (profile == null)
             try {
-                profile = new Profile(new JSONObject(profileJson), percentage, timeshift);
+                profile = new Profile(injector, new JSONObject(profileJson), percentage, timeshift);
             } catch (Exception e) {
-                log.error("Unhandled exception", e);
-                log.error("Unhandled exception", profileJson);
+                aapsLogger.error("Unhandled exception", e);
+                aapsLogger.error("Unhandled exception: " + profileJson);
             }
         return profile;
     }
@@ -111,7 +129,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
      */
     public String getCustomizedName() {
         String name = profileName;
-        if (LocalProfilePlugin.LOCAL_PROFILE.equals(name)) {
+        if (LocalProfilePlugin.Companion.getLOCAL_PROFILE().equals(name)) {
             name = DecimalFormatter.to2Decimal(getProfileObject().percentageBasalSum()) + "U ";
         }
         if (isCPP) {
@@ -217,7 +235,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     @Override
     public boolean isValid() {
         boolean isValid = getProfileObject() != null && getProfileObject().isValid(DateUtil.dateAndTimeString(date));
-        ProfileSwitch active = TreatmentsPlugin.getPlugin().getProfileSwitchFromHistory(DateUtil.now());
+        ProfileSwitch active = treatmentsPlugin.getProfileSwitchFromHistory(DateUtil.now());
         long activeProfileSwitchDate = active != null ? active.date : -1L;
         if (!isValid && date == activeProfileSwitchDate)
             createNotificationInvalidProfile(DateUtil.dateAndTimeString(date));
@@ -225,23 +243,23 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     }
 
     private void createNotificationInvalidProfile(String detail) {
-        Notification notification = new Notification(Notification.ZERO_VALUE_IN_PROFILE, String.format(MainApp.gs(R.string.zerovalueinprofile), detail), Notification.LOW, 5);
-        RxBus.INSTANCE.send(new EventNewNotification(notification));
+        Notification notification = new Notification(Notification.ZERO_VALUE_IN_PROFILE, resourceHelper.gs(R.string.zerovalueinprofile, detail), Notification.LOW, 5);
+        rxBus.send(new EventNewNotification(notification));
     }
 
-    public static boolean isEvent5minBack(List<ProfileSwitch> list, long time, boolean zeroDurationOnly) {
+    public static boolean isEvent5minBack(AAPSLogger aapsLogger, List<ProfileSwitch> list, long time, boolean zeroDurationOnly) {
         for (int i = 0; i < list.size(); i++) {
             ProfileSwitch event = list.get(i);
             if (event.date <= time && event.date > (time - T.mins(5).msecs())) {
                 if (zeroDurationOnly) {
                     if (event.durationInMinutes == 0) {
                         if (L.isEnabled(L.DATABASE))
-                            log.debug("Found ProfileSwitch event for time: " + DateUtil.dateAndTimeFullString(time) + " " + event.toString());
+                            aapsLogger.debug("Found ProfileSwitch event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
                         return true;
                     }
                 } else {
                     if (L.isEnabled(L.DATABASE))
-                        log.debug("Found ProfileSwitch event for time: " + DateUtil.dateAndTimeFullString(time) + " " + event.toString());
+                        aapsLogger.debug("Found ProfileSwitch event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
                     return true;
                 }
             }

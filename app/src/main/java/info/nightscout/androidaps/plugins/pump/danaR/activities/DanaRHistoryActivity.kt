@@ -16,11 +16,12 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.DanaRHistoryRecord
 import info.nightscout.androidaps.events.EventPumpStatusChanged
+import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PluginType
-import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.plugins.bus.RxBus.toObservable
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions
+import info.nightscout.androidaps.logging.AAPSLogger
+import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
@@ -29,14 +30,24 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.extensions.plusAssign
+import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.danar_historyactivity.*
-import org.slf4j.LoggerFactory
 import java.util.*
+import javax.inject.Inject
 
 class DanaRHistoryActivity : NoSplashAppCompatActivity() {
-    private val log = LoggerFactory.getLogger(L.PUMP)
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
+    @Inject lateinit var danaRSPlugin: DanaRSPlugin
+    @Inject lateinit var commandQueue: CommandQueueProvider
+
     private val disposable = CompositeDisposable()
 
     private var showingType = RecordTypes.RECORD_TYPE_ALARM
@@ -48,18 +59,17 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        disposable.add(toObservable(EventPumpStatusChanged::class.java)
+        disposable += rxBus
+            .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ danar_history_status.text = it.getStatus() }) { FabricPrivacy.logException(it) }
-        )
-        disposable.add(toObservable(EventDanaRSyncStatus::class.java)
+            .subscribe({ danar_history_status.text = it.getStatus(resourceHelper) }) { fabricPrivacy.logException(it) }
+        disposable += rxBus
+            .toObservable(EventDanaRSyncStatus::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                if (L.isEnabled(L.PUMP))
-                    log.debug("EventDanaRSyncStatus: " + it.message)
+                aapsLogger.debug(LTag.PUMP, "EventDanaRSyncStatus: " + it.message)
                 danar_history_status.text = it.message
-            }) { FabricPrivacy.logException(it) }
-        )
+            }) { fabricPrivacy.logException(it) }
     }
 
     override fun onPause() {
@@ -76,24 +86,24 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
         danar_history_recyclerview.adapter = RecyclerViewAdapter(historyList)
         danar_history_status.visibility = View.GONE
 
-        val isKorean = DanaRKoreanPlugin.getPlugin().isEnabled(PluginType.PUMP)
-        val isRS = DanaRSPlugin.getPlugin().isEnabled(PluginType.PUMP)
+        val isKorean = danaRKoreanPlugin.isEnabled(PluginType.PUMP)
+        val isRS = danaRSPlugin.isEnabled(PluginType.PUMP)
 
         // Types
         val typeList = ArrayList<TypeList>()
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_ALARM, MainApp.gs(R.string.danar_history_alarm)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_BASALHOUR, MainApp.gs(R.string.danar_history_basalhours)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_BOLUS, MainApp.gs(R.string.danar_history_bolus)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_CARBO, MainApp.gs(R.string.danar_history_carbohydrates)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_DAILY, MainApp.gs(R.string.danar_history_dailyinsulin)))
-        typeList.add(TypeList(RecordTypes.RECORD_TYPE_GLUCOSE, MainApp.gs(R.string.danar_history_glucose)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_ALARM, resourceHelper.gs(R.string.danar_history_alarm)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_BASALHOUR, resourceHelper.gs(R.string.danar_history_basalhours)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_BOLUS, resourceHelper.gs(R.string.danar_history_bolus)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_CARBO, resourceHelper.gs(R.string.danar_history_carbohydrates)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_DAILY, resourceHelper.gs(R.string.danar_history_dailyinsulin)))
+        typeList.add(TypeList(RecordTypes.RECORD_TYPE_GLUCOSE, resourceHelper.gs(R.string.danar_history_glucose)))
         if (!isKorean && !isRS) {
-            typeList.add(TypeList(RecordTypes.RECORD_TYPE_ERROR, MainApp.gs(R.string.danar_history_errors)))
+            typeList.add(TypeList(RecordTypes.RECORD_TYPE_ERROR, resourceHelper.gs(R.string.danar_history_errors)))
         }
-        if (isRS) typeList.add(TypeList(RecordTypes.RECORD_TYPE_PRIME, MainApp.gs(R.string.danar_history_prime)))
+        if (isRS) typeList.add(TypeList(RecordTypes.RECORD_TYPE_PRIME, resourceHelper.gs(R.string.danar_history_prime)))
         if (!isKorean) {
-            typeList.add(TypeList(RecordTypes.RECORD_TYPE_REFILL, MainApp.gs(R.string.danar_history_refill)))
-            typeList.add(TypeList(RecordTypes.RECORD_TYPE_SUSPEND, MainApp.gs(R.string.danar_history_syspend)))
+            typeList.add(TypeList(RecordTypes.RECORD_TYPE_REFILL, resourceHelper.gs(R.string.danar_history_refill)))
+            typeList.add(TypeList(RecordTypes.RECORD_TYPE_SUSPEND, resourceHelper.gs(R.string.danar_history_syspend)))
         }
         danar_history_spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, typeList)
 
@@ -104,7 +114,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
                 danar_history_status?.visibility = View.VISIBLE
             }
             clearCardView()
-            ConfigBuilderPlugin.getPlugin().commandQueue.loadHistory(selected.type, object : Callback() {
+            commandQueue.loadHistory(selected.type, object : Callback() {
                 override fun run() {
                     loadDataFromDB(selected.type)
                     runOnUiThread {
@@ -165,9 +175,9 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
                 }
 
                 RecordTypes.RECORD_TYPE_DAILY                                                                                                                                                              -> {
-                    holder.dailyBasal.text = MainApp.gs(R.string.formatinsulinunits, record.recordDailyBasal)
-                    holder.dailyBolus.text = MainApp.gs(R.string.formatinsulinunits, record.recordDailyBolus)
-                    holder.dailyTotal.text = MainApp.gs(R.string.formatinsulinunits, record.recordDailyBolus + record.recordDailyBasal)
+                    holder.dailyBasal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBasal)
+                    holder.dailyBolus.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus)
+                    holder.dailyTotal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus + record.recordDailyBasal)
                     holder.time.text = DateUtil.dateString(record.recordDate)
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.GONE
@@ -181,7 +191,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
                 }
 
                 RecordTypes.RECORD_TYPE_GLUCOSE                                                                                                                                                            -> {
-                    holder.value.text = Profile.toUnitsString(record.recordValue, record.recordValue * Constants.MGDL_TO_MMOLL, ProfileFunctions.getSystemUnits())
+                    holder.value.text = Profile.toUnitsString(record.recordValue, record.recordValue * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
                     holder.stringValue.visibility = View.GONE

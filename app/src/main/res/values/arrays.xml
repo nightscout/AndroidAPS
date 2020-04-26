@@ -191,6 +191,7 @@
         <item>@string/medtronic_pump_battery_alkaline</item>
         <item>@string/medtronic_pump_battery_lithium</item>
         <item>@string/medtronic_pump_battery_nizn</item>
+        <item>@string/medtronic_pump_battery_nimh</item>
     </string-array>
 
     <string-array name="medtronicBatteryTypeValues">
@@ -198,6 +199,7 @@
         <item>@string/key_medtronic_pump_battery_alkaline</item>
         <item>@string/key_medtronic_pump_battery_lithium</item>
         <item>@string/key_medtronic_pump_battery_nizn</item>
+        <item>@string/key_medtronic_pump_battery_nimh</item>
     </string-array>
 
     <string-array name="smbMaxMinutes">
@@ -211,6 +213,18 @@
         <item>120</item>
     </string-array>
 
-    key_medtronic_bolus_debug
+    <string-array name="protectiontype">
+        <item>@string/noprotection</item>
+        <item>@string/biometric</item>
+        <item>@string/master_password</item>
+        <item>@string/custom_password</item>
+    </string-array>
+
+    <string-array name="protectiontypeValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 
 </resources>

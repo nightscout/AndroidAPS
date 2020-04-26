@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageHashTableBase;
 import info.nightscout.androidaps.plugins.pump.danaR.services.AbstractSerialIOThread;
@@ -20,7 +21,7 @@ import info.nightscout.androidaps.utils.CRC;
  * Created by mike on 17.07.2016.
  */
 public class SerialIOThread extends AbstractSerialIOThread {
-    private static Logger log = LoggerFactory.getLogger(L.PUMPBTCOMM);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPBTCOMM);
 
     private InputStream mInputStream = null;
     private OutputStream mOutputStream = null;
@@ -31,10 +32,12 @@ public class SerialIOThread extends AbstractSerialIOThread {
 
     private MessageBase processedMessage;
     private MessageHashTableBase hashTable;
+    private DanaRPump danaRPump;
 
-    public SerialIOThread(BluetoothSocket rfcommSocket, MessageHashTableBase hashTable) {
+    public SerialIOThread(BluetoothSocket rfcommSocket, MessageHashTableBase hashTable, DanaRPump danaRPump) {
         super();
         this.hashTable = hashTable;
+        this.danaRPump = danaRPump;
 
         mRfCommSocket = rfcommSocket;
         try {
@@ -172,7 +175,7 @@ public class SerialIOThread extends AbstractSerialIOThread {
             if (L.isEnabled(L.PUMPBTCOMM))
                 log.error("Reply not received " + message.getMessageName());
             if (message.getCommand() == 0xF0F1) {
-                DanaRPump.getInstance().isNewPump = false;
+                danaRPump.setNewPump(false);
                 if (L.isEnabled(L.PUMPCOMM))
                     log.debug("Old firmware detected");
             }

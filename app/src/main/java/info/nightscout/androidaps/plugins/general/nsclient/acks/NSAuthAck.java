@@ -16,6 +16,6 @@ public class NSAuthAck extends Event implements Ack{
         read = response.optBoolean("read");
         write = response.optBoolean("write");
         write_treatment = response.optBoolean("write_treatment");
-        RxBus.INSTANCE.send(this);
+        RxBus.Companion.getINSTANCE().send(this);
     }
 }

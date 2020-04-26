@@ -8,6 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 
@@ -16,9 +17,8 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
  */
 
 public class Encoding4b6bLoop extends Encoding4b6bAbstract {
-    private static final Logger log = LoggerFactory.getLogger(Encoding4b6bLoop.class);
+    private static final Logger log = StacktraceLoggerWrapper.getLogger(Encoding4b6bLoop.class);
 
-    public static final Logger LOG = LoggerFactory.getLogger(Encoding4b6bLoop.class);
     public Map<Integer, Byte> codesRev = null;
 
 

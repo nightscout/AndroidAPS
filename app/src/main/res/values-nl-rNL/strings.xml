@@ -43,8 +43,6 @@
     <string name="description_pump_mdi">Pomp integratie voor mensen met pen-therapie (meerdere dagelijkse injecties)</string>
     <string name="description_pump_virtual">Pomp integratie voor pompen, waar nog geen driver voor is (Open Loop)</string>
     <string name="description_sensitivity_aaps">Gevoeligheid wordt berekend op dezelfde manier als Oref0, maar u kunt een tijdframe naar het verleden specificeren. Minimale koolhydraat absorptie is berekend op basis van max koolhydraat absorptie tijd van de voorkeursinstellingen.</string>
-    <string name="description_sensitivity_oref0">Gevoeligheid is berekend op basis van 24h gegevens uit het verleden en koolhydraten (indien niet geabsorbeerd) worden hiervan afgehaald, na de duur die is opgegeven in de voorkeursinstellingen.</string>
-    <string name="description_sensitivity_oref1">Gevoeligheid is berekend op basis van 8h gegevens uit het verleden en koolhydraten (indien niet geabsorbeerd) worden hiervan afgehaald, na de duur die is opgegeven in de voorkeursinstellingen. De plugin berekent ook UAM.</string>
     <string name="description_sensitivity_weighted_average">Gevoeligheid wordt berekend als een gewogen gemiddelde van afwijkingen. Nieuwere afwijkingen wegen hierbij zwaarder. Minimale koolhydraat absorptie is berekend op basis van de max koolhydraat absorptie tijd uit de voorkeursinstellingen. Dit algoritme is de snelste in het volgen van wijzigingen van de gevoeligheid.</string>
     <string name="description_source_eversense">Ontvang BG waardes van de aangepaste Eversense app.</string>
     <string name="description_source_glimp">Ontvang BG waardes van Glimp.</string>
@@ -164,9 +162,7 @@
     <string name="disableloop">Loop deactiveren</string>
     <string name="enableloop">Activeer Loop</string>
     <string name="openloop_newsuggestion">Nieuw voorstel beschikbaar</string>
-    <string name="unsupportedclientver">Niet ondersteunde versie van NSClient</string>
     <string name="unsupportednsversion">Niet ondersteunde versie van Nightscout</string>
-    <string name="nsclientnotinstalled">NSClient niet geïnstalleerd. Gegevens verloren!</string>
     <string name="loopdisabled">Loop gedeactiveerd door doelen tab</string>
     <string name="treatments_wizard_basaliob_label">Basaal IOB</string>
     <string name="bolusconstraintapplied">Bolus limiet ingesteld</string>
@@ -461,10 +457,6 @@
     <string name="openapsama_bolussnooze_dia_divisor_summary">Standaard waarde: 2\nBolus snooze is actief nadat je een maaltijd bolus toegediend hebt, zodat de loop geen tegenvoorstel met een verlaagd tijdelijk basaal doet nadat je gegeten hebt. Het voorbeeld hier van van standaard 2; dus een 3 u DIA betekent dat de bolus snooze gemiddeld 1.5u actief is (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">Standaardwaarde: 3,0 (AMA) of 8,0 (SMB). Dit is een instelling voor de standaard koolhydraten absorptie-impact per 5 minuten. De standaard is een verwachte 3mg / dl / 5min. Dit is van invloed op hoe snel COB zijn opgenomen en hoeveel koolhydraten absorptie wordt verwacht, bij het voorspellen van toekomstige BG, wanneer BG meer dan verwacht daalt of niet zoveel stijgt als verwacht.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Opgelet!\n Onderstaande waardes moeten normaal gezien niet worden aangepast. KLIK HIER en LEES de tekst zodat je alles volledig BEGRIJPT voordat je een waarde wijzigt.</string>
-    <string name="error_only_numeric_digits_allowed">Alleen numerieke waarden toegelaten.</string>
-    <string name="error_only_numeric_digits_range_allowed">Alleen numerieke waarden binnen het bereik %1$s - %2$s toegelaten.</string>
-    <string name="error_field_must_not_be_empty">Veld mag niet leeg zijn</string>
-    <string name="error_phone_not_valid">Telefoon nummer niet conform</string>
     <string name="smscommunicator_invalidphonennumber">Foutief SMS telefoon nummer</string>
     <string name="overview_calibration">Kalibratie</string>
     <string name="send_calibration">Calibratie %1$.1f naar xDrip verzenden?</string>
@@ -484,8 +476,6 @@
     <string name="virtualpump_settings">Virtuele pomp instellingen</string>
     <string name="virtualpump_uploadstatus_title">Upload status naar NS</string>
     <string name="wrongpassword">Verkeerd wachtwoord</string>
-    <string name="settings_password">Wachtwoord voor instelligen</string>
-    <string name="unlock_settings">Instellingen ontgrendelen</string>
     <string name="approachingdailylimit">Insuline daglimiet bereikt</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
@@ -989,7 +979,6 @@
     <string name="allow_hardware_pump_text">Let op: als u activeert en verbinding maakt met een hardwarepomp, kopieert AndroidAPS de basale instellingen van het profiel naar de pomp en overschrijft de bestaande basaal snelheid die op de pomp is opgeslagen. Zorg ervoor dat u de juiste basaal instelling hebt in AndroidAPS. Als u niet zeker weet of niet wilt dat de basaal instellingen op uw pomp worden overschreven, drukt u op Annuleren en herhaalt u het overschakelen naar de pomp op een later tijdstip.</string>
     <string name="error_adding_treatment_title">Behandelingen data incompleet</string>
     <string name="maintenance_settings">Onderhoudsinstellingen</string>
-    <string name="maintenance_email">E-mail</string>
     <string name="maintenance_amount">Aantal Logs om te verzenden</string>
     <string name="maintenance">Onderhoud</string>
     <string name="maintenance_shortname">ONDH</string>
@@ -1015,7 +1004,7 @@
     <string name="speederror">Snelheid fout</string>
     <string name="insulinlimitviolation">Insuline limiet overschreiding</string>
     <string name="loop_openmode_min_change">Minimale verzoek voor aanpassing [%]</string>
-    <string name="loop_openmode_min_change_summary">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
+    <string name="loop_openmode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
     <string name="pairfirst">Aub de pomp koppelen met je telefoon!</string>
     <string name="searching_for_devices">Bezig met zoeken naar apparaten…</string>
     <string name="please_wait">Even geduld a.u.b.…</string>
@@ -1454,4 +1443,5 @@
     <string name="loop_tbrrequest_time_label">Tijdelijk basaal aanvraag tijd</string>
     <string name="loop_tbrexecution_time_label">Tijdelijke basaal uitvoering tijd</string>
     <string name="insight_alert_notification_channel">Insight pomp waarschuwingen</string>
+    <!-- SMS Communicator & OTP Authenticator -->
 </resources>

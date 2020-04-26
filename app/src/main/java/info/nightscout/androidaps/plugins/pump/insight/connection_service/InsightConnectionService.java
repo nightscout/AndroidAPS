@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.insight.connection_service;
 
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -8,10 +7,9 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+
 import androidx.annotation.Nullable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongycastle.crypto.InvalidCipherTextException;
 
 import java.io.IOException;
@@ -19,7 +17,11 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.nightscout.androidaps.logging.L;
+import javax.inject.Inject;
+
+import dagger.android.DaggerService;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.ReadParameterBlockMessage;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.configuration.CloseConfigurationWriteSessionMessage;
@@ -82,11 +84,12 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.PairingDataStorage;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.DerivedKeys;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.KeyPair;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
-public class InsightConnectionService extends Service implements ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
+public class InsightConnectionService extends DaggerService implements ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
 
-    private static Logger log = LoggerFactory.getLogger(L.PUMPCOMM);
+    @Inject AAPSLogger aapsLogger;
+    @Inject SP sp;
 
     private static final int BUFFER_SIZE = 1024;
     private static final int TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD = 3;
@@ -138,10 +141,10 @@ public class InsightConnectionService extends Service implements ConnectionEstab
     }
 
     private void increaseRecoveryDuration() {
-        long maxRecoveryDuration = SP.getInt("insight_max_recovery_duration", 20);
+        long maxRecoveryDuration = sp.getInt("insight_max_recovery_duration", 20);
         maxRecoveryDuration = Math.min(maxRecoveryDuration, 20);
         maxRecoveryDuration = Math.max(maxRecoveryDuration, 0);
-        long minRecoveryDuration = SP.getInt("insight_min_recovery_duration", 5);
+        long minRecoveryDuration = sp.getInt("insight_min_recovery_duration", 5);
         minRecoveryDuration = Math.min(minRecoveryDuration, 20);
         minRecoveryDuration = Math.max(minRecoveryDuration, 0);
         recoveryDuration += 1000;
@@ -251,6 +254,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
 
     @Override
     public synchronized void onCreate() {
+        super.onCreate();
         pairingDataStorage = new PairingDataStorage(this);
         state = pairingDataStorage.isPaired() ? InsightState.DISCONNECTED : InsightState.NOT_PAIRED;
         wakeLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:InsightConnectionService");
@@ -264,7 +268,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
         else if (!wakeLock.isHeld()) wakeLock.acquire();
         this.state = state;
         for (StateCallback stateCallback : stateCallbacks) stateCallback.onStateChanged(state);
-        log.info("Insight state changed: " + state.name());
+        aapsLogger.info(LTag.PUMP, "Insight state changed: " + state.name());
     }
 
     public synchronized void requestConnection(Object lock) {
@@ -291,10 +295,10 @@ public class InsightConnectionService extends Service implements ConnectionEstab
                 setState(InsightState.DISCONNECTED);
                 cleanup(true);
             } else if (state != InsightState.DISCONNECTED) {
-                long disconnectTimeout = SP.getInt("insight_disconnect_delay", 5);
+                long disconnectTimeout = sp.getInt("insight_disconnect_delay", 5);
                 disconnectTimeout = Math.min(disconnectTimeout, 15);
                 disconnectTimeout = Math.max(disconnectTimeout, 0);
-                log.info("Last connection lock released, will disconnect in " + disconnectTimeout + " seconds");
+                aapsLogger.info(LTag.PUMP, "Last connection lock released, will disconnect in " + disconnectTimeout + " seconds");
                 disconnectTimer = DelayedActionThread.runDelayed("Disconnect Timer", disconnectTimeout * 1000, this::disconnect);
             }
         }
@@ -353,7 +357,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
             case RECOVERING:
                 return;
         }
-        log.info("Exception occurred: " + e.getClass().getSimpleName());
+        aapsLogger.info(LTag.PUMP, "Exception occurred: " + e.getClass().getSimpleName());
         if (pairingDataStorage.isPaired()) {
             if (e instanceof TimeoutException && (state == InsightState.SATL_SYN_REQUEST || state == InsightState.APP_CONNECT_MESSAGE)) {
                 if (++timeoutDuringHandshakeCounter == TIMEOUT_DURING_HANDSHAKE_NOTIFICATION_THRESHOLD) {
@@ -411,7 +415,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
             throw new IllegalStateException("Pump must be unbonded first.");
         if (connectionRequests.size() == 0)
             throw new IllegalStateException("A connection lock must be hold for pairing");
-        log.info("Pairing initiated");
+        aapsLogger.info(LTag.PUMP, "Pairing initiated");
         cleanup(true);
         pairingDataStorage.setMacAddress(macAddress);
         connect();
@@ -742,7 +746,7 @@ public class InsightConnectionService extends Service implements ConnectionEstab
                 SystemIdentification systemIdentification = ((SystemIdentificationBlock) message.getParameterBlock()).getSystemIdentification();
                 pairingDataStorage.setSystemIdentification(systemIdentification);
                 pairingDataStorage.setPaired(true);
-                log.info("Pairing completed YEE-HAW ♪ ┏(・o･)┛ ♪ ┗( ･o･)┓ ♪");
+                aapsLogger.info(LTag.PUMP, "Pairing completed YEE-HAW ♪ ┏(・o･)┛ ♪ ┗( ･o･)┓ ♪");
                 setState(InsightState.CONNECTED);
                 for (StateCallback stateCallback : stateCallbacks) stateCallback.onPumpPaired();
             }

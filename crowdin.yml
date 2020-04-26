@@ -9,3 +9,7 @@ files:
     translation: /app/src/main/res/values-%android_code%/%original_file_name%
   - source: /wear/src/main/res/values/strings.xml
     translation: /wear/src/main/res/values-%android_code%/strings.xml
+  - source: /app/src/main/res/values/protection.xml
+    translation: /app/src/main/res/values-%android_code%/protection.xml
+  - source: /app/src/main/res/values/validator.xml
+    translation: /app/src/main/res/values-%android_code%/validator.xml

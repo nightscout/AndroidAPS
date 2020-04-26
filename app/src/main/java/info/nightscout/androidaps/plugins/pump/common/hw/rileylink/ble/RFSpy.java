@@ -10,6 +10,7 @@ import java.util.UUID;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.Reset;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.RileyLinkCommand;
@@ -31,6 +32,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
+
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -40,7 +42,7 @@ public class RFSpy {
 
     public static final long RILEYLINK_FREQ_XTAL = 24000000;
     public static final int EXPECTED_MAX_BLUETOOTH_LATENCY_MS = 7500; // 1500
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPBTCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPBTCOMM);
     public int notConnectedCount = 0;
     private RileyLinkBLE rileyLinkBle;
     private RFSpyReader reader;
@@ -113,6 +115,12 @@ public class RFSpy {
             LOG.error("getVersion failed with code: " + result.resultCode);
             return "(null)";
         }
+    }
+
+    public boolean isRileyLinkStillAvailable() {
+        RileyLinkFirmwareVersion firmwareVersion = getFirmwareVersion();
+
+        return (firmwareVersion!= RileyLinkFirmwareVersion.UnknownVersion);
     }
 
 

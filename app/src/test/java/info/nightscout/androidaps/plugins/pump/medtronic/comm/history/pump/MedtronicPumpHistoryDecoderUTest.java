@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump;
 import org.junit.Before;
 import org.junit.Ignore;
 
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 
 /**

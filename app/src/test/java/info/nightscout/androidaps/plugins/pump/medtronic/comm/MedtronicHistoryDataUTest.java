@@ -6,7 +6,6 @@ import org.junit.Before;
 
 import java.util.List;
 
-import info.AAPSMocker;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage;
@@ -31,7 +30,7 @@ public class MedtronicHistoryDataUTest {
     MedtronicPumpHistoryDecoder decoder = new MedtronicPumpHistoryDecoder();
 
 
-    // Logger LOGGER = LoggerFactory.getLogger(MedtronicHistoryDataUTest.class);
+    // Logger LOGGER = StacktraceLoggerWrapper.getLogger(MedtronicHistoryDataUTest.class);
 
     //@Before
     public void setup() {
@@ -48,7 +47,6 @@ public class MedtronicHistoryDataUTest {
         // }
 
 
-        AAPSMocker.mockMainApp();
     }
 
 
@@ -56,12 +54,6 @@ public class MedtronicHistoryDataUTest {
     public void prepareMocks() throws Exception {
 
         System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
-        AAPSMocker.mockMainApp();
-        AAPSMocker.mockConfigBuilder();
-        AAPSMocker.mockStrings();
-        AAPSMocker.mockApplicationContext();
-        AAPSMocker.mockSP();
-        AAPSMocker.mockCommandQueue();
 
         when(SP.getString(R.string.key_danars_address, "")).thenReturn("");
 

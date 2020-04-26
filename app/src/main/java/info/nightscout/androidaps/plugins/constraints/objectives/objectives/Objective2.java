@@ -3,13 +3,15 @@ package info.nightscout.androidaps.plugins.constraints.objectives.objectives;
 import java.util.Collections;
 import java.util.List;
 
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 
 public class Objective2 extends Objective {
 
 
-    public Objective2() {
-        super("exam", R.string.objectives_exam_objective, R.string.objectives_exam_gate);
+    public Objective2(HasAndroidInjector injector) {
+        super(injector, "exam", R.string.objectives_exam_objective, R.string.objectives_exam_gate);
         for (Task task : tasks) {
             if (!task.isCompleted()) setAccomplishedOn(0);
         }
@@ -128,14 +130,12 @@ public class Objective2 extends Objective {
         );
         tasks.add(new ExamTask(R.string.sensitivity_label, R.string.sensitivity_which,"sensitivity")
                 .option(new Option(R.string.sensitivityweightedaverage, true))
-                .option(new Option(R.string.sensitivityoref0, false))
                 .option(new Option(R.string.sensitivityoref1, false))
                 .option(new Option(R.string.sensitivityaaps, true))
                 .hint(new Hint(R.string.sensitivity_hint1))
         );
         tasks.add(new ExamTask(R.string.sensitivity_label, R.string.sensitivityuam_which,"sensitivityuam")
                 .option(new Option(R.string.sensitivityweightedaverage, false))
-                .option(new Option(R.string.sensitivityoref0, false))
                 .option(new Option(R.string.sensitivityoref1, true))
                 .option(new Option(R.string.sensitivityaaps, false))
                 .hint(new Hint(R.string.sensitivity_hint1))
