@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAFragment">
+    android:paddingTop="2dp"
+    tools:context=".plugins.aps.openAPSAMA.OpenAPSAMAFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -89,9 +90,45 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="end"
+                    android:paddingRight="5dp"
+                    android:text="@string/constraints"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingEnd="2dp"
+                    android:paddingStart="2dp"
+                    android:text=":"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/openapsma_constraints"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:paddingLeft="5dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
             <View
                 android:layout_width="fill_parent"
-                android:layout_height="0dip"
+                android:layout_height="2dip"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"

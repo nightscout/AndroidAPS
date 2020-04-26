@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AAPS</string>
+    <string name="label_actions_activity">AAPS</string>
+    <string name="label_xdrip">AAPS</string>
+    <string name="label_xdrip_large">AAPS(Groot)</string>
+    <string name="label_xdrip_big_chart">AAPS(GroteGrafiek)</string>
+    <string name="label_xdrip_no_chart">AAPS(GeenGrafiek)</string>
+    <string name="label_xdrip_circle">AAPS(Cirkel)</string>
+    <string name="label_xdrip_v2">AAPSv2</string>
+    <string name="label_xdrip_cockpit">AAPS(Cockpit)</string>
+    <string name="label_xdrip_steampunk">AAPS(Steampunk)</string>
+    <string name="label_warning_sync">Geen gegevens!</string>
+    <string name="label_warning_old">Oude gegevens!</string>
+    <string name="label_warning_since">Sinds %1$s</string>
+    <string name="label_warning_sync_aaps">Synchroniseer met AAPS!</string>
+    <string name="msg_warning_sync">Geen gegevens ontvangen sinds %1$s! Controleer of AAPS op de telefoon gegevens verstuurt naar horloge</string>
+    <string name="msg_warning_old">AAPS gegevens zijn %1$s oud! Controleer je sensor, xDrip+, NS, AAPS instellingen of andere!</string>
+    <string name="pref_on">Aan</string>
+    <string name="pref_off">Uit</string>
+    <string name="pref_vibrate_on_bolus">Trillen bij bolus</string>
+    <string name="pref_units_for_actions">Eenheden voor acties</string>
+    <string name="pref_show_date">Toon datum</string>
+    <string name="pref_show_iob">Toon IOB</string>
+    <string name="pref_show_cob">Toon COB</string>
+    <string name="pref_show_delta">Toon Delta</string>
+    <string name="pref_show_avgdelta">Toon gemiddelde delta</string>
+    <string name="pref_show_phone_battery">Toon telefoonbatterij</string>
+    <string name="pref_show_rig_battery">Toon rig batterij</string>
+    <string name="pref_show_basal_rate">Toon basaal</string>
+    <string name="pref_show_loop_status">Toon loop status</string>
+    <string name="pref_show_bg">Toon BG</string>
+    <string name="pref_show_direction_arrow">Toon richtingspijl</string>
+    <string name="pref_show_ago">Toon tijd geleden</string>
+    <string name="pref_dark" comment="Enables dark visual theme">Donker</string>
+    <string name="pref_highlight_basals">Markeer basaalstanden</string>
+    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Bijpassende verdeler</string>
+    <string name="pref_chart_timeframe">Tijdsschaal grafiek</string>
+    <string name="pref_1_hour">1 uur</string>
+    <string name="pref_2_hours">2 uren</string>
+    <string name="pref_3_hours">3 uren</string>
+    <string name="pref_4_hours">4 uren</string>
+    <string name="pref_5_hours">5 uren</string>
+    <string name="pref_input_design">Invoer ontwerp</string>
+    <string name="pref_default">Standaard</string>
+    <string name="pref_quick_righty">Snel rechts</string>
+    <string name="pref_quick_lefty">Snel links</string>
+    <string name="pref_modern_sparse">Modern spaarzaam</string>
+    <string name="pref_delta_granularity">Delta schaalverdeling (Steampunk)</string>
+    <string name="pref_low">Laag</string>
+    <string name="pref_medium">Middel</string>
+    <string name="pref_high">Hoog</string>
+    <string name="pref_auto">Automatisch</string>
+    <string name="pref_big_numbers">Grote nummers</string>
+    <string name="pref_ring_history">Ring geschiedenis</string>
+    <string name="pref_light_ring_history">Lichte ring geschiedenis</string>
+    <string name="pref_animations">Animaties</string>
+    <string name="pref_wizard_in_menu">Wizard in menu</string>
+    <string name="pref_prime_in_menu">Ontlucht/vul in menu</string>
+    <string name="pref_single_target">Enkel streefdoel</string>
+    <string name="pref_wizard_percentage">Wizardpercentage</string>
+    <string name="pref_complication_tap_action">Complicatie tik voor actie</string>
+    <string name="pref_unicode_in_complications">Unicode in complicaties</string>
+    <string name="pref_version">Versie:</string>
+    <string name="menu_tempt">TijdStreefd</string>
+    <string name="menu_wizard">Wizard</string>
+    <string name="menu_bolus">Bolus</string>
+    <string name="menu_ecarb">eCarb</string>
+    <string name="menu_settings">Instellingen</string>
+    <string name="menu_status">Status</string>
+    <string name="menu_prime_fill">Ontlucht/vul</string>
+    <string name="menu_none">Geen</string>
+    <string name="menu_default">Standaard</string>
+    <string name="menu_menu">Menu</string>
+    <string name="action_duration">tijdsduur</string>
+    <string name="action_target" comment="In temp target menu, single target value">doel</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">laag</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">hoog</string>
+    <string name="action_carbs">khd</string>
+    <string name="action_percentage">percentage</string>
+    <string name="action_start_min">start [min]</string>
+    <string name="action_duration_h">duur [h]</string>
+    <string name="action_insulin">insuline</string>
+    <string name="action_preset_1">Voorinstelling 1</string>
+    <string name="action_preset_2">Voorinstelling 2</string>
+    <string name="action_preset_3">Voorinstelling 3</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Vrije hoeveelheid</string>
+    <string name="action_confirm">BEVESTIGEN</string>
+    <string name="action_status_pump">STATUS POMP</string>
+    <string name="action_status_loop">STATUS LOOP</string>
+    <string name="action_timeshift">tijdsverschuiving</string>
+    <string name="action_tdd_weighted">Gewogen TDD</string>
+    <string name="action_bolus">bolus</string>
+    <string name="status_pump">Pomp</string>
+    <string name="status_loop">Loop</string>
+    <string name="status_cpp">CPP</string>
+    <string name="status_tdd">TDD</string>
+    <string name="activity_carb">Khd</string>
+    <string name="activity_IOB">IOB</string>
+    <string name="activity_no_status">geen status</string>
+    <string name="unit_mg_dl">mg/dl</string>
+    <string name="unit_mmol_l">mmol/l</string>
+    <string name="unit_g" comment="Shortcut for ISO unit: gram">g</string>
+    <string name="unit_u" comment="Shortcut for: insulin Unit">E</string>
+    <string name="unit_u_p_h" comment="Shortcut for: insulin Unit per Hour">E/u</string>
+    <string name="unit_h" comment="One letter shortcut for: Hour" maxLength="1">u</string>
+    <string name="unit_d" comment="One letter shortcut for: Day" maxLength="1">d</string>
+    <string name="unit_w" comment="One letter shortcut for: Week" maxLength="1">w</string>
+</resources>

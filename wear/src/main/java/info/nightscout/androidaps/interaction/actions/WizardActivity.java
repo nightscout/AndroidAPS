@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
+import info.nightscout.androidaps.aaps;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
@@ -32,9 +33,6 @@ public class WizardActivity extends ViewSelectorActivity {
     PlusMinusEditText editCarbs;
     PlusMinusEditText editPercentage;
 
-    boolean useBG;
-    boolean includeBolusIOB;
-    boolean includeBasalIOB;
     boolean hasPercentage;
 
 
@@ -63,7 +61,7 @@ public class WizardActivity extends ViewSelectorActivity {
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
-            return hasPercentage?6:5;
+            return hasPercentage?3:2;
         }
 
         @Override
@@ -83,82 +81,10 @@ public class WizardActivity extends ViewSelectorActivity {
                     editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), false);
 
                 }
-                setLabelToPlusMinusView(view, "carbs");
+                setLabelToPlusMinusView(view, aaps.gs(R.string.action_carbs));
                 container.addView(view);
                 return view;
-            } else if(col == 1){
-                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_toggle_item, container, false);
-                final TextView textView = (TextView) view.findViewById(R.id.label);
-                textView.setText("include BG?");
-
-                final ImageView togglebutton = (ImageView) view.findViewById(R.id.togglebutton);
-                if(useBG){
-                    togglebutton.setImageResource(R.drawable.ic_toggle_on);
-                } else {
-                    togglebutton.setImageResource(R.drawable.ic_toggle_off);
-                }
-                togglebutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        useBG = !useBG;
-                        if(useBG){
-                            togglebutton.setImageResource(R.drawable.ic_toggle_on);
-                        } else {
-                            togglebutton.setImageResource(R.drawable.ic_toggle_off);
-                        }
-                    }
-                });
-                container.addView(view);
-                return view;
-            } else if(col == 2){
-                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_toggle_item, container, false);
-                final TextView textView = (TextView) view.findViewById(R.id.label);
-                textView.setText("Bolus IOB?");
-
-                final ImageView togglebutton = (ImageView) view.findViewById(R.id.togglebutton);
-                if(includeBolusIOB){
-                    togglebutton.setImageResource(R.drawable.ic_toggle_on);
-                } else {
-                    togglebutton.setImageResource(R.drawable.ic_toggle_off);
-                }
-                togglebutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        includeBolusIOB = !includeBolusIOB;
-                        if(includeBolusIOB){
-                            togglebutton.setImageResource(R.drawable.ic_toggle_on);
-                        } else {
-                            togglebutton.setImageResource(R.drawable.ic_toggle_off);
-                        }
-                    }
-                });
-                container.addView(view);
-                return view;
-            } else if(col == 3){
-                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_toggle_item, container, false);
-                final TextView textView = (TextView) view.findViewById(R.id.label);
-                textView.setText("Basal IOB?");
-
-                final ImageView togglebutton = (ImageView) view.findViewById(R.id.togglebutton);
-                if(includeBasalIOB){
-                    togglebutton.setImageResource(R.drawable.ic_toggle_on);
-                } else {
-                    togglebutton.setImageResource(R.drawable.ic_toggle_off);
-                }
-                togglebutton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        includeBasalIOB = !includeBasalIOB;
-                        if(includeBasalIOB){
-                            togglebutton.setImageResource(R.drawable.ic_toggle_on);
-                        } else {
-                            togglebutton.setImageResource(R.drawable.ic_toggle_off);
-                        }
-                    }
-                });
-                container.addView(view);
-                return view;
-            } else if(col == 4 && hasPercentage){
+            } else if(col == 1 && hasPercentage){
                 final View view = getInflatedPlusMinusView(container);
                 if (editPercentage == null) {
                     editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 100d, 50d, 150d, 1d, new DecimalFormat("0"), false);
@@ -166,7 +92,7 @@ public class WizardActivity extends ViewSelectorActivity {
                     double def = SafeParse.stringToDouble(editPercentage.editText.getText().toString());
                     editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 50d, 150d, 1d, new DecimalFormat("0"), false);
                 }
-                setLabelToPlusMinusView(view, "percentage");
+                setLabelToPlusMinusView(view, aaps.gs(R.string.action_percentage));
                 container.addView(view);
                 return view;
             } else {
@@ -184,10 +110,7 @@ public class WizardActivity extends ViewSelectorActivity {
 
                         if (editPercentage != null) percentage = SafeParse.stringToInt(editPercentage.editText.getText().toString());
 
-                        String actionstring = "wizard " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
-                                + " " + useBG
-                                + " " + includeBolusIOB
-                                + " " + includeBasalIOB
+                        String actionstring = "wizard2 " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
                                 + " " + percentage;
                         ListenerService.initiateAction(WizardActivity.this, actionstring);
                         finish();

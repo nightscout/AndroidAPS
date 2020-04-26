@@ -5,10 +5,9 @@
     android:layout_height="fill_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".plugins.PumpDanaR.activities.DanaRHistoryActivity">
+    tools:context=".plugins.pump.danaR.activities.DanaRHistoryActivity">
 
     <LinearLayout
-        android:id="@+id/danar_statstop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -34,7 +33,7 @@
                 android:gravity="center_horizontal"
                 android:textColor="@color/mdtp_white"
                 android:background="@drawable/pillborder"
-                android:text="@string/danar_stats" />
+                android:text="@string/danar_stats_tdd" />
 
             <TableLayout
                 android:stretchColumns="0,1,2,3,4"
@@ -118,7 +117,6 @@
                             android:labelFor="@+id/danar_stats_editTotalBaseBasal"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:id="@+id/danar_stats_editTotalBaseBasal_label"
                             android:gravity="left"
                             android:layout_weight="1" />
 
@@ -144,7 +142,6 @@
                             android:labelFor="@+id/danar_stats_editTotalBaseBasal2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:id="@+id/danar_stats_editTotalBaseBasal2_label"
                             android:gravity="left"
                             android:layout_weight="1" />
 

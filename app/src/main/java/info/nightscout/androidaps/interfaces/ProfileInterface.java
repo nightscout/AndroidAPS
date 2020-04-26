@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interfaces;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import info.nightscout.androidaps.data.ProfileStore;
 
@@ -10,6 +10,5 @@ import info.nightscout.androidaps.data.ProfileStore;
 public interface ProfileInterface {
     @Nullable
     ProfileStore getProfile();
-    String getUnits();
     String getProfileName();
 }

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="true"
+    android:minWidth="300dp"
+    android:orientation="vertical"
+    tools:context=".dialogs.CalibrationDialog">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/dialog_title_background"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/overview_calibration"
+                android:src="@drawable/icon_calibration" />
+
+            <TextView
+                android:id="@+id/actions_care_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/overview_calibration"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/spacer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp" />
+
+        <LinearLayout
+            android:id="@+id/action_care_bg_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:width="120dp"
+                android:padding="10dp"
+                android:text="@string/treatments_wizard_bg_label"
+                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                android:textStyle="bold" />
+
+            <info.nightscout.androidaps.utils.NumberPicker
+                android:id="@+id/overview_calibration_bg"
+                android:layout_width="130dp"
+                android:layout_height="40dp" />
+
+            <TextView
+                android:id="@+id/overview_calibration_units"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="start"
+                android:minWidth="45dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:text="@string/mgdl"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        </LinearLayout>
+
+        <include layout="@layout/okcancel" />
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,8 +1,11 @@
 package info.nightscout.androidaps.queue.commands;
 
-import info.nightscout.androidaps.MainApp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 
 /**
@@ -10,7 +13,9 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandCancelTempBasal extends Command {
-    boolean enforceNew;
+    private Logger log = LoggerFactory.getLogger(L.PUMPQUEUE);
+
+    private boolean enforceNew;
 
     public CommandCancelTempBasal(boolean enforceNew, Callback callback) {
         commandType = CommandType.TEMPBASAL;
@@ -20,7 +25,9 @@ public class CommandCancelTempBasal extends Command {
 
     @Override
     public void execute() {
-        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().cancelTempBasal(enforceNew);
+        PumpEnactResult r = ConfigBuilderPlugin.getPlugin().getActivePump().cancelTempBasal(enforceNew);
+        if (L.isEnabled(L.PUMPQUEUE))
+            log.debug("Result success: " + r.success + " enacted: " + r.enacted);
         if (callback != null)
             callback.result(r).run();
     }

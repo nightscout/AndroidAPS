@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:paddingLeft="20dp">
+
+
+    <TextView
+        android:id="@+id/medtronic_history_time"
+        android:layout_width="88dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="Date"
+        android:textSize="12dp" />
+
+    <TextView
+        android:id="@+id/medtronic_history_source"
+        android:layout_width="132dp"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:text="Source"
+        android:textSize="12dp" />
+
+    <TextView
+        android:id="@+id/medtronic_history_description"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:text="Description"
+        android:gravity="center_vertical"
+        android:textSize="12dp" />
+
+</LinearLayout>

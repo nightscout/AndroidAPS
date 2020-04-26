@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/profileswitch_cardview"
     android:layout_width="match_parent"
@@ -64,10 +64,11 @@
 
             <TextView
                 android:id="@+id/invalid_sign"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingEnd="10dp"
                 android:text="@string/invalid"
+                android:textAlignment="viewEnd"
                 android:textColor="@android:color/holo_red_light" />
 
             <TextView
@@ -88,6 +89,16 @@
                 android:textColor="@color/colorSetTempButton" />
 
             <TextView
+                android:id="@+id/profileswitch_clone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="5dp"
+                android:paddingStart="10dp"
+                android:text="@string/clone_label"
+                android:textAlignment="viewEnd"
+                android:textColor="@android:color/holo_blue_light" />
+
+            <TextView
                 android:id="@+id/profileswitch_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -96,6 +107,7 @@
                 android:text="@string/overview_quickwizard_item_remove_button"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/holo_orange_light" />
+
         </LinearLayout>
 
         <View
@@ -109,4 +121,4 @@
 
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

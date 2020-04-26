@@ -1,15 +1,24 @@
 package info.nightscout.androidaps.queue.commands;
 
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
-import info.nightscout.utils.LocalAlertUtils;
+import info.nightscout.androidaps.utils.LocalAlertUtils;
+import info.nightscout.androidaps.utils.T;
 
 /**
  * Created by mike on 09.11.2017.
  */
 
 public class CommandReadStatus extends Command {
-    String reason;
+    private Logger log = LoggerFactory.getLogger(L.PUMPQUEUE);
+
+    private String reason;
 
     public CommandReadStatus(String reason, Callback callback) {
         commandType = CommandType.READSTATUS;
@@ -19,10 +28,19 @@ public class CommandReadStatus extends Command {
 
     @Override
     public void execute() {
-        ConfigBuilderPlugin.getActivePump().getPumpStatus();
+        ConfigBuilderPlugin.getPlugin().getActivePump().getPumpStatus();
         LocalAlertUtils.notifyPumpStatusRead();
+        if (L.isEnabled(L.PUMPQUEUE))
+            log.debug("CommandReadStatus executed. Reason: " + reason);
+        final PumpInterface pump = ConfigBuilderPlugin.getPlugin().getActivePump();
+        PumpEnactResult result = new PumpEnactResult().success(false);
+        if (pump != null) {
+            long lastConnection = pump.lastDataTime();
+            if (lastConnection > System.currentTimeMillis() - T.mins(1).msecs())
+                result.success(true);
+        }
         if (callback != null)
-            callback.result(null).run();
+            callback.result(result).run();
     }
 
     @Override

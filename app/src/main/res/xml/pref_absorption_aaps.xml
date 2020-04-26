@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
+
     <PreferenceCategory
         android:key="absorption"
         android:title="@string/absorptionsettings_title">
-        <com.andreabaccega.widget.ValidatingEditTextPreference
-            validate:testType="numericRange"
-            validate:minNumber="1"
-            validate:maxNumber="10"
-            android:digits="0123456789.,"
-            android:defaultValue="3"
-            android:selectAllOnFocus="true"
-            android:inputType="number"
-            android:maxLines="20"
-            android:title="@string/absorption_maxtime_title"
-            android:dialogMessage="@string/absorption_maxtime_summary"
-            android:key="@string/key_absorption_maxtime" />
 
         <com.andreabaccega.widget.ValidatingEditTextPreference
-            validate:maxNumber="24"
+            android:defaultValue="6"
+            android:dialogMessage="@string/absorption_maxtime_summary"
+            android:digits="0123456789.,"
+            android:inputType="number"
+            android:key="@string/key_absorption_maxtime"
+            android:maxLines="20"
+            android:selectAllOnFocus="true"
+            android:title="@string/absorption_maxtime_title"
+            validate:maxNumber="10"
             validate:minNumber="4"
-            validate:testType="numericRange"
+            validate:testType="numericRange" />
+
+        <com.andreabaccega.widget.ValidatingEditTextPreference
             android:defaultValue="24"
             android:dialogMessage="@string/openapsama_autosens_period_summary"
             android:digits="0123456789"
@@ -29,7 +28,42 @@
             android:maxLines="20"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="@string/openapsama_autosens_period" />
+            android:title="@string/openapsama_autosens_period"
+            validate:maxNumber="24"
+            validate:minNumber="4"
+            validate:testType="numericRange" />
+
+        <PreferenceScreen android:title="@string/advancedsettings_title">
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="1.2"
+                android:dialogMessage="@string/openapsama_autosens_max_summary"
+                android:digits="0123456789.,"
+                android:inputType="numberDecimal"
+                android:key="@string/key_openapsama_autosens_max"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_autosens_max"
+                validate:floatmaxNumber="3"
+                validate:floatminNumber="0.5"
+                validate:testType="floatNumericRange" />
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                android:defaultValue="0.7"
+                android:dialogMessage="@string/openapsama_autosens_min_summary"
+                android:inputType="numberDecimal"
+                android:key="@string/key_openapsama_autosens_min"
+                android:maxLines="20"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:title="@string/openapsama_autosens_min"
+                validate:floatmaxNumber="1.0"
+                validate:floatminNumber="0.1"
+                validate:testType="floatNumericRange" />
+
+        </PreferenceScreen>
 
     </PreferenceCategory>
+
 </PreferenceScreen>

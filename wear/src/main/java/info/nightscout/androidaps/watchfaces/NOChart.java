@@ -17,11 +17,12 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.DateFormat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -45,13 +46,13 @@ import info.nightscout.androidaps.data.BgWatchData;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.data.TempWatchData;
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
-import lecho.lib.hellocharts.view.LineChartView;
 
 /**
  * Created by adrianLxM.
  */
 public class NOChart extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static IntentFilter INTENT_FILTER;
+    public static final int SCREENSIZE_SMALL = 280;
     public TextView mTime, mSgv, mTimestamp, mDelta, mAvgDelta;
     public RelativeLayout mRelativeLayout;
     public long sgvLevel = 0;
@@ -85,7 +86,7 @@ public class NOChart extends WatchFace implements SharedPreferences.OnSharedPref
         Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE))
                 .getDefaultDisplay();
         display.getSize(displaySize);
-        wakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Clock");
+        wakeLock = ((PowerManager) getSystemService(Context.POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:NOChart");
 
         specW = View.MeasureSpec.makeMeasureSpec(displaySize.x,
                 View.MeasureSpec.EXACTLY);
@@ -96,6 +97,12 @@ public class NOChart extends WatchFace implements SharedPreferences.OnSharedPref
         sharedPrefs.registerOnSharedPreferenceChangeListener(this);
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         layoutView = inflater.inflate(R.layout.activity_nochart, null);
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        if(metrics.widthPixels < SCREENSIZE_SMALL || metrics.heightPixels < SCREENSIZE_SMALL){
+            layoutView = inflater.inflate(R.layout.activity_nochart_small, null);
+        } else {
+            layoutView = inflater.inflate(R.layout.activity_nochart, null);
+        }
         performViewSetup();
     }
 

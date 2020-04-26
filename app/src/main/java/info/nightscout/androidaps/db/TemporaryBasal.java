@@ -6,28 +6,30 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.Objects;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
+import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 21.05.2017.
  */
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TEMPORARYBASALS)
-public class TemporaryBasal implements Interval {
-    private static Logger log = LoggerFactory.getLogger(TemporaryBasal.class);
+public class TemporaryBasal implements Interval, DbObjectBase {
+    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;
@@ -60,12 +62,40 @@ public class TemporaryBasal implements Interval {
     public TemporaryBasal() {
     }
 
-    public TemporaryBasal(long date) {
+    public TemporaryBasal date(long date) {
         this.date = date;
+        return this;
+    }
+
+    public TemporaryBasal duration(int durationInMinutes) {
+        this.durationInMinutes = durationInMinutes;
+        return this;
+    }
+
+    public TemporaryBasal absolute(double absoluteRate) {
+        this.absoluteRate = absoluteRate;
+        this.isAbsolute = true;
+        return this;
+    }
+
+    public TemporaryBasal percent(int percentRate) {
+        this.percentRate = percentRate;
+        this.isAbsolute = false;
+        return this;
+    }
+
+    public TemporaryBasal source(int source) {
+        this.source = source;
+        return this;
+    }
+
+    public TemporaryBasal pumpId(long pumpId) {
+        this.pumpId = pumpId;
+        return this;
     }
 
     public TemporaryBasal(ExtendedBolus extendedBolus) {
-        double basal = MainApp.getConfigBuilder().getProfile(extendedBolus.date).getBasal(extendedBolus.date);
+        double basal = ProfileFunctions.getInstance().getProfile(extendedBolus.date).getBasal(extendedBolus.date);
         this.date = extendedBolus.date;
         this.isValid = extendedBolus.isValid;
         this.source = extendedBolus.source;
@@ -75,6 +105,7 @@ public class TemporaryBasal implements Interval {
         this.isFakeExtended = true;
         this.netExtendedRate = extendedBolus.absoluteRate();
         this.absoluteRate = basal + extendedBolus.absoluteRate();
+        this.pumpId = extendedBolus.pumpId;
     }
 
     public TemporaryBasal clone() {
@@ -124,6 +155,14 @@ public class TemporaryBasal implements Interval {
         pumpId = t.pumpId;
         isFakeExtended = t.isFakeExtended;
         netExtendedRate = t.netExtendedRate;
+    }
+
+    public void copyFromPump(TemporaryBasal t) {
+        durationInMinutes = t.durationInMinutes;
+        isAbsolute = t.isAbsolute;
+        percentRate = t.percentRate;
+        absoluteRate = t.absoluteRate;
+        pumpId = t.pumpId;
     }
 
     // -------- Interval interface ---------
@@ -189,22 +228,21 @@ public class TemporaryBasal implements Interval {
 
     // -------- Interval interface end ---------
 
-    public IobTotal iobCalc(long time) {
+    public IobTotal iobCalc(long time, Profile profile) {
 
-        if(isFakeExtended){
+        if (isFakeExtended) {
             log.error("iobCalc should only be called on Extended boluses separately");
             return new IobTotal(time);
         }
 
         IobTotal result = new IobTotal(time);
-        Profile profile = MainApp.getConfigBuilder().getProfile(time);
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
 
-       int realDuration = getDurationToTime(time);
+        int realDuration = getDurationToTime(time);
         double netBasalAmount = 0d;
 
         if (realDuration > 0) {
-            double netBasalRate = 0d;
+            double netBasalRate;
             double dia = profile.getDia();
             double dia_ago = time - dia * 60 * 60 * 1000;
             int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
@@ -214,14 +252,79 @@ public class TemporaryBasal implements Interval {
                 // find middle of the interval
                 long calcdate = (long) (date + j * tempBolusSpacing * 60 * 1000 + 0.5d * tempBolusSpacing * 60 * 1000);
 
-                Double basalRate = profile.getBasal(calcdate);
+                double basalRate = profile.getBasal(calcdate);
 
-                if (basalRate == null)
-                    continue;
                 if (isAbsolute) {
                     netBasalRate = absoluteRate - basalRate;
                 } else {
                     netBasalRate = (percentRate - 100) / 100d * basalRate;
+                }
+
+                if (calcdate > dia_ago && calcdate <= time) {
+                    double tempBolusSize = netBasalRate * tempBolusSpacing / 60d;
+                    netBasalAmount += tempBolusSize;
+
+                    Treatment tempBolusPart = new Treatment();
+                    tempBolusPart.insulin = tempBolusSize;
+                    tempBolusPart.date = calcdate;
+
+                    Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
+                    result.basaliob += aIOB.iobContrib;
+                    result.activity += aIOB.activityContrib;
+                    result.netbasalinsulin += tempBolusPart.insulin;
+                    if (tempBolusPart.insulin > 0) {
+                        result.hightempinsulin += tempBolusPart.insulin;
+                    }
+                }
+                result.netRatio = netBasalRate; // ratio at the end of interval
+            }
+        }
+        result.netInsulin = netBasalAmount;
+        return result;
+    }
+
+    public IobTotal iobCalc(long time, Profile profile, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
+
+        if (isFakeExtended) {
+            log.error("iobCalc should only be called on Extended boluses separately");
+            return new IobTotal(time);
+        }
+
+        IobTotal result = new IobTotal(time);
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
+
+        double realDuration = getDurationToTime(time);
+        double netBasalAmount = 0d;
+
+        double sensitivityRatio = lastAutosensResult.ratio;
+        double normalTarget = 100;
+
+        if (exercise_mode && isTempTarget && profile.getTargetMgdl() >= normalTarget + 5) {
+            // w/ target 100, temp target 110 = .89, 120 = 0.8, 140 = 0.67, 160 = .57, and 200 = .44
+            // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6
+            double c = half_basal_exercise_target - normalTarget;
+            sensitivityRatio = c / (c + profile.getTargetMgdl() - normalTarget);
+        }
+
+        if (realDuration > 0) {
+            double netBasalRate;
+            double dia = profile.getDia();
+            double dia_ago = time - dia * 60 * 60 * 1000;
+            int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
+            double tempBolusSpacing = realDuration / aboutFiveMinIntervals;
+
+            for (long j = 0L; j < aboutFiveMinIntervals; j++) {
+                // find middle of the interval
+                long calcdate = (long) (date + j * tempBolusSpacing * 60 * 1000 + 0.5d * tempBolusSpacing * 60 * 1000);
+
+                double basalRate = profile.getBasal(calcdate);
+                basalRate *= sensitivityRatio;
+
+                if (isAbsolute) {
+                    netBasalRate = absoluteRate - basalRate;
+                } else {
+                    double abs = percentRate / 100d * profile.getBasal(calcdate);
+                    netBasalRate = abs - basalRate;
                 }
 
                 if (calcdate > dia_ago && calcdate <= time) {
@@ -262,13 +365,23 @@ public class TemporaryBasal implements Interval {
         return (remainingMin < 0) ? 0 : Math.round(remainingMin);
     }
 
-    public double tempBasalConvertedToAbsolute(long time) {
-        if(isFakeExtended){
-            return MainApp.getConfigBuilder().getProfile(time).getBasal(time) + netExtendedRate;
+    public double tempBasalConvertedToAbsolute(long time, Profile profile) {
+        if (isFakeExtended) {
+            return profile.getBasal(time) + netExtendedRate;
         } else if (isAbsolute) {
             return absoluteRate;
         } else {
-             return MainApp.getConfigBuilder().getProfile(time).getBasal(time) * percentRate / 100;
+            return profile.getBasal(time) * percentRate / 100;
+        }
+    }
+
+    public int tempBasalConvertedToPercent(long time, Profile profile) {
+        if (isFakeExtended) {
+            return (int) ((profile.getBasal(time) + netExtendedRate) / profile.getBasal(time)) * 100;
+        } else if (isAbsolute) {
+            return (int) (absoluteRate / profile.getBasal(time)) * 100;
+        } else {
+            return percentRate;
         }
     }
 
@@ -289,12 +402,14 @@ public class TemporaryBasal implements Interval {
     }
 
     public String toStringFull() {
-        if(isFakeExtended){
+        if (isFakeExtended) {
 
-            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Profile profile = ProfileFunctions.getInstance().getProfile();
+            if (profile == null)
+                return "null";
             Double currentBasalRate = profile.getBasal();
-            double rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
-            return getCalcuatedPercentageIfNeeded() + DecimalFormatter.to2Decimal(rate) + "U/h ("+DecimalFormatter.to2Decimal(netExtendedRate)+"E) @" +
+            double rate = currentBasalRate + netExtendedRate;
+            return getCalcuatedPercentageIfNeeded() + DecimalFormatter.to2Decimal(rate) + "U/h (" + DecimalFormatter.to2Decimal(netExtendedRate) + "E) @" +
                     DateUtil.timeString(date) +
                     " " + getRealDuration() + "/" + durationInMinutes + "'";
         } else if (isAbsolute) {
@@ -311,49 +426,52 @@ public class TemporaryBasal implements Interval {
     public String toStringShort() {
         if (isAbsolute || isFakeExtended) {
 
-            double rate  = 0d;
+            double rate;
             if (isFakeExtended) {
-                Profile profile = MainApp.getConfigBuilder().getProfile();
-                Double currentBasalRate = profile.getBasal();
-                rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
-            } else if (isAbsolute){
+                Profile profile = ProfileFunctions.getInstance().getProfile();
+                if (profile == null)
+                    return "null";
+                double currentBasalRate = profile.getBasal();
+                rate = currentBasalRate + netExtendedRate;
+            } else {
                 rate = absoluteRate;
             }
 
-            if(SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)){
-                Profile profile = MainApp.getConfigBuilder().getProfile();
-                if(profile != null) {
+            if (SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)) {
+                Profile profile = ProfileFunctions.getInstance().getProfile();
+                if (profile != null) {
                     double basal = profile.getBasal();
-                    if(basal != 0){
-                        return Math.round(rate*100d/basal) + "% ";
+                    if (basal != 0) {
+                        return Math.round(rate * 100d / basal) + "%";
                     }
                 }
             }
-            return DecimalFormatter.to2Decimal(rate) + "U/h ";
+            return DecimalFormatter.to2Decimal(rate) + "U/h";
         } else { // percent
-            return percentRate + "% ";
+            return percentRate + "%";
         }
     }
 
-    private String getCalcuatedPercentageIfNeeded(){
+    private String getCalcuatedPercentageIfNeeded() {
+        Profile profile = ProfileFunctions.getInstance().getProfile();
+
+        if (profile == null)
+            return "null";
+
         if (isAbsolute || isFakeExtended) {
 
-            double rate  = 0d;
+            double rate;
             if (isFakeExtended) {
-                Profile profile = MainApp.getConfigBuilder().getProfile();
-                Double currentBasalRate = profile.getBasal();
-                rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
-            } else if (isAbsolute){
+                double currentBasalRate = profile.getBasal();
+                rate = currentBasalRate + netExtendedRate;
+            } else {
                 rate = absoluteRate;
             }
 
-            if(SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)){
-                Profile profile = MainApp.getConfigBuilder().getProfile();
-                if(profile != null) {
-                    double basal = profile.getBasal();
-                    if(basal != 0){
-                        return Math.round(rate*100d/basal) + "% ";
-                    }
+            if (SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)) {
+                double basal = profile.getBasal();
+                if (basal != 0) {
+                    return Math.round(rate * 100d / basal) + "% ";
                 }
             }
         }
@@ -361,14 +479,18 @@ public class TemporaryBasal implements Interval {
     }
 
     public String toStringVeryShort() {
+        Profile profile = ProfileFunctions.getInstance().getProfile();
+
+        if (profile == null)
+            return "null";
+
         if (isAbsolute || isFakeExtended) {
 
-            double rate  = 0d;
+            double rate;
             if (isFakeExtended) {
-                Profile profile = MainApp.getConfigBuilder().getProfile();
-                Double currentBasalRate = profile.getBasal();
-                rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
-            } else if (isAbsolute){
+                double currentBasalRate = profile.getBasal();
+                rate = currentBasalRate + netExtendedRate;
+            } else {
                 rate = absoluteRate;
             }
             return DecimalFormatter.to2Decimal(rate) + "U/h ";
@@ -377,4 +499,13 @@ public class TemporaryBasal implements Interval {
         }
     }
 
+    @Override
+    public long getDate() {
+        return this.date;
+    }
+
+    @Override
+    public long getPumpId() {
+        return this.pumpId;
+    }
 }

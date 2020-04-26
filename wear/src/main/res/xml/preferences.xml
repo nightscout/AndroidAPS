@@ -5,14 +5,14 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="vibrateOnBolus"
-        android:title="Vibrate on Bolus"
+        android:title="@string/pref_vibrate_on_bolus"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="units_mgdl"
-        android:title="Units for Actions"
+        android:title="@string/pref_units_for_actions"
         android:summaryOn="mg/dl"
         android:summaryOff="mmol/l"
         app:wear_iconOff="@drawable/settings_off"
@@ -21,14 +21,14 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="show_date"
-        android:title="Show Date"
+        android:title="@string/pref_show_date"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="show_iob"
-        android:title="Show IOB"
+        android:title="@string/pref_show_iob"
         android:summary="Show insulin on board."
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -36,7 +36,7 @@
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="show_cob"
-        android:title="Show COB"
+        android:title="@string/pref_show_cob"
         android:summary="Show carb on board."
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
@@ -45,7 +45,7 @@
         android:defaultValue="true"
         android:key="showDelta"
         android:summary="Show delta. (Circle WF)"
-        android:title="Show Delta"
+        android:title="@string/pref_show_delta"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
@@ -53,35 +53,35 @@
         android:defaultValue="true"
         android:key="showAvgDelta"
         android:summary="Show the avgDelta."
-        android:title="Show AvgDelta"
+        android:title="@string/pref_show_avgdelta"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="show_uploader_battery"
-        android:title="Show Phone Battery"
+        android:title="@string/pref_show_phone_battery"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="show_rig_battery"
-        android:title="Show Rig Battery"
+        android:title="@string/pref_show_rig_battery"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="show_temp_basal"
-        android:title="Show Basal Rate"
+        android:title="@string/pref_show_basal_rate"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="showExternalStatus"
-        android:title="Show Loop Status"
+        android:title="@string/pref_show_loop_status"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
@@ -89,7 +89,7 @@
         android:defaultValue="true"
         android:key="showBG"
         android:summary="Show BG. (Circle WF)"
-        android:title="Show BG"
+        android:title="@string/pref_show_bg"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
@@ -97,7 +97,7 @@
         android:defaultValue="true"
         android:key="show_direction"
         android:summary="Show direction arrow"
-        android:title="Show Direction Arrow"
+        android:title="@string/pref_show_direction_arrow"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
@@ -105,7 +105,7 @@
         android:defaultValue="true"
         android:key="showAgo"
         android:summary="Minutes since last reading. (Circle WF)"
-        android:title="Show Ago"
+        android:title="@string/pref_show_ago"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
@@ -113,7 +113,7 @@
         android:defaultValue="true"
         android:key="dark"
         android:summary="Dark theme"
-        android:title="Dark"
+        android:title="@string/pref_dark"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
@@ -121,7 +121,15 @@
         android:defaultValue="false"
         android:key="highlight_basals"
         android:summary="Better visible basal rate and temp basals"
-        android:title="Highlight Basals"
+        android:title="@string/pref_highlight_basals"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="match_divider"
+        android:summary="Status bar divider background matches watchface background"
+        android:title="@string/pref_matching_divider"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
@@ -131,7 +139,7 @@
         android:entryValues="@array/chart_timeframe_values"
         android:key="chart_timeframe"
         android:summary="Chart Timeframe"
-        android:title="Chart Timeframe" />
+        android:title="@string/pref_chart_timeframe" />
 
     <ListPreference
         android:defaultValue="1"
@@ -139,7 +147,7 @@
         android:entryValues="@array/input_design_values"
         android:key="input_design"
         android:summary="Input Design"
-        android:title="Input Design" />
+        android:title="@string/pref_input_design" />
 
     <ListPreference
         android:defaultValue="2"
@@ -147,13 +155,13 @@
         android:entryValues="@array/delta_granularity_values"
         android:key="delta_granularity"
         android:summary="Delta Granularity (Steampunk)"
-        android:title="Delta Granularity (Steampunk)" />
+        android:title="@string/pref_delta_granularity" />
 
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="showBigNumbers"
         android:summary="Big numbers. (Circle WF)"
-        android:title="Big Numbers"
+        android:title="@string/pref_big_numbers"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
@@ -161,7 +169,7 @@
         android:defaultValue="false"
         android:key="showRingHistory"
         android:summary="Graphical history. (Circle WF)"
-        android:title="Ring History"
+        android:title="@string/pref_ring_history"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
@@ -169,7 +177,7 @@
         android:defaultValue="true"
         android:key="softRingHistory"
         android:summary="Less eyecandy. (Circle WF)"
-        android:title="Light Ring History"
+        android:title="@string/pref_light_ring_history"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
@@ -177,7 +185,7 @@
         android:defaultValue="true"
         android:key="animation"
         android:summary="Animations. (Circle WF)"
-        android:title="Animations"
+        android:title="@string/pref_animations"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
@@ -185,35 +193,55 @@
         android:defaultValue="true"
         android:key="showWizard"
         android:summary="Wizard from watch possible"
-        android:title="Wizard in Menu"
+        android:title="@string/pref_wizard_in_menu"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
+
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="primefill"
         android:summary="Prime/Fill from watch possible"
-        android:title="Prime in Menu"
+        android:title="@string/pref_prime_in_menu"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
+
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="singletarget"
         android:summary="Single temp-target instead of a range."
-        android:title="Single Target"
+        android:title="@string/pref_single_target"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
+
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="wizardpercentage"
         android:summary="Percentage correction."
-        android:title="Wizard Percentage"
+        android:title="@string/pref_wizard_percentage"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
+
+    <ListPreference
+        android:defaultValue="default"
+        android:entries="@array/complication_tap_action"
+        android:entryValues="@array/complication_tap_action_values"
+        android:key="complication_tap_action"
+        android:summary="What dialog to show after tap on complication"
+        android:title="@string/pref_complication_tap_action" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="complication_unicode"
+        android:summary="Use unicode special characters in complications."
+        android:title="@string/pref_unicode_in_complications"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
     <info.nightscout.androidaps.interaction.utils.VersionPreference
         android:defaultValue="1"
         android:entries="@array/input_design"
         android:entryValues="@array/input_design_values"
         android:key="version_number"
         android:summary="Input Design"
-        android:title="Version:" />
+        android:title="@string/pref_version" />
 </PreferenceScreen>

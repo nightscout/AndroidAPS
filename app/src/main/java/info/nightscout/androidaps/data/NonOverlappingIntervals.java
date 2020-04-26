@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.data;
 
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import info.nightscout.androidaps.interfaces.Interval;
 
@@ -11,7 +11,15 @@ import info.nightscout.androidaps.interfaces.Interval;
 
 public class NonOverlappingIntervals<T extends Interval> extends Intervals<T> {
 
-    protected synchronized void merge() {
+    public NonOverlappingIntervals() {
+        super();
+    }
+
+    public NonOverlappingIntervals (Intervals<T> other) {
+        rawData = other.rawData.clone();
+    }
+
+    public synchronized void merge() {
         for (int index = 0; index < rawData.size() - 1; index++) {
             Interval i = rawData.valueAt(index);
             long startOfNewer = rawData.valueAt(index + 1).start();
@@ -27,4 +35,5 @@ public class NonOverlappingIntervals<T extends Interval> extends Intervals<T> {
         if (index >= 0) return rawData.valueAt(index);
         return null;
     }
+
 }

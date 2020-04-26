@@ -12,12 +12,18 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_MMS" />
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.SEND_MMS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="com.dexcom.cgm.EXTERNAL_PERMISSION" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
@@ -29,62 +35,88 @@
         android:allowBackup="true"
         android:icon="${appIcon}"
         android:label="@string/app_name"
+        android:roundIcon="${appIconRound}"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.Launcher"
+        android:fullBackupContent="true">
+        <meta-data
+            android:name="com.google.android.gms.car.application"
+            android:resource="@xml/automotive_app_desc" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PreferencesActivity" />
+        <activity android:name=".activities.PreferencesActivity" />
         <activity
-            android:name=".plugins.Overview.Dialogs.BolusProgressHelperActivity"
+            android:name=".activities.BolusProgressHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
-            android:name=".plugins.Overview.Dialogs.ErrorHelperActivity"
+            android:name=".activities.ErrorHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity android:name=".AgreementActivity" />
-        <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
-        <activity android:name=".plugins.PumpDanaR.activities.DanaRStatsActivity" />
-        <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
+        <activity android:name=".plugins.pump.danaR.activities.DanaRHistoryActivity" />
+        <activity android:name=".plugins.pump.danaR.activities.DanaRUserOptionsActivity" />
+        <activity android:name=".activities.TDDStatsActivity" />
+        <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity">
             <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
+                <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".plugins.PumpDanaRS.activities.BLEScanActivity">
+        <activity android:name=".plugins.pump.danaRS.activities.BLEScanActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".plugins.PumpDanaRS.activities.PairingHelperActivity" />
+        <activity android:name=".plugins.pump.danaRS.activities.PairingHelperActivity" />
+        <activity android:name=".activities.HistoryBrowseActivity" />
+        <activity android:name=".activities.SurveyActivity" />
+        <activity android:name=".activities.StatsActivity" />
 
+        <!-- Receive new BG readings from other local apps -->
         <receiver
-            android:name=".receivers.DataReceiver"
-            android:enabled="true"
-            android:exported="true">
+                android:name=".receivers.DataReceiver"
+                android:enabled="true"
+                android:exported="true">
             <intent-filter>
-                <!-- Receive new SMS messages -->
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
                 <!-- Receiver from xDrip -->
-                <action android:name="com.eveningoutpost.dexdrip.BgEstimate" />
+                <action android:name="com.eveningoutpost.dexdrip.BgEstimate"/>
                 <!-- Receiver from 640g uploader -->
-                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
+                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR"/>
                 <!-- Receiver from glimp -->
-                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
-                <!-- Receiver from DexcomG5 -->
-                <action android:name="com.dexcom.cgm.DATA" />
+                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED"/>
+                <!-- Receiver from Dexcom -->
+                <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST"/>
+                <!-- Receiver from Poctech -->
+                <action android:name="com.china.poctech.data"/>
+                <!-- Receiver from Tomato -->
+                <action android:name="com.fanqies.tomatofn.BgEstimate"/>
             </intent-filter>
         </receiver>
+
+        <!-- Receive new SMS messages -->
+        <receiver
+                android:name=".receivers.SmsReceiver"
+                android:enabled="true"
+                android:exported="true"
+                android:permission="android.permission.BROADCAST_SMS">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
+
         <!-- Receiver keepalive, scheduled every 30 min -->
         <receiver android:name=".receivers.KeepAliveReceiver" />
 
         <!-- Auto start -->
         <receiver
-            android:name=".plugins.NSClientInternal.receivers.AutoStartReceiver"
+            android:name=".receivers.AutoStartReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -92,66 +124,166 @@
             </intent-filter>
         </receiver>
 
-        <!-- NSClient -->
-        <receiver
-            android:name=".plugins.NSClientInternal.receivers.RestartReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="info.nightscout.client.RESTART" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".plugins.NSClientInternal.receivers.DBAccessReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="info.nightscout.client.DBACCESS" />
-            </intent-filter>
-        </receiver>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
 
         <!-- Service processing incomming data -->
         <service
-            android:name=".Services.DataService"
+            android:name=".services.DataService"
             android:exported="false" />
         <service
-            android:name=".plugins.PumpDanaR.services.DanaRExecutionService"
+            android:name=".services.LocationService"
+            android:exported="false" />
+        <service
+            android:name=".plugins.pump.danaR.services.DanaRExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService"
+            android:name=".plugins.pump.danaRKorean.services.DanaRKoreanExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".plugins.PumpDanaRv2.services.DanaRv2ExecutionService"
+            android:name=".plugins.pump.danaRv2.services.DanaRv2ExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".plugins.PumpDanaRS.services.DanaRSService"
+            android:name=".plugins.pump.danaRS.services.DanaRSService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
         <service
-            android:name=".plugins.Wear.wearintegration.WatchUpdaterService"
+            android:name=".plugins.general.wear.wearintegration.WatchUpdaterService"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+                <!-- <action android:name="com.google.android.gms.wearable.BIND_LISTENER" /> -->
+                <!-- listeners receive events that match the action and data filters -->
+                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+
+                <data
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_data"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_data_resend"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_cancel_bolus"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_confirmactionstring"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_initiateactionstring"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/openwearsettings"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/sendstatustowear"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/sendpreferencestowear"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_basal"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_bolusprogress"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_actionconfirmationrequest"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_changeconfirmationrequest"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/nightscout_watch_cancelnotificationrequest"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
         <service
-            android:name=".plugins.NSClientInternal.services.NSClientService"
+            android:name=".plugins.general.nsclient.services.NSClientService"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".Services.AlarmSoundService"
+            android:name=".services.AlarmSoundService"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".plugins.Overview.notifications.DismissNotificationService"
-            android:exported="false"></service>
+            android:name=".plugins.general.overview.notifications.DismissNotificationService"
+            android:exported="false" />
+
+        <service android:name=".plugins.general.persistentNotification.DummyService" />
+        <service android:name=".plugins.pump.insight.connection_service.InsightConnectionService" />
+        <service android:name=".plugins.pump.insight.InsightAlertService" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
+
+        <activity
+            android:name=".setupwizard.SetupWizardActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_setup_wizard"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activities.SingleFragmentActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".plugins.general.maintenance.activities.LogSettingActivity" />
+        <activity
+            android:name=".plugins.pump.insight.activities.InsightPairingActivity"
+            android:label="@string/insight_pairing"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".plugins.pump.insight.activities.InsightAlertActivity"
+            android:label="@string/pump_alert"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:theme="@style/InsightAlertDialog" />
+        <activity
+            android:name=".plugins.pump.insight.activities.InsightPairingInformationActivity"
+            android:label="@string/pairing_information"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activities.RequestDexcomPermissionActivity" />
+
+        <!-- Medtronic service and activities -->
+        <service
+            android:name=".plugins.pump.medtronic.service.RileyLinkMedtronicService"
+            android:enabled="true"
+            android:exported="true" />
+        <activity android:name=".plugins.pump.common.dialog.RileyLinkBLEScanActivity">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity"
+            android:label="@string/title_activity_rileylink_settings"
+            android:theme="@style/Theme.AppCompat.NoTitle" />
+        <activity android:name=".plugins.pump.medtronic.dialog.MedtronicHistoryActivity" />
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
 
     </application>
 

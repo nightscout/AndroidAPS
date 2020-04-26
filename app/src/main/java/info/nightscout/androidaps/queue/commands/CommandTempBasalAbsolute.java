@@ -3,10 +3,10 @@ package info.nightscout.androidaps.queue.commands;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.queue.Callback;
 
 /**
@@ -14,25 +14,27 @@ import info.nightscout.androidaps.queue.Callback;
  */
 
 public class CommandTempBasalAbsolute extends Command {
-    private static Logger log = LoggerFactory.getLogger(CommandTempBasalAbsolute.class);
+    private Logger log = LoggerFactory.getLogger(L.PUMPQUEUE);
 
-    int durationInMinutes;
-    double absoluteRate;
-    boolean enforceNew;
+    private int durationInMinutes;
+    private double absoluteRate;
+    private boolean enforceNew;
+    private Profile profile;
 
-    public CommandTempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Callback callback) {
+    public CommandTempBasalAbsolute(double absoluteRate, int durationInMinutes, boolean enforceNew, Profile profile, Callback callback) {
         commandType = CommandType.TEMPBASAL;
         this.absoluteRate = absoluteRate;
         this.durationInMinutes = durationInMinutes;
         this.enforceNew = enforceNew;
+        this.profile = profile;
         this.callback = callback;
     }
 
     @Override
     public void execute() {
-        PumpEnactResult r = ConfigBuilderPlugin.getActivePump().setTempBasalAbsolute(absoluteRate, durationInMinutes, enforceNew);
-        if (Config.logCongigBuilderActions)
-            log.debug("setTempBasalAbsolute rate: " + absoluteRate + " durationInMinutes: " + durationInMinutes + " success: " + r.success + " enacted: " + r.enacted);
+        PumpEnactResult r = ConfigBuilderPlugin.getPlugin().getActivePump().setTempBasalAbsolute(absoluteRate, durationInMinutes, profile, enforceNew);
+        if (L.isEnabled(L.PUMPQUEUE))
+            log.debug("Result rate: " + absoluteRate + " durationInMinutes: " + durationInMinutes + " success: " + r.success + " enacted: " + r.enacted);
         if (callback != null)
             callback.result(r).run();
     }

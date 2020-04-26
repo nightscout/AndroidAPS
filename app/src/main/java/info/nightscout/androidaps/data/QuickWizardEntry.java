@@ -7,18 +7,19 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
-import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.utils.BolusWizard;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.SP;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.CobInfo;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.BolusWizard;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by mike on 25.12.2017.
@@ -50,7 +51,7 @@ public class QuickWizardEntry {
             useTemptarget: 0
         }
      */
-    public QuickWizardEntry() {
+    QuickWizardEntry() {
         String emptyData = "{\"buttonText\":\"\",\"carbs\":0,\"validFrom\":0,\"validTo\":86340}";
         try {
             storage = new JSONObject(emptyData);
@@ -60,39 +61,29 @@ public class QuickWizardEntry {
         position = -1;
     }
 
-    public QuickWizardEntry(JSONObject entry, int position) {
+    QuickWizardEntry(JSONObject entry, int position) {
         storage = entry;
         this.position = position;
     }
 
-    public Boolean isActive() {
+    Boolean isActive() {
         return Profile.secondsFromMidnight() >= validFrom() && Profile.secondsFromMidnight() <= validTo();
     }
 
-    public BolusWizard doCalc(Profile profile, TempTarget tempTarget, BgReading lastBG, boolean _synchronized) {
-        BolusWizard wizard = new BolusWizard();
-
+    public BolusWizard doCalc(Profile profile, String profileName, BgReading lastBG, boolean _synchronized) {
+        final TempTarget tempTarget = TreatmentsPlugin.getPlugin().getTempTargetFromHistory();
         //BG
         double bg = 0;
         if (lastBG != null && useBG() == YES) {
-            bg = lastBG.valueToUnits(profile.getUnits());
+            bg = lastBG.valueToUnits(ProfileFunctions.getSystemUnits());
         }
 
         // COB
         double cob = 0d;
-        AutosensData autosensData;
-        if (_synchronized)
-            autosensData = IobCobCalculatorPlugin.getLastAutosensDataSynchronized("QuickWizard COB");
-        else
-            autosensData = IobCobCalculatorPlugin.getLastAutosensData("QuickWizard COB");
-
-        if (autosensData != null && useCOB() == YES) {
-            cob = autosensData.cob;
-        }
-
-        // Temp target
-        if (useTempTarget() == NO) {
-            tempTarget = null;
+        if (useCOB() == YES) {
+            CobInfo cobInfo = IobCobCalculatorPlugin.getPlugin().getCobInfo(_synchronized, "QuickWizard COB");
+            if (cobInfo.displayCob != null)
+                cob = cobInfo.displayCob;
         }
 
         // Bolus IOB
@@ -102,7 +93,7 @@ public class QuickWizardEntry {
         }
 
         // Basal IOB
-        TreatmentsInterface treatments = MainApp.getConfigBuilder();
+        TreatmentsInterface treatments = TreatmentsPlugin.getPlugin();
         treatments.updateTotalIOBTempBasals();
         IobTotal basalIob = treatments.getLastCalculationTempBasals().round();
         boolean basalIOB = false;
@@ -119,8 +110,8 @@ public class QuickWizardEntry {
         if (useSuperBolus() == YES && SP.getBoolean(R.string.key_usesuperbolus, false)) {
             superBolus = true;
         }
-        final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-        if (activeloop != null && activeloop.isEnabled(activeloop.getType()) && activeloop.isSuperBolus())
+        final LoopPlugin loopPlugin = LoopPlugin.getPlugin();
+        if (loopPlugin.isEnabled(loopPlugin.getType()) && loopPlugin.isSuperBolus())
             superBolus = false;
 
         // Trend
@@ -134,8 +125,8 @@ public class QuickWizardEntry {
             trend = true;
         }
 
-        wizard.doCalc(profile, tempTarget, carbs(), cob, bg, 0d, bolusIOB, basalIOB, superBolus, trend);
-        return wizard;
+        double percentage = SP.getDouble(R.string.key_boluswizard_percentage, 100.0);
+        return new BolusWizard(profile, profileName, tempTarget, carbs(), cob, bg, 0d, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, "QuickWizard");
     }
 
     public String buttonText() {

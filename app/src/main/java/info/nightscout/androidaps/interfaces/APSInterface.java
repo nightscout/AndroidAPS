@@ -1,15 +1,14 @@
 package info.nightscout.androidaps.interfaces;
 
-import java.util.Date;
-
-import info.nightscout.androidaps.plugins.Loop.APSResult;
+import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 
 /**
  * Created by mike on 10.06.2016.
  */
 public interface APSInterface {
-    public APSResult getLastAPSResult();
-    public Date getLastAPSRun();
+    APSResult getLastAPSResult();
 
-    public void invoke(String initiator);
+    long getLastAPSRun();
+
+    void invoke(String initiator, boolean tempBasalFallback);
 }

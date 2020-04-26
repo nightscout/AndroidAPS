@@ -6,17 +6,20 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
-import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TEMPTARGETS)
 public class TempTarget implements Interval {
-    private static Logger log = LoggerFactory.getLogger(TempTarget.class);
+    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;
@@ -40,6 +43,10 @@ public class TempTarget implements Interval {
 
     @DatabaseField
     public int durationInMinutes;
+
+    public double target() {
+        return (low + high) / 2;
+    }
 
     public boolean isEqual(TempTarget other) {
         if (date != other.date) {
@@ -65,6 +72,41 @@ public class TempTarget implements Interval {
         low = t.low;
         high = t.high;
         reason = t.reason;
+    }
+
+    public TempTarget date(long date) {
+        this.date = date;
+        return this;
+    }
+
+    public TempTarget low(double low) {
+        this.low = low;
+        return this;
+    }
+
+    public TempTarget high(double high) {
+        this.high = high;
+        return this;
+    }
+
+    public TempTarget duration(int duration) {
+        this.durationInMinutes = duration;
+        return this;
+    }
+
+    public TempTarget reason(String reason) {
+        this.reason = reason;
+        return this;
+    }
+
+    public TempTarget _id(String _id) {
+        this._id = _id;
+        return this;
+    }
+
+    public TempTarget source(int source) {
+        this.source = source;
+        return this;
     }
 
     // -------- Interval interface ---------
@@ -150,6 +192,13 @@ public class TempTarget implements Interval {
                 ", low=" + low +
                 ", high=" + high +
                 '}';
+    }
+
+    public String friendlyDescription(String units) {
+        return Profile.toTargetRangeString(low, high, Constants.MGDL, units) +
+                units +
+                "@" + MainApp.gs(R.string.mins, durationInMinutes) +
+                (reason != null && !reason.equals("") ? "(" + reason + ")" : "");
     }
 
 }
