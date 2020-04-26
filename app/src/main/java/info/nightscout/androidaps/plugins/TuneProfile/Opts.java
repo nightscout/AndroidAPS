@@ -5,6 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Date;
@@ -198,7 +199,7 @@ public class Opts {
             for (int h = 0; h < 24; h++) {
                 String time;
                 time = (h<10 ? "0"+ h : h)  + ":00:00";
-                basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", profile.getBasal((long) h * secondfrommidnight)));
+                basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", profile.getBasal(h*secondfrommidnight)));
             };
             json.put("basalprofile", basals);
             int isfvalue = (int) profile.getIsfMgdl();
@@ -219,5 +220,25 @@ public class Opts {
         } catch (JSONException e) {}
 
         return json;
+    }
+
+    public synchronized Double getProfileBasal(Integer hour){
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, hour);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        return profile.getBasal(c.getTimeInMillis());
+    }
+
+    public synchronized Double getPumpProfileBasal(Integer hour){
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, hour);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+
+        return profile.getBasal(c.getTimeInMillis());
     }
 }

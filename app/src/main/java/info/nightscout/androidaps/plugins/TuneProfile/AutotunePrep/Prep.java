@@ -43,7 +43,7 @@ public class Prep {
 
     private NSService nsService = new NSService();
 
-    public PrepOutput categorizeBGDatums(Opts opts) throws JSONException, ParseException, IOException {
+    public static PrepOutput categorizeBGDatums(Opts opts) throws JSONException, ParseException, IOException {
         List<Treatment> treatments = opts.treatments;
         // this sorts the treatments collection in order.
         Collections.sort(treatments, (o1, o2) -> (int) (o2.getDate() - o1.getDate()));
@@ -605,13 +605,12 @@ public class Prep {
             autotuneprep.put("ISFGlucoseData",ISFGlucoseData.toString());
             autotuneprep.put("basalGlucoseData",basalGlucoseData.toString());
         } catch (JSONException e ) {}
-        prepOutput.JSONString = autotuneprep.toString(4);
 
         return prepOutput;
     }
 
     //dosed.js full
-    private double dosed(Opts opts) {
+    private static double dosed(Opts opts) {
         long start = opts.start;
         long end = opts.end;
         List<Treatment> treatments = opts.treatments;
@@ -634,7 +633,7 @@ public class Prep {
 
 
     // index.js // opts = inputs
-    public PrepOutput generate (Opts opts) throws JSONException, ParseException, IOException {
+    public static PrepOutput generate (Opts opts) throws JSONException, ParseException, IOException {
 
         PrepOutput autotune_prep_output = categorizeBGDatums(opts);
 

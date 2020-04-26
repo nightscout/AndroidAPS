@@ -19,6 +19,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.plugins.TuneProfile.AutotunePrep.Prep;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
 import info.nightscout.androidaps.plugins.insulin.InsulinOrefBasePlugin;
@@ -1371,6 +1372,10 @@ public class TuneProfilePlugin extends PluginBase {
                     //log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
                     log.debug("NSService asked for data from "+formatDate(new Date(glucoseStart))+" \nto "+formatDate(new Date(glucoseEnd)));
                     categorizeBGDatums(glucoseStart, glucoseEnd);
+
+                    PrepOutput prepOutput = Prep.generate(opts);
+                    FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(4));
+
                     tuneAllTheThings();
                 } catch (JSONException e) {
                     log.error(e.getMessage());
