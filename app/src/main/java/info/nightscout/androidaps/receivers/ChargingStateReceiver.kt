@@ -19,16 +19,24 @@ class ChargingStateReceiver : DaggerBroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         rxBus.send(grabChargingState(context))
-        aapsLogger.debug(LTag.CORE,  receiverStatusStore.lastChargingEvent!!.toString())
+        aapsLogger.debug(LTag.CORE, receiverStatusStore.lastChargingEvent?.toString()
+            ?: "Unknown charging state")
     }
 
     private fun grabChargingState(context: Context): EventChargingState {
-        val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { iFilter ->
-            context.registerReceiver(null, iFilter)
-        }
+        val batteryStatus = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+
+        // Level
+        var batteryLevel = 0
+        val level = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+        val scale = batteryStatus?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+        if (level != -1 && scale != -1)
+            batteryLevel = (level.toFloat() / scale.toFloat() * 100.0f).toInt()
+        // Status
         val status: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
         val isCharging: Boolean = status == BatteryManager.BATTERY_STATUS_CHARGING
             || status == BatteryManager.BATTERY_STATUS_FULL
-        return EventChargingState(isCharging).also { receiverStatusStore.lastChargingEvent = it }
+
+        return EventChargingState(isCharging, batteryLevel).also { receiverStatusStore.lastChargingEvent = it }
     }
 }

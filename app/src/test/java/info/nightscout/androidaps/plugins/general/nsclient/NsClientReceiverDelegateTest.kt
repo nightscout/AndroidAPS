@@ -52,14 +52,14 @@ class NsClientReceiverDelegateTest : TestBase() {
     @Test fun testCalculateStatusChargingState() {
         PowerMockito.mockStatic(SP::class.java)
         Mockito.`when`(sp.getBoolean(ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean())).thenReturn(false)
-        var ev = EventChargingState(true)
+        var ev = EventChargingState(true, 0)
         Assert.assertTrue(sut!!.calculateStatus(ev))
-        ev = EventChargingState(false)
+        ev = EventChargingState(false, 0)
         Assert.assertTrue(sut!!.calculateStatus(ev))
         Mockito.`when`(sp.getBoolean(ArgumentMatchers.anyInt(), ArgumentMatchers.anyBoolean())).thenReturn(true)
-        ev = EventChargingState(true)
+        ev = EventChargingState(true, 0)
         Assert.assertTrue(sut!!.calculateStatus(ev))
-        ev = EventChargingState(false)
+        ev = EventChargingState(false, 0)
         Assert.assertTrue(!sut!!.calculateStatus(ev))
     }
 

@@ -2,12 +2,12 @@ package info.nightscout.androidaps.receivers
 
 import android.content.Context
 import android.content.Intent
+import com.google.gson.Gson
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.PumpInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
 import info.nightscout.androidaps.utils.TimeChangeType
 import java.util.*
 import javax.inject.Inject
@@ -15,11 +15,13 @@ import javax.inject.Inject
 class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePluginProvider
+    var gson: Gson
 
     private var isDST = false
 
     init {
         isDST = calculateDST()
+        gson = Gson()
     }
 
     private fun calculateDST(): Boolean {
@@ -42,7 +44,7 @@ class TimeDateOrTZChangeReceiver : DaggerBroadcastReceiver() {
         }
 
         aapsLogger.debug(LTag.PUMP,"TimeDateOrTZChangeReceiver::Date, Time and/or TimeZone changed. [action={}]", action)
-        aapsLogger.debug(LTag.PUMP,"TimeDateOrTZChangeReceiver::Intent::{}", OmnipodUtil.getGsonInstance().toJson(intent))
+        aapsLogger.debug(LTag.PUMP,"TimeDateOrTZChangeReceiver::Intent::{}", gson.toJson(intent))
 
         if (action == null) {
             aapsLogger.error(LTag.PUMP,"TimeDateOrTZChangeReceiver::Action is null. Exiting.")

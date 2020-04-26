@@ -39,11 +39,9 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.utils.BatteryLevel;
+import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.SP;
@@ -160,7 +158,7 @@ public class NSUpload {
         }
     }
 
-    public static void uploadDeviceStatus(LoopPlugin loopPlugin, IobCobCalculatorPlugin iobCobCalculatorPlugin, ProfileFunction profileFunction, PumpInterface pumpInterface) {
+    public static void uploadDeviceStatus(LoopPlugin loopPlugin, IobCobCalculatorPlugin iobCobCalculatorPlugin, ProfileFunction profileFunction, PumpInterface pumpInterface, ReceiverStatusStore receiverStatusStore) {
         Profile profile = profileFunction.getProfile();
         String profileName = profileFunction.getProfileName();
 
@@ -216,7 +214,7 @@ public class NSUpload {
                 deviceStatus.pump = pumpstatus;
             }
 
-            int batteryLevel = BatteryLevel.getBatteryLevel();
+            int batteryLevel = receiverStatusStore.getBatteryLevel();
             deviceStatus.uploaderBattery = batteryLevel;
 
             deviceStatus.created_at = DateUtil.toISOString(new Date());
