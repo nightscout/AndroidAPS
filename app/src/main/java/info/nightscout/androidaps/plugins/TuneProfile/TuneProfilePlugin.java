@@ -1300,20 +1300,22 @@ public class TuneProfilePlugin extends PluginBase {
     public String result(int daysBack) throws IOException, ParseException {
         //clean autotune folder before run
         FS.deleteAutotuneFiles();
-        lastRun = new Date();
+        lastRun = new Date(System.currentTimeMillis());
         int tunedISF = 0;
         double isfResult = 0;
         basalsResultInit();
         long now = System.currentTimeMillis();
         Calendar c = Calendar.getInstance();
-        //todo: philoul set current day if after 4PM or previous day
-        c.setTimeInMillis(now - ((daysBack-1) * 24 * 60 * 60 * 1000L));
-        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.setTimeInMillis(now );
+        c.set(Calendar.HOUR_OF_DAY, 4);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
 
         long endTime = c.getTimeInMillis();
+        // new version of autotune starts at 4 AM
+        if (endTime > now)
+            endTime -= 24 * 60 * 60 * 1000L;
         long starttime = endTime - daysBack * 24 * 60 *  60 * 1000L;
 
         FS.createAutotunefile(FS.SETTINGS,settings(lastRun,daysBack,new Date(starttime),new Date(endTime)));
