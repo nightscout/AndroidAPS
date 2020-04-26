@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Thread
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.*
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.queue.commands.*
@@ -184,6 +185,14 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectGlucoseStatus(glucoseStatus: GlucoseStatus)
 
     fun injectGraphData(graphData: GraphData)
+
+    //Medtronic
+    fun injectServiceTask(serviceTask: ServiceTask)
+    fun injectPumpTask(pumpTask: PumpTask)
+    fun injectDiscoverGattServicesTask(discoverGattServicesTask: DiscoverGattServicesTask)
+    fun injectInitializePumpManagerTask(initializePumpManagerTask: InitializePumpManagerTask)
+    fun injectResetRileyLinkConfigurationTask(resetRileyLinkConfigurationTask: ResetRileyLinkConfigurationTask)
+    fun injectWakeAndTuneTask(wakeAndTuneTask: WakeAndTuneTask)
 
     @Component.Builder
     interface Builder {

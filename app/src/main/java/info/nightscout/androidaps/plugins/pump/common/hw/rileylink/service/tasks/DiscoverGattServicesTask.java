@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 
 /**
@@ -10,11 +11,13 @@ public class DiscoverGattServicesTask extends ServiceTask {
     public boolean needToConnect = false;
 
 
-    public DiscoverGattServicesTask() {
+    public DiscoverGattServicesTask(HasAndroidInjector injector) {
+        super(injector);
     }
 
 
-    public DiscoverGattServicesTask(boolean needToConnect) {
+    public DiscoverGattServicesTask(HasAndroidInjector injector, boolean needToConnect) {
+        super(injector);
         this.needToConnect = needToConnect;
     }
 

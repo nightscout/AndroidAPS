@@ -9,6 +9,7 @@ import android.os.IBinder;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
@@ -36,11 +37,11 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 public class RileyLinkMedtronicService extends RileyLinkService {
 
+    @Inject HasAndroidInjector injector;
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
     @Inject MedtronicUtil medtronicUtil;
 
     @Deprecated // TEDO remove this reference
-    private static RileyLinkMedtronicService instance;
     private static ServiceTask currentTask = null;
 
     // cache of most recently received set of pump history pages. Probably shouldn't be here.
@@ -51,12 +52,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
     public RileyLinkMedtronicService() {
         super();
-        instance = this;
-    }
-
-
-    public static RileyLinkMedtronicService getInstance() {
-        return instance;
     }
 
 
@@ -101,7 +96,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         rileyLinkUtil.setRileyLinkBLE(rileyLinkBLE);
 
         // init rileyLinkCommunicationManager
-        medtronicCommunicationManager = new MedtronicCommunicationManager(rfspy);
+        medtronicCommunicationManager = new MedtronicCommunicationManager(injector, rfspy);
 
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed");
         medtronicUtil.setMedtronicService(this);

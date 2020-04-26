@@ -109,7 +109,8 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
 
     public abstract void initPumpStatusData();
-
+    public abstract void resetRileyLinkConfiguration();
+    public abstract void doTuneUpDevice();
 
     @Override
     protected void onStart() {
@@ -125,7 +126,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> context.unbindService(serviceConnection), exception -> fabricPrivacy.logException(exception))
+                .subscribe(event -> context.unbindService(serviceConnection), fabricPrivacy::logException)
         );
         onStartCustomActions();
     }

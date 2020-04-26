@@ -40,6 +40,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -265,9 +266,9 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             if (treatment != null) {
 
                 if (MedtronicHistoryData.doubleBolusDebug)
-                    log.debug("DoubleBolusDebug: createTreatmentFromJsonIfNotExists:: medtronicPump={}", MedtronicUtil.getInstance().isMedtronicPump());
+                    log.debug("DoubleBolusDebug: createTreatmentFromJsonIfNotExists:: medtronicPump={}", MedtronicPumpPlugin.getPlugin().isEnabled());
 
-                if (!MedtronicUtil.getInstance().isMedtronicPump())
+                if (!MedtronicPumpPlugin.getPlugin().isEnabled())
                     createOrUpdate(treatment);
                 else
                     createOrUpdateMedtronic(treatment, true);

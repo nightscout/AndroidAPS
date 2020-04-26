@@ -72,7 +72,6 @@ public class MedtronicUtil {
 
     @Inject
     public MedtronicUtil(
-            Context context,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             RileyLinkUtil rileyLinkUtil
@@ -93,16 +92,6 @@ public class MedtronicUtil {
         return instance;
     }
 
-    public Gson getGsonInstance() {
-        return gsonInstance;
-    }
-
-
-    public Gson getGsonInstanceCore() {
-        return gsonInstanceCore;
-    }
-
-
     public LocalTime getTimeFrom30MinInterval(int interval) {
         if (interval % 2 == 0) {
             return new LocalTime(interval / 2, 0);
@@ -121,12 +110,6 @@ public class MedtronicUtil {
         int k = (b2 & 0xff) << 8 | b1 & 0xff;
         return k;
     }
-
-    public boolean isMedtronicPump() {
-        return MedtronicPumpPlugin.getPlugin().isEnabled(PluginType.PUMP);
-        //return ConfigBuilderPlugin.getPlugin().getActivePump().deviceID().equals("Medtronic");
-    }
-
 
     public byte[] getByteArrayFromUnsignedShort(int shortValue, boolean returnFixedSize) {
         byte highByte = (byte) (shortValue >> 8 & 0xFF);

@@ -46,6 +46,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Thread
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.*
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.queue.commands.*
@@ -277,6 +278,14 @@ open class AppModule {
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
+
+        // Medtronic
+        @ContributesAndroidInjector fun serviceTaskProvider(): ServiceTask
+        @ContributesAndroidInjector fun pumpTaskProvider(): PumpTask
+        @ContributesAndroidInjector fun discoverGattServicesTaskProvider(): DiscoverGattServicesTask
+        @ContributesAndroidInjector fun initializePumpManagerTaskProvider(): InitializePumpManagerTask
+        @ContributesAndroidInjector fun resetRileyLinkConfigurationTaskProvider(): ResetRileyLinkConfigurationTask
+        @ContributesAndroidInjector fun wakeAndTuneTaskProvider(): WakeAndTuneTask
 
         @Binds
         fun bindActivePluginProvider(pluginStore: PluginStore): ActivePluginProvider

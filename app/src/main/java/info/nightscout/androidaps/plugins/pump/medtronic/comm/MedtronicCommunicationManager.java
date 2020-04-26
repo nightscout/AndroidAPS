@@ -10,6 +10,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
@@ -70,8 +71,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     private boolean doWakeUpBeforeCommand = true;
 
 
-    public MedtronicCommunicationManager(RFSpy rfspy) {
-        super(rfspy);
+    public MedtronicCommunicationManager(HasAndroidInjector injector, RFSpy rfspy) {
+        super(injector, rfspy);
         medtronicCommunicationManager = this;
         this.medtronicConverter = new MedtronicConverter();
         this.pumpHistoryDecoder = new MedtronicPumpHistoryDecoder();
@@ -143,7 +144,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             long diff = System.currentTimeMillis() - MedtronicUtil.getInstance().getPumpStatus().lastConnection;
 
             if (diff > RILEYLINK_TIMEOUT) {
-                ServiceTaskExecutor.startTask(new WakeAndTuneTask());
+                ServiceTaskExecutor.startTask(new WakeAndTuneTask(injector));
             }
         }
 

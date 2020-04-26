@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import dagger.android.DaggerBroadcastReceiver;
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -42,6 +43,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  */
 public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
 
+    @Inject HasAndroidInjector injector;
     @Inject RileyLinkUtil rileyLinkUtil;
     @Inject SP sp;
 
@@ -171,7 +173,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             LOG.debug("RfSpy Radio version (CC110): " + rlVersion.name());
             this.serviceInstance.rileyLinkServiceData.versionCC110 = rlVersion;
 
-            ServiceTask task = new InitializePumpManagerTask(rileyLinkUtil.getTargetDevice());
+            ServiceTask task = new InitializePumpManagerTask(injector, rileyLinkUtil.getTargetDevice());
             ServiceTaskExecutor.startTask(task);
             if (isLoggingEnabled())
                 LOG.info("Announcing RileyLink open For business");
@@ -205,7 +207,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
         if (action.equals(RileyLinkConst.Intents.BluetoothConnected)) {
             if (isLoggingEnabled())
                 LOG.debug("Bluetooth - Connected");
-            ServiceTaskExecutor.startTask(new DiscoverGattServicesTask());
+            ServiceTaskExecutor.startTask(new DiscoverGattServicesTask(injector));
 
             return true;
 
@@ -214,7 +216,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
                 LOG.debug("Bluetooth - Reconnecting");
 
             serviceInstance.bluetoothInit();
-            ServiceTaskExecutor.startTask(new DiscoverGattServicesTask(true));
+            ServiceTaskExecutor.startTask(new DiscoverGattServicesTask(injector, true));
 
             return true;
         } else {
@@ -229,7 +231,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
 
         if (this.broadcastIdentifiers.get("TuneUp").contains(action)) {
             if (serviceInstance.getRileyLinkTargetDevice().isTuneUpEnabled()) {
-                ServiceTaskExecutor.startTask(new WakeAndTuneTask());
+                ServiceTaskExecutor.startTask(new WakeAndTuneTask(injector));
             }
             return true;
         } else {

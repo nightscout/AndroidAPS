@@ -3,6 +3,9 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
@@ -36,6 +39,7 @@ public abstract class RileyLinkCommunicationManager {
     private static final int SCAN_TIMEOUT = 1500;
     private static final int ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000; // 10 minutes
 
+    protected final HasAndroidInjector injector;
     protected final RFSpy rfspy;
     protected int receiverDeviceAwakeForMinutes = 1; // override this in constructor of specific implementation
     protected String receiverDeviceID; // String representation of receiver device (ex. Pump (xxxxxx) or Pod (yyyyyy))
@@ -49,7 +53,8 @@ public abstract class RileyLinkCommunicationManager {
     private int timeoutCount = 0;
 
 
-    public RileyLinkCommunicationManager(RFSpy rfspy) {
+    public RileyLinkCommunicationManager(HasAndroidInjector injector, RFSpy rfspy) {
+        this.injector = injector;
         this.rfspy = rfspy;
         this.rileyLinkServiceData = RileyLinkUtil.getInstance().getRileyLinkServiceData();
         RileyLinkUtil.getInstance().setRileyLinkCommunicationManager(this);
@@ -107,7 +112,7 @@ public abstract class RileyLinkCommunicationManager {
 
                     if (diff > ALLOWED_PUMP_UNREACHABLE) {
                         LOG.warn("We reached max time that Pump can be unreachable. Starting Tuning.");
-                        ServiceTaskExecutor.startTask(new WakeAndTuneTask());
+                        ServiceTaskExecutor.startTask(new WakeAndTuneTask(injector));
                         timeoutCount = 0;
                     }
                 }

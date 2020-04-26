@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.task
 
 import org.slf4j.Logger;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -23,14 +24,14 @@ public class InitializePumpManagerTask extends ServiceTask {
     private RileyLinkTargetDevice targetDevice;
     private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
-    public InitializePumpManagerTask(RileyLinkTargetDevice targetDevice) {
-        super();
+    public InitializePumpManagerTask(HasAndroidInjector injector, RileyLinkTargetDevice targetDevice) {
+        super(injector);
         this.targetDevice = targetDevice;
     }
 
 
-    public InitializePumpManagerTask(ServiceTransport transport) {
-        super(transport);
+    public InitializePumpManagerTask(HasAndroidInjector injector, ServiceTransport transport) {
+        super(injector, transport);
     }
 
 

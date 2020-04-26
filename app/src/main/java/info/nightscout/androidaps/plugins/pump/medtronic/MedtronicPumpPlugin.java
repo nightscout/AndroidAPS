@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.joda.time.LocalDateTime;
 
@@ -100,7 +101,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private final MedtronicPumpStatus medtronicPumpStatus;
 
     protected static MedtronicPumpPlugin plugin = null;
-    private RileyLinkMedtronicService medtronicService;
+    private RileyLinkMedtronicService rileyLinkMedtronicService;
     private MedtronicUIComm medtronicUIComm;
 
     // variables for handling statuses and history
@@ -156,13 +157,13 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             public void onServiceDisconnected(ComponentName name) {
                 aapsLogger.debug(LTag.PUMP, "RileyLinkMedtronicService is disconnected");
-                medtronicService = null;
+                rileyLinkMedtronicService = null;
             }
 
             public void onServiceConnected(ComponentName name, IBinder service) {
                 aapsLogger.debug(LTag.PUMP, "RileyLinkMedtronicService is connected");
                 RileyLinkMedtronicService.LocalBinder mLocalBinder = (RileyLinkMedtronicService.LocalBinder) service;
-                medtronicService = mLocalBinder.getServiceInstance();
+                rileyLinkMedtronicService = mLocalBinder.getServiceInstance();
 
                 new Thread(() -> {
 
@@ -213,7 +214,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         medtronicUtil.setPumpStatus(medtronicPumpStatus);
 
         medtronicPumpStatus.lastConnection = sp.getLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
-        medtronicPumpStatus.lastDataTime = new LocalDateTime(medtronicPumpStatus.lastConnection);
+        medtronicPumpStatus.lastDataTime = medtronicPumpStatus.lastConnection;
         medtronicPumpStatus.previousConnection = medtronicPumpStatus.lastConnection;
 
         medtronicPumpStatus.refreshConfiguration();
@@ -232,6 +233,15 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         migrateSettings();
 
+    }
+
+    @Override
+    public void resetRileyLinkConfiguration() {
+        rileyLinkMedtronicService.resetRileyLinkConfiguration();
+    }
+
+    @Override public void doTuneUpDevice() {
+        rileyLinkMedtronicService.doTuneUpDevice();
     }
 
     private void migrateSettings() {
@@ -306,9 +316,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     // Pump Plugin
 
     private boolean isServiceSet() {
-        return medtronicService != null;
+        return rileyLinkMedtronicService != null;
     }
 
+    @Deprecated
+    @Nullable
+    public RileyLinkMedtronicService getRileyLinkMedtronicService() {
+        return rileyLinkMedtronicService;
+    }
 
     @Override
     public boolean isInitialized() {
@@ -373,7 +388,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     public boolean isConnected() {
         if (displayConnectionMessages)
             aapsLogger.debug(LTag.PUMP, "MedtronicPumpPlugin::isConnected");
-        return isServiceSet() && medtronicService.isInitialized();
+        return isServiceSet() && rileyLinkMedtronicService.isInitialized();
     }
 
 
@@ -381,7 +396,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     public boolean isConnecting() {
         if (displayConnectionMessages)
             aapsLogger.debug(LTag.PUMP, "MedtronicPumpPlugin::isConnecting");
-        return !isServiceSet() || !medtronicService.isInitialized();
+        return !isServiceSet() || !rileyLinkMedtronicService.isInitialized();
     }
 
 
@@ -581,7 +596,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         if (errorCount >= 5) {
             aapsLogger.error("Number of error counts was 5 or more. Starting tunning.");
             setRefreshButtonEnabled(true);
-            ServiceTaskExecutor.startTask(new WakeAndTuneTask());
+            ServiceTaskExecutor.startTask(new WakeAndTuneTask(getInjector()));
             return;
         }
 
@@ -1518,7 +1533,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             case WakeUpAndTune: {
                 if (medtronicUtil.getPumpStatus().verifyConfiguration()) {
-                    ServiceTaskExecutor.startTask(new WakeAndTuneTask());
+                    ServiceTaskExecutor.startTask(new WakeAndTuneTask(getInjector()));
                 } else {
                     Intent i = new Intent(context, ErrorHelperActivity.class);
                     i.putExtra("soundid", R.raw.boluserror);
@@ -1538,7 +1553,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             break;
 
             case ResetRileyLinkConfiguration: {
-                ServiceTaskExecutor.startTask(new ResetRileyLinkConfigurationTask());
+                ServiceTaskExecutor.startTask(new ResetRileyLinkConfigurationTask(getInjector()));
             }
             break;
 
@@ -1557,7 +1572,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     }
 
 
-    public void setEnableCustomAction(MedtronicCustomActionType customAction, boolean isEnabled) {
+    private void setEnableCustomAction(MedtronicCustomActionType customAction, boolean isEnabled) {
 
         if (customAction == MedtronicCustomActionType.ClearBolusBlock) {
             this.customActionClearBolusBlock.setEnabled(isEnabled);

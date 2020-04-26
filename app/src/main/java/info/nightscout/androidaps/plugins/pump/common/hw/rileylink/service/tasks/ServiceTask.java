@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceTransport;
 
 /**
@@ -10,14 +11,19 @@ public class ServiceTask implements Runnable {
     private static final String TAG = "ServiceTask(base)";
     public boolean completed = false;
     protected ServiceTransport mTransport;
+    protected HasAndroidInjector injector;
 
 
-    public ServiceTask() {
+    public ServiceTask(HasAndroidInjector injector) {
+        this.injector = injector;
+        injector.androidInjector().inject(this);
         init(new ServiceTransport());
     }
 
 
-    public ServiceTask(ServiceTransport transport) {
+    public ServiceTask(HasAndroidInjector injector, ServiceTransport transport) {
+        this.injector = injector;
+        injector.androidInjector().inject(this);
         init(transport);
     }
 

@@ -112,7 +112,7 @@ public class MedtronicPumpStatus extends PumpStatus {
             createMedtronicDeviceTypeMap();
 
         this.lastConnection = sp.getLong(MedtronicConst.Statistics.LastGoodPumpCommunicationTime, 0L);
-        this.lastDataTime = new LocalDateTime(this.lastConnection);
+        this.lastDataTime = this.lastConnection;
     }
 
 
