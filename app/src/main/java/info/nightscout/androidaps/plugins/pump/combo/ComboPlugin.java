@@ -69,6 +69,7 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.InstanceId;
+import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -1404,8 +1405,7 @@ public class ComboPlugin extends PumpPluginBase implements PumpInterface, Constr
     }
 
     @Override
-    public void timeDateOrTimeZoneChanged() {
-
+    public void timezoneOrDSTChanged(TimeChangeType changeType) {
     }
 
 

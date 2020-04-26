@@ -14,6 +14,7 @@ import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.utils.TimeChangeType;
 
 /**
  * Created by mike on 04.06.2016.
@@ -115,5 +116,10 @@ public interface PumpInterface {
      * This method will be called when time or Timezone changes, and pump driver can then do a specific action (for
      * example update clock on pump).
      */
-    void timeDateOrTimeZoneChanged();
+    void timezoneOrDSTChanged(TimeChangeType timeChangeType);
+
+    /* Only used for pump types where hasCustomUnreachableAlertCheck=true */
+    default boolean isUnreachableAlertTimeoutExceeded(long alertTimeoutMilliseconds) {
+        return false;
+    }
 }

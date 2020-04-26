@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.content.Context;
-
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
@@ -39,7 +37,6 @@ public abstract class RileyLinkCommunicationManager {
     private static final int ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000; // 10 minutes
 
     protected final RFSpy rfspy;
-    protected final Context context;
     protected int receiverDeviceAwakeForMinutes = 1; // override this in constructor of specific implementation
     protected String receiverDeviceID; // String representation of receiver device (ex. Pump (xxxxxx) or Pod (yyyyyy))
     protected long lastGoodReceiverCommunicationTime = 0;
@@ -52,8 +49,7 @@ public abstract class RileyLinkCommunicationManager {
     private int timeoutCount = 0;
 
 
-    public RileyLinkCommunicationManager(Context context, RFSpy rfspy) {
-        this.context = context;
+    public RileyLinkCommunicationManager(RFSpy rfspy) {
         this.rfspy = rfspy;
         this.rileyLinkServiceData = RileyLinkUtil.getRileyLinkServiceData();
         RileyLinkUtil.setRileyLinkCommunicationManager(this);
@@ -66,7 +62,23 @@ public abstract class RileyLinkCommunicationManager {
 
 
     // All pump communications go through this function.
-    protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Class<E> clazz)
+    public <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Class<E> clazz)
+            throws RileyLinkCommunicationException {
+        return sendAndListen(msg, timeout_ms, null, clazz);
+    }
+
+    public <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Integer extendPreamble_ms, Class<E> clazz)
+            throws RileyLinkCommunicationException {
+        return sendAndListen(msg, timeout_ms, 0, extendPreamble_ms, clazz);
+    }
+
+    // For backward compatibility
+    public <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, Integer extendPreamble_ms, Class<E> clazz)
+            throws RileyLinkCommunicationException {
+        return sendAndListen(msg, timeout_ms, repeatCount, 0, extendPreamble_ms, clazz);
+    }
+
+    public <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms, Class<E> clazz)
             throws RileyLinkCommunicationException {
 
         if (showPumpMessages) {
@@ -74,11 +86,11 @@ public abstract class RileyLinkCommunicationManager {
                 LOG.info("Sent:" + ByteUtil.shortHexString(msg.getTxData()));
         }
 
-        RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(msg.getTxData()), timeout_ms);
+        RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(msg.getTxData()),
+                (byte)0, (byte)repeatCount, (byte)0, (byte)0, timeout_ms, (byte)retryCount, extendPreamble_ms);
 
         RadioResponse radioResponse = rfSpyResponse.getRadioResponse();
-
-        E response = createResponseMessage(rfSpyResponse.getRadioResponse().getPayload(), clazz);
+        E response = createResponseMessage(radioResponse.getPayload(), clazz);
 
         if (response.isValid()) {
             // Mark this as the last time we heard from the pump.
@@ -88,14 +100,16 @@ public abstract class RileyLinkCommunicationManager {
                     rfSpyResponse.wasTimeout(), rfSpyResponse.isUnknownCommand(), rfSpyResponse.isInvalidParam());
 
             if (rfSpyResponse.wasTimeout()) {
-                timeoutCount++;
+                if (hasTunning()) {
+                    timeoutCount++;
 
-                long diff = System.currentTimeMillis() - pumpStatus.lastConnection;
+                    long diff = System.currentTimeMillis() - pumpStatus.lastConnection;
 
-                if (diff > ALLOWED_PUMP_UNREACHABLE) {
-                    LOG.warn("We reached max time that Pump can be unreachable. Starting Tuning.");
-                    ServiceTaskExecutor.startTask(new WakeAndTuneTask());
-                    timeoutCount = 0;
+                    if (diff > ALLOWED_PUMP_UNREACHABLE) {
+                        LOG.warn("We reached max time that Pump can be unreachable. Starting Tuning.");
+                        ServiceTaskExecutor.startTask(new WakeAndTuneTask());
+                        timeoutCount = 0;
+                    }
                 }
 
                 throw new RileyLinkCommunicationException(RileyLinkBLEError.Timeout);
@@ -125,6 +139,9 @@ public abstract class RileyLinkCommunicationManager {
         return rfspy != null ? rfspy.notConnectedCount : 0;
     }
 
+    public boolean hasTunning() {
+        return true;
+    }
 
 
     // FIXME change wakeup
@@ -405,7 +422,9 @@ public abstract class RileyLinkCommunicationManager {
         lastGoodReceiverCommunicationTime = System.currentTimeMillis();
 
         SP.putLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, lastGoodReceiverCommunicationTime);
-        pumpStatus.setLastCommunicationToNow();
+        if(pumpStatus != null) {
+            pumpStatus.setLastCommunicationToNow();
+        }
     }
 
 
@@ -437,4 +456,7 @@ public abstract class RileyLinkCommunicationManager {
         return L.isEnabled(L.PUMPCOMM);
     }
 
+    public void setPumpStatus(PumpStatus pumpStatus) {
+        this.pumpStatus = pumpStatus;
+    }
 }

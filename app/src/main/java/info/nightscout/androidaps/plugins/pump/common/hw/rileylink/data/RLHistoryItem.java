@@ -97,7 +97,8 @@ public class RLHistoryItem {
     public enum RLHistoryItemSource {
         RileyLink("RileyLink"), //
         MedtronicPump("Medtronic"), //
-        MedtronicCommand("Medtronic");
+        MedtronicCommand("Medtronic"), //
+        OmnipodCommand("Omnipod");
 
         private String desc;
 
@@ -109,6 +110,14 @@ public class RLHistoryItem {
 
         public String getDesc() {
             return desc;
+        }
+    }
+
+    public static class Comparator implements java.util.Comparator<RLHistoryItem> {
+
+        @Override
+        public int compare(RLHistoryItem o1, RLHistoryItem o2) {
+            return o2.dateTime.compareTo(o1.dateTime);
         }
     }
 

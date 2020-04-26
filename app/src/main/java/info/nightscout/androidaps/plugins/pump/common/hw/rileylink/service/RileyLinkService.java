@@ -48,7 +48,6 @@ public abstract class RileyLinkService extends DaggerService {
     @Override
     public void onCreate() {
         super.onCreate();
-        //LOG.debug("onCreate");
 
         RileyLinkUtil.setContext(this.context);
         RileyLinkUtil.setRileyLinkService(this);
@@ -61,8 +60,6 @@ public abstract class RileyLinkService extends DaggerService {
 
         bluetoothStateReceiver = new RileyLinkBluetoothStateReceiver();
         bluetoothStateReceiver.registerBroadcasts(this);
-
-        //LOG.debug("onCreate(): It's ALIVE!");
     }
 
     /**
