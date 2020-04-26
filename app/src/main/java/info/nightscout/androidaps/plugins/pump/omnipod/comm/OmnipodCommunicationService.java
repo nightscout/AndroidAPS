@@ -15,6 +15,15 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMe
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.OmnipodAction;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommunicationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPacketTypeException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalResponseException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSequenceNumberException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceOutOfSyncException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceResyncException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NotEnoughDataException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodFaultException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodReturnedErrorResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodPacket;
@@ -28,15 +37,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodState;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommunicationException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPacketTypeException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalResponseException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceOutOfSyncException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceResyncException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NotEnoughDataException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodFaultException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodReturnedErrorResponseException;
 
 /**
  * Created by andy on 6/29/18.
@@ -153,6 +154,8 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             packetAddress = addressOverride;
         }
 
+        podState.increaseMessageNumber();
+
         boolean firstPacket = true;
         byte[] encodedMessage;
         // this does not work well with the deactivate pod command, we somehow either
@@ -207,7 +210,6 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
         }
 
         if (response.getPacketType() == PacketType.ACK) {
-            podState.increasePacketNumber(1);
             throw new IllegalPacketTypeException(null, PacketType.ACK);
         }
 
@@ -216,6 +218,9 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
         while (receivedMessage == null) {
             try {
                 receivedMessage = OmnipodMessage.decodeMessage(receivedMessageData);
+                if (receivedMessage.getSequenceNumber() != podState.getMessageNumber()) {
+                    throw new IllegalSequenceNumberException(podState.getMessageNumber(), receivedMessage.getSequenceNumber());
+                }
             } catch (NotEnoughDataException ex) {
                 // Message is (probably) not complete yet
                 OmnipodPacket ackForCon = createAckPacket(podState, packetAddress, ackAddressOverride);
@@ -235,8 +240,6 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             }
         }
 
-        podState.increaseMessageNumber(2);
-
         ackUntilQuiet(podState, packetAddress, ackAddressOverride);
 
         List<MessageBlock> messageBlocks = receivedMessage.getMessageBlocks();
@@ -250,7 +253,13 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             }
         }
 
-        return messageBlocks.get(0);
+        MessageBlock messageBlock = messageBlocks.get(0);
+
+        if (messageBlock.getType() != MessageBlockType.ERROR_RESPONSE) {
+            podState.increaseMessageNumber();
+        }
+
+        return messageBlock;
     }
 
     private OmnipodPacket createAckPacket(PodState podState, Integer packetAddress, Integer messageAddress) {
@@ -286,7 +295,7 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
         }
 
-        podState.increasePacketNumber(1);
+        podState.increasePacketNumber();
     }
 
     private OmnipodPacket exchangePackets(PodState podState, OmnipodPacket packet) {
@@ -300,6 +309,8 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
     private OmnipodPacket exchangePackets(PodState podState, OmnipodPacket packet, int repeatCount, int responseTimeoutMilliseconds, int exchangeTimeoutMilliseconds, int preambleExtensionMilliseconds) {
         long timeoutTime = System.currentTimeMillis() + exchangeTimeoutMilliseconds;
 
+        podState.increasePacketNumber();
+
         while (System.currentTimeMillis() < timeoutTime) {
             OmnipodPacket response = null;
             try {
@@ -311,17 +322,34 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             } catch (Exception ex) {
                 throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
             }
-            if (response == null || !response.isValid()) {
+            if (response == null) {
+                if (isLoggingEnabled()) {
+                    LOG.debug("exchangePackets response is null");
+                }
+                continue;
+            } else if (!response.isValid()) {
+                if (isLoggingEnabled()) {
+                    LOG.debug("exchangePackets response is invalid: " + response);
+                }
                 continue;
             }
             if (response.getAddress() != packet.getAddress()) {
-                continue;
-            }
-            if (response.getSequenceNumber() != ((podState.getPacketNumber() + 1) & 0b11111)) {
+                if (isLoggingEnabled()) {
+                    LOG.debug("Packet address " + response.getAddress() + " doesn't match " + packet.getAddress());
+                }
                 continue;
             }
 
-            podState.increasePacketNumber(2);
+            if (response.getSequenceNumber() != podState.getPacketNumber()) {
+                if (isLoggingEnabled()) {
+                    LOG.debug("Packet sequence number " + response.getSequenceNumber() + " does not match " + podState.getPacketNumber());
+                }
+                continue;
+            }
+
+            // Once we have verification that the POD heard us, we can increment our counters
+            podState.increasePacketNumber();
+
             return response;
         }
         throw new CommunicationException(CommunicationException.Type.TIMEOUT);

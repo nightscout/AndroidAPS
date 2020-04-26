@@ -971,9 +971,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
                 // Don't trigger an alert when we exceeded the thresholds, but the last communication was successful
                 // This happens when we simply didn't need to send any commands to the pump
-                return false;
             }
-
         }
 
         return false;
