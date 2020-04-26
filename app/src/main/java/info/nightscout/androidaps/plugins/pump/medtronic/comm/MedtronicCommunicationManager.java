@@ -62,10 +62,10 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     @Inject MedtronicPumpStatus medtronicPumpStatus;
 
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
-    private static final int MAX_COMMAND_TRIES = 3;
-    private static final int DEFAULT_TIMEOUT = 2000;
-    private static final long RILEYLINK_TIMEOUT = 15 * 60 * 1000; // 15 min
+    private final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
+    private final int MAX_COMMAND_TRIES = 3;
+    private final int DEFAULT_TIMEOUT = 2000;
+    private final long RILEYLINK_TIMEOUT = 15 * 60 * 1000; // 15 min
 
     static MedtronicCommunicationManager medtronicCommunicationManager;
     String errorMessage;
@@ -102,6 +102,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     }
 
 
+    @Override
     public boolean isDeviceReachable() {
         return isDeviceReachable(false);
     }

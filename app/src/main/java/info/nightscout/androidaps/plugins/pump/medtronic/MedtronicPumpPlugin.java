@@ -110,7 +110,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private Map<MedtronicStatusRefreshType, Long> statusRefreshMap = new HashMap<>();
     private boolean isInitialized = false;
     private MedtronicHistoryData medtronicHistoryData;
-    private MedtronicCommunicationManager medtronicCommunicationManager;
     private PumpHistoryEntry lastPumpHistoryEntry;
 
     public static boolean isBusy = false;
@@ -316,9 +315,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         return rileyLinkMedtronicService != null;
     }
 
-    @Deprecated
     @Nullable
-    public RileyLinkMedtronicService getRileyLinkMedtronicService() {
+    public RileyLinkMedtronicService getRileyLinkService() {
         return rileyLinkMedtronicService;
     }
 
@@ -432,7 +430,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             return false;
         }
 
-        return (!medtronicCommunicationManager.isDeviceReachable());
+        return (!rileyLinkMedtronicService.getDeviceCommunicationManager().isDeviceReachable());
     }
 
 
@@ -537,10 +535,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         aapsLogger.info(LTag.PUMP, getLogPrefix() + "initializePump - start");
 
-        if (medtronicCommunicationManager == null) {
-            medtronicCommunicationManager = MedtronicCommunicationManager.getInstance();
-            medtronicCommunicationManager.setDoWakeUpBeforeCommand(false);
-        }
+        rileyLinkMedtronicService.getDeviceCommunicationManager().setDoWakeUpBeforeCommand(false);
 
         setRefreshButtonEnabled(false);
 
@@ -633,10 +628,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             return isProfileSame(profile);
         } else if (medtronicPumpStatus.basalProfileStatus == BasalProfileStatus.ProfileChanged) {
             return false;
-        } else {
-
         }
-
 
         return (medtronicPumpStatus.basalProfileStatus != BasalProfileStatus.ProfileOK) || isProfileSame(profile);
     }

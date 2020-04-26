@@ -28,6 +28,10 @@ class AAPSLoggerDebug : AAPSLogger {
         Log.w(tag.tag, message)
     }
 
+    override fun warn(tag: LTag, format: String, vararg arguments: Any?) {
+        Log.w(tag.tag, String.format(format, arguments))
+    }
+
     override fun info(tag: LTag, message: String) {
         Log.i(tag.tag, message)
     }

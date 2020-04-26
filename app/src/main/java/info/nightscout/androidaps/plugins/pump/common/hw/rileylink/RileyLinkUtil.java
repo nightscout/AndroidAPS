@@ -190,17 +190,6 @@ public class RileyLinkUtil {
         this.rileyLinkService = rileyLinkService;
     }
 
-
-    public RileyLinkCommunicationManager getRileyLinkCommunicationManager() {
-        return rileyLinkCommunicationManager;
-    }
-
-
-    void setRileyLinkCommunicationManager(RileyLinkCommunicationManager rileyLinkCommunicationManager) {
-        this.rileyLinkCommunicationManager = rileyLinkCommunicationManager;
-    }
-
-
     public static boolean sendNotification(ServiceNotification notification, Integer clientHashcode) {
         return false;
     }

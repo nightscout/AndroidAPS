@@ -8,13 +8,11 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by andy on 6/14/18.
@@ -32,13 +30,11 @@ public class MedtronicUIComm {
 
     @Inject
     public MedtronicUIComm(
-            HasAndroidInjector injector,
-            AAPSLogger aapsLogger,
-            RxBusWrapper rxBus,
-            ResourceHelper resourceHelper,
-            RileyLinkUtil rileyLinkUtil,
-            MedtronicUtil medtronicUtil,
-            MedtronicUIPostprocessor medtronicUIPostprocessor
+            @NotNull HasAndroidInjector injector,
+            @NotNull AAPSLogger aapsLogger,
+            @NotNull RileyLinkUtil rileyLinkUtil,
+            @NotNull MedtronicUtil medtronicUtil,
+            @NotNull MedtronicUIPostprocessor medtronicUIPostprocessor
     ) {
         this.injector = injector;
         this.aapsLogger = aapsLogger;

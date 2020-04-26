@@ -2,9 +2,14 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.task
 
 import org.slf4j.Logger;
 
+import javax.inject.Inject;
+
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
@@ -19,6 +24,8 @@ import info.nightscout.androidaps.utils.SP;
  * This class is intended to be run by the Service, for the Service. Not intended for clients to run.
  */
 public class InitializePumpManagerTask extends ServiceTask {
+
+    @Inject ActivePluginProvider activePlugin;
 
     private static final String TAG = "InitPumpManagerTask";
     private RileyLinkTargetDevice targetDevice;
@@ -54,17 +61,19 @@ public class InitializePumpManagerTask extends ServiceTask {
             lastGoodFrequency = RileyLinkUtil.getInstance().getRileyLinkServiceData().lastGoodFrequency;
         }
 
+        RileyLinkCommunicationManager rileyLinkCommunicationManager = ((PumpPluginAbstract)activePlugin.getActivePump()).getRileyLinkService().getDeviceCommunicationManager();
+
         if ((lastGoodFrequency > 0.0d)
-                && RileyLinkUtil.getInstance().getRileyLinkCommunicationManager().isValidFrequency(lastGoodFrequency)) {
+                && rileyLinkCommunicationManager.isValidFrequency(lastGoodFrequency)) {
 
             RileyLinkUtil.getInstance().setServiceState(RileyLinkServiceState.RileyLinkReady);
 
             if (L.isEnabled(L.PUMPCOMM))
                 LOG.info("Setting radio frequency to {} MHz", lastGoodFrequency);
 
-            RileyLinkUtil.getInstance().getRileyLinkCommunicationManager().setRadioFrequencyForPump(lastGoodFrequency);
+            rileyLinkCommunicationManager.setRadioFrequencyForPump(lastGoodFrequency);
 
-            boolean foundThePump = RileyLinkUtil.getInstance().getRileyLinkCommunicationManager().tryToConnectToDevice();
+            boolean foundThePump = rileyLinkCommunicationManager.tryToConnectToDevice();
 
             if (foundThePump) {
                 RileyLinkUtil.getInstance().setServiceState(RileyLinkServiceState.PumpConnectorReady);

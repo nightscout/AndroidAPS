@@ -125,7 +125,6 @@ public abstract class RileyLinkService extends DaggerService {
 
     public abstract RileyLinkCommunicationManager getDeviceCommunicationManager();
 
-
     // Here is where the wake-lock begins:
     // We've received a service startCommand, we grab the lock.
     @Override
@@ -236,7 +235,7 @@ public abstract class RileyLinkService extends DaggerService {
             // error tuning pump, pump not present ??
             rileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorError, RileyLinkError.TuneUpOfDeviceFailed);
         } else {
-            rileyLinkUtil.getRileyLinkCommunicationManager().clearNotConnectedCount();
+            getDeviceCommunicationManager().clearNotConnectedCount();
             rileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorReady);
         }
     }

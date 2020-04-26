@@ -98,8 +98,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
-    @Override
-    public RileyLinkCommunicationManager getDeviceCommunicationManager() {
+    public MedtronicCommunicationManager getDeviceCommunicationManager() {
         return this.medtronicCommunicationManager;
     }
 
