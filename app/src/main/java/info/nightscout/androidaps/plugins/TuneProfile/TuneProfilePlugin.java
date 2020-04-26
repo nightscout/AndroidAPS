@@ -112,6 +112,7 @@ public class TuneProfilePlugin extends PluginBase {
     public static String result ="Press Run";
     public static Date lastRun=null;
     public boolean nsDataDownloaded = false;
+    private PrepOutput prepOutput=null;
 
 //    public TuneProfile() throws IOException {
 //    }
@@ -806,6 +807,11 @@ public class TuneProfilePlugin extends PluginBase {
             }
             CSFGlucoseData = new ArrayList<>();
         }
+        prepOutput = new PrepOutput();
+        prepOutput.CRData=CRData;
+        prepOutput.CSFGlucoseData=CSFGlucoseData;
+        prepOutput.ISFGlucoseData=ISFGlucoseData;
+        prepOutput.basalGlucoseData=basalGlucoseData;
 
         log.debug("CRData: "+CRData.size());
         log.debug("CSFGlucoseData: "+CSFGlucoseData.size());
@@ -1374,7 +1380,7 @@ public class TuneProfilePlugin extends PluginBase {
                     categorizeBGDatums(glucoseStart, glucoseEnd);
 
                     //PrepOutput prepOutput = Prep.generate(opts);
-                    //FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(4));
+                    FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(4));
 
                     tuneAllTheThings();
                 } catch (JSONException e) {
