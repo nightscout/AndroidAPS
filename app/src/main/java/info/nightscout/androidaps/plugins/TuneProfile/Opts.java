@@ -199,15 +199,15 @@ public class Opts {
             for (int h = 0; h < 24; h++) {
                 String time;
                 time = (h<10 ? "0"+ h : h)  + ":00:00";
-                basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", profile.getBasal(h*secondfrommidnight)));
+                basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", getProfileBasal(h)));
             };
             json.put("basalprofile", basals);
             int isfvalue = (int) profile.getIsfMgdl();
             json.put("isfProfile",new JSONObject().put("sensitivities",new JSONArray().put(new JSONObject().put("i",0).put("start","00:00:00").put("sensitivity",isfvalue).put("offset",0).put("x",0).put("endoffset",1440))));
             // json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("carb_ratio", 0d))));
             json.put("carb_ratio", profile.getIc());
-            json.put("autosens_max", SafeParse.stringToDouble(MainApp.gs(R.string.key_openapsama_autosens_max)));
-            json.put("autosens_min", SafeParse.stringToDouble(MainApp.gs(R.string.key_openapsama_autosens_min)));
+            json.put("autosens_max", SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
+            json.put("autosens_min", SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")));
             if (insulinInterface.getId() == InsulinInterface.OREF_ULTRA_RAPID_ACTING)
                 json.put("curve","ultra-rapid");
             else if (insulinInterface.getId() == InsulinInterface.OREF_RAPID_ACTING)
