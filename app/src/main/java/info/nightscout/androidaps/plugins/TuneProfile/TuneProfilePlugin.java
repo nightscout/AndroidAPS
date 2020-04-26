@@ -1373,8 +1373,8 @@ public class TuneProfilePlugin extends PluginBase {
                     log.debug("NSService asked for data from "+formatDate(new Date(glucoseStart))+" \nto "+formatDate(new Date(glucoseEnd)));
                     categorizeBGDatums(glucoseStart, glucoseEnd);
 
-                    PrepOutput prepOutput = Prep.generate(opts);
-                    FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(4));
+                    //PrepOutput prepOutput = Prep.generate(opts);
+                    //FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(4));
 
                     tuneAllTheThings();
                 } catch (JSONException e) {
