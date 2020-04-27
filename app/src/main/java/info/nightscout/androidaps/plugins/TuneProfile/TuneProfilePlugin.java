@@ -88,7 +88,6 @@ import java.util.List;
 
 public class TuneProfilePlugin extends PluginBase {
     // Turn on download of SGV and Treatments from NS or use local data
-    private boolean useNSData = true;
 
     private static TuneProfilePlugin tuneProfile = null;
     private static Logger log = LoggerFactory.getLogger(TuneProfilePlugin.class);
@@ -107,7 +106,6 @@ public class TuneProfilePlugin extends PluginBase {
     private static LongSparseArray<IobTotal> iobTable = new LongSparseArray<>(); // oldest at index 0
     private static Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
     private static Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
-    private NSService nsService = new NSService();
     public static final int autotuneStartHour = 4;
     public static String result ="Press Run";
     public static Date lastRun=null;
@@ -303,9 +301,7 @@ public class TuneProfilePlugin extends PluginBase {
         // TODO: Although the data from NS should be sorted maybe we need to sort it
         // sortBGdata
         // sort treatments
-        log.debug("NSService should receive "+new Date(from)+" to "+new Date(to));
         //starting variable at 0
-        //TODO: philoul Check if line below is ok
         boolean categorize_uam_as_basal = SP.getBoolean("categorize_uam_as_basal", false);
         List<BgReading> sgv = new ArrayList<BgReading>();
         CSFGlucoseData = new ArrayList<BGDatum>();
@@ -317,33 +313,17 @@ public class TuneProfilePlugin extends PluginBase {
 
         int boluses = 0;
         int maxCarbs = 0;
-        if (useNSData) {
-            //glucosedata is sgv
-            NSService nsService = new NSService();
-            log.debug("(2)NSService should receive " + new Date(from) + " to " + new Date(to));
-            nsService.setPeriod(from, to);
-            nsService.execute();
 
-            while (!nsService.jobFinished) {
-                // wait for the background job to finish before asking for SGV
-                nsDataDownloaded = nsService.jobFinished;
-            }
-            nsDataDownloaded = true;
-            sgv = nsService.getSgv();
-        } else {
-            sgv = MainApp.getDbHelper().getBgreadingsDataFromTime(from, to, false);
-        }
+        sgv = MainApp.getDbHelper().getBgreadingsDataFromTime(from, to, false);
 
         if (sgv.size() < 1) {
             log.debug("No SGV data");
             return;
         }
 
-        if (useNSData) {
-            treatments = nsService.getTreatments();
-        } else {
-            treatments = TreatmentsPlugin.getPlugin().getTreatmentsFromHistory();
-        }
+
+        treatments = TreatmentsPlugin.getPlugin().getTreatmentsFromHistory();
+
 
         log.debug("Treatmets size: "+treatments.size());
         //trim treatments size
@@ -746,7 +726,7 @@ public class TuneProfilePlugin extends PluginBase {
             // debug line to print out all the things
 //            BGDateArray = BGDate.toString().split(" ");
 //            BGTime = BGDateArray[4];
-//            log.debug(absorbing+" mealCOB: "+mealCOB+" mealCarbs: "+mealCarbs+" basalBGI: "+round(basalBGI,1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
+            log.debug(absorbing+" mealCOB: "+mealCOB+" mealCarbs: "+mealCarbs+" basalBGI: "+round(basalBGI,1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
 
 //        try {
@@ -1386,8 +1366,7 @@ public class TuneProfilePlugin extends PluginBase {
                     FS.createAutotunefile("ns-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.nsTreatmenttoJSON().toString(4).replace("\\/", "/"));
 
                     log.debug("Day "+i+" of "+daysBack);
-                    //log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
-                    log.debug("NSService asked for data from "+formatDate(new Date(glucoseStart))+" \nto "+formatDate(new Date(glucoseEnd)));
+
                     categorizeBGDatums(glucoseStart, glucoseEnd);
 
                     //PrepOutput prepOutput = Prep.generate(opts);

@@ -16,13 +16,11 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.plugins.TuneProfile.BGDatum;
 import info.nightscout.androidaps.plugins.TuneProfile.CRDatum;
-import info.nightscout.androidaps.plugins.TuneProfile.NSService;
 import info.nightscout.androidaps.plugins.TuneProfile.Opts;
 import info.nightscout.androidaps.plugins.TuneProfile.PrepOutput;
 import info.nightscout.androidaps.plugins.TuneProfile.TuneProfilePlugin;
@@ -40,8 +38,6 @@ public class Prep {
     private boolean useNSData = false;
     public boolean nsDataDownloaded = false;
     private static Logger log = LoggerFactory.getLogger(TuneProfilePlugin.class);
-
-    private NSService nsService = new NSService();
 
     public static PrepOutput categorizeBGDatums(Opts opts) throws JSONException, ParseException, IOException {
         List<Treatment> treatments = opts.treatments;
@@ -90,7 +86,6 @@ public class Prep {
 
   */
 
-        log.debug("NSService should receive " + new Date(opts.start) + " to " + new Date(opts.end));
 
         int boluses = 0;
         int maxCarbs = 0;
