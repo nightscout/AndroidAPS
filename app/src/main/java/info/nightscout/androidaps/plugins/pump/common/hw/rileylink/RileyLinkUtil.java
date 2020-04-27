@@ -32,7 +32,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 public class RileyLinkUtil {
 
     private List<RLHistoryItem> historyRileyLink = new ArrayList<>();
-    public RileyLinkCommunicationManager rileyLinkCommunicationManager;
     private ServiceTask currentTask;
 
     private RileyLinkEncodingType encoding;
@@ -40,16 +39,6 @@ public class RileyLinkUtil {
 
     @Inject
     public RileyLinkUtil() {
-        instance = this;
-    }
-
-    private static RileyLinkUtil instance;
-
-    // TODO: replace by injection
-    @Deprecated
-    public static RileyLinkUtil getInstance() {
-        if (instance == null) throw new IllegalStateException("RileyLinkUtil not initialized");
-        return instance;
     }
 
     public RileyLinkEncodingType getEncoding() {
@@ -113,7 +102,6 @@ public class RileyLinkUtil {
     }
 
 
-    @Deprecated
     public static BleAdvertisedData parseAdertisedData(byte[] advertisedData) {
         List<UUID> uuids = new ArrayList<UUID>();
         String name = null;

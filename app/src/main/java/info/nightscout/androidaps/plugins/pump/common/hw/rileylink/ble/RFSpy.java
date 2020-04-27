@@ -32,7 +32,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
@@ -42,12 +42,14 @@ public class RFSpy {
 
     @Inject AAPSLogger aapsLogger;
     @Inject ResourceHelper resourceHelper;
+    @Inject SP sp;
     @Inject RileyLinkServiceData rileyLinkServiceData;
+    @Inject RileyLinkUtil rileyLinkUtil;
 
     private final HasAndroidInjector injector;
 
-    public static final long RILEYLINK_FREQ_XTAL = 24000000;
-    public static final int EXPECTED_MAX_BLUETOOTH_LATENCY_MS = 7500; // 1500
+    private static final long RILEYLINK_FREQ_XTAL = 24000000;
+    private static final int EXPECTED_MAX_BLUETOOTH_LATENCY_MS = 7500; // 1500
     public int notConnectedCount = 0;
     private RileyLinkBLE rileyLinkBle;
     private RFSpyReader reader;
@@ -56,7 +58,7 @@ public class RFSpy {
     private UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
     private UUID responseCountUUID = UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT);
     private String bleVersion; // We don't use it so no need of sofisticated logic
-    Double currentFrequencyMHz;
+    private Double currentFrequencyMHz;
 
 
     public RFSpy(HasAndroidInjector injector, RileyLinkBLE rileyLinkBle) {
@@ -360,7 +362,7 @@ public class RFSpy {
         RileyLinkEncodingType encoding = RileyLinkEncodingType.FourByteSixByteLocal;
 
         if (RileyLinkFirmwareVersion.isSameVersion(rileyLinkServiceData.firmwareVersion, RileyLinkFirmwareVersion.Version2AndHigher)) {
-            if (SP.getString(MedtronicConst.Prefs.Encoding, "None").equals(resourceHelper.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink))) {
+            if (sp.getString(MedtronicConst.Prefs.Encoding, "None").equals(resourceHelper.gs(R.string.key_medtronic_pump_encoding_4b6b_rileylink))) {
                 encoding = RileyLinkEncodingType.FourByteSixByteRileyLink;
             }
         }
@@ -387,7 +389,7 @@ public class RFSpy {
 
         if (resp.isOK()) {
             reader.setRileyLinkEncodingType(encoding);
-            RileyLinkUtil.getInstance().setEncoding(encoding);
+            rileyLinkUtil.setEncoding(encoding);
         }
 
         return resp;

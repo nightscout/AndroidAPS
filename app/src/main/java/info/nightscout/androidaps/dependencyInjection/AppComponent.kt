@@ -34,6 +34,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SendAndListen
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SetPreamble
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioPacket
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioResponse
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.*
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
@@ -209,6 +210,7 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectRFSpy(rfSpy: RFSpy)
     fun injectSendAndListen(sendAndListen: SendAndListen)
     fun injectSetPreamble(setPreamble: SetPreamble)
+    fun injectRadioPacket(radioPacket: RadioPacket)
 
     @Component.Builder
     interface Builder {

@@ -86,7 +86,7 @@ public abstract class RileyLinkCommunicationManager {
             aapsLogger.info(LTag.PUMPBTCOMM, "Sent:" + ByteUtil.shortHexString(msg.getTxData()));
         }
 
-        RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(msg.getTxData()),
+        RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(injector, msg.getTxData()),
                 (byte) 0, (byte) repeatCount, (byte) 0, (byte) 0, timeout_ms, (byte) retryCount, extendPreamble_ms);
 
         RadioResponse radioResponse = rfSpyResponse.getRadioResponse(injector);
@@ -159,7 +159,7 @@ public abstract class RileyLinkCommunicationManager {
             aapsLogger.info(LTag.PUMPBTCOMM, "Waking pump...");
 
             byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData); // simple
-            RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 200,
+            RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(injector, pumpMsgContent), (byte) 0, (byte) 200,
                     (byte) 0, (byte) 0, 25000, (byte) 0);
             aapsLogger.info(LTag.PUMPBTCOMM, "wakeup: raw response is " + ByteUtil.shortHexString(resp.getRaw()));
 
@@ -238,7 +238,7 @@ public abstract class RileyLinkCommunicationManager {
             for (int j = 0; j < tries; j++) {
 
                 byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData);
-                RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 0,
+                RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(injector, pumpMsgContent), (byte) 0, (byte) 0,
                         (byte) 0, (byte) 0, 1250, (byte) 0);
                 if (resp.wasTimeout()) {
                     aapsLogger.error(LTag.PUMPBTCOMM, "scanForPump: Failed to find pump at frequency {}", frequencies[i]);
@@ -326,7 +326,7 @@ public abstract class RileyLinkCommunicationManager {
         rfspy.setBaseFrequency(freqMHz);
         // RLMessage msg = makeRLMessage(RLMessageType.ReadSimpleData);
         byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData);
-        RadioPacket pkt = new RadioPacket(pumpMsgContent);
+        RadioPacket pkt = new RadioPacket(injector, pumpMsgContent);
         RFSpyResponse resp = rfspy.transmitThenReceive(pkt, (byte) 0, (byte) 0, (byte) 0, (byte) 0, SCAN_TIMEOUT, (byte) 0);
         if (resp.wasTimeout()) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "tune_tryFrequency: no pump response at frequency {}", freqMHz);

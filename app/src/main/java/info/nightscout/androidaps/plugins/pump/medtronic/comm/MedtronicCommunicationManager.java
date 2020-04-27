@@ -150,7 +150,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         PumpDeviceState state = medtronicPumpStatus.getPumpDeviceState();
 
         byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData); // simple
-        RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 200,
+        RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(injector, pumpMsgContent), (byte) 0, (byte) 200,
                 (byte) 0, (byte) 0, 25000, (byte) 0);
         aapsLogger.info(LTag.PUMPBTCOMM, "wakeup: raw response is " + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
 

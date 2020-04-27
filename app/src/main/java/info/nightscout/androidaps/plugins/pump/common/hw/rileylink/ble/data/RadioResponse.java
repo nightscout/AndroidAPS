@@ -25,6 +25,7 @@ public class RadioResponse {
 
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;
+    @Inject RileyLinkUtil rileyLinkUtil;
 
     private boolean decodedOK = false;
     public int rssi;
@@ -98,7 +99,7 @@ public class RadioResponse {
                 return;
             }
 
-            switch (RileyLinkUtil.getInstance().getEncoding()) {
+            switch (rileyLinkUtil.getEncoding()) {
 
                 case Manchester:
                 case FourByteSixByteRileyLink: {
@@ -108,7 +109,7 @@ public class RadioResponse {
                 break;
 
                 case FourByteSixByteLocal: {
-                    byte[] decodeThis = RileyLinkUtil.getInstance().getEncoding4b6b().decode4b6b(encodedPayload);
+                    byte[] decodeThis = rileyLinkUtil.getEncoding4b6b().decode4b6b(encodedPayload);
 
                     if (decodeThis != null && decodeThis.length > 2) {
                         decodedOK = true;
@@ -127,7 +128,7 @@ public class RadioResponse {
                 break;
 
                 default:
-                    throw new NotImplementedException("this {" + RileyLinkUtil.getInstance().getEncoding().toString()
+                    throw new NotImplementedException("this {" + rileyLinkUtil.getEncoding().toString()
                             + "} encoding is not supported");
             }
         } catch (NumberFormatException e) {
