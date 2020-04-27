@@ -1757,6 +1757,7 @@
     <string name="omnipod_driver_error_invalid_progress_state">Communication failed: the Pod is in a wrong state.</string>
     <string name="omnipod_driver_error_invalid_response">Communication failed: received an invalid response from the Pod.</string>
     <string name="omnipod_driver_error_invalid_message_sequence_number">Communication failed: received a message with an invalid sequence number from the Pod.</string>
+    <string name="omnipod_driver_error_invalid_message_address">Communication failed: received a message with an invalid address from the Pod.</string>
     <string name="omnipod_driver_error_message_decoding_failed">Communication failed: failed to decode message from the Pod.</string>
     <string name="omnipod_driver_error_nonce_resync_failed">Communication failed: nonce resync failed.</string>
     <string name="omnipod_driver_error_nonce_out_of_sync">Communication failed: nonce out of sync.</string>

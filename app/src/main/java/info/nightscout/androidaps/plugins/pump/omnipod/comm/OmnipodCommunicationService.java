@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.OmnipodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommunicationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMessageAddressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPacketTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMessageSequenceNumberException;
@@ -218,6 +219,9 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
         while (receivedMessage == null) {
             try {
                 receivedMessage = OmnipodMessage.decodeMessage(receivedMessageData);
+                if(receivedMessage.getAddress() != message.getAddress()) {
+                    throw new IllegalMessageAddressException(message.getAddress(), receivedMessage.getAddress());
+                }
                 if (receivedMessage.getSequenceNumber() != podState.getMessageNumber()) {
                     throw new IllegalMessageSequenceNumberException(podState.getMessageNumber(), receivedMessage.getSequenceNumber());
                 }
