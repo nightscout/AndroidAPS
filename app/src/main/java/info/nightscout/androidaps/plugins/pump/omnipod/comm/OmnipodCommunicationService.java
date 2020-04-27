@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.OmnipodAction
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommunicationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPacketTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalResponseException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSequenceNumberException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMessageSequenceNumberException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceOutOfSyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceResyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NotEnoughDataException;
@@ -37,6 +37,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodState;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 /**
  * Created by andy on 6/29/18.
@@ -218,7 +219,7 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             try {
                 receivedMessage = OmnipodMessage.decodeMessage(receivedMessageData);
                 if (receivedMessage.getSequenceNumber() != podState.getMessageNumber()) {
-                    throw new IllegalSequenceNumberException(podState.getMessageNumber(), receivedMessage.getSequenceNumber());
+                    throw new IllegalMessageSequenceNumberException(podState.getMessageNumber(), receivedMessage.getSequenceNumber());
                 }
             } catch (NotEnoughDataException ex) {
                 // Message is (probably) not complete yet
@@ -332,7 +333,8 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
                 }
                 continue;
             }
-            if (response.getAddress() != packet.getAddress()) {
+            if (response.getAddress() != packet.getAddress() &&
+                    response.getAddress() != OmnipodConst.DEFAULT_ADDRESS) { // In some (strange) cases, the Pod remains a packet address of 0xffffffff during it's lifetime
                 if (isLoggingEnabled()) {
                     LOG.debug("Packet address " + response.getAddress() + " doesn't match " + packet.getAddress());
                 }

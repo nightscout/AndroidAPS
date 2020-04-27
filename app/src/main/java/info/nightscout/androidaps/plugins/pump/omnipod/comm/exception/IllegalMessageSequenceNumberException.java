@@ -2,12 +2,12 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.exception;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 
-public class IllegalSequenceNumberException extends OmnipodException {
+public class IllegalMessageSequenceNumberException extends OmnipodException {
     private final int expected;
     private final int actual;
 
-    public IllegalSequenceNumberException(int expected, int actual) {
-        super("Invalid sequence number. Expected="+ expected +", actual="+ actual, false);
+    public IllegalMessageSequenceNumberException(int expected, int actual) {
+        super("Invalid message sequence number. Expected="+ expected +", actual="+ actual, false);
         this.expected = expected;
         this.actual = actual;
     }

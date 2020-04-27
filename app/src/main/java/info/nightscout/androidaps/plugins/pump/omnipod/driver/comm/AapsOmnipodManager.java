@@ -37,7 +37,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.SetupActionResult;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSequenceNumberException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMessageSequenceNumberException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
@@ -613,8 +613,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_progress_state);
             } else if (ex instanceof IllegalResponseException) {
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_response);
-            } else if (ex instanceof IllegalSequenceNumberException) {
-                comment = getStringResource(R.string.omnipod_driver_error_invalid_sequence_number);
+            } else if (ex instanceof IllegalMessageSequenceNumberException) {
+                comment = getStringResource(R.string.omnipod_driver_error_invalid_message_sequence_number);
             } else if (ex instanceof MessageDecodingException) {
                 comment = getStringResource(R.string.omnipod_driver_error_message_decoding_failed);
             } else if (ex instanceof NonceOutOfSyncException) {
