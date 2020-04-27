@@ -47,6 +47,8 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Thread
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioResponse
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.*
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUITask
@@ -292,6 +294,8 @@ open class AppModule {
         @ContributesAndroidInjector fun initializePumpManagerTaskProvider(): InitializePumpManagerTask
         @ContributesAndroidInjector fun resetRileyLinkConfigurationTaskProvider(): ResetRileyLinkConfigurationTask
         @ContributesAndroidInjector fun wakeAndTuneTaskProvider(): WakeAndTuneTask
+        @ContributesAndroidInjector fun radioResponseProvider(): RadioResponse
+        @ContributesAndroidInjector fun rileyLinkBLEProvider(): RileyLinkBLE
 
         @Binds
         fun bindActivePluginProvider(pluginStore: PluginStore): ActivePluginProvider

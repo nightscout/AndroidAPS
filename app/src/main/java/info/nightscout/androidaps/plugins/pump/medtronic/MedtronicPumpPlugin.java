@@ -56,6 +56,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
@@ -99,6 +100,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private final MedtronicUtil medtronicUtil;
     private final MedtronicPumpStatus medtronicPumpStatus;
     private final MedtronicHistoryData medtronicHistoryData;
+    private final RileyLinkServiceData rileyLinkServiceData;
 
     protected static MedtronicPumpPlugin plugin = null;
     private RileyLinkMedtronicService rileyLinkMedtronicService;
@@ -129,7 +131,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             RileyLinkUtil rileyLinkUtil,
             MedtronicUtil medtronicUtil,
             MedtronicPumpStatus medtronicPumpStatus,
-            MedtronicHistoryData medtronicHistoryData
+            MedtronicHistoryData medtronicHistoryData,
+            RileyLinkServiceData rileyLinkServiceData
     ) {
 
         super(new PluginDescription() //
@@ -149,6 +152,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         this.sp = sp;
         this.medtronicPumpStatus = medtronicPumpStatus;
         this.medtronicHistoryData = medtronicHistoryData;
+        this.rileyLinkServiceData = rileyLinkServiceData;
 
         displayConnectionMessages = false;
 
@@ -408,7 +412,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     private boolean isPumpNotReachable() {
 
-        RileyLinkServiceState rileyLinkServiceState = rileyLinkUtil.getServiceState();
+        RileyLinkServiceState rileyLinkServiceState = rileyLinkServiceData.rileyLinkServiceState;
 
         if (rileyLinkServiceState == null) {
             aapsLogger.debug(LTag.PUMP, "RileyLink unreachable. RileyLinkServiceState is null.");

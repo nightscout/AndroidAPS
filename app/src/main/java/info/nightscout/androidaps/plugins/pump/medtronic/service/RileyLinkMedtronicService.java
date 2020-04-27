@@ -20,7 +20,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
@@ -45,7 +44,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     @Inject MedtronicUtil medtronicUtil;
     @Inject MedtronicUIPostprocessor medtronicUIPostprocessor;
     @Inject MedtronicPumpStatus medtronicPumpStatus;
-
 
     private MedtronicUIComm medtronicUIComm;
     private MedtronicCommunicationManager medtronicCommunicationManager;
@@ -94,17 +92,14 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         frequencies[0] = resourceHelper.gs(R.string.key_medtronic_pump_frequency_us_ca);
         frequencies[1] = resourceHelper.gs(R.string.key_medtronic_pump_frequency_worldwide);
 
-        rileyLinkServiceData = new RileyLinkServiceData(RileyLinkTargetDevice.MedtronicPump);
-
-        rileyLinkUtil.setRileyLinkServiceData(rileyLinkServiceData);
-        rileyLinkUtil.setTargetDevice(RileyLinkTargetDevice.MedtronicPump);
+        rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.MedtronicPump;
 
         setPumpIDString(sp.getString(MedtronicConst.Prefs.PumpSerial, "000000"));
 
         // get most recently used RileyLink address
         rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
-        rileyLinkBLE = new RileyLinkBLE(this.context); // or this
+        rileyLinkBLE = new RileyLinkBLE(injector, this); // or this
         rfspy = new RFSpy(rileyLinkBLE);
         rfspy.startReader();
 
@@ -185,7 +180,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     // PumpInterface - REMOVE
 
     public boolean isInitialized() {
-        return RileyLinkServiceState.isReady(rileyLinkUtil.getRileyLinkServiceData().serviceState);
+        return RileyLinkServiceState.isReady(rileyLinkServiceData.rileyLinkServiceState);
     }
 
 

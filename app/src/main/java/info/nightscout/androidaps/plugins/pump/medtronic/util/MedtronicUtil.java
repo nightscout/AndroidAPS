@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.PumpSettingDTO;
@@ -55,17 +56,19 @@ public class MedtronicUtil {
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
     private final RileyLinkUtil rileyLinkUtil;
+    private final RileyLinkServiceData rileyLinkServiceData;
 
     @Inject
     public MedtronicUtil(
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
-            RileyLinkUtil rileyLinkUtil
-
+            RileyLinkUtil rileyLinkUtil,
+            RileyLinkServiceData rileyLinkServiceData
     ) {
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.rileyLinkUtil = rileyLinkUtil;
+        this.rileyLinkServiceData = rileyLinkServiceData;
     }
 
     public LocalTime getTimeFrom30MinInterval(int interval) {
@@ -241,12 +244,12 @@ public class MedtronicUtil {
 //    }
 
 
-    public byte[] buildCommandPayload(MedtronicCommandType commandType, byte[] parameters) {
-        return buildCommandPayload((byte) commandType.commandCode, parameters);
+    public byte[] buildCommandPayload(RileyLinkServiceData rileyLinkServiceData, MedtronicCommandType commandType, byte[] parameters) {
+        return buildCommandPayload(rileyLinkServiceData, (byte) commandType.commandCode, parameters);
     }
 
 
-    public byte[] buildCommandPayload(byte commandType, byte[] parameters) {
+    public byte[] buildCommandPayload(RileyLinkServiceData rileyLinkServiceData, byte commandType, byte[] parameters) {
         // A7 31 65 51 C0 00 52
 
         byte commandLength = (byte) (parameters == null ? 2 : 2 + parameters.length);
@@ -254,7 +257,7 @@ public class MedtronicUtil {
         ByteBuffer sendPayloadBuffer = ByteBuffer.allocate(ENVELOPE_SIZE + commandLength); // + CRC_SIZE
         sendPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
 
-        byte[] serialNumberBCD = rileyLinkUtil.getRileyLinkServiceData().pumpIDBytes;
+        byte[] serialNumberBCD = rileyLinkServiceData.pumpIDBytes;
 
         sendPayloadBuffer.put((byte) 0xA7);
         sendPayloadBuffer.put(serialNumberBCD[0]);
@@ -398,7 +401,7 @@ public class MedtronicUtil {
     public void setPumpDeviceState(PumpDeviceState pumpDeviceState) {
         this.pumpDeviceState = pumpDeviceState;
 
-        rileyLinkUtil.historyRileyLink.add(new RLHistoryItem(pumpDeviceState, RileyLinkTargetDevice.MedtronicPump));
+        rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(pumpDeviceState, RileyLinkTargetDevice.MedtronicPump));
 
         rxBus.send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
     }
@@ -426,7 +429,7 @@ public class MedtronicUtil {
         this.currentCommand = currentCommand;
 
         if (currentCommand != null)
-            rileyLinkUtil.historyRileyLink.add(new RLHistoryItem(currentCommand));
+            rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(currentCommand));
 
     }
 

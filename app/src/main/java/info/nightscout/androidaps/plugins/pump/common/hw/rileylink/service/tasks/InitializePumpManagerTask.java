@@ -1,22 +1,20 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks;
 
-import org.slf4j.Logger;
-
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceTransport;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by geoff on 7/9/16.
@@ -25,66 +23,62 @@ import info.nightscout.androidaps.utils.SP;
  */
 public class InitializePumpManagerTask extends ServiceTask {
 
+    @Inject AAPSLogger aapsLogger;
     @Inject ActivePluginProvider activePlugin;
+    @Inject SP sp;
+    @Inject RileyLinkServiceData rileyLinkServiceData;
+    @Inject RileyLinkUtil rileyLinkUtil;
 
-    private static final String TAG = "InitPumpManagerTask";
-    private RileyLinkTargetDevice targetDevice;
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
-
-    public InitializePumpManagerTask(HasAndroidInjector injector, RileyLinkTargetDevice targetDevice) {
+    public InitializePumpManagerTask(HasAndroidInjector injector) {
         super(injector);
-        this.targetDevice = targetDevice;
     }
-
 
     public InitializePumpManagerTask(HasAndroidInjector injector, ServiceTransport transport) {
         super(injector, transport);
     }
 
-
     @Override
     public void run() {
 
-        double lastGoodFrequency = 0.0d;
+        double lastGoodFrequency;
 
-        if (RileyLinkUtil.getInstance().getRileyLinkServiceData().lastGoodFrequency == null) {
+        if (rileyLinkServiceData.lastGoodFrequency == null) {
 
-            lastGoodFrequency = SP.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0d);
+            lastGoodFrequency = sp.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0d);
             lastGoodFrequency = Math.round(lastGoodFrequency * 1000d) / 1000d;
 
-            RileyLinkUtil.getInstance().getRileyLinkServiceData().lastGoodFrequency = lastGoodFrequency;
+            rileyLinkServiceData.lastGoodFrequency = lastGoodFrequency;
 
 //            if (RileyLinkUtil.getRileyLinkTargetFrequency() == null) {
 //                String pumpFrequency = SP.getString(MedtronicConst.Prefs.PumpFrequency, null);
 //            }
         } else {
-            lastGoodFrequency = RileyLinkUtil.getInstance().getRileyLinkServiceData().lastGoodFrequency;
+            lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency;
         }
 
-        RileyLinkCommunicationManager rileyLinkCommunicationManager = ((PumpPluginAbstract)activePlugin.getActivePump()).getRileyLinkService().getDeviceCommunicationManager();
+        RileyLinkCommunicationManager rileyLinkCommunicationManager = ((PumpPluginAbstract) activePlugin.getActivePump()).getRileyLinkService().getDeviceCommunicationManager();
 
         if ((lastGoodFrequency > 0.0d)
                 && rileyLinkCommunicationManager.isValidFrequency(lastGoodFrequency)) {
 
-            RileyLinkUtil.getInstance().setServiceState(RileyLinkServiceState.RileyLinkReady);
+            rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.RileyLinkReady);
 
-            if (L.isEnabled(L.PUMPCOMM))
-                LOG.info("Setting radio frequency to {} MHz", lastGoodFrequency);
+            aapsLogger.info(LTag.PUMPBTCOMM, "Setting radio frequency to {} MHz", lastGoodFrequency);
 
             rileyLinkCommunicationManager.setRadioFrequencyForPump(lastGoodFrequency);
 
             boolean foundThePump = rileyLinkCommunicationManager.tryToConnectToDevice();
 
             if (foundThePump) {
-                RileyLinkUtil.getInstance().setServiceState(RileyLinkServiceState.PumpConnectorReady);
+                rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.PumpConnectorReady);
             } else {
-                RileyLinkUtil.getInstance().setServiceState(RileyLinkServiceState.PumpConnectorError,
+                rileyLinkServiceData.setServiceState(RileyLinkServiceState.PumpConnectorError,
                         RileyLinkError.NoContactWithDevice);
-                RileyLinkUtil.getInstance().sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
+                rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
             }
 
         } else {
-            RileyLinkUtil.getInstance().sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
+            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
         }
     }
 }

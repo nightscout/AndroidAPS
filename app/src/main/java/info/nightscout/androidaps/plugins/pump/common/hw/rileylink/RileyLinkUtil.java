@@ -46,13 +46,12 @@ import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDe
 @Singleton
 public class RileyLinkUtil {
 
-    public List<RLHistoryItem> historyRileyLink = new ArrayList<>();
+    private List<RLHistoryItem> historyRileyLink = new ArrayList<>();
     public RileyLinkCommunicationManager rileyLinkCommunicationManager;
+    @Deprecated
     static ServiceTask currentTask;
-    private RileyLinkServiceData rileyLinkServiceData;
     private RileyLinkTargetFrequency rileyLinkTargetFrequency;
 
-    private RileyLinkTargetDevice targetDevice;
     private RileyLinkEncodingType encoding;
     private RileyLinkSelectPreference rileyLinkSelectPreference;
     private Encoding4b6b encoding4b6b;
@@ -104,62 +103,8 @@ public class RileyLinkUtil {
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
-
-    public void setServiceState(RileyLinkServiceState newState) {
-        setServiceState(newState, null);
-    }
-
-    public RileyLinkServiceState getServiceState() {
-        return workWithServiceState(null, null, false);
-    }
-
-
-    public void setServiceState(RileyLinkServiceState newState, RileyLinkError errorCode) {
-        workWithServiceState(newState, errorCode, true);
-    }
-
-
-    private synchronized RileyLinkServiceState workWithServiceState(RileyLinkServiceState newState,
-                                                                    RileyLinkError errorCode, boolean set) {
-
-        if (set) {
-
-            rileyLinkServiceData.serviceState = newState;
-            rileyLinkServiceData.errorCode = errorCode;
-
-            aapsLogger.info(LTag.PUMP, "RileyLink State Changed: {} {}", newState, errorCode == null ? "" : " - Error State: "
-                    + errorCode.name());
-
-            historyRileyLink.add(new RLHistoryItem(rileyLinkServiceData.serviceState,
-                    rileyLinkServiceData.errorCode, targetDevice));
-            rxBus.send(new EventMedtronicDeviceStatusChange(newState, errorCode));
-            return null;
-
-        } else {
-            return (rileyLinkServiceData == null || rileyLinkServiceData.serviceState == null) ? //
-                    RileyLinkServiceState.NotStarted
-                    : rileyLinkServiceData.serviceState;
-        }
-
-    }
-
-
-    public RileyLinkServiceData getRileyLinkServiceData() {
-        return rileyLinkServiceData;
-    }
-
-
-    @Deprecated
-    public void setRileyLinkServiceData(RileyLinkServiceData rileyLinkServiceData) {
-        this.rileyLinkServiceData = rileyLinkServiceData;
-    }
-
-
-    public boolean hasPumpBeenTunned() {
-        return rileyLinkServiceData.tuneUpDone;
-    }
-
     // FIXME remove ?
+    @Deprecated
     public static void setCurrentTask(ServiceTask task) {
         if (currentTask == null) {
             currentTask = task;
@@ -169,6 +114,7 @@ public class RileyLinkUtil {
     }
 
 
+    @Deprecated
     public static void finishCurrentTask(ServiceTask task) {
         if (task != currentTask) {
             //LOG.error("finishCurrentTask: task does not match");
@@ -257,41 +203,25 @@ public class RileyLinkUtil {
         return new BleAdvertisedData(uuids, name);
     }
 
-
     public List<RLHistoryItem> getRileyLinkHistory() {
         return historyRileyLink;
     }
-
-
-    public RileyLinkTargetDevice getTargetDevice() {
-        return targetDevice;
-    }
-
-
-    public void setTargetDevice(RileyLinkTargetDevice targetDevice) {
-        this.targetDevice = targetDevice;
-    }
-
 
     public void setRileyLinkSelectPreference(RileyLinkSelectPreference rileyLinkSelectPreference) {
         this.rileyLinkSelectPreference = rileyLinkSelectPreference;
     }
 
-
     public RileyLinkSelectPreference getRileyLinkSelectPreference() {
         return rileyLinkSelectPreference;
     }
-
 
     public Encoding4b6b getEncoding4b6b() {
         return encoding4b6b;
     }
 
-
     public void setFirmwareVersion(RileyLinkFirmwareVersion firmwareVersion) {
         this.firmwareVersion = firmwareVersion;
     }
-
 
     public RileyLinkFirmwareVersion getFirmwareVersion() {
         return firmwareVersion;

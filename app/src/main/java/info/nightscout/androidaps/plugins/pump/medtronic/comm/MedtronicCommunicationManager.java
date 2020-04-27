@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMe
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioPacket;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioResponse;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -66,6 +67,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     @Inject MedtronicConverter medtronicConverter;
     @Inject MedtronicUtil medtronicUtil;
     @Inject MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
+    @Inject RileyLinkServiceData rileyLinkServiceData;
 
     private final int MAX_COMMAND_TRIES = 3;
     private final int DEFAULT_TIMEOUT = 2000;
@@ -154,7 +156,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         if (rfSpyResponse.wasTimeout()) {
             aapsLogger.error(LTag.PUMPBTCOMM, "isDeviceReachable. Failed to find pump (timeout).");
         } else if (rfSpyResponse.looksLikeRadioPacket()) {
-            RadioResponse radioResponse = new RadioResponse();
+            RadioResponse radioResponse = new RadioResponse(injector);
 
             try {
 
@@ -470,11 +472,11 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     public byte[] createPumpMessageContent(RLMessageType type) {
         switch (type) {
             case PowerOn:
-                return medtronicUtil.buildCommandPayload(MedtronicCommandType.RFPowerOn, //
+                return medtronicUtil.buildCommandPayload(rileyLinkServiceData, MedtronicCommandType.RFPowerOn, //
                         new byte[]{2, 1, (byte) receiverDeviceAwakeForMinutes}); // maybe this is better FIXME
 
             case ReadSimpleData:
-                return medtronicUtil.buildCommandPayload(MedtronicCommandType.PumpModel, null);
+                return medtronicUtil.buildCommandPayload(rileyLinkServiceData, MedtronicCommandType.PumpModel, null);
         }
         return new byte[0];
     }

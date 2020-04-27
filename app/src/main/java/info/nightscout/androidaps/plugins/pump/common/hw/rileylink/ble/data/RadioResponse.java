@@ -1,16 +1,19 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.slf4j.Logger;
 
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.RileyLinkCommand;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkCommandType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.CRC;
 
@@ -19,26 +22,24 @@ import info.nightscout.androidaps.plugins.pump.common.utils.CRC;
  */
 public class RadioResponse {
 
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPBTCOMM);
 
-    public boolean decodedOK = false;
+    @Inject AAPSLogger aapsLogger;
+    @Inject RileyLinkServiceData rileyLinkServiceData;
+
+    private boolean decodedOK = false;
     public int rssi;
-    public int responseNumber;
-    public byte[] decodedPayload = new byte[0];
-    public byte receivedCRC;
+    private int responseNumber;
+    private byte[] decodedPayload = new byte[0];
+    private byte receivedCRC;
     private RileyLinkCommand command;
 
 
-    public RadioResponse() {
-
+    public RadioResponse(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
     }
 
-
-    // public RadioResponse(byte[] rxData) {
-    // init(rxData);
-    // }
-
-    public RadioResponse(RileyLinkCommand command /* , byte[] raw */) {
+    public RadioResponse(HasAndroidInjector injector, RileyLinkCommand command /* , byte[] raw */) {
+        this(injector);
         this.command = command;
         // init(raw);
     }
@@ -74,7 +75,7 @@ public class RadioResponse {
         }
         byte[] encodedPayload;
 
-        if (RileyLinkFirmwareVersion.isSameVersion(RileyLinkUtil.getInstance().getRileyLinkServiceData().versionCC110,
+        if (RileyLinkFirmwareVersion.isSameVersion(rileyLinkServiceData.versionCC110,
                 RileyLinkFirmwareVersion.Version2)) {
             encodedPayload = ByteUtil.substring(rxData, 3, rxData.length - 3);
             rssi = rxData[1];
@@ -116,7 +117,7 @@ public class RadioResponse {
                         receivedCRC = decodeThis[decodeThis.length - 1];
                         byte calculatedCRC = CRC.crc8(decodedPayload);
                         if (receivedCRC != calculatedCRC) {
-                            LOG.error(String.format("RadioResponse: CRC mismatch, calculated 0x%02x, received 0x%02x",
+                            aapsLogger.error(LTag.PUMPCOMM, String.format("RadioResponse: CRC mismatch, calculated 0x%02x, received 0x%02x",
                                     calculatedCRC, receivedCRC));
                         }
                     } else {
@@ -131,7 +132,7 @@ public class RadioResponse {
             }
         } catch (NumberFormatException e) {
             decodedOK = false;
-            LOG.error("Failed to decode radio data: " + ByteUtil.shortHexString(encodedPayload));
+            aapsLogger.error(LTag.PUMPBTCOMM, "Failed to decode radio data: " + ByteUtil.shortHexString(encodedPayload));
         }
     }
 

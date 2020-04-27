@@ -49,7 +49,6 @@ public abstract class RileyLinkCommunicationManager {
     protected String receiverDeviceID; // String representation of receiver device (ex. Pump (xxxxxx) or Pod (yyyyyy))
     protected long lastGoodReceiverCommunicationTime = 0;
     //    protected PumpStatus pumpStatus;
-    protected RileyLinkServiceData rileyLinkServiceData;
     private long nextWakeUpRequired = 0L;
 
     private int timeoutCount = 0;
@@ -59,7 +58,6 @@ public abstract class RileyLinkCommunicationManager {
         this.injector = injector;
         injector.androidInjector().inject(this);
         this.rfspy = rfspy;
-        this.rileyLinkServiceData = rileyLinkUtil.getRileyLinkServiceData();
     }
 
 
@@ -92,7 +90,7 @@ public abstract class RileyLinkCommunicationManager {
         RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(msg.getTxData()),
                 (byte) 0, (byte) repeatCount, (byte) 0, (byte) 0, timeout_ms, (byte) retryCount, extendPreamble_ms);
 
-        RadioResponse radioResponse = rfSpyResponse.getRadioResponse();
+        RadioResponse radioResponse = rfSpyResponse.getRadioResponse(injector);
         E response = createResponseMessage(radioResponse.getPayload(), clazz);
 
         if (response.isValid()) {
@@ -122,7 +120,7 @@ public abstract class RileyLinkCommunicationManager {
         }
 
         if (showPumpMessages) {
-            aapsLogger.info(LTag.PUMPBTCOMM, "Received:" + ByteUtil.shortHexString(rfSpyResponse.getRadioResponse().getPayload()));
+            aapsLogger.info(LTag.PUMPBTCOMM, "Received:" + ByteUtil.shortHexString(rfSpyResponse.getRadioResponse(injector).getPayload()));
         }
 
         return response;
@@ -246,7 +244,7 @@ public abstract class RileyLinkCommunicationManager {
                 if (resp.wasTimeout()) {
                     aapsLogger.error(LTag.PUMPBTCOMM, "scanForPump: Failed to find pump at frequency {}", frequencies[i]);
                 } else if (resp.looksLikeRadioPacket()) {
-                    RadioResponse radioResponse = new RadioResponse();
+                    RadioResponse radioResponse = new RadioResponse(injector);
 
                     try {
 
@@ -334,7 +332,7 @@ public abstract class RileyLinkCommunicationManager {
         if (resp.wasTimeout()) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "tune_tryFrequency: no pump response at frequency {}", freqMHz);
         } else if (resp.looksLikeRadioPacket()) {
-            RadioResponse radioResponse = new RadioResponse();
+            RadioResponse radioResponse = new RadioResponse(injector);
             try {
                 radioResponse.init(resp.getRaw());
 

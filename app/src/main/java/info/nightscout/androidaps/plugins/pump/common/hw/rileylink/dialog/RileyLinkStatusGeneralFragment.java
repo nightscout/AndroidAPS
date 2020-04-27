@@ -17,7 +17,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
@@ -37,6 +36,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     @Inject MedtronicPumpStatus medtronicPumpStatus;
     @Inject ResourceHelper resourceHelper;
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+    @Inject RileyLinkServiceData rileyLinkServiceData;
 
     TextView connectionStatus;
     TextView configuredAddress;
@@ -49,8 +49,6 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     TextView lastUsedFrequency;
     TextView lastDeviceContact;
     TextView firmwareVersion;
-
-    RileyLinkServiceData rileyLinkServiceData;
 
     boolean first = false;
 
@@ -66,7 +64,6 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     @Override
     public void onStart() {
         super.onStart();
-        rileyLinkServiceData = rileyLinkUtil.getRileyLinkServiceData();
 
         this.connectionStatus = getActivity().findViewById(R.id.rls_t1_connection_status);
         this.configuredAddress = getActivity().findViewById(R.id.rls_t1_configured_address);
@@ -101,12 +98,9 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
     public void refreshData() {
 
-        RileyLinkTargetDevice targetDevice = rileyLinkUtil.getTargetDevice();
+        RileyLinkTargetDevice targetDevice = rileyLinkServiceData.targetDevice;
 
-        if (rileyLinkUtil.getServiceState() == null)
-            this.connectionStatus.setText(resourceHelper.gs(RileyLinkServiceState.NotStarted.getResourceId(targetDevice)));
-        else
-            this.connectionStatus.setText(resourceHelper.gs(rileyLinkUtil.getServiceState().getResourceId(targetDevice)));
+        this.connectionStatus.setText(resourceHelper.gs(rileyLinkServiceData.rileyLinkServiceState.getResourceId(targetDevice)));
 
         if (rileyLinkServiceData != null) {
             this.configuredAddress.setText(rileyLinkServiceData.rileylinkAddress);

@@ -8,7 +8,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.
  */
 public class ServiceTask implements Runnable {
 
-    private static final String TAG = "ServiceTask(base)";
     public boolean completed = false;
     protected ServiceTransport mTransport;
     protected HasAndroidInjector injector;
