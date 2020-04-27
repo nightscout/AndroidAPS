@@ -98,14 +98,18 @@ public class Opts {
         Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
         Collections.sort(treatments, (o1, o2) -> (int) (o2.date  - o1.date) );
         for(int i=0; i < (pumpHistory.size()+treatments.size()-1);i++) {
-            TemporaryBasal tb = pumpHistory.get(idxP);
-            Treatment tr = treatments.get(idxT);
-            if (tr.date > tb.date) {
+            Treatment tr = new Treatment();
+            TemporaryBasal tb = new TemporaryBasal();
+            if(idxT<treatments.size())
+                tr = treatments.get(idxT);
+            if(idxP<pumpHistory.size())
+                tb = pumpHistory.get(idxP);
+            if(idxP==pumpHistory.size() || tr.date > tb.date) {
                 if(tr.isValid) {
                     json.put(treatmentjson(tr));
                 }
                 idxT++;
-            } else {
+            } else if (idxT==treatments.size() || tr.date <= tb.date ) {
                 if(tb.isValid) {
                     json.put(tempBasaljson(tb));
                 }
