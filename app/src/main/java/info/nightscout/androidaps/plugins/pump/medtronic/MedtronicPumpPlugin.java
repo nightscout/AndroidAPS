@@ -9,7 +9,9 @@ import android.os.SystemClock;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
@@ -196,6 +198,16 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         return plugin;
     }
 
+
+    @Override
+    public void updatePreferenceSummary(@NotNull Preference pref) {
+        super.updatePreferenceSummary(pref);
+
+        if (pref.getKey().equals(getResourceHelper().gs(R.string.key_rileylink_mac_address))) {
+            String value = sp.getStringOrNull(R.string.key_rileylink_mac_address, null);
+            pref.setSummary(value == null ? getResourceHelper().gs(R.string.rileylink_error_address_not_set_short) : value);
+        }
+    }
 
     private String getLogPrefix() {
         return "MedtronicPumpPlugin::";

@@ -110,8 +110,6 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
             sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
 
-            rileyLinkUtil.getRileyLinkSelectPreference().setSummary(bleAddress);
-
             medtronicPumpPlugin.getRileyLinkService().verifyConfiguration(); // force reloading of address
 
             rxBus.send(new EventMedtronicPumpConfigurationChanged());

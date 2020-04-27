@@ -23,7 +23,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistor
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceResult;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceTransport;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTask;
-import info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference;
 
 /**
  * Created by andy on 17/05/2018.
@@ -38,7 +37,6 @@ public class RileyLinkUtil {
     static ServiceTask currentTask;
 
     private RileyLinkEncodingType encoding;
-    private RileyLinkSelectPreference rileyLinkSelectPreference;
     private Encoding4b6b encoding4b6b;
 
     @Inject
@@ -166,14 +164,6 @@ public class RileyLinkUtil {
 
     public List<RLHistoryItem> getRileyLinkHistory() {
         return historyRileyLink;
-    }
-
-    public void setRileyLinkSelectPreference(RileyLinkSelectPreference rileyLinkSelectPreference) {
-        this.rileyLinkSelectPreference = rileyLinkSelectPreference;
-    }
-
-    public RileyLinkSelectPreference getRileyLinkSelectPreference() {
-        return rileyLinkSelectPreference;
     }
 
     public Encoding4b6b getEncoding4b6b() {
