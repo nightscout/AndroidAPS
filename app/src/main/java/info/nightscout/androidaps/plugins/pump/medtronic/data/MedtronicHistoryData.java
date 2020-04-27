@@ -77,11 +77,11 @@ public class MedtronicHistoryData {
     private final SP sp;
     private final ActivePluginProvider activePlugin;
     private final MedtronicUtil medtronicUtil;
+    private final MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
 
-    private List<PumpHistoryEntry> allHistory = null;
+    private List<PumpHistoryEntry> allHistory;
     private List<PumpHistoryEntry> newHistory = null;
 
-    private Long lastHistoryRecordTime;
     private boolean isInit = false;
 
     private Gson gson; // cannot be initialized in constructor because of injection
@@ -103,7 +103,8 @@ public class MedtronicHistoryData {
             AAPSLogger aapsLogger,
             SP sp,
             ActivePluginProvider activePlugin,
-            MedtronicUtil medtronicUtil
+            MedtronicUtil medtronicUtil,
+            MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder
     ) {
         this.allHistory = new ArrayList<>();
 
@@ -111,6 +112,7 @@ public class MedtronicHistoryData {
         this.sp = sp;
         this.activePlugin = activePlugin;
         this.medtronicUtil = medtronicUtil;
+        this.medtronicPumpHistoryDecoder = medtronicPumpHistoryDecoder;
     }
 
     private Gson gson() {
@@ -441,7 +443,7 @@ public class MedtronicHistoryData {
             }
         }
 
-        pumpTime = MedtronicUtil.getInstance().getPumpTime();
+        pumpTime = medtronicUtil.getPumpTime();
 
         // Bolus
         List<PumpHistoryEntry> treatments = getFilteredItems(PumpHistoryEntryType.Bolus);
@@ -472,7 +474,7 @@ public class MedtronicHistoryData {
         }
 
         // 'Delivery Suspend'
-        List<TempBasalProcessDTO> suspends = null;
+        List<TempBasalProcessDTO> suspends;
 
         try {
             suspends = getSuspends();
@@ -1312,7 +1314,7 @@ public class MedtronicHistoryData {
             }
         }
 
-        LocalDateTime oldestEntryTime = null;
+        LocalDateTime oldestEntryTime;
 
         try {
 
@@ -1377,11 +1379,11 @@ public class MedtronicHistoryData {
 
     private PumpHistoryEntryType getTDDType() {
 
-        if (MedtronicUtil.getInstance().getMedtronicPumpModel() == null) {
+        if (medtronicUtil.getMedtronicPumpModel() == null) {
             return PumpHistoryEntryType.EndResultTotals;
         }
 
-        switch (MedtronicUtil.getInstance().getMedtronicPumpModel()) {
+        switch (medtronicUtil.getMedtronicPumpModel()) {
 
             case Medtronic_515:
             case Medtronic_715:
@@ -1454,7 +1456,6 @@ public class MedtronicHistoryData {
     public void setLastHistoryRecordTime(Long lastHistoryRecordTime) {
 
         // this.previousLastHistoryRecordTime = this.lastHistoryRecordTime;
-        this.lastHistoryRecordTime = lastHistoryRecordTime;
     }
 
 
@@ -1477,7 +1478,7 @@ public class MedtronicHistoryData {
 
         for (PumpHistoryEntry pumpHistoryEntry : TBRs_Input) {
             if (map.containsKey(pumpHistoryEntry.DT)) {
-                MedtronicPumpHistoryDecoder.decodeTempBasal(map.get(pumpHistoryEntry.DT), pumpHistoryEntry);
+                medtronicPumpHistoryDecoder.decodeTempBasal(map.get(pumpHistoryEntry.DT), pumpHistoryEntry);
                 pumpHistoryEntry.setEntryType(medtronicUtil.getMedtronicPumpModel(), PumpHistoryEntryType.TempBasalCombined);
                 TBRs.add(pumpHistoryEntry);
                 map.remove(pumpHistoryEntry.DT);

@@ -161,7 +161,7 @@ public class MedtronicUITask {
 
 
     private TempBasalPair getTBRSettings() {
-        return new TempBasalPair(getDoubleFromParameters(0), //
+        return new TempBasalPair(aapsLogger, getDoubleFromParameters(0), //
                 false, //
                 getIntegerFromParameters(1));
     }

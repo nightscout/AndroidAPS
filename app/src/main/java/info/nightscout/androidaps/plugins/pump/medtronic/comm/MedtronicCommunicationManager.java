@@ -869,7 +869,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
 
     public boolean cancelTBR() {
-        return setTBR(new TempBasalPair(0.0d, false, 0));
+        return setTBR(new TempBasalPair(aapsLogger, 0.0d, false, 0));
     }
 
 

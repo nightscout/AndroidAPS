@@ -478,14 +478,14 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
                     case BatteryStatus:
                     case RemainingInsulin: {
-                        rileyLinkMedtronicService.getMedtronicUIComm().executeCommand(refreshType.getKey().getCommandType());
+                        rileyLinkMedtronicService.getMedtronicUIComm().executeCommand(refreshType.getKey().getCommandType(medtronicUtil.getMedtronicPumpModel()));
                         refreshTypesNeededToReschedule.add(refreshType.getKey());
                         resetTime = true;
                     }
                     break;
 
                     case Configuration: {
-                        rileyLinkMedtronicService.getMedtronicUIComm().executeCommand(refreshType.getKey().getCommandType());
+                        rileyLinkMedtronicService.getMedtronicUIComm().executeCommand(refreshType.getKey().getCommandType(medtronicUtil.getMedtronicPumpModel()));
                         resetTime = true;
                     }
                     break;
@@ -1458,7 +1458,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @NonNull
     private BasalProfile convertProfileToMedtronicProfile(Profile profile) {
 
-        BasalProfile basalProfile = new BasalProfile();
+        BasalProfile basalProfile = new BasalProfile(aapsLogger);
 
         for (int i = 0; i < 24; i++) {
             double rate = profile.getBasalTimeFromMidnight(i * 60 * 60);

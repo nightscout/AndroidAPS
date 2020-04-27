@@ -79,7 +79,7 @@ public class MedtronicConverter {
             }
 
             case ReadTemporaryBasal: {
-                return new TempBasalPair(rawContent); // 5
+                return new TempBasalPair(aapsLogger, rawContent); // 5
             }
 
             case Settings_512: {
@@ -105,7 +105,7 @@ public class MedtronicConverter {
 
     private BasalProfile decodeBasalProfile(PumpType pumpType, byte[] rawContent) {
 
-        BasalProfile basalProfile = new BasalProfile(rawContent);
+        BasalProfile basalProfile = new BasalProfile(aapsLogger, rawContent);
 
         return basalProfile.verify(pumpType) ? basalProfile : null;
     }

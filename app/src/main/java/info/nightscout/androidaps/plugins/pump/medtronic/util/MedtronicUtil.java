@@ -66,16 +66,6 @@ public class MedtronicUtil {
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.rileyLinkUtil = rileyLinkUtil;
-        instance = this;
-    }
-
-    private static MedtronicUtil instance;
-
-    // TODO: replace by injection
-    @Deprecated
-    public static MedtronicUtil getInstance() {
-        if (instance == null) throw new IllegalStateException("MedtronicUtil not initialized");
-        return instance;
     }
 
     public LocalTime getTimeFrom30MinInterval(int interval) {
@@ -87,17 +77,17 @@ public class MedtronicUtil {
     }
 
 
-    public int getIntervalFromMinutes(int minutes) {
+    public static int getIntervalFromMinutes(int minutes) {
         return minutes / 30;
     }
 
 
-    public int makeUnsignedShort(int b2, int b1) {
+    public static int makeUnsignedShort(int b2, int b1) {
         int k = (b2 & 0xff) << 8 | b1 & 0xff;
         return k;
     }
 
-    public byte[] getByteArrayFromUnsignedShort(int shortValue, boolean returnFixedSize) {
+    public static byte[] getByteArrayFromUnsignedShort(int shortValue, boolean returnFixedSize) {
         byte highByte = (byte) (shortValue >> 8 & 0xFF);
         byte lowByte = (byte) (shortValue & 0xFF);
 
@@ -110,12 +100,12 @@ public class MedtronicUtil {
     }
 
 
-    public byte[] createByteArray(byte... data) {
+    public static byte[] createByteArray(byte... data) {
         return data;
     }
 
 
-    public byte[] createByteArray(List<Byte> data) {
+    public static byte[] createByteArray(List<Byte> data) {
 
         byte[] array = new byte[data.size()];
 
@@ -142,7 +132,7 @@ public class MedtronicUtil {
     }
 
 
-    public byte[] getBasalStrokes(double amount, boolean returnFixedSize) {
+    public static byte[] getBasalStrokes(double amount, boolean returnFixedSize) {
         return getStrokes(amount, 40, returnFixedSize);
     }
 
@@ -190,7 +180,7 @@ public class MedtronicUtil {
     }
 
 
-    public byte[] getStrokes(double amount, int strokesPerUnit, boolean returnFixedSize) {
+    public static byte[] getStrokes(double amount, int strokesPerUnit, boolean returnFixedSize) {
 
         int strokes = getStrokesInt(amount, strokesPerUnit);
 
@@ -199,7 +189,7 @@ public class MedtronicUtil {
     }
 
 
-    public int getStrokesInt(double amount, int strokesPerUnit) {
+    public static int getStrokesInt(double amount, int strokesPerUnit) {
 
         int length = 1;
         int scrollRate = 1;
@@ -456,7 +446,7 @@ public class MedtronicUtil {
     }
 
 
-    public boolean isSame(Double d1, Double d2) {
+    public static boolean isSame(Double d1, Double d2) {
         double diff = d1 - d2;
 
         return (Math.abs(diff) <= 0.000001);

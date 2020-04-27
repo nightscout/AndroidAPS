@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
@@ -19,11 +19,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  */
 public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair {
 
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
-
-    public TempBasalPair() {
-    }
-
+    private final AAPSLogger aapsLogger;
 
     /**
      * This constructor is for use with PumpHistoryDecoder
@@ -32,8 +28,9 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
      * @param startTimeByte
      * @param isPercent
      */
-    public TempBasalPair(byte rateByte, int startTimeByte, boolean isPercent) {
+    public TempBasalPair(AAPSLogger aapsLogger, byte rateByte, int startTimeByte, boolean isPercent) {
         super();
+        this.aapsLogger = aapsLogger;
 
         int rateInt = ByteUtil.asUINT8(rateByte);
 
@@ -46,45 +43,48 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
     }
 
 
-    public TempBasalPair(byte[] response) {
+    public TempBasalPair(AAPSLogger aapsLogger, byte[] response) {
+        super();
+        this.aapsLogger = aapsLogger;
 
         if (L.isEnabled(L.PUMPCOMM))
-            LOG.debug("Received TempBasal response: " + ByteUtil.getHex(response));
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Received TempBasal response: " + ByteUtil.getHex(response));
 
         isPercent = response[0] == 1;
 
         if (isPercent) {
             insulinRate = response[1];
         } else {
-            int strokes = MedtronicUtil.getInstance().makeUnsignedShort(response[2], response[3]);
+            int strokes = MedtronicUtil.makeUnsignedShort(response[2], response[3]);
 
             insulinRate = strokes / 40.0d;
         }
 
-        if (response.length<6) {
+        if (response.length < 6) {
             durationMinutes = ByteUtil.asUINT8(response[4]);
         } else {
-            durationMinutes = MedtronicUtil.getInstance().makeUnsignedShort(response[4], response[5]);
+            durationMinutes = MedtronicUtil.makeUnsignedShort(response[4], response[5]);
         }
 
-        LOG.warn("TempBasalPair (with {} byte response): {}", response.length, toString());
+        aapsLogger.warn(LTag.PUMPBTCOMM, "TempBasalPair (with {} byte response): {}", response.length, toString());
 
     }
 
 
-    public TempBasalPair(double insulinRate, boolean isPercent, int durationMinutes) {
+    public TempBasalPair(AAPSLogger aapsLogger, double insulinRate, boolean isPercent, int durationMinutes) {
         super(insulinRate, isPercent, durationMinutes);
+        this.aapsLogger = aapsLogger;
     }
 
 
     public byte[] getAsRawData() {
 
-        List<Byte> list = new ArrayList<Byte>();
+        List<Byte> list = new ArrayList<>();
 
         list.add((byte) 5);
 
-        byte[] insulinRate = MedtronicUtil.getInstance().getBasalStrokes(this.insulinRate, true);
-        byte timeMin = (byte) MedtronicUtil.getInstance().getIntervalFromMinutes(durationMinutes);
+        byte[] insulinRate = MedtronicUtil.getBasalStrokes(this.insulinRate, true);
+        byte timeMin = (byte) MedtronicUtil.getIntervalFromMinutes(durationMinutes);
 
         // list.add((byte) 0); // ?
 
@@ -107,11 +107,11 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
 
         list.add(insulinRate[1]);
 
-        return MedtronicUtil.getInstance().createByteArray(list);
+        return MedtronicUtil.createByteArray(list);
     }
 
     public boolean isCancelTBR() {
-        return (MedtronicUtil.getInstance().isSame(insulinRate, 0.0d) && durationMinutes == 0);
+        return (MedtronicUtil.isSame(insulinRate, 0.0d) && durationMinutes == 0);
     }
 
 
@@ -128,7 +128,7 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
     }
 
 
-    @Override
+    @NotNull @Override
     public String toString() {
         return "TempBasalPair [" + "Rate=" + insulinRate + ", DurationMinutes=" + durationMinutes + ", IsPercent="
                 + isPercent + "]";

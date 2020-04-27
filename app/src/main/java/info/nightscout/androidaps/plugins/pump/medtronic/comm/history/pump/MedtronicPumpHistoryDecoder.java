@@ -368,7 +368,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
 
         // LOG.debug("decodeBasalProfile: {}", entry);
 
-        BasalProfile basalProfile = new BasalProfile();
+        BasalProfile basalProfile = new BasalProfile(aapsLogger);
         basalProfile.setRawDataFromHistory(entry.getBody());
 
         // LOG.debug("decodeBasalProfile BasalProfile: {}", basalProfile);
@@ -603,7 +603,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
     }
 
 
-    public static void decodeTempBasal(PumpHistoryEntry tbrPreviousRecord, PumpHistoryEntry entry) {
+    public void decodeTempBasal(PumpHistoryEntry tbrPreviousRecord, PumpHistoryEntry entry) {
 
         PumpHistoryEntry tbrRate = null, tbrDuration = null;
 
@@ -619,7 +619,7 @@ public class MedtronicPumpHistoryDecoder extends MedtronicHistoryDecoder<PumpHis
             tbrRate = tbrPreviousRecord;
         }
 
-        TempBasalPair tbr = new TempBasalPair(tbrRate.getHead()[0], tbrDuration.getHead()[0], (ByteUtil.asUINT8(tbrRate
+        TempBasalPair tbr = new TempBasalPair(aapsLogger, tbrRate.getHead()[0], tbrDuration.getHead()[0], (ByteUtil.asUINT8(tbrRate
                 .getDatetime()[4]) >> 3) == 0);
 
         // System.out.println("TBR: amount=" + tbr.getInsulinRate() + ", duration=" + tbr.getDurationMinutes()
