@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Date;
+import java.util.TimeZone;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -45,17 +46,18 @@ public class Opts {
         JSONArray glucoseJson = new JSONArray();
         Date now = new Date(System.currentTimeMillis());
         int utcOffset = (int) ((DateUtil.fromISODateString(DateUtil.toISOString(now,null,null)).getTime()  - DateUtil.fromISODateString(DateUtil.toISOString(now)).getTime()) / (60 * 1000));
-
+        ConfigBuilderPlugin.getPlugin().getActiveBgSource();
         try {
             for (BgReading bgreading:glucose ) {
                 JSONObject bgjson = new JSONObject();
                 bgjson.put("_id",bgreading._id);
+                bgjson.put("device","AndroidAPS");
                 bgjson.put("date",bgreading.date);
-                bgjson.put("dateString", DateUtil.toISOAsUTC(bgreading.date));
+                bgjson.put("dateString", DateUtil.toISOString(bgreading.date));
                 bgjson.put("sgv",bgreading.value);
                 bgjson.put("direction",bgreading.direction);
                 bgjson.put("type","sgv");
-                bgjson.put("systime", DateUtil.toISOAsUTC(bgreading.date));
+                bgjson.put("systime", DateUtil.toISOString(bgreading.date));
                 bgjson.put("utcOffset", utcOffset);
                 glucoseJson.put(bgjson);
             }
@@ -131,7 +133,7 @@ public class Opts {
                     cPjson.put("_id", cp._id);
                     cPjson.put("eventType","Extended Bolus");
                     cPjson.put("date",cp.date);
-                    cPjson.put("dateString",DateUtil.toISOAsUTC(cp.date));
+                    cPjson.put("dateString",DateUtil.toISOString(new Date(cp.date),"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", TimeZone.getTimeZone("UTC")));
                     cPjson.put("insulin",cp.insulin);
                     cPjson.put("insulinrate",cp.absoluteRate());
                     cPjson.put("realDuration",cp.getRealDuration());
@@ -185,9 +187,10 @@ public class Opts {
             cPjson.put("_id", cp._id);
             cPjson.put("eventType",eventType);
             cPjson.put("date",cp.date);
-            cPjson.put("dateString",DateUtil.toISOAsUTC(cp.date));
-            cPjson.put("insulin",cp.insulin);
-            cPjson.put("carbs",cp.carbs);
+            cPjson.put("created_at",DateUtil.toISOString(cp.date));
+            cPjson.put("enteredBy","openaps://AndroidAPS");
+            cPjson.put("insulin",cp.insulin > 0 ? cp.insulin : null);
+            cPjson.put("carbs",cp.carbs > 0 ? cp.carbs : null);
             cPjson.put("isSMB",cp.isSMB);
         } catch (JSONException e) {}
         return cPjson;
@@ -199,15 +202,18 @@ public class Opts {
             cPjson.put("_id", tp._id);
             cPjson.put("eventType", "Temp Basal");
             cPjson.put("date", tp.date);
-            cPjson.put("dateString", DateUtil.toISOAsUTC(tp.date));
+            if (!tp.isEndingEvent())
+                cPjson.put("duration", tp.getRealDuration());
             cPjson.put("absolute", tp.absoluteRate);
             cPjson.put("rate", tp.absoluteRate);
-            cPjson.put("percentrate", tp.percentRate);
-            cPjson.put("percentrate", tp.percentRate);
-            cPjson.put("durationInMinutes", tp.durationInMinutes);
-            cPjson.put("duration", tp.getRealDuration());
-            cPjson.put("isEnding", tp.isEndingEvent());
+            cPjson.put("created_at", DateUtil.toISOString(tp.date));
+            cPjson.put("enteredBy","openaps://AndroidAPS");
+            cPjson.put("percent", tp.percentRate);
+            //cPjson.put("durationInMinutes", tp.durationInMinutes);
+            //cPjson.put("isEnding", tp.isEndingEvent());
             cPjson.put("isFakeExtended", tp.isFakeExtended);
+            cPjson.put("insulin",null);
+            cPjson.put("carbs",null);
         } catch (JSONException e) {}
         return cPjson;
     }
