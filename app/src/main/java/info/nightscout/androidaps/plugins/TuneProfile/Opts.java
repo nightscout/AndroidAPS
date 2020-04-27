@@ -186,12 +186,12 @@ public class Opts {
                 eventType = "Correction Bolus";
             cPjson.put("_id", cp._id);
             cPjson.put("eventType",eventType);
-            cPjson.put("date",cp.date);
+            cPjson.put("insulin",cp.insulin > 0 ? cp.insulin : JSONObject.NULL);
+            cPjson.put("carbs",cp.carbs > 0 ? cp.carbs : JSONObject.NULL );
             cPjson.put("created_at",DateUtil.toISOString(cp.date));
-            cPjson.put("enteredBy","openaps://AndroidAPS");
-            cPjson.put("insulin",cp.insulin > 0 ? cp.insulin : null);
-            cPjson.put("carbs",cp.carbs > 0 ? cp.carbs : null);
+            cPjson.put("date",cp.date);
             cPjson.put("isSMB",cp.isSMB);
+            cPjson.put("isMealBolus",cp.mealBolus);
         } catch (JSONException e) {}
         return cPjson;
     }

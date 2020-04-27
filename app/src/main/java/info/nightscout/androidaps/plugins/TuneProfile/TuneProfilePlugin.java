@@ -1375,15 +1375,15 @@ public class TuneProfilePlugin extends PluginBase {
 
                     // for debugging only, all these files are included in ns-treatments
                     // only meals and bolus
-                    FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatmentstoJSON().toString(4));
+                    FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatmentstoJSON().toString(4).replace("\\/", "/"));
                     //only temp basal
-                    FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistorytoJSON().toString(4));
+                    FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistorytoJSON().toString(4).replace("\\/", "/"));
                     //only extended
-                    FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.extBolustoJSON().toString(4));
+                    FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.extBolustoJSON().toString(4).replace("\\/", "/"));
                     //extended and temp basal file
-                    FS.createAutotunefile("aaps-pumphistory." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpHistorytoJSON().toString(4));
+                    FS.createAutotunefile("aaps-pumphistory." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpHistorytoJSON().toString(4).replace("\\/", "/"));
                     //ns-treatments files are for result compare with oref0 autotune on virtual machine
-                    FS.createAutotunefile("ns-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.nsTreatmenttoJSON().toString(4));
+                    FS.createAutotunefile("ns-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.nsTreatmenttoJSON().toString(4).replace("\\/", "/"));
 
                     log.debug("Day "+i+" of "+daysBack);
                     //log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
