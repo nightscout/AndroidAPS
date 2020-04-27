@@ -21,14 +21,12 @@ import javax.inject.Inject;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 
 
 public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
 
-    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
     @Inject MedtronicHistoryData medtronicHistoryData;
 
     Spinner historyTypeSpinner;

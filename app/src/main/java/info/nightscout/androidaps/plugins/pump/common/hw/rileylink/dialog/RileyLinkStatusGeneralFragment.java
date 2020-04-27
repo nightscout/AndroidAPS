@@ -104,9 +104,9 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
         if (rileyLinkServiceData != null) {
             this.configuredAddress.setText(rileyLinkServiceData.rileylinkAddress);
-            this.connectionError.setText(rileyLinkServiceData.errorCode == null ? //
+            this.connectionError.setText(rileyLinkServiceData.rileyLinkError == null ? //
                     "-"
-                    : resourceHelper.gs(rileyLinkServiceData.errorCode.getResourceId(targetDevice)));
+                    : resourceHelper.gs(rileyLinkServiceData.rileyLinkError.getResourceId(targetDevice)));
 
 
             RileyLinkFirmwareVersion firmwareVersion = rileyLinkServiceData.versionCC110;

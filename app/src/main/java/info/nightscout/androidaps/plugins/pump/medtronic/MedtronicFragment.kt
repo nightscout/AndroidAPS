@@ -19,7 +19,6 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
@@ -188,15 +187,10 @@ class MedtronicFragment : DaggerFragment() {
             }
         medtronic_rl_status.setTextColor(if (rileyLinkError != null) Color.RED else Color.WHITE)
 
-        medtronicPumpStatus.rileyLinkError = checkStatusSet(medtronicPumpStatus.rileyLinkError, medtronicPumpPlugin.rileyLinkService?.error) as RileyLinkError?
-
         medtronic_errors.text =
-            medtronicPumpStatus.rileyLinkError?.let {
+            rileyLinkServiceData.rileyLinkError?.let {
                 resourceHelper.gs(it.getResourceId(RileyLinkTargetDevice.MedtronicPump))
             } ?: "-"
-
-        medtronicPumpStatus.pumpDeviceState = checkStatusSet(medtronicPumpStatus.pumpDeviceState,
-            medtronicUtil.pumpDeviceState) as PumpDeviceState?
 
         when (medtronicPumpStatus.pumpDeviceState) {
             null,
@@ -236,17 +230,6 @@ class MedtronicFragment : DaggerFragment() {
         } else {
             medtronic_queue.visibility = View.VISIBLE
             medtronic_queue.text = status
-        }
-    }
-
-    private fun checkStatusSet(object1: Any?, object2: Any?): Any? {
-        return if (object1 == null) {
-            object2
-        } else {
-            if (object1 != object2) {
-                object2
-            } else
-                object1
         }
     }
 

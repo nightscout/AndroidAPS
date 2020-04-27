@@ -101,7 +101,7 @@ public class RileyLinkStatusActivity extends NoSplashAppCompatActivity {
             // FIXME
             this.connectedDevice.setText("???");
             // FIXME i18n
-            this.connectionError.setText(rileyLinkServiceData.errorCode.name());
+            this.connectionError.setText(rileyLinkServiceData.rileyLinkError.name());
         } else {
 
         }

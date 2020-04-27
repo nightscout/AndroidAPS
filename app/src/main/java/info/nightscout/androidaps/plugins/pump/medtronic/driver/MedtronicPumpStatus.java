@@ -11,13 +11,17 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BasalProfileStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
+import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -31,6 +35,8 @@ public class MedtronicPumpStatus extends PumpStatus {
 
     private final ResourceHelper resourceHelper;
     private final SP sp;
+    private final RileyLinkUtil rileyLinkUtil;
+    private final RxBusWrapper rxBus;
 
     public String errorDescription = null;
     public String serialNumber;
@@ -39,8 +45,7 @@ public class MedtronicPumpStatus extends PumpStatus {
     public Double maxBasal;
 
     // statuses
-    public RileyLinkError rileyLinkError;
-    public PumpDeviceState pumpDeviceState = PumpDeviceState.NeverContacted;
+    private PumpDeviceState pumpDeviceState = PumpDeviceState.NeverContacted;
     public MedtronicDeviceType medtronicDeviceType = null;
     public Date tempBasalStart;
     public Double tempBasalAmount = 0.0d;
@@ -57,11 +62,15 @@ public class MedtronicPumpStatus extends PumpStatus {
     @Inject
     public MedtronicPumpStatus(
             ResourceHelper resourceHelper,
-            SP sp
+            SP sp,
+            RxBusWrapper rxBus,
+            RileyLinkUtil rileyLinkUtil
     ) {
         super();
         this.resourceHelper = resourceHelper;
         this.sp = sp;
+        this.rxBus = rxBus;
+        this.rileyLinkUtil = rileyLinkUtil;
         initSettings();
     }
 
@@ -154,5 +163,18 @@ public class MedtronicPumpStatus extends PumpStatus {
     @NotNull
     public String getErrorInfo() {
         return (errorDescription == null) ? "-" : errorDescription;
+    }
+
+    public PumpDeviceState getPumpDeviceState() {
+        return pumpDeviceState;
+    }
+
+
+    public void setPumpDeviceState(PumpDeviceState pumpDeviceState) {
+        this.pumpDeviceState = pumpDeviceState;
+
+        rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(pumpDeviceState, RileyLinkTargetDevice.MedtronicPump));
+
+        rxBus.send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
     }
 }

@@ -16,13 +16,11 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.Radi
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioResponse;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
@@ -37,7 +35,6 @@ public abstract class RileyLinkCommunicationManager {
 
     @Inject MedtronicPumpStatus medtronicPumpStatus;
     @Inject RileyLinkUtil rileyLinkUtil;
-    @Inject MedtronicUtil medtronicUtil;
 
 
     private final int SCAN_TIMEOUT = 1500;
@@ -151,7 +148,7 @@ public abstract class RileyLinkCommunicationManager {
         // **** FIXME: this wakeup doesn't seem to work well... must revisit
         // receiverDeviceAwakeForMinutes = duration_minutes;
 
-        medtronicUtil.setPumpDeviceState(PumpDeviceState.WakingUp);
+        medtronicPumpStatus.setPumpDeviceState(PumpDeviceState.WakingUp);
 
         if (force)
             nextWakeUpRequired = 0L;

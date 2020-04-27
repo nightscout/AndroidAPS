@@ -26,7 +26,7 @@ public class RileyLinkServiceData {
     @Inject RxBusWrapper rxBus;
 
     boolean tuneUpDone = false;
-    public RileyLinkError errorCode;
+    public RileyLinkError rileyLinkError;
     public RileyLinkServiceState rileyLinkServiceState = RileyLinkServiceState.NotStarted;
     public String rileylinkAddress;
     long lastTuneUpTime = 0L;
@@ -70,7 +70,7 @@ public class RileyLinkServiceData {
         if (set) {
 
             rileyLinkServiceState = newState;
-            this.errorCode = errorCode;
+            this.rileyLinkError = errorCode;
 
             aapsLogger.info(LTag.PUMP, "RileyLink State Changed: {} {}", newState, errorCode == null ? "" : " - Error State: " + errorCode.name());
 

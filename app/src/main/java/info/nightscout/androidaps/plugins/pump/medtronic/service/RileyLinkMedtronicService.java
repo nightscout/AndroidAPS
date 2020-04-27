@@ -162,7 +162,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
             return;
         }
 
-        medtronicUtil.setPumpDeviceState(PumpDeviceState.InvalidConfiguration);
+        medtronicPumpStatus.setPumpDeviceState(PumpDeviceState.InvalidConfiguration);
 
         // LOG.info("setPumpIDString: saved pumpID " + idString);
     }

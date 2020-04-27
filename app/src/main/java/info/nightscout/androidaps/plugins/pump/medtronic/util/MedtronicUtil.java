@@ -22,7 +22,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
@@ -30,7 +29,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.PumpSettingDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicNotificationType;
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
+import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
@@ -43,7 +42,6 @@ public class MedtronicUtil {
 
     private int ENVELOPE_SIZE = 4; // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
     private static boolean lowLevelDebug = true;
-    private PumpDeviceState pumpDeviceState;
     private MedtronicDeviceType medtronicPumpModel;
     private MedtronicCommandType currentCommand;
     private Map<String, PumpSettingDTO> settings;
@@ -51,24 +49,23 @@ public class MedtronicUtil {
     private int doneBit = 1 << 7;
     private ClockDTO pumpTime;
     public Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    public Gson gsonInstanceCore = new GsonBuilder().create();
 
     private final AAPSLogger aapsLogger;
     private final RxBusWrapper rxBus;
     private final RileyLinkUtil rileyLinkUtil;
-    private final RileyLinkServiceData rileyLinkServiceData;
+    private final MedtronicPumpStatus medtronicPumpStatus;
 
     @Inject
     public MedtronicUtil(
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
             RileyLinkUtil rileyLinkUtil,
-            RileyLinkServiceData rileyLinkServiceData
+            MedtronicPumpStatus medtronicPumpStatus
     ) {
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.rileyLinkUtil = rileyLinkUtil;
-        this.rileyLinkServiceData = rileyLinkServiceData;
+        this.medtronicPumpStatus = medtronicPumpStatus;
     }
 
     public LocalTime getTimeFrom30MinInterval(int interval) {
@@ -393,29 +390,13 @@ public class MedtronicUtil {
         return lowLevelDebug;
     }
 
-    public PumpDeviceState getPumpDeviceState() {
-        return pumpDeviceState;
-    }
-
-
-    public void setPumpDeviceState(PumpDeviceState pumpDeviceState) {
-        this.pumpDeviceState = pumpDeviceState;
-
-        rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(pumpDeviceState, RileyLinkTargetDevice.MedtronicPump));
-
-        rxBus.send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
-    }
-
-
     public boolean isModelSet() {
         return medtronicPumpModel != null;
     }
 
-
     public MedtronicDeviceType getMedtronicPumpModel() {
         return medtronicPumpModel;
     }
-
 
     public void setMedtronicPumpModel(MedtronicDeviceType medtronicPumpModel) {
         this.medtronicPumpModel = medtronicPumpModel;
@@ -445,7 +426,7 @@ public class MedtronicUtil {
             setCurrentCommand(currentCommand);
         }
 
-        rxBus.send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
+        rxBus.send(new EventMedtronicDeviceStatusChange(medtronicPumpStatus.getPumpDeviceState()));
     }
 
 

@@ -25,6 +25,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceResult;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceTransport;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
+import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -41,6 +42,7 @@ public abstract class RileyLinkService extends DaggerService {
     @Inject protected RileyLinkUtil rileyLinkUtil;
     @Inject protected MedtronicUtil medtronicUtil; // TODO should be avoided here as it's MDT
     @Inject protected RileyLinkServiceData rileyLinkServiceData;
+    @Inject protected MedtronicPumpStatus medtronicPumpStatus;
 
     @NotNull protected RileyLinkBLE rileyLinkBLE; // android-bluetooth management, must be set in initRileyLinkServiceData
     protected BluetoothAdapter bluetoothAdapter;
@@ -204,7 +206,7 @@ public abstract class RileyLinkService extends DaggerService {
     public void doTuneUpDevice() {
 
         rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.TuneUpDevice);
-        medtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
+        medtronicPumpStatus.setPumpDeviceState(PumpDeviceState.Sleeping);
 
         double lastGoodFrequency = 0.0d;
 
@@ -266,7 +268,7 @@ public abstract class RileyLinkService extends DaggerService {
 
     public RileyLinkError getError() {
         if (rileyLinkServiceData != null)
-            return rileyLinkServiceData.errorCode;
+            return rileyLinkServiceData.rileyLinkError;
         else
             return null;
     }
