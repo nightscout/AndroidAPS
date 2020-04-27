@@ -37,6 +37,7 @@ public abstract class RileyLinkCommunicationManager {
 
     @Inject MedtronicPumpStatus medtronicPumpStatus;
     @Inject RileyLinkUtil rileyLinkUtil;
+    @Inject MedtronicUtil medtronicUtil;
 
 
     private final int SCAN_TIMEOUT = 1500;
@@ -51,8 +52,6 @@ public abstract class RileyLinkCommunicationManager {
     protected RileyLinkServiceData rileyLinkServiceData;
     private long nextWakeUpRequired = 0L;
 
-    // internal flag
-    private boolean showPumpMessages = true;
     private int timeoutCount = 0;
 
 
@@ -84,6 +83,8 @@ public abstract class RileyLinkCommunicationManager {
     public <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms, Class<E> clazz)
             throws RileyLinkCommunicationException {
 
+        // internal flag
+        boolean showPumpMessages = true;
         if (showPumpMessages) {
             aapsLogger.info(LTag.PUMPBTCOMM, "Sent:" + ByteUtil.shortHexString(msg.getTxData()));
         }
@@ -152,7 +153,7 @@ public abstract class RileyLinkCommunicationManager {
         // **** FIXME: this wakeup doesn't seem to work well... must revisit
         // receiverDeviceAwakeForMinutes = duration_minutes;
 
-        MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.WakingUp);
+        medtronicUtil.setPumpDeviceState(PumpDeviceState.WakingUp);
 
         if (force)
             nextWakeUpRequired = 0L;
@@ -193,7 +194,7 @@ public abstract class RileyLinkCommunicationManager {
 
 
     public double tuneForDevice() {
-        return scanForDevice(RileyLinkUtil.getInstance().getRileyLinkTargetFrequency().getScanFrequencies());
+        return scanForDevice(rileyLinkUtil.getRileyLinkTargetFrequency().getScanFrequencies());
     }
 
 
@@ -207,7 +208,7 @@ public abstract class RileyLinkCommunicationManager {
      */
     public boolean isValidFrequency(double frequency) {
 
-        double[] scanFrequencies = RileyLinkUtil.getInstance().getRileyLinkTargetFrequency().getScanFrequencies();
+        double[] scanFrequencies = rileyLinkUtil.getRileyLinkTargetFrequency().getScanFrequencies();
 
         if (scanFrequencies.length == 1) {
             return RileyLinkUtil.isSame(scanFrequencies[0], frequency);

@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.medtronic.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalTime;
 
 import java.nio.ByteBuffer;
@@ -25,17 +24,13 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.PumpSettingDTO;
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicNotificationType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
-import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
-import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
@@ -46,12 +41,9 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 public class MedtronicUtil {
 
     private int ENVELOPE_SIZE = 4; // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
-    int CRC_SIZE = 1;
     private boolean lowLevelDebug = true;
     private PumpDeviceState pumpDeviceState;
     private MedtronicDeviceType medtronicPumpModel;
-    private RileyLinkMedtronicService medtronicService;
-    @Deprecated // TODO remove this reference
     private MedtronicCommandType currentCommand;
     private Map<String, PumpSettingDTO> settings;
     private int BIG_FRAME_LENGTH = 65;
@@ -60,23 +52,20 @@ public class MedtronicUtil {
     public Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     public Gson gsonInstanceCore = new GsonBuilder().create();
 
-    @NotNull private final AAPSLogger aapsLogger;
-    @NotNull private final RxBusWrapper rxBus;
-    @NotNull private final RileyLinkUtil rileyLinkUtil;
-    @NotNull private final MedtronicPumpStatus medtronicPumpStatus;
+    private final AAPSLogger aapsLogger;
+    private final RxBusWrapper rxBus;
+    private final RileyLinkUtil rileyLinkUtil;
 
     @Inject
     public MedtronicUtil(
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
-            RileyLinkUtil rileyLinkUtil,
-            MedtronicPumpStatus medtronicPumpStatus
+            RileyLinkUtil rileyLinkUtil
 
     ) {
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.rileyLinkUtil = rileyLinkUtil;
-        this.medtronicPumpStatus = medtronicPumpStatus;
         instance = this;
     }
 
@@ -445,31 +434,9 @@ public class MedtronicUtil {
         this.medtronicPumpModel = medtronicPumpModel;
     }
 
-
-    public MedtronicCommunicationManager getMedtronicCommunicationManager() {
-        return (MedtronicCommunicationManager) rileyLinkUtil.rileyLinkCommunicationManager;
-    }
-
-
-    public RileyLinkMedtronicService getMedtronicService() {
-        return medtronicService;
-    }
-
-
-    public void setMedtronicService(RileyLinkMedtronicService medtronicService) {
-        this.medtronicService = medtronicService;
-    }
-
-
-    @Deprecated // TODO use singleton
-    public MedtronicPumpStatus getPumpStatus1() {
-        return medtronicPumpStatus;
-    }
-
     public MedtronicCommandType getCurrentCommand() {
         return this.currentCommand;
     }
-
 
     public void setCurrentCommand(MedtronicCommandType currentCommand) {
         this.currentCommand = currentCommand;

@@ -40,33 +40,7 @@ public class MedtronicUIComm {
 
         medtronicUtil.setCurrentCommand(commandType);
 
-        // new Thread(() -> {
-        // LOG.warn("@@@ Start Thread");
-        //
-        // task.execute(getCommunicationManager());
-        //
-        // LOG.warn("@@@ End Thread");
-        // });
-
         task.execute(medtronicCommunicationManager);
-
-        // for (int i = 0; i < getMaxWaitTime(commandType); i++) {
-        // synchronized (task) {
-        // // try {
-        // //
-        // // //task.wait(1000);
-        // // } catch (InterruptedException e) {
-        // // LOG.error("executeCommand InterruptedException", e);
-        // // }
-        //
-        //
-        // SystemClock.sleep(1000);
-        // }
-        //
-        // if (task.isReceived()) {
-        // break;
-        // }
-        // }
 
         if (!task.isReceived()) {
             aapsLogger.warn(LTag.PUMP, "Reply not received for " + commandType);

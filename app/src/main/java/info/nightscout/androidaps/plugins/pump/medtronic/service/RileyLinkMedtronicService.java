@@ -115,7 +115,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         medtronicUIComm = new MedtronicUIComm(injector, aapsLogger, medtronicUtil, medtronicUIPostprocessor, medtronicCommunicationManager);
 
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed");
-        medtronicUtil.setMedtronicService(this);
     }
 
 

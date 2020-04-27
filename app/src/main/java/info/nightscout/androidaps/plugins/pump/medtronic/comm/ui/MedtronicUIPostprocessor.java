@@ -58,7 +58,7 @@ public class MedtronicUIPostprocessor {
 
     // this is mostly intended for command that return certain statuses (Remaining Insulin, ...), and
     // where responses won't be directly used
-    public void postProcessData(MedtronicUITask uiTask) {
+    void postProcessData(MedtronicUITask uiTask) {
 
         switch (uiTask.commandType) {
 
@@ -203,7 +203,7 @@ public class MedtronicUIPostprocessor {
 
         medtronicUtil.setSettings(settings);
 
-        PumpSettingDTO checkValue = null;
+        PumpSettingDTO checkValue;
 
         medtronicPumpPlugin.getRileyLinkService().verifyConfiguration();
 

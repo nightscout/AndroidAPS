@@ -63,14 +63,14 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     @Inject AAPSLogger aapsLogger;
     @Inject MedtronicPumpStatus medtronicPumpStatus;
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+    @Inject MedtronicConverter medtronicConverter;
+    @Inject MedtronicUtil medtronicUtil;
 
     private final int MAX_COMMAND_TRIES = 3;
     private final int DEFAULT_TIMEOUT = 2000;
     private final long RILEYLINK_TIMEOUT = 15 * 60 * 1000; // 15 min
 
-    static MedtronicCommunicationManager medtronicCommunicationManager;
-    String errorMessage;
-    private MedtronicConverter medtronicConverter;
+    private String errorMessage;
     private boolean debugSetCommands = false;
 
     private MedtronicPumpHistoryDecoder pumpHistoryDecoder;
@@ -79,16 +79,9 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     public MedtronicCommunicationManager(HasAndroidInjector injector, RFSpy rfspy) {
         super(injector, rfspy);
-        medtronicCommunicationManager = this;
-        this.medtronicConverter = new MedtronicConverter();
         this.pumpHistoryDecoder = new MedtronicPumpHistoryDecoder();
         medtronicPumpStatus.previousConnection = sp.getLong(
                 RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
-    }
-
-
-    public static MedtronicCommunicationManager getInstance() {
-        return medtronicCommunicationManager;
     }
 
     @Override
@@ -96,7 +89,6 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         PumpMessage pumpMessage = new PumpMessage(payload);
         return (E) pumpMessage;
     }
-
 
     public void setDoWakeUpBeforeCommand(boolean doWakeUp) {
         this.doWakeUpBeforeCommand = doWakeUp;
@@ -117,10 +109,10 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
      */
     public boolean isDeviceReachable(boolean canPreventTuneUp) {
 
-        PumpDeviceState state = MedtronicUtil.getInstance().getPumpDeviceState();
+        PumpDeviceState state = medtronicUtil.getPumpDeviceState();
 
         if (state != PumpDeviceState.PumpUnreachable)
-            MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.WakingUp);
+            medtronicUtil.setPumpDeviceState(PumpDeviceState.WakingUp);
 
         for (int retry = 0; retry < 5; retry++) {
 
@@ -136,7 +128,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         }
 
         if (state != PumpDeviceState.PumpUnreachable)
-            MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.PumpUnreachable);
+            medtronicUtil.setPumpDeviceState(PumpDeviceState.PumpUnreachable);
 
         if (!canPreventTuneUp) {
 
@@ -153,7 +145,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     private boolean connectToDevice() {
 
-        PumpDeviceState state = MedtronicUtil.getInstance().getPumpDeviceState();
+        PumpDeviceState state = medtronicUtil.getPumpDeviceState();
 
         byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData); // simple
         RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 200,
@@ -185,8 +177,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                         MedtronicDeviceType pumpModel = (MedtronicDeviceType) dataResponse;
                         boolean valid = (pumpModel != MedtronicDeviceType.Unknown_Device);
 
-                        if (MedtronicUtil.getInstance().getMedtronicPumpModel() == null && valid) {
-                            MedtronicUtil.getInstance().setMedtronicPumpModel(pumpModel);
+                        if (medtronicUtil.getMedtronicPumpModel() == null && valid) {
+                            medtronicUtil.setMedtronicPumpModel(pumpModel);
                         }
 
                         aapsLogger.debug(LTag.PUMPBTCOMM, "isDeviceReachable. PumpModel is {} - Valid: {} (rssi={})", pumpModel.name(), valid,
@@ -194,9 +186,9 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                         if (valid) {
                             if (state == PumpDeviceState.PumpUnreachable)
-                                MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.WakingUp);
+                                medtronicUtil.setPumpDeviceState(PumpDeviceState.WakingUp);
                             else
-                                MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.Sleeping);
+                                medtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
                             rememberLastGoodDeviceCommunicationTime();
 
@@ -204,7 +196,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                         } else {
                             if (state != PumpDeviceState.PumpUnreachable)
-                                MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.PumpUnreachable);
+                                medtronicUtil.setPumpDeviceState(PumpDeviceState.PumpUnreachable);
                         }
 
                     }
@@ -280,7 +272,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         for (List<Byte> frame : frames) {
 
-            byte[] frameData = MedtronicUtil.getInstance().createByteArray(frame);
+            byte[] frameData = medtronicUtil.createByteArray(frame);
 
             // aapsLogger.debug(LTag.PUMPBTCOMM,"Frame {} data:\n{}", frameNr, ByteUtil.getCompactString(frameData));
 
@@ -317,9 +309,9 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         if (doWakeUpBeforeCommand)
             wakeUp(receiverDeviceAwakeForMinutes, false);
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Current command: " + MedtronicUtil.getInstance().getCurrentCommand());
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Current command: " + medtronicUtil.getCurrentCommand());
 
-        MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.Active);
+        medtronicUtil.setPumpDeviceState(PumpDeviceState.Active);
         boolean doneWithError = false;
 
         for (int pageNumber = 0; pageNumber < 5; pageNumber++) {
@@ -336,7 +328,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             PumpMessage firstResponse = null;
             boolean failed = false;
 
-            MedtronicUtil.getInstance().setCurrentCommand(MedtronicCommandType.GetHistoryData, pageNumber, null);
+            medtronicUtil.setCurrentCommand(MedtronicCommandType.GetHistoryData, pageNumber, null);
 
             for (int retries = 0; retries < MAX_COMMAND_TRIES; retries++) {
 
@@ -351,7 +343,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             }
 
             if (failed) {
-                MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.Sleeping);
+                medtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
                 return pumpTotalResult;
             }
 
@@ -379,7 +371,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     rawHistoryPage.appendData(currentResponse.getFrameData());
                     // RileyLinkMedtronicService.getInstance().announceProgress(((100 / 16) *
                     // currentResponse.getFrameNumber() + 1));
-                    MedtronicUtil.getInstance().setCurrentCommand(MedtronicCommandType.GetHistoryData, pageNumber,
+                    medtronicUtil.setCurrentCommand(MedtronicCommandType.GetHistoryData, pageNumber,
                             currentResponse.getFrameNumber());
 
                     aapsLogger.info(LTag.PUMPBTCOMM, "getPumpHistory: Got frame {} of Page {}", currentResponse.getFrameNumber(), pageNumber);
@@ -442,7 +434,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             }
 
             if (doneWithError) {
-                MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.Sleeping);
+                medtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
                 return pumpTotalResult;
             }
 
@@ -458,13 +450,13 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             aapsLogger.debug(LTag.PUMPBTCOMM, "getPumpHistory: Search status: Search finished: {}", pumpTotalResult.isSearchFinished());
 
             if (pumpTotalResult.isSearchFinished()) {
-                MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.Sleeping);
+                medtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
                 return pumpTotalResult;
             }
         }
 
-        MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.Sleeping);
+        medtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
         return pumpTotalResult;
 
@@ -480,11 +472,11 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     public byte[] createPumpMessageContent(RLMessageType type) {
         switch (type) {
             case PowerOn:
-                return MedtronicUtil.getInstance().buildCommandPayload(MedtronicCommandType.RFPowerOn, //
+                return medtronicUtil.buildCommandPayload(MedtronicCommandType.RFPowerOn, //
                         new byte[]{2, 1, (byte) receiverDeviceAwakeForMinutes}); // maybe this is better FIXME
 
             case ReadSimpleData:
-                return MedtronicUtil.getInstance().buildCommandPayload(MedtronicCommandType.PumpModel, null);
+                return medtronicUtil.buildCommandPayload(MedtronicCommandType.PumpModel, null);
         }
         return new byte[0];
     }
@@ -528,7 +520,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         if (doWakeUpBeforeCommand)
             wakeUp(receiverDeviceAwakeForMinutes, false);
 
-        MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.Active);
+        medtronicUtil.setPumpDeviceState(PumpDeviceState.Active);
 
         // create message
         PumpMessage msg;
@@ -541,7 +533,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         // send and wait for response
         PumpMessage response = sendAndListen(msg, timeoutMs);
 
-        MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.Sleeping);
+        medtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
         return response;
     }
@@ -571,12 +563,9 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         for (int retries = 0; retries < MAX_COMMAND_TRIES; retries++) {
 
             try {
-                PumpMessage response = null;
+                PumpMessage response = sendAndGetResponse(commandType, bodyData, DEFAULT_TIMEOUT + (DEFAULT_TIMEOUT * retries));
 
-                response = sendAndGetResponse(commandType, bodyData, DEFAULT_TIMEOUT + (DEFAULT_TIMEOUT * retries));
-
-                String check = checkResponseContent(response, commandType.commandDescription,
-                        commandType.expectedLength);
+                String check = checkResponseContent(response, commandType.commandDescription, commandType.expectedLength);
 
                 if (check == null) {
 
@@ -664,9 +653,9 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         aapsLogger.debug(LTag.PUMPBTCOMM, "getDataFromPump: {}", commandType);
 
-        MedtronicUtil.getInstance().setCurrentCommand(commandType);
+        medtronicUtil.setCurrentCommand(commandType);
 
-        MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.Active);
+        medtronicUtil.setPumpDeviceState(PumpDeviceState.Active);
 
         for (int retries = 0; retries <= MAX_COMMAND_TRIES; retries++) {
 
@@ -677,9 +666,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 msg = makePumpMessage(commandType);
 
                 // send and wait for response
-                PumpMessage response = null;
 
-                response = sendAndListen(msg, DEFAULT_TIMEOUT + (DEFAULT_TIMEOUT * retries));
+                PumpMessage response = sendAndListen(msg, DEFAULT_TIMEOUT + (DEFAULT_TIMEOUT * retries));
 
 //                aapsLogger.debug(LTag.PUMPBTCOMM,"1st Response: " + HexDump.toHexStringDisplayable(response.getRawContent()));
 //                aapsLogger.debug(LTag.PUMPBTCOMM,"1st Response: " + HexDump.toHexStringDisplayable(response.getMessageBody().getTxData()));
@@ -723,8 +711,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 if (basalProfile != null) {
                     aapsLogger.debug(LTag.PUMPBTCOMM, "Converted response for {} is {}.", commandType.name(), basalProfile);
 
-                    MedtronicUtil.getInstance().setCurrentCommand(null);
-                    MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.Sleeping);
+                    medtronicUtil.setCurrentCommand(null);
+                    medtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
                     return basalProfile;
                 }
@@ -735,8 +723,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         }
 
         aapsLogger.warn(LTag.PUMPBTCOMM, "Error reading profile in max retries.");
-        MedtronicUtil.getInstance().setCurrentCommand(null);
-        MedtronicUtil.getInstance().setPumpDeviceState(PumpDeviceState.Sleeping);
+        medtronicUtil.setCurrentCommand(null);
+        medtronicUtil.setPumpDeviceState(PumpDeviceState.Sleeping);
 
         return null;
 
@@ -795,7 +783,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     public Map<String, PumpSettingDTO> getPumpSettings() {
 
-        Object responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.getSettings(MedtronicUtil.getInstance()
+        Object responseObject = sendAndGetResponseWithCheck(MedtronicCommandType.getSettings(medtronicUtil
                 .getMedtronicPumpModel()));
 
         return responseObject == null ? null : (Map<String, PumpSettingDTO>) responseObject;
@@ -806,7 +794,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         aapsLogger.info(LTag.PUMPBTCOMM, "setBolus: " + units);
 
-        return setCommand(MedtronicCommandType.SetBolus, MedtronicUtil.getInstance().getBolusStrokes(units));
+        return setCommand(MedtronicCommandType.SetBolus, medtronicUtil.getBolusStrokes(units));
 
     }
 
@@ -833,7 +821,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         data[i + 1] = (byte) gc.get(Calendar.MINUTE);
         data[i + 2] = (byte) gc.get(Calendar.SECOND);
 
-        byte[] yearByte = MedtronicUtil.getInstance().getByteArrayFromUnsignedShort(gc.get(Calendar.YEAR), true);
+        byte[] yearByte = medtronicUtil.getByteArrayFromUnsignedShort(gc.get(Calendar.YEAR), true);
 
         data[i + 3] = yearByte[0];
         data[i + 4] = yearByte[1];
@@ -897,7 +885,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     public Boolean setBasalProfile(BasalProfile basalProfile) {
 
-        List<List<Byte>> basalProfileFrames = MedtronicUtil.getInstance().getBasalProfileFrames(basalProfile.getRawData());
+        List<List<Byte>> basalProfileFrames = medtronicUtil.getBasalProfileFrames(basalProfile.getRawData());
 
         for (int retries = 0; retries <= MAX_COMMAND_TRIES; retries++) {
 
