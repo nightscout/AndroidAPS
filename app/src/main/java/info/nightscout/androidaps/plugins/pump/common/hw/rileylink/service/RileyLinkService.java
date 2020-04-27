@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.inject.Inject;
 
 import dagger.android.DaggerService;
@@ -35,10 +37,10 @@ public abstract class RileyLinkService extends DaggerService {
     @Inject protected SP sp;
     @Inject protected Context context;
     @Inject protected RileyLinkUtil rileyLinkUtil;
-    @Inject protected MedtronicUtil medtronicUtil;
+    @Inject protected MedtronicUtil medtronicUtil; // TODO should be avoided here as it's MDT
 
 
-    public RileyLinkBLE rileyLinkBLE; // android-bluetooth management
+    @NotNull protected RileyLinkBLE rileyLinkBLE; // android-bluetooth management, must be set in initRileyLinkServiceData
     protected BluetoothAdapter bluetoothAdapter;
     protected RFSpy rfspy; // interface for RL xxx Mhz radio.
     protected RileyLinkBroadcastReceiver mBroadcastReceiver;
@@ -251,6 +253,9 @@ public abstract class RileyLinkService extends DaggerService {
         rileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothReady);
     }
 
+    public RileyLinkBLE getRileyLinkBLE() {
+        return rileyLinkBLE;
+    }
 
     /**
      * Get Target Device for Service

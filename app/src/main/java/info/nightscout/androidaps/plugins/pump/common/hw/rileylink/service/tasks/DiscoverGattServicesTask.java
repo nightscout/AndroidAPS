@@ -1,12 +1,17 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks;
 
+import javax.inject.Inject;
+
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 
 /**
  * Created by geoff on 7/9/16.
  */
 public class DiscoverGattServicesTask extends ServiceTask {
+
+    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
 
     public boolean needToConnect = false;
 
@@ -26,8 +31,8 @@ public class DiscoverGattServicesTask extends ServiceTask {
     public void run() {
 
         if (needToConnect)
-            RileyLinkUtil.getInstance().getRileyLinkBLE().connectGatt();
+            medtronicPumpPlugin.getRileyLinkService().getRileyLinkBLE().connectGatt();
 
-        RileyLinkUtil.getInstance().getRileyLinkBLE().discoverServices();
+        medtronicPumpPlugin.getRileyLinkService().getRileyLinkBLE().discoverServices();
     }
 }

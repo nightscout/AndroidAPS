@@ -22,6 +22,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUIComm;
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUIPostprocessor;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
@@ -34,8 +36,10 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     @Inject HasAndroidInjector injector;
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
     @Inject MedtronicUtil medtronicUtil;
+    @Inject MedtronicUIPostprocessor medtronicUIPostprocessor;
 
-    // cache of most recently received set of pump history pages. Probably shouldn't be here.
+
+    private MedtronicUIComm medtronicUIComm;
     private MedtronicCommunicationManager medtronicCommunicationManager;
     private IBinder mBinder = new LocalBinder();
 
@@ -87,6 +91,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
         // init rileyLinkCommunicationManager
         medtronicCommunicationManager = new MedtronicCommunicationManager(injector, rfspy);
+        medtronicUIComm = new MedtronicUIComm(injector, aapsLogger, medtronicUtil, medtronicUIPostprocessor, medtronicCommunicationManager);
 
         aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkMedtronicService newly constructed");
         medtronicUtil.setMedtronicService(this);
@@ -102,6 +107,10 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         return this.medtronicCommunicationManager;
     }
 
+
+    public MedtronicUIComm getMedtronicUIComm() {
+        return medtronicUIComm;
+    }
 
     public void setPumpIDString(String pumpID) {
         if (pumpID.length() != 6) {

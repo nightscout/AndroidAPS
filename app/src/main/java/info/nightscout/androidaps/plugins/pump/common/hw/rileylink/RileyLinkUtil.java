@@ -156,11 +156,13 @@ public class RileyLinkUtil {
     }
 
 
+    @Deprecated
     public RileyLinkBLE getRileyLinkBLE() {
         return rileyLinkBLE;
     }
 
 
+    @Deprecated
     public void setRileyLinkBLE(RileyLinkBLE rileyLinkBLEIn) {
         rileyLinkBLE = rileyLinkBLEIn;
     }
@@ -180,12 +182,13 @@ public class RileyLinkUtil {
         return rileyLinkServiceData.tuneUpDone;
     }
 
-
+    @Deprecated
     public RileyLinkService getRileyLinkService() {
         return rileyLinkService;
     }
 
 
+    @Deprecated
     public void setRileyLinkService(RileyLinkService rileyLinkService) {
         this.rileyLinkService = rileyLinkService;
     }

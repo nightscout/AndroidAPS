@@ -1,15 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
@@ -17,41 +12,28 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 /**
  * Created by andy on 6/14/18.
  */
-@Singleton
 public class MedtronicUIComm {
 
-    @NotNull private final HasAndroidInjector injector;
-    @NotNull private final AAPSLogger aapsLogger;
-    @NotNull private final RileyLinkUtil rileyLinkUtil;
-    @NotNull private final MedtronicUtil medtronicUtil;
-
-    MedtronicCommunicationManager mcmInstance = null;
-    @NotNull private final MedtronicUIPostprocessor medtronicUIPostprocessor;
+    private final HasAndroidInjector injector;
+    private final AAPSLogger aapsLogger;
+    private final MedtronicUtil medtronicUtil;
+    private final MedtronicCommunicationManager medtronicCommunicationManager;
+    private final MedtronicUIPostprocessor medtronicUIPostprocessor;
 
     @Inject
     public MedtronicUIComm(
-            @NotNull HasAndroidInjector injector,
-            @NotNull AAPSLogger aapsLogger,
-            @NotNull RileyLinkUtil rileyLinkUtil,
-            @NotNull MedtronicUtil medtronicUtil,
-            @NotNull MedtronicUIPostprocessor medtronicUIPostprocessor
+            HasAndroidInjector injector,
+            AAPSLogger aapsLogger,
+            MedtronicUtil medtronicUtil,
+            MedtronicUIPostprocessor medtronicUIPostprocessor,
+            MedtronicCommunicationManager medtronicCommunicationManager
     ) {
         this.injector = injector;
         this.aapsLogger = aapsLogger;
-        this.rileyLinkUtil = rileyLinkUtil;
         this.medtronicUtil = medtronicUtil;
         this.medtronicUIPostprocessor = medtronicUIPostprocessor;
+        this.medtronicCommunicationManager = medtronicCommunicationManager;
     }
-
-
-    private MedtronicCommunicationManager getCommunicationManager() {
-        if (mcmInstance == null) {
-            mcmInstance = MedtronicCommunicationManager.getInstance();
-        }
-
-        return mcmInstance;
-    }
-
 
     public synchronized MedtronicUITask executeCommand(MedtronicCommandType commandType, Object... parameters) {
 
@@ -69,7 +51,7 @@ public class MedtronicUIComm {
         // LOG.warn("@@@ End Thread");
         // });
 
-        task.execute(getCommunicationManager());
+        task.execute(medtronicCommunicationManager);
 
         // for (int i = 0; i < getMaxWaitTime(commandType); i++) {
         // synchronized (task) {
@@ -99,28 +81,7 @@ public class MedtronicUIComm {
 
     }
 
-
-    /**
-     * We return 25s as waitTime (17 for wakeUp, and addtional 8 for data retrieval) for normal commands and
-     * 120s for History. Real time for returning data would be arround 5s, but lets be sure.
-     *
-     * @param commandType
-     * @return
-     */
-    private int getMaxWaitTime(MedtronicCommandType commandType) {
-        if (commandType == MedtronicCommandType.GetHistoryData)
-            return 120;
-        else
-            return 25;
-    }
-
-
     public int getInvalidResponsesCount() {
-        return getCommunicationManager().getNotConnectedCount();
-    }
-
-
-    public void startTunning() {
-        rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
+        return medtronicCommunicationManager.getNotConnectedCount();
     }
 }

@@ -30,7 +30,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
  */
 
 @Singleton
-class MedtronicUIPostprocessor {
+public class MedtronicUIPostprocessor {
 
     @NotNull private final AAPSLogger aapsLogger;
     @NotNull private final RxBusWrapper rxBus;
