@@ -210,7 +210,7 @@ public class Opts {
             cPjson.put("enteredBy","openaps://AndroidAPS");
             cPjson.put("percent", tp.percentRate);
             //cPjson.put("durationInMinutes", tp.durationInMinutes);
-            //cPjson.put("isEnding", tp.isEndingEvent());
+            cPjson.put("isEnding", tp.isEndingEvent());
             cPjson.put("isFakeExtended", tp.isFakeExtended);
             cPjson.put("insulin",null);
             cPjson.put("carbs",null);
