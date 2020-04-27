@@ -1383,7 +1383,7 @@ public class TuneProfilePlugin extends PluginBase {
                     //extended and temp basal file
                     FS.createAutotunefile("aaps-pumphistory." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpHistorytoJSON().toString(4));
                     //ns-treatments files are for result compare with oref0 autotune on virtual machine
-                    FS.createAutotunefile("ns-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.extBolustoJSON().toString(4));
+                    FS.createAutotunefile("ns-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.nsTreatmenttoJSON().toString(4));
 
                     log.debug("Day "+i+" of "+daysBack);
                     //log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));
