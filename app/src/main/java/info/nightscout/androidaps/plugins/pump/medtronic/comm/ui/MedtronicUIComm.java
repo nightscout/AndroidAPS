@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 
-import javax.inject.Inject;
-
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -20,7 +18,6 @@ public class MedtronicUIComm {
     private final MedtronicCommunicationManager medtronicCommunicationManager;
     private final MedtronicUIPostprocessor medtronicUIPostprocessor;
 
-    @Inject
     public MedtronicUIComm(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,

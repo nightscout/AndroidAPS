@@ -12,7 +12,6 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 
 /**
@@ -278,7 +277,7 @@ public class BasalProfile {
     }
 
 
-    public Double[] getProfilesByHour() {
+    public Double[] getProfilesByHour(PumpType pumpType) {
 
         List<BasalProfileEntry> entries = null;
 
@@ -304,8 +303,6 @@ public class BasalProfile {
         }
 
         Double[] basalByHour = new Double[24];
-
-        PumpType pumpType = MedtronicPumpPlugin.getPlugin().getMedtronicPumpStatus().pumpType;
 
         for (int i = 0; i < entries.size(); i++) {
             BasalProfileEntry current = entries.get(i);
@@ -368,7 +365,7 @@ public class BasalProfile {
         return L.isEnabled(L.PUMPCOMM);
     }
 
-    public boolean verify() {
+    public boolean verify(PumpType pumpType) {
 
         try {
             getEntries();
@@ -376,7 +373,7 @@ public class BasalProfile {
             return false;
         }
 
-        Double[] profilesByHour = getProfilesByHour();
+        Double[] profilesByHour = getProfilesByHour(pumpType);
 
         for (Double aDouble : profilesByHour) {
             if (aDouble > 35.0d)

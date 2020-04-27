@@ -31,6 +31,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
@@ -1397,7 +1398,7 @@ public class MedtronicHistoryData {
     }
 
 
-    public void processLastBasalProfileChange(MedtronicPumpStatus mdtPumpStatus) {
+    public void processLastBasalProfileChange(PumpType pumpType, MedtronicPumpStatus mdtPumpStatus) {
 
         List<PumpHistoryEntry> filteredItems = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile);
 
@@ -1423,7 +1424,7 @@ public class MedtronicHistoryData {
             aapsLogger.debug(LTag.PUMP, "processLastBasalProfileChange. item found, setting new basalProfileLocally: " + newProfile);
             BasalProfile basalProfile = (BasalProfile) newProfile.getDecodedData().get("Object");
 
-            mdtPumpStatus.basalsByHour = basalProfile.getProfilesByHour();
+            mdtPumpStatus.basalsByHour = basalProfile.getProfilesByHour(pumpType);
         }
     }
 

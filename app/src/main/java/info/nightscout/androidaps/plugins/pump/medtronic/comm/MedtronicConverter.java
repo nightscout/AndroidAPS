@@ -3,13 +3,13 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm;
 import org.joda.time.IllegalFieldValueException;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
@@ -33,7 +33,7 @@ public class MedtronicConverter {
     MedtronicDeviceType pumpModel;
 
 
-    public Object convertResponse(MedtronicCommandType commandType, byte[] rawContent) {
+    public Object convertResponse(PumpType pumpType, MedtronicCommandType commandType, byte[] rawContent) {
 
         if ((rawContent == null || rawContent.length < 1) && commandType != MedtronicCommandType.PumpModel) {
             LOG.warn("Content is empty or too short, no data to convert (type={},isNull={},length={})",
@@ -67,7 +67,7 @@ public class MedtronicConverter {
             case GetBasalProfileSTD:
             case GetBasalProfileA:
             case GetBasalProfileB: {
-                return decodeBasalProfile(rawContent);
+                return decodeBasalProfile(pumpType, rawContent);
 
             }
 
@@ -96,11 +96,11 @@ public class MedtronicConverter {
     }
 
 
-    private BasalProfile decodeBasalProfile(byte[] rawContent) {
+    private BasalProfile decodeBasalProfile(PumpType pumpType, byte[] rawContent) {
 
         BasalProfile basalProfile = new BasalProfile(rawContent);
 
-        return basalProfile.verify() ? basalProfile : null;
+        return basalProfile.verify(pumpType) ? basalProfile : null;
     }
 
 

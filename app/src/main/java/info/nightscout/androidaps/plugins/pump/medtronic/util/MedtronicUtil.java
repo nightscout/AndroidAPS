@@ -59,7 +59,6 @@ public class MedtronicUtil {
     private ClockDTO pumpTime;
     public Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     public Gson gsonInstanceCore = new GsonBuilder().create();
-    private BatteryType batteryType = BatteryType.None;
 
     @NotNull private final AAPSLogger aapsLogger;
     @NotNull private final RxBusWrapper rxBus;
@@ -507,29 +506,15 @@ public class MedtronicUtil {
         return settings;
     }
 
-
     public void setSettings(Map<String, PumpSettingDTO> settings) {
         this.settings = settings;
     }
-
 
     public void setPumpTime(ClockDTO pumpTime) {
         this.pumpTime = pumpTime;
     }
 
-
     public ClockDTO getPumpTime() {
         return this.pumpTime;
     }
-
-    public void setBatteryType(BatteryType batteryType) {
-        this.batteryType = batteryType;
-    }
-
-
-    public BatteryType getBatteryType() {
-        return this.batteryType;
-    }
-
-
 }

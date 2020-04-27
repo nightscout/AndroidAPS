@@ -40,7 +40,6 @@ public abstract class PumpStatus {
     public Double dailyTotalUnits;
     public String maxDailyTotalUnits;
     public boolean validBasalRateProfileSelectedOnPump = true;
-    public PumpType pumpType = PumpType.GenericAAPS;
     public ProfileStore profileStore;
     public String units; // Constants.MGDL or Constants.MMOL
     public PumpStatusType pumpStatusType = PumpStatusType.Running;
@@ -70,23 +69,5 @@ public abstract class PumpStatus {
         this.lastErrorConnection = System.currentTimeMillis();
     }
 
-
     public abstract String getErrorInfo();
-
-
-    public abstract void refreshConfiguration();
-
-
-    public PumpType getPumpType() {
-        return pumpType;
-    }
-
-
-    public void setPumpType(PumpType pumpType) {
-        this.pumpType = pumpType;
-    }
-
-    // public Date last_bolus_time;
-    // public double last_bolus_amount = 0;
-
 }

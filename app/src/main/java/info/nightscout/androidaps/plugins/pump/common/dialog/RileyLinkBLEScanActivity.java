@@ -47,6 +47,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCons
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
 import info.nightscout.androidaps.plugins.pump.common.utils.LocationHelper;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
@@ -62,7 +63,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
     @Inject ResourceHelper resourceHelper;
     @Inject RileyLinkUtil rileyLinkUtil;
     @Inject MedtronicUtil medtronicUtil;
-    @Inject MedtronicPumpStatus medtronicPumpStatus;
+    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 30241; // arbitrary.
     private static final int REQUEST_ENABLE_BT = 30242; // arbitrary
@@ -113,7 +114,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
             rileyLinkUtil.getRileyLinkSelectPreference().setSummary(bleAddress);
 
-            medtronicPumpStatus.verifyConfiguration(); // force reloading of address
+            medtronicPumpPlugin.getRileyLinkService().verifyConfiguration(); // force reloading of address
 
             rxBus.send(new EventMedtronicPumpConfigurationChanged());
 

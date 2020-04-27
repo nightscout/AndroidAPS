@@ -37,9 +37,9 @@ import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.WarnColors
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -88,7 +88,7 @@ class MedtronicFragment : DaggerFragment() {
         medtronic_pump_status.text = "{fa-bed}"
 
         medtronic_history.setOnClickListener {
-            if (medtronicPumpStatus.verifyConfiguration()) {
+            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
                 startActivity(Intent(context, MedtronicHistoryActivity::class.java))
             } else {
                 displayNotConfiguredDialog()
@@ -96,7 +96,7 @@ class MedtronicFragment : DaggerFragment() {
         }
 
         medtronic_refresh.setOnClickListener {
-            if (!medtronicPumpStatus.verifyConfiguration()) {
+            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() != true) {
                 displayNotConfiguredDialog()
             } else {
                 medtronic_refresh.isEnabled = false
@@ -110,7 +110,7 @@ class MedtronicFragment : DaggerFragment() {
         }
 
         medtronic_stats.setOnClickListener {
-            if (medtronicPumpStatus.verifyConfiguration()) {
+            if (medtronicPumpPlugin.rileyLinkService?.verifyConfiguration() == true) {
                 startActivity(Intent(context, RileyLinkStatusActivity::class.java))
             } else {
                 displayNotConfiguredDialog()
@@ -150,7 +150,7 @@ class MedtronicFragment : DaggerFragment() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 aapsLogger.debug(LTag.PUMP, "EventMedtronicPumpConfigurationChanged triggered")
-                medtronicPumpStatus.verifyConfiguration()
+                medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
                 updateGUI()
             }, { fabricPrivacy.logException(it) })
         disposable += rxBus
@@ -185,7 +185,7 @@ class MedtronicFragment : DaggerFragment() {
                 medtronicPumpStatus.rileyLinkServiceState.isConnecting                        -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
                 medtronicPumpStatus.rileyLinkServiceState.isError && rileyLinkError == null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
                 medtronicPumpStatus.rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
-                else                                                                 -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
+                else                                                                          -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
             }
         medtronic_rl_status.setTextColor(if (rileyLinkError != null) Color.RED else Color.WHITE)
 
@@ -322,7 +322,7 @@ class MedtronicFragment : DaggerFragment() {
             ?: ""
 
         // battery
-        if (medtronicUtil.getBatteryType() == BatteryType.None || medtronicPumpStatus.batteryVoltage == null) {
+        if (medtronicPumpStatus.batteryType == BatteryType.None || medtronicPumpStatus.batteryVoltage == null) {
             medtronic_pumpstate_battery.text = "{fa-battery-" + medtronicPumpStatus.batteryRemaining / 25 + "}  "
         } else {
             medtronic_pumpstate_battery.text = "{fa-battery-" + medtronicPumpStatus.batteryRemaining / 25 + "}  " + medtronicPumpStatus.batteryRemaining + "%" + String.format("  (%.2f V)", medtronicPumpStatus.batteryVoltage)
@@ -333,6 +333,7 @@ class MedtronicFragment : DaggerFragment() {
         medtronic_reservoir.text = resourceHelper.gs(R.string.reservoirvalue, medtronicPumpStatus.reservoirRemainingUnits, medtronicPumpStatus.reservoirFullUnits)
         warnColors.setColorInverse(medtronic_reservoir, medtronicPumpStatus.reservoirRemainingUnits, 50.0, 20.0)
 
+        medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
         medtronic_errors.text = medtronicPumpStatus.errorInfo
     }
 }

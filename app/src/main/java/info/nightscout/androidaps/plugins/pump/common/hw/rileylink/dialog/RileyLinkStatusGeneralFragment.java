@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -35,6 +36,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     @Inject MedtronicUtil medtronicUtil;
     @Inject MedtronicPumpStatus medtronicPumpStatus;
     @Inject ResourceHelper resourceHelper;
+    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
 
     TextView connectionStatus;
     TextView configuredAddress;
@@ -128,7 +130,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
         if (medtronicPumpStatus != null) {
             this.deviceType.setText(resourceHelper.gs(RileyLinkTargetDevice.MedtronicPump.getResourceId()));
-            this.deviceModel.setText(medtronicPumpStatus.pumpType.getDescription());
+            this.deviceModel.setText(medtronicPumpPlugin.getPumpDescription().pumpType.getDescription());
             this.serialNumber.setText(medtronicPumpStatus.serialNumber);
             this.pumpFrequency.setText(resourceHelper.gs(medtronicPumpStatus.pumpFrequency.equals("medtronic_pump_frequency_us_ca") ? R.string.medtronic_pump_frequency_us_ca : R.string.medtronic_pump_frequency_worldwide));
 

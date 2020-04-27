@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui;
 
-import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 
@@ -13,6 +12,7 @@ import javax.inject.Singleton;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BatteryStatusDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
@@ -32,19 +32,27 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 @Singleton
 public class MedtronicUIPostprocessor {
 
-    @NotNull private final AAPSLogger aapsLogger;
-    @NotNull private final RxBusWrapper rxBus;
-    @NotNull private final ResourceHelper resourceHelper;
-    @NotNull private final MedtronicUtil medtronicUtil;
-    @NotNull private final MedtronicPumpStatus medtronicPumpStatus;
+    private final AAPSLogger aapsLogger;
+    private final RxBusWrapper rxBus;
+    private final ResourceHelper resourceHelper;
+    private final MedtronicUtil medtronicUtil;
+    private final MedtronicPumpStatus medtronicPumpStatus;
+    private final MedtronicPumpPlugin medtronicPumpPlugin;
 
     @Inject
-    public MedtronicUIPostprocessor(AAPSLogger aapsLogger, RxBusWrapper rxBus, ResourceHelper resourceHelper, MedtronicUtil medtronicUtil, MedtronicPumpStatus medtronicPumpStatus) {
+    public MedtronicUIPostprocessor(
+            AAPSLogger aapsLogger,
+            RxBusWrapper rxBus,
+            ResourceHelper resourceHelper,
+            MedtronicUtil medtronicUtil,
+            MedtronicPumpStatus medtronicPumpStatus,
+            MedtronicPumpPlugin medtronicPumpPlugin) {
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
         this.medtronicUtil = medtronicUtil;
         this.medtronicPumpStatus = medtronicPumpStatus;
+        this.medtronicPumpPlugin = medtronicPumpPlugin;
     }
 
 
@@ -60,7 +68,7 @@ public class MedtronicUIPostprocessor {
                 if (response) {
                     BasalProfile basalProfile = (BasalProfile) uiTask.getParameter(0);
 
-                    medtronicPumpStatus.basalsByHour = basalProfile.getProfilesByHour();
+                    medtronicPumpStatus.basalsByHour = basalProfile.getProfilesByHour(medtronicPumpPlugin.getPumpDescription().pumpType);
                 }
             }
             break;
@@ -69,7 +77,7 @@ public class MedtronicUIPostprocessor {
                 BasalProfile basalProfile = (BasalProfile) uiTask.returnData;
 
                 try {
-                    Double[] profilesByHour = basalProfile.getProfilesByHour();
+                    Double[] profilesByHour = basalProfile.getProfilesByHour(medtronicPumpPlugin.getPumpDescription().pumpType);
 
                     if (profilesByHour != null) {
                         medtronicPumpStatus.basalsByHour = profilesByHour;
@@ -197,7 +205,7 @@ public class MedtronicUIPostprocessor {
 
         PumpSettingDTO checkValue = null;
 
-        medtronicPumpStatus.verifyConfiguration();
+        medtronicPumpPlugin.getRileyLinkService().verifyConfiguration();
 
         // check profile
         if (!"Yes".equals(settings.get("PCFG_BASAL_PROFILES_ENABLED").value)) {

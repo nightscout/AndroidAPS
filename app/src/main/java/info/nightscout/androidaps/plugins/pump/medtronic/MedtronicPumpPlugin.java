@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
+import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -167,7 +168,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         SystemClock.sleep(5000);
 
                         aapsLogger.debug(LTag.PUMP, "Starting Medtronic-RileyLink service");
-                        if (medtronicPumpStatus.setNotInPreInit()) {
+                        if (rileyLinkMedtronicService.setNotInPreInit()) {
                             break;
                         }
                     }
@@ -208,11 +209,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         medtronicPumpStatus.lastDataTime = medtronicPumpStatus.lastConnection;
         medtronicPumpStatus.previousConnection = medtronicPumpStatus.lastConnection;
 
-        medtronicPumpStatus.refreshConfiguration();
+        if (rileyLinkMedtronicService != null) rileyLinkMedtronicService.verifyConfiguration();
 
         aapsLogger.debug(LTag.PUMP, "initPumpStatusData: " + this.medtronicPumpStatus);
-
-        this.pumpStatus = medtronicPumpStatus;
 
         // this is only thing that can change, by being configured
         pumpDescription.maxTempAbsolute = (medtronicPumpStatus.maxBasal != null) ? medtronicPumpStatus.maxBasal : 35.0d;
@@ -285,6 +284,9 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         return RileyLinkMedtronicService.class;
     }
 
+    @Override public PumpStatus getPumpStatusData() {
+        return medtronicPumpStatus;
+    }
 
     @Override
     public String deviceID() {
@@ -633,7 +635,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         boolean invalid = false;
         Double[] basalsByHour = medtronicPumpStatus.basalsByHour;
-        PumpType pumpType = medtronicPumpStatus.getPumpType();
 
         aapsLogger.debug(LTag.PUMP, "Current Basals (h):   "
                 + (basalsByHour == null ? "null" : BasalProfile.getProfilesByHourToString(basalsByHour)));
@@ -647,7 +648,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         for (Profile.ProfileValue basalValue : profile.getBasalValues()) {
 
-            double basalValueValue = pumpType.determineCorrectBasalSize(basalValue.value);
+            double basalValueValue = pumpDescription.pumpType.determineCorrectBasalSize(basalValue.value);
 
             int hour = basalValue.timeAsSeconds / (60 * 60);
 
@@ -1046,7 +1047,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew);
         } else {
             double absoluteValue = profile.getBasal() * (percent / 100.0d);
-            absoluteValue = medtronicPumpStatus.pumpType.determineCorrectBasalSize(absoluteValue);
+            absoluteValue = pumpDescription.pumpType.determineCorrectBasalSize(absoluteValue);
             aapsLogger.warn(LTag.PUMP, "setTempBasalPercent [MedtronicPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% (" + percent + "). This will start setTempBasalAbsolute, with calculated value (" + absoluteValue + "). Result might not be 100% correct.");
             return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew);
         }
@@ -1083,7 +1084,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         if (this.medtronicPumpStatus.basalProfileStatus != BasalProfileStatus.NotInitialized
                 && medtronicHistoryData.hasBasalProfileChanged()) {
-            medtronicHistoryData.processLastBasalProfileChange(medtronicPumpStatus);
+            medtronicHistoryData.processLastBasalProfileChange(pumpDescription.pumpType, medtronicPumpStatus);
         }
 
         PumpDriverState previousState = this.pumpState;
@@ -1373,12 +1374,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
     @NonNull @Override
     public ManufacturerType manufacturer() {
-        return medtronicPumpStatus.pumpType.getManufacturer();
+        return pumpDescription.pumpType.getManufacturer();
     }
 
     @NonNull @Override
     public PumpType model() {
-        return medtronicPumpStatus.pumpType;
+        return pumpDescription.pumpType;
     }
 
     @NonNull @Override
@@ -1462,14 +1463,12 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @NonNull
     private BasalProfile convertProfileToMedtronicProfile(Profile profile) {
 
-        PumpType pumpType = pumpStatus.pumpType;
-
         BasalProfile basalProfile = new BasalProfile();
 
         for (int i = 0; i < 24; i++) {
             double rate = profile.getBasalTimeFromMidnight(i * 60 * 60);
 
-            double v = pumpType.determineCorrectBasalSize(rate);
+            double v = pumpDescription.pumpType.determineCorrectBasalSize(rate);
 
             BasalProfileEntry basalEntry = new BasalProfileEntry(v, i, 0);
             basalProfile.addEntry(basalEntry);
@@ -1516,7 +1515,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         switch (mcat) {
 
             case WakeUpAndTune: {
-                if (medtronicPumpStatus.verifyConfiguration()) {
+                if (rileyLinkMedtronicService.verifyConfiguration()) {
                     ServiceTaskExecutor.startTask(new WakeAndTuneTask(getInjector()));
                 } else {
                     Intent i = new Intent(context, ErrorHelperActivity.class);
