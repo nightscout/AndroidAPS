@@ -11,8 +11,6 @@ import android.content.IntentFilter;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import org.slf4j.Logger;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -23,9 +21,7 @@ import javax.inject.Inject;
 import dagger.android.DaggerBroadcastReceiver;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
@@ -49,8 +45,6 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject ServiceTaskExecutor serviceTaskExecutor;
-
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
 
     RileyLinkService serviceInstance;
     protected Map<String, List<String>> broadcastIdentifiers = null;
@@ -98,11 +92,11 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
         super.onReceive(context, intent);
 
         if (intent == null) {
-            LOG.error("onReceive: received null intent");
+            aapsLogger.error("onReceive: received null intent");
         } else {
             String action = intent.getAction();
             if (action == null) {
-                LOG.error("onReceive: null action");
+                aapsLogger.error("onReceive: null action");
             } else {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Received Broadcast: " + action);
 
@@ -112,7 +106,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
                         !processDeviceSpecificBroadcasts(action, intent) && //
                         !processApplicationSpecificBroadcasts(action, intent) //
                 ) {
-                    LOG.error("Unhandled broadcast: action=" + action);
+                    aapsLogger.error("Unhandled broadcast: action=" + action);
                 }
             }
         }
@@ -176,7 +170,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
         } else if (action.equals(RileyLinkConst.Intents.RileyLinkNewAddressSet)) {
             String RileylinkBLEAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
             if (RileylinkBLEAddress.equals("")) {
-                LOG.error("No Rileylink BLE Address saved in app");
+                aapsLogger.error("No Rileylink BLE Address saved in app");
             } else {
                 // showBusy("Configuring Service", 50);
                 // rileyLinkBLE.findRileyLink(RileylinkBLEAddress);

@@ -32,8 +32,8 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ThreadUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by geoff on 5/26/16.
@@ -65,7 +65,7 @@ public class RFSpy {
         injector.androidInjector().inject(this);
         this.injector = injector;
         this.rileyLinkBle = rileyLinkBle;
-        reader = new RFSpyReader(rileyLinkBle);
+        reader = new RFSpyReader(aapsLogger, rileyLinkBle);
     }
 
     public String getBLEVersionCached() {

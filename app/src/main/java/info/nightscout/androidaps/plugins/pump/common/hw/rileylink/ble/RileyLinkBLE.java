@@ -47,8 +47,8 @@ public class RileyLinkBLE {
     @Inject RileyLinkUtil rileyLinkUtil;
 
     private final Context context;
-    public boolean gattDebugEnabled = true;
-    boolean manualDisconnect = false;
+    private boolean gattDebugEnabled = true;
+    private boolean manualDisconnect = false;
     private BluetoothAdapter bluetoothAdapter;
     private BluetoothGattCallback bluetoothGattCallback;
     private BluetoothDevice rileyLinkDevice;
@@ -447,7 +447,7 @@ public class RileyLinkBLE {
                     }
                     BluetoothGattDescriptor descr = list.get(0);
                     // Tell the remote device to send the notifications
-                    mCurrentOperation = new DescriptorWriteOperation(bluetoothConnectionGatt, descr,
+                    mCurrentOperation = new DescriptorWriteOperation(aapsLogger, bluetoothConnectionGatt, descr,
                             BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
                     mCurrentOperation.execute(this);
                     if (mCurrentOperation.timedOut) {
@@ -496,7 +496,7 @@ public class RileyLinkBLE {
                 } else {
                     BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID)
                             .getCharacteristic(charaUUID);
-                    mCurrentOperation = new CharacteristicWriteOperation(bluetoothConnectionGatt, chara, value);
+                    mCurrentOperation = new CharacteristicWriteOperation(aapsLogger, bluetoothConnectionGatt, chara, value);
                     mCurrentOperation.execute(this);
                     if (mCurrentOperation.timedOut) {
                         rval.resultCode = BLECommOperationResult.RESULT_TIMEOUT;
@@ -538,7 +538,7 @@ public class RileyLinkBLE {
                 } else {
                     BluetoothGattCharacteristic chara = bluetoothConnectionGatt.getService(serviceUUID).getCharacteristic(
                             charaUUID);
-                    mCurrentOperation = new CharacteristicReadOperation(bluetoothConnectionGatt, chara);
+                    mCurrentOperation = new CharacteristicReadOperation(aapsLogger, bluetoothConnectionGatt, chara);
                     mCurrentOperation.execute(this);
                     if (mCurrentOperation.timedOut) {
                         rval.resultCode = BLECommOperationResult.RESULT_TIMEOUT;

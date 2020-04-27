@@ -37,7 +37,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewB
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
@@ -109,8 +108,11 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
 
     public abstract void initPumpStatusData();
+
     public abstract void resetRileyLinkConfiguration();
+
     public abstract void doTuneUpDevice();
+
     public abstract RileyLinkService getRileyLinkService();
 
     @Override
@@ -446,7 +448,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
 
     public ManufacturerType manufacturer() {
-        return pumpType.getManufacturer() ;
+        return pumpType.getManufacturer();
     }
 
     @NotNull
