@@ -92,14 +92,14 @@ class TddCalculator @Inject constructor(
             "<b>" + resourceHelper.gs(R.string.tdd) + ":</b><br>" +
                 toText(tdds) +
                 "<b>" + resourceHelper.gs(R.string.average) + ":</b><br>" +
-                averageTdd.toText(tdds.size())
+                averageTdd.toText(resourceHelper, tdds.size())
         )
     }
 
     private fun toText(tdds: LongSparseArray<TDD>): String {
         var t = ""
         for (i in 0 until tdds.size()) {
-            t += "${tdds.valueAt(i).toText()}<br>"
+            t += "${tdds.valueAt(i).toText(resourceHelper)}<br>"
         }
         return t
     }

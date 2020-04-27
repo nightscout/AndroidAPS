@@ -14,7 +14,6 @@ import android.widget.Toast;
 import androidx.annotation.DrawableRes;
 import androidx.appcompat.view.ContextThemeWrapper;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
@@ -30,20 +29,20 @@ public class ToastUtils {
         }
 
         public static void infoToast(final Context ctx, final String string) {
-            graphicalToast(ctx, string, R.drawable.ic_toast_info,false);
+            graphicalToast(ctx, string, R.drawable.ic_toast_info, false);
         }
 
         public static void okToast(final Context ctx, final String string) {
-            graphicalToast(ctx, string, R.drawable.ic_toast_check,false);
+            graphicalToast(ctx, string, R.drawable.ic_toast_check, false);
         }
 
         public static void errorToast(final Context ctx, final String string) {
-            graphicalToast(ctx, string, R.drawable.ic_toast_error,false);
+            graphicalToast(ctx, string, R.drawable.ic_toast_error, false);
         }
     }
 
     public static void showToastInUiThread(final Context ctx, final int stringId) {
-        showToastInUiThread(ctx, MainApp.gs(stringId));
+        showToastInUiThread(ctx, ctx.getString(stringId));
     }
 
     public static void warnToast(final Context ctx, final String string) {
@@ -70,7 +69,7 @@ public class ToastUtils {
     public static void graphicalToast(final Context ctx, final String string, @DrawableRes int iconId, boolean isShort) {
         Handler mainThread = new Handler(Looper.getMainLooper());
         mainThread.post(() -> {
-            View toastRoot =LayoutInflater.from(new ContextThemeWrapper(ctx, R.style.AppTheme)).inflate(R.layout.toast, null);
+            View toastRoot = LayoutInflater.from(new ContextThemeWrapper(ctx, R.style.AppTheme)).inflate(R.layout.toast, null);
             TextView toastMessage = toastRoot.findViewById(android.R.id.message);
             toastMessage.setText(string);
 
@@ -86,9 +85,7 @@ public class ToastUtils {
 
     public static void showToastInUiThread(final Context ctx, final String string) {
         Handler mainThread = new Handler(Looper.getMainLooper());
-        mainThread.post(() -> {
-            Toast.makeText(ctx, string, Toast.LENGTH_SHORT).show();
-        });
+        mainThread.post(() -> Toast.makeText(ctx, string, Toast.LENGTH_SHORT).show());
     }
 
     public static void showToastInUiThread(final Context ctx, final RxBusWrapper rxBus,
