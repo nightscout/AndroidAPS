@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks;
 
+import android.content.Context;
+
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
@@ -29,12 +31,16 @@ public class InitializePumpManagerTask extends ServiceTask {
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject RileyLinkUtil rileyLinkUtil;
 
-    public InitializePumpManagerTask(HasAndroidInjector injector) {
+    private final Context context;
+
+    public InitializePumpManagerTask(HasAndroidInjector injector, Context context) {
         super(injector);
+        this.context = context;
     }
 
-    public InitializePumpManagerTask(HasAndroidInjector injector, ServiceTransport transport) {
+    public InitializePumpManagerTask(HasAndroidInjector injector, Context context, ServiceTransport transport) {
         super(injector, transport);
+        this.context = context;
     }
 
     @Override
@@ -74,11 +80,11 @@ public class InitializePumpManagerTask extends ServiceTask {
             } else {
                 rileyLinkServiceData.setServiceState(RileyLinkServiceState.PumpConnectorError,
                         RileyLinkError.NoContactWithDevice);
-                rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
+                rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump, context);
             }
 
         } else {
-            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
+            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump, context);
         }
     }
 }

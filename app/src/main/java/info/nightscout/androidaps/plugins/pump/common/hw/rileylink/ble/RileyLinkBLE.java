@@ -145,7 +145,7 @@ public class RileyLinkBLE {
 
                 if (newState == BluetoothProfile.STATE_CONNECTED) {
                     if (status == BluetoothGatt.GATT_SUCCESS) {
-                        rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothConnected);
+                        rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.BluetoothConnected, context);
                     } else {
                         aapsLogger.debug(LTag.PUMPBTCOMM, "BT State connected, GATT status {} ({})", status, getGattStatusMessage(status));
                     }
@@ -155,7 +155,7 @@ public class RileyLinkBLE {
                     // aapsLogger.debug(LTag.PUMPBTCOMM,"We are in {} state.", status == BluetoothProfile.STATE_CONNECTING ? "Connecting" :
                     // "Disconnecting");
                 } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                    rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnected);
+                    rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnected, context);
                     if (manualDisconnect)
                         close();
                     aapsLogger.warn(LTag.PUMPBTCOMM, "RileyLink Disconnected.");
@@ -242,7 +242,7 @@ public class RileyLinkBLE {
 
                     if (rileyLinkFound) {
                         mIsConnected = true;
-                        rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkReady);
+                        rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkReady, context);
                         // RileyLinkUtil.sendNotification(new
                         // ServiceNotification(RileyLinkConst.Intents.RileyLinkReady), null);
                     } else {
@@ -253,7 +253,7 @@ public class RileyLinkBLE {
 
                 } else {
                     aapsLogger.debug(LTag.PUMPBTCOMM, "onServicesDiscovered " + getGattStatusMessage(status));
-                    rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkGattFailed);
+                    rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkGattFailed, context);
                 }
             }
         };

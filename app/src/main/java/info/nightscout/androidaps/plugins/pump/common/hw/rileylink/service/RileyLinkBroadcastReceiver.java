@@ -106,7 +106,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
                     LOG.debug("Received Broadcast: " + action);
 
                 if (!processBluetoothBroadcasts(action) && //
-                        !processRileyLinkBroadcasts(action) && //
+                        !processRileyLinkBroadcasts(action, context) && //
                         !processTuneUpBroadcasts(action) && //
                         !processDeviceSpecificBroadcasts(action, intent) && //
                         !processApplicationSpecificBroadcasts(action, intent) //
@@ -137,7 +137,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
     }
 
 
-    private boolean processRileyLinkBroadcasts(String action) {
+    private boolean processRileyLinkBroadcasts(String action, Context context) {
 
         if (action.equals(RileyLinkConst.Intents.RileyLinkDisconnected)) {
             if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
@@ -158,7 +158,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
 
             serviceInstance.rfspy.initializeRileyLink();
             String bleVersion = serviceInstance.rfspy.getBLEVersionCached();
-            RileyLinkFirmwareVersion rlVersion = serviceInstance.rfspy.getRLVersionCached();
+            RileyLinkFirmwareVersion rlVersion = rileyLinkServiceData.firmwareVersion;
 
 //            if (isLoggingEnabled())
             LOG.debug("RfSpy version (BLE113): " + bleVersion);
@@ -168,7 +168,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             LOG.debug("RfSpy Radio version (CC110): " + rlVersion.name());
             serviceInstance.rileyLinkServiceData.versionCC110 = rlVersion;
 
-            ServiceTask task = new InitializePumpManagerTask(injector);
+            ServiceTask task = new InitializePumpManagerTask(injector, context);
             ServiceTaskExecutor.startTask(task);
             if (isLoggingEnabled())
                 LOG.info("Announcing RileyLink open For business");

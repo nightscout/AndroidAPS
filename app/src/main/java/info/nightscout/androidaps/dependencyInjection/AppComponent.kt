@@ -30,7 +30,10 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Thread
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SendAndListen
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SetPreamble
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioResponse
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.*
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
@@ -203,6 +206,9 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectWakeAndTuneTask(wakeAndTuneTask: WakeAndTuneTask)
     fun injectRadioResponse(radioResponse: RadioResponse)
     fun injectRileyLinkBLE(rileyLinkBLE: RileyLinkBLE)
+    fun injectRFSpy(rfSpy: RFSpy)
+    fun injectSendAndListen(sendAndListen: SendAndListen)
+    fun injectSetPreamble(setPreamble: SetPreamble)
 
     @Component.Builder
     interface Builder {

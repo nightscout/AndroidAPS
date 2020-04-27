@@ -5,8 +5,6 @@ import android.content.Intent;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -17,27 +15,15 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6b;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.BleAdvertisedData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceNotification;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceResult;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceTransport;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTask;
 import info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference;
-import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
 
 /**
  * Created by andy on 17/05/2018.
@@ -50,28 +36,13 @@ public class RileyLinkUtil {
     public RileyLinkCommunicationManager rileyLinkCommunicationManager;
     @Deprecated
     static ServiceTask currentTask;
-    private RileyLinkTargetFrequency rileyLinkTargetFrequency;
 
     private RileyLinkEncodingType encoding;
     private RileyLinkSelectPreference rileyLinkSelectPreference;
     private Encoding4b6b encoding4b6b;
-    private RileyLinkFirmwareVersion firmwareVersion;
-
-
-    @NotNull private final Context context;
-    @NotNull private final AAPSLogger aapsLogger;
-    @NotNull private final RxBusWrapper rxBus;
 
     @Inject
-    public RileyLinkUtil(
-            Context context,
-            AAPSLogger aapsLogger,
-            RxBusWrapper rxBus
-
-    ) {
-        this.context = context;
-        this.aapsLogger = aapsLogger;
-        this.rxBus = rxBus;
+    public RileyLinkUtil() {
         instance = this;
     }
 
@@ -98,7 +69,7 @@ public class RileyLinkUtil {
     }
 
 
-    public void sendBroadcastMessage(String message) {
+    public void sendBroadcastMessage(String message, Context context) {
         Intent intent = new Intent(message);
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
@@ -129,7 +100,7 @@ public class RileyLinkUtil {
     }
 
 
-    public static void sendServiceTransportResponse(ServiceTransport transport, ServiceResult serviceResult) {
+    private static void sendServiceTransportResponse(ServiceTransport transport, ServiceResult serviceResult) {
         // get the key (hashcode) of the client who requested this
         Integer clientHashcode = transport.getSenderHashcode();
         // make a new bundle to send as the message data
@@ -137,16 +108,6 @@ public class RileyLinkUtil {
         // FIXME
         // transport.setTransportType(RT2Const.IPC.MSG_ServiceResult);
         // rileyLinkIPCConnection.sendTransport(transport, clientHashcode);
-    }
-
-
-    public RileyLinkTargetFrequency getRileyLinkTargetFrequency() {
-        return rileyLinkTargetFrequency;
-    }
-
-
-    public void setRileyLinkTargetFrequency(RileyLinkTargetFrequency rileyLinkTargetFrequency) {
-        this.rileyLinkTargetFrequency = rileyLinkTargetFrequency;
     }
 
 
@@ -217,13 +178,5 @@ public class RileyLinkUtil {
 
     public Encoding4b6b getEncoding4b6b() {
         return encoding4b6b;
-    }
-
-    public void setFirmwareVersion(RileyLinkFirmwareVersion firmwareVersion) {
-        this.firmwareVersion = firmwareVersion;
-    }
-
-    public RileyLinkFirmwareVersion getFirmwareVersion() {
-        return firmwareVersion;
     }
 }

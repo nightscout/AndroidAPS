@@ -51,7 +51,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
     private boolean serialChanged = false;
     private String[] frequencies;
-    private RileyLinkTargetFrequency targetFrequency;
     private String rileyLinkAddress = null;
     private boolean rileyLinkAddressChanged = false;
     private RileyLinkEncodingType encodingType;
@@ -100,7 +99,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
         rileyLinkBLE = new RileyLinkBLE(injector, this); // or this
-        rfspy = new RFSpy(rileyLinkBLE);
+        rfspy = new RFSpy(injector, rileyLinkBLE);
         rfspy.startReader();
 
         // init rileyLinkCommunicationManager
@@ -263,9 +262,8 @@ public class RileyLinkMedtronicService extends RileyLinkService {
                             RileyLinkTargetFrequency.Medtronic_US
                             : RileyLinkTargetFrequency.Medtronic_WorldWide;
 
-                    if (targetFrequency != newTargetFrequency) {
-                        rileyLinkUtil.setRileyLinkTargetFrequency(newTargetFrequency);
-                        targetFrequency = newTargetFrequency;
+                    if (rileyLinkServiceData.rileyLinkTargetFrequency != newTargetFrequency) {
+                        rileyLinkServiceData.rileyLinkTargetFrequency = newTargetFrequency;
                     }
 
                 }
@@ -359,7 +357,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
             }
 
             if (rileyLinkAddressChanged) {
-                rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet);
+                rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this);
                 rileyLinkAddressChanged = false;
             }
 

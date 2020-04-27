@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.Radi
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioResponse;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
@@ -34,7 +35,7 @@ public abstract class RileyLinkCommunicationManager {
     @Inject protected SP sp;
 
     @Inject MedtronicPumpStatus medtronicPumpStatus;
-    @Inject RileyLinkUtil rileyLinkUtil;
+    @Inject RileyLinkServiceData rileyLinkServiceData;
 
 
     private final int SCAN_TIMEOUT = 1500;
@@ -59,23 +60,23 @@ public abstract class RileyLinkCommunicationManager {
 
 
     // All pump communications go through this function.
-    public <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Class<E> clazz)
+    protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Class<E> clazz)
             throws RileyLinkCommunicationException {
         return sendAndListen(msg, timeout_ms, null, clazz);
     }
 
-    public <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Integer extendPreamble_ms, Class<E> clazz)
+    private <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, Integer extendPreamble_ms, Class<E> clazz)
             throws RileyLinkCommunicationException {
         return sendAndListen(msg, timeout_ms, 0, extendPreamble_ms, clazz);
     }
 
     // For backward compatibility
-    public <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, Integer extendPreamble_ms, Class<E> clazz)
+    private <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, Integer extendPreamble_ms, Class<E> clazz)
             throws RileyLinkCommunicationException {
         return sendAndListen(msg, timeout_ms, repeatCount, 0, extendPreamble_ms, clazz);
     }
 
-    public <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms, Class<E> clazz)
+    private <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms, Class<E> clazz)
             throws RileyLinkCommunicationException {
 
         // internal flag
@@ -189,7 +190,7 @@ public abstract class RileyLinkCommunicationManager {
 
 
     public double tuneForDevice() {
-        return scanForDevice(rileyLinkUtil.getRileyLinkTargetFrequency().getScanFrequencies());
+        return scanForDevice(rileyLinkServiceData.rileyLinkTargetFrequency.getScanFrequencies());
     }
 
 
@@ -203,7 +204,7 @@ public abstract class RileyLinkCommunicationManager {
      */
     public boolean isValidFrequency(double frequency) {
 
-        double[] scanFrequencies = rileyLinkUtil.getRileyLinkTargetFrequency().getScanFrequencies();
+        double[] scanFrequencies = rileyLinkServiceData.rileyLinkTargetFrequency.getScanFrequencies();
 
         if (scanFrequencies.length == 1) {
             return RileyLinkUtil.isSame(scanFrequencies[0], frequency);
