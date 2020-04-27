@@ -263,15 +263,13 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
     }
 
     private OmnipodPacket createAckPacket(PodState podState, Integer packetAddress, Integer messageAddress) {
-        int pktAddress = podState.getAddress();
-        int msgAddress = podState.getAddress();
-        if (packetAddress != null) {
-            pktAddress = packetAddress;
+        if(packetAddress == null) {
+            packetAddress = podState.getAddress();
         }
-        if (messageAddress != null) {
-            msgAddress = messageAddress;
+        if(messageAddress == null) {
+            messageAddress = podState.getAddress();
         }
-        return new OmnipodPacket(pktAddress, PacketType.ACK, podState.getPacketNumber(), ByteUtil.getBytesFromInt(msgAddress));
+        return new OmnipodPacket(packetAddress, PacketType.ACK, podState.getPacketNumber(), ByteUtil.getBytesFromInt(messageAddress));
     }
 
     private void ackUntilQuiet(PodState podState, Integer packetAddress, Integer messageAddress) {
