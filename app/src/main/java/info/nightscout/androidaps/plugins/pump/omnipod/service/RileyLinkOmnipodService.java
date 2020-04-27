@@ -14,10 +14,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
@@ -37,6 +40,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 
@@ -50,7 +54,12 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 //    @Inject Context context;
     @Inject OmnipodPumpPlugin omnipodPumpPlugin;
 //    @Inject SP sp;
-    
+    @Inject RxBusWrapper rxBus;
+    @Inject ActivePluginProvider activePlugin;
+    @Inject HasAndroidInjector injector;
+    @Inject ResourceHelper resourceHelper;
+
+
     //private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private static RileyLinkOmnipodService instance;
@@ -122,7 +131,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         if (isLogEnabled())
             aapsLogger.debug(LTag.PUMPCOMM,"RileyLinkOmnipodService newly constructed");
         OmnipodUtil.setOmnipodService(this);
-        pumpStatus = (OmnipodPumpStatus) OmnipodPumpPlugin.getPlugin().getPumpStatusData();
+        pumpStatus = (OmnipodPumpStatus) omnipodPumpPlugin.getPumpStatusData();
         //aapsLogger.debug(LTag.PUMPCOMM,"RRRRRRRRRR: " + pumpStatus);
     }
 
@@ -143,7 +152,8 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             OmnipodCommunicationService omnipodCommunicationService = new OmnipodCommunicationService(rfspy);
             omnipodCommunicationService.setPumpStatus(pumpStatus);
 
-            omnipodCommunicationManager = new AapsOmnipodManager(omnipodCommunicationService, podState, pumpStatus);
+            omnipodCommunicationManager = new AapsOmnipodManager(omnipodCommunicationService, podState, pumpStatus,
+                    aapsLogger, rxBus, resourceHelper, injector, activePlugin);
         } else {
             omnipodCommunicationManager = AapsOmnipodManager.getInstance();
         }

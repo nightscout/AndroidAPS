@@ -142,6 +142,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         );
 
         displayConnectionMessages = false;
+        OmnipodPumpPlugin.plugin = this;
 
         //OmnipodUtil.setDriverState();
 

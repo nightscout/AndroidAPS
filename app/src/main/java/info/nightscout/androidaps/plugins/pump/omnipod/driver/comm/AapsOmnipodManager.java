@@ -85,14 +85,13 @@ import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import io.reactivex.disposables.Disposable;
 
-
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
 
-    @Inject AAPSLogger aapsLogger;
-    @Inject RxBusWrapper rxBus;
-    @Inject ResourceHelper resourceHelper;
-    @Inject HasAndroidInjector injector;
-    @Inject ActivePluginProvider activePlugin;
+    AAPSLogger aapsLogger;
+    RxBusWrapper rxBus;
+    ResourceHelper resourceHelper;
+    HasAndroidInjector injector;
+    ActivePluginProvider activePlugin;
 
     //private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
     private final OmnipodManager delegate;
@@ -107,13 +106,25 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return instance;
     }
 
-    public AapsOmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState, OmnipodPumpStatus _pumpStatus) {
+    public AapsOmnipodManager(OmnipodCommunicationService communicationService,
+                              PodSessionState podState,
+                              OmnipodPumpStatus _pumpStatus,
+                              AAPSLogger aapsLogger,
+                              RxBusWrapper rxBus,
+                              ResourceHelper resourceHelper,
+                              HasAndroidInjector injector,
+                              ActivePluginProvider activePlugin) {
+        this.aapsLogger = aapsLogger;
+        this.rxBus = rxBus;
+        this.resourceHelper = resourceHelper;
+        this.injector = injector;
+        this.activePlugin = activePlugin;
+        this.pumpStatus = _pumpStatus;
         delegate = new OmnipodManager(communicationService, podState, podSessionState -> {
             // Handle pod state changes
             OmnipodUtil.setPodSessionState(podSessionState);
             updatePumpStatus(podSessionState);
         });
-        this.pumpStatus = _pumpStatus;
         instance = this;
     }
 

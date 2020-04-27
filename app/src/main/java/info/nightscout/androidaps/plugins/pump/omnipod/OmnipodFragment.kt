@@ -59,7 +59,7 @@ class OmnipodFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
+    @Inject lateinit var omnipodPumpPlugin: OmnipodPumpPlugin
     @Inject lateinit var warnColors: WarnColors
 
     private var disposable: CompositeDisposable = CompositeDisposable()
@@ -370,7 +370,7 @@ class OmnipodFragment : DaggerFragment() {
 
     // GUI functions
     fun updateGUI() {
-        val plugin = OmnipodPumpPlugin.getPlugin()
+        val plugin = omnipodPumpPlugin
         val pumpStatus = OmnipodUtil.getPumpStatus()
         var pumpType = OmnipodUtil.getPumpType()
 

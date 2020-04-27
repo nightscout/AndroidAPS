@@ -46,6 +46,7 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Thread
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.queue.commands.*
@@ -274,6 +275,8 @@ open class AppModule {
         @ContributesAndroidInjector fun importExportPrefsInjector(): ImportExportPrefs
         @ContributesAndroidInjector fun encryptedPrefsFormatInjector(): EncryptedPrefsFormat
         @ContributesAndroidInjector fun classicPrefsFormatInjector(): ClassicPrefsFormat
+
+        @ContributesAndroidInjector fun aapsOmnipodManagerInjector(): AapsOmnipodManager
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
