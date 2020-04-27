@@ -265,7 +265,7 @@ public class DetermineBasalAdapterSMBJS {
         mProfile.put("exercise_mode", SMBDefaults.exercise_mode);
         mProfile.put("half_basal_exercise_target", SMBDefaults.half_basal_exercise_target);
         mProfile.put("maxCOB", SMBDefaults.maxCOB);
-        mProfile.put("skip_neutral_temps", SMBDefaults.skip_neutral_temps);
+        mProfile.put("skip_neutral_temps", sp.getBoolean(R.string.key_skip_neutral_temps,SMBDefaults.skip_neutral_temps));
         // min_5m_carbimpact is not used within SMB determinebasal
         //if (mealData.usedMinCarbsImpact > 0) {
         //    mProfile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact);
