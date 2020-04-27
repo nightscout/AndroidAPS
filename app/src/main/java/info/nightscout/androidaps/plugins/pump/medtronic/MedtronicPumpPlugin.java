@@ -103,6 +103,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private final MedtronicPumpStatus medtronicPumpStatus;
     private final MedtronicHistoryData medtronicHistoryData;
     private final RileyLinkServiceData rileyLinkServiceData;
+    private final ServiceTaskExecutor serviceTaskExecutor;
 
     protected static MedtronicPumpPlugin plugin = null;
     private RileyLinkMedtronicService rileyLinkMedtronicService;
@@ -134,7 +135,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             MedtronicUtil medtronicUtil,
             MedtronicPumpStatus medtronicPumpStatus,
             MedtronicHistoryData medtronicHistoryData,
-            RileyLinkServiceData rileyLinkServiceData
+            RileyLinkServiceData rileyLinkServiceData,
+            ServiceTaskExecutor serviceTaskExecutor
     ) {
 
         super(new PluginDescription() //
@@ -155,6 +157,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         this.medtronicPumpStatus = medtronicPumpStatus;
         this.medtronicHistoryData = medtronicHistoryData;
         this.rileyLinkServiceData = rileyLinkServiceData;
+        this.serviceTaskExecutor = serviceTaskExecutor;
 
         displayConnectionMessages = false;
 
@@ -596,7 +599,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         if (errorCount >= 5) {
             aapsLogger.error("Number of error counts was 5 or more. Starting tunning.");
             setRefreshButtonEnabled(true);
-            ServiceTaskExecutor.startTask(new WakeAndTuneTask(getInjector()));
+            serviceTaskExecutor.startTask(new WakeAndTuneTask(getInjector()));
             return;
         }
 
@@ -1527,7 +1530,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
             case WakeUpAndTune: {
                 if (rileyLinkMedtronicService.verifyConfiguration()) {
-                    ServiceTaskExecutor.startTask(new WakeAndTuneTask(getInjector()));
+                    serviceTaskExecutor.startTask(new WakeAndTuneTask(getInjector()));
                 } else {
                     Intent i = new Intent(context, ErrorHelperActivity.class);
                     i.putExtra("soundid", R.raw.boluserror);
@@ -1547,7 +1550,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             break;
 
             case ResetRileyLinkConfiguration: {
-                ServiceTaskExecutor.startTask(new ResetRileyLinkConfigurationTask(getInjector()));
+                serviceTaskExecutor.startTask(new ResetRileyLinkConfigurationTask(getInjector()));
             }
             break;
 

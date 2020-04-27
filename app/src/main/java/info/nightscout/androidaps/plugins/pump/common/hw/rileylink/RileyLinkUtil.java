@@ -33,8 +33,7 @@ public class RileyLinkUtil {
 
     private List<RLHistoryItem> historyRileyLink = new ArrayList<>();
     public RileyLinkCommunicationManager rileyLinkCommunicationManager;
-    @Deprecated
-    static ServiceTask currentTask;
+    private ServiceTask currentTask;
 
     private RileyLinkEncodingType encoding;
     private Encoding4b6b encoding4b6b;
@@ -73,8 +72,7 @@ public class RileyLinkUtil {
     }
 
     // FIXME remove ?
-    @Deprecated
-    public static void setCurrentTask(ServiceTask task) {
+    public void setCurrentTask(ServiceTask task) {
         if (currentTask == null) {
             currentTask = task;
         } else {
@@ -83,8 +81,7 @@ public class RileyLinkUtil {
     }
 
 
-    @Deprecated
-    public static void finishCurrentTask(ServiceTask task) {
+    public void finishCurrentTask(ServiceTask task) {
         if (task != currentTask) {
             //LOG.error("finishCurrentTask: task does not match");
         }

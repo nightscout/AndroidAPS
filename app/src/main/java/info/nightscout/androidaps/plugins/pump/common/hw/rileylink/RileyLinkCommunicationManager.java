@@ -36,6 +36,7 @@ public abstract class RileyLinkCommunicationManager {
 
     @Inject MedtronicPumpStatus medtronicPumpStatus;
     @Inject RileyLinkServiceData rileyLinkServiceData;
+    @Inject ServiceTaskExecutor serviceTaskExecutor;
 
 
     private final int SCAN_TIMEOUT = 1500;
@@ -106,7 +107,7 @@ public abstract class RileyLinkCommunicationManager {
 
                     if (diff > ALLOWED_PUMP_UNREACHABLE) {
                         aapsLogger.warn(LTag.PUMPBTCOMM, "We reached max time that Pump can be unreachable. Starting Tuning.");
-                        ServiceTaskExecutor.startTask(new WakeAndTuneTask(injector));
+                        serviceTaskExecutor.startTask(new WakeAndTuneTask(injector));
                         timeoutCount = 0;
                     }
                 }
@@ -222,7 +223,7 @@ public abstract class RileyLinkCommunicationManager {
     public abstract boolean tryToConnectToDevice();
 
 
-    public double scanForDevice(double[] frequencies) {
+    private double scanForDevice(double[] frequencies) {
         aapsLogger.info(LTag.PUMPBTCOMM, "Scanning for receiver ({})", receiverDeviceID);
         wakeUp(receiverDeviceAwakeForMinutes, false);
         FrequencyScanResults results = new FrequencyScanResults();

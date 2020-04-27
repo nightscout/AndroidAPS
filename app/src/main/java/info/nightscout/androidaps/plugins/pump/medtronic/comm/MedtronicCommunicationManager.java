@@ -68,6 +68,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     @Inject MedtronicUtil medtronicUtil;
     @Inject MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
     @Inject RileyLinkServiceData rileyLinkServiceData;
+    @Inject ServiceTaskExecutor serviceTaskExecutor;
 
     private final int MAX_COMMAND_TRIES = 3;
     private final int DEFAULT_TIMEOUT = 2000;
@@ -136,7 +137,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             long diff = System.currentTimeMillis() - medtronicPumpStatus.lastConnection;
 
             if (diff > RILEYLINK_TIMEOUT) {
-                ServiceTaskExecutor.startTask(new WakeAndTuneTask(injector));
+                serviceTaskExecutor.startTask(new WakeAndTuneTask(injector));
             }
         }
 
