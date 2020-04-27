@@ -9,8 +9,6 @@ import info.nightscout.androidaps.logging.L;
 
 public class TempBasalPair {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
-
     @Expose
     protected double insulinRate = 0.0d;
     @Expose

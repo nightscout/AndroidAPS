@@ -26,7 +26,7 @@ class AAPSLoggerProduction : AAPSLogger {
 
     override fun debug(tag: LTag, format: String, vararg arguments: Any?) {
         if (L.isEnabled(tag.tag))
-            LoggerFactory.getLogger(tag.tag).debug(stackLogMarker() + String.format(format, arguments))
+            LoggerFactory.getLogger(tag.tag).debug(stackLogMarker() + format, arguments)
     }
 
     override fun warn(tag: LTag, message: String) {
@@ -36,7 +36,7 @@ class AAPSLoggerProduction : AAPSLogger {
     }
 
     override fun warn(tag: LTag, format: String, vararg arguments: Any?) {
-        LoggerFactory.getLogger(tag.tag).warn(stackLogMarker() + String.format(format, arguments))
+        LoggerFactory.getLogger(tag.tag).warn(stackLogMarker() + format, arguments)
     }
 
     override fun info(tag: LTag, message: String) {
@@ -47,7 +47,7 @@ class AAPSLoggerProduction : AAPSLogger {
     }
 
     override fun info(tag: LTag, format: String, vararg arguments: Any?) {
-        LoggerFactory.getLogger(tag.tag).info(stackLogMarker() + String.format(format, arguments))
+        LoggerFactory.getLogger(tag.tag).info(stackLogMarker() + format, arguments)
     }
 
     override fun error(tag: LTag, message: String) {
@@ -65,7 +65,7 @@ class AAPSLoggerProduction : AAPSLogger {
     }
 
     override fun error(format: String, vararg arguments: Any?) {
-        LoggerFactory.getLogger(LTag.CORE.tag).error(stackLogMarker() + String.format(format, arguments))
+        LoggerFactory.getLogger(LTag.CORE.tag).error(stackLogMarker() + format, arguments)
     }
 
     override fun error(tag: LTag, message: String, throwable: Throwable) {
@@ -76,7 +76,7 @@ class AAPSLoggerProduction : AAPSLogger {
 
     override fun error(tag: LTag, format: String, vararg arguments: Any?) {
         if (L.isEnabled(tag.tag)) {
-            LoggerFactory.getLogger(tag.tag).error(stackLogMarker() + String.format(format, arguments))
+            LoggerFactory.getLogger(tag.tag).error(stackLogMarker() + format, arguments)
         }
     }
 }

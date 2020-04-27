@@ -62,7 +62,7 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
         // }
 
         if (medtronicUtil.getMedtronicPumpModel() == null) {
-            aapsLogger.error(LTag.PUMPBTCOMM, "Device Type is not defined.");
+            aapsLogger.error(LTag.PUMPCOMM, "Device Type is not defined.");
             return byteList;
         }
 
@@ -118,10 +118,10 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
             StringUtil.appendToStringBuilder(sb, "" + unknownEntry.getKey(), ", ");
         }
 
-        aapsLogger.error(LTag.PUMPBTCOMM, "STATISTICS OF PUMP DECODE");
+        aapsLogger.error(LTag.PUMPCOMM, "STATISTICS OF PUMP DECODE");
 
         if (unknownOpCodes.size() > 0) {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "Unknown Op Codes: {}", sb.toString());
+            aapsLogger.warn(LTag.PUMPCOMM, "Unknown Op Codes: {}", sb.toString());
         }
 
         for (Map.Entry<RecordDecodeStatus, Map<String, String>> entry : mapStatistics.entrySet()) {
@@ -137,9 +137,9 @@ public abstract class MedtronicHistoryDecoder<T extends MedtronicHistoryEntry> i
 
                 String spaces = StringUtils.repeat(" ", 14 - entry.getKey().name().length());
 
-                aapsLogger.error(LTag.PUMPBTCOMM, "    {}{} - {}. Elements: {}", entry.getKey().name(), spaces, entry.getValue().size(), sb.toString());
+                aapsLogger.error(LTag.PUMPCOMM, "    {}{} - {}. Elements: {}", entry.getKey().name(), spaces, entry.getValue().size(), sb.toString());
             } else {
-                aapsLogger.error(LTag.PUMPBTCOMM, "    {}             - {}", entry.getKey().name(), entry.getValue().size());
+                aapsLogger.error(LTag.PUMPCOMM, "    {}             - {}", entry.getKey().name(), entry.getValue().size());
             }
         }
     }

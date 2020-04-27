@@ -68,7 +68,7 @@ public class BasalProfile {
 
     private boolean setRawData(byte[] data) {
         if (data == null) {
-            aapsLogger.error(LTag.PUMPBTCOMM,"setRawData: buffer is null!");
+            aapsLogger.error(LTag.PUMPCOMM,"setRawData: buffer is null!");
             return false;
         }
 
@@ -91,7 +91,7 @@ public class BasalProfile {
 
     public boolean setRawDataFromHistory(byte[] data) {
         if (data == null) {
-            aapsLogger.error(LTag.PUMPBTCOMM,"setRawData: buffer is null!");
+            aapsLogger.error(LTag.PUMPCOMM,"setRawData: buffer is null!");
             return false;
         }
 
@@ -116,13 +116,13 @@ public class BasalProfile {
 
 
     public void dumpBasalProfile() {
-        aapsLogger.debug(LTag.PUMPBTCOMM,"Basal Profile entries:");
+        aapsLogger.debug(LTag.PUMPCOMM,"Basal Profile entries:");
         List<BasalProfileEntry> entries = getEntries();
         for (int i = 0; i < entries.size(); i++) {
             BasalProfileEntry entry = entries.get(i);
             String startString = entry.startTime.toString("HH:mm");
             // this doesn't work
-            aapsLogger.debug(LTag.PUMPBTCOMM,String.format("Entry %d, rate=%.3f (0x%02X), start=%s (0x%02X)", i + 1, entry.rate,
+            aapsLogger.debug(LTag.PUMPCOMM,String.format("Entry %d, rate=%.3f (0x%02X), start=%s (0x%02X)", i + 1, entry.rate,
                     entry.rate_raw, startString, entry.startTime_raw));
 
         }
@@ -169,14 +169,14 @@ public class BasalProfile {
         BasalProfileEntry rval = new BasalProfileEntry();
         List<BasalProfileEntry> entries = getEntries();
         if (entries.size() == 0) {
-            aapsLogger.warn(LTag.PUMPBTCOMM,String.format("getEntryForTime(%s): table is empty",
+            aapsLogger.warn(LTag.PUMPCOMM,String.format("getEntryForTime(%s): table is empty",
                     when.toDateTime().toLocalTime().toString("HH:mm")));
             return rval;
         }
         // Log.w(TAG,"Assuming first entry");
         rval = entries.get(0);
         if (entries.size() == 1) {
-            aapsLogger.debug(LTag.PUMPBTCOMM,"getEntryForTime: Only one entry in profile");
+            aapsLogger.debug(LTag.PUMPCOMM,"getEntryForTime: Only one entry in profile");
             return rval;
         }
 
@@ -186,17 +186,17 @@ public class BasalProfile {
         while (!done) {
             BasalProfileEntry entry = entries.get(i);
             if (DEBUG_BASALPROFILE) {
-                aapsLogger.debug(LTag.PUMPBTCOMM,String.format("Comparing 'now'=%s to entry 'start time'=%s", when.toDateTime().toLocalTime()
+                aapsLogger.debug(LTag.PUMPCOMM,String.format("Comparing 'now'=%s to entry 'start time'=%s", when.toDateTime().toLocalTime()
                         .toString("HH:mm"), entry.startTime.toString("HH:mm")));
             }
             if (localMillis >= entry.startTime.getMillisOfDay()) {
                 rval = entry;
                 if (DEBUG_BASALPROFILE)
-                    aapsLogger.debug(LTag.PUMPBTCOMM,"Accepted Entry");
+                    aapsLogger.debug(LTag.PUMPCOMM,"Accepted Entry");
             } else {
                 // entry at i has later start time, keep older entry
                 if (DEBUG_BASALPROFILE)
-                    aapsLogger.debug(LTag.PUMPBTCOMM,"Rejected Entry");
+                    aapsLogger.debug(LTag.PUMPCOMM,"Rejected Entry");
                 done = true;
             }
             i++;
@@ -205,7 +205,7 @@ public class BasalProfile {
             }
         }
         if (DEBUG_BASALPROFILE) {
-            aapsLogger.debug(LTag.PUMPBTCOMM,String.format("getEntryForTime(%s): Returning entry: rate=%.3f (%d), start=%s (%d)", when
+            aapsLogger.debug(LTag.PUMPCOMM,String.format("getEntryForTime(%s): Returning entry: rate=%.3f (%d), start=%s (%d)", when
                             .toDateTime().toLocalTime().toString("HH:mm"), rval.rate, rval.rate_raw,
                     rval.startTime.toString("HH:mm"), rval.startTime_raw));
         }
@@ -217,7 +217,7 @@ public class BasalProfile {
         List<BasalProfileEntry> entries = new ArrayList<>();
 
         if (mRawData == null || mRawData[2] == 0x3f) {
-            aapsLogger.warn(LTag.PUMPBTCOMM,"Raw Data is empty.");
+            aapsLogger.warn(LTag.PUMPCOMM,"Raw Data is empty.");
             return entries; // an empty list
         }
         boolean done = false;
@@ -237,7 +237,7 @@ public class BasalProfile {
             try {
                 entries.add(new BasalProfileEntry(aapsLogger, r, st));
             } catch (Exception ex) {
-                aapsLogger.error(LTag.PUMPBTCOMM,"Error decoding basal profile from bytes: {}", ByteUtil.shortHexString(mRawData));
+                aapsLogger.error(LTag.PUMPCOMM,"Error decoding basal profile from bytes: {}", ByteUtil.shortHexString(mRawData));
                 throw ex;
             }
 
@@ -286,10 +286,10 @@ public class BasalProfile {
         try {
             entries = getEntries();
         } catch (Exception ex) {
-            aapsLogger.error(LTag.PUMPBTCOMM,"=============================================================================");
-            aapsLogger.error(LTag.PUMPBTCOMM,"  Error generating entries. Ex.: " + ex, ex);
-            aapsLogger.error(LTag.PUMPBTCOMM,"  rawBasalValues: " + ByteUtil.shortHexString(this.getRawData()));
-            aapsLogger.error(LTag.PUMPBTCOMM,"=============================================================================");
+            aapsLogger.error(LTag.PUMPCOMM,"=============================================================================");
+            aapsLogger.error(LTag.PUMPCOMM,"  Error generating entries. Ex.: " + ex, ex);
+            aapsLogger.error(LTag.PUMPCOMM,"  rawBasalValues: " + ByteUtil.shortHexString(this.getRawData()));
+            aapsLogger.error(LTag.PUMPCOMM,"=============================================================================");
 
             //FabricUtil.createEvent("MedtronicBasalProfileGetByHourError", null);
         }

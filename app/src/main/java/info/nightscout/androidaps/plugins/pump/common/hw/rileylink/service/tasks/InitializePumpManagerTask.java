@@ -69,7 +69,7 @@ public class InitializePumpManagerTask extends ServiceTask {
 
             rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.RileyLinkReady);
 
-            aapsLogger.info(LTag.PUMPBTCOMM, "Setting radio frequency to {} MHz", lastGoodFrequency);
+            aapsLogger.info(LTag.PUMPCOMM, "Setting radio frequency to {} MHz", lastGoodFrequency);
 
             rileyLinkCommunicationManager.setRadioFrequencyForPump(lastGoodFrequency);
 

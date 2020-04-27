@@ -275,7 +275,7 @@ public class MedtronicUtil {
 
         byte[] payload = sendPayloadBuffer.array();
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "buildCommandPayload [{}]", ByteUtil.shortHexString(payload));
+        aapsLogger.debug(LTag.PUMPCOMM, "buildCommandPayload [{}]", ByteUtil.shortHexString(payload));
 
         // int crc = computeCRC8WithPolynomial(payload, 0, payload.length - 1);
 

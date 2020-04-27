@@ -66,7 +66,7 @@ public class PumpMessage implements RLMessage {
         if (rxData.length > 4) {
             this.commandType = MedtronicCommandType.getByCode(rxData[4]);
             if (this.commandType == MedtronicCommandType.InvalidCommand) {
-                aapsLogger.error(LTag.PUMPBTCOMM, "PumpMessage - Unknown commandType " + rxData[4]);
+                aapsLogger.error(LTag.PUMPCOMM, "PumpMessage - Unknown commandType " + rxData[4]);
             }
         }
         if (rxData.length > 5) {

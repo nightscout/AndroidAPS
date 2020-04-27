@@ -31,16 +31,16 @@ public class PumpHistoryResult {
             /*
              * this.searchEntry = searchEntry;
              * this.searchType = SearchType.LastEntry;
-             * aapsLogger.debug(LTag.PUMPBTCOMM,"PumpHistoryResult. Search parameters: Last Entry: " + searchEntry.atechDateTime + " type="
+             * aapsLogger.debug(LTag.PUMPCOMM,"PumpHistoryResult. Search parameters: Last Entry: " + searchEntry.atechDateTime + " type="
              * + searchEntry.getEntryType().name());
              */
             this.searchDate = searchEntry.atechDateTime;
             this.searchType = SearchType.Date;
-            aapsLogger.debug(LTag.PUMPBTCOMM, "PumpHistoryResult. Search parameters: Date(with searchEntry): " + targetDate);
+            aapsLogger.debug(LTag.PUMPCOMM, "PumpHistoryResult. Search parameters: Date(with searchEntry): " + targetDate);
         } else if (targetDate != null) {
             this.searchDate = targetDate;
             this.searchType = SearchType.Date;
-            aapsLogger.debug(LTag.PUMPBTCOMM, "PumpHistoryResult. Search parameters: Date: " + targetDate);
+            aapsLogger.debug(LTag.PUMPCOMM, "PumpHistoryResult. Search parameters: Date: " + targetDate);
         }
 
         // this.unprocessedEntries = new ArrayList<>();
@@ -50,7 +50,7 @@ public class PumpHistoryResult {
 
     public void addHistoryEntries(List<PumpHistoryEntry> entries, int page) {
         this.unprocessedEntries = entries;
-        //aapsLogger.debug(LTag.PUMPBTCOMM,"PumpHistoryResult. Unprocessed entries: {}", MedtronicUtil.getGsonInstance().toJson(entries));
+        //aapsLogger.debug(LTag.PUMPCOMM,"PumpHistoryResult. Unprocessed entries: {}", MedtronicUtil.getGsonInstance().toJson(entries));
         processEntries();
     }
 
@@ -62,47 +62,47 @@ public class PumpHistoryResult {
 
         switch (searchType) {
             case None:
-                //aapsLogger.debug(LTag.PUMPBTCOMM,"PE. None search");
+                //aapsLogger.debug(LTag.PUMPCOMM,"PE. None search");
                 this.validEntries.addAll(this.unprocessedEntries);
                 break;
 
             case LastEntry: {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "PE. Last entry search");
+                aapsLogger.debug(LTag.PUMPCOMM, "PE. Last entry search");
 
                 //Collections.sort(this.unprocessedEntries, new PumpHistoryEntry.Comparator());
 
-                aapsLogger.debug(LTag.PUMPBTCOMM, "PE. PumpHistoryResult. Search entry date: " + searchEntry.atechDateTime);
+                aapsLogger.debug(LTag.PUMPCOMM, "PE. PumpHistoryResult. Search entry date: " + searchEntry.atechDateTime);
 
                 Long date = searchEntry.atechDateTime;
 
                 for (PumpHistoryEntry unprocessedEntry : unprocessedEntries) {
 
                     if (unprocessedEntry.equals(searchEntry)) {
-                        //aapsLogger.debug(LTag.PUMPBTCOMM,"PE. Item found {}.", unprocessedEntry);
+                        //aapsLogger.debug(LTag.PUMPCOMM,"PE. Item found {}.", unprocessedEntry);
                         searchFinished = true;
                         break;
                     }
 
-                    //aapsLogger.debug(LTag.PUMPBTCOMM,"PE. Entry {} added.", unprocessedEntry);
+                    //aapsLogger.debug(LTag.PUMPCOMM,"PE. Entry {} added.", unprocessedEntry);
                     this.validEntries.add(unprocessedEntry);
                 }
             }
             break;
             case Date: {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "PE. Date search: Search date: {}", this.searchDate);
+                aapsLogger.debug(LTag.PUMPCOMM, "PE. Date search: Search date: {}", this.searchDate);
 
 
                 for (PumpHistoryEntry unprocessedEntry : unprocessedEntries) {
 
                     if (unprocessedEntry.atechDateTime == null || unprocessedEntry.atechDateTime == 0) {
-                        aapsLogger.debug(LTag.PUMPBTCOMM, "PE. PumpHistoryResult. Search entry date: Entry with no date: {}", unprocessedEntry);
+                        aapsLogger.debug(LTag.PUMPCOMM, "PE. PumpHistoryResult. Search entry date: Entry with no date: {}", unprocessedEntry);
                         continue;
                     }
 
                     if (unprocessedEntry.isAfter(this.searchDate)) {
                         this.validEntries.add(unprocessedEntry);
                     } else {
-//                        aapsLogger.debug(LTag.PUMPBTCOMM,"PE. PumpHistoryResult. Not after.. Unprocessed Entry [year={},entry={}]",
+//                        aapsLogger.debug(LTag.PUMPCOMM,"PE. PumpHistoryResult. Not after.. Unprocessed Entry [year={},entry={}]",
 //                                DateTimeUtil.getYear(unprocessedEntry.atechDateTime), unprocessedEntry);
                         if (DateTimeUtil.getYear(unprocessedEntry.atechDateTime) > 2015)
                             olderEntries++;
@@ -119,7 +119,7 @@ public class PumpHistoryResult {
 
         } // switch
 
-        //aapsLogger.debug(LTag.PUMPBTCOMM,"PE. Valid Entries: {}", validEntries);
+        //aapsLogger.debug(LTag.PUMPCOMM,"PE. Valid Entries: {}", validEntries);
     }
 
 

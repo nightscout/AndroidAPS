@@ -118,7 +118,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         for (int retry = 0; retry < 5; retry++) {
 
-            aapsLogger.debug(LTag.PUMPBTCOMM, "isDeviceReachable. Waking pump... " + (retry != 0 ? " (retry " + retry + ")" : ""));
+            aapsLogger.debug(LTag.PUMPCOMM, "isDeviceReachable. Waking pump... " + (retry != 0 ? " (retry " + retry + ")" : ""));
 
             boolean connected = connectToDevice();
 
@@ -152,10 +152,10 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData); // simple
         RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(injector, pumpMsgContent), (byte) 0, (byte) 200,
                 (byte) 0, (byte) 0, 25000, (byte) 0);
-        aapsLogger.info(LTag.PUMPBTCOMM, "wakeup: raw response is " + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
+        aapsLogger.info(LTag.PUMPCOMM, "wakeup: raw response is " + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
 
         if (rfSpyResponse.wasTimeout()) {
-            aapsLogger.error(LTag.PUMPBTCOMM, "isDeviceReachable. Failed to find pump (timeout).");
+            aapsLogger.error(LTag.PUMPCOMM, "isDeviceReachable. Failed to find pump (timeout).");
         } else if (rfSpyResponse.looksLikeRadioPacket()) {
             RadioResponse radioResponse = new RadioResponse(injector);
 
@@ -168,7 +168,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     PumpMessage pumpResponse = createResponseMessage(radioResponse.getPayload(), PumpMessage.class);
 
                     if (!pumpResponse.isValid()) {
-                        aapsLogger.warn(LTag.PUMPBTCOMM, "Response is invalid ! [interrupted={}, timeout={}]", rfSpyResponse.wasInterrupted(),
+                        aapsLogger.warn(LTag.PUMPCOMM, "Response is invalid ! [interrupted={}, timeout={}]", rfSpyResponse.wasInterrupted(),
                                 rfSpyResponse.wasTimeout());
                     } else {
 
@@ -183,7 +183,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                             medtronicUtil.setMedtronicPumpModel(pumpModel);
                         }
 
-                        aapsLogger.debug(LTag.PUMPBTCOMM, "isDeviceReachable. PumpModel is {} - Valid: {} (rssi={})", pumpModel.name(), valid,
+                        aapsLogger.debug(LTag.PUMPCOMM, "isDeviceReachable. PumpModel is {} - Valid: {} (rssi={})", pumpModel.name(), valid,
                                 radioResponse.rssi);
 
                         if (valid) {
@@ -204,17 +204,17 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     }
 
                 } else {
-                    aapsLogger.warn(LTag.PUMPBTCOMM, "isDeviceReachable. Failed to parse radio response: "
+                    aapsLogger.warn(LTag.PUMPCOMM, "isDeviceReachable. Failed to parse radio response: "
                             + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
                 }
 
             } catch (RileyLinkCommunicationException e) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "isDeviceReachable. Failed to decode radio response: "
+                aapsLogger.warn(LTag.PUMPCOMM, "isDeviceReachable. Failed to decode radio response: "
                         + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
             }
 
         } else {
-            aapsLogger.warn(LTag.PUMPBTCOMM, "isDeviceReachable. Unknown response: " + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
+            aapsLogger.warn(LTag.PUMPCOMM, "isDeviceReachable. Unknown response: " + ByteUtil.shortHexString(rfSpyResponse.getRaw()));
         }
 
         return false;
@@ -230,7 +230,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     private PumpMessage runCommandWithArgs(PumpMessage msg) throws RileyLinkCommunicationException {
 
         if (debugSetCommands)
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Run command with Args: ");
+            aapsLogger.debug(LTag.PUMPCOMM, "Run command with Args: ");
 
         PumpMessage rval;
         PumpMessage shortMessage = makePumpMessage(msg.commandType, new CarelinkShortMessageBody(new byte[]{0}));
@@ -238,15 +238,15 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         PumpMessage shortResponse = sendAndListen(shortMessage);
         if (shortResponse.commandType == MedtronicCommandType.CommandACK) {
             if (debugSetCommands)
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Run command with Args: Got ACK response");
+                aapsLogger.debug(LTag.PUMPCOMM, "Run command with Args: Got ACK response");
 
             rval = sendAndListen(msg);
             if (debugSetCommands)
-                aapsLogger.debug(LTag.PUMPBTCOMM, "2nd Response: {}", rval);
+                aapsLogger.debug(LTag.PUMPCOMM, "2nd Response: {}", rval);
 
             return rval;
         } else {
-            aapsLogger.error(LTag.PUMPBTCOMM, "runCommandWithArgs: Pump did not ack Attention packet");
+            aapsLogger.error(LTag.PUMPCOMM, "runCommandWithArgs: Pump did not ack Attention packet");
             return new PumpMessage(aapsLogger, "No ACK after Attention packet.");
         }
     }
@@ -255,7 +255,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     private PumpMessage runCommandWithFrames(MedtronicCommandType commandType, List<List<Byte>> frames)
             throws RileyLinkCommunicationException {
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Run command with Frames: {}", commandType.name());
+        aapsLogger.debug(LTag.PUMPCOMM, "Run command with Frames: {}", commandType.name());
 
         PumpMessage rval = null;
         PumpMessage shortMessage = makePumpMessage(commandType, new CarelinkShortMessageBody(new byte[]{0}));
@@ -263,11 +263,11 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         PumpMessage shortResponse = sendAndListen(shortMessage);
 
         if (shortResponse.commandType != MedtronicCommandType.CommandACK) {
-            aapsLogger.error(LTag.PUMPBTCOMM, "runCommandWithFrames: Pump did not ack Attention packet");
+            aapsLogger.error(LTag.PUMPCOMM, "runCommandWithFrames: Pump did not ack Attention packet");
 
             return new PumpMessage(aapsLogger, "No ACK after start message.");
         } else {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Run command with Frames: Got ACK response for Attention packet");
+            aapsLogger.debug(LTag.PUMPCOMM, "Run command with Frames: Got ACK response for Attention packet");
         }
 
         int frameNr = 1;
@@ -276,23 +276,23 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
             byte[] frameData = medtronicUtil.createByteArray(frame);
 
-            // aapsLogger.debug(LTag.PUMPBTCOMM,"Frame {} data:\n{}", frameNr, ByteUtil.getCompactString(frameData));
+            // aapsLogger.debug(LTag.PUMPCOMM,"Frame {} data:\n{}", frameNr, ByteUtil.getCompactString(frameData));
 
             PumpMessage msg = makePumpMessage(commandType, new CarelinkLongMessageBody(frameData));
 
             rval = sendAndListen(msg);
 
-            // aapsLogger.debug(LTag.PUMPBTCOMM,"PumpResponse: " + rval);
+            // aapsLogger.debug(LTag.PUMPCOMM,"PumpResponse: " + rval);
 
             if (rval.commandType != MedtronicCommandType.CommandACK) {
-                aapsLogger.error(LTag.PUMPBTCOMM, "runCommandWithFrames: Pump did not ACK frame #{}", frameNr);
+                aapsLogger.error(LTag.PUMPCOMM, "runCommandWithFrames: Pump did not ACK frame #{}", frameNr);
 
-                aapsLogger.error(LTag.PUMPBTCOMM, "Run command with Frames FAILED (command={}, response={})", commandType.name(),
+                aapsLogger.error(LTag.PUMPCOMM, "Run command with Frames FAILED (command={}, response={})", commandType.name(),
                         rval.toString());
 
                 return new PumpMessage(aapsLogger, "No ACK after frame #" + frameNr);
             } else {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Run command with Frames: Got ACK response for frame #{}", (frameNr));
+                aapsLogger.debug(LTag.PUMPCOMM, "Run command with Frames: Got ACK response for frame #{}", (frameNr));
             }
 
             frameNr++;
@@ -311,7 +311,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         if (doWakeUpBeforeCommand)
             wakeUp(receiverDeviceAwakeForMinutes, false);
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Current command: " + medtronicUtil.getCurrentCommand());
+        aapsLogger.debug(LTag.PUMPCOMM, "Current command: " + medtronicUtil.getCurrentCommand());
 
         medtronicPumpStatus.setPumpDeviceState(PumpDeviceState.Active);
         boolean doneWithError = false;
@@ -323,8 +323,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             PumpMessage getHistoryMsg = makePumpMessage(MedtronicCommandType.GetHistoryData,
                     new GetHistoryPageCarelinkMessageBody(pageNumber));
 
-            aapsLogger.info(LTag.PUMPBTCOMM, "getPumpHistory: Page {}", pageNumber);
-            // aapsLogger.info(LTag.PUMPBTCOMM,"getPumpHistoryPage("+pageNumber+"): "+ByteUtil.shortHexString(getHistoryMsg.getTxData()));
+            aapsLogger.info(LTag.PUMPCOMM, "getPumpHistory: Page {}", pageNumber);
+            // aapsLogger.info(LTag.PUMPCOMM,"getPumpHistoryPage("+pageNumber+"): "+ByteUtil.shortHexString(getHistoryMsg.getTxData()));
             // Ask the pump to transfer history (we get first frame?)
 
             PumpMessage firstResponse = null;
@@ -339,7 +339,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     failed = false;
                     break;
                 } catch (RileyLinkCommunicationException e) {
-                    aapsLogger.error(LTag.PUMPBTCOMM, "First call for PumpHistory failed (retry={})", retries);
+                    aapsLogger.error(LTag.PUMPCOMM, "First call for PumpHistory failed (retry={})", retries);
                     failed = true;
                 }
             }
@@ -349,7 +349,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 return pumpTotalResult;
             }
 
-            // aapsLogger.info(LTag.PUMPBTCOMM,"getPumpHistoryPage("+pageNumber+"): " + ByteUtil.shortHexString(firstResponse.getContents()));
+            // aapsLogger.info(LTag.PUMPCOMM,"getPumpHistoryPage("+pageNumber+"): " + ByteUtil.shortHexString(firstResponse.getContents()));
 
             PumpMessage ackMsg = makePumpMessage(MedtronicCommandType.CommandACK, new PumpAckMessageBody());
             GetHistoryPageCarelinkMessageBody currentResponse = new GetHistoryPageCarelinkMessageBody(firstResponse
@@ -366,7 +366,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                         && currentResponse.getFrameNumber() == expectedFrameNum) {
                     // success! got a frame.
                     if (frameData.length != 64) {
-                        aapsLogger.warn(LTag.PUMPBTCOMM, "Expected frame of length 64, got frame of length " + frameData.length);
+                        aapsLogger.warn(LTag.PUMPCOMM, "Expected frame of length 64, got frame of length " + frameData.length);
                         // but append it anyway?
                     }
                     // handle successful frame data
@@ -376,7 +376,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     medtronicUtil.setCurrentCommand(MedtronicCommandType.GetHistoryData, pageNumber,
                             currentResponse.getFrameNumber());
 
-                    aapsLogger.info(LTag.PUMPBTCOMM, "getPumpHistory: Got frame {} of Page {}", currentResponse.getFrameNumber(), pageNumber);
+                    aapsLogger.info(LTag.PUMPCOMM, "getPumpHistory: Got frame {} of Page {}", currentResponse.getFrameNumber(), pageNumber);
                     // Do we need to ask for the next frame?
                     if (expectedFrameNum < 16) { // This number may not be correct for pumps other than 522/722
                         expectedFrameNum++;
@@ -385,16 +385,16 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     }
                 } else {
                     if (frameData == null) {
-                        aapsLogger.error(LTag.PUMPBTCOMM, "null frame data, retrying");
+                        aapsLogger.error(LTag.PUMPCOMM, "null frame data, retrying");
                     } else if (currentResponse.getFrameNumber() != expectedFrameNum) {
-                        aapsLogger.warn(LTag.PUMPBTCOMM, "Expected frame number {}, received {} (retrying)", expectedFrameNum,
+                        aapsLogger.warn(LTag.PUMPCOMM, "Expected frame number {}, received {} (retrying)", expectedFrameNum,
                                 currentResponse.getFrameNumber());
                     } else if (frameData.length == 0) {
-                        aapsLogger.warn(LTag.PUMPBTCOMM, "Frame has zero length, retrying");
+                        aapsLogger.warn(LTag.PUMPCOMM, "Frame has zero length, retrying");
                     }
                     failures++;
                     if (failures == 6) {
-                        aapsLogger.error(LTag.PUMPBTCOMM,
+                        aapsLogger.error(LTag.PUMPCOMM,
                                 "getPumpHistory: 6 failures in attempting to download frame {} of page {}, giving up.",
                                 expectedFrameNum, pageNumber);
                         done = true; // failure completion.
@@ -412,26 +412,26 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                             nextMsg = sendAndListen(ackMsg);
                             break;
                         } catch (RileyLinkCommunicationException e) {
-                            aapsLogger.error(LTag.PUMPBTCOMM, "Problem acknowledging frame response. (retry={})", retries);
+                            aapsLogger.error(LTag.PUMPCOMM, "Problem acknowledging frame response. (retry={})", retries);
                         }
                     }
 
                     if (nextMsg != null)
                         currentResponse = new GetHistoryPageCarelinkMessageBody(nextMsg.getMessageBody().getTxData());
                     else {
-                        aapsLogger.error(LTag.PUMPBTCOMM, "We couldn't acknowledge frame from pump, aborting operation.");
+                        aapsLogger.error(LTag.PUMPCOMM, "We couldn't acknowledge frame from pump, aborting operation.");
                     }
                 }
             }
 
             if (rawHistoryPage.getLength() != 1024) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "getPumpHistory: short page.  Expected length of 1024, found length of "
+                aapsLogger.warn(LTag.PUMPCOMM, "getPumpHistory: short page.  Expected length of 1024, found length of "
                         + rawHistoryPage.getLength());
                 doneWithError = true;
             }
 
             if (!rawHistoryPage.isChecksumOK()) {
-                aapsLogger.error(LTag.PUMPBTCOMM, "getPumpHistory: checksum is wrong");
+                aapsLogger.error(LTag.PUMPCOMM, "getPumpHistory: checksum is wrong");
                 doneWithError = true;
             }
 
@@ -444,11 +444,11 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
             List<PumpHistoryEntry> medtronicHistoryEntries = medtronicPumpHistoryDecoder.processPageAndCreateRecords(rawHistoryPage);
 
-            aapsLogger.debug(LTag.PUMPBTCOMM, "getPumpHistory: Found {} history entries.", medtronicHistoryEntries.size());
+            aapsLogger.debug(LTag.PUMPCOMM, "getPumpHistory: Found {} history entries.", medtronicHistoryEntries.size());
 
             pumpTotalResult.addHistoryEntries(medtronicHistoryEntries, pageNumber);
 
-            aapsLogger.debug(LTag.PUMPBTCOMM, "getPumpHistory: Search status: Search finished: {}", pumpTotalResult.isSearchFinished());
+            aapsLogger.debug(LTag.PUMPCOMM, "getPumpHistory: Search status: Search finished: {}", pumpTotalResult.isSearchFinished());
 
             if (pumpTotalResult.isSearchFinished()) {
                 medtronicPumpStatus.setPumpDeviceState(PumpDeviceState.Sleeping);
@@ -559,7 +559,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     private Object sendAndGetResponseWithCheck(MedtronicCommandType commandType, byte[] bodyData) {
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "getDataFromPump: {}", commandType);
+        aapsLogger.debug(LTag.PUMPCOMM, "getDataFromPump: {}", commandType);
 
         for (int retries = 0; retries < MAX_COMMAND_TRIES; retries++) {
 
@@ -574,7 +574,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                     if (dataResponse != null) {
                         this.errorMessage = null;
-                        aapsLogger.debug(LTag.PUMPBTCOMM, "Converted response for {} is {}.", commandType.name(), dataResponse);
+                        aapsLogger.debug(LTag.PUMPCOMM, "Converted response for {} is {}.", commandType.name(), dataResponse);
 
                         return dataResponse;
                     } else {
@@ -586,7 +586,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 }
 
             } catch (RileyLinkCommunicationException e) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
+                aapsLogger.warn(LTag.PUMPCOMM, "Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
             }
 
         }
@@ -599,7 +599,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         if (!response.isValid()) {
             String responseData = String.format("%s: Invalid response.", method);
-            aapsLogger.warn(LTag.PUMPBTCOMM, responseData);
+            aapsLogger.warn(LTag.PUMPCOMM, responseData);
             return responseData;
         }
 
@@ -607,7 +607,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         if (contents != null) {
             if (contents.length >= expectedLength) {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "{}: Content: {}", method, ByteUtil.shortHexString(contents));
+                aapsLogger.debug(LTag.PUMPCOMM, "{}: Content: {}", method, ByteUtil.shortHexString(contents));
                 return null;
 
             } else {
@@ -615,12 +615,12 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                         "%s: Cannot return data. Data is too short [expected=%s, received=%s].", method, ""
                                 + expectedLength, "" + contents.length);
 
-                aapsLogger.warn(LTag.PUMPBTCOMM, responseData);
+                aapsLogger.warn(LTag.PUMPCOMM, responseData);
                 return responseData;
             }
         } else {
             String responseData = String.format("%s: Cannot return data. Null response.", method);
-            aapsLogger.warn(LTag.PUMPBTCOMM, responseData);
+            aapsLogger.warn(LTag.PUMPCOMM, responseData);
             return responseData;
         }
     }
@@ -652,7 +652,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         MedtronicCommandType commandType = MedtronicCommandType.GetBasalProfileSTD;
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "getDataFromPump: {}", commandType);
+        aapsLogger.debug(LTag.PUMPCOMM, "getDataFromPump: {}", commandType);
 
         medtronicUtil.setCurrentCommand(commandType);
 
@@ -670,8 +670,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                 PumpMessage response = sendAndListen(msg, DEFAULT_TIMEOUT + (DEFAULT_TIMEOUT * retries));
 
-//                aapsLogger.debug(LTag.PUMPBTCOMM,"1st Response: " + HexDump.toHexStringDisplayable(response.getRawContent()));
-//                aapsLogger.debug(LTag.PUMPBTCOMM,"1st Response: " + HexDump.toHexStringDisplayable(response.getMessageBody().getTxData()));
+//                aapsLogger.debug(LTag.PUMPCOMM,"1st Response: " + HexDump.toHexStringDisplayable(response.getRawContent()));
+//                aapsLogger.debug(LTag.PUMPCOMM,"1st Response: " + HexDump.toHexStringDisplayable(response.getMessageBody().getTxData()));
 
                 String check = checkResponseContent(response, commandType.commandDescription, 1);
 
@@ -687,8 +687,8 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                         response = sendAndListen(ackMsg, DEFAULT_TIMEOUT + (DEFAULT_TIMEOUT * retries));
 
-//                        aapsLogger.debug(LTag.PUMPBTCOMM,"{} Response: {}", runs, HexDump.toHexStringDisplayable(response2.getRawContent()));
-//                        aapsLogger.debug(LTag.PUMPBTCOMM,"{} Response: {}", runs,
+//                        aapsLogger.debug(LTag.PUMPCOMM,"{} Response: {}", runs, HexDump.toHexStringDisplayable(response2.getRawContent()));
+//                        aapsLogger.debug(LTag.PUMPCOMM,"{} Response: {}", runs,
 //                            HexDump.toHexStringDisplayable(response2.getMessageBody().getTxData()));
 
                         String check2 = checkResponseContent(response, commandType.commandDescription, 1);
@@ -699,7 +699,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
                         } else {
                             this.errorMessage = check2;
-                            aapsLogger.error(LTag.PUMPBTCOMM, "Error with response got GetProfile: " + check2);
+                            aapsLogger.error(LTag.PUMPCOMM, "Error with response got GetProfile: " + check2);
                         }
                     }
 
@@ -710,7 +710,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 BasalProfile basalProfile = (BasalProfile) medtronicConverter.convertResponse(medtronicPumpPlugin.getPumpDescription().pumpType, commandType, data);
 
                 if (basalProfile != null) {
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "Converted response for {} is {}.", commandType.name(), basalProfile);
+                    aapsLogger.debug(LTag.PUMPCOMM, "Converted response for {} is {}.", commandType.name(), basalProfile);
 
                     medtronicUtil.setCurrentCommand(null);
                     medtronicPumpStatus.setPumpDeviceState(PumpDeviceState.Sleeping);
@@ -719,11 +719,11 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 }
 
             } catch (RileyLinkCommunicationException e) {
-                aapsLogger.error(LTag.PUMPBTCOMM, "Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
+                aapsLogger.error(LTag.PUMPCOMM, "Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
             }
         }
 
-        aapsLogger.warn(LTag.PUMPBTCOMM, "Error reading profile in max retries.");
+        aapsLogger.warn(LTag.PUMPCOMM, "Error reading profile in max retries.");
         medtronicUtil.setCurrentCommand(null);
         medtronicPumpStatus.setPumpDeviceState(PumpDeviceState.Sleeping);
 
@@ -741,7 +741,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
             int last = responseRaw.length - 1;
 
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Length: " + data.length);
+            aapsLogger.debug(LTag.PUMPCOMM, "Length: " + data.length);
 
             if (data.length >= BasalProfile.MAX_RAW_DATA_SIZE) {
                 return false;
@@ -793,7 +793,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     public Boolean setBolus(double units) {
 
-        aapsLogger.info(LTag.PUMPBTCOMM, "setBolus: " + units);
+        aapsLogger.info(LTag.PUMPCOMM, "setBolus: " + units);
 
         return setCommand(MedtronicCommandType.SetBolus, medtronicUtil.getBolusStrokes(units));
 
@@ -802,7 +802,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     public boolean setTBR(TempBasalPair tbr) {
 
-        aapsLogger.info(LTag.PUMPBTCOMM, "setTBR: " + tbr.getDescription());
+        aapsLogger.info(LTag.PUMPCOMM, "setTBR: " + tbr.getDescription());
 
         return setCommand(MedtronicCommandType.SetTemporaryBasal, tbr.getAsRawData());
     }
@@ -813,7 +813,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         GregorianCalendar gc = new GregorianCalendar();
         gc.add(Calendar.SECOND, 5);
 
-        aapsLogger.info(LTag.PUMPBTCOMM, "setPumpTime: " + DateTimeUtil.toString(gc));
+        aapsLogger.info(LTag.PUMPCOMM, "setPumpTime: " + DateTimeUtil.toString(gc));
 
         int i = 1;
         byte[] data = new byte[8];
@@ -830,7 +830,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         data[i + 5] = (byte) (gc.get(Calendar.MONTH) + 1);
         data[i + 6] = (byte) gc.get(Calendar.DAY_OF_MONTH);
 
-        //aapsLogger.info(LTag.PUMPBTCOMM,"setPumpTime: Body:  " + ByteUtil.getHex(data));
+        //aapsLogger.info(LTag.PUMPCOMM,"setPumpTime: Body:  " + ByteUtil.getHex(data));
 
         return setCommand(MedtronicCommandType.SetRealTimeClock, data);
 
@@ -846,7 +846,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     wakeUp(false);
 
                 if (debugSetCommands)
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "{}: Body - {}", commandType.getCommandDescription(),
+                    aapsLogger.debug(LTag.PUMPCOMM, "{}: Body - {}", commandType.getCommandDescription(),
                             ByteUtil.getHex(body));
 
                 PumpMessage msg = makePumpMessage(commandType, new CarelinkLongMessageBody(body));
@@ -854,16 +854,16 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 PumpMessage pumpMessage = runCommandWithArgs(msg);
 
                 if (debugSetCommands)
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "{}: {}", commandType.getCommandDescription(), pumpMessage.getResponseContent());
+                    aapsLogger.debug(LTag.PUMPCOMM, "{}: {}", commandType.getCommandDescription(), pumpMessage.getResponseContent());
 
                 if (pumpMessage.commandType == MedtronicCommandType.CommandACK) {
                     return true;
                 } else {
-                    aapsLogger.warn(LTag.PUMPBTCOMM, "We received non-ACK response from pump: {}", pumpMessage.getResponseContent());
+                    aapsLogger.warn(LTag.PUMPCOMM, "We received non-ACK response from pump: {}", pumpMessage.getResponseContent());
                 }
 
             } catch (RileyLinkCommunicationException e) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
+                aapsLogger.warn(LTag.PUMPCOMM, "Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
             }
         }
 
@@ -899,13 +899,13 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                     return true;
 
             } catch (RileyLinkCommunicationException e) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
+                aapsLogger.warn(LTag.PUMPCOMM, "Error getting response from RileyLink (error={}, retry={})", e.getMessage(), retries + 1);
             }
 
             if (responseMessage != null)
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Set Basal Profile: Invalid response: commandType={},rawData={}", responseMessage.commandType, ByteUtil.shortHexString(responseMessage.getRawContent()));
+                aapsLogger.warn(LTag.PUMPCOMM, "Set Basal Profile: Invalid response: commandType={},rawData={}", responseMessage.commandType, ByteUtil.shortHexString(responseMessage.getRawContent()));
             else
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Set Basal Profile: Null response.");
+                aapsLogger.warn(LTag.PUMPCOMM, "Set Basal Profile: Null response.");
         }
 
         return false;
