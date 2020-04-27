@@ -1370,11 +1370,20 @@ public class TuneProfilePlugin extends PluginBase {
                 for (ExtendedBolus eb: opts.pumpExtBolusHistory ) { opts.pumpHistory.add(new TemporaryBasal(eb)); }
                 Collections.sort(opts.pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
                 try {
-                    FS.createAutotunefile("aaps-entries." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(4));
+                    //ns-entries files are for result compare with oref0 autotune on virtual machine
+                    FS.createAutotunefile("ns-entries." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(4));
+
+                    // for debugging only, all these files are included in ns-treatments
+                    // only meals and bolus
                     FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatmentstoJSON().toString(4));
+                    //only temp basal
                     FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistorytoJSON().toString(4));
+                    //only extended
+                    FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.extBolustoJSON().toString(4));
+                    //extended and temp basal file
                     FS.createAutotunefile("aaps-pumphistory." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpHistorytoJSON().toString(4));
-                    FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.extBolustoJSON(treatmentStart,treatmentEnd).toString(4));
+                    //ns-treatments files are for result compare with oref0 autotune on virtual machine
+                    FS.createAutotunefile("ns-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.extBolustoJSON().toString(4));
 
                     log.debug("Day "+i+" of "+daysBack);
                     //log.debug("NSService asked for data from "+formatDate(new Date(starttime))+" \nto "+formatDate(new Date(endTime)));

@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Date;
@@ -90,14 +91,39 @@ public class Opts {
     }
     */
 
+    public JSONArray nsTreatmenttoJSON() {
+        JSONArray json = new JSONArray();
+        int idxT=0;
+        int idxP=0;
+        Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
+        Collections.sort(treatments, (o1, o2) -> (int) (o2.date  - o1.date) );
+        for(int i=0; i < (pumpHistory.size()+treatments.size()-1);i++) {
+            TemporaryBasal tb = pumpHistory.get(idxP);
+            Treatment tr = treatments.get(idxT);
+            if (tr.date > tb.date) {
+                if(tr.isValid) {
+                    json.put(treatmentjson(tr));
+                }
+                idxT++;
+            } else {
+                if(tb.isValid) {
+                    json.put(tempBasaljson(tb));
+                }
+                idxP++;
+            }
+        }
+
+        return json;
+    }
+
     //For treatment export, add starttime and endtime to export dedicated files for each loop
-    public JSONArray extBolustoJSON(long starttime, long endtime)  {
+    public JSONArray extBolustoJSON()  {
         JSONArray json = new JSONArray();
         try {
             for (ExtendedBolus cp:pumpExtBolusHistory ) {
                 JSONObject cPjson = new JSONObject();
 
-                if(cp.date >= starttime && cp.date <= endtime && cp.isValid) {
+                if(cp.isValid) {
                     cPjson.put("_id", cp._id);
                     cPjson.put("eventType","Extended Bolus");
                     cPjson.put("date",cp.date);
@@ -117,68 +143,71 @@ public class Opts {
         return tempBasaltoJSON(pumpHistory);
     }
 
-
     public JSONArray pumpTempBasalHistorytoJSON()  {
         return tempBasaltoJSON(pumpTempBasalHistory);
     }
 
     public JSONArray treatmentstoJSON()  {
         JSONArray json = new JSONArray();
-
-        try {
-            for (Treatment cp:treatments ) {
-                JSONObject cPjson = new JSONObject();
-                String eventType = "";
-                if(cp.insulin > 0 && cp.carbs > 0)
-                    eventType = "Bolus Wizard";
-                else if (cp.carbs > 0)
-                    eventType = "Carb Correction";
-                else
-                    eventType = "Correction Bolus";
-
-                if(cp.isValid) {
-                    cPjson.put("_id", cp._id);
-                    cPjson.put("eventType",eventType);
-                    cPjson.put("date",cp.date);
-                    cPjson.put("dateString",DateUtil.toISOAsUTC(cp.date));
-                    cPjson.put("insulin",cp.insulin);
-                    cPjson.put("carbs",cp.carbs);
-                    cPjson.put("isSMB",cp.isSMB);
-                }
-                json.put(cPjson);
+        for (Treatment cp:treatments ) {
+            if(cp.isValid) {
+                json.put(treatmentjson(cp));
             }
-        } catch (JSONException e) {}
-
+        }
         return json;
     }
-
 
     private JSONArray tempBasaltoJSON(List<TemporaryBasal> listTempBasals)  {
         JSONArray json = new JSONArray();
-        try {
-            for (TemporaryBasal cp:listTempBasals ) {
-                JSONObject cPjson = new JSONObject();
-
-                if(cp.isValid) {
-                    cPjson.put("_id", cp._id);
-                    cPjson.put("eventType","Temp Basal");
-                    cPjson.put("date",cp.date);
-                    cPjson.put("dateString",DateUtil.toISOAsUTC(cp.date));
-                    cPjson.put("absolute",cp.absoluteRate);
-                    cPjson.put("rate",cp.absoluteRate);
-                    cPjson.put("percentrate",cp.percentRate);
-                    cPjson.put("percentrate",cp.percentRate);
-                    cPjson.put("durationInMinutes",cp.durationInMinutes);
-                    cPjson.put("duration",cp.getRealDuration());
-                    cPjson.put("isEnding",cp.isEndingEvent());
-                    cPjson.put("isFakeExtended",cp.isFakeExtended);
-                }
-                json.put(cPjson);
+        for (TemporaryBasal tp:listTempBasals ) {
+            if(tp.isValid) {
+                json.put(tempBasaljson(tp));
             }
-        } catch (JSONException e) {}
-
+        }
         return json;
     }
+
+
+    private JSONObject treatmentjson(Treatment cp) {
+        JSONObject cPjson = new JSONObject();
+        try {
+            String eventType = "";
+            if(cp.insulin > 0 && cp.carbs > 0)
+                eventType = "Bolus Wizard";
+            else if (cp.carbs > 0)
+                eventType = "Carb Correction";
+            else
+                eventType = "Correction Bolus";
+            cPjson.put("_id", cp._id);
+            cPjson.put("eventType",eventType);
+            cPjson.put("date",cp.date);
+            cPjson.put("dateString",DateUtil.toISOAsUTC(cp.date));
+            cPjson.put("insulin",cp.insulin);
+            cPjson.put("carbs",cp.carbs);
+            cPjson.put("isSMB",cp.isSMB);
+        } catch (JSONException e) {}
+        return cPjson;
+    }
+
+    private JSONObject tempBasaljson(TemporaryBasal tp) {
+        JSONObject cPjson = new JSONObject();
+        try {
+            cPjson.put("_id", tp._id);
+            cPjson.put("eventType", "Temp Basal");
+            cPjson.put("date", tp.date);
+            cPjson.put("dateString", DateUtil.toISOAsUTC(tp.date));
+            cPjson.put("absolute", tp.absoluteRate);
+            cPjson.put("rate", tp.absoluteRate);
+            cPjson.put("percentrate", tp.percentRate);
+            cPjson.put("percentrate", tp.percentRate);
+            cPjson.put("durationInMinutes", tp.durationInMinutes);
+            cPjson.put("duration", tp.getRealDuration());
+            cPjson.put("isEnding", tp.isEndingEvent());
+            cPjson.put("isFakeExtended", tp.isFakeExtended);
+        } catch (JSONException e) {}
+        return cPjson;
+    }
+
 
 
     public JSONObject profiletoOrefJSON()  {
