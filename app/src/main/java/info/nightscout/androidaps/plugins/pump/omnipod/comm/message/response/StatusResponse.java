@@ -31,20 +31,20 @@ public class StatusResponse extends MessageBlock {
         }
         this.encodedData = ByteUtil.substring(encodedData, 1, MESSAGE_LENGTH - 1);
 
-        this.deliveryStatus = DeliveryStatus.fromByte((byte) (ByteUtil.convertUnsignedByteToInt(encodedData[1]) >>> 4));
-        this.podProgressStatus = PodProgressStatus.fromByte((byte) (encodedData[1] & 0x0F));
+        deliveryStatus = DeliveryStatus.fromByte((byte) (ByteUtil.convertUnsignedByteToInt(encodedData[1]) >>> 4));
+        podProgressStatus = PodProgressStatus.fromByte((byte) (encodedData[1] & 0x0F));
 
         int minutes = ((encodedData[7] & 0x7F) << 6) | ((encodedData[8] & 0xFC) >>> 2);
-        this.timeActive = Duration.standardMinutes(minutes);
+        timeActive = Duration.standardMinutes(minutes);
 
         int highInsulinBits = (encodedData[2] & 0xF) << 9;
         int middleInsulinBits = ByteUtil.convertUnsignedByteToInt(encodedData[3]) << 1;
         int lowInsulinBits = ByteUtil.convertUnsignedByteToInt(encodedData[4]) >>> 7;
-        this.insulinDelivered = OmnipodConst.POD_PULSE_SIZE * (highInsulinBits | middleInsulinBits | lowInsulinBits);
-        this.podMessageCounter = (byte) ((encodedData[4] >>> 3) & 0xf);
+        insulinDelivered = OmnipodConst.POD_PULSE_SIZE * (highInsulinBits | middleInsulinBits | lowInsulinBits);
+        podMessageCounter = (byte) ((encodedData[4] >>> 3) & 0xf);
 
-        this.insulinNotDelivered = OmnipodConst.POD_PULSE_SIZE * (((encodedData[4] & 0x03) << 8) | ByteUtil.convertUnsignedByteToInt(encodedData[5]));
-        this.alerts = new AlertSet((byte) (((encodedData[6] & 0x7f) << 1) | (ByteUtil.convertUnsignedByteToInt(encodedData[7]) >>> 7)));
+        insulinNotDelivered = OmnipodConst.POD_PULSE_SIZE * (((encodedData[4] & 0x03) << 8) | ByteUtil.convertUnsignedByteToInt(encodedData[5]));
+        alerts = new AlertSet((byte) (((encodedData[6] & 0x7f) << 1) | (ByteUtil.convertUnsignedByteToInt(encodedData[7]) >>> 7)));
 
         double reservoirValue = (((encodedData[8] & 0x3) << 8) + ByteUtil.convertUnsignedByteToInt(encodedData[9])) * OmnipodConst.POD_PULSE_SIZE;
         if (reservoirValue > OmnipodConst.MAX_RESERVOIR_READING) {
@@ -94,7 +94,7 @@ public class StatusResponse extends MessageBlock {
     public byte[] getRawData() {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         try {
-            stream.write(this.getType().getValue());
+            stream.write(getType().getValue());
             stream.write(encodedData);
         } catch (IOException e) {
             e.printStackTrace();

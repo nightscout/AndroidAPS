@@ -34,18 +34,18 @@ public class VersionResponse extends MessageBlock {
                 throw new IllegalArgumentException("Unrecognized VersionResponse message length: " + length);
         }
 
-        this.podProgressStatus = PodProgressStatus.fromByte(truncatedData[7]);
-        this.pmVersion = new FirmwareVersion(truncatedData[0], truncatedData[1], truncatedData[2]);
-        this.piVersion = new FirmwareVersion(truncatedData[3], truncatedData[4], truncatedData[5]);
-        this.lot = ByteUtil.toInt((int) truncatedData[8], (int) truncatedData[9],
+        podProgressStatus = PodProgressStatus.fromByte(truncatedData[7]);
+        pmVersion = new FirmwareVersion(truncatedData[0], truncatedData[1], truncatedData[2]);
+        piVersion = new FirmwareVersion(truncatedData[3], truncatedData[4], truncatedData[5]);
+        lot = ByteUtil.toInt((int) truncatedData[8], (int) truncatedData[9],
                 (int) truncatedData[10], (int) truncatedData[11], ByteUtil.BitConversion.BIG_ENDIAN);
-        this.tid = ByteUtil.toInt((int) truncatedData[12], (int) truncatedData[13],
+        tid = ByteUtil.toInt((int) truncatedData[12], (int) truncatedData[13],
                 (int) truncatedData[14], (int) truncatedData[15], ByteUtil.BitConversion.BIG_ENDIAN);
 
-        int indexIncrementor = extraByte ? 1 : 0;
+        int indexIncrement = extraByte ? 1 : 0;
 
-        this.address = ByteUtil.toInt((int) truncatedData[16 + indexIncrementor], (int) truncatedData[17 + indexIncrementor],
-                (int) truncatedData[18 + indexIncrementor], (int) truncatedData[19 + indexIncrementor], ByteUtil.BitConversion.BIG_ENDIAN);
+        address = ByteUtil.toInt((int) truncatedData[16 + indexIncrement], (int) truncatedData[17 + indexIncrement],
+                (int) truncatedData[18 + indexIncrement], (int) truncatedData[19 + indexIncrement], ByteUtil.BitConversion.BIG_ENDIAN);
     }
 
     @Override

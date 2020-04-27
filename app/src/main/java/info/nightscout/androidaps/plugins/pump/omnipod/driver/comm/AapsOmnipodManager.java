@@ -43,7 +43,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.pod
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
@@ -330,7 +330,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         TreatmentsPlugin.getPlugin().addToHistoryTreatment(detailedBolusInfo, false);
 
         if (delegate.getPodState().hasFaultEvent()) {
-            showPodFaultErrorDialog(delegate.getPodState().getFaultEvent().getFaultEventType(), R.raw.urgentalarm);
+            showPodFaultErrorDialog(delegate.getPodState().getFaultEvent().getFaultEventCode(), R.raw.urgentalarm);
         }
 
         return new PumpEnactResult().success(true).enacted(true).bolusDelivered(unitsDelivered);
@@ -346,7 +346,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
                 return new PumpEnactResult().success(true).enacted(true);
             } catch (PodFaultException ex) {
-                showPodFaultErrorDialog(ex.getFaultEvent().getFaultEventType(), null);
+                showPodFaultErrorDialog(ex.getFaultEvent().getFaultEventCode(), null);
                 addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
                 return new PumpEnactResult().success(true).enacted(true);
             } catch (Exception ex) {
@@ -624,9 +624,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             } else if (ex instanceof NotEnoughDataException) {
                 comment = getStringResource(R.string.omnipod_driver_error_not_enough_data);
             } else if (ex instanceof PodFaultException) {
-                FaultEventType faultEventType = ((PodFaultException) ex).getFaultEvent().getFaultEventType();
-                showPodFaultErrorDialog(faultEventType, R.raw.urgentalarm);
-                comment = createPodFaultErrorMessage(faultEventType);
+                FaultEventCode faultEventCode = ((PodFaultException) ex).getFaultEvent().getFaultEventCode();
+                showPodFaultErrorDialog(faultEventCode, R.raw.urgentalarm);
+                comment = createPodFaultErrorMessage(faultEventCode);
             } else if (ex instanceof PodReturnedErrorResponseException) {
                 comment = getStringResource(R.string.omnipod_driver_error_pod_returned_error_response);
             } else {
@@ -646,10 +646,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return comment;
     }
 
-    private String createPodFaultErrorMessage(FaultEventType faultEventType) {
+    private String createPodFaultErrorMessage(FaultEventCode faultEventCode) {
         String comment;
         comment = getStringResource(R.string.omnipod_driver_error_pod_fault,
-                ByteUtil.convertUnsignedByteToInt(faultEventType.getValue()), faultEventType.name());
+                ByteUtil.convertUnsignedByteToInt(faultEventCode.getValue()), faultEventCode.name());
         return comment;
     }
 
@@ -657,8 +657,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         RxBus.INSTANCE.send(event);
     }
 
-    private void showPodFaultErrorDialog(FaultEventType faultEventType, Integer sound) {
-        showErrorDialog(createPodFaultErrorMessage(faultEventType), sound);
+    private void showPodFaultErrorDialog(FaultEventCode faultEventCode, Integer sound) {
+        showErrorDialog(createPodFaultErrorMessage(faultEventCode), sound);
     }
 
     private void showErrorDialog(String message, Integer sound) {

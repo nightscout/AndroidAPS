@@ -32,7 +32,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.Err
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoFaultEvent;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.ErrorResponseType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
@@ -125,7 +124,7 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
             } else {
                 if (responseMessageBlock.getType() == MessageBlockType.ERROR_RESPONSE) {
                     ErrorResponse error = (ErrorResponse) responseMessageBlock;
-                    if (error.getErrorResponseType() == ErrorResponseType.BAD_NONCE) {
+                    if (error.getErrorResponseCode() == ErrorResponse.ERROR_RESPONSE_CODE_BAD_NONCE) {
                         podState.resyncNonce(error.getNonceSearchKey(), message.getSentNonce(), message.getSequenceNumber());
                         if (automaticallyResyncNonce) {
                             message.resyncNonce(podState.getCurrentNonce());
@@ -133,7 +132,7 @@ public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
                             throw new NonceOutOfSyncException();
                         }
                     } else {
-                        throw new PodReturnedErrorResponseException((ErrorResponse) responseMessageBlock);
+                        throw new PodReturnedErrorResponseException(error);
                     }
                 } else if (responseMessageBlock.getType() == MessageBlockType.POD_INFO_RESPONSE && ((PodInfoResponse) responseMessageBlock).getSubType() == PodInfoType.FAULT_EVENT) {
                     PodInfoFaultEvent faultEvent = ((PodInfoResponse) responseMessageBlock).getPodInfo();
