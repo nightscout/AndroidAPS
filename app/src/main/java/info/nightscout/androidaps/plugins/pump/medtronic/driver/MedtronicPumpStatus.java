@@ -44,10 +44,6 @@ public class MedtronicPumpStatus extends PumpStatus {
     public RileyLinkError rileyLinkError;
     public PumpDeviceState pumpDeviceState = PumpDeviceState.NeverContacted;
     public MedtronicDeviceType medtronicDeviceType = null;
-    public double currentBasal = 0;
-    public int tempBasalInProgress = 0;
-    public int tempBasalRatio = 0;
-    public int tempBasalRemainMin = 0;
     public Date tempBasalStart;
     public Double tempBasalAmount = 0.0d;
 

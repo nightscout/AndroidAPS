@@ -108,8 +108,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
         rfspy = new RFSpy(rileyLinkBLE);
         rfspy.startReader();
 
-        rileyLinkUtil.setRileyLinkBLE(rileyLinkBLE);
-
         // init rileyLinkCommunicationManager
         medtronicCommunicationManager = new MedtronicCommunicationManager(injector, rfspy);
         medtronicUIComm = new MedtronicUIComm(injector, aapsLogger, medtronicUtil, medtronicUIPostprocessor, medtronicCommunicationManager);

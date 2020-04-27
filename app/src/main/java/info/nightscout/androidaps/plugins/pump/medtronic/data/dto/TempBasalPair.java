@@ -19,8 +19,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
  */
 public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair {
 
-    private final AAPSLogger aapsLogger;
-
     /**
      * This constructor is for use with PumpHistoryDecoder
      *
@@ -28,10 +26,8 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
      * @param startTimeByte
      * @param isPercent
      */
-    public TempBasalPair(AAPSLogger aapsLogger, byte rateByte, int startTimeByte, boolean isPercent) {
+    public TempBasalPair(byte rateByte, int startTimeByte, boolean isPercent) {
         super();
-        this.aapsLogger = aapsLogger;
-
         int rateInt = ByteUtil.asUINT8(rateByte);
 
         if (isPercent)
@@ -45,7 +41,6 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
 
     public TempBasalPair(AAPSLogger aapsLogger, byte[] response) {
         super();
-        this.aapsLogger = aapsLogger;
 
         if (L.isEnabled(L.PUMPCOMM))
             aapsLogger.debug(LTag.PUMPBTCOMM, "Received TempBasal response: " + ByteUtil.getHex(response));
@@ -71,9 +66,8 @@ public class TempBasalPair extends info.nightscout.androidaps.plugins.pump.commo
     }
 
 
-    public TempBasalPair(AAPSLogger aapsLogger, double insulinRate, boolean isPercent, int durationMinutes) {
+    public TempBasalPair(double insulinRate, boolean isPercent, int durationMinutes) {
         super(insulinRate, isPercent, durationMinutes);
-        this.aapsLogger = aapsLogger;
     }
 
 

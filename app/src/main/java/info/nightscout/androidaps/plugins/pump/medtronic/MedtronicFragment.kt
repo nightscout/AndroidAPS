@@ -178,7 +178,7 @@ class MedtronicFragment : DaggerFragment() {
             rileyLinkUtil.getServiceState()) as RileyLinkServiceState?
 
         val resourceId = medtronicPumpStatus.rileyLinkServiceState.getResourceId(RileyLinkTargetDevice.MedtronicPump)
-        val rileyLinkError = rileyLinkUtil.getError()
+        val rileyLinkError = medtronicPumpPlugin.rileyLinkService?.error
         medtronic_rl_status.text =
             when {
                 medtronicPumpStatus.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
@@ -189,7 +189,7 @@ class MedtronicFragment : DaggerFragment() {
             }
         medtronic_rl_status.setTextColor(if (rileyLinkError != null) Color.RED else Color.WHITE)
 
-        medtronicPumpStatus.rileyLinkError = checkStatusSet(medtronicPumpStatus.rileyLinkError, rileyLinkUtil.getError()) as RileyLinkError?
+        medtronicPumpStatus.rileyLinkError = checkStatusSet(medtronicPumpStatus.rileyLinkError, medtronicPumpPlugin.rileyLinkService?.error) as RileyLinkError?
 
         medtronic_errors.text =
             medtronicPumpStatus.rileyLinkError?.let {

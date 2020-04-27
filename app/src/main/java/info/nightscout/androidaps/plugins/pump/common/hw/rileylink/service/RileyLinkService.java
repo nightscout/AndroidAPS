@@ -51,7 +51,6 @@ public abstract class RileyLinkService extends DaggerService {
     public void onCreate() {
         super.onCreate();
 
-        rileyLinkUtil.setRileyLinkService(this);
         rileyLinkUtil.setEncoding(getEncoding());
         initRileyLinkServiceData();
 
@@ -94,10 +93,7 @@ public abstract class RileyLinkService extends DaggerService {
         super.onDestroy();
         //LOG.error("I die! I die!");
 
-        if (rileyLinkBLE != null) {
-            rileyLinkBLE.disconnect(); // dispose of Gatt (disconnect and close)
-            rileyLinkBLE = null;
-        }
+        rileyLinkBLE.disconnect(); // dispose of Gatt (disconnect and close)
 
         if (mBroadcastReceiver != null) {
             mBroadcastReceiver.unregisterBroadcasts();
@@ -162,11 +158,6 @@ public abstract class RileyLinkService extends DaggerService {
     // returns true if our Rileylink configuration changed
     public boolean reconfigureRileyLink(String deviceAddress) {
 
-        if (rileyLinkBLE == null) {
-            rileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothInitializing);
-            return false;
-        }
-
         rileyLinkUtil.setServiceState(RileyLinkServiceState.RileyLinkInitializing);
 
         if (rileyLinkBLE.isConnected()) {
@@ -191,7 +182,7 @@ public abstract class RileyLinkService extends DaggerService {
             if (rileyLinkUtil.getServiceState() == RileyLinkServiceState.NotStarted) {
                 if (!bluetoothInit()) {
                     aapsLogger.error("RileyLink can't get activated, Bluetooth is not functioning correctly. {}",
-                            rileyLinkUtil.getError() != null ? rileyLinkUtil.getError().name() : "Unknown error (null)");
+                            getError() != null ? getError().name() : "Unknown error (null)");
                     return false;
                 }
             }
@@ -245,15 +236,15 @@ public abstract class RileyLinkService extends DaggerService {
 
     public void disconnectRileyLink() {
 
-        if (this.rileyLinkBLE != null && this.rileyLinkBLE.isConnected()) {
-            this.rileyLinkBLE.disconnect();
+        if (rileyLinkBLE.isConnected()) {
+            rileyLinkBLE.disconnect();
             rileyLinkServiceData.rileylinkAddress = null;
         }
 
         rileyLinkUtil.setServiceState(RileyLinkServiceState.BluetoothReady);
     }
 
-    public RileyLinkBLE getRileyLinkBLE() {
+    @NotNull public RileyLinkBLE getRileyLinkBLE() {
         return rileyLinkBLE;
     }
 
@@ -269,5 +260,12 @@ public abstract class RileyLinkService extends DaggerService {
         if (rfspy != null) {
             rfspy.setRileyLinkEncoding(encodingType);
         }
+    }
+
+    public RileyLinkError getError() {
+        if (rileyLinkServiceData != null)
+            return rileyLinkServiceData.errorCode;
+        else
+            return null;
     }
 }

@@ -85,7 +85,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     @Override
     public <E extends RLMessage> E createResponseMessage(byte[] payload, Class<E> clazz) {
-        PumpMessage pumpMessage = new PumpMessage(payload);
+        PumpMessage pumpMessage = new PumpMessage(aapsLogger, payload);
         return (E) pumpMessage;
     }
 
@@ -244,7 +244,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
             return rval;
         } else {
             aapsLogger.error(LTag.PUMPBTCOMM, "runCommandWithArgs: Pump did not ack Attention packet");
-            return new PumpMessage("No ACK after Attention packet.");
+            return new PumpMessage(aapsLogger, "No ACK after Attention packet.");
         }
     }
 
@@ -262,7 +262,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         if (shortResponse.commandType != MedtronicCommandType.CommandACK) {
             aapsLogger.error(LTag.PUMPBTCOMM, "runCommandWithFrames: Pump did not ack Attention packet");
 
-            return new PumpMessage("No ACK after start message.");
+            return new PumpMessage(aapsLogger, "No ACK after start message.");
         } else {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Run command with Frames: Got ACK response for Attention packet");
         }
@@ -287,7 +287,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
                 aapsLogger.error(LTag.PUMPBTCOMM, "Run command with Frames FAILED (command={}, response={})", commandType.name(),
                         rval.toString());
 
-                return new PumpMessage("No ACK after frame #" + frameNr);
+                return new PumpMessage(aapsLogger, "No ACK after frame #" + frameNr);
             } else {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Run command with Frames: Got ACK response for frame #{}", (frameNr));
             }
@@ -302,7 +302,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
     public PumpHistoryResult getPumpHistory(PumpHistoryEntry lastEntry, LocalDateTime targetDate) {
 
-        PumpHistoryResult pumpTotalResult = new PumpHistoryResult(lastEntry, targetDate == null ? null
+        PumpHistoryResult pumpTotalResult = new PumpHistoryResult(aapsLogger, lastEntry, targetDate == null ? null
                 : DateTimeUtil.toATechDate(targetDate));
 
         if (doWakeUpBeforeCommand)
@@ -492,7 +492,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
 
     private PumpMessage makePumpMessage(MedtronicCommandType messageType, MessageBody messageBody) {
-        PumpMessage msg = new PumpMessage();
+        PumpMessage msg = new PumpMessage(aapsLogger);
         msg.init(PacketType.Carelink, rileyLinkServiceData.pumpIDBytes, messageType, messageBody);
         return msg;
     }
@@ -869,7 +869,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
 
     public boolean cancelTBR() {
-        return setTBR(new TempBasalPair(aapsLogger, 0.0d, false, 0));
+        return setTBR(new TempBasalPair(0.0d, false, 0));
     }
 
 

@@ -31,7 +31,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistor
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceNotification;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceResult;
@@ -50,9 +49,7 @@ public class RileyLinkUtil {
     public List<RLHistoryItem> historyRileyLink = new ArrayList<>();
     public RileyLinkCommunicationManager rileyLinkCommunicationManager;
     static ServiceTask currentTask;
-    private RileyLinkBLE rileyLinkBLE;
     private RileyLinkServiceData rileyLinkServiceData;
-    private RileyLinkService rileyLinkService;
     private RileyLinkTargetFrequency rileyLinkTargetFrequency;
 
     private RileyLinkTargetDevice targetDevice;
@@ -112,15 +109,6 @@ public class RileyLinkUtil {
         setServiceState(newState, null);
     }
 
-
-    public RileyLinkError getError() {
-        if (rileyLinkServiceData != null)
-            return rileyLinkServiceData.errorCode;
-        else
-            return null;
-    }
-
-
     public RileyLinkServiceState getServiceState() {
         return workWithServiceState(null, null, false);
     }
@@ -156,23 +144,12 @@ public class RileyLinkUtil {
     }
 
 
-    @Deprecated
-    public RileyLinkBLE getRileyLinkBLE() {
-        return rileyLinkBLE;
-    }
-
-
-    @Deprecated
-    public void setRileyLinkBLE(RileyLinkBLE rileyLinkBLEIn) {
-        rileyLinkBLE = rileyLinkBLEIn;
-    }
-
-
     public RileyLinkServiceData getRileyLinkServiceData() {
         return rileyLinkServiceData;
     }
 
 
+    @Deprecated
     public void setRileyLinkServiceData(RileyLinkServiceData rileyLinkServiceData) {
         this.rileyLinkServiceData = rileyLinkServiceData;
     }
@@ -181,22 +158,6 @@ public class RileyLinkUtil {
     public boolean hasPumpBeenTunned() {
         return rileyLinkServiceData.tuneUpDone;
     }
-
-    @Deprecated
-    public RileyLinkService getRileyLinkService() {
-        return rileyLinkService;
-    }
-
-
-    @Deprecated
-    public void setRileyLinkService(RileyLinkService rileyLinkService) {
-        this.rileyLinkService = rileyLinkService;
-    }
-
-    public static boolean sendNotification(ServiceNotification notification, Integer clientHashcode) {
-        return false;
-    }
-
 
     // FIXME remove ?
     public static void setCurrentTask(ServiceTask task) {

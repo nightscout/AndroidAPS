@@ -158,8 +158,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     TempBasalCombined(0xfe, "TBR", PumpHistoryEntryGroup.Basal), //
     UnknownBasePacket(0xff, "Unknown Base Packet", PumpHistoryEntryGroup.Unknown);
 
-    private static Map<Integer, PumpHistoryEntryType> opCodeMap = new HashMap<Integer, PumpHistoryEntryType>();
-    private static PumpHistoryEntryType tddType;
+    private static Map<Integer, PumpHistoryEntryType> opCodeMap = new HashMap<>();
 
     static {
         for (PumpHistoryEntryType type : values()) {
@@ -171,7 +170,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
 
     private int opCode;
     private String description;
-    private int headLength = 0;
+    private int headLength;
     private int dateLength;
     // private MinimedDeviceType deviceType;
     private int bodyLength;
@@ -181,8 +180,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
     private List<SpecialRule> specialRulesHead;
     private List<SpecialRule> specialRulesBody;
     private boolean hasSpecialRules = false;
-    private PumpHistoryEntryGroup group = PumpHistoryEntryGroup.Unknown;
-    private static Object TDDType;
+    private PumpHistoryEntryGroup group;
 
 
     PumpHistoryEntryType(int opCode, String name, PumpHistoryEntryGroup group) {
@@ -400,7 +398,7 @@ public enum PumpHistoryEntryType // implements CodeEnum
         int size;
 
 
-        public SpecialRule(MedtronicDeviceType deviceType, int size) {
+        SpecialRule(MedtronicDeviceType deviceType, int size) {
             this.deviceType = deviceType;
             this.size = size;
         }

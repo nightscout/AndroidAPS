@@ -2,11 +2,8 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump;
 
 import com.google.gson.annotations.Expose;
 
-import org.slf4j.Logger;
-
 import java.util.Objects;
 
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryEntry;
@@ -20,8 +17,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceTyp
  */
 
 public class PumpHistoryEntry extends MedtronicHistoryEntry {
-
-    private static Logger LOG = StacktraceLoggerWrapper.getLogger(PumpHistoryEntry.class);
 
     @Expose
     private PumpHistoryEntryType entryType;
