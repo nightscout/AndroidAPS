@@ -65,6 +65,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
     @Inject MedtronicConverter medtronicConverter;
     @Inject MedtronicUtil medtronicUtil;
+    @Inject MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
 
     private final int MAX_COMMAND_TRIES = 3;
     private final int DEFAULT_TIMEOUT = 2000;
@@ -73,13 +74,11 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
     private String errorMessage;
     private boolean debugSetCommands = false;
 
-    private MedtronicPumpHistoryDecoder pumpHistoryDecoder;
     private boolean doWakeUpBeforeCommand = true;
 
 
     public MedtronicCommunicationManager(HasAndroidInjector injector, RFSpy rfspy) {
         super(injector, rfspy);
-        this.pumpHistoryDecoder = new MedtronicPumpHistoryDecoder();
         medtronicPumpStatus.previousConnection = sp.getLong(
                 RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
     }
@@ -316,7 +315,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
         for (int pageNumber = 0; pageNumber < 5; pageNumber++) {
 
-            RawHistoryPage rawHistoryPage = new RawHistoryPage();
+            RawHistoryPage rawHistoryPage = new RawHistoryPage(aapsLogger);
             // wakeUp(receiverDeviceAwakeForMinutes, false);
             PumpMessage getHistoryMsg = makePumpMessage(MedtronicCommandType.GetHistoryData,
                     new GetHistoryPageCarelinkMessageBody(pageNumber));
@@ -440,8 +439,7 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
 
             rawHistoryPage.dumpToDebug();
 
-            List<PumpHistoryEntry> medtronicHistoryEntries = pumpHistoryDecoder
-                    .processPageAndCreateRecords(rawHistoryPage);
+            List<PumpHistoryEntry> medtronicHistoryEntries = medtronicPumpHistoryDecoder.processPageAndCreateRecords(rawHistoryPage);
 
             aapsLogger.debug(LTag.PUMPBTCOMM, "getPumpHistory: Found {} history entries.", medtronicHistoryEntries.size());
 

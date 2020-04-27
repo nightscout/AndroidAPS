@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump;
 import com.google.gson.annotations.Expose;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
@@ -11,6 +10,7 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryEntry;
+import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
@@ -35,12 +35,12 @@ public class PumpHistoryEntry extends MedtronicHistoryEntry {
     }
 
 
-    public void setEntryType(PumpHistoryEntryType entryType) {
+    public void setEntryType(MedtronicDeviceType medtronicDeviceType, PumpHistoryEntryType entryType) {
         this.entryType = entryType;
 
-        this.sizes[0] = entryType.getHeadLength();
+        this.sizes[0] = entryType.getHeadLength(medtronicDeviceType);
         this.sizes[1] = entryType.getDateLength();
-        this.sizes[2] = entryType.getBodyLength();
+        this.sizes[2] = entryType.getBodyLength(medtronicDeviceType);
 
         if (this.entryType != null && this.atechDateTime != null)
             setPumpId();

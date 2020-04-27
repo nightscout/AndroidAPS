@@ -23,11 +23,13 @@ import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry;
+import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
 
 
 public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
 
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+    @Inject MedtronicHistoryData medtronicHistoryData;
 
     Spinner historyTypeSpinner;
     TextView statusView;
@@ -49,7 +51,7 @@ public class MedtronicHistoryActivity extends NoSplashAppCompatActivity {
         this.filteredHistoryList.clear();
 
         List<PumpHistoryEntry> list = new ArrayList<>();
-        list.addAll(medtronicPumpPlugin.getMedtronicHistoryData().getAllHistory());
+        list.addAll(medtronicHistoryData.getAllHistory());
 
         //LOG.debug("Items on full list: {}", list.size());
 

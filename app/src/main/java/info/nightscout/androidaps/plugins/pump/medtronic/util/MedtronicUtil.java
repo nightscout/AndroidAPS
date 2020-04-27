@@ -41,7 +41,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 public class MedtronicUtil {
 
     private int ENVELOPE_SIZE = 4; // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
-    private boolean lowLevelDebug = true;
+    private static boolean lowLevelDebug = true;
     private PumpDeviceState pumpDeviceState;
     private MedtronicDeviceType medtronicPumpModel;
     private MedtronicCommandType currentCommand;
@@ -396,15 +396,9 @@ public class MedtronicUtil {
     }
 
 
-    public boolean isLowLevelDebug() {
+    public static boolean isLowLevelDebug() {
         return lowLevelDebug;
     }
-
-
-    public void setLowLevelDebug(boolean lowLevelDebug) {
-        this.lowLevelDebug = lowLevelDebug;
-    }
-
 
     public PumpDeviceState getPumpDeviceState() {
         return pumpDeviceState;

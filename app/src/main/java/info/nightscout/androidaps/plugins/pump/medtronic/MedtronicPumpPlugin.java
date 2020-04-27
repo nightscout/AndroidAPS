@@ -98,6 +98,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private final RileyLinkUtil rileyLinkUtil;
     private final MedtronicUtil medtronicUtil;
     private final MedtronicPumpStatus medtronicPumpStatus;
+    private final MedtronicHistoryData medtronicHistoryData;
 
     protected static MedtronicPumpPlugin plugin = null;
     private RileyLinkMedtronicService rileyLinkMedtronicService;
@@ -107,7 +108,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private boolean isRefresh = false;
     private Map<MedtronicStatusRefreshType, Long> statusRefreshMap = new HashMap<>();
     private boolean isInitialized = false;
-    private MedtronicHistoryData medtronicHistoryData;
     private PumpHistoryEntry lastPumpHistoryEntry;
 
     public static boolean isBusy = false;
@@ -128,7 +128,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             FabricPrivacy fabricPrivacy,
             RileyLinkUtil rileyLinkUtil,
             MedtronicUtil medtronicUtil,
-            MedtronicPumpStatus medtronicPumpStatus
+            MedtronicPumpStatus medtronicPumpStatus,
+            MedtronicHistoryData medtronicHistoryData
     ) {
 
         super(new PluginDescription() //
@@ -147,6 +148,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         this.medtronicUtil = medtronicUtil;
         this.sp = sp;
         this.medtronicPumpStatus = medtronicPumpStatus;
+        this.medtronicHistoryData = medtronicHistoryData;
 
         displayConnectionMessages = false;
 
@@ -181,7 +183,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Override
     protected void onStart() {
         super.onStart();
-        medtronicHistoryData = new MedtronicHistoryData(aapsLogger, sp, activePlugin);
     }
 
     @Deprecated
@@ -195,12 +196,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private String getLogPrefix() {
         return "MedtronicPumpPlugin::";
     }
-
-
-    public MedtronicHistoryData getMedtronicHistoryData() {
-        return this.medtronicHistoryData;
-    }
-
 
     @Override
     public void initPumpStatusData() {
@@ -1565,10 +1560,4 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
 
         refreshCustomActionsList();
     }
-
-    @Deprecated
-    public MedtronicPumpStatus getMedtronicPumpStatus() {
-        return medtronicPumpStatus;
-    }
-
 }

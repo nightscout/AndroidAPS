@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDeco
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
  * management and modified/extended for AAPS.
- *
+ * <p>
  * Author: Andy {andy.rozman@gmail.com}
  */
 
@@ -209,8 +209,7 @@ public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHis
                     entry.setDateTime(dateTime, getIndex);
             }
 
-            if (isLogEnabled())
-                LOG.debug("Record: {}", entry);
+            LOG.debug("Record: {}", entry);
         }
 
         return reversedOutList;
