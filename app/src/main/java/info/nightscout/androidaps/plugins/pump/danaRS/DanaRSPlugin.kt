@@ -170,15 +170,15 @@ class DanaRSPlugin @Inject constructor(
 
     // DanaR interface
     override fun loadHistory(type: Byte): PumpEnactResult {
-        return danaRSService?.loadHistory(type) ?:  PumpEnactResult(injector).success(false)
+        return danaRSService?.loadHistory(type) ?: PumpEnactResult(injector).success(false)
     }
 
     override fun loadEvents(): PumpEnactResult {
-        return danaRSService?.loadEvents() ?:  PumpEnactResult(injector).success(false)
+        return danaRSService?.loadEvents() ?: PumpEnactResult(injector).success(false)
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        return danaRSService?.setUserSettings() ?:  PumpEnactResult(injector).success(false)
+        return danaRSService?.setUserSettings() ?: PumpEnactResult(injector).success(false)
     }
 
     // Constraints interface
@@ -300,7 +300,8 @@ class DanaRSPlugin @Inject constructor(
             val t = Treatment()
             t.isSMB = detailedBolusInfo.isSMB
             var connectionOK = false
-            if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), DateUtil.now() + T.mins(carbTime.toLong()).msecs(), t) ?: false
+            if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), DateUtil.now() + T.mins(carbTime.toLong()).msecs(), t)
+                ?: false
             val result = PumpEnactResult(injector)
             result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDesc.bolusStep
             result.bolusDelivered = t.insulin
@@ -428,7 +429,8 @@ class DanaRSPlugin @Inject constructor(
         }
         val connectionOK: Boolean
         connectionOK = if (durationInMinutes == 15 || durationInMinutes == 30) {
-            danaRSService?.tempBasalShortDuration(percentAfterConstraint, durationInMinutes) ?: false
+            danaRSService?.tempBasalShortDuration(percentAfterConstraint, durationInMinutes)
+                ?: false
         } else {
             val durationInHours = max(durationInMinutes / 60, 1)
             danaRSService?.tempBasal(percentAfterConstraint, durationInHours) ?: false
@@ -493,7 +495,8 @@ class DanaRSPlugin @Inject constructor(
             aapsLogger.debug(LTag.PUMP, "setExtendedBolus: Correct extended bolus already set. Current: " + pump.extendedBolusAmount + " Asked: " + insulinAfterConstraint)
             return result
         }
-        val connectionOK = danaRSService?.extendedBolus(insulinAfterConstraint, durationInHalfHours) ?: false
+        val connectionOK = danaRSService?.extendedBolus(insulinAfterConstraint, durationInHalfHours)
+            ?: false
         if (connectionOK && pump.isExtendedInProgress && abs(pump.extendedBolusAbsoluteRate - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = true
             result.success = true
@@ -654,5 +657,5 @@ class DanaRSPlugin @Inject constructor(
     override fun getCustomActions(): List<CustomAction>? = null
     override fun executeCustomAction(customActionType: CustomActionType) {}
     override fun canHandleDST(): Boolean = false
-    override fun timeDateOrTimeZoneChanged() {}
+    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType?) {}
 }

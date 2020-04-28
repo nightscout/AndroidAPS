@@ -32,10 +32,13 @@ import info.nightscout.androidaps.plugins.insulin.InsulinFragment
 import info.nightscout.androidaps.plugins.profile.local.LocalProfileFragment
 import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
 import info.nightscout.androidaps.plugins.pump.combo.ComboFragment
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusGeneralFragment
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusHistoryFragment
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRFragment
 import info.nightscout.androidaps.plugins.pump.danaRS.dialogs.PairingProgressDialog
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightFragment
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicFragment
+import info.nightscout.androidaps.plugins.pump.medtronic.dialog.RileyLinkStatusDeviceMedtronic
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpFragment
 import info.nightscout.androidaps.plugins.source.BGSourceFragment
 import info.nightscout.androidaps.plugins.treatments.TreatmentsFragment
@@ -115,4 +118,8 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector abstract fun contributesWizardInfoDialog(): WizardInfoDialog
 
     @ContributesAndroidInjector abstract fun contributesPasswordCheck(): PasswordCheck
+
+    @ContributesAndroidInjector abstract fun contributesRileyLinkStatusGeneral(): RileyLinkStatusGeneralFragment
+    @ContributesAndroidInjector abstract fun contributesRileyLinkStatusHistoryFragment(): RileyLinkStatusHistoryFragment
+    @ContributesAndroidInjector abstract fun contributesRileyLinkStatusDeviceMedtronic(): RileyLinkStatusDeviceMedtronic
 }

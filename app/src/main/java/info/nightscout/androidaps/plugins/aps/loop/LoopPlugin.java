@@ -17,8 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -49,7 +47,6 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.aps.loop.events.EventLoopUpdateGui;
@@ -65,6 +62,7 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
+import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.T;
@@ -88,6 +86,8 @@ public class LoopPlugin extends PluginBase {
     private final VirtualPumpPlugin virtualPumpPlugin;
     private final Lazy<ActionStringHandler> actionStringHandler;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
+    private final ReceiverStatusStore receiverStatusStore;
+    private final FabricPrivacy fabricPrivacy;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -105,7 +105,7 @@ public class LoopPlugin extends PluginBase {
         public PumpEnactResult tbrSetByPump = null;
         public PumpEnactResult smbSetByPump = null;
         public String source = null;
-        public long  lastAPSRun = DateUtil.now();
+        public long lastAPSRun = DateUtil.now();
         public long lastTBREnact = 0;
         public long lastSMBEnact = 0;
         public long lastTBRRequest = 0;
@@ -130,7 +130,9 @@ public class LoopPlugin extends PluginBase {
             TreatmentsPlugin treatmentsPlugin,
             VirtualPumpPlugin virtualPumpPlugin,
             Lazy<ActionStringHandler> actionStringHandler, // TODO Adrian use RxBus instead of Lazy
-            IobCobCalculatorPlugin iobCobCalculatorPlugin
+            IobCobCalculatorPlugin iobCobCalculatorPlugin,
+            ReceiverStatusStore receiverStatusStore,
+            FabricPrivacy fabricPrivacy
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.LOOP)
@@ -154,6 +156,8 @@ public class LoopPlugin extends PluginBase {
         this.virtualPumpPlugin = virtualPumpPlugin;
         this.actionStringHandler = actionStringHandler;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
+        this.receiverStatusStore = receiverStatusStore;
+        this.fabricPrivacy = fabricPrivacy;
 
         loopSuspendedTill = sp.getLong("loopSuspendedTill", 0L);
         isSuperBolus = sp.getBoolean("isSuperBolus", false);
@@ -167,7 +171,7 @@ public class LoopPlugin extends PluginBase {
         disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(Schedulers.io())
-                .subscribe(event -> invoke("EventTempTargetChange", true), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> invoke("EventTempTargetChange", true), fabricPrivacy::logException)
         );
         /**
          * This method is triggered once autosens calculation has completed, so the LoopPlugin
@@ -191,7 +195,7 @@ public class LoopPlugin extends PluginBase {
 
                     lastBgTriggeredRun = bgReading.date;
                     invoke("AutosenseCalculation for " + bgReading, true);
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
     }
 
@@ -391,7 +395,7 @@ public class LoopPlugin extends PluginBase {
             lastRun.lastSMBEnact = 0;
             lastRun.lastSMBRequest = 0;
 
-            NSUpload.uploadDeviceStatus(this, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump());
+            NSUpload.uploadDeviceStatus(this, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump(), receiverStatusStore);
 
             if (isSuspended()) {
                 getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.loopsuspended));
@@ -418,7 +422,7 @@ public class LoopPlugin extends PluginBase {
                     if (resultAfterConstraints.bolusRequested)
                         lastRun.smbSetByPump = waiting;
                     rxBus.send(new EventLoopUpdateGui());
-                    FabricPrivacy.getInstance().logCustom("APSRequest");
+                    fabricPrivacy.logCustom("APSRequest");
                     applyTBRRequest(resultAfterConstraints, profile, new Callback() {
                         @Override
                         public void run() {
@@ -516,13 +520,13 @@ public class LoopPlugin extends PluginBase {
                     lastRun.lastTBRRequest = lastRun.lastAPSRun;
                     lastRun.lastTBREnact = DateUtil.now();
                     lastRun.lastOpenModeAccept = DateUtil.now();
-                    NSUpload.uploadDeviceStatus(lp, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump());
+                    NSUpload.uploadDeviceStatus(lp, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump(), receiverStatusStore);
                     sp.incInt(R.string.key_ObjectivesmanualEnacts);
                 }
                 rxBus.send(new EventAcceptOpenLoopChange());
             }
         });
-        FabricPrivacy.getInstance().logCustom("AcceptTemp");
+        fabricPrivacy.logCustom("AcceptTemp");
     }
 
     /**

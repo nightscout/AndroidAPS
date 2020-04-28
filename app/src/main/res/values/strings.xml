@@ -1562,7 +1562,7 @@
     <string name="rileylink_scanner_scanning">Scanning</string>
     <string name="rileylink_scanner_scanning_finished">Scanning finished</string>
     <string name="rileylink_scanner_scanning_error">Scanning error: %1$d</string>
-
+    <string name="common_never">Never</string>
 
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Settings</string>
@@ -1715,6 +1715,7 @@
     <string name="objectives_button_unstart">Clear started</string>
     <string name="timedetection">Time detection</string>
     <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
+    <string name="time_or_timezone_change">Time and/or Timezone change on pump</string>
     <string name="nopumpselected">No pump selected</string>
     <string name="setupwizard_units_prompt">Select units you want to display values in</string>
     <string name="key_ns_uploadlocalprofile" translatable="false">ns_uploadlocalprofile</string>

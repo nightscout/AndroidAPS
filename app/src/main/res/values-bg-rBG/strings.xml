@@ -43,6 +43,7 @@
     <string name="description_pump_mdi">Писалки - За хората, които правят множество ежедневни инжекции ( интензифицирано лечение с писалки)</string>
     <string name="description_pump_virtual">За помпи, който все още не работят с AndroidAPS(Open Loop)</string>
     <string name="description_sensitivity_aaps">Чувствителността се изчислява по същия начин като в Oref0, но можете да зададете времева рамка. Минимална въглехидрати абсорбция се изчислява от Макс време за усвояване на въглехидратите в опциите.</string>
+    <string name="description_sensitivity_oref1">Чувствителността се изчислява за 8 или 24 назад в миналото, а въглехидрати (ако не са се абсорбирали) изчезват след изтичане на срока от настройките. Това е необходимо за изчисление на необявени хранения (UAM).</string>
     <string name="description_sensitivity_weighted_average">Чувствителността се изчислява като среднопретеглена стойност от отклоненията. По-новите отклонения имат по-високо тегло. Минималната абсорбция на въглехидрати се изчислява от Време за макс усвояване на въглехидрати от опциите. Този алгоритъм е най-бързият при проследяването на промени в чувствителността.</string>
     <string name="description_source_eversense">Получава данни за КЗ от модифицираното приложение на Eversense.</string>
     <string name="description_source_glimp">Получава данни за КЗ от Glimp.</string>
@@ -105,7 +106,6 @@
     <string name="sms_delta">Изменение (делта):</string>
     <string name="configbuilder">Конфигурация</string>
     <string name="objectives">Цели</string>
-    <string name="openapsma">OpenAPS МА</string>
     <string name="overview">Общ</string>
     <string name="nsprofile">NS Профил</string>
     <string name="simpleprofile">Обикновен профил</string>
@@ -543,8 +543,6 @@
     <string name="enablesuperbolus">Разреши използването на Суперболус</string>
     <string name="enablesuperbolus_summary">Разреши функцията суперболус в съветника. Не я разрешавайте докато не научите какво наистина прави. ТОВА МОЖЕ ДА СЪЗДАДЕ ОПАСНОСТ ОТ ПРЕДОЗИРАНЕ С ИНСУЛИН.</string>
     <string name="show_statuslights">Покажи статус светлини на началния екран</string>
-    <string name="show_statuslights_extended">Покажи статус светлини с подробности на началния екран</string>
-    <string name="show_statuslights_extended_summary">Показвай подробни статус светлини за канула, инсулин, сензор, резервоар и батерията на началния екран.</string>
     <string name="statuslights_res_warning">Ниво за аларма за останал инсулин в резервоара [Е]</string>
     <string name="statuslights_res_critical">Критично ниво на останал инсулин в резервоар [Е]</string>
     <string name="statuslights_bat_warning">Аларма при заряд на батерия под [%]</string>
@@ -979,6 +977,7 @@
     <string name="allow_hardware_pump_text">Внимание: Ако активирате и свържете с хардуерна помпа, AndroidAPS ще копира основните настройки от профила в помпата, като презапише съществуващата базова скорост, съхранявана на помпата. Уверете се, че имате правилните основни настройки в AndroidAPS. Ако не сте сигурни или не искате да презапишете основните настройки на помпата, натиснете Cancel и повторете превключването към помпата по-късно.</string>
     <string name="error_adding_treatment_title">Данните за лечението не са пълни</string>
     <string name="maintenance_settings">Настройки за поддръжка</string>
+    <string name="maintenance_email">Имейл</string>
     <string name="maintenance_amount">Брой логове за изпращане</string>
     <string name="maintenance">Поддръжка</string>
     <string name="maintenance_shortname">ПОДДР</string>

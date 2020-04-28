@@ -186,7 +186,6 @@ public class MainApp extends DaggerApplication {
 
         filter = new IntentFilter();
         filter.addAction(Intent.ACTION_TIME_CHANGED);
-        filter.addAction(Intent.ACTION_DATE_CHANGED);
         filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
         registerReceiver(new TimeDateOrTZChangeReceiver(), filter);
 
@@ -216,16 +215,6 @@ public class MainApp extends DaggerApplication {
     @Deprecated
     public static String gs(@StringRes int id, Object... args) {
         return sResources.getString(id, args);
-    }
-
-    @Deprecated
-    public static int gc(@ColorRes int id) {
-        return ContextCompat.getColor(instance(), id);
-    }
-
-    @Deprecated
-    public static Resources resources() {
-        return sResources;
     }
 
     @Deprecated

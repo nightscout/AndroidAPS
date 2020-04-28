@@ -11,6 +11,7 @@ interface AAPSLogger {
     fun debug(tag: LTag, message: String)
     fun debug(tag: LTag, format: String, vararg arguments: Any?)
     fun warn(tag: LTag, message: String)
+    fun warn(tag: LTag, format: String, vararg arguments: Any?)
     fun info(tag: LTag, message: String)
     fun info(tag: LTag, format: String, vararg arguments: Any?)
     fun error(tag: LTag, message: String)

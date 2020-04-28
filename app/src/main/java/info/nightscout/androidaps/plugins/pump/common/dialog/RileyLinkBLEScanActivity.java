@@ -44,9 +44,8 @@ import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
-import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -58,6 +57,12 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
     @Inject RxBusWrapper rxBus;
     @Inject ResourceHelper resourceHelper;
     @Inject BlePreCheck blePrecheck;
+    @Inject RileyLinkUtil rileyLinkUtil;
+    // TODO change this. Currently verifyConfiguration uses MDT data not only RL
+    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+
+    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 30241; // arbitrary.
+    private static final int REQUEST_ENABLE_BT = 30242; // arbitrary
 
     private static String TAG = "RileyLinkBLEScanActivity";
 
@@ -103,10 +108,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
             sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
 
-            RileyLinkUtil.getRileyLinkSelectPreference().setSummary(bleAddress);
-
-            MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
-            pumpStatus.verifyConfiguration(); // force reloading of address
+            medtronicPumpPlugin.getRileyLinkService().verifyConfiguration(); // force reloading of address
 
             rxBus.send(new EventMedtronicPumpConfigurationChanged());
 
@@ -161,7 +163,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
         }
 
         // disable currently selected RL, so that we can discover it
-        RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect);
+        rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect, this);
     }
 
 

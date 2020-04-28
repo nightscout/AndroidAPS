@@ -23,10 +23,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.viewpager.widget.ViewPager
-import com.google.android.material.navigation.NavigationView
-import com.google.android.material.tabs.TabLayout
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayoutMediator
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
@@ -47,10 +45,10 @@ import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionChec
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
-import info.nightscout.androidaps.tabs.TabPageAdapter
+import info.nightscout.androidaps.utils.tabs.TabPageAdapter
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.LocaleHelper.update
+import info.nightscout.androidaps.utils.LocaleHelper
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
@@ -86,50 +84,44 @@ class MainActivity : NoSplashAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Iconify.with(FontAwesomeModule())
-        update(applicationContext)
+        LocaleHelper.update(applicationContext)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
-        actionBarDrawerToggle = ActionBarDrawerToggle(this, drawer_layout, R.string.open_navigation, R.string.close_navigation).also {
-            drawer_layout.addDrawerListener(it)
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, main_drawer_layout, R.string.open_navigation, R.string.close_navigation).also {
+            main_drawer_layout.addDrawerListener(it)
             it.syncState()
         }
 
         // initialize screen wake lock
         processPreferenceChange(EventPreferenceChange(resourceHelper.gs(R.string.key_keep_screen_on)))
-        pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        main_pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
-                checkPluginPreferences(pager)
+                checkPluginPreferences(main_pager)
             }
-
-            override fun onPageScrollStateChanged(state: Int) {}
         })
 
         //Check here if loop plugin is disabled. Else check via constraints
         if (!loopPlugin.isEnabled(PluginType.LOOP)) versionCheckerUtils.triggerCheckVersion()
         fabricPrivacy.setUserStats()
-        setupTabs()
         setupViews()
         disposable.add(rxBus
             .toObservable(EventRebuildTabs::class.java)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                update(applicationContext)
                 if (it.recreate) recreate()
-                else {
-                    setupTabs()
-                    setupViews()
-                }
+                else setupViews()
                 setWakeLock()
-            }) { fabricPrivacy.logException(it) }
+            }) { fabricPrivacy::logException }
         )
         disposable.add(rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ processPreferenceChange(it) }) { fabricPrivacy.logException(it) }
+            .subscribe({ processPreferenceChange(it) }) { fabricPrivacy::logException }
         )
         if (!sp.getBoolean(R.string.key_setupwizard_processed, false) && !isRunningRealPumpTest()) {
             val intent = Intent(this, SetupWizardActivity::class.java)
@@ -144,7 +136,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         }
     }
 
-    private fun checkPluginPreferences(viewPager: ViewPager) {
+    private fun checkPluginPreferences(viewPager: ViewPager2) {
         pluginPreferencesMenuItem?.isEnabled = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem).preferencesId != -1
     }
 
@@ -179,50 +171,46 @@ class MainActivity : NoSplashAppCompatActivity() {
     }
 
     private fun setupViews() {
-        val pageAdapter = TabPageAdapter(supportFragmentManager, this)
-        val navigationView = findViewById<NavigationView>(R.id.navigation_view)
-        navigationView.setNavigationItemSelectedListener { true }
-        val menu = navigationView.menu.also { it.clear() }
+        // Menu
+        val pageAdapter = TabPageAdapter(this)
+        main_navigation_view.setNavigationItemSelectedListener { true }
+        val menu = main_navigation_view.menu.also { it.clear() }
         for (p in activePlugin.pluginsList) {
             pageAdapter.registerNewFragment(p)
-            if (p.hasFragment() && !p.isFragmentVisible() && p.isEnabled(p.pluginDescription.type) && !p.pluginDescription.neverVisible) {
+            if (p.isEnabled() && p.hasFragment() && !p.isFragmentVisible() && !p.pluginDescription.neverVisible) {
                 val menuItem = menu.add(p.name)
                 menuItem.isCheckable = true
                 menuItem.setOnMenuItemClickListener {
                     val intent = Intent(this, SingleFragmentActivity::class.java)
                     intent.putExtra("plugin", activePlugin.pluginsList.indexOf(p))
                     startActivity(intent)
-                    (findViewById<View>(R.id.drawer_layout) as DrawerLayout).closeDrawers()
+                    main_drawer_layout.closeDrawers()
                     true
                 }
             }
         }
-        val mPager = findViewById<ViewPager>(R.id.pager)
-        mPager.adapter = pageAdapter
-        //if (switchToLast)
-        //    mPager.setCurrentItem(pageAdapter.getCount() - 1, false);
-        checkPluginPreferences(mPager)
-    }
+        main_pager.adapter = pageAdapter
+        checkPluginPreferences(main_pager)
 
-    private fun setupTabs() {
-        val viewPager = findViewById<ViewPager>(R.id.pager)
-        val normalTabs = findViewById<TabLayout>(R.id.tabs_normal)
-        normalTabs.setupWithViewPager(viewPager, true)
-        val compactTabs = findViewById<TabLayout>(R.id.tabs_compact)
-        compactTabs.setupWithViewPager(viewPager, true)
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        // Tabs
         if (sp.getBoolean(R.string.key_short_tabtitles, false)) {
-            normalTabs.visibility = View.GONE
-            compactTabs.visibility = View.VISIBLE
+            tabs_normal.visibility = View.GONE
+            tabs_compact.visibility = View.VISIBLE
             toolbar.layoutParams = LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, resources.getDimension(R.dimen.compact_height).toInt())
+            TabLayoutMediator(tabs_compact, main_pager) { tab, position ->
+                tab.text = (main_pager.adapter as TabPageAdapter).getPluginAt(position).nameShort
+            }.attach()
         } else {
-            normalTabs.visibility = View.VISIBLE
-            compactTabs.visibility = View.GONE
+            tabs_normal.visibility = View.VISIBLE
+            tabs_compact.visibility = View.GONE
             val typedValue = TypedValue()
             if (theme.resolveAttribute(R.attr.actionBarSize, typedValue, true)) {
                 toolbar.layoutParams = LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT,
                     TypedValue.complexToDimensionPixelSize(typedValue.data, resources.displayMetrics))
             }
+            TabLayoutMediator(tabs_normal, main_pager) { tab, position ->
+                tab.text = (main_pager.adapter as TabPageAdapter).getPluginAt(position).name
+            }.attach()
         }
     }
 
@@ -260,7 +248,7 @@ class MainActivity : NoSplashAppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)
-        checkPluginPreferences(findViewById(R.id.pager))
+        checkPluginPreferences(main_pager)
         return true
     }
 
@@ -314,8 +302,7 @@ class MainActivity : NoSplashAppCompatActivity() {
             }
 
             R.id.nav_plugin_preferences -> {
-                val viewPager = findViewById<ViewPager>(R.id.pager)
-                val plugin = (viewPager.adapter as TabPageAdapter).getPluginAt(viewPager.currentItem)
+                val plugin = (main_pager.adapter as TabPageAdapter).getPluginAt(main_pager.currentItem)
                 protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, Runnable {
                     val i = Intent(this, PreferencesActivity::class.java)
                     i.putExtra("id", plugin.preferencesId)

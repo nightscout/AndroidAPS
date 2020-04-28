@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,23 +10,33 @@ import org.joda.time.LocalDateTime;
 
 import java.util.Locale;
 
-import info.nightscout.androidaps.MainApp;
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by andy on 5/19/18.
  */
 
-public class RileyLinkStatusGeneral extends Fragment implements RefreshableInterface {
+public class RileyLinkStatusGeneralFragment extends DaggerFragment implements RefreshableInterface {
+
+    @Inject RileyLinkUtil rileyLinkUtil;
+    @Inject MedtronicUtil medtronicUtil;
+    @Inject MedtronicPumpStatus medtronicPumpStatus;
+    @Inject ResourceHelper resourceHelper;
+    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+    @Inject RileyLinkServiceData rileyLinkServiceData;
 
     TextView connectionStatus;
     TextView configuredAddress;
@@ -41,9 +50,6 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
     TextView lastDeviceContact;
     TextView firmwareVersion;
 
-    RileyLinkServiceData rileyLinkServiceData;
-
-    MedtronicPumpStatus medtronicPumpStatus;
     boolean first = false;
 
 
@@ -58,7 +64,6 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
     @Override
     public void onStart() {
         super.onStart();
-        rileyLinkServiceData = RileyLinkUtil.getRileyLinkServiceData();
 
         this.connectionStatus = getActivity().findViewById(R.id.rls_t1_connection_status);
         this.configuredAddress = getActivity().findViewById(R.id.rls_t1_configured_address);
@@ -93,23 +98,20 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
 
     public void refreshData() {
 
-        RileyLinkTargetDevice targetDevice = RileyLinkUtil.getTargetDevice();
+        RileyLinkTargetDevice targetDevice = rileyLinkServiceData.targetDevice;
 
-        if (RileyLinkUtil.getServiceState()==null)
-            this.connectionStatus.setText(MainApp.gs(RileyLinkServiceState.NotStarted.getResourceId(targetDevice)));
-        else
-            this.connectionStatus.setText(MainApp.gs(RileyLinkUtil.getServiceState().getResourceId(targetDevice)));
+        this.connectionStatus.setText(resourceHelper.gs(rileyLinkServiceData.rileyLinkServiceState.getResourceId(targetDevice)));
 
         if (rileyLinkServiceData != null) {
             this.configuredAddress.setText(rileyLinkServiceData.rileylinkAddress);
-            this.connectionError.setText(rileyLinkServiceData.errorCode == null ? //
+            this.connectionError.setText(rileyLinkServiceData.rileyLinkError == null ? //
                     "-"
-                    : MainApp.gs(rileyLinkServiceData.errorCode.getResourceId(targetDevice)));
+                    : resourceHelper.gs(rileyLinkServiceData.rileyLinkError.getResourceId(targetDevice)));
 
 
             RileyLinkFirmwareVersion firmwareVersion = rileyLinkServiceData.versionCC110;
 
-            if (firmwareVersion==null) {
+            if (firmwareVersion == null) {
                 this.firmwareVersion.setText("BLE113: -\nCC110: -");
             } else {
                 this.firmwareVersion.setText("BLE113: " + rileyLinkServiceData.versionBLE113 + //
@@ -119,18 +121,17 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
         }
 
         // TODO add handling for Omnipod pump status
-        this.medtronicPumpStatus = MedtronicUtil.getPumpStatus();
 
         if (medtronicPumpStatus != null) {
-            this.deviceType.setText(MainApp.gs(RileyLinkTargetDevice.MedtronicPump.getResourceId()));
-            this.deviceModel.setText(medtronicPumpStatus.pumpType.getDescription());
+            this.deviceType.setText(resourceHelper.gs(RileyLinkTargetDevice.MedtronicPump.getResourceId()));
+            this.deviceModel.setText(medtronicPumpPlugin.getPumpDescription().pumpType.getDescription());
             this.serialNumber.setText(medtronicPumpStatus.serialNumber);
-            this.pumpFrequency.setText(MainApp.gs(medtronicPumpStatus.pumpFrequency.equals("medtronic_pump_frequency_us_ca") ? R.string.medtronic_pump_frequency_us_ca : R.string.medtronic_pump_frequency_worldwide));
+            this.pumpFrequency.setText(resourceHelper.gs(medtronicPumpStatus.pumpFrequency.equals("medtronic_pump_frequency_us_ca") ? R.string.medtronic_pump_frequency_us_ca : R.string.medtronic_pump_frequency_worldwide));
 
             // TODO extend when Omnipod used
 
-            if (MedtronicUtil.getMedtronicPumpModel() != null)
-                this.connectedDevice.setText("Medtronic " + MedtronicUtil.getMedtronicPumpModel().getPumpModel());
+            if (medtronicUtil.getMedtronicPumpModel() != null)
+                this.connectedDevice.setText("Medtronic " + medtronicUtil.getMedtronicPumpModel().getPumpModel());
             else
                 this.connectedDevice.setText("???");
 

@@ -104,7 +104,6 @@
     <string name="sms_delta">Diferență:</string>
     <string name="configbuilder">Configurator</string>
     <string name="objectives">Obiective</string>
-    <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Privire de ansamblu</string>
     <string name="nsprofile">Profil NS</string>
     <string name="simpleprofile">Profil simplu</string>
@@ -517,8 +516,6 @@
     <string name="enablesuperbolus">Activează superbolus în asistent</string>
     <string name="enablesuperbolus_summary">Activează funcționalitatea de superbolus în asistentul de buclă. Nu activați până nu înțelegeți ce face cu adevărat. DACĂ ESTE FOLOSIT ÎN NECUNOȘTINȚĂ DE CAUZĂ POATE DUCE LA SUPRADOZĂ DE INSULINĂ!</string>
     <string name="show_statuslights">Afișați indicatorii luminoși ai pompei pe ecranul de start</string>
-    <string name="show_statuslights_extended">Afișați indicatorii luminoși referitori la starea detaliată a pompei pe ecranul principal</string>
-    <string name="show_statuslights_extended_summary">Activați indicatori pentru CAGE, IAGE, SAGE, nivel baterie și rezervor pe ecranul principal.</string>
     <string name="statuslights_res_warning">Pragul de avertisment pentru insulina din rezervor [U]</string>
     <string name="statuslights_res_critical">Pragul critic al nivelului insulinei în rezervor [U]</string>
     <string name="iob">IOB</string>

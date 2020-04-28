@@ -26,7 +26,9 @@ import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
 import info.nightscout.androidaps.plugins.source.GlimpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.HardLimits
+import info.nightscout.androidaps.utils.Profiler
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
@@ -43,7 +45,7 @@ import java.util.*
  * Created by mike on 18.03.2018.
  */
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(MainApp::class, ConfigBuilderPlugin::class, ConstraintChecker::class, SP::class, Context::class, OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class, TreatmentsPlugin::class, TreatmentService::class, VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, GlimpPlugin::class)
+@PrepareForTest(MainApp::class, ConfigBuilderPlugin::class, ConstraintChecker::class, SP::class, Context::class, OpenAPSAMAPlugin::class, OpenAPSSMBPlugin::class, TreatmentsPlugin::class, TreatmentService::class, VirtualPumpPlugin::class, DetailedBolusInfoStorage::class, GlimpPlugin::class, Profiler::class)
 class ConstraintsCheckerTest : TestBaseWithProfile() {
 
     @Mock lateinit var activePlugin: ActivePluginProvider
@@ -55,6 +57,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
     @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
+    @Mock lateinit var profiler: Profiler
 
     private var buildHelper = BuildHelper()
     lateinit var danaRPump: DanaRPump
@@ -114,8 +117,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         danaRPlugin = DanaRPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, treatmentsPlugin, sp, commandQueue, danaRPump)
         danaRSPlugin = DanaRSPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump, detailedBolusInfoStorage, fabricPrivacy)
         insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, treatmentsPlugin, sp, commandQueue, profileFunction, context)
-        openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits)
-        openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits)
+        openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits, profiler, fabricPrivacy)
+        openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits, profiler, fabricPrivacy)
         safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper, treatmentsPlugin)
         val constraintsPluginsList = ArrayList<PluginBase?>()
         constraintsPluginsList.add(safetyPlugin)

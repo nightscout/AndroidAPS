@@ -29,6 +29,16 @@ import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobOref1Thread
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobThread
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SendAndListen
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.SetPreamble
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioPacket
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioResponse
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.*
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUITask
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.queue.commands.*
@@ -184,6 +194,23 @@ interface AppComponent : AndroidInjector<MainApp> {
     fun injectGlucoseStatus(glucoseStatus: GlucoseStatus)
 
     fun injectGraphData(graphData: GraphData)
+
+    //Medtronic
+    fun injectRileyLinkCommunicationManager(rileyLinkCommunicationManager: RileyLinkCommunicationManager)
+    fun injectMedtronicCommunicationManager(medtronicCommunicationManager: MedtronicCommunicationManager)
+    fun injectMedtronicUITask(medtronicUITask: MedtronicUITask)
+    fun injectServiceTask(serviceTask: ServiceTask)
+    fun injectPumpTask(pumpTask: PumpTask)
+    fun injectDiscoverGattServicesTask(discoverGattServicesTask: DiscoverGattServicesTask)
+    fun injectInitializePumpManagerTask(initializePumpManagerTask: InitializePumpManagerTask)
+    fun injectResetRileyLinkConfigurationTask(resetRileyLinkConfigurationTask: ResetRileyLinkConfigurationTask)
+    fun injectWakeAndTuneTask(wakeAndTuneTask: WakeAndTuneTask)
+    fun injectRadioResponse(radioResponse: RadioResponse)
+    fun injectRileyLinkBLE(rileyLinkBLE: RileyLinkBLE)
+    fun injectRFSpy(rfSpy: RFSpy)
+    fun injectSendAndListen(sendAndListen: SendAndListen)
+    fun injectSetPreamble(setPreamble: SetPreamble)
+    fun injectRadioPacket(radioPacket: RadioPacket)
 
     @Component.Builder
     interface Builder {

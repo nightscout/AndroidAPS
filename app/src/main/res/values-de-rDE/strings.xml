@@ -43,6 +43,7 @@
     <string name="description_pump_mdi">Pumpen-Integration für Personen, die täglich mehrere Injektionen für ihre Diabetestherapie vornehmen</string>
     <string name="description_pump_virtual">Pumpen-Integration für Pumpen, die noch nicht über einen Treiber verfügen (Open Loop)</string>
     <string name="description_sensitivity_aaps">Die Sensitivität wird genauso wie bei Oref0 berechnet, aber Du kannst dafür ein Zeitfenster bestimmen. Die minimale Kohlenhydrat-Absorptionsrate wird aus der maximalen Absorptionsdauer aus den Einstellungen abgeleitet.</string>
+    <string name="description_sensitivity_oref1">Die Sensitivität wird aus den Daten der letzten 8 Stunden berechnet und Kohlenhydrate (falls nicht bereits absorbiert) werden nach der in den Einstellungen angegebenen Zeit als absorbiert betrachtet. Das Plugin bezieht Zeiträume, in denen UAM annimmt, dass Kohlenhydrate aktiv waren, nicht mit in die Berechnung ein.</string>
     <string name="description_sensitivity_weighted_average">Die Sensitivität wird aus den Abweichungen errechnet. Dabei werden neuere Abweichungen stärker gewichtet als ältere. Die minimale Kohlenhydrat-Aufnahme wird aus der in den Präferenzen angegebenen maximalen Kohlenhydrat-Resorptionszeit abgeleitet. Dieser Algorithmus reagiert am schnellsten auf Änderungen der Empfindlichkeit.</string>
     <string name="description_source_eversense">Empfange BZ-Werte von der gepatchten Eversense App.</string>
     <string name="description_source_glimp">Empfange Blutzucker-Werte von Glimp.</string>
@@ -105,7 +106,6 @@
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Konfiguration</string>
     <string name="objectives">Zielsetzungen</string>
-    <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Übersicht</string>
     <string name="nsprofile">Nightscout-Profil</string>
     <string name="simpleprofile">Einfaches Profil</string>
@@ -218,6 +218,44 @@
     <string name="openapsma_maxiob_title">Maximales Basal-IOB, das OpenAPS abgeben darf [IE]</string>
     <string name="openapsma_maxiob_summary">Maximale Menge von nicht Bolus-IOB, die OpenAPs abgeben kann.</string>
     <string name="dismiss">VERWERFEN</string>
+    <string name="password_preferences_encrypt_prompt">Du wirst nach dem Master-Passwort gefragt. Mit diesem werden die exportierten Einstellungen verschlüsselt.</string>
+    <string name="password_preferences_decrypt_prompt">Du wirst nach dem Master-Passwort gefragt. Mit diesem werden die importierten Einstellungen entschlüsselt.</string>
+    <string name="preferences_export_canceled">Export abgebrochen! Einstellungen wurden NICHT exportiert!</string>
+    <string name="preferences_import_canceled">Import abgebrochen! Einstellungen wurden NICHT importiert!</string>
+    <string name="check_preferences_before_import">Überprüfe die Einstellungen vor dem Import:</string>
+    <string name="check_preferences_cannot_import">Einstellungen können nicht importiert werden!</string>
+    <string name="check_preferences_dangerous_import">Einstellungen sollten nicht importiert werden!</string>
+    <string name="check_preferences_details_btn">Beschreibe die Import-Probleme...</string>
+    <string name="check_preferences_details_title">Details zu den Import-Problemen</string>
+    <string name="check_preferences_import_btn">Importieren</string>
+    <string name="check_preferences_import_anyway_btn">Trotzdem importieren (GEFÄHRLICH!)</string>
+    <string name="metadata_warning_different_flavour">Einstellungen wurden mit einer anderen Variante von AAPS erstellt (%1$s). Du nutzt: %2$s.\n\nEinige Einstellungen können fehlen oder ungültig sein - überprüfe und aktualisiere Deine Einstellungen nach dem Import .</string>
+    <string name="metadata_warning_different_device">Einstellungen wurden auf einem anderen Gerät erstellt. Das ist OK, wenn Du von einem älteren/anderen Handy importierst. Stelle aber sicher, dass die importierten Einstellungen korrekt sind!</string>
+    <string name="metadata_warning_outdated_format">Du verwendest das veraltete Format einer alten AAPS-Version das nicht sicher ist! Verwende dieses nur als letzte Möglichkeit, wenn Du keinen Export im aktuellen JSON-Format hast.</string>
+    <string name="metadata_warning_old_export">Die importierten Einstellungen sind bereits %1$s Tage alt! Hast Du aktuellere Einstellungen oder evtl. die falsche Datei gewählt? Denke daran, die Einstellungen regelmäßig zu exportieren.</string>
+    <string name="metadata_warning_date_format">Ungültiges Datums-/Zeitformat!</string>
+    <string name="metadata_label_format">Dateiformat</string>
+    <string name="metadata_label_created_at">Erstellt am</string>
+    <string name="metadata_label_aaps_version">AAPS-Version</string>
+    <string name="metadata_label_aaps_flavour">Build-Variante</string>
+    <string name="metadata_label_device_name">Patientenname des exportierenden Geräts</string>
+    <string name="metadata_label_device_model">Modell des exportierenden Geräts</string>
+    <string name="metadata_label_encryption">Dateiverschlüsselung</string>
+    <string name="metadata_format_old">Altes Exportformat</string>
+    <string name="metadata_format_new">Neues verschlüsseltes Format</string>
+    <string name="metadata_format_debug">Neues Debugformat (unverschlüsselt)</string>
+    <string name="metadata_format_other">Unbekanntes Export-Format</string>
+    <string name="prefdecrypt_settings_tampered">Einstellungen-Datei wurde manipuliert.</string>
+    <string name="prefdecrypt_settings_secure">Einstellungsdatei ist sicher.</string>
+    <string name="prefdecrypt_settings_unencrypted">Nicht sicheres, unverschlüsseltes Einstellungsformat verwenden</string>
+    <string name="prefdecrypt_wrong_json">Fehler im JSON-Format, fehlendes erforderliches Feld (Format, Inhalt, Metadaten oder Sicherheit)</string>
+    <string name="prefdecrypt_wrong_password">Entschlüsselungsfehler. Das angegebene Passwort kann die Datei nicht entschlüsseln.</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Datei-Prüfsumme (hash) fehlt. Einstellungen können nicht auf Echtheit überprüft werden!</string>
+    <string name="prefdecrypt_issue_modified">Datei wurde nach dem Export verändert!</string>
+    <string name="prefdecrypt_issue_parsing">Entschlüsselungsfehler, Analyse der Einstellungen fehlgeschlagen!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Entschlüsselungsfehler. Das angegebene Passwort ist ungültig oder die Einstellungsdatei wurde verändert! Evtl. wurde die importierte Datei mit einem anderen Master-Passwort exportiert.</string>
+    <string name="prefdecrypt_issue_wrong_format">Fehlende Verschlüsselungskonfiguration, Einstellungsformat ist ungültig!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Nicht unterstützter oder nicht angegebener Verschlüsselungsalgorithmus!</string>
     <string name="danarpump">DanaR</string>
     <string name="connecting">Verbinden</string>
     <string name="connected">Verbunden</string>
@@ -507,6 +545,9 @@
     <string name="adult">Erwachsener</string>
     <string name="resistantadult">Insulinresistenter Erwachsener</string>
     <string name="patientage_summary">Bitte wähle das Patientenalter, um die Sicherheits-Limits festzulegen</string>
+    <string name="patient_name">Name des Patienten</string>
+    <string name="patient_name_summary">Gib den Namen des Patienten oder einen Spitznamen für die Unterscheidung zwischen mehreren Setups an.</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Nutzer</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s benötigt eine deaktivierte Akku-Leistungsoptimierung, um korrekt arbeiten zu können.</string>
     <string name="loopsuspended">Loop pausiert</string>
@@ -543,8 +584,14 @@
     <string name="enablesuperbolus">Aktiviere Superbolus im Wizard</string>
     <string name="enablesuperbolus_summary">Aktiviere die SuperBolus-Funktion im Wizard. Nicht aktivieren, wenn Du nicht weißt, welche Auswirkungen dieser Bolus hat! ES KANN ZU EINER ÜBERDOSIERUNG AN INSULIN KOMMEN!</string>
     <string name="show_statuslights">Statusanzeige auf Homescreen</string>
-    <string name="show_statuslights_extended">Erweiterte Statusanzeige auf Homescreen</string>
-    <string name="show_statuslights_extended_summary">Erweiterte Statusanzeige für CAGE, IAGE, SAGE, Reservoir- und Batteriestand auf dem Homescreen.</string>
+    <string name="statuslights_cage_warning">Warnschwelle Kanülenalter [h]</string>
+    <string name="statuslights_cage_critical">Warnschwelle kritisches Kanülenalter [h]</string>
+    <string name="statuslights_iage_warning">Warnschwelle Insulinalter [h]</string>
+    <string name="statuslights_iage_critical">Warnschwelle kritisches Insulinalter [h]</string>
+    <string name="statuslights_sage_warning">Warnschwelle Sensoralter [h]</string>
+    <string name="statuslights_sage_critical">Warnschwelle kritisches Sensoralter [h]</string>
+    <string name="statuslights_bage_warning">Warnschwelle Batteriealter [h]</string>
+    <string name="statuslights_bage_critical">Warnschwelle kritisches Batteriealter [h]</string>
     <string name="statuslights_res_warning">Warnschwelle Reservoirstand [IE]</string>
     <string name="statuslights_res_critical">Warnschwelle kritischer Reservoirstand [IE]</string>
     <string name="statuslights_bat_warning">Warnschwelle Batteriestand [%]</string>
@@ -704,8 +751,12 @@
     <string name="bgsource_upload">BZ Upload Einstellungen</string>
     <string name="wear_detailed_delta_title">Zeige detailliertes Delta</string>
     <string name="wear_detailed_delta_summary">Delta wird mit Dezimalstelle angezeigt.</string>
+    <string name="smbinterval_summary">Wie häufig SMBs angegeben werden (in Min.)</string>
     <string name="smbmaxminutes">SMB max. Minuten</string>
     <string name="smbmaxminutes_summary">SMB Basal-Limit in Minuten</string>
+    <string name="uamsmbmaxminutes">UAM SMB max minutes</string>
+    <string name="uamsmbmaxminutes_summary">SMB Basal-Limit in Minuten für UAM</string>
+    <string name="carbsReqThreshold">Schwellenwert für KH-Empfehlung</string>
     <string name="unsupportedfirmware">Nicht unterstützte Pumpen-Firmware</string>
     <string name="dexcomg5_xdripupload_title">Sende BZ-Werte zu xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Wähle in xDrip+ 640g/Eversense als Daten-Quelle.</string>
@@ -772,6 +823,7 @@
     <string name="ago">her</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d mins</string>
+    <string name="format_mins_short">%1$dm</string>
     <string name="enablesmbalways">SMB immer aktivieren</string>
     <string name="enablesmbalways_summary">Aktiviere SMB immer, unabhängig von Boli. Dies ist nur möglich, wenn eine BZ-Quelle genutzt wird, die die Daten besonders gut filtert wie z. B. G5.</string>
     <string name="enablesmbaftercarbs">Aktiviere SMB nach Mahlzeiten.</string>
@@ -970,6 +1022,10 @@
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Erhöhe die Sensitivität für temporäre Ziele >= 100.]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Niedrige temporäre Ziele senken die Sensitivität</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Senke die Sensitivität für temporäre Ziele < 100.]]></string>
+    <string name="resistance_lowers_target_title">Resistenz senkt Zielwert</string>
+    <string name="resistance_lowers_target_summary">Wenn Resistenz festgestellt wird, senke den Glukose-Zielwert</string>
+    <string name="sensitivity_raises_target_title">Empfindlichkeit erhöht den Zielwert</string>
+    <string name="sensitivity_raises_target_summary">Wenn eine höhere Empfindlichkeit festgestellt wird, wird der Glukose-Zielwert erhöht.</string>
     <string name="combo_invalid_setup">Ungültige Pumpen-Einstellungen. Lies das Wiki und stelle mit der 360° Konfigurations-Software sicher, dass das Quick-Info-Menü \"QUICK INFO\" heißt.</string>
     <string name="custom">Benutzerdefiniert</string>
     <string name="largetimedifftitle">Große Zeitdifferenz</string>
@@ -979,6 +1035,8 @@
     <string name="allow_hardware_pump_text">WARNUNG: Wenn Du eine echte Pumpe aktivierst und anschließt, kopiert AndroidAPS die Basaleinstellungen vom aktiven Profil zur Pumpe (und behält sie bei). Die Einstellungen in der Pumpe werden hierbei überschrieben. Wenn Du Dir nicht sicher bist oder die Basaleinstellungen in der Pumpe nicht überschreiben möchten, drücke \"Abbrechen\" und vollziehe den Wechsel zur Pumpe später.</string>
     <string name="error_adding_treatment_title">Behandlungsdaten unvollständig</string>
     <string name="maintenance_settings">Wartungseinstellungen</string>
+    <string name="maintenance_email">E-Mail</string>
+    <string name="maintenance_encrypt_exported_prefs">Exportierte Einstellungen verschlüsseln</string>
     <string name="maintenance_amount">Anzahl der zu sendenden Logs</string>
     <string name="maintenance">Wartung</string>
     <string name="maintenance_shortname">WRTNG</string>
@@ -1187,6 +1245,8 @@ Unerwartetes Verhalten.</string>
     <string name="exists">existiert</string>
     <string name="notexists">existiert nicht</string>
     <string name="temptargetcompared">Temporäres Ziel %1$s</string>
+    <string name="btdevicecompared">Bluetooth-Verbindung mit Gerät %1$s %2$s</string>
+    <string name="btdevice">Mit Bluetooth-Gerät verbinden</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -1241,6 +1301,7 @@ Unerwartetes Verhalten.</string>
     <string name="medtronic_pump_battery_alkaline">Alkaline Batterie (erweiterte Ansicht)</string>
     <string name="medtronic_pump_battery_lithium">Lithium Batterie (erweiterte Ansicht)</string>
     <string name="medtronic_pump_battery_nizn">Nickel-Zink-Akku (erweiterte Ansicht)</string>
+    <string name="medtronic_pump_battery_nimh">Nickel-Zink-Akku (erweiterte Ansicht)</string>
     <string name="medtronic_bolus_debugging">Fehlersuche Bolus/Behandlungen</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SCANNEN</string>
@@ -1256,6 +1317,7 @@ Unerwartetes Verhalten.</string>
     <string name="rileylink_scanner_scanning">Scannt</string>
     <string name="rileylink_scanner_scanning_finished">Scannen abgeschlossen</string>
     <string name="rileylink_scanner_scanning_error">Scanfehler: %1$d</string>
+    <string name="common_never">Nie</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Einstellungen</string>
     <string name="rileylink_settings_tab2">Verlauf</string>
@@ -1389,6 +1451,7 @@ Unerwartetes Verhalten.</string>
     <string name="objectives_button_unstart">Ziel neu starten</string>
     <string name="timedetection">Zeiterkennung</string>
     <string name="doyouwantresetstart">Möchtest Du den Start der Ziele zurücksetzen? Du verlierst Deine Fortschritte.</string>
+    <string name="time_or_timezone_change">Zeit- und/oder Zeitzonenänderung an der Pumpe</string>
     <string name="nopumpselected">Keine Pumpe ausgewählt</string>
     <string name="setupwizard_units_prompt">Wähle die Einheit, in der die Werte angezeigt werden sollen.</string>
     <string name="ns_ploadlocalprofile">Lade die Änderungen des lokalen Profils zu NS hoch.</string>
@@ -1445,4 +1508,34 @@ Unerwartetes Verhalten.</string>
     <string name="loop_tbrexecution_time_label">Temp. BR Ausführungszeit</string>
     <string name="insight_alert_notification_channel">Insight Pumpenalarme</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">von der Authentifizierungs-App für: %1$s</string>
+    <string name="smscommunicator_otp_enabled">Authentifizierung einschalten</string>
+    <string name="smscommunicator_otp_enabled_summary">Authentifiziere Befehle mit Einmal-Passwörtern, die von Google Authenticator oder ähnlichen Apps zur 2-Faktor-Authentifizierung generiert wurden.</string>
+    <string name="smscommunicator_otp_pin">Zusätzliche PIN am Ende des Tokens</string>
+    <string name="smscommunicator_otp_pin_summary">Zusätzliche Ziffern, die auswendig gelernt und am Ende jedes generierten Einmal-Passworts angehängt werden sollten.</string>
+    <string name="smscomunicator_tab_otp_label">Konfiguration des Authentifikators</string>
+    <string name="smscommunicator_otp_verify_label">Zu überprüfendes OTP:</string>
+    <string name="smscommunicator_otp_reset_btn">Authentifikators zurücksetzen</string>
+    <string name="smscommunicator_otp_reset_title">Authentifikatorschlüssel zurücksetzen</string>
+    <string name="smscommunicator_otp_reset_prompt">Willst Du wirklich den Authentifikatorschlüssel zurücksetzen? Dies wird alle momentan genutzten Authentifikatoren ungültig machen und Du musst sie neu einrichten.</string>
+    <string name="smscommunicator_otp_reset_successful">Neuer Authentifizierungsschlüssel generiert! Bitte verwende den aktualisierten QR-Code für die Bereitstellung von Authentifikatoren.</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Authentifikator installieren</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scanne den Code zum Einrichten von AndroidAPS OTP-Codes</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Teste das Einmal-Passwort</string>
+    <string name="smscommunicator_otp_reset_header">Authentifikators zurücksetzen</string>
+    <string name="smscommunicator_otp_install_info">Installiere auf jedem Folloer-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_provisioning_warning">Diesen Code NICHT ONLINE TEILEN!\nVerwende ihn nur zur Einrichtung der Authenticator App auf den Follower-Phones.</string>
+    <string name="smscommunicator_otp_reset_warning">Wenn Du den Authentifikator zurücksetzt werden alle bestehenden Authentifikatoren ungültig. Du musst sie dann neu einrichten!</string>
+    <string name="onconnect">Beim Verbinden</string>
+    <string name="ondisconnect">Beim Trennen</string>
+    <string name="overview_show_predictions">Predictions (Vorhersagen)</string>
+    <string name="overview_show_deviationslope">Steigung der Abweichung</string>
+    <string name="authorizationfailed">Autorisierung fehlgeschlagen</string>
+    <string name="overview_show_absinsulin">Gesamtinsulin</string>
+    <string name="master_password_summary">Das Master-Passwort wird für die Backup-Verschlüsselung und zur Außerkraftsetzung der Sicherheit in der Anwendung verwendet. Merke es Dir oder bewahre es an einem sicheren Ort auf.</string>
+    <string name="passwords_dont_match">Die Passwörter stimmen nicht überein.</string>
+    <string name="current_master_password">Aktuelles Master-Passwort</string>
+    <string name="statuslights">Statusanzeige</string>
+    <string name="statuslights_copy_ns">Einstellung aus NS kopieren</string>
+    <string name="copyexistingvalues">NS-Einstellungen kopieren (falls vorhanden)?</string>
 </resources>

@@ -106,7 +106,6 @@
     <string name="sms_delta">Rozdíl:</string>
     <string name="configbuilder">Konfigurace</string>
     <string name="objectives">Cíle</string>
-    <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Přehled</string>
     <string name="nsprofile">NS profil</string>
     <string name="simpleprofile">Jednoduchý profil</string>
@@ -585,8 +584,14 @@
     <string name="enablesuperbolus">Povolit superbolus</string>
     <string name="enablesuperbolus_summary">Povolení superbolusu v kalkulátoru. Nepovolujte, dokud se nenaučíte, co to opravdu dělá. MŮŽE ZPŮSOBIT PŘEDÁVKOVÁNÍ INZULÍNEM PŘI NESPRÁVNÉM POUŽITÍ!</string>
     <string name="show_statuslights">Zobrazit stavové indikátory na domovské obrazovce</string>
-    <string name="show_statuslights_extended">Zobrazit rozšířené stavové indikátory na domovské obrazovce</string>
-    <string name="show_statuslights_extended_summary">Povolí rozšířené stavové indikátory pro stáří kanyly, inzulínu, senzoru, zásobníku a baterie na domovské obrazovce.</string>
+    <string name="statuslights_cage_warning">Úroveň varování stáří kanyly [h]</string>
+    <string name="statuslights_cage_critical">Úroveň kritického stáří kanyly [h]</string>
+    <string name="statuslights_iage_warning">Úroveň varování stáří inzulínu [h]</string>
+    <string name="statuslights_iage_critical">Úroveň kritického stáří inzulínu [h]</string>
+    <string name="statuslights_sage_warning">Úroveň varování stáří senzoru [h]</string>
+    <string name="statuslights_sage_critical">Úroveň kritického stáří senzoru [h]</string>
+    <string name="statuslights_bage_warning">Úroveň varování stáří baterie [h]</string>
+    <string name="statuslights_bage_critical">Úroveň kritického varování stáří baterie [h]</string>
     <string name="statuslights_res_warning">Úroveň varování stavu zásobníku [U]</string>
     <string name="statuslights_res_critical">Úroveň kritického varování stavu zásobníku [U]</string>
     <string name="statuslights_bat_warning">Úroveň varování stavu baterie [%]</string>
@@ -1523,4 +1528,12 @@
     <string name="ondisconnect">Při odpojení</string>
     <string name="overview_show_predictions">Predikce</string>
     <string name="overview_show_deviationslope">Odchylka sklonu</string>
+    <string name="authorizationfailed">Autorizace selhala</string>
+    <string name="overview_show_absinsulin">Absolutní inzulin</string>
+    <string name="master_password_summary">Hlavní heslo se používá pro šifrování zálohy a pro \"přebití\" zabezpečení v aplikaci. Dobře si ho zapamatujte nebo uložte na bezpečném místě.</string>
+    <string name="passwords_dont_match">Hesla se neshodují</string>
+    <string name="current_master_password">Aktuální hlavní heslo</string>
+    <string name="statuslights">Stavové indikátory</string>
+    <string name="statuslights_copy_ns">Zkopírovat nastavení z NS</string>
+    <string name="copyexistingvalues">Zkopírovat nastavení NS (existuje-li)?</string>
 </resources>

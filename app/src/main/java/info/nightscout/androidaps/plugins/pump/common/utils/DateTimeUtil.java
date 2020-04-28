@@ -20,14 +20,13 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
  */
 public class DateTimeUtil {
 
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
-
     /**
      * DateTime is packed as long: yyyymmddHHMMss
      *
      * @param atechDateTime
      * @return
      */
+    @Deprecated // use joda instead
     public static LocalDateTime toLocalDateTime(long atechDateTime) {
         int year = (int) (atechDateTime / 10000000000L);
         atechDateTime -= year * 10000000000L;
@@ -49,8 +48,7 @@ public class DateTimeUtil {
         try {
             return new LocalDateTime(year, month, dayOfMonth, hourOfDay, minute, second);
         } catch (Exception ex) {
-            if (L.isEnabled(L.PUMPCOMM))
-                LOG.error("Error creating LocalDateTime from values [atechDateTime={}, year={}, month={}, day={}, hour={}, minute={}, second={}]. Exception: {}", atechDateTime, year, month, dayOfMonth, hourOfDay, minute, second, ex.getMessage());
+            //LOG.error("Error creating LocalDateTime from values [atechDateTime={}, year={}, month={}, day={}, hour={}, minute={}, second={}]. Exception: {}", atechDateTime, year, month, dayOfMonth, hourOfDay, minute, second, ex.getMessage());
             //return null;
             throw ex;
         }
@@ -63,6 +61,7 @@ public class DateTimeUtil {
      * @param atechDateTime
      * @return
      */
+    @Deprecated // use joda instead
     public static GregorianCalendar toGregorianCalendar(long atechDateTime) {
         int year = (int) (atechDateTime / 10000000000L);
         atechDateTime -= year * 10000000000L;
@@ -84,8 +83,7 @@ public class DateTimeUtil {
         try {
             return new GregorianCalendar(year, month - 1, dayOfMonth, hourOfDay, minute, second);
         } catch (Exception ex) {
-            if (L.isEnabled(L.PUMPCOMM))
-                LOG.error("DateTimeUtil", String.format("Error creating GregorianCalendar from values [atechDateTime=%d, year=%d, month=%d, day=%d, hour=%d, minute=%d, second=%d]", atechDateTime, year, month, dayOfMonth, hourOfDay, minute, second));
+            //LOG.error("DateTimeUtil", String.format("Error creating GregorianCalendar from values [atechDateTime=%d, year=%d, month=%d, day=%d, hour=%d, minute=%d, second=%d]", atechDateTime, year, month, dayOfMonth, hourOfDay, minute, second));
             //return null;
             throw ex;
         }
@@ -117,6 +115,14 @@ public class DateTimeUtil {
         atechDateTime += gc.get(Calendar.SECOND);
 
         return atechDateTime;
+    }
+
+
+    public static long toATechDate(long timeInMillis) {
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTimeInMillis(timeInMillis);
+
+        return toATechDate(gc);
     }
 
 
@@ -275,5 +281,22 @@ public class DateTimeUtil {
         return toATechDate(oldestEntryTime);
     }
 
+
+    public static long getTimeInFutureFromMinutes(long startTime, int minutes) {
+        return startTime + getTimeInMs(minutes);
+    }
+
+    public static long getTimeInFutureFromMinutes(int minutes) {
+        return System.currentTimeMillis() + getTimeInMs(minutes);
+    }
+
+
+    public static long getTimeInMs(int minutes) {
+        return getTimeInS(minutes) * 1000L;
+    }
+
+    public static int getTimeInS(int minutes) {
+        return minutes * 60;
+    }
 
 }

@@ -36,6 +36,7 @@ class CareDialog : DialogFragmentWithDate() {
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var translator: Translator
 
     enum class EventType {
         BGCHECK,
@@ -149,7 +150,7 @@ class CareDialog : DialogFragmentWithDate() {
                     actions_care_sensor.isChecked -> "Sensor"
                     else                          -> "Manual"
                 }
-            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + Translator.translate(type))
+            actions.add(resourceHelper.gs(R.string.careportal_newnstreatment_glucosetype) + ": " + translator.translate(type))
             actions.add(resourceHelper.gs(R.string.treatments_wizard_bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, actions_care_bg.value) + " " + resourceHelper.gs(unitResId))
             json.put("glucose", actions_care_bg.value)
             json.put("glucoseType", type)

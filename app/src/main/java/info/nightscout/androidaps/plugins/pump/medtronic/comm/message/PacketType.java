@@ -25,7 +25,7 @@ public enum PacketType {
         }
     }
 
-    private byte value = 0;
+    private byte value;
 
 
     PacketType(int value) {

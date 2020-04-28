@@ -214,7 +214,8 @@ abstract class PluginsModule {
 
     @Binds
     @AllConfigs
-    @IntoSet
+    @IntoMap
+    @IntKey(265)
     abstract fun bindSafetyPlugin(plugin: SafetyPlugin): PluginBase
 
     @Binds

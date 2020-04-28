@@ -105,7 +105,6 @@
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Konfiguracja</string>
     <string name="objectives">Zadania</string>
-    <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Przegląd</string>
     <string name="nsprofile">Profil Nightscout</string>
     <string name="simpleprofile">Prosty profil</string>
@@ -543,8 +542,14 @@
     <string name="enablesuperbolus">Zezwalaj na superbolus w kalkulatorze</string>
     <string name="enablesuperbolus_summary">Włącz funkcję Superbolus w kalkulatorze. Nie uruchamiaj, dopóki nie nauczysz się jak ta funkcja działa. MOŻESZ DOPROWADZIĆ DO PRZEDAWKOWANIA INSULINY JEŻELI UŻYJESZ TEJ FUNKCJI NIE POSIADAJĄC ODPOWIEDNIEJ WIEDZY!</string>
     <string name="show_statuslights">Pokaż diody stanu na ekranie głównym</string>
-    <string name="show_statuslights_extended">Pokaż diody stanu na ekranie głównym</string>
-    <string name="show_statuslights_extended_summary">Włącz diody stanu dla cage, iage, sage, rezerwuar i poziom baterii na ekranie głównym.</string>
+    <string name="statuslights_cage_warning">Ostrzeżenie o czasie wkłucia [h]</string>
+    <string name="statuslights_cage_critical">Krytyczny czas wkłucia [h]</string>
+    <string name="statuslights_iage_warning">Ostrzeżenie o czasie insuliny [h]</string>
+    <string name="statuslights_iage_critical">Krytyczny czas insuliny [h]</string>
+    <string name="statuslights_sage_warning">Ostrzeżenie o czasie sensora CGM [h]</string>
+    <string name="statuslights_sage_critical">Krytyczny czas sensora CGM [h]</string>
+    <string name="statuslights_bage_warning">Ostrzeżenie o czasie baterii [h]</string>
+    <string name="statuslights_bage_critical">Krytyczny czas baterii [h]</string>
     <string name="statuslights_res_warning">Próg ostrzeżenia o poziomie zbiornika [U]</string>
     <string name="statuslights_res_critical">Próg ostrzeżenia o krytycznym poziomie zbiornika [U]</string>
     <string name="statuslights_bat_warning">Próg ostrzeżenia o poziomie baterii [%]</string>
@@ -1433,4 +1438,6 @@
     <string name="message">Wiadomość</string>
     <string name="clearqueueconfirm">Wyczyścić kolejkę? Wszystkie dane w kolejce zostaną utracone!</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="statuslights">Wskaźniki stanu</string>
+    <string name="statuslights_copy_ns">Kopiowanie ustawień z NS</string>
 </resources>
