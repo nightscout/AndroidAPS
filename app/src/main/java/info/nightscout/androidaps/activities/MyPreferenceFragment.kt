@@ -279,7 +279,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
 
         for (plugin in pluginStore.plugins) {
-            pref?.let { plugin.updatePreferenceSummary(it) }
+            pref?.let { pref-> pref.getKey()?.let { plugin.updatePreferenceSummary(pref) }}
         }
 
         val hmacPasswords = arrayOf(
