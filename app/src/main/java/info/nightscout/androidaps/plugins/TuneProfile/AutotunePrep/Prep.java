@@ -138,7 +138,7 @@ public class Prep {
 
             // As we're processing each data point, go through the treatment.carbs and see if any of them are older than
             // the current BG data point.  If so, add those carbs to COB.
-            
+
             Treatment treatment = treatments.size() > 0 ? treatments.get(treatments.size()-1) : null;
             int myCarbs = 0;
             if (treatment != null) {
