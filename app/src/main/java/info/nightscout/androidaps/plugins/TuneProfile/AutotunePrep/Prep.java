@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.TuneProfile.AutotunePrep;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -27,13 +26,10 @@ import info.nightscout.androidaps.plugins.TuneProfile.data.Opts;
 import info.nightscout.androidaps.plugins.TuneProfile.data.PrepOutput;
 import info.nightscout.androidaps.plugins.TuneProfile.TuneProfilePlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.Round;
-
-
 
 
 
@@ -61,12 +57,11 @@ public class Prep {
         int boluses = 0;
         int maxCarbs = 0;
 
-
-        //var IOBInputs = {
-        //        profile: profileData,
-        //        history: opts.pumpHistory
-        //};
-
+        IobInputs iobInputs = new IobInputs();
+        iobInputs.profile = opts.profile;
+        // pumpHistory of oref0 are splitted in pumpHistory (for temp basals or extended bolus) and treatments (for bolus, meal bolus or correction carbs)
+        iobInputs.history = opts.pumpHistory;
+        iobInputs.treatments = opts.treatments;
         List<BGDatum> CSFGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> ISFGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
@@ -94,6 +89,7 @@ public class Prep {
                 bucketedData.add(new BGDatum(average));
             }
         }
+
         //console.error(bucketedData);
         //console.error(bucketedData[bucketedData.length-1]);
         // go through the treatments and remove any that are older than the oldest glucose value
@@ -113,97 +109,23 @@ public class Prep {
         }
         log.debug("Treatments size: " + treatments.size());
 
-        /*} catch (IOException e) {
-            e.printStackTrace();
-        }*/
         if (treatments.size() < 1) {
             log.debug("No treatments");
             return null;
         }
 
-        //IobCobCalculatorPlugin.getPlugin().
-        JSONObject IOBInputs = new JSONObject();
-        IOBInputs.put("profile", opts.profile);
-        IOBInputs.put("history", "pumpHistory");
-
-        double CRInitialIOB = 0d;
-        double CRInitialBG = 0d;
-        Date CRInitialCarbTime = null;
-
-        // BasalGlucosedata is null
-//        bucketedData.add(basalGlucoseData.get(0));
-        int j = 0;
-        //for loop to validate and bucket the data
-        for (int i = 1; i < glucoseData.size(); ++i) {
-            long BGTime = 0;
-            long lastBGTime = 0;
-            if (glucoseData.get(i).date != 0) {
-                BGTime = new Date(glucoseData.get(i).date).getTime();
-            } else {
-                log.error("Could not determine last BG time");
-            }
-            if (i > 1) {
-                if (glucoseData.get(i).value < 39 || glucoseData.get(i - 1).value < 39) {
-                    continue;
-                }
-            } else if (glucoseData.get(i).value < 39) {
-                continue;
-            }
-            long elapsedMinutes = (BGTime - lastBGTime) / (60 * 1000);
-            if (Math.abs(elapsedMinutes) > 2) {
-                j++;
-                if (bucketedData.size() < j)
-                    bucketedData.add(new BGDatum(glucoseData.get(i)));
-                else
-                    bucketedData.set(j, new BGDatum(glucoseData.get(i)));
-//                bucketedData<j>.date = BGTime;
-                /*if (! bucketedData[j].dateString) {
-                    bucketedData[j].dateString = BGTime.toISOString();
-                }*/
-            } else {
-                // if duplicate, average the two
-                BgReading average = new BgReading();
-                average.copyFrom(bucketedData.get(j));
-                average.value = (bucketedData.get(j).value + glucoseData.get(i).value) / 2;
-                bucketedData.set(j, new BGDatum(average));
-            }
-        }
-        // go through the treatments and remove any that are older than the oldest glucose value
-        //log.debug(treatments);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss''");
-        log.debug("Treatments size before clear: " + treatments.size());
-        log.debug("Treatment(0) " + new Date(treatments.get(0).date).toString() + " last " + new Date(treatments.get(treatments.size() - 1).date).toString());
-        for (int i = treatments.size() - 1; i > 0; --i) {
-            Treatment treatment = treatments.get(i);
-            //log.debug(treatment);
-            if (treatment != null) {
-                Date treatmentDate = new Date(treatment.date);
-                long treatmentTime = treatmentDate.getTime();
-                BgReading glucoseDatum = bucketedData.get(bucketedData.size() - 1);
-                //log.debug(glucoseDatum);
-                Date BGDate = new Date(glucoseDatum.date);
-                long BGTime = BGDate.getTime();
-
-//                log.debug("Oldest BG data is: "+format.format(BGDate)+" oldest treatment is: "+format.format(new Date(treatments.get(treatments.size()-1).date).toGMTString()));
-                if (treatmentTime < BGTime) {
-                    //treatments.splice(i,1);
-                    treatments.remove(i);
-                }
-//                log.debug("Treatment size after removing of older: "+treatments.size());
-            }
-        }
-        //log.debug(treatments);
-
         boolean calculatingCR = false;
         int absorbing = 0;
-        int uam = 0; // unannounced meal
+        boolean uam = false; // unannounced meal
         double mealCOB = 0d;
         int mealCarbs = 0;
         int CRCarbs = 0;
         String type = "";
+//****************************************************************************************************************************************
+        //categorize.js#123
         // main for loop
-        List<Treatment> fullHistory = new ArrayList<Treatment>();//IOBInputs.history; TODO: get treatments with IOB
-//categorize.js#125
+        List<TemporaryBasal> fullHistoryB = iobInputs.history ;//IOBInputs.history;
+        List<Treatment> fullHistoryT = iobInputs.treatments ;//IOBInputs.history;
         for (int i = bucketedData.size() - 5; i > 0; --i) {
             BGDatum glucoseDatum = bucketedData.get(i);
             //log.debug(glucoseDatum);
@@ -214,9 +136,6 @@ public class Prep {
             // the current BG data point.  If so, add those carbs to COB.
             Treatment treatment = treatments.get(treatments.size()-1);
             int myCarbs = 0;
-//Todo: Philoul here there is a loop that doesn't exist in original categorize#134
-//            for (int jj = 0; jj < treatments.size() - 1; jj++) {
-//                Treatment treatment = treatments.get(jj);
             if (treatment != null) {
                 Date treatmentDate = new Date(treatment.date);
                 long treatmentTime = treatmentDate.getTime();
@@ -265,6 +184,7 @@ public class Prep {
             // trim down IOBInputs.history to just the data for 6h prior to BGDate
             //log.debug(IOBInputs.history[0].created_at);
             List<Treatment> newHistory = null;
+            /*
             for (int h = 0; h < fullHistory.size(); h++) {
 //                Date hDate = new Date(fullHistory.get(h).created_at) TODO: When we get directly from Ns there should be created_at
                 Date hDate = new Date(fullHistory.get(h).date);
@@ -284,6 +204,8 @@ public class Prep {
                 IOBInputs = new JSONObject();
             // process.stderr.write("" + newHistory.length + " ");
             //log.debug(newHistory[0].created_at,newHistory[newHistory.length-1].created_at,newHistory.length);
+
+             */
 
 
             // for IOB calculations, use the average of the last 4 hours' basals to help convergence;
@@ -370,10 +292,13 @@ public class Prep {
                 // set initial values when we first see COB
                 CRCarbs += myCarbs;
                 if (calculatingCR == false) {
+                    /*
                     CRInitialIOB = iob.iob;
                     CRInitialBG = glucoseDatum.value;
                     CRInitialCarbTime = new Date(glucoseDatum.date);
                     log.debug("CRInitialIOB: " + CRInitialIOB + " CRInitialBG: " + CRInitialBG + " CRInitialCarbTime: " + CRInitialCarbTime.toString());
+
+                     */
                 }
                 // keep calculatingCR as long as we have COB or enough IOB
                 if (mealCOB > 0 && i > 1) {
@@ -386,6 +311,8 @@ public class Prep {
                     double CREndBG = glucoseDatum.value;
                     Date CREndTime = new Date(glucoseDatum.date);
                     log.debug("CREndIOB: " + CREndIOB + " CREndBG: " + CREndBG + " CREndTime: " + CREndTime);
+                    /*
+
                     //TODO:Fix this one as it produces error
 //                    JSONObject CRDatum = new JSONObject("{\"CRInitialIOB\": "+CRInitialIOB+",   \"CRInitialBG\": "+CRInitialBG+",   \"CRInitialCarbTime\": "+CRInitialCarbTime+",   \"CREndIOB\": " +CREndIOB+",   \"CREndBG\": "+CREndBG+",   \"CREndTime\": "+CREndTime+                            ",   \"CRCarbs\": "+CRCarbs+"}");
                     String crDataString = "{\"CRInitialIOB\": " + CRInitialIOB + ",   \"CRInitialBG\": " + CRInitialBG + ",   \"CRInitialCarbTime\": " + CRInitialCarbTime.getTime() + ",   \"CREndIOB\": " + CREndIOB + ",   \"CREndBG\": " + CREndBG + ",   \"CREndTime\": " + CREndTime.getTime() + ",   \"CRCarbs\": " + CRCarbs + "}";
@@ -400,13 +327,15 @@ public class Prep {
                     //log.debug(CRDatum);
 
                     int CRElapsedMinutes = Math.round((CREndTime.getTime() - CRInitialCarbTime.getTime()) / (1000 * 60));
+
+
                     //log.debug(CREndTime - CRInitialCarbTime, CRElapsedMinutes);
                     if (CRElapsedMinutes < 60 || (i == 1 && mealCOB > 0)) {
                         log.debug("Ignoring " + CRElapsedMinutes + " m CR period.");
                     } else {
                         CRData.add(crDatum);
                     }
-
+                     */
                     CRCarbs = 0;
                     calculatingCR = false;
                 }
@@ -445,11 +374,11 @@ public class Prep {
                     log.debug(CSFGlucoseData.get(CSFGlucoseData.size() - 1).mealAbsorption + " carb absorption");
                 }
 
-                if ((iob.iob > currentBasal || deviation > 6 || uam > 0)) {
+                if ((iob.iob > currentBasal || deviation > 6 || uam )) {
                     if (deviation > 0) {
-                        uam = 1;
+                        uam = true;
                     } else {
-                        uam = 0;
+                        uam = false;
                     }
                     if (type != "uam") {
                         glucoseDatum.uamAbsorption = "start";
