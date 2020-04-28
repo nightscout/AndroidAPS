@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -81,19 +82,18 @@ public class OmnipodManager {
         this(communicationService, podState, null);
     }
 
-    public synchronized Single<SetupActionResult> pairAndPrime() {
+    public synchronized Single<SetupActionResult> pairAndPrime(int address) {
         logStartingCommandExecution("pairAndPrime");
 
         try {
-            if (podState == null) {
+            if (podState == null || podState.getSetupProgress().isBefore(SetupProgress.POD_CONFIGURED)) {
+                // Always send both 0x07 and 0x03 on retries
                 podState = communicationService.executeAction(
-                        new AssignAddressAction(podStateChangedHandler));
-            } else if (SetupProgress.PRIMING.isBefore(podState.getSetupProgress())) {
-                throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, podState.getSetupProgress());
-            }
+                        new AssignAddressAction(podStateChangedHandler, address));
 
-            if (SetupProgress.ADDRESS_ASSIGNED.equals(podState.getSetupProgress())) {
                 communicationService.executeAction(new SetupPodAction(podState));
+            } else if (SetupProgress.PRIMING.isBefore(podState.getSetupProgress())) {
+                throw new IllegalSetupProgressException(SetupProgress.POD_CONFIGURED, podState.getSetupProgress());
             }
 
             communicationService.executeAction(new PrimeAction(new PrimeService(), podState));
@@ -590,6 +590,11 @@ public class OmnipodManager {
 
     public static boolean isCertainFailure(Exception ex) {
         return ex instanceof OmnipodException && ((OmnipodException) ex).isCertainFailure();
+    }
+
+    public static int generateRandomAddress() {
+        // Create random address with 20 bits to match PDM, could easily use 24 bits instead
+        return 0x1f000000 | (new Random().nextInt() & 0x000fffff);
     }
 
     public static class BolusCommandResult {

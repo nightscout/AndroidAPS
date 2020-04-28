@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.Random;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMessageAddressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalVersionResponseTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.AssignAddressCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.VersionResponse;
@@ -18,13 +20,9 @@ public class AssignAddressAction implements OmnipodAction<PodSessionState> {
     private final int address;
     private final PodStateChangedHandler podStateChangedHandler;
 
-    public AssignAddressAction(PodStateChangedHandler podStateChangedHandler) {
-        this.address = generateRandomAddress();
+    public AssignAddressAction(PodStateChangedHandler podStateChangedHandler, int address) {
+        this.address = address;
         this.podStateChangedHandler = podStateChangedHandler;
-    }
-
-    private static int generateRandomAddress() {
-        return 0x1f000000 | (new Random().nextInt() & 0x000fffff);
     }
 
     @Override
@@ -37,6 +35,13 @@ public class AssignAddressAction implements OmnipodAction<PodSessionState> {
 
         VersionResponse assignAddressResponse = communicationService.exchangeMessages(VersionResponse.class, setupState, assignAddressMessage,
                 OmnipodConst.DEFAULT_ADDRESS, setupState.getAddress());
+
+        if(!assignAddressResponse.isAssignAddressVersionResponse()) {
+            throw new IllegalVersionResponseTypeException("assignAddress", "setupPod");
+        }
+        if(assignAddressResponse.getAddress() != address) {
+            throw new IllegalMessageAddressException(address, assignAddressResponse.getAddress());
+        }
 
         DateTimeZone timeZone = DateTimeZone.getDefault();
 

@@ -5,6 +5,8 @@ import org.joda.time.DateTime;
 import java.util.Collections;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMessageAddressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalVersionResponseTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.SetupPodCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.VersionResponse;
@@ -48,6 +50,12 @@ public class SetupPodAction implements OmnipodAction<VersionResponse> {
             throw ex;
         }
 
+        if(!setupPodResponse.isSetupPodVersionResponse()) {
+            throw new IllegalVersionResponseTypeException("setupPod", "assignAddress");
+        }
+        if(setupPodResponse.getAddress() != podState.getAddress()) {
+            throw new IllegalMessageAddressException(podState.getAddress(), setupPodResponse.getAddress());
+        }
         if (setupPodResponse.getPodProgressStatus() != PodProgressStatus.PAIRING_SUCCESS) {
             throw new IllegalPodProgressException(PodProgressStatus.PAIRING_SUCCESS, setupPodResponse.getPodProgressStatus());
         }

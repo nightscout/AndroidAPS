@@ -170,7 +170,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         long time = System.currentTimeMillis();
         if (PodInitActionType.PairAndPrimeWizardStep.equals(podInitActionType)) {
             try {
-                Disposable disposable = delegate.pairAndPrime().subscribe(res -> //
+                // BS FIXME use static address for retries
+                int address = OmnipodManager.generateRandomAddress();
+
+                Disposable disposable = delegate.pairAndPrime(address).subscribe(res -> //
                         handleSetupActionResult(podInitActionType, podInitReceiver, res, time, null));
                 return new PumpEnactResult().success(true).enacted(true);
             } catch (Exception ex) {
