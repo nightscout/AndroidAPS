@@ -79,7 +79,6 @@ import java.util.List;
  */
 
 public class TuneProfilePlugin extends PluginBase {
-    // Turn on download of SGV and Treatments from NS or use local data
 
     private static TuneProfilePlugin tuneProfile = null;
     private static Logger log = LoggerFactory.getLogger(TuneProfilePlugin.class);
