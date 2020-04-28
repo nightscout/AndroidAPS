@@ -25,6 +25,7 @@ import info.nightscout.androidaps.plugins.TuneProfile.Opts;
 import info.nightscout.androidaps.plugins.TuneProfile.PrepOutput;
 import info.nightscout.androidaps.plugins.TuneProfile.TuneProfilePlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.SP;
@@ -55,38 +56,6 @@ public class Prep {
         }
         Collections.sort(glucoseData, (o1, o2) -> (int) (o2.date - o1.date));
 
- /*       glucoseData = opts.glucose.map(function prepGlucose (obj) {
-            //Support the NS sgv field to avoid having to convert in a custom way
-            obj.glucose = obj.glucose || obj.sgv;
-
-            if (obj.date) {
-                //obj.BGTime = new Date(obj.date);
-            } else if (obj.displayTime) {
-                // Attempt to get date from displayTime
-                obj.date = new Date(obj.displayTime.replace('T', ' ')).getTime();
-            } else if (obj.dateString) {
-                // Attempt to get date from dateString
-                obj.date = new Date(obj.dateString).getTime();
-            }// else { console.error("Could not determine BG time"); }
-
-            if (!obj.dateString)
-            {
-                obj.dateString = new Date(tz(obj.date)).toISOString();
-            }
-            return obj;
-        }).filter(function filterRecords(obj) {
-            // Only take records with a valid date record
-            // and a glucose value, which is also above 39
-            return (obj.date && obj.glucose && obj.glucose >=39);
-        }).sort(function (a, b) {
-            // sort the collection in order
-            return b.date - a.date;
-        });
-    }
-
-  */
-
-
         int boluses = 0;
         int maxCarbs = 0;
 
@@ -101,15 +70,47 @@ public class Prep {
         List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> UAMGlucoseData = new ArrayList<BGDatum>();
         List<CRDatum> CRData = new ArrayList<CRDatum>();
-        JSONArray CRDataJson = new JSONArray();
 
-        log.debug("Treatmets size: " + treatments.size());
-        //trim treatments size
-        for (int i = 0; i < treatments.size(); i++) {
-            if (treatments.get(i).date < opts.start || treatments.get(i).date > opts.end) {
-                treatments.remove(i);
+        List<BGDatum> bucketedData = new ArrayList<BGDatum>();
+        bucketedData.add(new BGDatum(glucoseData.get(0)));
+        //int j=0;
+        int k=0; // index of first value used by bucket
+        //for loop to validate and bucket the data
+        for (int i=1; i < glucoseData.size(); ++i) {
+            long BGTime = glucoseData.get(i).date;
+            long lastBGTime = glucoseData.get(k).date;
+            long elapsedMinutes = (BGTime - lastBGTime) / (60 * 1000);
+            if (Math.abs(elapsedMinutes) >= 2) {
+                //j++; // move to next bucket
+                k = i; // store index of first value used by bucket
+                bucketedData.add(new BGDatum((glucoseData.get(i))));
+            } else {
+                // average all readings within time deadband
+                BgReading average = glucoseData.get(k);
+                for(int l = k+1; l < i+1; l++) { average.value += glucoseData.get(l).value; }
+                average.value=average.value/(i-k+1);
+                bucketedData.add(new BGDatum(average));
             }
         }
+        //console.error(bucketedData);
+        //console.error(bucketedData[bucketedData.length-1]);
+        // go through the treatments and remove any that are older than the oldest glucose value
+        //console.error(treatments);
+        for (int i=treatments.size()-1; i>0; --i) {
+            Treatment treatment = treatments.get(i);
+            //console.error(treatment);
+            if (treatment != null) {
+                BGDatum glucoseDatum = bucketedData.get(bucketedData.size()-1);
+                //console.error(glucoseDatum);
+                if (glucoseDatum != null) {
+                    if ( treatment.date < glucoseDatum.date ) {
+                        treatments.remove(i);
+                    }
+                }
+            }
+        }
+        log.debug("Treatments size: " + treatments.size());
+
         /*} catch (IOException e) {
             e.printStackTrace();
         }*/
@@ -118,13 +119,10 @@ public class Prep {
             return null;
         }
 
-
+        //IobCobCalculatorPlugin.getPlugin().
         JSONObject IOBInputs = new JSONObject();
         IOBInputs.put("profile", opts.profile);
         IOBInputs.put("history", "pumpHistory");
-
-
-        List<BGDatum> bucketedData = new ArrayList<BGDatum>();
 
         double CRInitialIOB = 0d;
         double CRInitialBG = 0d;
@@ -520,7 +518,6 @@ public class Prep {
             dosedOpts.start = crDatum.CRInitialCarbTime;
             dosedOpts.end = crDatum.CREndTime;
             crDatum.CRInsulin = dosed(dosedOpts);
-            CRDataJson.put(crDatum);
         }
 
 // categorize.js Lines 384-436
@@ -595,7 +592,7 @@ public class Prep {
 //        log.debug("Returning: "+returnJSON);
         JSONObject autotuneprep = new JSONObject();
         try {
-            autotuneprep.put("CRData",CRDataJson);
+            autotuneprep.put("CRData",CRData);
             autotuneprep.put("CSFGlucoseData",CSFGlucoseData.toString());
             autotuneprep.put("ISFGlucoseData",ISFGlucoseData.toString());
             autotuneprep.put("basalGlucoseData",basalGlucoseData.toString());
