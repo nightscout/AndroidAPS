@@ -39,6 +39,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.SetupActionResult;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMessageAddressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMessageSequenceNumberException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalVersionResponseTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
@@ -607,7 +608,11 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             if (ex instanceof ActionInitializationException || ex instanceof CommandInitializationException) {
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_parameters);
             } else if (ex instanceof CommunicationException) {
-                comment = getStringResource(R.string.omnipod_driver_error_communication_failed);
+                if(((CommunicationException) ex).getType() == CommunicationException.Type.TIMEOUT) {
+                    comment = getStringResource(R.string.omnipod_driver_error_communication_failed_timeout);
+                } else {
+                    comment = getStringResource(R.string.omnipod_driver_error_communication_failed_unexpected_exception);
+                }
             } else if (ex instanceof CrcMismatchException) {
                 comment = getStringResource(R.string.omnipod_driver_error_crc_mismatch);
             } else if (ex instanceof IllegalPacketTypeException) {
@@ -615,6 +620,8 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             } else if (ex instanceof IllegalPodProgressException || ex instanceof IllegalSetupProgressException
                     || ex instanceof IllegalDeliveryStatusException) {
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_progress_state);
+            } else if (ex instanceof IllegalVersionResponseTypeException) {
+                comment = getStringResource(R.string.omnipod_driver_error_invalid_response);
             } else if (ex instanceof IllegalResponseException) {
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_response);
             } else if (ex instanceof IllegalMessageSequenceNumberException) {
