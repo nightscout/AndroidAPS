@@ -440,8 +440,7 @@ public class Prep {
 //    ,   history: opts.pumpHistory
 //    };
 //	  treatments = find_insulin(IOBInputs);
-        //Todo Philoul check if line below gets insulin from IOBInputs
-        treatments = TreatmentsPlugin.getPlugin().getTreatmentsFromHistory();
+//****************************************************************************************************************************************
 // categorize.js Lines 372-383
         for (CRDatum crDatum : CRData) {
             Opts dosedOpts = new Opts();
@@ -450,7 +449,6 @@ public class Prep {
             dosedOpts.end = crDatum.CREndTime;
             crDatum.CRInsulin = dosed(dosedOpts);
         }
-
 // categorize.js Lines 384-436
         int CSFLength = CSFGlucoseData.size();
         int ISFLength = ISFGlucoseData.size();
@@ -473,7 +471,7 @@ public class Prep {
                 // if too much data is excluded as UAM, add in the UAM deviations, but then discard the highest 50%
                 Collections.sort(basalGlucoseData, (o1, o2) -> (int) (o1.deviation - o2.deviation));
                 List<BGDatum> newBasalGlucose = new ArrayList<BGDatum>();
-                ;
+
                 for (int i = 0; i < basalGlucoseData.size() / 2; i++) {
                     newBasalGlucose.add(basalGlucoseData.get(i));
                 }
@@ -509,27 +507,12 @@ public class Prep {
         }
 
 // categorize.js Lines 437-444
-        PrepOutput prepOutput = new PrepOutput();
-        prepOutput.CRData=CRData;
-        prepOutput.CSFGlucoseData=CSFGlucoseData;
-        prepOutput.ISFGlucoseData=ISFGlucoseData;
-        prepOutput.basalGlucoseData=basalGlucoseData;
-
         log.debug("CRData: "+CRData.size());
         log.debug("CSFGlucoseData: "+CSFGlucoseData.size());
         log.debug("ISFGlucoseData: "+ISFGlucoseData.size());
         log.debug("BasalGlucoseData: "+basalGlucoseData.size());
-//        String returnJSON = "{\"CRData\":"+CRData.toString()+",\"CSFGlucoseData\": "+CSFGlucoseData.toString()+",\"ISFGlucoseData\": "+ISFGlucoseData.toString()+",\"basalGlucoseData\": "+basalGlucoseData.toString()+"}";
-//        log.debug("Returning: "+returnJSON);
-        JSONObject autotuneprep = new JSONObject();
-        try {
-            autotuneprep.put("CRData",CRData);
-            autotuneprep.put("CSFGlucoseData",CSFGlucoseData.toString());
-            autotuneprep.put("ISFGlucoseData",ISFGlucoseData.toString());
-            autotuneprep.put("basalGlucoseData",basalGlucoseData.toString());
-        } catch (JSONException e ) {}
 
-        return prepOutput;
+        return new PrepOutput(CRData, CSFGlucoseData, ISFGlucoseData, basalGlucoseData);
     }
 
     //dosed.js full

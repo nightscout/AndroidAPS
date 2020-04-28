@@ -21,6 +21,14 @@ public class PrepOutput {
     // to generate same king of json string than oref0-autotune-prep
     public String toString() { return toString(0); }
 
+    public PrepOutput (List<CRDatum> crData, List<BGDatum> csfGlucoseData, List<BGDatum> isfGlucoseData, List<BGDatum> basalGlucoseData) {
+        CRData = crData;
+        CSFGlucoseData=csfGlucoseData;
+        ISFGlucoseData=isfGlucoseData;
+        basalGlucoseData=basalGlucoseData;
+    }
+
+
     public String toString(int indent) {
         JSONObject json = new JSONObject();
 
