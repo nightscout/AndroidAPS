@@ -105,7 +105,6 @@
     <string name="sms_delta">Variación:</string>
     <string name="configbuilder">Tabla de configuraciones</string>
     <string name="objectives">Objetivos</string>
-    <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Inicio</string>
     <string name="nsprofile">Perfil NS</string>
     <string name="simpleprofile">Perfil simple</string>
@@ -218,6 +217,36 @@
     <string name="openapsma_maxiob_title">Max IOB basal que OpenAPs puede emitir [U]</string>
     <string name="openapsma_maxiob_summary">Este valor es llamado Max Iob en el OpenAPS\nEsta es la máxima insulina en [U] que APS puede entregar a la vez.</string>
     <string name="dismiss">DESCARTAR</string>
+    <string name="password_preferences_encrypt_prompt">Se le solicitará la contraseña maestra, que se utilizará para cifrar las preferencias exportadas.</string>
+    <string name="password_preferences_decrypt_prompt">Se le solicitará la contraseña maestra, que es necesaria para descifrar las preferencias importadas.</string>
+    <string name="preferences_export_canceled">¡Exportación cancelada! ¡Las preferencias NO se han exportado!</string>
+    <string name="preferences_import_canceled">¡Importación cancelada! ¡Las preferencias NO se han importado!</string>
+    <string name="check_preferences_before_import">Por favor, compruebe las preferencias antes de importar:</string>
+    <string name="check_preferences_cannot_import">¡Las preferencias no se pueden importar!</string>
+    <string name="check_preferences_dangerous_import">¡Las preferencias no se deben importar!</string>
+    <string name="check_preferences_details_btn">Explicar problemas de importación…</string>
+    <string name="check_preferences_import_btn">Importar</string>
+    <string name="check_preferences_import_anyway_btn">Importar de todos modos (¡PELIGROSO!)</string>
+    <string name="metadata_warning_different_device">Las preferencias se han creado en un dispositivo distinto. Está bien si va a importar desde un teléfono más antiguo/diferente, pero ¡asegúrese de que las preferencias importadas son correctas!</string>
+    <string name="metadata_warning_outdated_format">¡Estás usando el obsoleto formato heredado de versiones antiguas de AAPS, que no es seguro! Únicamente utilizarlo como último recurso, si no tiene una exportación en formato JSON actual.</string>
+    <string name="metadata_warning_old_export">Las preferencias importadas ya tienen %1$s días! ¿Tal vez tengas preferencias más actualizadas o eligiste el archivo equivocado? ¡Recuerda exportar las preferencias regularmente!</string>
+    <string name="metadata_warning_date_format">¡Formato de fecha no válido!</string>
+    <string name="metadata_label_format">Formato del archivo</string>
+    <string name="metadata_label_created_at">Creado el</string>
+    <string name="metadata_label_aaps_version">Versión de AAPS</string>
+    <string name="metadata_label_device_name">Exportar el nombre del paciente del dispositivo</string>
+    <string name="metadata_label_device_model">Exportar modelo de dispositivo</string>
+    <string name="metadata_label_encryption">Encriptación de archivos</string>
+    <string name="metadata_format_old">Formato de exportación antiguo</string>
+    <string name="metadata_format_new">Nuevo formato cifrado</string>
+    <string name="metadata_format_debug">Nuevo formato de depuración (sin cifrar)</string>
+    <string name="metadata_format_other">Formato de exportación desconocido</string>
+    <string name="prefdecrypt_settings_tampered">Archivo de configuración alterado</string>
+    <string name="prefdecrypt_settings_secure">El archivo de configuración es seguro</string>
+    <string name="prefdecrypt_wrong_password">Error de descifrado, la contraseña proporcionada no puede descifrar el archivo</string>
+    <string name="prefdecrypt_issue_modified">¡El archivo se ha modificado tras la exportación!</string>
+    <string name="prefdecrypt_issue_parsing">Error de descifrado, ¡el análisis de las preferencias ha fallado!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">¡Algoritmo de cifrado no soportado o no especificado!</string>
     <string name="danarpump">DanaR</string>
     <string name="connecting">Conectando</string>
     <string name="connected">Conectado</string>
@@ -507,6 +536,9 @@
     <string name="adult">Adulto</string>
     <string name="resistantadult">Adulto resistente a la insulina</string>
     <string name="patientage_summary">Por favor elige la edad del paciente para ajustar los límites de seguridad</string>
+    <string name="patient_name">Nombre del paciente</string>
+    <string name="patient_name_summary">Proporcione el nombre de paciente o el apodo para diferenciar entre varias configuraciones</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuario</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s necesita una optimización de la batería para funcionar óptimamente</string>
     <string name="loopsuspended">Loop desactivado</string>
@@ -543,8 +575,6 @@
     <string name="enablesuperbolus">Activar superbolo en asistente</string>
     <string name="enablesuperbolus_summary">Activar función superbolo en asistente. No lo actives hasta que hayas aprendido lo que realmente hace. ¡PUEDE CAUSAR SOBREDOSIS DE INSULINA usándolo sin precaución!</string>
     <string name="show_statuslights">Mostrar luces de estado en la pantalla de inicio</string>
-    <string name="show_statuslights_extended">Mostrar luces de estado extendidas en pantalla de inicio</string>
-    <string name="show_statuslights_extended_summary">Habilita luces de estado extendidas para tiempo de cánula, tiempo de insulina, tiempo del sensor, reservorio y nivel de batería en pantalla de inicio.</string>
     <string name="statuslights_res_warning">Umbral de advertencia de nivel de reservorio [U]</string>
     <string name="statuslights_res_critical">Umbral crítico de nivel de reservorio [U]</string>
     <string name="statuslights_bat_warning">Umbral de advertencia de nivel de pila [%]</string>
@@ -704,8 +734,12 @@
     <string name="bgsource_upload">Ajuste de subida de datos de glucosa</string>
     <string name="wear_detailed_delta_title">Mostrar detalles delta</string>
     <string name="wear_detailed_delta_summary">Mostrar delta con un decimal mas</string>
+    <string name="smbinterval_summary">Con qué frecuencia se administrarán los SMB en min</string>
     <string name="smbmaxminutes">Minutos máximos SMB</string>
     <string name="smbmaxminutes_summary">Minutos máximos de basal para limitar SMB</string>
+    <string name="uamsmbmaxminutes">Minutos máximos de UAM SMB</string>
+    <string name="uamsmbmaxminutes_summary">Minutos máximos de basal para limitar SMB para UAM</string>
+    <string name="carbsReqThreshold">Umbral de sugerencia de Carbohidratos</string>
     <string name="unsupportedfirmware">Firmware de la bomba no soportado</string>
     <string name="dexcomg5_xdripupload_title">Mandar datos BG a xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">En xDrip+ elige 640g/Eversense como fuente de datos</string>
@@ -969,6 +1003,7 @@
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumentar la sensibilidad para objetivos temporales >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Objetivo temporal bajo reduce sensibilidad</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Reduce la sensibilidad para objetivos temporales < 100]]></string>
+    <string name="sensitivity_raises_target_title">Sensibilidad aumenta objetivo</string>
     <string name="combo_invalid_setup">Configuración de la bomba incorrecta, leer la documentación y comprobar que el menú de Quick Info se llama QUICK INFO usando el software de configuración 360.</string>
     <string name="custom">Personalizado</string>
     <string name="largetimedifftitle">Diferencia de tiempo grande</string>
@@ -978,6 +1013,8 @@
     <string name="allow_hardware_pump_text">Atención: si activas y conectas al hardware de la bomba, AndroidAPS copiará los ajustes basales del perfil de la bomba, sobrescribiendo el actual perfil basal de la bomba. Comprueba que tengas el perfil basal correcto en AndroidAPS. Si no estás seguro o no quieres sobrescribir los ajustes basales en la bomba, presiona cancelar y repite cambio de la bomba más tarde.</string>
     <string name="error_adding_treatment_title">Datos de tratamiento incompletos</string>
     <string name="maintenance_settings">Ajustes de mantenimiento</string>
+    <string name="maintenance_email">Email</string>
+    <string name="maintenance_encrypt_exported_prefs">Cifrar valores exportados</string>
     <string name="maintenance_amount">Ningún registro para enviar</string>
     <string name="maintenance">Mantenimiento</string>
     <string name="maintenance_shortname">MANT</string>
@@ -1185,6 +1222,8 @@
     <string name="exists">existe</string>
     <string name="notexists">no existe</string>
     <string name="temptargetcompared">Objetivo temporal %1$s</string>
+    <string name="btdevicecompared">Conexión Bluetooth con el dispositivo %1$s %2$s</string>
+    <string name="btdevice">Conectar con dispositivo Bluetooth </string>
     <string name="wifissidcompared">SSID WiFi %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -1239,6 +1278,7 @@
     <string name="medtronic_pump_battery_alkaline">Alcalina (vista extendida)</string>
     <string name="medtronic_pump_battery_lithium">Litio (vista extendida)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (vista ampliada)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (vista extendida)</string>
     <string name="medtronic_bolus_debugging">Bolos/Depuración de Tratamientos</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">ESCANEAR</string>
@@ -1439,4 +1479,14 @@
     <string name="loop_smbrequest_time_label">Tiempo requerido de SMB</string>
     <string name="loop_smbexecution_time_label">Tiempo de ejecución de SMB</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_otp_enabled">Habilitar autentificador</string>
+    <string name="smscomunicator_tab_otp_label">Configuración de autentificación</string>
+    <string name="smscommunicator_otp_reset_prompt">¿Está seguro de que desea restablecer la clave del autenticador? Los autenticadores configurados actualmente no seran válidos, y tendrá que volver a configurarlos.</string>
+    <string name="smscommunicator_otp_reset_successful">¡Se ha generado una clave de autenticador nueva! Utilice QRCode actualizado para suministrar autenticadores.</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Instalar autenticador</string>
+    <string name="smscommunicator_otp_reset_header">Restablecer autentificadores</string>
+    <string name="smscommunicator_otp_reset_warning">Al resetear el autenticador haces que todos los autenticadores ya provistos no sean válidos. ¡Necesitarás configurarlos de nuevo!</string>
+    <string name="onconnect">Al conectar</string>
+    <string name="ondisconnect">Al desconectar</string>
+    <string name="overview_show_predictions">Predicciones</string>
 </resources>

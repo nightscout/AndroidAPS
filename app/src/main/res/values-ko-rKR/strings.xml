@@ -105,7 +105,6 @@
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">구성 관리자</string>
     <string name="objectives">목표</string>
-    <string name="openapsma">OpenAPS MA</string>
     <string name="overview">홈</string>
     <string name="nsprofile">NS 프로파일</string>
     <string name="simpleprofile">Simple 프로파일</string>
@@ -543,8 +542,6 @@
     <string name="enablesuperbolus">마법사에서 Superbolus 활성화하기</string>
     <string name="enablesuperbolus_summary">마법사에서 Superbolus 기능을 활성화합니다. 어떤 기능인지 확실히 알기전까지 활성화 하지 마세요. 제대로 알지 못하고 사용하면 일슐린이 과다 주입될 수 있습니다!</string>
     <string name="show_statuslights">홈화면에 상태 표시등 보여주기</string>
-    <string name="show_statuslights_extended">홈화면에 확장 상태등 표시하기</string>
-    <string name="show_statuslights_extended_summary">홈화면에 캐뉼라 사용기간(cage), 인슐린 사용기간(iage), 센서 사용기간(sage), 펌프용 주사기(reservoir)와 배터리(battery) 남은 양에 대한 확장 표시등을 활성화합니다.</string>
     <string name="statuslights_res_warning">주사기량 경고 기준값[U]</string>
     <string name="statuslights_res_critical">주사기량 위험 기준값[U]</string>
     <string name="statuslights_bat_warning">배터리 잔량 경고값 [%]</string>

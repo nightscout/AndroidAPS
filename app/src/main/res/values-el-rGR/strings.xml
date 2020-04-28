@@ -105,7 +105,6 @@
     <string name="sms_delta">Διαφορά:</string>
     <string name="configbuilder">Διαμόρφωση</string>
     <string name="objectives">Βήματα</string>
-    <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Επισκόπηση</string>
     <string name="nsprofile">Προφίλ NS</string>
     <string name="simpleprofile">Απλό Προφίλ</string>
@@ -518,8 +517,6 @@
     <string name="enablesuperbolus">Ενεργοποίηση superbolus στον σύντομο οδηγό</string>
     <string name="enablesuperbolus_summary">Ενεργοποιήστε την λειτουργία superbolus στον σύντομο οδηγό. Μην το κάνετε μέχρι να μάθετε τι ακριβώς κάνει. ΜΠΟΡΕΙ ΝΑ ΕΓΧΥΣΕΙ ΠΑΡΑΠΑΝΩ ΔΟΣΕΙΣ ΙΝΣΟΥΛΙΝΗΣ ΑΝ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΛΑΝΘΑΣΜΕΝΑ!</string>
     <string name="show_statuslights">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
-    <string name="show_statuslights_extended">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
-    <string name="show_statuslights_extended_summary">Ενεργοποίηση του φωτισμού κατάστασης για cage, iage, sage, reservoir και επίπεδο μπαταρίας στην αρχική οθόνη.</string>
     <string name="statuslights_res_warning">Όριο προειδοποίησης χαμηλής αμπούλας [U]</string>
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
     <string name="statuslights_bat_warning">Όριο προειδοποίησης χαμηλής μπαταρίας [%]</string>
