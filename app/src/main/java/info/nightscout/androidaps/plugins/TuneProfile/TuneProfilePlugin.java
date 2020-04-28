@@ -12,6 +12,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.plugins.TuneProfile.AutotunePrep.Prep;
 import info.nightscout.androidaps.plugins.TuneProfile.data.BGDatum;
 import info.nightscout.androidaps.plugins.TuneProfile.data.CRDatum;
 import info.nightscout.androidaps.plugins.TuneProfile.data.Opts;
@@ -1355,7 +1356,7 @@ public class TuneProfilePlugin extends PluginBase {
                     log.debug("Day "+i+" of "+daysBack);
 
                     categorizeBGDatums(glucoseStart, glucoseEnd);
-
+                    Prep.categorizeBGDatums(opts); // line added for log and test
                     //PrepOutput prepOutput = Prep.generate(opts);
                     FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(4));
 
