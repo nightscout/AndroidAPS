@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.TuneProfile;
+package info.nightscout.androidaps.plugins.TuneProfile.data;
 
 import org.json.JSONException;
 import org.json.JSONObject;

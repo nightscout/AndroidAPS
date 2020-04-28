@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.TuneProfile;
+package info.nightscout.androidaps.plugins.TuneProfile.data;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +22,7 @@ public class BGDatum extends BgReading {
     public long CREndTime;
     public double CRInsulin;
     public double AvgDelta;
-
+    private BgReading bgreading;
     public BGDatum() {
     }
 
@@ -33,7 +33,10 @@ public class BGDatum extends BgReading {
         raw = bgReading.raw;
         direction = bgReading.direction;
         _id = bgReading._id;
+        bgreading=bgReading;
     }
+
+    public BgReading getBgReading() {return bgreading; }
 
     public JSONObject toJSON() throws JSONException {
         JSONObject bgjson = new JSONObject();
