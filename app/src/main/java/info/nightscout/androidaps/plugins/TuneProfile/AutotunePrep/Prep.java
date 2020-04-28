@@ -39,6 +39,8 @@ public class Prep {
     private static Logger log = LoggerFactory.getLogger(TuneProfilePlugin.class);
 
     public static PrepOutput categorizeBGDatums(Opts opts) throws JSONException, ParseException, IOException {
+        log.debug("Start of Prep categorizeBGDatums");
+
         List<Treatment> treatments = opts.treatments;
         // this sorts the treatments collection in order.
         Collections.sort(treatments, (o1, o2) -> (int) (o2.getDate() - o1.getDate()));
@@ -131,6 +133,8 @@ public class Prep {
             //log.debug(glucoseDatum);
             Date BGDate = new Date(glucoseDatum.date);
             long BGTime = BGDate.getTime();
+
+            log.debug("Main Loop bucketedData N° " + i + " on " + bucketedData.size());
 
             // As we're processing each data point, go through the treatment.carbs and see if any of them are older than
             // the current BG data point.  If so, add those carbs to COB.
@@ -426,6 +430,9 @@ public class Prep {
 //            BGTime = BGDateArray[4];
 //            log.debug(absorbing+" mealCOB: "+mealCOB+" mealCarbs: "+mealCarbs+" basalBGI: "+round(basalBGI,1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
+
+        log.debug("end of mail loop");
+
 
 
         /* Code template for IOB calculation trom tempBasal Object

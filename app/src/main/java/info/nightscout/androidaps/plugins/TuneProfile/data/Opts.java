@@ -227,7 +227,6 @@ public class Opts {
         JSONObject store = new JSONObject();
         JSONObject convertedProfile = new JSONObject();
         int basalIncrement = 60 ;
-        int secondfrommidnight = 60 * 60;
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
 
         try {
@@ -236,9 +235,11 @@ public class Opts {
 
             JSONArray basals = new JSONArray();
             for (int h = 0; h < 24; h++) {
+                int secondfrommidnight = h * 60 * 60;
                 String time;
                 time = (h<10 ? "0"+ h : h)  + ":00:00";
-                basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", getProfileBasal(h)));
+                //basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", getProfileBasal(h)));
+                basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", profile.getBasalTimeFromMidnight(secondfrommidnight)));
             };
             json.put("basalprofile", basals);
             int isfvalue = (int) profile.getIsfMgdl();
