@@ -779,11 +779,7 @@ public class TuneProfilePlugin extends PluginBase {
             }
             CSFGlucoseData = new ArrayList<>();
         }
-        prepOutput = new PrepOutput();
-        prepOutput.CRData=CRData;
-        prepOutput.CSFGlucoseData=CSFGlucoseData;
-        prepOutput.ISFGlucoseData=ISFGlucoseData;
-        prepOutput.basalGlucoseData=basalGlucoseData;
+        prepOutput = new PrepOutput(CRData,CSFGlucoseData,ISFGlucoseData,basalGlucoseData);
 
         log.debug("CRData: "+CRData.size());
         log.debug("CSFGlucoseData: "+CSFGlucoseData.size());
