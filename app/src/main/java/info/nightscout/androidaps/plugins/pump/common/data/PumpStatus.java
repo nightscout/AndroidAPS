@@ -1,13 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.common.data;
 
-import org.joda.time.LocalDateTime;
-
 import java.util.Date;
 
 import info.nightscout.androidaps.data.ProfileStore;
-import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpStatusType;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
+import info.nightscout.androidaps.utils.DateUtil;
 
 /**
  * Created by andy on 4/28/18.
@@ -16,7 +14,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 public abstract class PumpStatus {
 
     // connection
-    public LocalDateTime lastDataTime;
+    public long lastDataTime;
     public long lastConnection = 0L;
     public long previousConnection = 0L; // here should be stored last connection of previous session (so needs to be
     // read before lastConnection is modified for first time).
@@ -42,7 +40,6 @@ public abstract class PumpStatus {
     public Double dailyTotalUnits;
     public String maxDailyTotalUnits;
     public boolean validBasalRateProfileSelectedOnPump = true;
-    public PumpType pumpType = PumpType.GenericAAPS;
     public ProfileStore profileStore;
     public String units; // Constants.MGDL or Constants.MMOL
     public PumpStatusType pumpStatusType = PumpStatusType.Running;
@@ -55,18 +52,16 @@ public abstract class PumpStatus {
     //protected PumpDescription pumpDescription;
 
 
-   public PumpStatus() {
- //  public PumpStatus(PumpDescription pumpDescription) {
- //       this.pumpDescription = pumpDescription;
+    public PumpStatus() {
+        //  public PumpStatus(PumpDescription pumpDescription) {
+        //       this.pumpDescription = pumpDescription;
 
 //        this.initSettings();
     }
 
 
-
-
     public void setLastCommunicationToNow() {
-        this.lastDataTime = LocalDateTime.now();
+        this.lastDataTime = DateUtil.now();
         this.lastConnection = System.currentTimeMillis();
     }
 
@@ -74,23 +69,5 @@ public abstract class PumpStatus {
         this.lastErrorConnection = System.currentTimeMillis();
     }
 
-
     public abstract String getErrorInfo();
-
-
-    public abstract void refreshConfiguration();
-
-
-    public PumpType getPumpType() {
-        return pumpType;
-    }
-
-
-    public void setPumpType(PumpType pumpType) {
-        this.pumpType = pumpType;
-    }
-
-    // public Date last_bolus_time;
-    // public double last_bolus_amount = 0;
-
 }

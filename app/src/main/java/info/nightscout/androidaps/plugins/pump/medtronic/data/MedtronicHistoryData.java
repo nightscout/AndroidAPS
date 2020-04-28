@@ -18,10 +18,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.CareportalEvent;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbObjectBase;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
@@ -31,6 +33,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
@@ -67,22 +70,23 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 // All things marked with "TODO: Fix db code" needs to be updated in new 2.5 database code
 
+@Singleton
 public class MedtronicHistoryData {
 
-    private AAPSLogger aapsLogger;
-    private SP sp;
-    private ActivePluginProvider activePlugin;
+    private final AAPSLogger aapsLogger;
+    private final SP sp;
+    private final ActivePluginProvider activePlugin;
+    private final MedtronicUtil medtronicUtil;
+    private final MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
 
-    private List<PumpHistoryEntry> allHistory = null;
+    private List<PumpHistoryEntry> allHistory;
     private List<PumpHistoryEntry> newHistory = null;
 
-    private Long lastHistoryRecordTime;
     private boolean isInit = false;
 
-    private Gson gson;
-    private Gson gsonCore;
+    private Gson gson; // cannot be initialized in constructor because of injection
+    private Gson gsonCore; // cannot be initialized in constructor because of injection
 
-    private DatabaseHelper databaseHelper = MainApp.getDbHelper();
     private ClockDTO pumpTime;
 
     private long lastIdUsed = 0;
@@ -94,17 +98,32 @@ public class MedtronicHistoryData {
      */
     public static boolean doubleBolusDebug = false;
 
-
-    public MedtronicHistoryData(AAPSLogger aapsLogger, SP sp, ActivePluginProvider activePlugin) {
+    @Inject
+    public MedtronicHistoryData(
+            AAPSLogger aapsLogger,
+            SP sp,
+            ActivePluginProvider activePlugin,
+            MedtronicUtil medtronicUtil,
+            MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder
+    ) {
         this.allHistory = new ArrayList<>();
-        this.gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        this.gsonCore = new GsonBuilder().create();
 
         this.aapsLogger = aapsLogger;
         this.sp = sp;
         this.activePlugin = activePlugin;
+        this.medtronicUtil = medtronicUtil;
+        this.medtronicPumpHistoryDecoder = medtronicPumpHistoryDecoder;
     }
 
+    private Gson gson() {
+        if (gson == null) gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        return gson;
+    }
+
+    private Gson gsonCore() {
+        if (gsonCore == null) gsonCore = new GsonBuilder().create();
+        return gsonCore;
+    }
 
     /**
      * Add New History entries
@@ -126,7 +145,7 @@ public class MedtronicHistoryData {
 
         this.newHistory = newEntries;
 
-        showLogs("List of history (before filtering): [" + this.newHistory.size() + "]", gson.toJson(this.newHistory));
+        showLogs("List of history (before filtering): [" + this.newHistory.size() + "]", gson().toJson(this.newHistory));
     }
 
 
@@ -200,7 +219,7 @@ public class MedtronicHistoryData {
 
         aapsLogger.debug(LTag.PUMP, "New History entries found: {}", this.newHistory.size());
 
-        showLogs("List of history (after filtering): [" + this.newHistory.size() + "]", gson.toJson(this.newHistory));
+        showLogs("List of history (after filtering): [" + this.newHistory.size() + "]", gson().toJson(this.newHistory));
 
     }
 
@@ -313,7 +332,7 @@ public class MedtronicHistoryData {
 
         List<PumpHistoryEntry> items = getDataForPumpSuspends();
 
-        showLogs("isPumpSuspended: ", gson.toJson(items));
+        showLogs("isPumpSuspended: ", gson().toJson(items));
 
         if (isCollectionNotEmpty(items)) {
 
@@ -399,7 +418,7 @@ public class MedtronicHistoryData {
         // Prime (for reseting autosense)
         List<PumpHistoryEntry> primeRecords = getFilteredItems(PumpHistoryEntryType.Prime);
 
-        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: Prime [count={}, items={}]", primeRecords.size(), gson.toJson(primeRecords));
+        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: Prime [count={}, items={}]", primeRecords.size(), gson().toJson(primeRecords));
 
         if (isCollectionNotEmpty(primeRecords)) {
             try {
@@ -413,7 +432,7 @@ public class MedtronicHistoryData {
         // TDD
         List<PumpHistoryEntry> tdds = getFilteredItems(PumpHistoryEntryType.EndResultTotals, getTDDType());
 
-        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: TDD [count={}, items={}]", tdds.size(), gson.toJson(tdds));
+        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: TDD [count={}, items={}]", tdds.size(), gson().toJson(tdds));
 
         if (isCollectionNotEmpty(tdds)) {
             try {
@@ -424,12 +443,12 @@ public class MedtronicHistoryData {
             }
         }
 
-        pumpTime = MedtronicUtil.getInstance().getPumpTime();
+        pumpTime = medtronicUtil.getPumpTime();
 
         // Bolus
         List<PumpHistoryEntry> treatments = getFilteredItems(PumpHistoryEntryType.Bolus);
 
-        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: Bolus [count={}, items={}]", treatments.size(), gson.toJson(treatments));
+        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: Bolus [count={}, items={}]", treatments.size(), gson().toJson(treatments));
 
         if (treatments.size() > 0) {
             try {
@@ -443,7 +462,7 @@ public class MedtronicHistoryData {
         // TBR
         List<PumpHistoryEntry> tbrs = getFilteredItems(PumpHistoryEntryType.TempBasalCombined);
 
-        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: TBRs Processed [count={}, items={}]", tbrs.size(), gson.toJson(tbrs));
+        aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: TBRs Processed [count={}, items={}]", tbrs.size(), gson().toJson(tbrs));
 
         if (tbrs.size() > 0) {
             try {
@@ -455,7 +474,7 @@ public class MedtronicHistoryData {
         }
 
         // 'Delivery Suspend'
-        List<TempBasalProcessDTO> suspends = null;
+        List<TempBasalProcessDTO> suspends;
 
         try {
             suspends = getSuspends();
@@ -465,7 +484,7 @@ public class MedtronicHistoryData {
         }
 
         aapsLogger.debug(LTag.PUMP, "ProcessHistoryData: 'Delivery Suspend' Processed [count={}, items={}]", suspends.size(),
-                gson.toJson(suspends));
+                gson().toJson(suspends));
 
         if (isCollectionNotEmpty(suspends)) {
             try {
@@ -531,9 +550,9 @@ public class MedtronicHistoryData {
 
         List<PumpHistoryEntry> tdds = filterTDDs(tddsIn);
 
-        aapsLogger.debug(LTag.PUMP, getLogPrefix() + "TDDs found: {}.\n{}", tdds.size(), gson.toJson(tdds));
+        aapsLogger.debug(LTag.PUMP, getLogPrefix() + "TDDs found: {}.\n{}", tdds.size(), gson().toJson(tdds));
 
-        List<TDD> tddsDb = databaseHelper.getTDDsForLastXDays(3);
+        List<TDD> tddsDb = MainApp.getDbHelper().getTDDsForLastXDays(3);
 
         for (PumpHistoryEntry tdd : tdds) {
 
@@ -549,7 +568,7 @@ public class MedtronicHistoryData {
 
                 aapsLogger.debug(LTag.PUMP, "TDD Add: {}", tddNew);
 
-                databaseHelper.createOrUpdateTDD(tddNew);
+                MainApp.getDbHelper().createOrUpdateTDD(tddNew);
 
             } else {
 
@@ -558,7 +577,7 @@ public class MedtronicHistoryData {
 
                     aapsLogger.debug(LTag.PUMP, "TDD Edit: {}", tddDbEntry);
 
-                    databaseHelper.createOrUpdateTDD(tddDbEntry);
+                    MainApp.getDbHelper().createOrUpdateTDD(tddDbEntry);
                 }
             }
         }
@@ -590,8 +609,8 @@ public class MedtronicHistoryData {
         List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntriesByLastTimestamp(oldestTimestamp, ProcessHistoryRecord.Bolus);
 
         if (doubleBolusDebug)
-            aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: List (before filter): {}, FromDb={}", gson.toJson(entryList),
-                    gsonCore.toJson(entriesFromHistory));
+            aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: List (before filter): {}, FromDb={}", gson().toJson(entryList),
+                    gsonCore().toJson(entriesFromHistory));
 
         filterOutAlreadyAddedEntries(entryList, entriesFromHistory);
 
@@ -604,8 +623,8 @@ public class MedtronicHistoryData {
         filterOutNonInsulinEntries(entriesFromHistory);
 
         if (doubleBolusDebug)
-            aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: List (after filter): {}, FromDb={}", gson.toJson(entryList),
-                    gsonCore.toJson(entriesFromHistory));
+            aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: List (after filter): {}, FromDb={}", gson().toJson(entryList),
+                    gsonCore().toJson(entriesFromHistory));
 
         if (isCollectionEmpty(entriesFromHistory)) {
             for (PumpHistoryEntry treatment : entryList) {
@@ -668,8 +687,8 @@ public class MedtronicHistoryData {
 
         List<? extends DbObjectBase> entriesFromHistory = getDatabaseEntriesByLastTimestamp(oldestTimestamp, ProcessHistoryRecord.TBR);
 
-        aapsLogger.debug(LTag.PUMP, ProcessHistoryRecord.TBR.getDescription() + " List (before filter): {}, FromDb={}", gson.toJson(entryList),
-                gson.toJson(entriesFromHistory));
+        aapsLogger.debug(LTag.PUMP, ProcessHistoryRecord.TBR.getDescription() + " List (before filter): {}, FromDb={}", gson().toJson(entryList),
+                gson().toJson(entriesFromHistory));
 
 
         TempBasalProcessDTO processDTO = null;
@@ -719,7 +738,7 @@ public class MedtronicHistoryData {
 
                         tempBasal.durationInMinutes = tempBasalProcessDTO.getDuration();
 
-                        databaseHelper.createOrUpdate(tempBasal);
+                        MainApp.getDbHelper().createOrUpdate(tempBasal);
 
                         aapsLogger.debug(LTag.PUMP, "Edit " + ProcessHistoryRecord.TBR.getDescription() + " - (entryFromDb={}) ", tempBasal);
                     } else {
@@ -767,7 +786,7 @@ public class MedtronicHistoryData {
             }
         }
 
-        TemporaryBasal tempBasal = databaseHelper.findTempBasalByPumpId(pumpId);
+        TemporaryBasal tempBasal = MainApp.getDbHelper().findTempBasalByPumpId(pumpId);
         return tempBasal;
     }
 
@@ -788,7 +807,7 @@ public class MedtronicHistoryData {
         //proposedTime += (this.pumpTime.timeDifference * 1000);
 
         if (doubleBolusDebug)
-            aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: findDbEntry Treatment={}, FromDb={}", treatment, gson.toJson(entriesFromHistory));
+            aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: findDbEntry Treatment={}, FromDb={}", treatment, gson().toJson(entriesFromHistory));
 
         if (entriesFromHistory.size() == 0) {
             if (doubleBolusDebug)
@@ -842,10 +861,10 @@ public class MedtronicHistoryData {
 
                 if (min == 0 && sec == 10 && outList.size() > 1) {
                     aapsLogger.error("Too many entries (with too small diff): (timeDiff=[min={},sec={}],count={},list={})",
-                            min, sec, outList.size(), gson.toJson(outList));
+                            min, sec, outList.size(), gson().toJson(outList));
                     if (doubleBolusDebug)
                         aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: findDbEntry Error - Too many entries (with too small diff): (timeDiff=[min={},sec={}],count={},list={})",
-                                min, sec, outList.size(), gson.toJson(outList));
+                                min, sec, outList.size(), gson().toJson(outList));
                 }
             }
         }
@@ -858,7 +877,7 @@ public class MedtronicHistoryData {
         if (processHistoryRecord == ProcessHistoryRecord.Bolus) {
             return activePlugin.getActiveTreatments().getTreatmentsFromHistoryAfterTimestamp(startTimestamp);
         } else {
-            return databaseHelper.getTemporaryBasalsDataFromTime(startTimestamp, true);
+            return MainApp.getDbHelper().getTemporaryBasalsDataFromTime(startTimestamp, true);
         }
     }
 
@@ -895,8 +914,8 @@ public class MedtronicHistoryData {
 
         if (doubleBolusDebug)
             aapsLogger.debug(LTag.PUMP, "DoubleBolusDebug: filterOutAlreadyAddedEntries: PumpHistory={}, Treatments={}",
-                    gson.toJson(removeTreatmentsFromPH),
-                    gsonCore.toJson(removeTreatmentsFromHistory));
+                    gson().toJson(removeTreatmentsFromPH),
+                    gsonCore().toJson(removeTreatmentsFromHistory));
 
         treatmentsFromHistory.removeAll(removeTreatmentsFromHistory);
     }
@@ -1016,7 +1035,7 @@ public class MedtronicHistoryData {
 
         treatment.setLinkedObject(temporaryBasalDb);
 
-        databaseHelper.createOrUpdate(temporaryBasalDb);
+        MainApp.getDbHelper().createOrUpdate(temporaryBasalDb);
 
         aapsLogger.debug(LTag.PUMP, operation + " - [date={},pumpId={}, rate={} {}, duration={}]", //
                 temporaryBasalDb.date, //
@@ -1032,7 +1051,7 @@ public class MedtronicHistoryData {
 
         for (TempBasalProcessDTO tempBasalProcess : tempBasalProcessList) {
 
-            TemporaryBasal tempBasal = databaseHelper.findTempBasalByPumpId(tempBasalProcess.itemOne.getPumpId());
+            TemporaryBasal tempBasal = MainApp.getDbHelper().findTempBasalByPumpId(tempBasalProcess.itemOne.getPumpId());
 
             if (tempBasal == null) {
                 // add
@@ -1048,7 +1067,7 @@ public class MedtronicHistoryData {
                 tempBasalProcess.itemOne.setLinkedObject(tempBasal);
                 tempBasalProcess.itemTwo.setLinkedObject(tempBasal);
 
-                databaseHelper.createOrUpdate(tempBasal);
+                MainApp.getDbHelper().createOrUpdate(tempBasal);
 
             }
         }
@@ -1195,11 +1214,11 @@ public class MedtronicHistoryData {
 
 
         if (!finishedItems) {
-            showLogs("NoDeliveryRewindPrimeRecords: Not finished Items: ", gson.toJson(tempData));
+            showLogs("NoDeliveryRewindPrimeRecords: Not finished Items: ", gson().toJson(tempData));
             return outList;
         }
 
-        showLogs("NoDeliveryRewindPrimeRecords: Records to evaluate: ", gson.toJson(tempData));
+        showLogs("NoDeliveryRewindPrimeRecords: Records to evaluate: ", gson().toJson(tempData));
 
         List<PumpHistoryEntry> items = getFilteredItems(tempData, //
                 PumpHistoryEntryType.Prime
@@ -1295,7 +1314,7 @@ public class MedtronicHistoryData {
             }
         }
 
-        LocalDateTime oldestEntryTime = null;
+        LocalDateTime oldestEntryTime;
 
         try {
 
@@ -1360,11 +1379,11 @@ public class MedtronicHistoryData {
 
     private PumpHistoryEntryType getTDDType() {
 
-        if (MedtronicUtil.getInstance().getMedtronicPumpModel() == null) {
+        if (medtronicUtil.getMedtronicPumpModel() == null) {
             return PumpHistoryEntryType.EndResultTotals;
         }
 
-        switch (MedtronicUtil.getInstance().getMedtronicPumpModel()) {
+        switch (medtronicUtil.getMedtronicPumpModel()) {
 
             case Medtronic_515:
             case Medtronic_715:
@@ -1391,13 +1410,13 @@ public class MedtronicHistoryData {
 
         List<PumpHistoryEntry> filteredItems = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile);
 
-        aapsLogger.debug(LTag.PUMP, "hasBasalProfileChanged. Items: " + gson.toJson(filteredItems));
+        aapsLogger.debug(LTag.PUMP, "hasBasalProfileChanged. Items: " + gson().toJson(filteredItems));
 
         return (filteredItems.size() > 0);
     }
 
 
-    public void processLastBasalProfileChange(MedtronicPumpStatus mdtPumpStatus) {
+    public void processLastBasalProfileChange(PumpType pumpType, MedtronicPumpStatus mdtPumpStatus) {
 
         List<PumpHistoryEntry> filteredItems = getFilteredItems(PumpHistoryEntryType.ChangeBasalProfile_NewProfile);
 
@@ -1423,7 +1442,7 @@ public class MedtronicHistoryData {
             aapsLogger.debug(LTag.PUMP, "processLastBasalProfileChange. item found, setting new basalProfileLocally: " + newProfile);
             BasalProfile basalProfile = (BasalProfile) newProfile.getDecodedData().get("Object");
 
-            mdtPumpStatus.basalsByHour = basalProfile.getProfilesByHour();
+            mdtPumpStatus.basalsByHour = basalProfile.getProfilesByHour(pumpType);
         }
     }
 
@@ -1437,7 +1456,6 @@ public class MedtronicHistoryData {
     public void setLastHistoryRecordTime(Long lastHistoryRecordTime) {
 
         // this.previousLastHistoryRecordTime = this.lastHistoryRecordTime;
-        this.lastHistoryRecordTime = lastHistoryRecordTime;
     }
 
 
@@ -1460,8 +1478,8 @@ public class MedtronicHistoryData {
 
         for (PumpHistoryEntry pumpHistoryEntry : TBRs_Input) {
             if (map.containsKey(pumpHistoryEntry.DT)) {
-                MedtronicPumpHistoryDecoder.decodeTempBasal(map.get(pumpHistoryEntry.DT), pumpHistoryEntry);
-                pumpHistoryEntry.setEntryType(PumpHistoryEntryType.TempBasalCombined);
+                medtronicPumpHistoryDecoder.decodeTempBasal(map.get(pumpHistoryEntry.DT), pumpHistoryEntry);
+                pumpHistoryEntry.setEntryType(medtronicUtil.getMedtronicPumpModel(), PumpHistoryEntryType.TempBasalCombined);
                 TBRs.add(pumpHistoryEntry);
                 map.remove(pumpHistoryEntry.DT);
             } else {

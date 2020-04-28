@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 
@@ -44,7 +43,7 @@ public class LocationHelper {
         }
 
         // Shamelessly borrowed from http://stackoverflow.com/a/10311877/868533
-        OKDialog.showConfirmation(parent, MainApp.gs(R.string.location_not_found_title), MainApp.gs(R.string.location_not_found_message), () -> {
+        OKDialog.showConfirmation(parent, parent.getString(R.string.location_not_found_title), parent.getString(R.string.location_not_found_message), () -> {
             parent.startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
         });
     }

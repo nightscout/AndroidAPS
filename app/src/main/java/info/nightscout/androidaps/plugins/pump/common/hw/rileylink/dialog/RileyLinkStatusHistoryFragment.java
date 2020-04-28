@@ -1,21 +1,19 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -24,9 +22,9 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
-import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by andy on 5/19/18.
@@ -35,6 +33,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 public class RileyLinkStatusHistoryFragment extends DaggerFragment implements RefreshableInterface {
 
     @Inject RileyLinkUtil rileyLinkUtil;
+    @Inject ResourceHelper resourceHelper;
 
     RecyclerView recyclerView;
     RecyclerViewAdapter recyclerViewAdapter;
@@ -50,7 +49,7 @@ public class RileyLinkStatusHistoryFragment extends DaggerFragment implements Re
         recyclerView = (RecyclerView) rootView.findViewById(R.id.rileylink_history_list);
 
         recyclerView.setHasFixedSize(true);
-        llm = new LinearLayoutManager(getActivity().getApplicationContext());
+        llm = new LinearLayoutManager(rootView.getContext());
         recyclerView.setLayoutManager(llm);
 
         recyclerViewAdapter = new RecyclerViewAdapter(filteredHistoryList);
@@ -76,7 +75,7 @@ public class RileyLinkStatusHistoryFragment extends DaggerFragment implements Re
     }
 
 
-    public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder> {
+    public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder> {
 
         List<RLHistoryItem> historyList;
 
@@ -111,11 +110,11 @@ public class RileyLinkStatusHistoryFragment extends DaggerFragment implements Re
 
             PumpDeviceState pumpState = item.getPumpDeviceState();
 
-            if ((pumpState != null) && //
-                    (pumpState == PumpDeviceState.Sleeping || //
-                            pumpState == PumpDeviceState.Active || //
-                            pumpState == PumpDeviceState.WakingUp //
-                    ))
+            //
+            if ((pumpState == PumpDeviceState.Sleeping || //
+                    pumpState == PumpDeviceState.Active || //
+                    pumpState == PumpDeviceState.WakingUp //
+            ))
                 return false;
 
             return true;
@@ -139,7 +138,7 @@ public class RileyLinkStatusHistoryFragment extends DaggerFragment implements Re
             if (item != null) {
                 holder.timeView.setText(DateUtil.dateAndTimeAndSecondsString(item.getDateTime().toDateTime().getMillis()));
                 holder.typeView.setText(item.getSource().getDesc());
-                holder.valueView.setText(item.getDescription());
+                holder.valueView.setText(item.getDescription(resourceHelper));
             }
         }
 
@@ -155,7 +154,7 @@ public class RileyLinkStatusHistoryFragment extends DaggerFragment implements Re
             super.onAttachedToRecyclerView(recyclerView);
         }
 
-        static class HistoryViewHolder extends RecyclerView.ViewHolder {
+        class HistoryViewHolder extends RecyclerView.ViewHolder {
 
             TextView timeView;
             TextView typeView;

@@ -1,11 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.util;
 
-import android.content.Context;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.jetbrains.annotations.NotNull;
 import org.joda.time.LocalTime;
 
 import java.nio.ByteBuffer;
@@ -17,7 +14,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -26,20 +22,15 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.ClockDTO;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.PumpSettingDTO;
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicNotificationType;
-import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
-import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
@@ -50,58 +41,32 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 public class MedtronicUtil {
 
     private int ENVELOPE_SIZE = 4; // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
-    int CRC_SIZE = 1;
-    private boolean lowLevelDebug = true;
-    private PumpDeviceState pumpDeviceState;
+    private static boolean lowLevelDebug = true;
     private MedtronicDeviceType medtronicPumpModel;
-    private RileyLinkMedtronicService medtronicService;
-    @Deprecated // TODO remove this reference
-    private MedtronicPumpStatus medtronicPumpStatus;
     private MedtronicCommandType currentCommand;
     private Map<String, PumpSettingDTO> settings;
     private int BIG_FRAME_LENGTH = 65;
     private int doneBit = 1 << 7;
     private ClockDTO pumpTime;
     public Gson gsonInstance = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    public Gson gsonInstanceCore = new GsonBuilder().create();
-    private BatteryType batteryType = BatteryType.None;
 
-    @NotNull private final AAPSLogger aapsLogger;
-    @NotNull private final RxBusWrapper rxBus;
-    @NotNull private final RileyLinkUtil rileyLinkUtil;
+    private final AAPSLogger aapsLogger;
+    private final RxBusWrapper rxBus;
+    private final RileyLinkUtil rileyLinkUtil;
+    private final MedtronicPumpStatus medtronicPumpStatus;
 
     @Inject
     public MedtronicUtil(
-            Context context,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
-            RileyLinkUtil rileyLinkUtil
-
+            RileyLinkUtil rileyLinkUtil,
+            MedtronicPumpStatus medtronicPumpStatus
     ) {
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.rileyLinkUtil = rileyLinkUtil;
-        instance = this;
+        this.medtronicPumpStatus = medtronicPumpStatus;
     }
-
-    private static MedtronicUtil instance;
-
-    // TODO: replace by injection
-    @Deprecated
-    public static MedtronicUtil getInstance() {
-        if (instance == null) throw new IllegalStateException("MedtronicUtil not initialized");
-        return instance;
-    }
-
-    public Gson getGsonInstance() {
-        return gsonInstance;
-    }
-
-
-    public Gson getGsonInstanceCore() {
-        return gsonInstanceCore;
-    }
-
 
     public LocalTime getTimeFrom30MinInterval(int interval) {
         if (interval % 2 == 0) {
@@ -112,23 +77,17 @@ public class MedtronicUtil {
     }
 
 
-    public int getIntervalFromMinutes(int minutes) {
+    public static int getIntervalFromMinutes(int minutes) {
         return minutes / 30;
     }
 
 
-    public int makeUnsignedShort(int b2, int b1) {
+    public static int makeUnsignedShort(int b2, int b1) {
         int k = (b2 & 0xff) << 8 | b1 & 0xff;
         return k;
     }
 
-    public boolean isMedtronicPump() {
-        return MedtronicPumpPlugin.getPlugin().isEnabled(PluginType.PUMP);
-        //return ConfigBuilderPlugin.getPlugin().getActivePump().deviceID().equals("Medtronic");
-    }
-
-
-    public byte[] getByteArrayFromUnsignedShort(int shortValue, boolean returnFixedSize) {
+    public static byte[] getByteArrayFromUnsignedShort(int shortValue, boolean returnFixedSize) {
         byte highByte = (byte) (shortValue >> 8 & 0xFF);
         byte lowByte = (byte) (shortValue & 0xFF);
 
@@ -141,12 +100,12 @@ public class MedtronicUtil {
     }
 
 
-    public byte[] createByteArray(byte... data) {
+    public static byte[] createByteArray(byte... data) {
         return data;
     }
 
 
-    public byte[] createByteArray(List<Byte> data) {
+    public static byte[] createByteArray(List<Byte> data) {
 
         byte[] array = new byte[data.size()];
 
@@ -173,7 +132,7 @@ public class MedtronicUtil {
     }
 
 
-    public byte[] getBasalStrokes(double amount, boolean returnFixedSize) {
+    public static byte[] getBasalStrokes(double amount, boolean returnFixedSize) {
         return getStrokes(amount, 40, returnFixedSize);
     }
 
@@ -221,7 +180,7 @@ public class MedtronicUtil {
     }
 
 
-    public byte[] getStrokes(double amount, int strokesPerUnit, boolean returnFixedSize) {
+    public static byte[] getStrokes(double amount, int strokesPerUnit, boolean returnFixedSize) {
 
         int strokes = getStrokesInt(amount, strokesPerUnit);
 
@@ -230,7 +189,7 @@ public class MedtronicUtil {
     }
 
 
-    public int getStrokesInt(double amount, int strokesPerUnit) {
+    public static int getStrokesInt(double amount, int strokesPerUnit) {
 
         int length = 1;
         int scrollRate = 1;
@@ -282,12 +241,12 @@ public class MedtronicUtil {
 //    }
 
 
-    public byte[] buildCommandPayload(MedtronicCommandType commandType, byte[] parameters) {
-        return buildCommandPayload((byte) commandType.commandCode, parameters);
+    public byte[] buildCommandPayload(RileyLinkServiceData rileyLinkServiceData, MedtronicCommandType commandType, byte[] parameters) {
+        return buildCommandPayload(rileyLinkServiceData, (byte) commandType.commandCode, parameters);
     }
 
 
-    public byte[] buildCommandPayload(byte commandType, byte[] parameters) {
+    public byte[] buildCommandPayload(RileyLinkServiceData rileyLinkServiceData, byte commandType, byte[] parameters) {
         // A7 31 65 51 C0 00 52
 
         byte commandLength = (byte) (parameters == null ? 2 : 2 + parameters.length);
@@ -295,7 +254,7 @@ public class MedtronicUtil {
         ByteBuffer sendPayloadBuffer = ByteBuffer.allocate(ENVELOPE_SIZE + commandLength); // + CRC_SIZE
         sendPayloadBuffer.order(ByteOrder.BIG_ENDIAN);
 
-        byte[] serialNumberBCD = rileyLinkUtil.getRileyLinkServiceData().pumpIDBytes;
+        byte[] serialNumberBCD = rileyLinkServiceData.pumpIDBytes;
 
         sendPayloadBuffer.put((byte) 0xA7);
         sendPayloadBuffer.put(serialNumberBCD[0]);
@@ -316,7 +275,7 @@ public class MedtronicUtil {
 
         byte[] payload = sendPayloadBuffer.array();
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, "buildCommandPayload [{}]", ByteUtil.shortHexString(payload));
+        aapsLogger.debug(LTag.PUMPCOMM, "buildCommandPayload [{}]", ByteUtil.shortHexString(payload));
 
         // int crc = computeCRC8WithPolynomial(payload, 0, payload.length - 1);
 
@@ -427,81 +386,31 @@ public class MedtronicUtil {
     }
 
 
-    public boolean isLowLevelDebug() {
+    public static boolean isLowLevelDebug() {
         return lowLevelDebug;
     }
-
-
-    public void setLowLevelDebug(boolean lowLevelDebug) {
-        this.lowLevelDebug = lowLevelDebug;
-    }
-
-
-    public PumpDeviceState getPumpDeviceState() {
-        return pumpDeviceState;
-    }
-
-
-    public void setPumpDeviceState(PumpDeviceState pumpDeviceState) {
-        this.pumpDeviceState = pumpDeviceState;
-
-        rileyLinkUtil.historyRileyLink.add(new RLHistoryItem(pumpDeviceState, RileyLinkTargetDevice.MedtronicPump));
-
-        rxBus.send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
-    }
-
 
     public boolean isModelSet() {
         return medtronicPumpModel != null;
     }
 
-
     public MedtronicDeviceType getMedtronicPumpModel() {
         return medtronicPumpModel;
     }
-
 
     public void setMedtronicPumpModel(MedtronicDeviceType medtronicPumpModel) {
         this.medtronicPumpModel = medtronicPumpModel;
     }
 
-
-    public MedtronicCommunicationManager getMedtronicCommunicationManager() {
-        return (MedtronicCommunicationManager) rileyLinkUtil.rileyLinkCommunicationManager;
-    }
-
-
-    public RileyLinkMedtronicService getMedtronicService() {
-        return medtronicService;
-    }
-
-
-    public void setMedtronicService(RileyLinkMedtronicService medtronicService) {
-        this.medtronicService = medtronicService;
-    }
-
-
-    @Deprecated // TODO use singleton
-    public MedtronicPumpStatus getPumpStatus() {
-        return medtronicPumpStatus;
-    }
-
-    @Deprecated // TODO use singleton
-    public void setPumpStatus(MedtronicPumpStatus medtronicPumpStatus) {
-        this.medtronicPumpStatus = medtronicPumpStatus;
-    }
-
-
     public MedtronicCommandType getCurrentCommand() {
         return this.currentCommand;
     }
-
 
     public void setCurrentCommand(MedtronicCommandType currentCommand) {
         this.currentCommand = currentCommand;
 
         if (currentCommand != null)
-            rileyLinkUtil.historyRileyLink.add(new RLHistoryItem(currentCommand));
+            rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(currentCommand));
 
     }
 
@@ -517,11 +426,11 @@ public class MedtronicUtil {
             setCurrentCommand(currentCommand);
         }
 
-        rxBus.send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
+        rxBus.send(new EventMedtronicDeviceStatusChange(medtronicPumpStatus.getPumpDeviceState()));
     }
 
 
-    public boolean isSame(Double d1, Double d2) {
+    public static boolean isSame(Double d1, Double d2) {
         double diff = d1 - d2;
 
         return (Math.abs(diff) <= 0.000001);
@@ -532,29 +441,15 @@ public class MedtronicUtil {
         return settings;
     }
 
-
     public void setSettings(Map<String, PumpSettingDTO> settings) {
         this.settings = settings;
     }
-
 
     public void setPumpTime(ClockDTO pumpTime) {
         this.pumpTime = pumpTime;
     }
 
-
     public ClockDTO getPumpTime() {
         return this.pumpTime;
     }
-
-    public void setBatteryType(BatteryType batteryType) {
-        this.batteryType = batteryType;
-    }
-
-
-    public BatteryType getBatteryType() {
-        return this.batteryType;
-    }
-
-
 }

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command.RileyLinkCommand;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RFSpyRLResponse;
@@ -48,12 +49,12 @@ public class RFSpyResponse {
     }
 
 
-    public RadioResponse getRadioResponse() throws RileyLinkCommunicationException {
+    public RadioResponse getRadioResponse(HasAndroidInjector injector) throws RileyLinkCommunicationException {
         if (looksLikeRadioPacket()) {
-            radioResponse = new RadioResponse(command);
+            radioResponse = new RadioResponse(injector, command);
             radioResponse.init(raw);
         } else {
-            radioResponse = new RadioResponse();
+            radioResponse = new RadioResponse(injector);
         }
         return radioResponse;
     }
