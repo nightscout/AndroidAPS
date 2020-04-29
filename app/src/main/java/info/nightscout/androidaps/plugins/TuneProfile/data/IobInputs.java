@@ -9,8 +9,10 @@ import java.util.List;
 
 public class IobInputs {
     public static List<Treatment> treatments;
-    public static Profile profile;
+    public static TunedProfile profile;
     public List<TemporaryBasal> history;
+    public Double currentBasal;
+    public long clock;
 
 
 }

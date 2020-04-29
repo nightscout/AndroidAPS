@@ -6,10 +6,12 @@ import info.nightscout.androidaps.plugins.general.tidepool.elements.ProfileEleme
 public class TunedProfile extends Profile {
     private Profile profile;
     private ProfileValue pv;
+    public double currentBasal;
+    public Double AvgISF;
 
-    TunedProfile (Profile currentProfile) {
+    public TunedProfile (Profile currentProfile) {
         profile=currentProfile;
-
+        getAvgISF();
     }
 
     public void setCR(int cr) {
@@ -21,10 +23,10 @@ public class TunedProfile extends Profile {
 
     }
 
-    double getAvgISF() {
+    private void getAvgISF() {
         Double AvgISF=0d;
 
-        return AvgISF;
+
     }
 
     double getAvgCR() {

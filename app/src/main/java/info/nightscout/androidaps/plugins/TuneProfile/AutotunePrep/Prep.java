@@ -24,10 +24,12 @@ import info.nightscout.androidaps.plugins.TuneProfile.data.CRDatum;
 import info.nightscout.androidaps.plugins.TuneProfile.data.IobInputs;
 import info.nightscout.androidaps.plugins.TuneProfile.data.Opts;
 import info.nightscout.androidaps.plugins.TuneProfile.data.PrepOutput;
+import info.nightscout.androidaps.plugins.TuneProfile.data.TunedProfile;
 import info.nightscout.androidaps.plugins.TuneProfile.TuneProfilePlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.Round;
 
@@ -39,7 +41,6 @@ public class Prep {
     private static Logger log = LoggerFactory.getLogger(TuneProfilePlugin.class);
 
     public static PrepOutput categorizeBGDatums(Opts opts) throws JSONException, ParseException, IOException {
-        log.debug("Start of Prep categorizeBGDatums");
 
         List<Treatment> treatments = opts.treatments;
         // this sorts the treatments collection in order.
@@ -60,7 +61,7 @@ public class Prep {
         int maxCarbs = 0;
 
         IobInputs iobInputs = new IobInputs();
-        iobInputs.profile = opts.profile;
+        iobInputs.profile = new TunedProfile(opts.profile);
         // pumpHistory of oref0 are splitted in pumpHistory (for temp basals or extended bolus) and treatments (for bolus, meal bolus or correction carbs)
         iobInputs.history = opts.pumpHistory;
         iobInputs.treatments = opts.treatments;
@@ -117,13 +118,17 @@ public class Prep {
         }
 
         boolean calculatingCR = false;
-        int absorbing = 0;
+        boolean absorbing = false;
         boolean uam = false; // unannounced meal
         double mealCOB = 0d;
         int mealCarbs = 0;
         int CRCarbs = 0;
         String type = "";
-//****************************************************************************************************************************************
+
+        Double CRInitialIOB=0d;
+        Double CRInitialBG=0d;
+        long CRInitialCarbTime=0L;
+
         //categorize.js#123
         // main for loop
         List<TemporaryBasal> fullHistoryB = iobInputs.history ;//IOBInputs.history;
@@ -131,10 +136,7 @@ public class Prep {
         for (int i = bucketedData.size() - 5; i > 0; --i) {
             BGDatum glucoseDatum = bucketedData.get(i);
             //log.debug(glucoseDatum);
-            Date BGDate = new Date(glucoseDatum.date);
-            long BGTime = BGDate.getTime();
-
-            log.debug("Main Loop bucketedData N° " + i + " on " + bucketedData.size());
+            long BGTime = glucoseDatum.date;
 
             // As we're processing each data point, go through the treatment.carbs and see if any of them are older than
             // the current BG data point.  If so, add those carbs to COB.
@@ -142,11 +144,8 @@ public class Prep {
             Treatment treatment = treatments.size() > 0 ? treatments.get(treatments.size()-1) : null;
             int myCarbs = 0;
             if (treatment != null) {
-                Date treatmentDate = new Date(treatment.date);
-                long treatmentTime = treatmentDate.getTime();
-                //log.debug(treatmentDate);
 
-                if (treatmentTime < BGTime) {
+                if (treatment.date < BGTime) {
                     if (treatment.carbs >= 1) {
                         // Here I parse Integers not float like the original source categorize.js#136
 
@@ -158,7 +157,7 @@ public class Prep {
                     treatments.remove(treatments.size()-1);
                 }
             }
-//            }
+
             double BG = 0;
             double avgDelta = 0;
 
@@ -178,82 +177,74 @@ public class Prep {
                 log.error("Could not find glucose data");
             }
 
-
             avgDelta = avgDelta * 100 / 100;
             glucoseDatum.AvgDelta = avgDelta;
 
             //sens = ISF
-//            int sens = ISF.isfLookup(IOBInputs.profile.isfProfile,BGDate);
-            double sens = opts.profile.getIsfMgdl(BGTime);
-//            IOBInputs.clock=BGDate.toString();
+            double sens = profileData.getIsfMgdl(BGTime);
+            log.debug("ISF data = " + sens);
+            iobInputs.clock=BGTime;
             // trim down IOBInputs.history to just the data for 6h prior to BGDate
             //log.debug(IOBInputs.history[0].created_at);
-            List<Treatment> newHistory = null;
-            /*
-            for (int h = 0; h < fullHistory.size(); h++) {
-//                Date hDate = new Date(fullHistory.get(h).created_at) TODO: When we get directly from Ns there should be created_at
-                Date hDate = new Date(fullHistory.get(h).date);
+            List<TemporaryBasal> newHistoryB = new ArrayList<TemporaryBasal>();
+            List<Treatment> newHistoryT = new ArrayList<Treatment>();
+
+            for (int h = 0; h < fullHistoryB.size(); h++) {
+                long hDate = fullHistoryB.get(h).date;
                 //log.debug(fullHistory[i].created_at, hDate, BGDate, BGDate-hDate);
                 //if (h == 0 || h == fullHistory.length - 1) {
                 //log.debug(hDate, BGDate, hDate-BGDate)
                 //}
-                if (BGDate.getTime() - hDate.getTime() < 6 * 60 * 60 * 1000 && BGDate.getTime() - hDate.getTime() > 0) {
+                if (BGTime - hDate < 6 * 60 * 60 * 1000 && BGTime - hDate > 0) {
                     //process.stderr.write("i");
                     //log.debug(hDate);
-                    newHistory.add(fullHistory.get(h));
+                    newHistoryB.add(fullHistoryB.get(h));
                 }
             }
-            if (newHistory != null)
-                IOBInputs = new JSONObject(newHistory.toString());
-            else
-                IOBInputs = new JSONObject();
+            iobInputs.history = newHistoryB;
+            for (int h = 0; h < fullHistoryT.size(); h++) {
+                long hDate = fullHistoryT.get(h).date;
+                //log.debug(fullHistory[i].created_at, hDate, BGDate, BGDate-hDate);
+                //if (h == 0 || h == fullHistory.length - 1) {
+                //log.debug(hDate, BGDate, hDate-BGDate)
+                //}
+                if (BGTime - hDate < 6 * 60 * 60 * 1000 && BGTime - hDate > 0) {
+                    //process.stderr.write("i");
+                    //log.debug(hDate);
+                    newHistoryT.add(fullHistoryT.get(h));
+                }
+            }
+            iobInputs.treatments = newHistoryT;
+
             // process.stderr.write("" + newHistory.length + " ");
             //log.debug(newHistory[0].created_at,newHistory[newHistory.length-1].created_at,newHistory.length);
-
-             */
-
 
             // for IOB calculations, use the average of the last 4 hours' basals to help convergence;
             // this helps since the basal this hour could be different from previous, especially if with autotune they start to diverge.
             // use the pumpbasalprofile to properly calculate IOB during periods where no temp basal is set
-            Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-            calendar.setTime(BGDate);   // assigns calendar to given date
-            int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
-//            double currentPumpBasal = basal.basalLookup(opts.pumpbasalprofile, BGDate);
-            double currentPumpBasal = TuneProfilePlugin.getBasal(hourOfDay);
-            double basal1hAgo = TuneProfilePlugin.getBasal(hourOfDay - 1);
-            double basal2hAgo = TuneProfilePlugin.getBasal(hourOfDay - 2);
-            double basal3hAgo = TuneProfilePlugin.getBasal(hourOfDay - 3);
-            if (hourOfDay > 3) {
-                basal1hAgo = TuneProfilePlugin.getBasal(hourOfDay - 1);
-                basal2hAgo = TuneProfilePlugin.getBasal(hourOfDay - 2);
-                basal3hAgo = TuneProfilePlugin.getBasal(hourOfDay - 3);
-            } else {
-                if (hourOfDay - 1 < 0)
-                    basal1hAgo = TuneProfilePlugin.getBasal(24 - 1);
-                else
-                    basal1hAgo = TuneProfilePlugin.getBasal(hourOfDay - 1);
-                if (hourOfDay - 2 < 0)
-                    basal2hAgo = TuneProfilePlugin.getBasal(24 - 2);
-                else
-                    basal2hAgo = TuneProfilePlugin.getBasal(hourOfDay - 2);
-                if (hourOfDay - 3 < 0)
-                    basal3hAgo = TuneProfilePlugin.getBasal(24 - 3);
-                else
-                    basal3hAgo = TuneProfilePlugin.getBasal(hourOfDay - 3);
-            }
+            double currentPumpBasal = opts.pumpprofile.getBasal(BGTime);
+            log.debug("Basal Rate = " + currentPumpBasal);
+            double basal1hAgo = opts.pumpprofile.getBasal(BGTime-1*60*60*1000);
+            double basal2hAgo = opts.pumpprofile.getBasal(BGTime-2*60*60*1000);
+            double basal3hAgo = opts.pumpprofile.getBasal(BGTime-3*60*60*1000);
+
             double sum = currentPumpBasal + basal1hAgo + basal2hAgo + basal3hAgo;
-//            IOBInputs.profile.currentBasal = Math.round((sum/4)*1000)/1000;
+            iobInputs.profile.currentBasal = Math.round((sum/4)*1000)/1000;
 
             // this is the current autotuned basal, used for everything else besides IOB calculations
-            double currentBasal = TuneProfilePlugin.getBasal(hourOfDay);
+            //double currentBasal = TuneProfilePlugin.getBasal(hourOfDay);
+            double currentBasal = profileData.getBasal(BGTime);
 
             //log.debug(currentBasal,basal1hAgo,basal2hAgo,basal3hAgo,IOBInputs.profile.currentBasal);
             // basalBGI is BGI of basal insulin activity.
             double basalBGI = Math.round((currentBasal * sens / 60 * 5) * 100) / 100; // U/hr * mg/dL/U * 1 hr / 60 minutes * 5 = mg/dL/5m
             //console.log(JSON.stringify(IOBInputs.profile));
             // call iob since calculated elsewhere
-            IobTotal iob = TuneProfilePlugin.calculateFromTreatmentsAndTemps(BGDate.getTime());
+//****************************************************************************************************************************************
+            //todo Calculate iob or check initial proposition below
+            //var getIOB = require('../iob');
+            //var iob = getIOB(IOBInputs)[0];
+            IobTotal iob = TuneProfilePlugin.calculateFromTreatmentsAndTemps(BGTime);
             //log.debug(JSON.stringify(iob));
 
             // activity times ISF times 5 minutes is BGI
@@ -297,13 +288,10 @@ public class Prep {
                 // set initial values when we first see COB
                 CRCarbs += myCarbs;
                 if (calculatingCR == false) {
-                    /*
                     CRInitialIOB = iob.iob;
                     CRInitialBG = glucoseDatum.value;
-                    CRInitialCarbTime = new Date(glucoseDatum.date);
-                    log.debug("CRInitialIOB: " + CRInitialIOB + " CRInitialBG: " + CRInitialBG + " CRInitialCarbTime: " + CRInitialCarbTime.toString());
-
-                     */
+                    CRInitialCarbTime = glucoseDatum.date;
+                    log.debug("CRInitialIOB: " + CRInitialIOB + " CRInitialBG: " + CRInitialBG + " CRInitialCarbTime: " + DateUtil.toISOString(CRInitialCarbTime));
                 }
                 // keep calculatingCR as long as we have COB or enough IOB
                 if (mealCOB > 0 && i > 1) {
@@ -314,25 +302,21 @@ public class Prep {
                 } else {
                     double CREndIOB = iob.iob;
                     double CREndBG = glucoseDatum.value;
-                    Date CREndTime = new Date(glucoseDatum.date);
+                    long CREndTime = glucoseDatum.date;
                     log.debug("CREndIOB: " + CREndIOB + " CREndBG: " + CREndBG + " CREndTime: " + CREndTime);
-                    /*
 
-                    //TODO:Fix this one as it produces error
-//                    JSONObject CRDatum = new JSONObject("{\"CRInitialIOB\": "+CRInitialIOB+",   \"CRInitialBG\": "+CRInitialBG+",   \"CRInitialCarbTime\": "+CRInitialCarbTime+",   \"CREndIOB\": " +CREndIOB+",   \"CREndBG\": "+CREndBG+",   \"CREndTime\": "+CREndTime+                            ",   \"CRCarbs\": "+CRCarbs+"}");
-                    String crDataString = "{\"CRInitialIOB\": " + CRInitialIOB + ",   \"CRInitialBG\": " + CRInitialBG + ",   \"CRInitialCarbTime\": " + CRInitialCarbTime.getTime() + ",   \"CREndIOB\": " + CREndIOB + ",   \"CREndBG\": " + CREndBG + ",   \"CREndTime\": " + CREndTime.getTime() + ",   \"CRCarbs\": " + CRCarbs + "}";
-//                    log.debug("CRData is: "+crDataString);
                     CRDatum crDatum = new CRDatum();
                     crDatum.CRInitialBG = CRInitialBG;
                     crDatum.CRInitialIOB = CRInitialIOB;
-                    crDatum.CRInitialCarbTime = CRInitialCarbTime.getTime();
+                    crDatum.CRInitialCarbTime = CRInitialCarbTime;
                     crDatum.CREndBG = CREndBG;
                     crDatum.CREndIOB = CREndIOB;
-                    crDatum.CREndTime = CREndTime.getTime();
+                    crDatum.CREndTime = CREndTime;
                     //log.debug(CRDatum);
+                    //String crDataString = "{\"CRInitialIOB\": " + CRInitialIOB + ",   \"CRInitialBG\": " + CRInitialBG + ",   \"CRInitialCarbTime\": " + CRInitialCarbTime + ",   \"CREndIOB\": " + CREndIOB + ",   \"CREndBG\": " + CREndBG + ",   \"CREndTime\": " + CREndTime + ",   \"CRCarbs\": " + CRCarbs + "}";
+                    log.debug("CRDatum is: " + crDatum.toString() );
 
-                    int CRElapsedMinutes = Math.round((CREndTime.getTime() - CRInitialCarbTime.getTime()) / (1000 * 60));
-
+                    int CRElapsedMinutes = Math.round((CREndTime - CRInitialCarbTime) / (1000 * 60));
 
                     //log.debug(CREndTime - CRInitialCarbTime, CRElapsedMinutes);
                     if (CRElapsedMinutes < 60 || (i == 1 && mealCOB > 0)) {
@@ -340,26 +324,25 @@ public class Prep {
                     } else {
                         CRData.add(crDatum);
                     }
-                     */
+
                     CRCarbs = 0;
                     calculatingCR = false;
                 }
             }
 
-
             // If mealCOB is zero but all deviations since hitting COB=0 are positive, assign those data points to CSFGlucoseData
             // Once deviations go negative for at least one data point after COB=0, we can use the rest of the data to tune ISF or basals
-            if (mealCOB > 0 || absorbing != 0 || mealCarbs > 0) {
+            if (mealCOB > 0 || !absorbing || mealCarbs > 0) {
                 // if meal IOB has decayed, then end absorption after this data point unless COB > 0
                 if (iob.iob < currentBasal / 2) {
-                    absorbing = 0;
+                    absorbing = false;
                     // otherwise, as long as deviations are positive, keep tracking carb deviations
                 } else if (deviation > 0) {
-                    absorbing = 1;
+                    absorbing = true;
                 } else {
-                    absorbing = 0;
+                    absorbing = false;
                 }
-                if (absorbing != 0 && mealCOB != 0) {
+                if (!absorbing && mealCOB != 0) {
                     mealCarbs = 0;
                 }
                 // check previous "type" value, and if it wasn't csf, set a mealAbsorption start flag
@@ -432,22 +415,21 @@ public class Prep {
 //            log.debug(absorbing+" mealCOB: "+mealCOB+" mealCarbs: "+mealCarbs+" basalBGI: "+round(basalBGI,1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
 
-        log.debug("end of mail loop");
 
-
+        iobInputs.profile = new TunedProfile(opts.profile);
+        iobInputs.history = opts.pumpHistory;
+        iobInputs.treatments = opts.treatments;
+        // todo: var find_insulin = require('../iob/history');
+        //  treatments = find_insulin(IOBInputs);
 
         /* Code template for IOB calculation trom tempBasal Object
         IobTotal iob = new IobTotal(now);
         Profile profile = ProfileFunctions.getInstance().getProfile(now);
         if (profile != null)
             iob = tempBasal.iobCalc(now, profile);
-
          */
-//    IOBInputs = {
-//        profile: profileData
-//    ,   history: opts.pumpHistory
-//    };
-//	  treatments = find_insulin(IOBInputs);
+
+
 //****************************************************************************************************************************************
 // categorize.js Lines 372-383
         for (CRDatum crDatum : CRData) {
