@@ -22,6 +22,8 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.general.nsclient.acks.NSAddAck;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.Round;
@@ -29,17 +31,47 @@ import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 
 public class Opts {
-    public static List<Treatment> treatments;
     public static Profile profile;
     public static Profile pumpprofile;
     public List<BgReading> glucose;
-    public List<TemporaryBasal> pumpHistory;
+    public List<NsTreatment> pumpHistory;
     public List<ExtendedBolus> pumpExtBolusHistory;
     public List<TemporaryBasal> pumpTempBasalHistory;
+    public static List<Treatment> treatments;
     public long start;
     public long end;
     public boolean categorize_uam_as_basal;
     public boolean tune_insulin_curve;
+
+    public void setTempBasalHistory(List<TemporaryBasal> lt) {
+        pumpTempBasalHistory=lt;
+        //Convert
+        for (TemporaryBasal tp:pumpTempBasalHistory ) {
+            Profile ps = ProfileFunctions.getInstance().getProfile(tp.date);
+            if (ps!=null)
+                tp.absoluteRate = tp.tempBasalConvertedToAbsolute(tp.date, ps);
+        }
+        for (TemporaryBasal t:pumpTempBasalHistory) {
+            pumpHistory.add(new NsTreatment(t));
+        }
+        Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
+    }
+
+    public void setExtBolusHistory(List<ExtendedBolus> lt) {
+        pumpExtBolusHistory=lt;
+        for (ExtendedBolus t:pumpExtBolusHistory) {
+            pumpHistory.add(new NsTreatment(t));
+        }
+        Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
+    }
+
+    public void setTreatments(List<Treatment> lt) {
+        treatments=lt;
+        for (Treatment t:treatments) {
+            pumpHistory.add(new NsTreatment(t));
+        }
+        Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
+    }
 
     // on each loop glucose containts only one day BG Value
     public JSONArray glucosetoJSON()  {
@@ -92,7 +124,16 @@ public class Opts {
         return json;
     }
     */
+    public JSONArray nsHistorytoJSON() {
+        JSONArray json = new JSONArray();
+        for (NsTreatment t: pumpHistory ) {
+            if (t.isValid)
+                json.put(t.toJson());
+        }
+        return json;
+    }
 
+    /*
     public JSONArray nsTreatmenttoJSON() {
         JSONArray json = new JSONArray();
         int idxT=0;
@@ -121,9 +162,10 @@ public class Opts {
 
         return json;
     }
+    */
 
     //For treatment export, add starttime and endtime to export dedicated files for each loop
-    public JSONArray extBolustoJSON()  {
+    public JSONArray pumpExtBolusHistorytoJSON()  {
         JSONArray json = new JSONArray();
         try {
             for (ExtendedBolus cp:pumpExtBolusHistory ) {
@@ -145,13 +187,6 @@ public class Opts {
         return json;
     }
 
-    public JSONArray pumpHistorytoJSON()  {
-        return tempBasaltoJSON(pumpHistory);
-    }
-
-    public JSONArray pumpTempBasalHistorytoJSON()  {
-        return tempBasaltoJSON(pumpTempBasalHistory);
-    }
 
     public JSONArray treatmentstoJSON()  {
         JSONArray json = new JSONArray();
@@ -163,9 +198,9 @@ public class Opts {
         return json;
     }
 
-    private JSONArray tempBasaltoJSON(List<TemporaryBasal> listTempBasals)  {
+    public JSONArray pumpTempBasalHistorytoJSON()  {
         JSONArray json = new JSONArray();
-        for (TemporaryBasal tp:listTempBasals ) {
+        for (TemporaryBasal tp:pumpTempBasalHistory ) {
             if(tp.isValid) {
                 json.put(tempBasaljson(tp));
             }
