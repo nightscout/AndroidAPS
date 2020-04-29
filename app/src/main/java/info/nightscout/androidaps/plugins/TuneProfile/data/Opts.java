@@ -50,17 +50,20 @@ public class Opts {
             Profile ps = ProfileFunctions.getInstance().getProfile(tp.date);
             if (ps!=null)
                 tp.absoluteRate = tp.tempBasalConvertedToAbsolute(tp.date, ps);
+            NsTreatment NsT = new NsTreatment(tp);
+            if (NsT != null)
+                pumpHistory.add(NsT);
         }
-        for (TemporaryBasal t:pumpTempBasalHistory) {
-            pumpHistory.add(new NsTreatment(t));
-        }
+
         Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
     }
 
     public void setExtBolusHistory(List<ExtendedBolus> lt) {
         pumpExtBolusHistory=lt;
         for (ExtendedBolus t:pumpExtBolusHistory) {
-            pumpHistory.add(new NsTreatment(t));
+            NsTreatment NsT = new NsTreatment(t);
+            if(NsT != null)
+                pumpHistory.add(NsT);
         }
         Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
     }
@@ -68,7 +71,9 @@ public class Opts {
     public void setTreatments(List<Treatment> lt) {
         treatments=lt;
         for (Treatment t:treatments) {
-            pumpHistory.add(new NsTreatment(t));
+            NsTreatment NsT = new NsTreatment(t);
+            if(NsT != null)
+                pumpHistory.add(NsT);
         }
         Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
     }

@@ -1323,7 +1323,7 @@ public class TuneProfilePlugin extends PluginBase {
                 opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
 
                 // get treatments from 6 hours (DIA duration) before first BG value
-                opts.treatments = new TreatmentService().getTreatmentDataFromTime(treatmentStart,treatmentEnd,false);
+                opts.setTreatments(new TreatmentService().getTreatmentDataFromTime(treatmentStart,treatmentEnd,false));
                 // get basal temp and extended temp from 6 hours (DIA duration) before first BG value
                 opts.setTempBasalHistory(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(treatmentStart,treatmentEnd,false));
                 opts.setExtBolusHistory(MainApp.getDbHelper().getExtendedBolusDataFromTime(treatmentStart,treatmentEnd,false));
