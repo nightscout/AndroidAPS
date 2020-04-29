@@ -50,10 +50,9 @@ import info.nightscout.androidaps.utils.SP;
 public class TuneProfileFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TuneProfileFragment.class);
     @Inject NSProfilePlugin nsProfilePlugin;
+    @Inject TuneProfilePlugin tuneProfilePlugin;
+
     public TuneProfileFragment() {super();}
-    static public TuneProfilePlugin getPlugin() throws IOException {
-        return TuneProfilePlugin.getPlugin();
-    }
 
     Button runTuneNowButton;
 // disabled by philoul to build AAPS
@@ -118,8 +117,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
             if (daysBack > 0)
 //            resultView.setText(TuneProfile.bgReadings(daysBack));
                 try {
-                    TuneProfilePlugin tuneProfile = new TuneProfilePlugin();
-                    resultView.setText(tuneProfile.result(daysBack));
+                    resultView.setText(tuneProfilePlugin.result(daysBack));
                     tuneProfileSwitch.setVisibility(View.VISIBLE);
                 } catch (IOException e) {
                     e.printStackTrace();

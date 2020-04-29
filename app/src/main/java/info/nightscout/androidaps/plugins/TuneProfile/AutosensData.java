@@ -7,11 +7,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
@@ -23,8 +26,11 @@ import info.nightscout.androidaps.utils.SP;
 
 public class AutosensData {
     private static Logger log = LoggerFactory.getLogger(AutosensData.class);
+    @Inject SensitivityAAPSPlugin sensitivityAAPSPlugin;
+    @Inject SensitivityWeightedAveragePlugin sensitivityWeightedAveragePlugin;
+    @Inject ProfileFunction profileFunction;
 
-    static class CarbsInPast {
+    class CarbsInPast {
         long time = 0L;
         double carbs = 0d;
         double min5minCarbImpact = 0d;
@@ -34,10 +40,10 @@ public class AutosensData {
             time = t.date;
             carbs = t.carbs;
             remaining = t.carbs;
-            if (SensitivityAAPSPlugin.getPlugin().isEnabled(PluginType.SENSITIVITY) || SensitivityWeightedAveragePlugin.getPlugin().isEnabled(PluginType.SENSITIVITY)) {
+            if (sensitivityAAPSPlugin.isEnabled(PluginType.SENSITIVITY) || sensitivityWeightedAveragePlugin.isEnabled(PluginType.SENSITIVITY)) {
                 double maxAbsorptionHours = SP.getDouble(R.string.key_absorption_maxtime, 4d);
 //                Profile profile = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile(t.date);
-                Profile profile = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile().getDefaultProfile();
+                Profile profile = profileFunction.getProfile(time);
                 double sens = Profile.toMgdl(profile.getIsfMgdl(t.date), profile.getUnits());
                 double ic = profile.getIc(t.date);
                 min5minCarbImpact = t.carbs / (maxAbsorptionHours * 60 / 5) * sens / ic;

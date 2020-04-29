@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.plugins.TuneProfile;
 
+import android.content.Context;
 import android.util.LongSparseArray;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Intervals;
@@ -10,13 +12,16 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.TuneProfile.AutotunePrep.Prep;
 import info.nightscout.androidaps.plugins.TuneProfile.data.BGDatum;
 import info.nightscout.androidaps.plugins.TuneProfile.data.CRDatum;
 import info.nightscout.androidaps.plugins.TuneProfile.data.Opts;
 import info.nightscout.androidaps.plugins.TuneProfile.data.PrepOutput;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentService;
@@ -32,6 +37,7 @@ import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,6 +56,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import javax.inject.Inject;
 
 
 /**
@@ -108,24 +116,48 @@ public class TuneProfilePlugin extends PluginBase {
 //    }
 
     static TuneProfilePlugin tuneProfilePlugin;
+    private final ResourceHelper resourceHelper;
+    private final ProfileFunction profileFunction;
+    private final Context context;
+    private final RxBusWrapper rxBus;
+    private final ActivePluginProvider activePlugin;
+    private final TreatmentsPlugin treatmentsPlugin;
+    private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
+    private final Prep prep;
 
-    static public TuneProfilePlugin getPlugin() {
-        if (tuneProfilePlugin == null) {
-            tuneProfilePlugin = new TuneProfilePlugin();
-        }
-        return tuneProfilePlugin;
-    }
 
-    public TuneProfilePlugin()  {
+
+    @Inject
+    public TuneProfilePlugin(
+            HasAndroidInjector injector,
+            AAPSLogger aapsLogger,
+            RxBusWrapper rxBus,
+            ResourceHelper resourceHelper,
+            ProfileFunction profileFunction,
+            Context context,
+            Prep prep,
+            ActivePluginProvider activePlugin,
+            TreatmentsPlugin treatmentsPlugin,
+            IobCobCalculatorPlugin iobCobCalculatorPlugin
+    )  {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
                 .fragmentClass(TuneProfileFragment.class.getName())
                 .pluginName(R.string.autotune)
                 .shortName(R.string.autotune_shortname)
-                .preferencesId(R.xml.pref_tuneprofile)
+                .preferencesId(R.xml.pref_tuneprofile),
+                aapsLogger, resourceHelper, injector
         );
         //create autotune subfolder for autotune files if not exists
         FS.createAutotuneFolder();
+        this.resourceHelper = resourceHelper;
+        this.profileFunction = profileFunction;
+        this.rxBus = rxBus;
+        this.context = context;
+        this.activePlugin = activePlugin;
+        this.treatmentsPlugin = treatmentsPlugin;
+        this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
+        this.prep = prep;
     }
 
 //    @Override
@@ -133,20 +165,6 @@ public class TuneProfilePlugin extends PluginBase {
         return TuneProfileFragment.class.getName();
     }
 
-
-    @Override
-    public String getName() { return "TuneProfile"; }
-
-    @Override
-    public String getNameShort() {
-        String name = "TP";
-        if (!name.trim().isEmpty()) {
-            //only if translation exists
-            return name;
-        }
-        // use long name as fallback
-        return getName();
-    }
 
 
     public void invoke(String initiator, boolean allowNotification) {
@@ -156,15 +174,13 @@ public class TuneProfilePlugin extends PluginBase {
 
     public void getProfile(){
         //get active profile
-        if (ConfigBuilderPlugin.getPlugin().getActiveProfileInterface() == null){
-            log.debug("TuneProfile: No profile selected");
-            return;
-        }
-        profile = ProfileFunctions.getInstance().getProfile();
+        profile = profileFunction.getProfile();
+        if(profile==null)
+            log.debug("Autotune no profile selected");
     }
 
-    public static synchronized Double getBasal(Integer hour){
-        getPlugin().getProfile();
+    public synchronized Double getBasal(Integer hour){
+        getProfile();
         if(profile.equals(null))
             return 0d;
         Calendar c = Calendar.getInstance();
@@ -176,7 +192,7 @@ public class TuneProfilePlugin extends PluginBase {
         return profile.getBasal(c.getTimeInMillis());
     }
 
-    public static long roundUpTime(long time) {
+    public long roundUpTime(long time) {
         if (time % 60000 == 0)
             return time;
         long rouded = (time / 60000 + 1) * 60000;
@@ -186,7 +202,7 @@ public class TuneProfilePlugin extends PluginBase {
     public IobTotal getCalculationToTimeTreatments(long time) {
         IobTotal total = new IobTotal(time);
 
-        Profile profile = ProfileFunctions.getInstance().getProfile();
+        Profile profile = profileFunction.getProfile();
         if (profile == null)
             return total;
 
@@ -210,7 +226,7 @@ public class TuneProfilePlugin extends PluginBase {
                 total.bolussnooze += bIOB.iobContrib;
             }
         }
-        if (!ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses())
+        if (!activePlugin.getActivePump().isFakingTempsByExtendedBoluses())
             synchronized (extendedBoluses) {
                 for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
                     ExtendedBolus e = extendedBoluses.get(pos);
@@ -240,7 +256,7 @@ public class TuneProfilePlugin extends PluginBase {
 
             }
         }
-        if (ConfigBuilderPlugin.getPlugin().getActivePump().isFakingTempsByExtendedBoluses()) {
+        if (activePlugin.getActivePump().isFakingTempsByExtendedBoluses()) {
             IobTotal totalExt = new IobTotal(time);
             synchronized (extendedBoluses) {
                 for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
@@ -267,7 +283,7 @@ public class TuneProfilePlugin extends PluginBase {
     }
 
 
-    public static IobTotal calculateFromTreatmentsAndTemps(long time) {
+    public IobTotal calculateFromTreatmentsAndTemps(long time) {
         long now = System.currentTimeMillis();
         time = roundUpTime(time);
         if (time < now && iobTable.get(time) != null) {
@@ -279,8 +295,8 @@ public class TuneProfilePlugin extends PluginBase {
         IobTotal bolusIob = null;
         IobTotal basalIob = null;
 
-        bolusIob = getPlugin().getCalculationToTimeTreatments(time).round();
-        basalIob = getPlugin().getCalculationToTimeTempBasals(time).round();
+        bolusIob = getCalculationToTimeTreatments(time).round();
+        basalIob = getCalculationToTimeTempBasals(time).round();
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
         if (time < System.currentTimeMillis()) {
@@ -314,7 +330,7 @@ public class TuneProfilePlugin extends PluginBase {
         }
 
 
-        treatments = TreatmentsPlugin.getPlugin().getTreatmentsFromHistory();
+        treatments = treatmentsPlugin.getTreatmentsFromHistory();
 
         log.debug("Treatmets size: "+treatments.size());
         //trim treatments size
@@ -515,40 +531,40 @@ public class TuneProfilePlugin extends PluginBase {
             calendar.setTime(BGDate);   // assigns calendar to given date
             int hourOfDay = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
 //            double currentPumpBasal = basal.basalLookup(opts.pumpbasalprofile, BGDate);
-            double currentPumpBasal = TuneProfilePlugin.getBasal(hourOfDay);
-            double basal1hAgo = TuneProfilePlugin.getBasal(hourOfDay - 1);
-            double basal2hAgo = TuneProfilePlugin.getBasal(hourOfDay - 2);
-            double basal3hAgo = TuneProfilePlugin.getBasal(hourOfDay - 3);
+            double currentPumpBasal = getBasal(hourOfDay);
+            double basal1hAgo = getBasal(hourOfDay - 1);
+            double basal2hAgo = getBasal(hourOfDay - 2);
+            double basal3hAgo = getBasal(hourOfDay - 3);
             if(hourOfDay>3){
-                basal1hAgo = TuneProfilePlugin.getBasal(hourOfDay - 1);
-                basal2hAgo = TuneProfilePlugin.getBasal(hourOfDay - 2);
-                basal3hAgo = TuneProfilePlugin.getBasal(hourOfDay - 3);
+                basal1hAgo = getBasal(hourOfDay - 1);
+                basal2hAgo = getBasal(hourOfDay - 2);
+                basal3hAgo = getBasal(hourOfDay - 3);
             } else {
                 if(hourOfDay-1 < 0)
-                    basal1hAgo = TuneProfilePlugin.getBasal(24 - 1);
+                    basal1hAgo = getBasal(24 - 1);
                 else
-                    basal1hAgo = TuneProfilePlugin.getBasal(hourOfDay - 1);
+                    basal1hAgo = getBasal(hourOfDay - 1);
                 if(hourOfDay-2 < 0)
-                    basal2hAgo = TuneProfilePlugin.getBasal(24 - 2);
+                    basal2hAgo = getBasal(24 - 2);
                 else
-                    basal2hAgo = TuneProfilePlugin.getBasal(hourOfDay - 2);
+                    basal2hAgo = getBasal(hourOfDay - 2);
                 if(hourOfDay-3 < 0)
-                    basal3hAgo = TuneProfilePlugin.getBasal(24 - 3);
+                    basal3hAgo = getBasal(24 - 3);
                 else
-                    basal3hAgo = TuneProfilePlugin.getBasal(hourOfDay - 3);
+                    basal3hAgo = getBasal(hourOfDay - 3);
             }
             double sum = currentPumpBasal+basal1hAgo+basal2hAgo+basal3hAgo;
 //            IOBInputs.profile.currentBasal = Math.round((sum/4)*1000)/1000;
 
             // this is the current autotuned basal, used for everything else besides IOB calculations
-            double currentBasal = TuneProfilePlugin.getBasal(hourOfDay);
+            double currentBasal = getBasal(hourOfDay);
 
             //log.debug(currentBasal,basal1hAgo,basal2hAgo,basal3hAgo,IOBInputs.profile.currentBasal);
             // basalBGI is BGI of basal insulin activity.
             double basalBGI = Math.round(( currentBasal * sens / 60 * 5 )*100)/100; // U/hr * mg/dL/U * 1 hr / 60 minutes * 5 = mg/dL/5m
             //console.log(JSON.stringify(IOBInputs.profile));
             // call iob since calculated elsewhere
-            IobTotal iob = TuneProfilePlugin.calculateFromTreatmentsAndTemps(BGDate.getTime());
+            IobTotal iob = calculateFromTreatmentsAndTemps(BGDate.getTime());
             //log.debug(JSON.stringify(iob));
 
             // activity times ISF times 5 minutes is BGI
@@ -571,11 +587,11 @@ public class TuneProfilePlugin extends PluginBase {
             // Then, calculate carb absorption for that 5m interval using the deviation.
             if ( mealCOB > 0 ) {
                 Profile profile;
-                if (ProfileFunctions.getInstance().getProfile() == null){
+                profile = profileFunction.getProfile();
+                if (profile == null){
                     log.debug("No profile selected");
                     return;
                 }
-                profile = ProfileFunctions.getInstance().getProfile();
                 double ci = Math.max(deviation, SP.getDouble("openapsama_min_5m_carbimpact", 3.0));
                 double absorbed = ci * profile.getIc() / sens;
                 // Store the COB, and use it as the starting point for the next data point.
@@ -721,7 +737,7 @@ public class TuneProfilePlugin extends PluginBase {
         }
 
 //        try {
-            List<Treatment> treatments = TreatmentsPlugin.getPlugin().getTreatmentsFromHistory();
+            List<Treatment> treatments = treatmentsPlugin.getTreatmentsFromHistory();
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
@@ -1347,7 +1363,7 @@ public class TuneProfilePlugin extends PluginBase {
                     log.debug("Day "+i+" of "+daysBack);
 
                     categorizeBGDatums(glucoseStart, glucoseEnd);
-                    Prep.categorizeBGDatums(opts); // line added for log and test
+                    prep.categorizeBGDatums(opts); // line added for log and test
                     //PrepOutput prepOutput = Prep.generate(opts);
                     FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(4));
 
@@ -1435,9 +1451,9 @@ public class TuneProfilePlugin extends PluginBase {
                 FS.createAutotunefile(FS.profilName(null), convertedProfile.toString(4));
 
                 store.put(MainApp.gs(R.string.tuneprofile_name), convertedProfile);
-                ProfileStore profileStore = new ProfileStore(json);
-                SP.putString("autotuneprofile", profileStore.getData().toString());
-                log.debug("Entered in ProfileStore "+profileStore.getSpecificProfile(MainApp.gs(R.string.tuneprofile_name)));
+                //ProfileStore profileStore = new ProfileStore(json);
+                //SP.putString("autotuneprofile", profileStore.getData().toString());
+                //log.debug("Entered in ProfileStore "+profileStore.getSpecificProfile(MainApp.gs(R.string.tuneprofile_name)));
 // TODO: check line below modified by philoul => need to be verify...
 //                RxBus.INSTANCE.send(new EventProfileStoreChanged());
             } catch (JSONException e) {
@@ -1476,7 +1492,7 @@ public class TuneProfilePlugin extends PluginBase {
             endDateOffset++;
         Date endDate = new Date(runDate.getTime()-endDateOffset* 24 * 60 * 60 * 1000L);
         Date startDate = new Date(runDate.getTime()-(nbDays+endDateOffset-1) * 24 * 60 * 60 * 1000L);
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
+        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
         int utcOffset = (int) ((DateUtil.fromISODateString(DateUtil.toISOString(runDate,null,null)).getTime()  - DateUtil.fromISODateString(DateUtil.toISOString(runDate)).getTime()) / (60 * 1000));
         try {
             jsonSettings.put("datestring",DateUtil.toISOString(runDate,null,null));

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Date;
 import java.util.TimeZone;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -19,9 +21,11 @@ import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.TuneProfile.data.NsTreatment;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -41,6 +45,8 @@ public class Opts {
     public long end;
     public boolean categorize_uam_as_basal;
     public boolean tune_insulin_curve;
+    @Inject ProfileFunction profileFunction;
+    @Inject ActivePluginProvider activePlugin;
 
     public void setTempBasalHistory(List<TemporaryBasal> lt) {
         if (pumpHistory==null)
@@ -48,7 +54,7 @@ public class Opts {
         pumpTempBasalHistory=lt;
         //Convert
         for (TemporaryBasal tp:pumpTempBasalHistory ) {
-            Profile ps = ProfileFunctions.getInstance().getProfile(tp.date);
+            Profile ps = profileFunction.getProfile(tp.date);
             if (ps!=null)
                 tp.absoluteRate = tp.tempBasalConvertedToAbsolute(tp.date, ps);
             pumpHistory.add(new NsTreatment(tp));
@@ -82,7 +88,8 @@ public class Opts {
         JSONArray glucoseJson = new JSONArray();
         Date now = new Date(System.currentTimeMillis());
         int utcOffset = (int) ((DateUtil.fromISODateString(DateUtil.toISOString(now,null,null)).getTime()  - DateUtil.fromISODateString(DateUtil.toISOString(now)).getTime()) / (60 * 1000));
-        ConfigBuilderPlugin.getPlugin().getActiveBgSource();
+        BgSourceInterface activeBgSource = activePlugin.getActiveBgSource();
+        //String device = activeBgSource.getClass().getTypeName();
         try {
             for (BgReading bgreading:glucose ) {
                 JSONObject bgjson = new JSONObject();
@@ -266,7 +273,7 @@ public class Opts {
         JSONObject store = new JSONObject();
         JSONObject convertedProfile = new JSONObject();
         int basalIncrement = 60 ;
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getPlugin().getActiveInsulin();
+        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
 
         try {
             json.put("min_5m_carbimpact",SP.getDouble("openapsama_min_5m_carbimpact", 3.0));

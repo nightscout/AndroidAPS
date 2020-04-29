@@ -46,11 +46,10 @@ import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionChec
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.receivers.BTReceiver;
 import info.nightscout.androidaps.receivers.ChargingStateReceiver;
-import info.nightscout.androidaps.plugins.TuneProfile.TuneProfilePlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
-import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.androidaps.receivers.NetworkChangeReceiver;
+import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.receivers.TimeDateOrTZChangeReceiver;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.ActivityMonitor;

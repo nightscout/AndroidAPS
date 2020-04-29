@@ -43,6 +43,7 @@ public class Prep {
     public boolean nsDataDownloaded = false;
     private static Logger log = LoggerFactory.getLogger(TuneProfilePlugin.class);
     @Inject ProfileFunction profileFunction;
+    @Inject TuneProfilePlugin tuneProfilePlugin;
 
     public PrepOutput categorizeBGDatums(Opts opts) throws JSONException, ParseException, IOException {
 
@@ -234,7 +235,7 @@ public class Prep {
             //todo Calculate iob or check initial proposition below
             //var getIOB = require('../iob');
             //var iob = getIOB(IOBInputs)[0];
-            IobTotal iob = TuneProfilePlugin.calculateFromTreatmentsAndTemps(BGTime);
+            IobTotal iob = tuneProfilePlugin.calculateFromTreatmentsAndTemps(BGTime);
             //log.debug(JSON.stringify(iob));
 
             // activity times ISF times 5 minutes is BGI
