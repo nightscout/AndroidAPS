@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
@@ -26,7 +28,7 @@ import info.nightscout.androidaps.plugins.TuneProfile.data.Opts;
 import info.nightscout.androidaps.plugins.TuneProfile.data.PrepOutput;
 import info.nightscout.androidaps.plugins.TuneProfile.data.TunedProfile;
 import info.nightscout.androidaps.plugins.TuneProfile.TuneProfilePlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.TuneProfile.data.NsTreatment;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
@@ -40,8 +42,9 @@ public class Prep {
     private boolean useNSData = false;
     public boolean nsDataDownloaded = false;
     private static Logger log = LoggerFactory.getLogger(TuneProfilePlugin.class);
+    @Inject ProfileFunction profileFunction;
 
-    public static PrepOutput categorizeBGDatums(Opts opts) throws JSONException, ParseException, IOException {
+    public PrepOutput categorizeBGDatums(Opts opts) throws JSONException, ParseException, IOException {
 
         List<Treatment> treatments = opts.treatments;
         // this sorts the treatments collection in order.
@@ -254,11 +257,11 @@ public class Prep {
             // Then, calculate carb absorption for that 5m interval using the deviation.
             if (mealCOB > 0) {
                 Profile profile;
-                if (ProfileFunctions.getInstance().getProfile() == null) {
+                if (profileFunction.getProfile() == null) {
                     log.debug("No profile selected");
                     return null;
                 }
-                profile = ProfileFunctions.getInstance().getProfile();
+                profile = profileFunction.getProfile();
                 double ci = Math.max(deviation, SP.getDouble("openapsama_min_5m_carbimpact", 3.0));
                 double absorbed = ci * profile.getIc() / sens;
                 // Store the COB, and use it as the starting point for the next data point.
@@ -516,7 +519,7 @@ public class Prep {
 
 
     // index.js // opts = inputs
-    public static PrepOutput generate (Opts opts) throws JSONException, ParseException, IOException {
+    public PrepOutput generate (Opts opts) throws JSONException, ParseException, IOException {
 
         PrepOutput autotune_prep_output = categorizeBGDatums(opts);
 

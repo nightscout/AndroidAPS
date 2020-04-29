@@ -25,18 +25,21 @@ import java.util.Date;
 //2 unknown imports disabled by philoul to build AAPS
 //import butterknife.BindView;
 //import butterknife.OnClick;
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -46,6 +49,7 @@ import info.nightscout.androidaps.utils.SP;
 
 public class TuneProfileFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TuneProfileFragment.class);
+    @Inject NSProfilePlugin nsProfilePlugin;
     public TuneProfileFragment() {super();}
     static public TuneProfilePlugin getPlugin() throws IOException {
         return TuneProfilePlugin.getPlugin();
@@ -94,7 +98,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
 // @OnClick(R.id.nsprofile_profileswitch)
     public void onClickProfileSwitch() {
         String name = MainApp.gs(R.string.tuneprofile_name);
-        ProfileStore store = NSProfilePlugin.getPlugin().getProfile();
+        ProfileStore store = nsProfilePlugin.getProfile();
         if (store != null) {
             Profile profile = store.getSpecificProfile(name);
             if (profile != null) {
@@ -132,7 +136,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
             String name = MainApp.gs(R.string.tuneprofile_name);
             ProfileStore profile = null;
             log.debug("ProfileSwitch pressed");
-
+            /*todo Profile management to update
             String profileString = SP.getString("autotuneprofile", null);
             if (profileString != null) {
                 if (L.isEnabled(L.PROFILE))
@@ -162,6 +166,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
 //                 );
             } else
                 log.debug("ProfileStore is null!");
+             */
         }
 
         //updateGUI();

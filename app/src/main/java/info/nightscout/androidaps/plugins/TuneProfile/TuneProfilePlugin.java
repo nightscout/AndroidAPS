@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.TuneProfile.data.BGDatum;
 import info.nightscout.androidaps.plugins.TuneProfile.data.CRDatum;
 import info.nightscout.androidaps.plugins.TuneProfile.data.Opts;
 import info.nightscout.androidaps.plugins.TuneProfile.data.PrepOutput;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.db.BgReading;
@@ -315,7 +315,6 @@ public class TuneProfilePlugin extends PluginBase {
 
 
         treatments = TreatmentsPlugin.getPlugin().getTreatmentsFromHistory();
-
 
         log.debug("Treatmets size: "+treatments.size());
         //trim treatments size

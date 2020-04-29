@@ -33,6 +33,12 @@ public class NsTreatment {
     public int percentRate;
     public boolean isAbsolute;
     public ExtendedBolus extendedBolus;
+    private String origin;
+    public static final String TEMPBASAL="Temp Basal";
+    public static final String BOLUSWIZARD="Bolus Wizard";
+    public static final String CARBCORRECTION="Carb Correction";
+    public static final String CORRECTIONBOLUS="Correction Bolus";
+    public static final String ENTEREDBY="openaps://AndroidAPS";
 
 
     public NsTreatment(Treatment t) {
@@ -45,11 +51,11 @@ public class NsTreatment {
         isValid=t.isValid;
         mealBolus=t.mealBolus;
         if(insulin > 0 && carbs > 0)
-            eventType = "Bolus Wizard";
+            eventType = BOLUSWIZARD;
         else if (carbs > 0)
-            eventType = "Carb Correction";
+            eventType = CARBCORRECTION;
         else
-            eventType = "Correction Bolus";
+            eventType = CORRECTIONBOLUS;
         created_at = DateUtil.toISOString(t.date);
     }
     public NsTreatment (TemporaryBasal t) {
@@ -67,8 +73,8 @@ public class NsTreatment {
         absoluteRate=t.absoluteRate;
         isValid=t.isValid;
         isEndingEvent=t.isEndingEvent();
-        eventType = "Temp Basal";
-        enteredBy = "openaps://AndroidAPS";
+        eventType = TEMPBASAL;
+        enteredBy = ENTEREDBY;
         duration = t.getRealDuration();
         percentRate = t.percentRate;
         isFakeExtended = t.isFakeExtended;
@@ -85,16 +91,20 @@ public class NsTreatment {
             cPjson.put("created_at",created_at);
             cPjson.put("insulin",insulin > 0 ? insulin : JSONObject.NULL);
             cPjson.put("carbs",carbs > 0 ? carbs : JSONObject.NULL );
-            if (!isEndingEvent)
-                cPjson.put("duration", duration);
-            cPjson.put("absolute", absoluteRate);
-            cPjson.put("rate", absoluteRate);
-            cPjson.put("percent", percentRate);
-            cPjson.put("enteredBy",enteredBy);
-            cPjson.put("isSMB",isSMB);
-            cPjson.put("isMealBolus",mealBolus);
-            cPjson.put("isEnding", isEndingEvent);
-            cPjson.put("isFakeExtended", isFakeExtended);
+            if(eventType==TEMPBASAL) {
+                if (!isEndingEvent)
+                    cPjson.put("duration", duration);
+                cPjson.put("absolute", absoluteRate);
+                cPjson.put("rate", absoluteRate);
+                cPjson.put("percent", percentRate);
+                cPjson.put("enteredBy", enteredBy);
+                cPjson.put("isEnding", isEndingEvent);
+                cPjson.put("isFakeExtended", isFakeExtended);
+            } else {
+                cPjson.put("isSMB", isSMB);
+                cPjson.put("isMealBolus", mealBolus);
+            }
+
         } catch (JSONException e) {}
         return cPjson;
     }
