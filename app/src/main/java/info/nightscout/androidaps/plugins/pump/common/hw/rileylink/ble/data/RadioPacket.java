@@ -2,6 +2,9 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data;
 
 import org.apache.commons.lang3.NotImplementedException;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.CRC;
@@ -12,10 +15,13 @@ import info.nightscout.androidaps.plugins.pump.common.utils.CRC;
 
 public class RadioPacket {
 
-    protected byte[] pkt;
+    @Inject RileyLinkUtil rileyLinkUtil;
+
+    private byte[] pkt;
 
 
-    public RadioPacket(byte[] pkt) {
+    public RadioPacket(HasAndroidInjector injector, byte[] pkt) {
+        injector.androidInjector().inject(this);
         this.pkt = pkt;
     }
 
@@ -25,7 +31,7 @@ public class RadioPacket {
     }
 
 
-    public byte[] getWithCRC() {
+    private byte[] getWithCRC() {
         byte[] withCRC = ByteUtil.concat(pkt, CRC.crc8(pkt));
         return withCRC;
     }
@@ -33,7 +39,7 @@ public class RadioPacket {
 
     public byte[] getEncoded() {
 
-        switch (RileyLinkUtil.getEncoding()) {
+        switch (rileyLinkUtil.getEncoding()) {
             case Manchester: { // We have this encoding in RL firmware
                 return pkt;
             }
@@ -41,8 +47,8 @@ public class RadioPacket {
             case FourByteSixByteLocal: {
                 byte[] withCRC = getWithCRC();
 
-                byte[] encoded = RileyLinkUtil.getEncoding4b6b().encode4b6b(withCRC);
-                return ByteUtil.concat(encoded, (byte)0);
+                byte[] encoded = rileyLinkUtil.getEncoding4b6b().encode4b6b(withCRC);
+                return ByteUtil.concat(encoded, (byte) 0);
             }
 
             case FourByteSixByteRileyLink: {
@@ -50,8 +56,7 @@ public class RadioPacket {
             }
 
             default:
-                throw new NotImplementedException(("Encoding not supported: " + RileyLinkUtil.getEncoding().toString()));
+                throw new NotImplementedException(("Encoding not supported: " + rileyLinkUtil.getEncoding().toString()));
         }
     }
-
 }

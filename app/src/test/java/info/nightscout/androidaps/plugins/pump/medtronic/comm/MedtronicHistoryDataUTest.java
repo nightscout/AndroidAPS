@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
  * Created by andy on 3/10/19.
  */
 public class MedtronicHistoryDataUTest {
-
+/*
     //TestLogger LOGGER = TestLoggerFactory.getTestLogger(MedtronicHistoryDataUTest.class);
 
     byte[] historyPageData = ByteUtil
@@ -123,5 +123,5 @@ public class MedtronicHistoryDataUTest {
         }
     }
 
-
+*/
 }

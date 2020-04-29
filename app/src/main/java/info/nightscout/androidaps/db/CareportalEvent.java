@@ -42,6 +42,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
     @Inject ProfileFunction profileFunction;
     @Inject ResourceHelper resourceHelper;
     @Inject AAPSLogger aapsLogger;
+    @Inject Translator translator;
 
     @DatabaseField(id = true)
     public long date;
@@ -227,7 +228,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }
-        return Translator.translate(eventType);
+        return translator.translate(eventType);
     }
 
     public String getNotes() {

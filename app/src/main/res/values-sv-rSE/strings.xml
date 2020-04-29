@@ -43,6 +43,7 @@
     <string name="description_pump_mdi">Integration för de som endast använder insulinpennor</string>
     <string name="description_pump_virtual">Integration för pumpar som ännu inte stöds av AndroidAPS (Open loop)</string>
     <string name="description_sensitivity_aaps">Känsligheten beräknas på samma sätt som i Oref0, men du kan specificera hur mycket av historiken som ska tas med i beräkningen. Minimalt upptag av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i Inställningar.</string>
+    <string name="description_sensitivity_oref1">Känsligheten beräknas både från 8 och 24 timmars data från historiken och väljer det resultat som har högst insulinkänslighet. Kolhydrater som ännu inte räknats av ignoreras efter tiden som ställts in i inställningarna. Insticksprogrammet beräknar också icke inmatade måltider, UAM.</string>
     <string name="description_sensitivity_weighted_average">Känsligheten beräknas som ett viktat medelvärde av avvikelserna. Senare avvikelser får en högre vikt. Minimal upptagning av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i inställningarna. Den här algoritmen är den snabbaste att justera förändringar i känsligheten.</string>
     <string name="description_source_eversense">Ta emot BG-data från den modifierade
 Eversense-appen.</string>
@@ -106,7 +107,6 @@ Eversense-appen.</string>
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Konfigurationsverktyg</string>
     <string name="objectives">Mål</string>
-    <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Översikt</string>
     <string name="nsprofile">NS-profil</string>
     <string name="simpleprofile">Enkel profil</string>
@@ -219,6 +219,44 @@ Eversense-appen.</string>
     <string name="openapsma_maxiob_title">Maximal basal IOB som OpenAPS kan ge [E]</string>
     <string name="openapsma_maxiob_summary">Detta värde kallas Max IOB i OpenAPS. Det är ställt till noll från start. Efter flera dagar till veckor, beroende på hur du känner, kan du välja att justera denna.</string>
     <string name="dismiss">TA BORT</string>
+    <string name="password_preferences_encrypt_prompt">Du kommer att bli tillfrågad om huvudlösenordet som sedan kommer att användas för att kryptera exporterade inställningar.</string>
+    <string name="password_preferences_decrypt_prompt">Du kommer att bli tillfrågad om huvudlösenordet som sedan kommer att användas för att avkryptera importerade inställningar.</string>
+    <string name="preferences_export_canceled">Exporten avbröts. Inställningarna har INTE exporterats!</string>
+    <string name="preferences_import_canceled">Importen avbröts. Inställningarna har inte importerats!</string>
+    <string name="check_preferences_before_import">Vänligen kontrollera inställningarna innan du importerar:</string>
+    <string name="check_preferences_cannot_import">Inställningarna kan inte importeras!</string>
+    <string name="check_preferences_dangerous_import">Inställningar bör inte importeras!</string>
+    <string name="check_preferences_details_btn">Förklara importproblem…</string>
+    <string name="check_preferences_details_title">Detaljer kring importproblem</string>
+    <string name="check_preferences_import_btn">Importera</string>
+    <string name="check_preferences_import_anyway_btn">Importera ändå (FARLIGT!)</string>
+    <string name="metadata_warning_different_flavour">Inställningar skapades med en annan variant av AAPS (%1$s). Du kör nu: %2$s.\n\nVissa inställningar kan saknas eller är ogiltiga. Efter att du importerat bör du kontrollera och uppdatera inställningarna.</string>
+    <string name="metadata_warning_different_device">Inställningar skapades på en annan enhet. Det är OK om du importerar från en äldre eller en annan telefon, men se till att importerade inställningar är korrekta!</string>
+    <string name="metadata_warning_outdated_format">Du använder det gamla formatet (från äldre versioner av AAPS) som inte är säkert. Använd det bara som en sista utväg om du inte har någon export i aktuellt format, JSON.</string>
+    <string name="metadata_warning_old_export">Importerade inställningar är %1$s dagar gamla. Du kanske har mer aktuella inställningar eller väljer du fel fil? Kom ihåg att exportera dina inställningar regelbundet!</string>
+    <string name="metadata_warning_date_format">Ogiltigt datumformat!</string>
+    <string name="metadata_label_format">Filformat</string>
+    <string name="metadata_label_created_at">Skapad</string>
+    <string name="metadata_label_aaps_version">AAPS-version</string>
+    <string name="metadata_label_aaps_flavour">Build-variant</string>
+    <string name="metadata_label_device_name">Exporterar patientens namn</string>
+    <string name="metadata_label_device_model">Exporterar enhetsmodell</string>
+    <string name="metadata_label_encryption">· Filkryptering</string>
+    <string name="metadata_format_old">Gammalt exportformat</string>
+    <string name="metadata_format_new">Nytt krypterat format</string>
+    <string name="metadata_format_debug">Nytt debug-format (okrypterat)</string>
+    <string name="metadata_format_other">Okänt exportformat</string>
+    <string name="prefdecrypt_settings_tampered">Inställningsfil manipulerad</string>
+    <string name="prefdecrypt_settings_secure">Inställningsfilen är intakt</string>
+    <string name="prefdecrypt_settings_unencrypted">Använder icke säkrat, okrypterat format</string>
+    <string name="prefdecrypt_wrong_json">JSON-formatfel, saknar obligatoriskt fält (format, innehåll, metadata eller säkerhet)</string>
+    <string name="prefdecrypt_wrong_password">Dekrypteringsfel. Det angivna lösenordet kan inte dekryptera filen</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Filen checksumma (hash) saknas. Det går inte att verifiera inställningarna!</string>
+    <string name="prefdecrypt_issue_modified">Filen har ändrats efter export!</string>
+    <string name="prefdecrypt_issue_parsing">Dekrypteringsfel. Det gick inte att tolka inställningarna.</string>
+    <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfel. Det angivna lösenordet är ogiltigt eller så har inställningsfilen ändrats. Filen verkar ha exporterats med ett annat lösenord.</string>
+    <string name="prefdecrypt_issue_wrong_format">Krypteringskonfigurationen saknas. Inställningsformatet är ogiltigt!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Ej stödd eller ej angiven krypteringsalgoritm!</string>
     <string name="danarpump">Dana R</string>
     <string name="connecting">Ansluter</string>
     <string name="connected">Ansluten</string>
@@ -508,6 +546,9 @@ Eversense-appen.</string>
     <string name="adult">Vuxen</string>
     <string name="resistantadult">Insulinresistent vuxen</string>
     <string name="patientage_summary">Vg ange personens ålder för inställningar av gränser</string>
+    <string name="patient_name">Patientens namn</string>
+    <string name="patient_name_summary">Vänligen ange patientens namn eller smeknamn för att kunna skilja mellan flera uppsättningar av inställningar</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Ditt namn</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s behöver kunna kringgå batterisparfunktionerna för att fungera korrekt</string>
     <string name="loopsuspended">Loop pausad</string>
@@ -544,8 +585,6 @@ Eversense-appen.</string>
     <string name="enablesuperbolus">Aktivera superbolus i kalkylatorn</string>
     <string name="enablesuperbolus_summary">Aktiverar superbolusfunktionen i kalkylatorn. Aktivera inte innan du förstått hur den fungerar. DEN KAN ORSAKA ÖVERDOSERING AV INSULIN OM INSIKT SAKNAS OM FUNKTIONEN!</string>
     <string name="show_statuslights">Visa \"statuslampor\" på hemskärmen</string>
-    <string name="show_statuslights_extended">Visa utökade statusindikatorer</string>
-    <string name="show_statuslights_extended_summary">Aktivera statusindikatorerna för cage, iage, sage, reservoar och batterinivå på hemskärmen.</string>
     <string name="statuslights_res_warning">Varningsnivå för reservoar [U]</string>
     <string name="statuslights_res_critical">Akut varningsnivå för reservoar [U]</string>
     <string name="statuslights_bat_warning">Varningsnivå för batteri [%]</string>
@@ -705,8 +744,13 @@ Eversense-appen.</string>
     <string name="bgsource_upload">Uppladdningsinställningar för BG</string>
     <string name="wear_detailed_delta_title">Visa detaljerad delta</string>
     <string name="wear_detailed_delta_summary">Visa delta med en extra decimal</string>
+    <string name="smbinterval_summary">Minsta antal minuter mellan SMB</string>
     <string name="smbmaxminutes">SMB max minuter</string>
     <string name="smbmaxminutes_summary">Max antal minuter som kan bli SMB</string>
+    <string name="uamsmbmaxminutes">UAM SMB max minuter</string>
+    <string name="uamsmbmaxminutes_summary">Max antal minuter basal som kan bli SMB vid UAM</string>
+    <string name="carbsReqThreshold">Min föreslagen mängd kolhydrater</string>
+    <string name="carbsReqThreshold_summary">När kolhydrater rekommenderas som korrektion, ange minsta mängd KH som ger notifiering</string>
     <string name="unsupportedfirmware">Pumpens firmware stöds inte</string>
     <string name="dexcomg5_xdripupload_title">Skicka BG-data till xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Välj \"640G/Eversense\" som datakälla i xDrip+</string>
@@ -773,6 +817,7 @@ Eversense-appen.</string>
     <string name="ago">sedan</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="format_mins_short">%1$dm</string>
     <string name="enablesmbalways">Använd alltid SMB</string>
     <string name="enablesmbalways_summary">Använd alltid SMB oberoende av bolus. Endast möjligt med en bra filtrerad BG-källa, t ex Dexcom G5.</string>
     <string name="enablesmbaftercarbs">Använd SMB efter kolhydrater</string>
@@ -971,6 +1016,10 @@ Eversense-appen.</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Höj känsligheten om temp målvärde är 100 mg/dl (5.5 mmol/l) eller högre]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Lågt målvärde sänker känsligheten</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Sänk känsligheten om temp målvärde är mindre än 100 mg/dl (5.5 mmol/l)]]></string>
+    <string name="resistance_lowers_target_title">Insulinresistens sänker mål-BG</string>
+    <string name="resistance_lowers_target_summary">Om systemet upptäcker tillfällig insulinresistens, sänk mål-BG för att på så sätt tillåta mer insulin</string>
+    <string name="sensitivity_raises_target_title">Insulinkänslighet höjer mål-BG</string>
+    <string name="sensitivity_raises_target_summary">Om systemet upptäcker tillfällig insulinkänslighet, höj mål-BG för att på så sätt minska insulindoseringen</string>
     <string name="combo_invalid_setup">Felaktig pumpinstallation. Kontrollera dokumentationen och verifiera att Snabbmenyn heter QUICK INFO med hjälp av 360-mjukvaran.</string>
     <string name="custom">Anpassad</string>
     <string name="largetimedifftitle">Stor tidsskillnad</string>
@@ -980,6 +1029,8 @@ Eversense-appen.</string>
     <string name="allow_hardware_pump_text">Varning: Om du aktiverar och ansluter en pump, kommer AndroidAPS skriva över pumpens basalprofil med den aktiva profilen i AndroidAPS. Se till att ha rätt inställningar i appen innan du ansluter. Om du är osäker, tryck på Avbryt och anslut pumpen på nytt vid ett senare tillfälle.</string>
     <string name="error_adding_treatment_title">Behandlingsdata ofullständigt</string>
     <string name="maintenance_settings">Underhållsinställningar</string>
+    <string name="maintenance_email">e-postmottagare</string>
+    <string name="maintenance_encrypt_exported_prefs">Kryptera exporterade inställningar</string>
     <string name="maintenance_amount">Antal loggar att skicka</string>
     <string name="maintenance">Underhåll</string>
     <string name="maintenance_shortname">UH</string>
@@ -1187,6 +1238,8 @@ Eversense-appen.</string>
     <string name="exists">finns</string>
     <string name="notexists">finns inte</string>
     <string name="temptargetcompared">Temp mål %1$s</string>
+    <string name="btdevicecompared">Bluetooth-anslutning till enhet %1$s %2$s</string>
+    <string name="btdevice">Anslutning till Bluetooth-enhet </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -1241,6 +1294,7 @@ Eversense-appen.</string>
     <string name="medtronic_pump_battery_alkaline">Alkaliskt</string>
     <string name="medtronic_pump_battery_lithium">Litium</string>
     <string name="medtronic_pump_battery_nizn">NiZn (utökad vy)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (utökad vy)</string>
     <string name="medtronic_bolus_debugging">Avlusning av Bolus/Behandlingar</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SÖK</string>
@@ -1445,4 +1499,31 @@ Eversense-appen.</string>
     <string name="loop_tbrexecution_time_label">Basalförändring utförd</string>
     <string name="insight_alert_notification_channel">Pumpvarningar Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">från autentiseringsapp för: %1$s</string>
+    <string name="smscommunicator_otp_enabled">Aktivera autentiseraren</string>
+    <string name="smscommunicator_otp_enabled_summary">Autentisera kommandon med hjälp av engångslösenord som genererats av Google Authenticator eller liknande appar för tvåfaktorsautentisering.</string>
+    <string name="smscommunicator_otp_pin">Extra PIN-kod</string>
+    <string name="smscommunicator_otp_pin_summary">Ytterligare siffror som ska memoreras och läggas till i slutet av varje genererat engångslösenord</string>
+    <string name="smscomunicator_tab_otp_label">Konfiguration av tvåfaktorsautentisering</string>
+    <string name="smscommunicator_otp_verify_label">Engångslösenord att kontrollera:</string>
+    <string name="smscommunicator_otp_reset_btn">Återställ autentiserare</string>
+    <string name="smscommunicator_otp_reset_title">Återställ autentiseringsnyckel</string>
+    <string name="smscommunicator_otp_reset_prompt">Är du säker på att återställa autentiseringsnyckeln? Det gör alla konfigurerade autentiseringsappar ogiltiga och du kommer behöva ställa in dem igen.</string>
+    <string name="smscommunicator_otp_reset_successful">Ny autentiseringsnyckel genererades! Använd uppdaterad QR-kod till att aktivera autentiserare.</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Installera autentiseringsapp</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scanna koden för att ställa in engångslösenord för AndroidAPS</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Testa engångslösenord</string>
+    <string name="smscommunicator_otp_reset_header">Återställ autentiserare</string>
+    <string name="smscommunicator_otp_install_info">På varje följartelefon behöver man installera en autentiseringsapp som stöder RFC 6238 TOTP tokens. Populära gratisappar är:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_provisioning_warning">DELA INTE denna kod online!\nAnvänd den endast för att installera autentiseringsappen på följartelefoner.</string>
+    <string name="smscommunicator_otp_reset_warning">Genom att återställa autentiseringsfunktionen kommer alla redan driftsatta autentiserare bli ogiltiga. Du kommer behöva sätta upp dem igen!</string>
+    <string name="onconnect">Vid anslutning</string>
+    <string name="ondisconnect">Vid frånkoppling</string>
+    <string name="overview_show_predictions">Beräknade resultat</string>
+    <string name="overview_show_deviationslope">Avvikelsekurva</string>
+    <string name="authorizationfailed">Behörighetskontroll misslyckades</string>
+    <string name="overview_show_absinsulin">Absolut insulinmängd</string>
+    <string name="master_password_summary">Huvudlösenordet används för att kryptera backuper och för att åsidosätta vissa säkerhetsfunktioner i applikationen. Kom ihåg det eller förvara det på ett säkert ställe.</string>
+    <string name="passwords_dont_match">Lösenorden stämmer inte överens</string>
+    <string name="current_master_password">Nuvarande huvudlösenord</string>
 </resources>

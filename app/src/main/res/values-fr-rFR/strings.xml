@@ -43,6 +43,7 @@
     <string name="description_pump_mdi">Intégration pompe pour les personnes qui font des injections quotidiennes multiples pour le traitement de leur diabète</string>
     <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
     <string name="description_sensitivity_aaps">La sensibilité est calculée de la même manière que Oref0, mais vous pouvez spécifier la période concernée. L\'absorption minimale des glucides est calculée à partir des temps d’absorption max des glucides du menu préférences.</string>
+    <string name="description_sensitivity_oref1">La sensibilité est calculée à partir des données des dernières 8 heures et les glucides (si non absorbés) ne sont plus pris en compte après le temps spécifié dans les préférences. Le plugin calcule également les RNS (UAM).</string>
     <string name="description_sensitivity_weighted_average">La sensibilité est calculée comme une moyenne pondérée des écarts. Les écarts les plus récents ont un poids plus élevé. L\'absorption minimale des glucides est calculée à partir des temps d’absorption des glucides max du menu préférences. Cet algorithme est le plus rapide pour s\'adapter aux changements de sensibilité.</string>
     <string name="description_source_eversense">Recevoir les valeurs de glycémie de l’app Eversense patchée.</string>
     <string name="description_source_glimp">Recevoir les glycémies depuis Glimp.</string>
@@ -105,7 +106,6 @@
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Générateur de configuration</string>
     <string name="objectives">Objectifs</string>
-    <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Aperçu</string>
     <string name="nsprofile">Profil NS</string>
     <string name="simpleprofile">Profil simple</string>
@@ -218,6 +218,44 @@
     <string name="openapsma_maxiob_title">IA basale max que OpenAPS pourra délivrer [U]</string>
     <string name="openapsma_maxiob_summary">Cette valeur est appelée Max IA (Insuline Active) dans le contexte OpenAPS\nC\'estlle maximum d\'insuline en [U] que APS peut délivrer en une seule fois.</string>
     <string name="dismiss">FERMER</string>
+    <string name="password_preferences_encrypt_prompt">Le mot de passe principal vous sera demandé pour crypter les préférences exportées.</string>
+    <string name="password_preferences_decrypt_prompt">Le mot de passe principal vous sera demandé pour décrypter les préférences exportées.</string>
+    <string name="preferences_export_canceled">Export annulé ! Les préférences n\'ont PAS été exportées !</string>
+    <string name="preferences_import_canceled">Import annulé ! Les préférences n\'ont PAS été importées !</string>
+    <string name="check_preferences_before_import">Vérifiez les préférences avant d\'importer :</string>
+    <string name="check_preferences_cannot_import">Les préférences ne peuvent pas être importées !</string>
+    <string name="check_preferences_dangerous_import">Les préférences ne doivent pas être importées !</string>
+    <string name="check_preferences_details_btn">Explication des problèmes d\'importation…</string>
+    <string name="check_preferences_details_title">Détails des problèmes d\'importation</string>
+    <string name="check_preferences_import_btn">Import</string>
+    <string name="check_preferences_import_anyway_btn">Importer quand même (DANGEREUX !)</string>
+    <string name="metadata_warning_different_flavour">Des préférences ont été créées avec des variantes différentes d\'AAPS (%1$s) quand vous avez : %2$s.\n\nCertains paramètres peuvent manquer ou ou ne pas être valides après l\'import, vérifiez et mettez à jour vos préférences.</string>
+    <string name="metadata_warning_different_device">Les préférences ont été créées sur un autre périphérique. C\'est OK si vous importez à partir d\'un téléphone ancien/différent, mais vérifiez les préférences importées sont correctes !</string>
+    <string name="metadata_warning_outdated_format">Vous utilisez le format obsolète des anciennes versions d\'APPS qui n\'est pas sécurisé ! Utilisez-le uniquement en dernier recours, si vous n\'avez pas d\'export au format JSON actuel.</string>
+    <string name="metadata_warning_old_export">Les préférences importées ont déjà %1$s jours ! Vous avez peut-être des préférences plus récentes ou vous avez sélectionné un mauvais fichier ? N\'oubliez pas d\'exporter vos préférences régulièrement !</string>
+    <string name="metadata_warning_date_format">Format de date invalide !</string>
+    <string name="metadata_label_format">Format de fichier</string>
+    <string name="metadata_label_created_at">Créé le</string>
+    <string name="metadata_label_aaps_version">Version d\'AAPS</string>
+    <string name="metadata_label_aaps_flavour">Variante de Build</string>
+    <string name="metadata_label_device_name">Export du nom du patient de l\'appareil</string>
+    <string name="metadata_label_device_model">Export du modèle de l\'appareil</string>
+    <string name="metadata_label_encryption">Cryptage du fichier</string>
+    <string name="metadata_format_old">Ancien format d\'export</string>
+    <string name="metadata_format_new">Nouveau format crypté</string>
+    <string name="metadata_format_debug">Nouveau format de débug (non crypté)</string>
+    <string name="metadata_format_other">Format d\'export inconnu</string>
+    <string name="prefdecrypt_settings_tampered">Fichier paramètres altérés</string>
+    <string name="prefdecrypt_settings_secure">Fichier paramètres sécurisé</string>
+    <string name="prefdecrypt_settings_unencrypted">Utilisation non sécurisée, fichier paramètres non crypté</string>
+    <string name="prefdecrypt_wrong_json">Erreur de format JSON, zone obligatoire manquante (format, contenu, métadonnées ou sécurité)</string>
+    <string name="prefdecrypt_wrong_password">Erreur de décryptage, le mot de passe indiqué ne permet pas le décryptage du fichier</string>
+    <string name="prefdecrypt_issue_missing_file_hash">Checksum du fichier manquant, vérification de l\'authenticité des pararamètres impossible !</string>
+    <string name="prefdecrypt_issue_modified">Le fichier a été modifié après l\'export !</string>
+    <string name="prefdecrypt_issue_parsing">Erreur de décryptage, échec de l\'import des préférences !</string>
+    <string name="prefdecrypt_issue_wrong_pass">Erreur de décryptage, le mot de passe fourni est invalide ou le fichier de paramètres à été modifié ! Cela peut arriver si le fichier a été exporté avec un mot de passe principal différent.</string>
+    <string name="prefdecrypt_issue_wrong_format">Configuration du cryptage manquant, format des paramètres invalide !</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Algorithme de cryptage non pris en charge ou non spécifié !</string>
     <string name="danarpump">DanaR</string>
     <string name="connecting">Connection en cours</string>
     <string name="connected">Connectée</string>
@@ -253,8 +291,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="smscommunicator_mealbolusreplywithcode">Pour injecter le bolus repas de %1$.2fU renvoyer le code %2$s</string>
     <string name="smscommunicator_temptargetwithcode">Pour définir la Cible Temp %1$s renvoyer le code %2$s</string>
     <string name="smscommunicator_temptargetcancel">Pour annuler la Cible Temp renvoyer le code %1$s</string>
-    <string name="smscommunicator_stopsmswithcode">Pour désactiver les commandes à distance SMS renvoyer le code %1$s.\n\nGardez à l\'esprit que vous ne pourrez le réactiver que directement à partir de l\'application AAPS du smartphone maitre.</string>
-    <string name="smscommunicator_stoppedsms">Service de commande à distance SMS arrêté. Pour le réactiver, utilisez AAPS sur le smartphone maitre.</string>
+    <string name="smscommunicator_stopsmswithcode">Pour désactiver les commandes à distance SMS renvoyer le code %1$s.\n\nGardez à l\'esprit que vous ne pourrez le réactiver que directement à partir de l\'application AAPS du smartphone maître.</string>
+    <string name="smscommunicator_stoppedsms">Service de commande à distance SMS arrêté. Pour le réactiver, utilisez AAPS sur le smartphone maître.</string>
     <string name="smscommunicator_calibrationreplywithcode">Renvoyer le code %2$s pour envoyer la calibration %1$.2f</string>
     <string name="smscommunicator_bolusfailed">Échec du Bolus</string>
     <string name="smscommunicator_remotebolusmindistance_summary">Nombre minimum de minutes qu\'il doit y avoir entre un bolus distant et le suivant</string>
@@ -508,6 +546,9 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="adult">Adulte</string>
     <string name="resistantadult">Adulte résistant à l\'insuline</string>
     <string name="patientage_summary">Veuillez svp sélectionner l’âge du patient pour définir les limites de sécurité</string>
+    <string name="patient_name">Nom du patient</string>
+    <string name="patient_name_summary">Veuillez indiquer un nom ou pseudo du patient pour différencier plusieurs configurations</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Patient</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">%1$s a besoin d\'optimisation de la batterie (whitelisting) pour une performance correcte</string>
     <string name="loopsuspended">La Boucle est suspendue</string>
@@ -544,8 +585,14 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="enablesuperbolus">Activer les Superbolus dans l’Assistant</string>
     <string name="enablesuperbolus_summary">Activer la fonctionnalité SuperBolus dans l’Assistant. Ne pas l’activer avant de bien comprendre comment cela fonctionne réellement. IL PEUT PROVOQUER UNE OVERDOSE D’INSULINE SI UTILISÉ AVEUGLÉMENT !</string>
     <string name="show_statuslights">Afficher les voyants d\'état sur l\'écran d\'accueil</string>
-    <string name="show_statuslights_extended">Afficher les voyants d\'état prolongés sur l\'écran d\'accueil</string>
-    <string name="show_statuslights_extended_summary">Activer les voyants d\'état prolongés pour AgeC, AgeI, AgeS, niveaux du réservoir et de batterie sur l\'écran d\'accueil.</string>
+    <string name="statuslights_cage_warning">Seuil d\'alerte âge canule [h]</string>
+    <string name="statuslights_cage_critical">Seuil critique âge canule [h]</string>
+    <string name="statuslights_iage_warning">Seuil d\'alerte âge insuline [h]</string>
+    <string name="statuslights_iage_critical">Seuil critique âge insuline [h]</string>
+    <string name="statuslights_sage_warning">Seuil d\'alerte âge capteur [h]</string>
+    <string name="statuslights_sage_critical">Seuil critique âge capteur [h]</string>
+    <string name="statuslights_bage_warning">Seuil d\'alerte niveau pile [h]</string>
+    <string name="statuslights_bage_critical">Seuil critique niveau pile [h]</string>
     <string name="statuslights_res_warning">Seuil d\'avertissement de niveau du réservoir [U]</string>
     <string name="statuslights_res_critical">Seuil critique de niveau du réservoir [U]</string>
     <string name="statuslights_bat_warning">Seuil d’avertissement du niveau de batterie [%]</string>
@@ -705,8 +752,13 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="bgsource_upload">Paramètres de téléchargement des glycémies</string>
     <string name="wear_detailed_delta_title">Afficher le delta détaillé</string>
     <string name="wear_detailed_delta_summary">Afficher delta avec une décimale supplémentaire</string>
+    <string name="smbinterval_summary">Fréquence des SMB en min</string>
     <string name="smbmaxminutes">SMB minutes max</string>
     <string name="smbmaxminutes_summary">Max. minutes de basal pour limiter le SMB</string>
+    <string name="uamsmbmaxminutes">SMB RNS minutes max</string>
+    <string name="uamsmbmaxminutes_summary">Minutes de basal max pour limiter les SMB des RNS</string>
+    <string name="carbsReqThreshold">Seuil de suggestionde glucides</string>
+    <string name="carbsReqThreshold_summary">Quantité de glucides à partir de laquelle une notification est envoyée</string>
     <string name="unsupportedfirmware">Firmware pompe incompatible </string>
     <string name="dexcomg5_xdripupload_title">Transmettre les Gly vers xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">Dans xDrip+ veuillez séléctionner 640g/Eversense comme source de données</string>
@@ -773,6 +825,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="ago">passé(e)s</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="format_mins_short">%1$dm</string>
     <string name="enablesmbalways">Activer en permanence les SMB</string>
     <string name="enablesmbalways_summary">Activer toujours SMB de manière autonome pour les bolus. Ceci est possible uniquement avec une source de glycémie ayant un très bon filtrage de données comme le G5</string>
     <string name="enablesmbaftercarbs">Activer SMB après ingestion de glucides</string>
@@ -971,6 +1024,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Augmente la Sensibilité pour les cibles temporaires >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Cible temp. basse abaisse la sensibilité</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Diminue la Sensibilité pour les cibles temporaires < 100]]></string>
+    <string name="resistance_lowers_target_title">La résistance diminue la cible</string>
+    <string name="resistance_lowers_target_summary">Quand une résistance est détectée, baisse de la glycémie cible</string>
+    <string name="sensitivity_raises_target_title">Sensibilité augmente la cible</string>
+    <string name="sensitivity_raises_target_summary">Quand une sensibilité est détectée, augmentation de la glycémie cible</string>
     <string name="combo_invalid_setup">Paramétrage de la pompe invalide. Vérifiez la documentation et le menu QUICK INFO en utilisant le logiciel de configuration 360.</string>
     <string name="custom">Personnalisé</string>
     <string name="largetimedifftitle">Différence horaire importante</string>
@@ -980,6 +1037,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="allow_hardware_pump_text">ATTENTION : Si vous activez et connectez à une vraie pompe, AndroidAPS copiera les paramètres Basals du profil vers la pompe, écrasant le taux basal existant stocké sur la pompe. Assurez-vous d\'avoir correctement saisi et réglé les paramètres Basal dans AndroidAPS. Si vous ne savez pas ou si ne voulez pas écraser les paramètres Basal sur votre pompe, appuyez sur Annuler et reporter le passage à la pompe à une date ultérieure.</string>
     <string name="error_adding_treatment_title">Données de traitement incomplètes</string>
     <string name="maintenance_settings">Paramètres de maintenance</string>
+    <string name="maintenance_email">E-mail</string>
+    <string name="maintenance_encrypt_exported_prefs">Crypter les paramètres exportés</string>
     <string name="maintenance_amount">Nombre de journaux (Logs) à envoyer</string>
     <string name="maintenance">Maintenance</string>
     <string name="maintenance_shortname">MAINT</string>
@@ -1187,6 +1246,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="exists">existe</string>
     <string name="notexists">n\'existe pas</string>
     <string name="temptargetcompared">Cible Temp. %1$s</string>
+    <string name="btdevicecompared">Connexion Bluetooth à l\'appareil %1$s %2$s</string>
+    <string name="btdevice">Connecter à un appareil Bluetooth </string>
     <string name="wifissidcompared">SSID WiFi %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -1241,6 +1302,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="medtronic_pump_battery_alkaline">Alcaline (vue étendue)</string>
     <string name="medtronic_pump_battery_lithium">Lithium (vue étendue)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (vue étendue)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (vue Étendue)</string>
     <string name="medtronic_bolus_debugging">Débogage de Bolus/Traitements</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SCANNER</string>
@@ -1256,6 +1318,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="rileylink_scanner_scanning">Recherche en cours</string>
     <string name="rileylink_scanner_scanning_finished">Recherche finie</string>
     <string name="rileylink_scanner_scanning_error">Erreur de recherche : %1$d</string>
+    <string name="common_never">Jamais</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Paramètres</string>
     <string name="rileylink_settings_tab2">Historique</string>
@@ -1389,6 +1452,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="objectives_button_unstart">Suppression démarrée</string>
     <string name="timedetection">Détection de temps</string>
     <string name="doyouwantresetstart">Voulez-vous réinitialiser le début de l\'objectif ? Vous risquez de perdre vos progrès.</string>
+    <string name="time_or_timezone_change">Heure et/ou fuseau horaire changé sur la pompe</string>
     <string name="nopumpselected">Aucune pompe sélectionnée</string>
     <string name="setupwizard_units_prompt">Sélectionnez les unités dans lesquelles vous souhaitez afficher les valeurs</string>
     <string name="ns_ploadlocalprofile">Remonter les modifications de profil local dans NS</string>
@@ -1445,4 +1509,34 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="loop_tbrexecution_time_label">Heure d\'exécution basal temp</string>
     <string name="insight_alert_notification_channel">Alertes Pompe Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">depuis l\'appli. Authenticateur pour : %1$s</string>
+    <string name="smscommunicator_otp_enabled">Activer l\'Authentificateur</string>
+    <string name="smscommunicator_otp_enabled_summary">Authentifier les commandes à l\'aide des mots de passe uniques (OTP) générés par Google Authenticator ou des applications 2FA similaires.</string>
+    <string name="smscommunicator_otp_pin">Code PIN supplémentaire à la fin de l\'OTP</string>
+    <string name="smscommunicator_otp_pin_summary">Chiffres supplémentaires qui doivent être mémorisés et collés à la fin de chaque OTP généré</string>
+    <string name="smscomunicator_tab_otp_label">Configuration de l\'Authentificateur</string>
+    <string name="smscommunicator_otp_verify_label">OTP à vérifier :</string>
+    <string name="smscommunicator_otp_reset_btn">Réinitialiser les authentificateurs</string>
+    <string name="smscommunicator_otp_reset_title">Réinitialiser la clé de l\'Authentificateur</string>
+    <string name="smscommunicator_otp_reset_prompt">Voulez-vous réinitialiser la clé de l\'Authenticateur ? Cela rendra tous authentificateurs configurés invalides, et vous devrez les configurer à nouveau.</string>
+    <string name="smscommunicator_otp_reset_successful">Nouvelle clé de l\'Authenticateur générée ! Veuillez utiliser le QRCode mis à jour pour les authentificateurs.</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Installation l\'Authentificateur</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scan du code pour configurer les codes OTP AndroidAPS</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Test Mot-de-Passe-Unique (OTP)</string>
+    <string name="smscommunicator_otp_reset_header">Réinitialiser les authentificateurs</string>
+    <string name="smscommunicator_otp_install_info">Sur chaque téléphone suiveur, installez une appli. Authentificateur qui prend en charge les jetons RFC 6238 TOTP. Les applications libres populaires sont:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_provisioning_warning">NE PAS PARTAGER ce code en ligne !\nUtilisez-le uniquement pour configurer l\'appli. Authenticateur sur les téléphones suiveurs.</string>
+    <string name="smscommunicator_otp_reset_warning">En réinitialisant l\'Authentificateur, vous invalidez tous les authentificateurs déjà initialisés. Vous devrez les reconfigurer !</string>
+    <string name="onconnect">À la connexion</string>
+    <string name="ondisconnect">À la déconnexion</string>
+    <string name="overview_show_predictions">Prédictions</string>
+    <string name="overview_show_deviationslope">Pente de déviations</string>
+    <string name="authorizationfailed">Echec de l\'authentification</string>
+    <string name="overview_show_absinsulin">Insuline absolue</string>
+    <string name="master_password_summary">Le mot de passe principal est utilisé pour crypter les sauvegardes et superviser la sécurité de l\'application. Rappelez-vous en ou stockez le en lieu sûr.</string>
+    <string name="passwords_dont_match">Les mots de passe ne correspondent pas</string>
+    <string name="current_master_password">Mot de passe principal actuel</string>
+    <string name="statuslights">Voyants d\'état</string>
+    <string name="statuslights_copy_ns">Copier les paramètres depuis NS</string>
+    <string name="copyexistingvalues">Copier les paramètres NS (s\'ils existent)?</string>
 </resources>

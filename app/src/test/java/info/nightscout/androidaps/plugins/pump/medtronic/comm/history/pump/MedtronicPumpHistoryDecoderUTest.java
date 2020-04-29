@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
  */
 @Ignore
 public class MedtronicPumpHistoryDecoderUTest {
-
+/*
     MedtronicPumpHistoryDecoder decoder = new MedtronicPumpHistoryDecoder();
 
 
@@ -152,5 +152,5 @@ public class MedtronicPumpHistoryDecoderUTest {
         System.out.println("Record: " + phe);
 
     }
-
+*/
 }

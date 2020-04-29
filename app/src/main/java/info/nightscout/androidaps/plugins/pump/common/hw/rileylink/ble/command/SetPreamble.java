@@ -4,20 +4,26 @@ import java.nio.ByteBuffer;
 
 import org.apache.commons.lang3.NotImplementedException;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkCommandType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 
 public class SetPreamble extends RileyLinkCommand {
+
+    @Inject RileyLinkServiceData rileyLinkServiceData;
 
     private int preamble;
 
 
-    public SetPreamble(int preamble) throws Exception {
+    public SetPreamble(HasAndroidInjector injector, int preamble) throws Exception {
         super();
 
         // this command was not supported before 2.0
-        if (!RileyLinkUtil.getFirmwareVersion().isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher)) {
+        if (!rileyLinkServiceData.firmwareVersion.isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher)) {
             throw new NotImplementedException("Old firmware does not support SetPreamble command");
         }
 

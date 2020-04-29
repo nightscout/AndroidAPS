@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.defs;
 
+import androidx.annotation.StringRes;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,30 +21,14 @@ public enum BatteryType {
     NiMH(R.string.key_medtronic_pump_battery_nimh, 1.10d, 1.40d) //
     ;
 
-    private final String description;
-    public double lowVoltage;
-    public double highVoltage;
+    public final @StringRes int description;
+    public final double lowVoltage;
+    public final double highVoltage;
 
-    static Map<String, BatteryType> mapByDescription;
-
-    static {
-        mapByDescription = new HashMap<>();
-
-        for (BatteryType value : values()) {
-            mapByDescription.put(value.description, value);
-        }
-    }
 
     BatteryType(int resId, double lowVoltage, double highVoltage) {
-        this.description = MainApp.gs(resId);
+        this.description = resId;
         this.lowVoltage = lowVoltage;
         this.highVoltage = highVoltage;
-    }
-
-    public static BatteryType getByDescription(String batteryTypeStr) {
-        if (mapByDescription.containsKey(batteryTypeStr)) {
-            return mapByDescription.get(batteryTypeStr);
-        }
-        return BatteryType.None;
     }
 }
