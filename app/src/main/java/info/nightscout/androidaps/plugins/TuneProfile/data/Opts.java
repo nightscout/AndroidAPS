@@ -43,36 +43,36 @@ public class Opts {
     public boolean tune_insulin_curve;
 
     public void setTempBasalHistory(List<TemporaryBasal> lt) {
+        if (pumpHistory==null)
+            pumpHistory = new ArrayList<NsTreatment>();
         pumpTempBasalHistory=lt;
         //Convert
         for (TemporaryBasal tp:pumpTempBasalHistory ) {
             Profile ps = ProfileFunctions.getInstance().getProfile(tp.date);
             if (ps!=null)
                 tp.absoluteRate = tp.tempBasalConvertedToAbsolute(tp.date, ps);
-            NsTreatment NsT = new NsTreatment(tp);
-            if (NsT != null)
-                pumpHistory.add(NsT);
+            pumpHistory.add(new NsTreatment(tp));
         }
 
         Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
     }
 
     public void setExtBolusHistory(List<ExtendedBolus> lt) {
+        if (pumpHistory==null)
+            pumpHistory = new ArrayList<NsTreatment>();
         pumpExtBolusHistory=lt;
         for (ExtendedBolus t:pumpExtBolusHistory) {
-            NsTreatment NsT = new NsTreatment(t);
-            if(NsT != null)
-                pumpHistory.add(NsT);
+            pumpHistory.add(new NsTreatment(t));
         }
         Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
     }
 
     public void setTreatments(List<Treatment> lt) {
+        if (pumpHistory==null)
+            pumpHistory = new ArrayList<NsTreatment>();
         treatments=lt;
         for (Treatment t:treatments) {
-            NsTreatment NsT = new NsTreatment(t);
-            if(NsT != null)
-                pumpHistory.add(NsT);
+            pumpHistory.add(new NsTreatment(t));
         }
         Collections.sort(pumpHistory, (o1, o2) -> (int) (o2.date  - o1.date) );
     }
