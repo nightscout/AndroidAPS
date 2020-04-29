@@ -18,8 +18,8 @@ public class NsTreatment {
 
     // treatment properties
     public Treatment treatment;
-    public Double insulin;
-    public Double carbs;
+    public Double insulin=0d;
+    public Double carbs=0d;
     public boolean isSMB;
     public boolean mealBolus;
 
