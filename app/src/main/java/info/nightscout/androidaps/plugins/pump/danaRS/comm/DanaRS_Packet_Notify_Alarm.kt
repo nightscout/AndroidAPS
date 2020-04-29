@@ -1,20 +1,22 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import javax.inject.Inject
 
 class DanaRS_Packet_Notify_Alarm(
-    private val aapsLogger: AAPSLogger,
-    private val resourceHelper: ResourceHelper,
-    private val rxBus: RxBusWrapper
-) : DanaRS_Packet() {
+    injector: HasAndroidInjector
+) : DanaRS_Packet(injector) {
+
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var resourceHelper: ResourceHelper
 
     init {
         type = BleEncryption.DANAR_PACKET__TYPE_NOTIFY

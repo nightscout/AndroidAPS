@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -7,11 +9,18 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest()
 class DanaRS_Packet_Basal_Set_Temporary_BasalTest : DanaRSTestBase() {
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_Basal_Set_Temporary_Basal) {
+                it.aapsLogger = aapsLogger
+            }
+        }
+    }
+
     @Test fun runTest() {
-        val testPacket = DanaRS_Packet_Basal_Set_Temporary_Basal(aapsLogger, 50, 20)
+        val testPacket = DanaRS_Packet_Basal_Set_Temporary_Basal(packetInjector, 50, 20)
         // params
         val params = testPacket.requestParams
         // is ratio 50

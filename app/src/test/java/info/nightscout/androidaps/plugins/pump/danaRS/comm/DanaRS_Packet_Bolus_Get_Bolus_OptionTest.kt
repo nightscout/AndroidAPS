@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import org.junit.Assert
 import org.junit.Test
@@ -11,8 +13,19 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(RxBusWrapper::class)
 class DanaRS_Packet_Bolus_Get_Bolus_OptionTest : DanaRSTestBase() {
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_Bolus_Get_Bolus_Option) {
+                it.aapsLogger = aapsLogger
+                it.rxBus = rxBus
+                it.resourceHelper = resourceHelper
+                it.danaRPump = danaRPump
+            }
+        }
+    }
+
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Bolus_Get_Bolus_Option(aapsLogger, rxBus, resourceHelper, danaRPump)
+        val packet = DanaRS_Packet_Bolus_Get_Bolus_Option(packetInjector)
         // test message decoding
         //if dataArray is 1 pump.isExtendedBolusEnabled should be true
         packet.handleMessage(createArray(21, 1.toByte()))

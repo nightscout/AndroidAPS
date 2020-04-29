@@ -1,22 +1,23 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import javax.inject.Inject
 import kotlin.math.min
 
 class DanaRS_Packet_Notify_Delivery_Rate_Display(
-    private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
-    private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump
-) : DanaRS_Packet() {
+    injector: HasAndroidInjector
+) : DanaRS_Packet(injector) {
 
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var danaRPump: DanaRPump
 
     init {
         type = BleEncryption.DANAR_PACKET__TYPE_NOTIFY

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -9,13 +11,22 @@ import java.util.*
 @RunWith(PowerMockRunner::class)
 class DanaRS_Packet_General_Get_More_InformationTest : DanaRSTestBase() {
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_General_Get_More_Information) {
+                it.aapsLogger = aapsLogger
+                it.danaRPump = danaRPump
+            }
+        }
+    }
+
     @Test fun runTest() {
-        var packet = DanaRS_Packet_General_Get_More_Information(aapsLogger, danaRPump)
+        var packet = DanaRS_Packet_General_Get_More_Information(packetInjector)
 
         packet.handleMessage(createArray(14, 0.toByte()))
         Assert.assertTrue(packet.failed)
 
-        packet = DanaRS_Packet_General_Get_More_Information(aapsLogger, danaRPump)
+        packet = DanaRS_Packet_General_Get_More_Information(packetInjector)
         val array = createArray(15, 0.toByte()) // 13 + 2
         putIntToArray(array, 0, 600) // iob 6
         putIntToArray(array, 2, 1250) // daily units 12.5

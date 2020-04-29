@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -10,8 +12,16 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest()
 class DanaRS_Packet_Etc_Set_History_SaveTest : DanaRSTestBase() {
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_Etc_Set_History_Save) {
+                it.aapsLogger = aapsLogger
+            }
+        }
+    }
+
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Etc_Set_History_Save(aapsLogger, 0, 0, 0, 0, 0, 0, 0, 0, 2)
+        val packet = DanaRS_Packet_Etc_Set_History_Save(packetInjector, 0, 0, 0, 0, 0, 0, 0, 0, 2)
         // test params
         val testparams = packet.requestParams
         Assert.assertEquals(2.toByte(), testparams[8])

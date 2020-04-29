@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
@@ -20,10 +22,24 @@ class DanaRS_Packet_APS_History_EventsTest : DanaRSTestBase() {
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_APS_History_Events) {
+                it.aapsLogger = aapsLogger
+                it.rxBus = rxBus
+                it.resourceHelper = resourceHelper
+                it.activePlugin = activePlugin
+                it.danaRPump = danaRPump
+                it.detailedBolusInfoStorage = detailedBolusInfoStorage
+                it.sp = sp
+            }
+        }
+    }
+
     @Test fun runTest() {
         val now = DateUtil.now()
 
-        val testPacket = DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRPump, detailedBolusInfoStorage, sp, injector, now)
+        val testPacket = DanaRS_Packet_APS_History_Events(packetInjector, now)
         // test getRequestedParams
         val returnedValues = testPacket.requestParams
         val expectedValues = getCalender(now)
@@ -45,7 +61,7 @@ class DanaRS_Packet_APS_History_EventsTest : DanaRSTestBase() {
         Assert.assertEquals("APS_HISTORY_EVENTS", testPacket.friendlyName)
     }
 
-    fun getCalender(from: Long): ByteArray {
+    private fun getCalender(from: Long): ByteArray {
         val cal = GregorianCalendar()
         if (from != 0L) cal.timeInMillis = from else cal[2000, 0, 1, 0, 0] = 0
         val ret = ByteArray(6)

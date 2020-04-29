@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
-import info.nightscout.androidaps.logging.AAPSLogger
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 
 class DanaRS_Packet_Notify_Missed_Bolus_Alarm(
-    private val aapsLogger: AAPSLogger
-) : DanaRS_Packet() {
+    injector: HasAndroidInjector
+) : DanaRS_Packet(injector) {
 
     init {
         type = BleEncryption.DANAR_PACKET__TYPE_NOTIFY

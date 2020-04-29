@@ -1,23 +1,25 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import java.util.*
+import javax.inject.Inject
 
 class DanaRS_Packet_Basal_Get_Basal_Rate(
-    private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
-    private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump
-) : DanaRS_Packet() {
+    injector: HasAndroidInjector
+) : DanaRS_Packet(injector) {
+
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var danaRPump: DanaRPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BASAL__GET_BASAL_RATE
@@ -31,7 +33,7 @@ class DanaRS_Packet_Basal_Get_Basal_Rate(
         dataIndex += dataSize
         dataSize = 1
         danaRPump.basalStep = byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100.0
-        danaRPump.pumpProfiles =  Array(4) {Array(48) {0.0} }
+        danaRPump.pumpProfiles = Array(4) { Array(48) { 0.0 } }
         var i = 0
         val size = 24
         while (i < size) {

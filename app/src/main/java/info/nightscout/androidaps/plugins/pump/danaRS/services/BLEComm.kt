@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.SystemClock
 import android.util.Base64
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -33,6 +34,7 @@ import javax.inject.Singleton
 
 @Singleton
 class BLEComm @Inject internal constructor(
+    private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
     private val resourceHelper: ResourceHelper,
     private val context: Context,
@@ -695,7 +697,7 @@ class BLEComm @Inject internal constructor(
     // process common packet response
     private fun processMessage(decryptedBuffer: ByteArray) {
         val originalCommand = processedMessage?.command ?: 0xFFFF
-        val receivedCommand = DanaRS_Packet.getCommand(decryptedBuffer)
+        val receivedCommand = DanaRS_Packet(injector).getCommand(decryptedBuffer)
         val message: DanaRS_Packet? = if (originalCommand == receivedCommand) {
             // it's response to last message
             processedMessage

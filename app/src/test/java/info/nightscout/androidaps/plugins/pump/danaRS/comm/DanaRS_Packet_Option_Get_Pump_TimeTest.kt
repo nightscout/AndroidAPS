@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import org.joda.time.DateTime
 import org.junit.Assert
 import org.junit.Test
@@ -9,8 +11,17 @@ import org.powermock.modules.junit4.PowerMockRunner
 @RunWith(PowerMockRunner::class)
 class DanaRS_Packet_Option_Get_Pump_TimeTest : DanaRSTestBase() {
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_Option_Get_Pump_Time) {
+                it.aapsLogger = aapsLogger
+                it.danaRPump = danaRPump
+            }
+        }
+    }
+
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Option_Get_Pump_Time(aapsLogger, danaRPump)
+        val packet = DanaRS_Packet_Option_Get_Pump_Time(packetInjector)
         val array = createArray(8, 0.toByte()) // 6 + 2
         putByteToArray(array, 0, 19) // year 2019
         putByteToArray(array, 1, 2) // month february

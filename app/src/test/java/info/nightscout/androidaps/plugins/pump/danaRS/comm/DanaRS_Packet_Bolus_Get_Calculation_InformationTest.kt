@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -10,8 +12,17 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest()
 class DanaRS_Packet_Bolus_Get_Calculation_InformationTest : DanaRSTestBase() {
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_Bolus_Get_Calculation_Information) {
+                it.aapsLogger = aapsLogger
+                it.danaRPump = danaRPump
+            }
+        }
+    }
+
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Bolus_Get_Calculation_Information(aapsLogger, danaRPump)
+        val packet = DanaRS_Packet_Bolus_Get_Calculation_Information(packetInjector)
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
         packet.handleMessage(createArray(24, 0.toByte()))

@@ -3,16 +3,26 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm;
 import android.annotation.TargetApi;
 import android.os.Build;
 
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption;
+
 import org.slf4j.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 public class DanaRS_Packet {
-    private static final Logger log = StacktraceLoggerWrapper.getLogger(DanaRS_Packet.class);
+
+    @Inject AAPSLogger aapsLogger;
+
+    protected HasAndroidInjector injector;
 
     protected static final int TYPE_START = 0;
     protected static final int OPCODE_START = 1;
@@ -23,9 +33,11 @@ public class DanaRS_Packet {
     protected int type = BleEncryption.DANAR_PACKET__TYPE_RESPONSE; // most of the messages, should be changed for others
     protected int opCode;
 
-    public DanaRS_Packet() {
+    public DanaRS_Packet(HasAndroidInjector injector) {
         received = false;
         failed = false;
+        this.injector = injector;
+        injector.androidInjector().inject(this);
     }
 
     public void setReceived() {
@@ -54,7 +66,7 @@ public class DanaRS_Packet {
 
     // STATIC FUNCTIONS
 
-    public static int getCommand(byte[] data) {
+    public int getCommand(byte[] data) {
         int type = byteArrayToInt(getBytes(data, TYPE_START, 1));
         int opCode = byteArrayToInt(getBytes(data, OPCODE_START, 1));
         return ((type & 0xFF) << 8) + (opCode & 0xFF);
@@ -70,7 +82,7 @@ public class DanaRS_Packet {
         return "UNKNOWN_PACKET";
     }
 
-    protected static byte[] getBytes(byte[] data, int srcStart, int srcLength) {
+    protected byte[] getBytes(byte[] data, int srcStart, int srcLength) {
         try {
             byte[] ret = new byte[srcLength];
 
@@ -78,7 +90,7 @@ public class DanaRS_Packet {
 
             return ret;
         } catch (Exception e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error(LTag.PUMPBTCOMM, "Unhandled exception", e);
         }
         return null;
     }
@@ -148,7 +160,7 @@ public class DanaRS_Packet {
         return new String(strbuff, StandardCharsets.UTF_8);
     }
 
-    public static long dateFromBuff(byte[] buff, int offset) {
+    public long dateFromBuff(byte[] buff, int offset) {
         return
                 new Date(
                         100 + byteArrayToInt(getBytes(buff, offset, 1)),
@@ -159,7 +171,7 @@ public class DanaRS_Packet {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
 
-    public static String asciiStringFromBuff(byte[] buff, int offset, int length) {
+    public String asciiStringFromBuff(byte[] buff, int offset, int length) {
         byte[] strbuff = new byte[length];
         System.arraycopy(buff, offset, strbuff, 0, length);
         for (int pos = 0; pos < length; pos++)

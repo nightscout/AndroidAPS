@@ -1,16 +1,18 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
-import info.nightscout.androidaps.logging.AAPSLogger
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.utils.DateUtil
+import javax.inject.Inject
 import kotlin.math.ceil
 
 class DanaRS_Packet_Basal_Get_Temporary_Basal_State(
-    private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
-) : DanaRS_Packet() {
+    injector: HasAndroidInjector
+) : DanaRS_Packet(injector) {
+
+    @Inject lateinit var danaRPump: DanaRPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BASAL__TEMPORARY_BASAL_STATE

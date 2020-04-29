@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
-import info.nightscout.androidaps.logging.AAPSLogger
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 
 class DanaRS_Packet_Etc_Set_History_Save(
-    private val aapsLogger: AAPSLogger,
+    injector: HasAndroidInjector,
     private var historyType: Int = 0,
     private var historyYear: Int = 0,
     private var historyMonth: Int = 0,
@@ -15,8 +15,7 @@ class DanaRS_Packet_Etc_Set_History_Save(
     private var historySecond: Int = 0,
     private var historyCode: Int = 0,
     private var historyValue: Int = 0
-) : DanaRS_Packet() {
-
+) : DanaRS_Packet(injector) {
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_ETC__SET_HISTORY_SAVE

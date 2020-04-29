@@ -1,16 +1,18 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
-import info.nightscout.androidaps.logging.AAPSLogger
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import java.util.*
+import javax.inject.Inject
 
 open class DanaRS_Packet_Basal_Get_Profile_Basal_Rate(
-    private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump,
+    injector: HasAndroidInjector,
     private val profileNumber: Int = 0
-) : DanaRS_Packet() {
+) : DanaRS_Packet(injector) {
+
+    @Inject lateinit var danaRPump: DanaRPump
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BASAL__GET_PROFILE_BASAL_RATE
@@ -26,7 +28,7 @@ open class DanaRS_Packet_Basal_Get_Profile_Basal_Rate(
     override fun handleMessage(data: ByteArray) {
         var dataIndex = DATA_START
         var dataSize = 2
-        danaRPump.pumpProfiles = Array(4) {Array(48) {0.0} }
+        danaRPump.pumpProfiles = Array(4) { Array(48) { 0.0 } }
         var i = 0
         val size = 24
         while (i < size) {

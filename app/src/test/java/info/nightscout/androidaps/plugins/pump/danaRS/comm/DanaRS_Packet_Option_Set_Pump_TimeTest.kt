@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -9,12 +11,20 @@ import java.util.*
 @RunWith(PowerMockRunner::class)
 class DanaRS_Packet_Option_Set_Pump_TimeTest : DanaRSTestBase() {
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_Option_Set_Pump_Time) {
+                it.aapsLogger = aapsLogger
+            }
+        }
+    }
+
     @Test fun runTest() {
         val date = Date()
-        val packet = DanaRS_Packet_Option_Set_Pump_Time(aapsLogger, date.time)
+        val packet = DanaRS_Packet_Option_Set_Pump_Time(packetInjector, date.time)
         // test params
         val params = packet.requestParams
-        Assert.assertEquals((date.year  - 100 and 0xff).toByte(), params[0]) // 2019 -> 19
+        Assert.assertEquals((date.year - 100 and 0xff).toByte(), params[0]) // 2019 -> 19
         Assert.assertEquals((date.month + 1 and 0xff).toByte(), params[1])
         Assert.assertEquals((date.date and 0xff).toByte(), params[2])
         Assert.assertEquals((date.hours and 0xff).toByte(), params[3])

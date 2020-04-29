@@ -4,10 +4,8 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.plugins.treatments.Treatment
-import info.nightscout.androidaps.utils.DefaultValueHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -25,8 +23,14 @@ class DanaRS_Packet_Notify_Delivery_CompleteTest : DanaRSTestBase() {
     @Mock lateinit var danaRSPlugin: DanaRSPlugin
     @Mock lateinit var activePlugin: ActivePluginProvider
 
-    private var treatmentInjector: HasAndroidInjector = HasAndroidInjector {
+    private val packetInjector = HasAndroidInjector {
         AndroidInjector {
+            if (it is DanaRS_Packet_Notify_Delivery_Complete) {
+                it.aapsLogger = aapsLogger
+                it.rxBus = rxBus
+                it.resourceHelper = resourceHelper
+                it.danaRPump = danaRPump
+            }
             if (it is Treatment) {
                 it.defaultValueHelper = defaultValueHelper
                 it.resourceHelper = resourceHelper
@@ -39,8 +43,8 @@ class DanaRS_Packet_Notify_Delivery_CompleteTest : DanaRSTestBase() {
     @Test fun runTest() {
         `when`(resourceHelper.gs(anyInt(), anyDouble())).thenReturn("SomeString")
 
-        danaRPump.bolusingTreatment = Treatment(treatmentInjector)
-        val packet = DanaRS_Packet_Notify_Delivery_Complete(aapsLogger, rxBus, resourceHelper, danaRPump)
+        danaRPump.bolusingTreatment = Treatment(packetInjector)
+        val packet = DanaRS_Packet_Notify_Delivery_Complete(packetInjector)
         // test params
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding

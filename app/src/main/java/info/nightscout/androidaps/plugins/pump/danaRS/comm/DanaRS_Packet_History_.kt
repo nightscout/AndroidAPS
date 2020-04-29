@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.db.DanaRHistoryRecord
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes
@@ -10,12 +10,14 @@ import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.utils.DateUtil
 import org.joda.time.DateTime
 import java.util.*
+import javax.inject.Inject
 
 abstract class DanaRS_Packet_History_(
-    protected val aapsLogger: AAPSLogger,
-    protected val rxBus: RxBusWrapper,
+    injector: HasAndroidInjector,
     protected val from: Long
-) : DanaRS_Packet() {
+) : DanaRS_Packet(injector) {
+
+    @Inject lateinit var rxBus: RxBusWrapper
 
     protected var year = 0
     protected var month = 0

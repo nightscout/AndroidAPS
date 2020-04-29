@@ -1,17 +1,25 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest()
 class DanaRS_Packet_General_Set_History_Upload_ModeTest : DanaRSTestBase() {
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_General_Set_History_Upload_Mode) {
+                it.aapsLogger = aapsLogger
+            }
+        }
+    }
+
     @Test fun runTest() {
-        val packet = DanaRS_Packet_General_Set_History_Upload_Mode(aapsLogger, 1)
+        val packet = DanaRS_Packet_General_Set_History_Upload_Mode(packetInjector, 1)
         // test params
         Assert.assertEquals(1.toByte(), packet.requestParams[0])
         // test message decoding

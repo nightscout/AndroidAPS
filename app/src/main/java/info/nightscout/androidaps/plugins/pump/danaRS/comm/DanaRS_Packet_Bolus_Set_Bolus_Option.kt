@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
-import info.nightscout.androidaps.logging.AAPSLogger
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 
 class DanaRS_Packet_Bolus_Set_Bolus_Option(
-    private val aapsLogger: AAPSLogger,
+    injector: HasAndroidInjector,
     private var extendedBolusOptionOnOff: Int = 0,
     private var bolusCalculationOption: Int = 0,
     private var missedBolusConfig: Int = 0,
@@ -26,7 +26,7 @@ class DanaRS_Packet_Bolus_Set_Bolus_Option(
     private var missedBolus04EndHour: Int = 0,
     private var missedBolus04EndMin: Int = 0
 
-) : DanaRS_Packet() {
+) : DanaRS_Packet(injector) {
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_BOLUS_OPTION

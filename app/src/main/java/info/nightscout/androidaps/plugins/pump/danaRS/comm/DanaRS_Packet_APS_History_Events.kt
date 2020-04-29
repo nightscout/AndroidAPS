@@ -10,7 +10,6 @@ import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.dialogs.FillDialog
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
@@ -20,18 +19,19 @@ import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
+import javax.inject.Inject
 
 open class DanaRS_Packet_APS_History_Events(
-    private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBusWrapper,
-    private val resourceHelper: ResourceHelper,
-    private val activePlugin: ActivePluginProvider,
-    private val danaRPump: DanaRPump,
-    private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
-    private val sp: SP,
-    private val injector: HasAndroidInjector,
+    injector: HasAndroidInjector,
     private var from: Long
-) : DanaRS_Packet() {
+) : DanaRS_Packet(injector) {
+
+    @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var activePlugin: ActivePluginProvider
+    @Inject lateinit var danaRPump: DanaRPump
+    @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
+    @Inject lateinit var sp: SP
 
     private var year = 0
     private var month = 0

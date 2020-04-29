@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.db.DatabaseHelper
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes
@@ -26,9 +28,18 @@ class DanaRS_Packet_History_AlarmTest : DanaRSTestBase() {
         `when`(MainApp.getDbHelper()).thenReturn(databaseHelper)
     }
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_History_Alarm) {
+                it.aapsLogger = aapsLogger
+                it.rxBus = rxBus
+            }
+        }
+    }
+
     @Test
     fun runTest() {
-        val packet = DanaRS_Packet_History_Alarm(aapsLogger, rxBus, 0)
+        val packet = DanaRS_Packet_History_Alarm(packetInjector, 0)
 
         val array = createArray(12, 0.toByte()) // 10 + 2
         putByteToArray(array, 0, 0x0A) // record code alarm

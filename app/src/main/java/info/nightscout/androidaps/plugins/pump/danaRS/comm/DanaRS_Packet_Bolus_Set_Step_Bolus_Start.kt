@@ -1,20 +1,21 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.Constraint
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
+import javax.inject.Inject
 
 class DanaRS_Packet_Bolus_Set_Step_Bolus_Start(
-    private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump,
-    constraintChecker: ConstraintChecker,
+    injector: HasAndroidInjector,
     private var amount: Double = 0.0,
     private var speed: Int = 0
-) : DanaRS_Packet() {
+) : DanaRS_Packet(injector) {
 
+    @Inject lateinit var danaRPump: DanaRPump
+    @Inject lateinit var constraintChecker: ConstraintChecker
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_START

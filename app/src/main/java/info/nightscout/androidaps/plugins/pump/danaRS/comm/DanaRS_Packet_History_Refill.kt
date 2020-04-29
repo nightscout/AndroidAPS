@@ -1,15 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
-import info.nightscout.androidaps.logging.AAPSLogger
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 
 class DanaRS_Packet_History_Refill @JvmOverloads constructor(
-    aapsLogger: AAPSLogger,
-    rxBus: RxBusWrapper,
+    injector: HasAndroidInjector,
     from: Long = 0
-) : DanaRS_Packet_History_(aapsLogger, rxBus, from) {
+) : DanaRS_Packet_History_(injector, from) {
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_REVIEW__REFILL

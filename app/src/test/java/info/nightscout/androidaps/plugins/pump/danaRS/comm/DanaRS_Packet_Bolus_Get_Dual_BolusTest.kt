@@ -1,17 +1,26 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 
 @RunWith(PowerMockRunner::class)
-@PrepareForTest()
 class DanaRS_Packet_Bolus_Get_Dual_BolusTest : DanaRSTestBase() {
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_Bolus_Get_Dual_Bolus) {
+                it.aapsLogger = aapsLogger
+                it.danaRPump = danaRPump
+            }
+        }
+    }
+
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Bolus_Get_Dual_Bolus(aapsLogger, danaRPump)
+        val packet = DanaRS_Packet_Bolus_Get_Dual_Bolus(packetInjector)
         // test params
         Assert.assertEquals(null, packet.requestParams)
 

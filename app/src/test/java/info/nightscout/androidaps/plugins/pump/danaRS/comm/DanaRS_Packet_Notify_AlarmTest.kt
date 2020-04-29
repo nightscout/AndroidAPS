@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import org.junit.Assert
 import org.junit.Before
@@ -13,8 +15,18 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(NSUpload::class)
 class DanaRS_Packet_Notify_AlarmTest : DanaRSTestBase() {
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_Notify_Alarm) {
+                it.aapsLogger = aapsLogger
+                it.rxBus = rxBus
+                it.resourceHelper = resourceHelper
+            }
+        }
+    }
+
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Notify_Alarm(aapsLogger, resourceHelper, rxBus)
+        val packet = DanaRS_Packet_Notify_Alarm(packetInjector)
         // test params
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding

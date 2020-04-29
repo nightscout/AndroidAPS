@@ -6,7 +6,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import org.junit.Assert
@@ -29,8 +28,18 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_StartTest : DanaRSTestBase() {
 
     private lateinit var danaRSPlugin: DanaRSPlugin
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_Bolus_Set_Step_Bolus_Start) {
+                it.aapsLogger = aapsLogger
+                it.danaRPump = danaRPump
+                it.constraintChecker = constraintChecker
+            }
+        }
+    }
+
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Bolus_Set_Step_Bolus_Start(aapsLogger, danaRPump, constraintChecker)
+        val packet = DanaRS_Packet_Bolus_Set_Step_Bolus_Start(packetInjector)
         // test params
         val testparams = packet.requestParams
         Assert.assertEquals(0.toByte(), testparams[0])

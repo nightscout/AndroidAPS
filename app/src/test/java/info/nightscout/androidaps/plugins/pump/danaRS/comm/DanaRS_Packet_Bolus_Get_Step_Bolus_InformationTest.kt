@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -11,8 +13,17 @@ import java.util.*
 @PrepareForTest()
 class DanaRS_Packet_Bolus_Get_Step_Bolus_InformationTest : DanaRSTestBase() {
 
+    private val packetInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is DanaRS_Packet_Bolus_Get_Step_Bolus_Information) {
+                it.aapsLogger = aapsLogger
+                it.danaRPump = danaRPump
+            }
+        }
+    }
+
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Bolus_Get_Step_Bolus_Information(aapsLogger, danaRPump)
+        val packet = DanaRS_Packet_Bolus_Get_Step_Bolus_Information(packetInjector)
 
         val array = createArray(13, 0.toByte()) // 11 + 2
         putByteToArray(array, 0, 2) // error 2

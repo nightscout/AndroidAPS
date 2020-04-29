@@ -7,11 +7,9 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.plugins.treatments.Treatment
-import info.nightscout.androidaps.utils.DefaultValueHelper
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -34,8 +32,14 @@ class DanaRS_Packet_Notify_Delivery_Rate_DisplayTest : DanaRSTestBase() {
 
     private lateinit var danaRSPlugin: DanaRSPlugin
 
-    private var treatmentInjector: HasAndroidInjector = HasAndroidInjector {
+    private val packetInjector = HasAndroidInjector {
         AndroidInjector {
+            if (it is DanaRS_Packet_Notify_Delivery_Rate_Display) {
+                it.aapsLogger = aapsLogger
+                it.rxBus = rxBus
+                it.resourceHelper = resourceHelper
+                it.danaRPump = danaRPump
+            }
             if (it is Treatment) {
                 it.defaultValueHelper = defaultValueHelper
                 it.resourceHelper = resourceHelper
@@ -48,7 +52,7 @@ class DanaRS_Packet_Notify_Delivery_Rate_DisplayTest : DanaRSTestBase() {
     @Test fun runTest() {
         `when`(resourceHelper.gs(ArgumentMatchers.anyInt(), anyObject())).thenReturn("SomeString")
         // val packet = DanaRS_Packet_Notify_Delivery_Rate_Display(1.0, Treatment(treatmentInjector))
-        val packet = DanaRS_Packet_Notify_Delivery_Rate_Display(aapsLogger, rxBus, resourceHelper, danaRPump)
+        val packet = DanaRS_Packet_Notify_Delivery_Rate_Display(packetInjector)
         // test params
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
@@ -64,6 +68,6 @@ class DanaRS_Packet_Notify_Delivery_Rate_DisplayTest : DanaRSTestBase() {
     @Before
     fun mock() {
         danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump, detailedBolusInfoStorage, fabricPrivacy)
-        danaRPump.bolusingTreatment = Treatment(treatmentInjector)
+        danaRPump.bolusingTreatment = Treatment(packetInjector)
     }
 }
