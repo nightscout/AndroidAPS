@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.TuneProfile.data.PrepOutput;
 import info.nightscout.androidaps.plugins.TuneProfile.data.TunedProfile;
 import info.nightscout.androidaps.plugins.TuneProfile.TuneProfilePlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctions;
+import info.nightscout.androidaps.plugins.TuneProfile.data.NsTreatment;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -131,8 +132,8 @@ public class Prep {
 
         //categorize.js#123
         // main for loop
-        List<TemporaryBasal> fullHistoryB = iobInputs.history ;//IOBInputs.history;
-        List<Treatment> fullHistoryT = iobInputs.treatments ;//IOBInputs.history;
+        List<NsTreatment> fullHistory = iobInputs.history ;//IOBInputs.history;
+
         for (int i = bucketedData.size() - 5; i > 0; --i) {
             BGDatum glucoseDatum = bucketedData.get(i);
             //log.debug(glucoseDatum);
@@ -186,11 +187,10 @@ public class Prep {
             iobInputs.clock=BGTime;
             // trim down IOBInputs.history to just the data for 6h prior to BGDate
             //log.debug(IOBInputs.history[0].created_at);
-            List<TemporaryBasal> newHistoryB = new ArrayList<TemporaryBasal>();
-            List<Treatment> newHistoryT = new ArrayList<Treatment>();
+            List<NsTreatment> newHistory = new ArrayList<NsTreatment>();
 
-            for (int h = 0; h < fullHistoryB.size(); h++) {
-                long hDate = fullHistoryB.get(h).date;
+            for (int h = 0; h < fullHistory.size(); h++) {
+                long hDate = fullHistory.get(h).date;
                 //log.debug(fullHistory[i].created_at, hDate, BGDate, BGDate-hDate);
                 //if (h == 0 || h == fullHistory.length - 1) {
                 //log.debug(hDate, BGDate, hDate-BGDate)
@@ -198,23 +198,10 @@ public class Prep {
                 if (BGTime - hDate < 6 * 60 * 60 * 1000 && BGTime - hDate > 0) {
                     //process.stderr.write("i");
                     //log.debug(hDate);
-                    newHistoryB.add(fullHistoryB.get(h));
+                    newHistory.add(fullHistory.get(h));
                 }
             }
-            iobInputs.history = newHistoryB;
-            for (int h = 0; h < fullHistoryT.size(); h++) {
-                long hDate = fullHistoryT.get(h).date;
-                //log.debug(fullHistory[i].created_at, hDate, BGDate, BGDate-hDate);
-                //if (h == 0 || h == fullHistory.length - 1) {
-                //log.debug(hDate, BGDate, hDate-BGDate)
-                //}
-                if (BGTime - hDate < 6 * 60 * 60 * 1000 && BGTime - hDate > 0) {
-                    //process.stderr.write("i");
-                    //log.debug(hDate);
-                    newHistoryT.add(fullHistoryT.get(h));
-                }
-            }
-            iobInputs.treatments = newHistoryT;
+            iobInputs.history = newHistory;
 
             // process.stderr.write("" + newHistory.length + " ");
             //log.debug(newHistory[0].created_at,newHistory[newHistory.length-1].created_at,newHistory.length);
