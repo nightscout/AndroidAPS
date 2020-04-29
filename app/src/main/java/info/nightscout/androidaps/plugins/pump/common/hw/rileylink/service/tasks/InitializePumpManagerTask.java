@@ -1,22 +1,22 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks;
 
-import android.util.Log;
+import android.content.Context;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.inject.Inject;
 
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceTransport;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by geoff on 7/9/16.
@@ -25,67 +25,71 @@ import info.nightscout.androidaps.utils.SP;
  */
 public class InitializePumpManagerTask extends ServiceTask {
 
-    private static final String TAG = "InitPumpManagerTask";
-    private RileyLinkTargetDevice targetDevice;
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
+    @Inject AAPSLogger aapsLogger;
+    @Inject ActivePluginProvider activePlugin;
+    @Inject SP sp;
+    @Inject RileyLinkServiceData rileyLinkServiceData;
+    @Inject RileyLinkUtil rileyLinkUtil;
 
-    public InitializePumpManagerTask(RileyLinkTargetDevice targetDevice) {
-        super();
-        this.targetDevice = targetDevice;
+    private final Context context;
+
+    public InitializePumpManagerTask(HasAndroidInjector injector, Context context) {
+        super(injector);
+        this.context = context;
     }
 
-
-    public InitializePumpManagerTask(ServiceTransport transport) {
-        super(transport);
+    public InitializePumpManagerTask(HasAndroidInjector injector, Context context, ServiceTransport transport) {
+        super(injector, transport);
+        this.context = context;
     }
-
 
     @Override
     public void run() {
 
-        double lastGoodFrequency = 0.0d;
+        double lastGoodFrequency;
 
-        if (RileyLinkUtil.getRileyLinkServiceData().lastGoodFrequency == null) {
+        if (rileyLinkServiceData.lastGoodFrequency == null) {
 
-            lastGoodFrequency = SP.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0d);
+            lastGoodFrequency = sp.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0d);
             lastGoodFrequency = Math.round(lastGoodFrequency * 1000d) / 1000d;
 
-            RileyLinkUtil.getRileyLinkServiceData().lastGoodFrequency = lastGoodFrequency;
+            rileyLinkServiceData.lastGoodFrequency = lastGoodFrequency;
 
 //            if (RileyLinkUtil.getRileyLinkTargetFrequency() == null) {
 //                String pumpFrequency = SP.getString(MedtronicConst.Prefs.PumpFrequency, null);
 //            }
         } else {
-            lastGoodFrequency = RileyLinkUtil.getRileyLinkServiceData().lastGoodFrequency;
+            lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency;
         }
 
+	// TODO Omnipod/Dagger needs refactoring
 
-        if (MedtronicUtil.isMedtronicPump()) {
+	if (MedtronicUtil.isMedtronicPump()) {
+        RileyLinkCommunicationManager rileyLinkCommunicationManager = ((PumpPluginAbstract) activePlugin.getActivePump()).getRileyLinkService().getDeviceCommunicationManager();
 
-            if ((lastGoodFrequency > 0.0d)
-                    && RileyLinkUtil.getRileyLinkCommunicationManager().isValidFrequency(lastGoodFrequency)) {
+        if ((lastGoodFrequency > 0.0d)
+                && rileyLinkCommunicationManager.isValidFrequency(lastGoodFrequency)) {
 
-                RileyLinkUtil.setServiceState(RileyLinkServiceState.RileyLinkReady);
+            rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.RileyLinkReady);
 
-                if (L.isEnabled(L.PUMPCOMM))
-                    LOG.info("Setting radio frequency to {} MHz", lastGoodFrequency);
+            aapsLogger.info(LTag.PUMPCOMM, "Setting radio frequency to {} MHz", lastGoodFrequency);
 
-                RileyLinkUtil.getRileyLinkCommunicationManager().setRadioFrequencyForPump(lastGoodFrequency);
+            rileyLinkCommunicationManager.setRadioFrequencyForPump(lastGoodFrequency);
 
-                boolean foundThePump = RileyLinkUtil.getRileyLinkCommunicationManager().tryToConnectToDevice();
+            boolean foundThePump = rileyLinkCommunicationManager.tryToConnectToDevice();
 
-                if (foundThePump) {
-                    RileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorReady);
-                } else {
-                    RileyLinkUtil.setServiceState(RileyLinkServiceState.PumpConnectorError,
-                            RileyLinkError.NoContactWithDevice);
-                    RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
-                }
-
+            if (foundThePump) {
+                rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.PumpConnectorReady);
             } else {
-                RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump);
+                rileyLinkServiceData.setServiceState(RileyLinkServiceState.PumpConnectorError,
+                        RileyLinkError.NoContactWithDevice);
+                rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump, context);
             }
+
         } else {
+            rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump, context);
+        }
+    } else {
 
             if (!RileyLinkUtil.isSame(lastGoodFrequency, RileyLinkTargetFrequency.Omnipod.getScanFrequencies()[0])) {
                 lastGoodFrequency = RileyLinkTargetFrequency.Omnipod.getScanFrequencies()[0];

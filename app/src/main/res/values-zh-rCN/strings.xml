@@ -102,7 +102,6 @@
     <string name="sms_delta">增量:</string>
     <string name="configbuilder">配置生成器</string>
     <string name="objectives">目标</string>
-    <string name="openapsma">OpenAPS MA</string>
     <string name="overview">首页概览</string>
     <string name="nsprofile">NS 配置文件</string>
     <string name="simpleprofile">简单配置文件</string>

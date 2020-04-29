@@ -41,20 +41,14 @@ import javax.inject.Inject;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
 import info.nightscout.androidaps.plugins.pump.common.utils.LocationHelper;
-import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -65,6 +59,9 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
     @Inject SP sp;
     @Inject RxBusWrapper rxBus;
     @Inject ResourceHelper resourceHelper;
+    @Inject RileyLinkUtil rileyLinkUtil;
+    // TODO change this. Currently verifyConfiguration uses MDT data not only RL
+    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
     @Inject ActivePluginProvider activePlugin;
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 30241; // arbitrary.
@@ -114,13 +111,13 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
             sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
 
-            RileyLinkUtil.getRileyLinkSelectPreference().setSummary(bleAddress);
+            //RileyLinkUtil.getRileyLinkSelectPreference().setSummary(bleAddress);
 
             if (activePlugin.getActivePump().manufacturer()== ManufacturerType.Medtronic) {
-                MedtronicPumpStatus pumpStatus = MedtronicUtil.getPumpStatus();
-                pumpStatus.verifyConfiguration(); // force reloading of address
+            	medtronicPumpPlugin.getRileyLinkService().verifyConfiguration(); // force reloading of address
 
-                rxBus.send(new EventMedtronicPumpConfigurationChanged());
+            	rxBus.send(new EventMedtronicPumpConfigurationChanged());
+
             } else if (activePlugin.getActivePump().manufacturer()== ManufacturerType.Insulet) {
                 OmnipodPumpStatus pumpStatus = OmnipodUtil.getPumpStatus();
                 pumpStatus.verifyConfiguration();
@@ -202,7 +199,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
         }
 
         // disable currently selected RL, so that we can discover it
-        RileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect);
+        rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkDisconnect, this);
     }
 
 

@@ -3,13 +3,19 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.command;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioPacket;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkCommandType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 
 public class SendAndListen extends RileyLinkCommand {
+
+    @Inject RileyLinkServiceData rileyLinkServiceData;
 
     private byte sendChannel;
     private byte repeatCount;
@@ -21,20 +27,21 @@ public class SendAndListen extends RileyLinkCommand {
     private RadioPacket packetToSend;
 
 
-    public SendAndListen(byte sendChannel, byte repeatCount, byte delayBetweenPackets_ms, byte listenChannel,
+    public SendAndListen(HasAndroidInjector injector, byte sendChannel, byte repeatCount, byte delayBetweenPackets_ms, byte listenChannel,
             int timeout_ms, byte retryCount, RadioPacket packetToSend
 
     ) {
-        this(sendChannel, repeatCount, delayBetweenPackets_ms, listenChannel, timeout_ms, retryCount, null,
+        this(injector, sendChannel, repeatCount, delayBetweenPackets_ms, listenChannel, timeout_ms, retryCount, null,
             packetToSend);
     }
 
 
-    public SendAndListen(byte sendChannel, byte repeatCount, int delayBetweenPackets_ms, byte listenChannel,
-            int timeout_ms, byte retryCount, Integer preambleExtension_ms, RadioPacket packetToSend
+    public SendAndListen(HasAndroidInjector injector, byte sendChannel, byte repeatCount, int delayBetweenPackets_ms, byte listenChannel,
+                         int timeout_ms, byte retryCount, Integer preambleExtension_ms, RadioPacket packetToSend
 
     ) {
         super();
+        injector.androidInjector().inject(this);
         this.sendChannel = sendChannel;
         this.repeatCount = repeatCount;
         this.delayBetweenPackets_ms = delayBetweenPackets_ms;
@@ -57,8 +64,8 @@ public class SendAndListen extends RileyLinkCommand {
 
         // If firmware version is not set (error reading version from device, shouldn't happen),
         // we will default to version 2
-        boolean isPacketV2 = RileyLinkUtil.getFirmwareVersion() != null ? RileyLinkUtil.getFirmwareVersion()
-            .isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher) : true;
+        boolean isPacketV2 = rileyLinkServiceData.firmwareVersion == null || rileyLinkServiceData.firmwareVersion
+                .isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher);
 
         ArrayList<Byte> bytes = new ArrayList<Byte>();
         bytes.add(this.getCommandType().code);

@@ -26,6 +26,10 @@ class AAPSLoggerTest : AAPSLogger {
         println("WARN: " + tag.tag + " " + message)
     }
 
+    override fun warn(tag: LTag, format: String, vararg arguments: Any?) {
+        println("INFO: : " + tag.tag + " " + String.format(format, arguments))
+    }
+
     override fun info(tag: LTag, message: String) {
         println("INFO: " + tag.tag + " " + message)
     }

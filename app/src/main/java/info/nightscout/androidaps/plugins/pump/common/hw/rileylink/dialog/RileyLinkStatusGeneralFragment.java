@@ -6,32 +6,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.fragment.app.Fragment;
-
 import org.joda.time.LocalDateTime;
 
 import java.util.Locale;
 
-import info.nightscout.androidaps.MainApp;
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
  * Created by andy on 5/19/18.
  */
 
-public class RileyLinkStatusGeneral extends Fragment implements RefreshableInterface {
+public class RileyLinkStatusGeneralFragment extends DaggerFragment implements RefreshableInterface {
+
+    // TODO fix this is not correct
+    @Inject RileyLinkUtil rileyLinkUtil;
+    @Inject MedtronicUtil medtronicUtil;
+    @Inject MedtronicPumpStatus medtronicPumpStatus;
+    @Inject ResourceHelper resourceHelper;
+    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+    @Inject RileyLinkServiceData rileyLinkServiceData;
 
     TextView connectionStatus;
     TextView configuredAddress;
@@ -98,18 +104,15 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
 
     public void refreshData() {
 
-        RileyLinkTargetDevice targetDevice = RileyLinkUtil.getTargetDevice();
+        RileyLinkTargetDevice targetDevice = rileyLinkServiceData.targetDevice;
 
-        if (RileyLinkUtil.getServiceState() == null)
-            this.connectionStatus.setText(MainApp.gs(RileyLinkServiceState.NotStarted.getResourceId(targetDevice)));
-        else
-            this.connectionStatus.setText(MainApp.gs(RileyLinkUtil.getServiceState().getResourceId(targetDevice)));
+        this.connectionStatus.setText(resourceHelper.gs(rileyLinkServiceData.rileyLinkServiceState.getResourceId(targetDevice)));
 
         if (rileyLinkServiceData != null) {
             this.configuredAddress.setText(rileyLinkServiceData.rileylinkAddress);
-            this.connectionError.setText(rileyLinkServiceData.errorCode == null ? //
+            this.connectionError.setText(rileyLinkServiceData.rileyLinkError == null ? //
                     "-"
-                    : MainApp.gs(rileyLinkServiceData.errorCode.getResourceId(targetDevice)));
+                    : resourceHelper.gs(rileyLinkServiceData.rileyLinkError.getResourceId(targetDevice)));
 
 
             RileyLinkFirmwareVersion firmwareVersion = rileyLinkServiceData.versionCC110;
@@ -123,31 +126,31 @@ public class RileyLinkStatusGeneral extends Fragment implements RefreshableInter
 
         }
 
-        if (MedtronicUtil.isMedtronicPump()) {
+        // TODO add handling for Omnipod pump status
+// TODO refactor this Omnipod
 
-            this.medtronicPumpStatus = MedtronicUtil.getPumpStatus();
+        if (medtronicPumpStatus != null) {
+            this.deviceType.setText(resourceHelper.gs(RileyLinkTargetDevice.MedtronicPump.getResourceId()));
+            this.deviceModel.setText(medtronicPumpPlugin.getPumpDescription().pumpType.getDescription());
+            this.serialNumber.setText(medtronicPumpStatus.serialNumber);
+            this.pumpFrequency.setText(resourceHelper.gs(medtronicPumpStatus.pumpFrequency.equals("medtronic_pump_frequency_us_ca") ? R.string.medtronic_pump_frequency_us_ca : R.string.medtronic_pump_frequency_worldwide));
 
-            if (medtronicPumpStatus != null) {
-                this.deviceType.setText(MainApp.gs(RileyLinkTargetDevice.MedtronicPump.getResourceId()));
-                this.deviceModel.setText(medtronicPumpStatus.pumpType.getDescription());
-                this.serialNumber.setText(medtronicPumpStatus.serialNumber);
-                this.pumpFrequency.setText(MainApp.gs(medtronicPumpStatus.pumpFrequency.equals("medtronic_pump_frequency_us_ca") ? R.string.medtronic_pump_frequency_us_ca : R.string.medtronic_pump_frequency_worldwide));
+            // TODO extend when Omnipod used
 
-                if (MedtronicUtil.getMedtronicPumpModel() != null)
-                    this.connectedDevice.setText("Medtronic " + MedtronicUtil.getMedtronicPumpModel().getPumpModel());
-                else
-                    this.connectedDevice.setText("???");
+            if (medtronicUtil.getMedtronicPumpModel() != null)
+                this.connectedDevice.setText("Medtronic " + medtronicUtil.getMedtronicPumpModel().getPumpModel());
+            else
+                this.connectedDevice.setText("???");
 
-                if (rileyLinkServiceData.lastGoodFrequency != null)
-                    this.lastUsedFrequency.setText(String.format(Locale.ENGLISH, "%.2f MHz",
-                            rileyLinkServiceData.lastGoodFrequency));
+            if (rileyLinkServiceData.lastGoodFrequency != null)
+                this.lastUsedFrequency.setText(String.format(Locale.ENGLISH, "%.2f MHz",
+                        rileyLinkServiceData.lastGoodFrequency));
 
-                if (medtronicPumpStatus.lastConnection != 0)
-                    this.lastDeviceContact.setText(StringUtil.toDateTimeString(new LocalDateTime(
-                            medtronicPumpStatus.lastDataTime)));
-                else
-                    this.lastDeviceContact.setText(MainApp.gs(R.string.common_never));
-            }
+            if (medtronicPumpStatus.lastConnection != 0)
+                this.lastDeviceContact.setText(StringUtil.toDateTimeString(new LocalDateTime(
+                        medtronicPumpStatus.lastDataTime)));
+            else
+                this.lastDeviceContact.setText("Never");
         } else {
 
             // if (OmnipodUtil.isOmnipodDash())

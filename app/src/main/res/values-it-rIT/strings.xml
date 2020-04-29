@@ -106,7 +106,6 @@
     <string name="sms_delta">Delta:</string>
     <string name="configbuilder">Configuratore strutturale</string>
     <string name="objectives">Obiettivi</string>
-    <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Panoramica</string>
     <string name="nsprofile">Profilo NS</string>
     <string name="simpleprofile">Profilo semplice</string>
@@ -220,8 +219,43 @@
     <string name="openapsma_maxiob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nIndica l\'insulina massima in [U] che APS può erogare in contemporanea.</string>
     <string name="dismiss">RIMUOVI</string>
     <string name="password_preferences_encrypt_prompt">Ti verrà richiesta la password principale, che verrà utilizzata per crittografare le preferenze esportate.</string>
+    <string name="password_preferences_decrypt_prompt">Ti verrà chiesta la password master, che è necessaria per decrittare le preferenze importate.</string>
+    <string name="preferences_export_canceled">Esportazione annullata! Le preferenze NON sono state esportate!</string>
+    <string name="preferences_import_canceled">Importazione annullata! Le preferenze NON sono state importate!</string>
+    <string name="check_preferences_before_import">Verifica le preferenze prima dell\'importazione:</string>
     <string name="check_preferences_cannot_import">Le preferenze non possono essere importate!</string>
     <string name="check_preferences_dangerous_import">Le preferenze non dovrebbero essere importate!</string>
+    <string name="check_preferences_details_btn">Descrivi i problemi importazione…</string>
+    <string name="check_preferences_details_title">Dettagli dei problemi di importazione</string>
+    <string name="check_preferences_import_btn">Importa</string>
+    <string name="check_preferences_import_anyway_btn">Importa comunque (PERICOLOSO!)</string>
+    <string name="metadata_warning_different_flavour">Le preferenze sono state create con una differente versione di AAPS (%1$s) mentre invece tu hai: %2$s.\n\nAlcune impostazioni potrebbero mancare o non essere valide - dopo l\'importazione controlla e aggiornare le tue preferenze.</string>
+    <string name="metadata_warning_different_device">Le preferenze sono state create su un dispositivo diverso. Va bene importarle da un vecchio/diverso telefono, ma assicurati che le preferenze importate siano corrette!</string>
+    <string name="metadata_warning_outdated_format">Stai utilizzando il formato precedente (obsoleto) delle vecchie versioni di APPS, che non è sicuro! Utilizzalo solo come ultima risorsa, se non hai un\'esportazione nel corrente formato JSON.</string>
+    <string name="metadata_warning_old_export">Le preferenze importate hanno già %1$s giorni! Forse hai preferenze più aggiornate. Hai scelto il file sbagliato? Ricorda di esportare le preferenze regolarmente!</string>
+    <string name="metadata_warning_date_format">Formato data-ora non valido!</string>
+    <string name="metadata_label_format">Formato file</string>
+    <string name="metadata_label_created_at">Creato:</string>
+    <string name="metadata_label_aaps_version">Versione AAPS</string>
+    <string name="metadata_label_aaps_flavour">Variante build</string>
+    <string name="metadata_label_device_name">Nome paziente del dispositivo esportatore</string>
+    <string name="metadata_label_device_model">Modello dispositivo esportatore</string>
+    <string name="metadata_label_encryption">Crittografia file</string>
+    <string name="metadata_format_old">Vecchio formato esportazione</string>
+    <string name="metadata_format_new">Nuovo formato crittografato</string>
+    <string name="metadata_format_debug">Nuovo formato di debug (non crittografato)</string>
+    <string name="metadata_format_other">Formato esportazione sconosciuto</string>
+    <string name="prefdecrypt_settings_tampered">File delle impostazioni manomesso</string>
+    <string name="prefdecrypt_settings_secure">Il file delle impostazioni è sicuro</string>
+    <string name="prefdecrypt_settings_unencrypted">Utilizzo non sicuro, formato impostazioni non crittografato</string>
+    <string name="prefdecrypt_wrong_json">Errore formato JSON, campo obbligatorio mancante (formato, contenuto, metadati o sicurezza)</string>
+    <string name="prefdecrypt_wrong_password">Errore decrittazione, la password data non può decrittare il file</string>
+    <string name="prefdecrypt_issue_missing_file_hash">File checksum (hash) mancante, impossibile verificare l\'autenticità delle impostazioni!</string>
+    <string name="prefdecrypt_issue_modified">Il file è stato modificato dopo l\'esportazione!</string>
+    <string name="prefdecrypt_issue_parsing">Errore decrittazione, analisi preferenze fallita!</string>
+    <string name="prefdecrypt_issue_wrong_pass">Errore decrittazione, la password fornita è errata o il file delle impostazioni è stato modificato! È possibile che il file importato sia stato esportato con una diversa password master.</string>
+    <string name="prefdecrypt_issue_wrong_format">Configurazione crittografia mancante, il formato delle impostazioni non è valido!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo di crittografia non supportato o non specificato!</string>
     <string name="danarpump">DanaR</string>
     <string name="connecting">Connessione</string>
     <string name="connected">Connesso</string>
@@ -511,6 +545,9 @@
     <string name="adult">Adulto</string>
     <string name="resistantadult">Adulto insulino-resistente</string>
     <string name="patientage_summary">Seleziona l\'età del paziente per impostare i limiti di sicurezza</string>
+    <string name="patient_name">Nome paziente</string>
+    <string name="patient_name_summary">Fornisci il nome del paziente o il nickname per distinguere questa configurazione tra altre</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utente</string>
     <string name="Glimp">Glimp</string>
     <string name="needwhitelisting">Per un buon funzionamento, %1$s ha bisogno di essere nella whitelist della funzione \"ottimizzazione batteria\" di Android</string>
     <string name="loopsuspended">Loop sospeso</string>
@@ -547,8 +584,14 @@
     <string name="enablesuperbolus">Abilita superbolo nel calcolatore</string>
     <string name="enablesuperbolus_summary">Abilita la funzionalità superbolo nel calcolatore. Non abilitare fino a quando non impari ciò che realmente fa. PUÒ CAUSARE SOVRADOSAGGIO DI INSULINA SE USATO IMPROPRIAMENTE!</string>
     <string name="show_statuslights">Mostra indicatori di stato sulla home</string>
-    <string name="show_statuslights_extended">Mostra indicatori estesi sulla home</string>
-    <string name="show_statuslights_extended_summary">Abilita indicatori di stato estesi per \"età\" cannula, insulina, sensore, serbatoio e livello batteria sulla schermata iniziale.</string>
+    <string name="statuslights_cage_warning">Soglia di avviso età cannula [h]</string>
+    <string name="statuslights_cage_critical">Soglia età cannula critica [h]</string>
+    <string name="statuslights_iage_warning">Soglia di avviso età insulina [h]</string>
+    <string name="statuslights_iage_critical">Soglia età insulina critica [h]</string>
+    <string name="statuslights_sage_warning">Soglia di avviso età sensore [h]</string>
+    <string name="statuslights_sage_critical">Soglia età sensore critica [h]</string>
+    <string name="statuslights_bage_warning">Soglia di avviso età batteria [h]</string>
+    <string name="statuslights_bage_critical">Soglia età batteria critica [h]</string>
     <string name="statuslights_res_warning">Soglia di avviso livello serbatoio [U]</string>
     <string name="statuslights_res_critical">Soglia livello serbatoio critico [U]</string>
     <string name="statuslights_bat_warning">Soglia di avviso livello batteria [%]</string>
@@ -708,8 +751,13 @@
     <string name="bgsource_upload">Impostazioni caricamento BG</string>
     <string name="wear_detailed_delta_title">Mostra delta dettagliato</string>
     <string name="wear_detailed_delta_summary">Mostra delta con una cifra decimale in più</string>
+    <string name="smbinterval_summary">Frequenza di erogazione SMB (min)</string>
     <string name="smbmaxminutes">Max minuti SMB</string>
     <string name="smbmaxminutes_summary">Max minuti di basale a cui limitare SMB</string>
+    <string name="uamsmbmaxminutes">SMB UAM max minuti</string>
+    <string name="uamsmbmaxminutes_summary">Max minuti di basale a cui limitare SMB per UAM</string>
+    <string name="carbsReqThreshold">Soglia proposta CHO</string>
+    <string name="carbsReqThreshold_summary">Quando vengono proposti carboidrati, la quantità minima per la quale verrà mostrata una notifica</string>
     <string name="unsupportedfirmware">Firmware del micro non supportato</string>
     <string name="dexcomg5_xdripupload_title">Invia dati BG a xDrip+</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ seleziona origine dati 640g/Eversense</string>
@@ -776,6 +824,7 @@
     <string name="ago">fa</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
+    <string name="format_mins_short">%1$dm</string>
     <string name="enablesmbalways">Abilita SMB sempre</string>
     <string name="enablesmbalways_summary">Abilita SMB sempre, indipendentemente dai boli. Possibile solo con sorgente glicemia con un buon filtraggio dei dati, come G5</string>
     <string name="enablesmbaftercarbs">Abilita SMB dopo i CHO</string>
@@ -926,7 +975,7 @@
     <string name="readstatus">Lettura stato</string>
     <string name="adjustprofileinns">Le modifiche devono essere fatte in NS</string>
     <string name="exitwizard">Salta configurazione guidata</string>
-    <string name="setupwizard_loop_description">Premi il tasto in basso per permettere ad AndroidAPS di suggerire/fare modifiche alla basale</string>
+    <string name="setupwizard_loop_description">Premi il tasto in basso per permettere ad AndroidAPS di proporre/fare modifiche alla basale</string>
     <string name="apssetup">Configura il plugin APS</string>
     <string name="sensitivitysetup">Configura il plugin di Sensibilità</string>
     <string name="setupwizard_sensitivity_description">Il plugin di Sensibilità è utilizzato per il rilevamento della sensibilità all\'insulina e il calcolo di COB. Per ulteriori informazioni visita:</string>
@@ -974,6 +1023,10 @@
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumenta la sensibilità per temp-target >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Temp-Target \"basso\" riduce la sensibilità</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Riduci la sensibilità per temp-target < 100]]></string>
+    <string name="resistance_lowers_target_title">La resistenza abbassa il target</string>
+    <string name="resistance_lowers_target_summary">Quando viene rilevata resistenza, ridurre la glicemia target</string>
+    <string name="sensitivity_raises_target_title">La sensibilità aumenta il target</string>
+    <string name="sensitivity_raises_target_summary">Quando viene rilevata sensibilità, aumentare la glicemia target</string>
     <string name="combo_invalid_setup">Configurazione micro non valida, controlla la documentazione e verifica che il menu Quick Info sia denominato QUICK INFO utilizzando \"360 configuration software\".</string>
     <string name="custom">Personalizzato</string>
     <string name="largetimedifftitle">Grande differenza oraria</string>
@@ -983,6 +1036,8 @@
     <string name="allow_hardware_pump_text">Attenzione: se attivi e connetti un micro, AndroidAPS copierà le impostazioni della basale dal profilo al micro, sovrascrivendo la velocità basale esistente memorizzata sul micro. Assicurati di avere la giusta impostazione della basale in AndroidAPS. Se non sei sicuro o non vuoi sovrascrivere le impostazioni della basale sul micro, premi annulla e ripeti il processo in un altro momento.</string>
     <string name="error_adding_treatment_title">Dati trattamento incompleti</string>
     <string name="maintenance_settings">Impostazioni manutenzione</string>
+    <string name="maintenance_email">Destinatario email</string>
+    <string name="maintenance_encrypt_exported_prefs">Crittografa impostazioni esportate</string>
     <string name="maintenance_amount">Numero di log da inviare</string>
     <string name="maintenance">Manutenzione</string>
     <string name="maintenance_shortname">MANUT</string>
@@ -1190,6 +1245,8 @@
     <string name="exists">esiste</string>
     <string name="notexists">non esiste</string>
     <string name="temptargetcompared">Temp-Target %1$s</string>
+    <string name="btdevicecompared">Connessione Bluetooth a dispositivo %1$s %2$s</string>
+    <string name="btdevice">Connessione a dispositivo Bluetooth </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -1244,6 +1301,7 @@
     <string name="medtronic_pump_battery_alkaline">Alcalina (Extended view)</string>
     <string name="medtronic_pump_battery_lithium">Litio (Extended view)</string>
     <string name="medtronic_pump_battery_nizn">NiZn (Extended view)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (Extended view)</string>
     <string name="medtronic_bolus_debugging">Debug Bolo/Trattamenti</string>
     <!-- RL BLE Scanning -->
     <string name="rileylink_scanner_scan_scan">SCAN</string>
@@ -1259,6 +1317,7 @@
     <string name="rileylink_scanner_scanning">Scansione</string>
     <string name="rileylink_scanner_scanning_finished">Scansione terminata</string>
     <string name="rileylink_scanner_scanning_error">Errore scansione: %1$d</string>
+    <string name="common_never">Mai</string>
     <!-- RL Status Page -->
     <string name="rileylink_settings_tab1">Impostazioni</string>
     <string name="rileylink_settings_tab2">Storico</string>
@@ -1392,6 +1451,7 @@
     <string name="objectives_button_unstart">Cancella avvio</string>
     <string name="timedetection">Rilevazione tempo</string>
     <string name="doyouwantresetstart">Vuoi resettare l\'avvio dell\'obiettivo? Potresti perdere i tuoi progressi.</string>
+    <string name="time_or_timezone_change">Cambio di ora e/o fuso orario sul micro</string>
     <string name="nopumpselected">Nessun micro selezionato</string>
     <string name="setupwizard_units_prompt">Seleziona le unità in cui vuoi visualizzare i valori</string>
     <string name="ns_ploadlocalprofile">Carica modifiche al profilo locale in NS</string>
@@ -1448,4 +1508,34 @@
     <string name="loop_tbrexecution_time_label">Esecuzione basale temporanea (momento)</string>
     <string name="insight_alert_notification_channel">Avvisi micro Insight</string>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app Autenticatore per: %1$s</string>
+    <string name="smscommunicator_otp_enabled">Abilita Autenticatore</string>
+    <string name="smscommunicator_otp_enabled_summary">Autentica i comandi utilizzando OTP (One Time Password) generate da Google Authenticator o app 2FA simili.</string>
+    <string name="smscommunicator_otp_pin">PIN aggiuntivo a fine token</string>
+    <string name="smscommunicator_otp_pin_summary">Cifre aggiuntive che devono essere memorizzate e incollate alla fine di ogni OTP generata</string>
+    <string name="smscomunicator_tab_otp_label">Configurazione Autenticatore</string>
+    <string name="smscommunicator_otp_verify_label">OTP per verifica:</string>
+    <string name="smscommunicator_otp_reset_btn">Resetta Autenticatori</string>
+    <string name="smscommunicator_otp_reset_title">Resetta Chiave Autenticatore</string>
+    <string name="smscommunicator_otp_reset_prompt">Sei sicuro di resettare la chiave Autenticatore? Renderà non validi tutti gli Autenticatori attualmente configurati e sarà necessario configurarli nuovamente.</string>
+    <string name="smscommunicator_otp_reset_successful">La nuova Chiave Autenticatore è stata generata! Utilizza il QRCode aggiornato per fornire gli autenticatori.</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Installa l\'Autenticatore</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scansione il codice per configurare i codici OTP di AndroidAPS</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Testa OTP</string>
+    <string name="smscommunicator_otp_reset_header">Resetta Autenticatori</string>
+    <string name="smscommunicator_otp_install_info">Su ogni telefono follower installa una app Autenticatore che supporta i token RFC 6238 TOTP. App gratuite popolari sono:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_provisioning_warning">NON CONDIVIDERE questo codice online!\nUtilizzalo solo per configurare l\'app Autenticatore sui telefoni follower.</string>
+    <string name="smscommunicator_otp_reset_warning">Resettando l\'autenticatore rendi non validi tutti gli autenticatori già forniti. Dovrai configurarli di nuovo!</string>
+    <string name="onconnect">Alla connessione</string>
+    <string name="ondisconnect">Alla disconnessione</string>
+    <string name="overview_show_predictions">Predizioni</string>
+    <string name="overview_show_deviationslope">Pendenza deviazione</string>
+    <string name="authorizationfailed">Autorizzazione fallita</string>
+    <string name="overview_show_absinsulin">Insulina assoluta</string>
+    <string name="master_password_summary">La password master viene utilizzata per la crittografia del backup e per gestire la sicurezza nell\'applicazione. Ricordala o conservala in un luogo sicuro.</string>
+    <string name="passwords_dont_match">Le password non coincidono</string>
+    <string name="current_master_password">Password Master corrente</string>
+    <string name="statuslights">Indicatori di stato</string>
+    <string name="statuslights_copy_ns">Copia impostazioni da NS</string>
+    <string name="copyexistingvalues">Copiare impostazioni NS (se esiste)?</string>
 </resources>

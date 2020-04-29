@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
@@ -13,7 +16,14 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLink
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
+import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicConverter;
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder;
+import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
+import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.OmnipodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
@@ -41,9 +51,17 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodReturne
 /**
  * Created by andy on 6/29/18.
  */
-
+// FIXME should be named OmnipodCommunicationManager
 public class OmnipodCommunicationService extends RileyLinkCommunicationManager {
 
+    @Inject AAPSLogger aapsLogger;
+    @Inject MedtronicPumpStatus medtronicPumpStatus;
+    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+    @Inject MedtronicConverter medtronicConverter;
+    @Inject MedtronicUtil medtronicUtil;
+    @Inject MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
+    @Inject RileyLinkServiceData rileyLinkServiceData;
+    @Inject ServiceTaskExecutor serviceTaskExecutor;
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public OmnipodCommunicationService(RFSpy rfspy) {

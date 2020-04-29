@@ -218,16 +218,6 @@ public class MainApp extends DaggerApplication {
     }
 
     @Deprecated
-    public static int gc(@ColorRes int id) {
-        return ContextCompat.getColor(instance(), id);
-    }
-
-    @Deprecated
-    public static Resources resources() {
-        return sResources;
-    }
-
-    @Deprecated
     public static MainApp instance() {
         return sInstance;
     }

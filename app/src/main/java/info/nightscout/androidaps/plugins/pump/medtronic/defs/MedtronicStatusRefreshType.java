@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.defs;
 
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
-
 /**
  * Created by andy on 6/28/18.
  */
@@ -30,9 +28,9 @@ public enum MedtronicStatusRefreshType {
     }
 
 
-    public MedtronicCommandType getCommandType() {
+    public MedtronicCommandType getCommandType(MedtronicDeviceType medtronicDeviceType) {
         if (this == Configuration) {
-            return MedtronicCommandType.getSettings(MedtronicUtil.getMedtronicPumpModel());
+            return MedtronicCommandType.getSettings(medtronicDeviceType);
         } else
             return commandType;
     }

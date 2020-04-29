@@ -105,7 +105,6 @@
     <string name="sms_delta">Verschil:</string>
     <string name="configbuilder">Configurator</string>
     <string name="objectives">Doelen</string>
-    <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Overzicht</string>
     <string name="nsprofile">NS Profiel</string>
     <string name="simpleprofile">Eenvoudig profiel</string>
@@ -543,8 +542,6 @@
     <string name="enablesuperbolus">Activeer superbolus in de wizard</string>
     <string name="enablesuperbolus_summary">Activeer de superbolus functie in de wizard. Activeer deze niet tot je begrijpt wat dit doet. OVERDOSIS IS MOGELIJK BIJ BLINDELINGS GEBRUIK!</string>
     <string name="show_statuslights">Toon statusindicatoren op startscherm</string>
-    <string name="show_statuslights_extended">Toon uitgebreide statusindicatoren op overzicht scherm</string>
-    <string name="show_statuslights_extended_summary">Statusindicatoren inschakelen voor cage, iage, sage, reservoir en batterijniveau op het overzicht scherm.</string>
     <string name="statuslights_res_warning">Drempel waarschuwing reservoir niveau [E]</string>
     <string name="statuslights_res_critical">Drempel alarm reservoir niveau [E]</string>
     <string name="statuslights_bat_warning">Drempel waarschuwing batterij niveau [%]</string>
