@@ -1,6 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
+import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceTransport;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventRefreshButtonState;
@@ -12,31 +20,32 @@ import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtro
 public class ResetRileyLinkConfigurationTask extends PumpTask {
 
     private static final String TAG = "ResetRileyLinkTask";
+    @Inject ActivePluginProvider activePlugin;
+    @Inject RxBusWrapper rxBus;
 
-
-    public ResetRileyLinkConfigurationTask() {
+    public ResetRileyLinkConfigurationTask(HasAndroidInjector injector) {
+        super(injector);
     }
 
 
-    public ResetRileyLinkConfigurationTask(ServiceTransport transport) {
-        super(transport);
+    public ResetRileyLinkConfigurationTask(HasAndroidInjector injector, ServiceTransport transport) {
+        super(injector, transport);
     }
 
 
     @Override
     public void run() {
-	// TODO Omnipod refactor this	
-	if (MedtronicUtil.isMedtronicPump()) {
-        RxBus.Companion.getINSTANCE().send(new EventRefreshButtonState(false));
-        MedtronicPumpPlugin.isBusy = true;
-        RileyLinkMedtronicService.getInstance().resetRileyLinkConfiguration();
-        MedtronicPumpPlugin.isBusy = false;
-        RxBus.Companion.getINSTANCE().send(new EventRefreshButtonState(true));
-    } else if (OmnipodUtil.isOmnipodEros()) {
-            OmnipodPumpPlugin.isBusy = true;
-            RileyLinkOmnipodService.getInstance().resetRileyLinkConfiguration();
-            OmnipodPumpPlugin.isBusy = false;
-        }
+        // this is intended only for RL supported pump, so we can cast to PumpPluginAbstract
+        RileyLinkPumpDevice pumpAbstract = (RileyLinkPumpDevice)activePlugin.getActivePump();
 
-	RxBus.Companion.getINSTANCE().send(new EventRefreshButtonState(true));
+        rxBus.send(new EventRefreshButtonState(false));
+
+        pumpAbstract.setIsBusy(true);
+        pumpAbstract.resetRileyLinkConfiguration();
+        pumpAbstract.setIsBusy(false);
+
+        rxBus.send(new EventRefreshButtonState(true));
+    }
+
+
 }

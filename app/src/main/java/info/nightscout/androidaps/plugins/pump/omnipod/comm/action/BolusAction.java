@@ -4,7 +4,7 @@ import org.joda.time.Duration;
 
 import java.util.Arrays;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.BolusExtraCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.SetInsulinScheduleCommand;
@@ -40,7 +40,7 @@ public class BolusAction implements OmnipodAction<StatusResponse> {
     }
 
     @Override
-    public StatusResponse execute(OmnipodCommunicationService communicationService) {
+    public StatusResponse execute(OmnipodCommunicationManager communicationService) {
         BolusDeliverySchedule bolusDeliverySchedule = new BolusDeliverySchedule(units, timeBetweenPulses);
         SetInsulinScheduleCommand setInsulinScheduleCommand = new SetInsulinScheduleCommand(
                 podState.getCurrentNonce(), bolusDeliverySchedule);

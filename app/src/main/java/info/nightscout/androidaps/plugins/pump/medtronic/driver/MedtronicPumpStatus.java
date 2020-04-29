@@ -60,13 +60,12 @@ public class MedtronicPumpStatus extends PumpStatus {
 
 
     @Inject
-    public MedtronicPumpStatus(
-            ResourceHelper resourceHelper,
+    public MedtronicPumpStatus(ResourceHelper resourceHelper,
             SP sp,
             RxBusWrapper rxBus,
             RileyLinkUtil rileyLinkUtil
     ) {
-        super();
+        super(PumpType.Medtronic_522_722);
         this.resourceHelper = resourceHelper;
         this.sp = sp;
         this.rxBus = rxBus;
@@ -75,7 +74,7 @@ public class MedtronicPumpStatus extends PumpStatus {
     }
 
 
-    private void initSettings() {
+    public void initSettings() {
 
         this.activeProfileName = "STD";
         this.reservoirRemainingUnits = 75d;
@@ -122,7 +121,6 @@ public class MedtronicPumpStatus extends PumpStatus {
         medtronicPumpMap.put("723", PumpType.Medtronic_523_723_Revel);
         medtronicPumpMap.put("554", PumpType.Medtronic_554_754_Veo);
         medtronicPumpMap.put("754", PumpType.Medtronic_554_754_Veo);
-
     }
 
     public Map<String, PumpType> getMedtronicPumpMap() {

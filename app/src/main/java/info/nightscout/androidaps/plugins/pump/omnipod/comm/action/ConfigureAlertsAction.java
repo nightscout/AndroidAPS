@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.action;
 
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.ConfigureAlertsCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertConfiguration;
@@ -25,7 +25,7 @@ public class ConfigureAlertsAction implements OmnipodAction<StatusResponse> {
     }
 
     @Override
-    public StatusResponse execute(OmnipodCommunicationService communicationService) {
+    public StatusResponse execute(OmnipodCommunicationManager communicationService) {
         ConfigureAlertsCommand configureAlertsCommand = new ConfigureAlertsCommand(podState.getCurrentNonce(), alertConfigurations);
         StatusResponse statusResponse = communicationService.sendCommand(StatusResponse.class, podState, configureAlertsCommand);
         for (AlertConfiguration alertConfiguration : alertConfigurations) {

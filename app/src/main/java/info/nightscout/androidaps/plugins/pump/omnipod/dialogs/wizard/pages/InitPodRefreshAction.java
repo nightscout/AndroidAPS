@@ -30,6 +30,8 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
     private PodManagementActivity podManagementActivity;
     private PodActionType actionType;
 
+    OmnipodUtil omnipodUtil;
+
     public InitPodRefreshAction(PodManagementActivity podManagementActivity, PodActionType actionType) {
         this.podManagementActivity = podManagementActivity;
         this.actionType = actionType;
@@ -51,14 +53,14 @@ public class InitPodRefreshAction extends AbstractCancelAction implements Finish
     @Override
     public void execute() {
         if (actionType==PodActionType.InitPod) {
-            if (OmnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED)) {
-                OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodInitializing);
+            if (omnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED)) {
+                omnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodInitializing);
             } else {
-                OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAttached);
+                omnipodUtil.setDriverState(OmnipodDriverState.Initalized_PodAttached);
                 uploadCareportalEvent(System.currentTimeMillis(), CareportalEvent.SITECHANGE);
             }
         } else {
-            OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod);
+            omnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod);
         }
 
         podManagementActivity.refreshButtons();

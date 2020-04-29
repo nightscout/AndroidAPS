@@ -10,7 +10,12 @@ import java.util.EnumSet;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AcknowledgeAlertsAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AssignAddressAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.BolusAction;
@@ -44,7 +49,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceOutOf
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
-import info.nightscout.androidaps.utils.SP;
+
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Single;
@@ -55,17 +61,25 @@ import io.reactivex.subjects.SingleSubject;
 public class OmnipodManager {
     private static final int ACTION_VERIFICATION_TRIES = 3;
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    //private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
-    protected final OmnipodCommunicationService communicationService;
+    protected final OmnipodCommunicationManager communicationService;
     private final PodStateChangedHandler podStateChangedHandler;
     protected PodSessionState podState;
 
     private ActiveBolusData activeBolusData;
     private final Object bolusDataMutex = new Object();
 
-    public OmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState,
+    private HasAndroidInjector injector;
+    @Inject AAPSLogger aapsLogger;
+    @Inject SP sp;
+
+    public OmnipodManager(HasAndroidInjector injector,
+                          OmnipodCommunicationManager communicationService,
+                          PodSessionState podState,
                           PodStateChangedHandler podStateChangedHandler) {
+        this.injector = injector;
+        this.injector.androidInjector().inject(this);
         if (communicationService == null) {
             throw new IllegalArgumentException("Communication service cannot be null");
         }
@@ -77,8 +91,10 @@ public class OmnipodManager {
         this.podStateChangedHandler = podStateChangedHandler;
     }
 
-    public OmnipodManager(OmnipodCommunicationService communicationService, PodSessionState podState) {
-        this(communicationService, podState, null);
+    public OmnipodManager(HasAndroidInjector injector,
+                          OmnipodCommunicationManager communicationService,
+                          PodSessionState podState) {
+        this(injector, communicationService, podState, null);
     }
 
     public synchronized Single<SetupActionResult> pairAndPrime() {
@@ -239,7 +255,7 @@ public class OmnipodManager {
             return executeAndVerify(() -> {
                 StatusResponse statusResponse = communicationService.executeAction(new CancelDeliveryAction(podState, deliveryTypes, acknowledgementBeep));
                 if (isLoggingEnabled()) {
-                    LOG.info("Status response after cancel delivery[types={}]: {}", deliveryTypes.toString(), statusResponse.toString());
+                    aapsLogger.info(LTag.PUMPCOMM,"Status response after cancel delivery[types={}]: {}", deliveryTypes.toString(), statusResponse.toString());
                 }
                 return statusResponse;
             });
@@ -267,7 +283,7 @@ public class OmnipodManager {
 
             // Catch uncertain exceptions as we still want to report bolus progress indication
             if (isLoggingEnabled()) {
-                LOG.error("Caught exception[certainFailure=false] in bolus", ex);
+                aapsLogger.error(LTag.PUMPCOMM,"Caught exception[certainFailure=false] in bolus", ex);
             }
             commandDeliveryStatus = CommandDeliveryStatus.UNCERTAIN_FAILURE;
         } finally {
@@ -320,12 +336,12 @@ public class OmnipodManager {
                                 unitsNotDelivered = ex.getFaultEvent().getInsulinNotDelivered();
 
                                 if (isLoggingEnabled()) {
-                                    LOG.debug("Caught PodFaultException in bolus completion verification", ex);
+                                    aapsLogger.debug(LTag.PUMPCOMM,"Caught PodFaultException in bolus completion verification", ex);
                                 }
                                 break;
                             } catch (Exception ex) {
                                 if (isLoggingEnabled()) {
-                                    LOG.debug("Ignoring exception in bolus completion verification", ex);
+                                    aapsLogger.debug(LTag.PUMPCOMM,"Ignoring exception in bolus completion verification", ex);
                                 }
                             }
                         }
@@ -434,9 +450,9 @@ public class OmnipodManager {
             try {
                 PodInfoResponse podInfoResponse = communicationService.executeAction(new GetPodInfoAction(podState, PodInfoType.RECENT_PULSE_LOG));
                 PodInfoRecentPulseLog pulseLogInfo = podInfoResponse.getPodInfo();
-                LOG.info("Retrieved pulse log from the pod: {}", pulseLogInfo.toString());
+                aapsLogger.info(LTag.PUMPCOMM,"Retrieved pulse log from the pod: {}", pulseLogInfo.toString());
             } catch (Exception ex) {
-                LOG.warn("Failed to retrieve pulse log from the pod", ex);
+                aapsLogger.warn(LTag.PUMPCOMM,"Failed to retrieve pulse log from the pod", ex);
             }
         }
 
@@ -445,7 +461,7 @@ public class OmnipodManager {
             communicationService.executeAction(new DeactivatePodAction(podState, true));
         } catch (PodFaultException ex) {
             if (isLoggingEnabled()) {
-                LOG.info("Ignoring PodFaultException in deactivatePod", ex);
+                aapsLogger.info(LTag.PUMPCOMM,"Ignoring PodFaultException in deactivatePod", ex);
             }
         } finally {
             logCommandExecutionFinished("deactivatePod");
@@ -456,13 +472,13 @@ public class OmnipodManager {
 
     public void resetPodState(boolean forcedByUser) {
         if (isLoggingEnabled()) {
-            LOG.warn("resetPodState has been called. forcedByUser={}", forcedByUser);
+            aapsLogger.warn(LTag.PUMPCOMM,"resetPodState has been called. forcedByUser={}", forcedByUser);
         }
         podState = null;
-        SP.remove(OmnipodConst.Prefs.PodState);
+        sp.remove(OmnipodConst.Prefs.PodState);
     }
 
-    public OmnipodCommunicationService getCommunicationService() {
+    public OmnipodCommunicationManager getCommunicationService() {
         return communicationService;
     }
 
@@ -499,7 +515,7 @@ public class OmnipodManager {
                 throw originalException;
             } else {
                 if (isLoggingEnabled()) {
-                    LOG.warn("Caught exception in executeAndVerify. Verifying command by using cancel none command to verify nonce", originalException);
+                    aapsLogger.warn(LTag.PUMPCOMM,"Caught exception in executeAndVerify. Verifying command by using cancel none command to verify nonce", originalException);
                 }
 
                 try {
@@ -507,13 +523,13 @@ public class OmnipodManager {
                     StatusResponse statusResponse = communicationService.sendCommand(StatusResponse.class, podState,
                             new CancelDeliveryCommand(podState.getCurrentNonce(), BeepType.NO_BEEP, DeliveryType.NONE), false);
                     if (isLoggingEnabled()) {
-                        LOG.info("Command status resolved to SUCCESS. Status response after cancelDelivery[types=DeliveryType.NONE]: {}", statusResponse);
+                        aapsLogger.info(LTag.PUMPCOMM,"Command status resolved to SUCCESS. Status response after cancelDelivery[types=DeliveryType.NONE]: {}", statusResponse);
                     }
 
                     return statusResponse;
                 } catch (NonceOutOfSyncException verificationException) {
                     if (isLoggingEnabled()) {
-                        LOG.error("Command resolved to FAILURE (CERTAIN_FAILURE)", verificationException);
+                        aapsLogger.error(LTag.PUMPCOMM,"Command resolved to FAILURE (CERTAIN_FAILURE)", verificationException);
                     }
                     if (originalException instanceof OmnipodException) {
                         ((OmnipodException) originalException).setCertainFailure(true);
@@ -525,7 +541,7 @@ public class OmnipodManager {
                     }
                 } catch (Exception verificationException) {
                     if (isLoggingEnabled()) {
-                        LOG.error("Command unresolved (UNCERTAIN_FAILURE)", verificationException);
+                        aapsLogger.error(LTag.PUMPCOMM,"Command unresolved (UNCERTAIN_FAILURE)", verificationException);
                     }
                     throw originalException;
                 } finally {
@@ -566,18 +582,19 @@ public class OmnipodManager {
 
     private void logStartingCommandExecution(String action) {
         if (isLoggingEnabled()) {
-            LOG.debug("Starting command execution for action: " + action);
+            aapsLogger.debug(LTag.PUMPCOMM,"Starting command execution for action: " + action);
         }
     }
 
     private void logCommandExecutionFinished(String action) {
         if (isLoggingEnabled()) {
-            LOG.debug("Command execution finished for action: " + action);
+            aapsLogger.debug(LTag.PUMPCOMM,"Command execution finished for action: " + action);
         }
     }
 
+    // TODO remove this
     private boolean isLoggingEnabled() {
-        return L.isEnabled(L.PUMP);
+        return true;
     }
 
     private static Duration calculateBolusDuration(double units, double deliveryRate) {

@@ -24,6 +24,7 @@ import info.nightscout.androidaps.utils.SP;
 /**
  * Created by andy on 4.8.2019
  */
+// TODO refactor to use dagger, just commented out errors
 public class OmnipodDashCommunicationManager implements OmnipodCommunicationManagerInterface {
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
@@ -34,8 +35,8 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
 
     public OmnipodDashCommunicationManager(Context context, RFSpy rfspy) {
         omnipodCommunicationManager = this;
-        OmnipodUtil.getPumpStatus().previousConnection = SP.getLong(
-                RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
+//        OmnipodUtil.getPumpStatus().previousConnection = SP.getLong(
+//                RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, 0L);
     }
 
 

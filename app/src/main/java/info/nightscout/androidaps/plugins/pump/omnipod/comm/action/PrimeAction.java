@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.PrimeService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
@@ -39,7 +39,7 @@ public class PrimeAction implements OmnipodAction<StatusResponse> {
     }
 
     @Override
-    public StatusResponse execute(OmnipodCommunicationService communicationService) {
+    public StatusResponse execute(OmnipodCommunicationManager communicationService) {
         if (podState.getSetupProgress().isBefore(SetupProgress.POD_CONFIGURED)) {
             throw new IllegalSetupProgressException(SetupProgress.POD_CONFIGURED, podState.getSetupProgress());
         }

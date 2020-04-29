@@ -3,18 +3,27 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.ui;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
+import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
+import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodResponseType;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
@@ -25,7 +34,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 public class OmnipodUITask {
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    @Inject RxBusWrapper rxBus;
+    @Inject AAPSLogger aapsLogger;
+    @Inject OmnipodPumpStatus omnipodPumpStatus;
+    @Inject OmnipodUtil omnipodUtil;
+
+    private final HasAndroidInjector injector;
+    
+    //private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     public OmnipodCommandType commandType;
     public PumpEnactResult returnData;
@@ -35,12 +51,16 @@ public class OmnipodUITask {
     public Object returnDataObject;
 
 
-    public OmnipodUITask(OmnipodCommandType commandType) {
+    public OmnipodUITask(HasAndroidInjector injector, OmnipodCommandType commandType) {
+        this.injector = injector;
+        this.injector.androidInjector().inject(this);
         this.commandType = commandType;
     }
 
 
-    public OmnipodUITask(OmnipodCommandType commandType, Object... parameters) {
+    public OmnipodUITask(HasAndroidInjector injector, OmnipodCommandType commandType, Object... parameters) {
+        this.injector = injector;
+        this.injector.androidInjector().inject(this);
         this.commandType = commandType;
         this.parameters = parameters;
     }
@@ -48,8 +68,8 @@ public class OmnipodUITask {
 
     public void execute(OmnipodCommunicationManagerInterface communicationManager) {
 
-        if (isLogEnabled())
-            LOG.debug("OmnipodUITask: @@@ In execute. {}", commandType);
+        
+            aapsLogger.debug(LTag.PUMP,"OmnipodUITask: @@@ In execute. {}", commandType);
 
         switch (commandType) {
 
@@ -91,8 +111,8 @@ public class OmnipodUITask {
                         responseType = PodResponseType.Acknowledgment;
                         break;
                     } catch (Exception ex) {
-                        if (isLogEnabled()) {
-                            LOG.warn("Failed to retrieve pulse log", ex);
+                         {
+                            aapsLogger.warn(LTag.PUMP,"Failed to retrieve pulse log", ex);
                         }
                         returnDataObject = null;
                         responseType = PodResponseType.Error;
@@ -129,7 +149,7 @@ public class OmnipodUITask {
                 break;
 
             default: {
-                LOG.warn("This commandType is not supported (yet) - {}.", commandType);
+                aapsLogger.warn(LTag.PUMP,"This commandType is not supported (yet) - {}.", commandType);
                 responseType = PodResponseType.Error;
             }
 
@@ -183,33 +203,32 @@ public class OmnipodUITask {
     public void postProcess(OmnipodUIPostprocessor postprocessor) {
 
         EventOmnipodDeviceStatusChange statusChange;
-        if (isLogEnabled())
-            LOG.debug("OmnipodUITask: @@@ postProcess. {}", commandType);
-
-        LOG.debug("OmnipodUITask: @@@ postProcess. responseType={}", responseType);
+        
+        aapsLogger.debug(LTag.PUMP,"OmnipodUITask: @@@ postProcess. {}", commandType);
+        aapsLogger.debug(LTag.PUMP,"OmnipodUITask: @@@ postProcess. responseType={}", responseType);
 
         if (responseType == PodResponseType.Data || responseType == PodResponseType.Acknowledgment) {
             postprocessor.postProcessData(this);
         }
 
-        LOG.debug("OmnipodUITask: @@@ postProcess. responseType={}", responseType);
+        aapsLogger.debug(LTag.PUMP,"OmnipodUITask: @@@ postProcess. responseType={}", responseType);
 
         if (responseType == PodResponseType.Invalid) {
             statusChange = new EventOmnipodDeviceStatusChange(PodDeviceState.ErrorWhenCommunicating,
                     "Unsupported command in OmnipodUITask");
-            OmnipodUtil.getPumpStatus().setLastFailedCommunicationToNow();
-            postprocessor.getRxBus().send(statusChange);
+            omnipodPumpStatus.setLastFailedCommunicationToNow();
+            rxBus.send(statusChange);
         } else if (responseType == PodResponseType.Error) {
             statusChange = new EventOmnipodDeviceStatusChange(PodDeviceState.ErrorWhenCommunicating,
                     errorDescription);
-            OmnipodUtil.getPumpStatus().setLastFailedCommunicationToNow();
-            postprocessor.getRxBus().send(statusChange);
+            omnipodPumpStatus.setLastFailedCommunicationToNow();
+            rxBus.send(statusChange);
         } else {
-            OmnipodUtil.getPumpStatus().setLastCommunicationToNow();
-            postprocessor.getRxBus().send(new EventOmnipodPumpValuesChanged());
+            omnipodPumpStatus.setLastCommunicationToNow();
+            rxBus.send(new EventOmnipodPumpValuesChanged());
         }
 
-        OmnipodUtil.setPodDeviceState(PodDeviceState.Sleeping);
+        omnipodUtil.setPodDeviceState(PodDeviceState.Sleeping);
     }
 
 

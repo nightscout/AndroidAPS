@@ -13,7 +13,6 @@ import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
@@ -22,7 +21,6 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
@@ -30,7 +28,6 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState;
@@ -98,9 +95,9 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
             omnipodCommunicationManager = OmnipodDashCommunicationManager.getInstance();
         }
 
-        omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager, this, this.pumpStatusLocal);
+        // DG omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager, this, this.omnipodPumpStatus);
 
-        OmnipodUtil.setPlugin(this);
+        //OmnipodUtil.setPlugin(this);
 
         // FIXME
 //        serviceConnection = new ServiceConnection() {

@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 
 import java.util.Collections;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.ConfigurePodCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.VersionResponse;
@@ -25,7 +25,7 @@ public class ConfigurePodAction implements OmnipodAction<VersionResponse> {
     }
 
     @Override
-    public VersionResponse execute(OmnipodCommunicationService communicationService) {
+    public VersionResponse execute(OmnipodCommunicationManager communicationService) {
         if (!podState.getSetupProgress().equals(SetupProgress.ADDRESS_ASSIGNED)) {
             throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, podState.getSetupProgress());
         }

@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
+import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
@@ -34,7 +35,7 @@ public abstract class RileyLinkCommunicationManager {
     @Inject protected AAPSLogger aapsLogger;
     @Inject protected SP sp;
 
-    @Inject MedtronicPumpStatus medtronicPumpStatus;
+    //@Inject MedtronicPumpStatus medtronicPumpStatus;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject ServiceTaskExecutor serviceTaskExecutor;
 
@@ -77,7 +78,7 @@ public abstract class RileyLinkCommunicationManager {
         return sendAndListen(msg, timeout_ms, repeatCount, 0, extendPreamble_ms, clazz);
     }
 
-    private <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms, Class<E> clazz)
+    protected <E extends RLMessage> E sendAndListen(RLMessage msg, int timeout_ms, int repeatCount, int retryCount, Integer extendPreamble_ms, Class<E> clazz)
             throws RileyLinkCommunicationException {
 
         // internal flag
@@ -129,6 +130,9 @@ public abstract class RileyLinkCommunicationManager {
     public abstract <E extends RLMessage> E createResponseMessage(byte[] payload, Class<E> clazz);
 
 
+    public abstract void setPumpDeviceState(PumpDeviceState pumpDeviceState);
+
+
     public void wakeUp(boolean force) {
         wakeUp(receiverDeviceAwakeForMinutes, force);
     }
@@ -150,7 +154,7 @@ public abstract class RileyLinkCommunicationManager {
         // **** FIXME: this wakeup doesn't seem to work well... must revisit
         // receiverDeviceAwakeForMinutes = duration_minutes;
 
-        medtronicPumpStatus.setPumpDeviceState(PumpDeviceState.WakingUp);
+        setPumpDeviceState(PumpDeviceState.WakingUp);
 
         if (force)
             nextWakeUpRequired = 0L;
@@ -208,7 +212,7 @@ public abstract class RileyLinkCommunicationManager {
         double[] scanFrequencies = rileyLinkServiceData.rileyLinkTargetFrequency.getScanFrequencies();
 
         if (scanFrequencies.length == 1) {
-            return RileyLinkUtil.isSame(scanFrequencies[0], frequency);
+            return Round.isSame(scanFrequencies[0], frequency);
         } else {
             return (scanFrequencies[0] <= frequency && scanFrequencies[scanFrequencies.length - 1] >= frequency);
         }

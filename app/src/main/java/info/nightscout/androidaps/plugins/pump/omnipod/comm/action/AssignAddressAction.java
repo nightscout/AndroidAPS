@@ -5,7 +5,7 @@ import org.joda.time.DateTimeZone;
 import java.util.Collections;
 import java.util.Random;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.AssignAddressCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.VersionResponse;
@@ -28,7 +28,7 @@ public class AssignAddressAction implements OmnipodAction<PodSessionState> {
     }
 
     @Override
-    public PodSessionState execute(OmnipodCommunicationService communicationService) {
+    public PodSessionState execute(OmnipodCommunicationManager communicationService) {
         PodSetupState setupState = new PodSetupState(address, 0x00, 0x00);
 
         AssignAddressCommand assignAddress = new AssignAddressCommand(setupState.getAddress());

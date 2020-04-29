@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.comm.action;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.GetStatusCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
@@ -18,7 +18,7 @@ public class GetStatusAction implements OmnipodAction<StatusResponse> {
     }
 
     @Override
-    public StatusResponse execute(OmnipodCommunicationService communicationService) {
+    public StatusResponse execute(OmnipodCommunicationManager communicationService) {
         return communicationService.sendCommand(StatusResponse.class, podState, new GetStatusCommand(PodInfoType.NORMAL));
     }
 }

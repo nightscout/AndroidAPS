@@ -6,7 +6,7 @@ import org.joda.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.BolusAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.ConfigureAlertsAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.SetBasalScheduleAction;
@@ -18,13 +18,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionStat
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 
 public class InsertCannulaService {
-    public StatusResponse programInitialBasalSchedule(OmnipodCommunicationService communicationService,
+    public StatusResponse programInitialBasalSchedule(OmnipodCommunicationManager communicationService,
                                                       PodSessionState podState, BasalSchedule basalSchedule) {
         return communicationService.executeAction(new SetBasalScheduleAction(podState, basalSchedule,
                 true, podState.getScheduleOffset(), false));
     }
 
-    public StatusResponse executeExpirationRemindersAlertCommand(OmnipodCommunicationService communicationService,
+    public StatusResponse executeExpirationRemindersAlertCommand(OmnipodCommunicationManager communicationService,
                                                                  PodSessionState podState) {
         AlertConfiguration lowReservoirAlertConfiguration = AlertConfigurationFactory.createLowReservoirAlertConfiguration(OmnipodConst.LOW_RESERVOIR_ALERT);
 
@@ -52,7 +52,7 @@ public class InsertCannulaService {
         return new ConfigureAlertsAction(podState, alertConfigurations).execute(communicationService);
     }
 
-    public StatusResponse executeInsertionBolusCommand(OmnipodCommunicationService communicationService, PodSessionState podState) {
+    public StatusResponse executeInsertionBolusCommand(OmnipodCommunicationManager communicationService, PodSessionState podState) {
         return communicationService.executeAction(new BolusAction(podState, OmnipodConst.POD_CANNULA_INSERTION_BOLUS_UNITS,
                 Duration.standardSeconds(1), false, false));
     }

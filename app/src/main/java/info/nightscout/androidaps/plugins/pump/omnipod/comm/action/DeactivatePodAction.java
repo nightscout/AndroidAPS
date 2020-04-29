@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.action;
 
 import java.util.EnumSet;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.DeactivatePodCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryType;
@@ -23,7 +23,7 @@ public class DeactivatePodAction implements OmnipodAction<StatusResponse> {
     }
 
     @Override
-    public StatusResponse execute(OmnipodCommunicationService communicationService) {
+    public StatusResponse execute(OmnipodCommunicationManager communicationService) {
         if (!podState.isSuspended() && !podState.hasFaultEvent()) {
             try {
                 communicationService.executeAction(new CancelDeliveryAction(podState,

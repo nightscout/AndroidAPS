@@ -5,7 +5,7 @@ import org.joda.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.SetInsulinScheduleCommand;
@@ -37,7 +37,7 @@ public class SetTempBasalAction implements OmnipodAction<StatusResponse> {
     }
 
     @Override
-    public StatusResponse execute(OmnipodCommunicationService communicationService) {
+    public StatusResponse execute(OmnipodCommunicationManager communicationService) {
         List<MessageBlock> messageBlocks = Arrays.asList( //
                 new SetInsulinScheduleCommand(podState.getCurrentNonce(), rate, duration),
                 new TempBasalExtraCommand(rate, duration, acknowledgementBeep, completionBeep, Duration.ZERO));

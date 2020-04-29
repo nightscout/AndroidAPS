@@ -29,6 +29,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
@@ -38,8 +41,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 /**
  * Created by andy on 12/11/2019
  */
-public class PodInfoFragment extends Fragment {
+public class PodInfoFragment extends DaggerFragment {
     private static final String ARG_KEY = "key";
+
+    @Inject OmnipodUtil omnipodUtil;
 
     private PageFragmentCallbacks mCallbacks;
     private String mKey;
@@ -95,7 +100,7 @@ public class PodInfoFragment extends Fragment {
 
     private boolean createDataOfPod() {
 
-        PodSessionState podSessionState = OmnipodUtil.getPodSessionState();
+        PodSessionState podSessionState = omnipodUtil.getPodSessionState();
 
 //        PodSessionState podSessionState = new PodSessionState(DateTimeZone.UTC,
 //                483748738,

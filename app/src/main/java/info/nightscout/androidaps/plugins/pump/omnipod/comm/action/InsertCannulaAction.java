@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.InsertCannulaService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
@@ -45,7 +45,7 @@ public class InsertCannulaAction implements OmnipodAction<StatusResponse> {
     }
 
     @Override
-    public StatusResponse execute(OmnipodCommunicationService communicationService) {
+    public StatusResponse execute(OmnipodCommunicationManager communicationService) {
         if (podState.getSetupProgress().isBefore(SetupProgress.PRIMING_FINISHED)) {
             throw new IllegalSetupProgressException(SetupProgress.PRIMING_FINISHED, podState.getSetupProgress());
         }

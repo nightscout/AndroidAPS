@@ -44,7 +44,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var commandQueue: CommandQueueProvider
-
+    @Inject lateinit var omnipodUtil: OmnipodUtil
 
     private var initPodChanged = false
     private var podSessionFullyInitalized = false
@@ -103,7 +103,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
         wizardPagerContext.clearContext()
         wizardPagerContext.pagerSettings = pagerSettings
-        val podSessionState = OmnipodUtil.getPodSessionState()
+        val podSessionState = omnipodUtil.getPodSessionState()
         val isFullInit = podSessionState == null || podSessionState.setupProgress.isBefore(SetupProgress.PRIMING_FINISHED)
         if (isFullInit) {
             wizardPagerContext.wizardModel = FullInitPodWizardModel(applicationContext)
@@ -140,7 +140,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
 
     fun resetPodAction() {
         OKDialog.showConfirmation(this,
-            MainApp.gs(R.string.omnipod_cmd_reset_pod_desc), Thread {
+            resourceHelper.gs(R.string.omnipod_cmd_reset_pod_desc), Thread {
             AapsOmnipodManager.getInstance().resetPodStatus()
             OmnipodUtil.setDriverState(OmnipodDriverState.Initalized_NoPod)
             refreshButtons()
@@ -155,10 +155,10 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
     }
 
     fun refreshButtons() {
-        initpod_init_pod.isEnabled = (OmnipodUtil.getPodSessionState() == null ||
-            OmnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED))
+        initpod_init_pod.isEnabled = (omnipodUtil.getPodSessionState() == null ||
+            omnipodUtil.getPodSessionState().getSetupProgress().isBefore(SetupProgress.COMPLETED))
 
-        val isPodSessionActive = (OmnipodUtil.getPodSessionState() != null)
+        val isPodSessionActive = (omnipodUtil.getPodSessionState() != null)
 
         initpod_remove_pod.isEnabled = isPodSessionActive
         initpod_reset_pod.isEnabled = isPodSessionActive

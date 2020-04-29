@@ -18,16 +18,19 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginType;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
+import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
@@ -46,26 +49,41 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
  * Created by andy on 4/8/19.
  */
 // FIXME
-public class OmnipodUtil extends RileyLinkUtil {
+@Singleton
+public class OmnipodUtil {
 
-    @Inject RxBusWrapper rxBus;
+    //@Inject RxBusWrapper rxBus;
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     private static boolean lowLevelDebug = true;
     private static RileyLinkOmnipodService omnipodService;
-    private static OmnipodPumpStatus omnipodPumpStatus;
+    //private static OmnipodPumpStatus omnipodPumpStatus;
     private static OmnipodCommandType currentCommand;
     private static Gson gsonInstance = createGson();
     //private static PodSessionState podSessionState;
     //private static PodDeviceState podDeviceState;
-    private static OmnipodPumpPluginInterface omnipodPumpPlugin;
+    //private static OmnipodPumpPluginInterface omnipodPumpPlugin;
     private static OmnipodPodType omnipodPodType;
     private static OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
-    private static PumpType pumpType;
+    //private static PumpType pumpType;
 
-    public static Gson getGsonInstance() {
-        return gsonInstance;
+    private final AAPSLogger aapsLogger;
+    private final RxBusWrapper rxBus;
+    private final RileyLinkUtil rileyLinkUtil;
+    private final OmnipodPumpStatus omnipodPumpStatus;
+
+    @Inject
+    public OmnipodUtil(
+            AAPSLogger aapsLogger,
+            RxBusWrapper rxBus,
+            RileyLinkUtil rileyLinkUtil,
+            OmnipodPumpStatus omnipodPumpStatus
+    ) {
+        this.aapsLogger = aapsLogger;
+        this.rxBus = rxBus;
+        this.rileyLinkUtil = rileyLinkUtil;
+        this.omnipodPumpStatus = omnipodPumpStatus;
     }
 
     public static int makeUnsignedShort(int b2, int b1) {
@@ -113,14 +131,14 @@ public class OmnipodUtil extends RileyLinkUtil {
     }
 
 
-    public static OmnipodCommunicationManagerInterface getOmnipodCommunicationManager() {
-        return (OmnipodCommunicationManagerInterface) RileyLinkUtil.rileyLinkCommunicationManager;
-    }
+//    public static OmnipodCommunicationManagerInterface getOmnipodCommunicationManager() {
+//        return (OmnipodCommunicationManagerInterface) RileyLinkUtil.rileyLinkCommunicationManager;
+//    }
 
 
-    public static RileyLinkOmnipodService getOmnipodService() {
-        return OmnipodUtil.omnipodService;
-    }
+//    public static RileyLinkOmnipodService getOmnipodService() {
+//        return OmnipodUtil.omnipodService;
+//    }
 
 
     public static void setOmnipodService(RileyLinkOmnipodService medtronicService) {
@@ -133,12 +151,11 @@ public class OmnipodUtil extends RileyLinkUtil {
 
 
     // FIXME
-    public static void setCurrentCommand(OmnipodCommandType currentCommand) {
+    public void setCurrentCommand(OmnipodCommandType currentCommand) {
         OmnipodUtil.currentCommand = currentCommand;
 
         if (currentCommand != null)
-            historyRileyLink.add(new RLHistoryItem(currentCommand));
-
+            rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(currentCommand));
     }
 
 
@@ -153,10 +170,10 @@ public class OmnipodUtil extends RileyLinkUtil {
         OKDialog.showConfirmation(context, MainApp.gs(R.string.combo_warning),
                 MainApp.gs(R.string.omnipod_error_operation_not_possible_no_configuration), (Runnable)null);
     }
-
-    public static OmnipodPumpStatus getPumpStatus() {
-        return omnipodPumpStatus;
-    }
+//
+//    public static OmnipodPumpStatus getPumpStatus() {
+//        return omnipodPumpStatus;
+//    }
 
     public static OmnipodDriverState getDriverState() {
         return OmnipodUtil.driverState;
@@ -178,9 +195,9 @@ public class OmnipodUtil extends RileyLinkUtil {
 //        }
     }
 
-    public static void setPumpStatus(OmnipodPumpStatus omnipodPumpStatus) {
-        OmnipodUtil.omnipodPumpStatus = omnipodPumpStatus;
-    }
+//    public static void setPumpStatus(OmnipodPumpStatus omnipodPumpStatus) {
+//        OmnipodUtil.omnipodPumpStatus = omnipodPumpStatus;
+//    }
 
     private static Gson createGson() {
         GsonBuilder gsonBuilder = new GsonBuilder()
@@ -196,27 +213,27 @@ public class OmnipodUtil extends RileyLinkUtil {
         return gsonBuilder.create();
     }
 
-    public static void setPodSessionState(PodSessionState podSessionState) {
+    public void setPodSessionState(PodSessionState podSessionState) {
         omnipodPumpStatus.podSessionState = podSessionState;
-        omnipodPumpPlugin.getRxBus().send(new EventOmnipodDeviceStatusChange(podSessionState));
+        rxBus.send(new EventOmnipodDeviceStatusChange(podSessionState));
     }
 
 
-    public static void setPodDeviceState(PodDeviceState podDeviceState) {
+    public void setPodDeviceState(PodDeviceState podDeviceState) {
         omnipodPumpStatus.podDeviceState = podDeviceState;
     }
 
 
-    @NotNull
-    public static OmnipodPumpPluginInterface getPlugin() {
-        return OmnipodUtil.omnipodPumpPlugin;
-    }
+//    @NotNull
+//    public static OmnipodPumpPluginInterface getPlugin() {
+//        return OmnipodUtil.omnipodPumpPlugin;
+//    }
 
 
-    @NotNull
-    public static void setPlugin(OmnipodPumpPluginInterface pumpPlugin) {
-        OmnipodUtil.omnipodPumpPlugin = pumpPlugin;
-    }
+//    @NotNull
+//    public static void setPlugin(OmnipodPumpPluginInterface pumpPlugin) {
+//        OmnipodUtil.omnipodPumpPlugin = pumpPlugin;
+//    }
 
 
     public static void setOmnipodPodType(OmnipodPodType omnipodPodType) {
@@ -227,29 +244,38 @@ public class OmnipodUtil extends RileyLinkUtil {
         return omnipodPodType;
     }
 
-    public static PodDeviceState getPodDeviceState() {
+    public PodDeviceState getPodDeviceState() {
         return omnipodPumpStatus.podDeviceState;
     }
 
 
-    public static PodSessionState getPodSessionState() {
+    public PodSessionState getPodSessionState() {
         return omnipodPumpStatus.podSessionState;
     }
 
-    public static boolean isOmnipodEros() {
-        return OmnipodPumpPlugin.getPlugin().isEnabled(PluginType.PUMP);
+//    public static boolean isOmnipodEros() {
+//        return OmnipodPumpPlugin.getPlugin().isEnabled(PluginType.PUMP);
+//    }
+//
+//    public static boolean isOmnipodDash() {
+//        return OmnipodDashPumpPlugin.getPlugin().isEnabled(PluginType.PUMP);
+//    }
+
+
+    public void setPumpType(PumpType pumpType_) {
+        omnipodPumpStatus.pumpType = pumpType_;
     }
 
-    public static boolean isOmnipodDash() {
-        return OmnipodDashPumpPlugin.getPlugin().isEnabled(PluginType.PUMP);
+    public PumpType getPumpType() {
+        return omnipodPumpStatus.pumpType;
+    }
+
+    public static Gson getGsonInstance() {
+        return gsonInstance;
     }
 
 
-    public static void setPumpType(PumpType pumpType) {
-        OmnipodUtil.pumpType = pumpType;
-    }
 
-    public static PumpType getPumpType() {
-        return pumpType;
-    }
+
+
 }

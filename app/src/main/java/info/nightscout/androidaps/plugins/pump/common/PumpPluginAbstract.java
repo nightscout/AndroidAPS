@@ -44,6 +44,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -57,11 +58,14 @@ import io.reactivex.schedulers.Schedulers;
 public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpInterface, ConstraintsInterface {
     private CompositeDisposable disposable = new CompositeDisposable();
 
+    protected HasAndroidInjector injector;
     protected AAPSLogger aapsLogger;
     protected RxBusWrapper rxBus;
     protected ActivePluginProvider activePlugin;
     protected Context context;
     protected FabricPrivacy fabricPrivacy;
+    protected ResourceHelper resourceHelper;
+    protected CommandQueueProvider commandQueue;
     protected SP sp;
 
     /*
@@ -99,7 +103,9 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
         this.activePlugin = activePlugin;
         this.context = context;
         this.fabricPrivacy = fabricPrivacy;
+        this.resourceHelper = resourceHelper;
         this.sp = sp;
+        this.commandQueue = commandQueue;
 
         pumpDescription.setPumpDescription(pumpType);
         this.pumpType = pumpType;
@@ -108,12 +114,6 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
 
     public abstract void initPumpStatusData();
-
-    public abstract void resetRileyLinkConfiguration();
-
-    public abstract void doTuneUpDevice();
-
-    public abstract RileyLinkService getRileyLinkService();
 
     @Override
     protected void onStart() {
@@ -464,6 +464,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
     public void setPumpType(PumpType pumpType) {
         this.pumpType = pumpType;
+        this.pumpDescription.setPumpDescription(pumpType);
     }
 
 

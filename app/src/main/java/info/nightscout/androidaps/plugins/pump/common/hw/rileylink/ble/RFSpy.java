@@ -363,7 +363,7 @@ public class RFSpy {
 
         }
 
-        this.selectedTargetFrequency = frequency;
+        //this.selectedTargetFrequency = frequency;
     }
 
 

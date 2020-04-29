@@ -68,6 +68,7 @@ public class MedtronicUtil {
         this.medtronicPumpStatus = medtronicPumpStatus;
     }
 
+
     public LocalTime getTimeFrom30MinInterval(int interval) {
         if (interval % 2 == 0) {
             return new LocalTime(interval / 2, 0);

@@ -56,6 +56,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.Radi
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.*
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUITask
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.queue.commands.*
@@ -307,6 +309,8 @@ open class AppModule {
 
         // Omnipod
         @ContributesAndroidInjector fun aapsOmnipodManagerInjector(): AapsOmnipodManager
+        @ContributesAndroidInjector fun omnipodCommunicationManagerProvider(): OmnipodCommunicationManager
+
 
         @Binds
         fun bindActivePluginProvider(pluginStore: PluginStore): ActivePluginProvider
