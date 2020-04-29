@@ -30,13 +30,13 @@ import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 
 public class Opts {
-    public static Profile profile;
-    public static Profile pumpprofile;
+    public Profile profile;
+    public Profile pumpprofile;
     public List<BgReading> glucose;
     public List<NsTreatment> pumpHistory;
     public List<ExtendedBolus> pumpExtBolusHistory;
     public List<TemporaryBasal> pumpTempBasalHistory;
-    public static List<Treatment> treatments;
+    public List<Treatment> treatments;
     public long start;
     public long end;
     public boolean categorize_uam_as_basal;

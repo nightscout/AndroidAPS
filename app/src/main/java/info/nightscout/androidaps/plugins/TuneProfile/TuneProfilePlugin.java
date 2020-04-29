@@ -1296,6 +1296,7 @@ public class TuneProfilePlugin extends PluginBase {
         if(profile.equals(null))
             return null;
         opts.profile=profile;
+        opts.pumpprofile=profile;
         tunedProfileResult = profile;
         try {
             FS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(4));
