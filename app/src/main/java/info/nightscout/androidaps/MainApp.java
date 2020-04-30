@@ -1,21 +1,13 @@
 package info.nightscout.androidaps;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
-import androidx.annotation.ColorRes;
 import androidx.annotation.StringRes;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.TaskStackBuilder;
-import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.crashlytics.android.Crashlytics;
@@ -68,10 +60,6 @@ public class MainApp extends DaggerApplication {
 
     static DatabaseHelper sDatabaseHelper = null;
 
-    private String CHANNEL_ID = "AndroidAPS-Ongoing"; // TODO: move to OngoingNotificationProvider (and dagger)
-    private int ONGOING_NOTIFICATION_ID = 4711; // TODO: move to OngoingNotificationProvider (and dagger)
-    private Notification notification; // TODO: move to OngoingNotificationProvider (and dagger)
-
     @Inject PluginStore pluginStore;
     @Inject public HasAndroidInjector injector;
     @Inject AAPSLogger aapsLogger;
@@ -95,7 +83,6 @@ public class MainApp extends DaggerApplication {
         sInstance = this;
         sResources = getResources();
         LocaleHelper.INSTANCE.update(this);
-        generateEmptyNotification();
         sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
 
         Thread.setDefaultUncaughtExceptionHandler((thread, ex) -> {
@@ -228,42 +215,6 @@ public class MainApp extends DaggerApplication {
 
     public FirebaseAnalytics getFirebaseAnalytics() {
         return firebaseAnalytics;
-    }
-
-    // global Notification has been moved to MainApp because PersistentNotificationPlugin is initialized too late
-    private void generateEmptyNotification() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
-        builder.setOngoing(true)
-                .setOnlyAlertOnce(true)
-                .setCategory(NotificationCompat.CATEGORY_STATUS)
-                .setSmallIcon(resourceHelper.getNotificationIcon())
-                .setLargeIcon(resourceHelper.decodeResource(resourceHelper.getIcon()));
-        builder.setContentTitle(resourceHelper.gs(R.string.loading));
-        Intent resultIntent = new Intent(this, MainApp.class);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notification = builder.build();
-        mNotificationManager.notify(ONGOING_NOTIFICATION_ID, notification);
-    }
-
-    public int notificationId() {
-        return ONGOING_NOTIFICATION_ID;
-    }
-
-    public String channelId() {
-        return CHANNEL_ID;
-    }
-
-    public void setNotification(Notification notification) {
-        this.notification = notification;
-    }
-
-    public Notification getNotification() {
-        return notification;
     }
 
     @Override
