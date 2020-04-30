@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.TuneProfile;
+package info.nightscout.androidaps.plugins.general.autotune;
 
 import android.content.Context;
 import android.util.LongSparseArray;
@@ -11,16 +11,15 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.plugins.TuneProfile.AutotunePrep.Prep;
-import info.nightscout.androidaps.plugins.TuneProfile.data.BGDatum;
-import info.nightscout.androidaps.plugins.TuneProfile.data.CRDatum;
-import info.nightscout.androidaps.plugins.TuneProfile.data.Opts;
-import info.nightscout.androidaps.plugins.TuneProfile.data.PrepOutput;
+import info.nightscout.androidaps.plugins.general.autotune.AutotunePrep.Prep;
+import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
+import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
+import info.nightscout.androidaps.plugins.general.autotune.data.Opts;
+import info.nightscout.androidaps.plugins.general.autotune.data.PrepOutput;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
@@ -30,7 +29,6 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.Round;
@@ -87,10 +85,10 @@ import javax.inject.Inject;
  *  TODO: add Preference for main settings (categorize_uam_as_basal, nb of days, may be advanced settings for % of adjustment (default 20%))
  */
 
-public class TuneProfilePlugin extends PluginBase {
+public class AutotunePlugin extends PluginBase {
 
-    private static TuneProfilePlugin tuneProfile = null;
-    private static Logger log = LoggerFactory.getLogger(TuneProfilePlugin.class);
+    private static AutotunePlugin tuneProfile = null;
+    private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
     public static Profile profile;
     public static List<Double> basalsResult = new ArrayList<Double>();
     public static List<Treatment> treatments;
@@ -100,7 +98,7 @@ public class TuneProfilePlugin extends PluginBase {
     private List<BGDatum> UAMGlucoseData = new ArrayList<BGDatum>();
     private List<CRDatum> CRData = new ArrayList<CRDatum>();
     private JSONObject previousResult = null;
-    private Profile tunedProfileResult;
+    private Profile autotuneResult;
     private String tunedProfileName = "Autotune";
     //copied from IobCobCalculator
     private static LongSparseArray<IobTotal> iobTable = new LongSparseArray<>(); // oldest at index 0
@@ -112,10 +110,10 @@ public class TuneProfilePlugin extends PluginBase {
     public boolean nsDataDownloaded = false;
     private PrepOutput prepOutput=null;
 
-//    public TuneProfile() throws IOException {
+//    public autotune() throws IOException {
 //    }
 
-    static TuneProfilePlugin tuneProfilePlugin;
+    static AutotunePlugin autotunePlugin;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final Context context;
@@ -128,7 +126,7 @@ public class TuneProfilePlugin extends PluginBase {
 
 
     @Inject
-    public TuneProfilePlugin(
+    public AutotunePlugin(
             HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBusWrapper rxBus,
@@ -142,10 +140,10 @@ public class TuneProfilePlugin extends PluginBase {
     )  {
         super(new PluginDescription()
                 .mainType(PluginType.GENERAL)
-                .fragmentClass(TuneProfileFragment.class.getName())
+                .fragmentClass(AutotuneFragment.class.getName())
                 .pluginName(R.string.autotune)
                 .shortName(R.string.autotune_shortname)
-                .preferencesId(R.xml.pref_tuneprofile),
+                .preferencesId(R.xml.pref_autotune),
                 aapsLogger, resourceHelper, injector
         );
         //create autotune subfolder for autotune files if not exists
@@ -162,7 +160,7 @@ public class TuneProfilePlugin extends PluginBase {
 
 //    @Override
     public String getFragmentClass() {
-        return TuneProfileFragment.class.getName();
+        return AutotuneFragment.class.getName();
     }
 
 
@@ -1312,7 +1310,7 @@ public class TuneProfilePlugin extends PluginBase {
             return null;
         opts.profile=profile;
         opts.pumpprofile=profile;
-        tunedProfileResult = profile;
+        autotuneResult = profile;
         try {
             FS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(4));
         } catch (JSONException e) {}
@@ -1544,7 +1542,7 @@ public class TuneProfilePlugin extends PluginBase {
         long tmp = Math.round(value);
         return (double) tmp / factor;
     }
-    // end of TuneProfile Plugin
+    // end of autotune Plugin
 
 
 }

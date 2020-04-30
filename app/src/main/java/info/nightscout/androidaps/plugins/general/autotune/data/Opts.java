@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.TuneProfile.data;
+package info.nightscout.androidaps.plugins.general.autotune.data;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Date;
 import java.util.TimeZone;
@@ -17,19 +16,15 @@ import javax.inject.Inject;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
-import info.nightscout.androidaps.plugins.TuneProfile.data.NsTreatment;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.TuneProfile.data;
+package info.nightscout.androidaps.plugins.general.autotune.data;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.plugins.TuneProfile.data.BGDatum;
-import info.nightscout.androidaps.plugins.TuneProfile.data.CRDatum;
 import info.nightscout.androidaps.utils.DateUtil;
 
 public class PrepOutput {

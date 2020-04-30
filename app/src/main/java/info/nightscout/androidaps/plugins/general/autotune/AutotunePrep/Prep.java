@@ -1,18 +1,13 @@
-package info.nightscout.androidaps.plugins.TuneProfile.AutotunePrep;
+package info.nightscout.androidaps.plugins.general.autotune.AutotunePrep;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -20,18 +15,16 @@ import javax.inject.Inject;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.plugins.TuneProfile.data.BGDatum;
-import info.nightscout.androidaps.plugins.TuneProfile.data.CRDatum;
-import info.nightscout.androidaps.plugins.TuneProfile.data.IobInputs;
-import info.nightscout.androidaps.plugins.TuneProfile.data.Opts;
-import info.nightscout.androidaps.plugins.TuneProfile.data.PrepOutput;
-import info.nightscout.androidaps.plugins.TuneProfile.data.TunedProfile;
-import info.nightscout.androidaps.plugins.TuneProfile.TuneProfilePlugin;
+import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
+import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
+import info.nightscout.androidaps.plugins.general.autotune.data.IobInputs;
+import info.nightscout.androidaps.plugins.general.autotune.data.Opts;
+import info.nightscout.androidaps.plugins.general.autotune.data.PrepOutput;
+import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
+import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
-import info.nightscout.androidaps.plugins.TuneProfile.data.NsTreatment;
+import info.nightscout.androidaps.plugins.general.autotune.data.NsTreatment;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.Round;
@@ -41,9 +34,9 @@ import info.nightscout.androidaps.utils.Round;
 public class Prep {
     private boolean useNSData = false;
     public boolean nsDataDownloaded = false;
-    private static Logger log = LoggerFactory.getLogger(TuneProfilePlugin.class);
+    private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
     @Inject ProfileFunction profileFunction;
-    @Inject TuneProfilePlugin tuneProfilePlugin;
+    @Inject AutotunePlugin autotunePlugin;
 
     public PrepOutput categorizeBGDatums(Opts opts) throws JSONException, ParseException, IOException {
 
@@ -223,7 +216,7 @@ public class Prep {
             iobInputs.profile.currentBasal = Math.round((sum/4)*1000)/1000;
 
             // this is the current autotuned basal, used for everything else besides IOB calculations
-            //double currentBasal = TuneProfilePlugin.getBasal(hourOfDay);
+            //double currentBasal = AutotunePlugin.getBasal(hourOfDay);
             double currentBasal = profileData.getBasal(BGTime);
 
             //log.debug(currentBasal,basal1hAgo,basal2hAgo,basal3hAgo,IOBInputs.profile.currentBasal);
@@ -235,7 +228,7 @@ public class Prep {
             //todo Calculate iob or check initial proposition below
             //var getIOB = require('../iob');
             //var iob = getIOB(IOBInputs)[0];
-            IobTotal iob = tuneProfilePlugin.calculateFromTreatmentsAndTemps(BGTime);
+            IobTotal iob = autotunePlugin.calculateFromTreatmentsAndTemps(BGTime);
             //log.debug(JSON.stringify(iob));
 
             // activity times ISF times 5 minutes is BGI
@@ -251,7 +244,7 @@ public class Prep {
             }
 
             // rounding and storing deviation
-            deviation = TuneProfilePlugin.round(deviation, 2);
+            deviation = AutotunePlugin.round(deviation, 2);
             glucoseDatum.deviation = deviation;
 
 

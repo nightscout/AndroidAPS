@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.TuneProfile;
+package info.nightscout.androidaps.plugins.general.autotune;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +9,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.PluginType;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;

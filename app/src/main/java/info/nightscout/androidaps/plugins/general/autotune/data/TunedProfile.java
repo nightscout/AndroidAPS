@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.plugins.TuneProfile.data;
+package info.nightscout.androidaps.plugins.general.autotune.data;
 
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.plugins.general.tidepool.elements.ProfileElement;
 
 public class TunedProfile extends Profile {
     private Profile profile;

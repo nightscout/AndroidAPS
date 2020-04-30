@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.plugins.TuneProfile;
+package info.nightscout.androidaps.plugins.general.autotune;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,14 +12,11 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
 
 //2 unknown imports disabled by philoul to build AAPS
 //import butterknife.BindView;
@@ -31,15 +27,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
-import info.nightscout.androidaps.plugins.general.careportal.CareportalFragment;
-import info.nightscout.androidaps.plugins.general.careportal.Dialogs.NewNSTreatmentDialog;
-import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
-import info.nightscout.androidaps.services.Intents;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 import info.nightscout.androidaps.utils.SP;
 
 /**
@@ -47,12 +36,12 @@ import info.nightscout.androidaps.utils.SP;
  * Rebase with current dev by philoul on 03/02/2020
  */
 
-public class TuneProfileFragment extends Fragment implements View.OnClickListener {
-    private static Logger log = LoggerFactory.getLogger(TuneProfileFragment.class);
+public class AutotuneFragment extends Fragment implements View.OnClickListener {
+    private static Logger log = LoggerFactory.getLogger(AutotuneFragment.class);
     @Inject NSProfilePlugin nsProfilePlugin;
-    @Inject TuneProfilePlugin tuneProfilePlugin;
+    @Inject AutotunePlugin autotunePlugin;
 
-    public TuneProfileFragment() {super();}
+    public AutotuneFragment() {super();}
 
     Button runTuneNowButton;
 // disabled by philoul to build AAPS
@@ -62,12 +51,12 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
     TextView resultView;
     TextView lastRunView;
     EditText tune_days;
-    //TuneProfile tuneProfile = new TuneProfile();
+    //autotune tuneProfile = new autotune();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            View view = inflater.inflate(R.layout.tuneprofile_fragment, container, false);
+            View view = inflater.inflate(R.layout.autotune_fragment, container, false);
 
             warningView = (TextView) view.findViewById(R.id.tune_warning);
             resultView = (TextView) view.findViewById(R.id.tune_result);
@@ -81,8 +70,8 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
 
             tune_days.setText(SP.getString("autotune_default_tune_days","5"));
             warningView.setText("Don't run tune for more than 5 days back! It will cause app crashes and too much data usage! Don't even try to run without WiFi connectivity!");
-            resultView.setText(TuneProfilePlugin.result);
-            String latRunTxt = TuneProfilePlugin.lastRun != null ? DateUtil.dateAndTimeString(TuneProfilePlugin.lastRun) : "";
+            resultView.setText(AutotunePlugin.result);
+            String latRunTxt = AutotunePlugin.lastRun != null ? DateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
             lastRunView.setText(latRunTxt);
             updateGUI();
             return view;
@@ -115,9 +104,9 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
 
             int daysBack = Integer.parseInt(tune_days.getText().toString());
             if (daysBack > 0)
-//            resultView.setText(TuneProfile.bgReadings(daysBack));
+//            resultView.setText(autotune.bgReadings(daysBack));
                 try {
-                    resultView.setText(tuneProfilePlugin.result(daysBack));
+                    resultView.setText(autotunePlugin.result(daysBack));
                     tuneProfileSwitch.setVisibility(View.VISIBLE);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -128,7 +117,7 @@ public class TuneProfileFragment extends Fragment implements View.OnClickListene
                 resultView.setText("Set days between 1 and 10!!!");
             // lastrun in minutes ???
             warningView.setText("You already pressed RUN - NO WARNING NEEDED!");
-            String latRunTxt = TuneProfilePlugin.lastRun != null ? "" + DateUtil.dateAndTimeString(TuneProfilePlugin.lastRun) : "";
+            String latRunTxt = AutotunePlugin.lastRun != null ? "" + DateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
             lastRunView.setText(latRunTxt);
         } else if (id == R.id.tune_profileswitch){
             String name = MainApp.gs(R.string.tuneprofile_name);
