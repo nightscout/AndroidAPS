@@ -35,7 +35,7 @@ class TddCalculator @Inject constructor(
 ) : TreatmentsPlugin(injector, aapsLogger, rxBus, resourceHelper, mainApp, sp, profileFunction, activePlugin, fabricPrivacy) {
 
     init {
-        service = TreatmentService() // plugin is not started
+        service = TreatmentService(injector) // plugin is not started
     }
 
     fun calculate(days: Long): LongSparseArray<TDD> {

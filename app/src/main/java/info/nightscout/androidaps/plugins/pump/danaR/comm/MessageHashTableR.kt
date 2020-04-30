@@ -39,7 +39,7 @@ class MessageHashTableR @Inject constructor(
         put(MsgBolusProgress(aapsLogger, resourceHelper, rxBus, danaRPump))             // 0x0202 CMD_PUMP_THIS_REMAINDER_MEAL_INS
         put(MsgStatusProfile(aapsLogger, danaRPump))             // 0x0204 CMD_PUMP_CALCULATION_SETTING
         put(MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin, injector))           // 0x0205 CMD_PUMP_EXERCISE_MODE
-        put(MsgStatusBolusExtended(aapsLogger, danaRPump, activePlugin))       // 0x0207 CMD_PUMP_EXPANS_INS_I
+        put(MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin))       // 0x0207 CMD_PUMP_EXPANS_INS_I
         put(MsgStatusBasic(aapsLogger, danaRPump))               // 0x020A CMD_PUMP_INITVIEW_I
         put(MsgStatus(aapsLogger, danaRPump))                    // 0x020B CMD_PUMP_STATUS
         // 0x0301 CMD_PUMPINIT_TIME_INFO

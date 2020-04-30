@@ -10,18 +10,20 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.json.JSONObject;
-import org.slf4j.Logger;
 
 import java.util.Objects;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries;
@@ -38,7 +40,10 @@ import info.nightscout.androidaps.utils.Round;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_EXTENDEDBOLUSES)
 public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.DATABASE);
+
+    @Inject ActivePluginProvider activePlugin;
+
+    private HasAndroidInjector injector;
 
     @DatabaseField(id = true)
     public long date;
@@ -64,10 +69,19 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     @DatabaseField
     public double dia = Constants.defaultDIA;
 
+    @Deprecated
     public ExtendedBolus() {
+        injector = MainApp.instance();
+        injector.androidInjector().inject(this);
     }
 
-    public ExtendedBolus(long date) {
+    public ExtendedBolus(HasAndroidInjector injector) {
+        this.injector = injector;
+        injector.androidInjector().inject(this);
+    }
+
+    public ExtendedBolus(HasAndroidInjector injector, long date) {
+        this(injector);
         this.date = date;
     }
 
@@ -124,8 +138,8 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
         pumpId = t.pumpId;
     }
 
-    public static ExtendedBolus createFromJson(JSONObject json) {
-        ExtendedBolus extendedBolus = new ExtendedBolus()
+    public static ExtendedBolus createFromJson(HasAndroidInjector injector, JSONObject json) {
+        ExtendedBolus extendedBolus = new ExtendedBolus(injector)
                 .source(Source.NIGHTSCOUT)
                 .date(JsonHelper.safeGetLong(json, "mills"))
                 .durationInMinutes(JsonHelper.safeGetInt(json, "duration"))
@@ -219,7 +233,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
     public IobTotal iobCalc(long time) {
         IobTotal result = new IobTotal(time);
-        InsulinInterface insulinInterface = PluginStore.Companion.getInstance().getActiveInsulin();
+        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
 
         double realDuration = getDurationToTime(time);
 
@@ -251,7 +265,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
     public IobTotal iobCalc(long time, Profile profile, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
         IobTotal result = new IobTotal(time);
-        InsulinInterface insulinInterface = PluginStore.Companion.getInstance().getActiveInsulin();
+        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
 
         double realDuration = getDurationToTime(time);
         double netBasalAmount = 0d;

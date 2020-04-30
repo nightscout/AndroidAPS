@@ -64,7 +64,7 @@ public class Profile {
 
     // Default constructor for DB
     public Profile() {
-        MainApp.instance().injector.androidInjector().inject(this);
+        MainApp.instance().androidInjector().inject(this);
     }
 
     protected Profile(HasAndroidInjector injector) {

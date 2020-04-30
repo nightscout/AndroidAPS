@@ -15,6 +15,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventNsTreatment;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.BundleLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -51,6 +52,7 @@ public class DataService extends DaggerIntentService {
     @Inject TomatoPlugin tomatoPlugin;
     @Inject XdripPlugin xdripPlugin;
     @Inject NSProfilePlugin nsProfilePlugin;
+    @Inject ActivePluginProvider activePlugin;
 
     public DataService() {
         super("DataService");
@@ -208,7 +210,7 @@ public class DataService extends DaggerIntentService {
         } else if (eventType.equals(CareportalEvent.COMBOBOLUS)) {
             MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(json);
         } else if (eventType.equals(CareportalEvent.PROFILESWITCH)) {
-            MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(json);
+            MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(activePlugin, json);
         } else if (eventType.equals(CareportalEvent.SITECHANGE) ||
                 eventType.equals(CareportalEvent.INSULINCHANGE) ||
                 eventType.equals(CareportalEvent.SENSORCHANGE) ||

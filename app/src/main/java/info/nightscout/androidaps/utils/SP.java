@@ -145,7 +145,7 @@ public class SP {
 
     @Deprecated
     static public void incInt(int resourceID) {
-        int value = SP.getInt(resourceID, 0) + 1;
+        int value = getInt(resourceID, 0) + 1;
         sharedPreferences.edit().putInt(MainApp.gs(resourceID), value).apply();
     }
 

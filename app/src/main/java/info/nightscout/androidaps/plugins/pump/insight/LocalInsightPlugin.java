@@ -817,7 +817,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             insightBolusID.timestamp = System.currentTimeMillis();
             insightBolusID.pumpSerial = connectionService.getPumpSystemIdentification().getSerialNumber();
             MainApp.getDbHelper().createOrUpdate(insightBolusID);
-            ExtendedBolus extendedBolus = new ExtendedBolus();
+            ExtendedBolus extendedBolus = new ExtendedBolus(getInjector());
             extendedBolus.date = insightBolusID.timestamp;
             extendedBolus.source = Source.PUMP;
             extendedBolus.durationInMinutes = durationInMinutes;
@@ -1409,7 +1409,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, true);
         }
         if ((event.getBolusType() == BolusType.EXTENDED || event.getBolusType() == BolusType.MULTIWAVE)) {
-            ExtendedBolus extendedBolus = new ExtendedBolus();
+            ExtendedBolus extendedBolus = new ExtendedBolus(getInjector());
             extendedBolus.date = bolusID.timestamp;
             extendedBolus.source = Source.PUMP;
             extendedBolus.durationInMinutes = event.getDuration();
@@ -1452,7 +1452,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                     MainApp.getDbHelper().delete(extendedBolus);
                 }
             } else {
-                ExtendedBolus extendedBolus = new ExtendedBolus();
+                ExtendedBolus extendedBolus = new ExtendedBolus(getInjector());
                 extendedBolus.date = bolusID.timestamp;
                 extendedBolus.source = Source.PUMP;
                 extendedBolus.durationInMinutes = event.getDuration();

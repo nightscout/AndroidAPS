@@ -4,7 +4,6 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.db.TemporaryBasal
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
@@ -17,7 +16,10 @@ open class DanaRSTestBase : TestBaseWithProfile() {
     val injector = HasAndroidInjector {
         AndroidInjector {
             if (it is TemporaryBasal) {
+                it.aapsLogger = aapsLogger
+                it.activePlugin = activePluginProvider
                 it.profileFunction = profileFunction
+                it.sp = sp
             }
         }
     }
