@@ -41,6 +41,11 @@ public class Opts {
     public boolean categorize_uam_as_basal;
     public boolean tune_insulin_curve;
     @Inject ProfileFunction profileFunction;
+    //FATAL EXCEPTION shown in Logcat:
+    //    java.lang.NullPointerException: Attempt to invoke interface method 'info.nightscout.androidaps.interfaces.InsulinInterface info.nightscout.androidaps.interfaces.ActivePluginProvider.getActiveInsulin()' on a null object reference
+    //        at info.nightscout.androidaps.plugins.general.autotune.data.Opts.profiletoOrefJSON(Opts.java:273)
+    // Don't understand what's wrong (same line in AutotunePlugin #1483 works...)
+    // Line 273 = InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
     @Inject ActivePluginProvider activePlugin;
 
     public void setTempBasalHistory(List<TemporaryBasal> lt) {
