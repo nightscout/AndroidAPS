@@ -85,7 +85,7 @@ public class AutotuneFragment extends Fragment implements View.OnClickListener {
 // disabled by philoul to build AAPS
 // @OnClick(R.id.nsprofile_profileswitch)
     public void onClickProfileSwitch() {
-        String name = MainApp.gs(R.string.tuneprofile_name);
+        String name = MainApp.gs(R.string.autotune_tunedprofile_name);
         ProfileStore store = nsProfilePlugin.getProfile();
         if (store != null) {
             Profile profile = store.getSpecificProfile(name);
@@ -120,7 +120,7 @@ public class AutotuneFragment extends Fragment implements View.OnClickListener {
             String latRunTxt = AutotunePlugin.lastRun != null ? "" + DateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";
             lastRunView.setText(latRunTxt);
         } else if (id == R.id.tune_profileswitch){
-            String name = MainApp.gs(R.string.tuneprofile_name);
+            String name = MainApp.gs(R.string.autotune_tunedprofile_name);
             ProfileStore profile = null;
             log.debug("ProfileSwitch pressed");
             /*todo Profile management to update
