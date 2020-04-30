@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.general.autotune;
 import android.app.Activity;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import dagger.android.support.DaggerFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ import info.nightscout.androidaps.utils.SP;
  * Rebase with current dev by philoul on 03/02/2020
  */
 
-public class AutotuneFragment extends Fragment implements View.OnClickListener {
+public class AutotuneFragment extends DaggerFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(AutotuneFragment.class);
     @Inject NSProfilePlugin nsProfilePlugin;
     @Inject AutotunePlugin autotunePlugin;

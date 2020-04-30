@@ -116,7 +116,6 @@ public class AutotunePlugin extends PluginBase {
     private final ActivePluginProvider activePlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
-    private final Prep prep;
 
     @Inject
     public AutotunePlugin(
@@ -126,7 +125,6 @@ public class AutotunePlugin extends PluginBase {
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
             Context context,
-            Prep prep,
             ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
             IobCobCalculatorPlugin iobCobCalculatorPlugin
@@ -149,7 +147,6 @@ public class AutotunePlugin extends PluginBase {
         this.activePlugin = activePlugin;
         this.treatmentsPlugin = treatmentsPlugin;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
-        this.prep = prep;
     }
 
 //    @Override
@@ -1353,6 +1350,7 @@ public class AutotunePlugin extends PluginBase {
                     log.debug("Day "+i+" of "+daysBack);
 
                     categorizeBGDatums(glucoseStart, glucoseEnd);
+                    Prep prep = new Prep();
                     prep.categorizeBGDatums(opts); // line added for log and test
                     //PrepOutput prepOutput = Prep.generate(opts);
                     FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(4));

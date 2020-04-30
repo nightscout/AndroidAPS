@@ -211,7 +211,7 @@ abstract class PluginsModule {
     @AllConfigs
     @IntoMap
     @IntKey(255)
-    abstract fun bindAutomationPlugin(plugin: AutotunePlugin): PluginBase
+    abstract fun bindAutotunePlugin(plugin: AutotunePlugin): PluginBase
 
     @Binds
     @AllConfigs
