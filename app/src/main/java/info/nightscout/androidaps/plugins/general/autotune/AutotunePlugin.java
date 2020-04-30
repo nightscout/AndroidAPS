@@ -151,7 +151,7 @@ public class AutotunePlugin extends PluginBase {
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
         this.prep = prep;
     }
-/*
+
 //    @Override
     public String getFragmentClass() {
         return AutotuneFragment.class.getName();
@@ -160,7 +160,7 @@ public class AutotunePlugin extends PluginBase {
     public void invoke(String initiator, boolean allowNotification) {
         // invoke
     }
-*/
+
 
     public void getProfile(){
         //get active profile
