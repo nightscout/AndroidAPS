@@ -18,8 +18,6 @@ import com.j256.ormlite.table.TableUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,6 +27,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ICallback;
 import info.nightscout.androidaps.db.Source;
@@ -36,13 +37,12 @@ import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventNsTreatment;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.bus.RxBus;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.JsonHelper;
 import io.reactivex.disposables.CompositeDisposable;
@@ -54,16 +54,22 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.DATATREATMENTS);
+
+    @Inject AAPSLogger aapsLogger;
+    @Inject FabricPrivacy fabricPrivacy;
+    @Inject RxBusWrapper rxBus;
+    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final ScheduledExecutorService treatmentEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledTreatmentEventPost = null;
 
-    public TreatmentService() {
+    public TreatmentService(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
         onCreate();
         dbInitialize();
-        disposable.add(RxBus.Companion.getINSTANCE()
+        disposable.add(rxBus
                 .toObservable(EventNsTreatment.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
@@ -75,7 +81,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     } else { // EventNsTreatment.REMOVE
                         this.deleteNS(payload);
                     }
-                }, exception -> FabricPrivacy.getInstance().logException(exception))
+                }, fabricPrivacy::logException)
         );
     }
 
@@ -101,7 +107,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         try {
             return DaoManager.createDao(this.getConnectionSource(), Treatment.class);
         } catch (SQLException e) {
-            log.error("Cannot create Dao for Treatment.class");
+            aapsLogger.error("Cannot create Dao for Treatment.class");
         }
 
         return null;
@@ -111,35 +117,33 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     public void onCreate() {
         super.onCreate();
         try {
-            if (L.isEnabled(L.DATATREATMENTS))
-                log.info("onCreate");
+            aapsLogger.info(LTag.DATATREATMENTS, "onCreate");
             TableUtils.createTableIfNotExists(this.getConnectionSource(), Treatment.class);
         } catch (SQLException e) {
-            log.error("Can't create database", e);
+            aapsLogger.error("Can't create database", e);
             throw new RuntimeException(e);
         }
     }
 
     public void onUpgrade(ConnectionSource connectionSource, int oldVersion, int newVersion) {
         if (oldVersion == 7 && newVersion == 8) {
-            log.debug("Upgrading database from v7 to v8");
+            aapsLogger.debug("Upgrading database from v7 to v8");
             try {
                 TableUtils.dropTable(connectionSource, Treatment.class, true);
                 TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             } catch (SQLException e) {
-                log.error("Can't create database", e);
+                aapsLogger.error("Can't create database", e);
                 throw new RuntimeException(e);
             }
         } else if (oldVersion == 8 && newVersion == 9) {
-            log.debug("Upgrading database from v8 to v9");
+            aapsLogger.debug("Upgrading database from v8 to v9");
             try {
                 getDao().executeRaw("ALTER TABLE `" + Treatment.TABLE_TREATMENTS + "` ADD COLUMN boluscalc STRING;");
             } catch (SQLException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error("Unhandled exception", e);
             }
         } else {
-            if (L.isEnabled(L.DATATREATMENTS))
-                log.info("onUpgrade");
+            aapsLogger.info(LTag.DATATREATMENTS, "onUpgrade");
 //            this.resetFood();
         }
     }
@@ -149,7 +153,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             try {
                 getDao().executeRaw("ALTER TABLE `" + Treatment.TABLE_TREATMENTS + "` DROP COLUMN boluscalc STRING;");
             } catch (SQLException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error("Unhandled exception", e);
             }
         }
     }
@@ -160,7 +164,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             TableUtils.createTableIfNotExists(this.getConnectionSource(), Treatment.class);
             DatabaseHelper.updateEarliestDataChange(0);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         scheduleTreatmentChange(null, true);
     }
@@ -185,13 +189,11 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(L.DATATREATMENTS))
-                    log.debug("Firing EventReloadTreatmentData");
-                RxBus.Companion.getINSTANCE().send(event);
+                aapsLogger.debug(LTag.DATATREATMENTS, "Firing EventReloadTreatmentData");
+                rxBus.send(event);
                 if (DatabaseHelper.earliestDataChange != null) {
-                    if (L.isEnabled(L.DATATREATMENTS))
-                        log.debug("Firing EventNewHistoryData");
-                    RxBus.Companion.getINSTANCE().send(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
+                    aapsLogger.debug(LTag.DATATREATMENTS, "Firing EventNewHistoryData");
+                    rxBus.send(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
                 }
                 DatabaseHelper.earliestDataChange = null;
                 callback.setPost(null);
@@ -212,13 +214,11 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
      */
     public void scheduleTreatmentChange(@Nullable final Treatment treatment, boolean runImmediately) {
         if (runImmediately) {
-            if (L.isEnabled(L.DATATREATMENTS))
-                log.debug("Firing EventReloadTreatmentData");
-            RxBus.Companion.getINSTANCE().send(new EventReloadTreatmentData(new EventTreatmentChange(treatment)));
+            aapsLogger.debug(LTag.DATATREATMENTS, "Firing EventReloadTreatmentData");
+            rxBus.send(new EventReloadTreatmentData(new EventTreatmentChange(treatment)));
             if (DatabaseHelper.earliestDataChange != null) {
-                if (L.isEnabled(L.DATATREATMENTS))
-                    log.debug("Firing EventNewHistoryData");
-                RxBus.Companion.getINSTANCE().send(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
+                aapsLogger.debug(LTag.DATATREATMENTS, "Firing EventNewHistoryData");
+                rxBus.send(new EventNewHistoryData(DatabaseHelper.earliestDataChange));
             }
             DatabaseHelper.earliestDataChange = null;
         } else {
@@ -240,7 +240,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         try {
             return this.getDao().queryForAll();
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
 
         return new ArrayList<>();
@@ -266,16 +266,16 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             if (treatment != null) {
 
                 if (MedtronicHistoryData.doubleBolusDebug)
-                    log.debug("DoubleBolusDebug: createTreatmentFromJsonIfNotExists:: medtronicPump={}", MedtronicPumpPlugin.getPlugin().isEnabled());
+                    aapsLogger.debug(LTag.DATATREATMENTS, "DoubleBolusDebug: createTreatmentFromJsonIfNotExists:: medtronicPump={}", medtronicPumpPlugin.isEnabled());
 
-                if (!MedtronicPumpPlugin.getPlugin().isEnabled())
+                if (!medtronicPumpPlugin.isEnabled())
                     createOrUpdate(treatment);
                 else
                     createOrUpdateMedtronic(treatment, true);
             } else
-                log.error("Date is null: " + treatment.toString());
+                aapsLogger.error("Date is null: " + treatment.toString());
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -283,7 +283,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     // return true if new record is created
     public UpdateReturn createOrUpdate(Treatment treatment) {
         if (treatment != null && treatment.source == Source.NONE) {
-            log.error("Coder error: source is not set for treatment: " + treatment, new Exception());
+            aapsLogger.error("Coder error: source is not set for treatment: " + treatment, new Exception());
             //FabricPrivacy.logException(new Exception("Coder error: source is not set for treatment: " + treatment));
         }
         try {
@@ -298,8 +298,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     boolean sameSource = existingTreatment.source == treatment.source;
                     if (!equalRePumpHistory) {
                         // another treatment exists. Update it with the treatment coming from the pump
-                        if (L.isEnabled(L.DATATREATMENTS))
-                            log.debug("Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
+                        aapsLogger.debug(LTag.DATATREATMENTS, "Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
                         long oldDate = existingTreatment.date;
 
                         //preserve carbs
@@ -323,8 +322,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     boolean equalRePumpHistory = existingTreatment.equalsRePumpHistory(treatment);
                     boolean sameSource = existingTreatment.source == treatment.source;
                     long oldDate = existingTreatment.date;
-                    if (L.isEnabled(L.DATATREATMENTS))
-                        log.debug("Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
+                    aapsLogger.debug(LTag.DATATREATMENTS, "Pump record already found in database: " + existingTreatment.toString() + " wanting to add " + treatment.toString());
 
                     //preserve carbs
                     if (existingTreatment.isValid && existingTreatment.carbs > 0 && treatment.carbs == 0) {
@@ -340,8 +338,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     return new UpdateReturn(equalRePumpHistory || sameSource, false);
                 }
                 getDao().create(treatment);
-                if (L.isEnabled(L.DATATREATMENTS))
-                    log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
+                aapsLogger.debug(LTag.DATATREATMENTS, "New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 DatabaseHelper.updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange(treatment, true);
                 return new UpdateReturn(true, true);
@@ -355,8 +352,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                         getDao().delete(old); // need to delete/create because date may change too
                         old.copyFrom(treatment);
                         getDao().create(old);
-                        if (L.isEnabled(L.DATATREATMENTS))
-                            log.debug("Updating record by date from: " + Source.getString(treatment.source) + " " + old.toString());
+                        aapsLogger.debug(LTag.DATATREATMENTS, "Updating record by date from: " + Source.getString(treatment.source) + " " + old.toString());
                         if (historyChange) {
                             DatabaseHelper.updateEarliestDataChange(oldDate);
                             DatabaseHelper.updateEarliestDataChange(old.date);
@@ -364,8 +360,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                         scheduleTreatmentChange(treatment, false);
                         return new UpdateReturn(true, true);
                     }
-                    if (L.isEnabled(L.DATATREATMENTS))
-                        log.debug("Equal record by date from: " + Source.getString(treatment.source) + " " + old.toString());
+                    aapsLogger.debug(LTag.DATATREATMENTS, "Equal record by date from: " + Source.getString(treatment.source) + " " + old.toString());
                     return new UpdateReturn(true, false);
                 }
                 // find by NS _id
@@ -378,8 +373,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                             getDao().delete(old); // need to delete/create because date may change too
                             old.copyFrom(treatment);
                             getDao().create(old);
-                            if (L.isEnabled(L.DATATREATMENTS))
-                                log.debug("Updating record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
+                            aapsLogger.debug(LTag.DATATREATMENTS, "Updating record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
                             if (historyChange) {
                                 DatabaseHelper.updateEarliestDataChange(oldDate);
                                 DatabaseHelper.updateEarliestDataChange(old.date);
@@ -387,28 +381,25 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                             scheduleTreatmentChange(treatment, false);
                             return new UpdateReturn(true, true);
                         }
-                        if (L.isEnabled(L.DATATREATMENTS))
-                            log.debug("Equal record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
+                        aapsLogger.debug(LTag.DATATREATMENTS, "Equal record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
                         return new UpdateReturn(true, false);
                     }
                 }
                 getDao().create(treatment);
-                if (L.isEnabled(L.DATATREATMENTS))
-                    log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
+                aapsLogger.debug(LTag.DATATREATMENTS, "New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 DatabaseHelper.updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange(treatment, false);
                 return new UpdateReturn(true, true);
             }
             if (treatment.source == Source.USER) {
                 getDao().create(treatment);
-                if (L.isEnabled(L.DATATREATMENTS))
-                    log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
+                aapsLogger.debug(LTag.DATATREATMENTS, "New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 DatabaseHelper.updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange(treatment, true);
                 return new UpdateReturn(true, true);
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new UpdateReturn(false, false);
     }
@@ -417,7 +408,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     public UpdateReturn createOrUpdateMedtronic(Treatment treatment, boolean fromNightScout) {
 
         if (MedtronicHistoryData.doubleBolusDebug)
-            log.debug("DoubleBolusDebug: createOrUpdateMedtronic:: originalTreatment={}, fromNightScout={}", treatment, fromNightScout);
+            aapsLogger.debug(LTag.DATATREATMENTS, "DoubleBolusDebug: createOrUpdateMedtronic:: originalTreatment={}, fromNightScout={}", treatment, fromNightScout);
 
         try {
             treatment.date = DatabaseHelper.roundDateToSec(treatment.date);
@@ -425,12 +416,11 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             Treatment existingTreatment = getRecord(treatment.pumpId, treatment.date);
 
             if (MedtronicHistoryData.doubleBolusDebug)
-                log.debug("DoubleBolusDebug: createOrUpdateMedtronic:: existingTreatment={}", treatment);
+                aapsLogger.debug(LTag.DATATREATMENTS, "DoubleBolusDebug: createOrUpdateMedtronic:: existingTreatment={}", treatment);
 
             if (existingTreatment == null) {
                 getDao().create(treatment);
-                if (L.isEnabled(L.DATATREATMENTS))
-                    log.debug("New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
+                aapsLogger.debug(LTag.DATATREATMENTS, "New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 DatabaseHelper.updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange(treatment, true);
                 return new UpdateReturn(true, true);
@@ -438,7 +428,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
                 if (existingTreatment.date == treatment.date) {
                     if (MedtronicHistoryData.doubleBolusDebug)
-                        log.debug("DoubleBolusDebug: createOrUpdateMedtronic::(existingTreatment.date==treatment.date)");
+                        aapsLogger.debug(LTag.DATATREATMENTS, "DoubleBolusDebug: createOrUpdateMedtronic::(existingTreatment.date==treatment.date)");
 
                     // we will do update only, if entry changed
                     if (!optionalTreatmentCopy(existingTreatment, treatment, fromNightScout)) {
@@ -450,7 +440,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                     return new UpdateReturn(true, false);
                 } else {
                     if (MedtronicHistoryData.doubleBolusDebug)
-                        log.debug("DoubleBolusDebug: createOrUpdateMedtronic::(existingTreatment.date != treatment.date)");
+                        aapsLogger.debug(LTag.DATATREATMENTS, "DoubleBolusDebug: createOrUpdateMedtronic::(existingTreatment.date != treatment.date)");
 
                     // date is different, we need to remove entry
                     getDao().delete(existingTreatment);
@@ -463,7 +453,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             }
 
         } catch (SQLException e) {
-            log.error("Unhandled SQL exception: {}", e.getMessage(), e);
+            aapsLogger.error("Unhandled SQL exception: {}", e.getMessage(), e);
         }
         return new UpdateReturn(false, false);
     }
@@ -471,7 +461,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
 
     private boolean optionalTreatmentCopy(Treatment oldTreatment, Treatment newTreatment, boolean fromNightScout) {
 
-        log.debug("optionalTreatmentCopy [old={}, new={}]", oldTreatment.toString(), newTreatment.toString());
+        aapsLogger.debug(LTag.DATATREATMENTS, "optionalTreatmentCopy [old={}, new={}]", oldTreatment.toString(), newTreatment.toString());
 
         boolean changed = false;
 
@@ -537,7 +527,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             changed = true;
         }
 
-        log.debug("optionalTreatmentCopy [changed={}, newAfterChange={}]", changed, oldTreatment.toString());
+        aapsLogger.debug(LTag.DATATREATMENTS, "optionalTreatmentCopy [changed={}, newAfterChange={}]", changed, oldTreatment.toString());
         return changed;
     }
 
@@ -551,7 +541,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     @Deprecated
     private void treatmentCopy(Treatment oldTreatment, Treatment newTreatment, boolean fromNightScout) {
 
-        log.debug("treatmentCopy [old={}, new={}]", oldTreatment.toString(), newTreatment.toString());
+        aapsLogger.debug(LTag.DATATREATMENTS, "treatmentCopy [old={}, new={}]", oldTreatment.toString(), newTreatment.toString());
 
 
         if (fromNightScout) {
@@ -574,7 +564,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             oldTreatment.copyFrom(newTreatment);
         }
 
-        log.debug("treatmentCopy [newAfterChange={}]", oldTreatment.toString());
+        aapsLogger.debug(LTag.DATATREATMENTS, "treatmentCopy [newAfterChange={}]", oldTreatment.toString());
 
     }
 
@@ -595,7 +585,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         try {
             record = getDao().queryForId(date);
         } catch (SQLException ex) {
-            log.error("Error getting entry by id ({}", date);
+            aapsLogger.error("Error getting entry by id ({}", date);
         }
 
         return record;
@@ -619,7 +609,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             if (result.isEmpty())
                 return null;
             if (result.size() > 1)
-                log.warn("Multiple records with the same pump id found (returning first one): " + result.toString());
+                aapsLogger.warn(LTag.DATATREATMENTS, "Multiple records with the same pump id found (returning first one): " + result.toString());
             return result.get(0);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -642,12 +632,11 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
     private void deleteByNSId(String _id) {
         Treatment stored = findByNSId(_id);
         if (stored != null) {
-            if (L.isEnabled(L.DATATREATMENTS))
-                log.debug("Removing Treatment record from database: " + stored.toString());
+            aapsLogger.debug(LTag.DATATREATMENTS, "Removing Treatment record from database: " + stored.toString());
             try {
                 getDao().delete(stored);
             } catch (SQLException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error("Unhandled exception", e);
             }
             DatabaseHelper.updateEarliestDataChange(stored.date);
             this.scheduleTreatmentChange(stored, false);
@@ -667,7 +656,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             DatabaseHelper.updateEarliestDataChange(treatment.date);
             this.scheduleTreatmentChange(treatment, true);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -676,7 +665,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             getDao().update(treatment);
             DatabaseHelper.updateEarliestDataChange(treatment.date);
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         scheduleTreatmentChange(treatment, true);
     }
@@ -705,7 +694,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
                 return trList.get(0);
             }
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return null;
     }
@@ -722,7 +711,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             treatments = daoTreatments.query(preparedQuery);
             return treatments;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<>();
     }
@@ -739,7 +728,7 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
             treatments = daoTreatments.query(preparedQuery);
             return treatments;
         } catch (SQLException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         return new ArrayList<>();
     }

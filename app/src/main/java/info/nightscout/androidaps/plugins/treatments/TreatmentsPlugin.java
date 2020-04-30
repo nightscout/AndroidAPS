@@ -122,7 +122,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
 
     @Override
     protected void onStart() {
-        this.service = new TreatmentService();
+        this.service = new TreatmentService(getInjector());
         initializeData(range());
         super.onStart();
         disposable.add(rxBus

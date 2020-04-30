@@ -105,7 +105,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     private final RileyLinkServiceData rileyLinkServiceData;
     private final ServiceTaskExecutor serviceTaskExecutor;
 
-    protected static MedtronicPumpPlugin plugin = null;
     private RileyLinkMedtronicService rileyLinkMedtronicService;
 
     // variables for handling statuses and history
@@ -149,7 +148,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                 PumpType.Medtronic_522_722, // we default to most basic model, correct model from config is loaded later
                 injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy
         );
-        this.plugin = this;
 
         this.rileyLinkUtil = rileyLinkUtil;
         this.medtronicUtil = medtronicUtil;
@@ -193,14 +191,6 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     protected void onStart() {
         super.onStart();
     }
-
-    @Deprecated
-    public static MedtronicPumpPlugin getPlugin() {
-        if (plugin == null)
-            throw new IllegalStateException("Plugin not injected jet");
-        return plugin;
-    }
-
 
     @Override
     public void updatePreferenceSummary(@NotNull Preference pref) {

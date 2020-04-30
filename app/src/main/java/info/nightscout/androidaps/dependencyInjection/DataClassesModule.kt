@@ -11,6 +11,7 @@ import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.plugins.treatments.Treatment
+import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 
@@ -28,6 +29,8 @@ abstract class DataClassesModule {
     @ContributesAndroidInjector abstract fun temporaryBasalInjector(): TemporaryBasal
     @ContributesAndroidInjector abstract fun careportalEventInjector(): CareportalEvent
     @ContributesAndroidInjector abstract fun extendedBolusInjector(): ExtendedBolus
+
+    @ContributesAndroidInjector abstract fun treatmentServiceInjector(): TreatmentService
 
     @ContributesAndroidInjector abstract fun bolusWizardInjector(): BolusWizard
     @ContributesAndroidInjector abstract fun quickWizardEntryInjector(): QuickWizardEntry
