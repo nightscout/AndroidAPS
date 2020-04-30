@@ -423,7 +423,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     Profile profile = profileFunction.getProfile(e.date);
                     if (profile == null) continue;
                     if (truncate && e.end() > truncateTime) {
-                        ExtendedBolus dummyExt = new ExtendedBolus();
+                        ExtendedBolus dummyExt = new ExtendedBolus(getInjector());
                         dummyExt.copyFrom(e);
                         dummyExt.cutEndTo(truncateTime);
                         calc = dummyExt.iobCalc(time);
@@ -498,7 +498,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     Profile profile = profileFunction.getProfile(e.date);
                     if (profile == null) continue;
                     if (e.end() > truncateTime) {
-                        ExtendedBolus dummyExt = new ExtendedBolus();
+                        ExtendedBolus dummyExt = new ExtendedBolus(getInjector());
                         dummyExt.copyFrom(e);
                         dummyExt.cutEndTo(truncateTime);
                         calc = dummyExt.iobCalc(time, profile, lastAutosensResult, exercise_mode, half_basal_exercise_target, isTempTarget);

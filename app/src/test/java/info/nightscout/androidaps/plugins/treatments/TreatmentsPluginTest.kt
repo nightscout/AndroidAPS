@@ -37,7 +37,10 @@ class TreatmentsPluginTest : TestBaseWithProfile() {
     val injector = HasAndroidInjector {
         AndroidInjector {
             if (it is TemporaryBasal) {
+                it.aapsLogger = aapsLogger
+                it.activePlugin = activePluginProvider
                 it.profileFunction = profileFunction
+                it.sp = sp
             }
         }
     }

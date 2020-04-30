@@ -12,21 +12,6 @@ class PluginStore @Inject constructor(
     val aapsLogger: AAPSLogger
 ) : ActivePluginProvider {
 
-    // TODO remove
-    init {
-        pluginStore = this
-    }
-
-    companion object {
-        var pluginStore: PluginStore? = null
-
-        @Deprecated("Use dagger instead")
-        fun getInstance(): PluginStore {
-            checkNotNull(pluginStore) { "Accessing PluginStore before first instantiation" }
-            return pluginStore!!
-        }
-    }
-
     lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
 
     private var activeBgSource: BgSourceInterface? = null
@@ -165,8 +150,7 @@ class PluginStore @Inject constructor(
      * @return
     </T> */
     private fun <T> determineActivePlugin(pluginInterface: Class<T>, pluginType: PluginType): T? {
-        val pluginsInCategory: ArrayList<PluginBase>
-        pluginsInCategory = pluginStore!!.getSpecificPluginsListByInterface(pluginInterface)
+        val pluginsInCategory: ArrayList<PluginBase> = getSpecificPluginsListByInterface(pluginInterface)
         return determineActivePlugin(pluginsInCategory, pluginType)
     }
 

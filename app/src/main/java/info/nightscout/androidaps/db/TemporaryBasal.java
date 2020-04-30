@@ -3,8 +3,6 @@ package info.nightscout.androidaps.db;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import org.slf4j.Logger;
-
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -15,17 +13,16 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
-import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by mike on 21.05.2017.
@@ -33,9 +30,12 @@ import info.nightscout.androidaps.utils.SP;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TEMPORARYBASALS)
 public class TemporaryBasal implements Interval, DbObjectBase {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.DATABASE);
 
+    @Inject public AAPSLogger aapsLogger;
     @Inject public ProfileFunction profileFunction;
+    @Inject public ActivePluginProvider activePlugin;
+    @Inject public SP sp;
+
     private HasAndroidInjector injector;
 
     @DatabaseField(id = true)
@@ -246,12 +246,12 @@ public class TemporaryBasal implements Interval, DbObjectBase {
     public IobTotal iobCalc(long time, Profile profile) {
 
         if (isFakeExtended) {
-            log.error("iobCalc should only be called on Extended boluses separately");
+            aapsLogger.error("iobCalc should only be called on Extended boluses separately");
             return new IobTotal(time);
         }
 
         IobTotal result = new IobTotal(time);
-        InsulinInterface insulinInterface = PluginStore.Companion.getInstance().getActiveInsulin();
+        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
 
         int realDuration = getDurationToTime(time);
         double netBasalAmount = 0d;
@@ -301,12 +301,12 @@ public class TemporaryBasal implements Interval, DbObjectBase {
     public IobTotal iobCalc(long time, Profile profile, AutosensResult lastAutosensResult, boolean exercise_mode, int half_basal_exercise_target, boolean isTempTarget) {
 
         if (isFakeExtended) {
-            log.error("iobCalc should only be called on Extended boluses separately");
+            aapsLogger.error("iobCalc should only be called on Extended boluses separately");
             return new IobTotal(time);
         }
 
         IobTotal result = new IobTotal(time);
-        InsulinInterface insulinInterface = PluginStore.Companion.getInstance().getActiveInsulin();
+        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
 
         double realDuration = getDurationToTime(time);
         double netBasalAmount = 0d;
@@ -452,7 +452,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
                 rate = absoluteRate;
             }
 
-            if (SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)) {
+            if (sp.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && sp.getBoolean(R.string.key_danar_useextended, false)) {
                 Profile profile = profileFunction.getProfile();
                 if (profile != null) {
                     double basal = profile.getBasal();
@@ -483,7 +483,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
                 rate = absoluteRate;
             }
 
-            if (SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)) {
+            if (sp.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && sp.getBoolean(R.string.key_danar_useextended, false)) {
                 double basal = profile.getBasal();
                 if (basal != 0) {
                     return Math.round(rate * 100d / basal) + "% ";
