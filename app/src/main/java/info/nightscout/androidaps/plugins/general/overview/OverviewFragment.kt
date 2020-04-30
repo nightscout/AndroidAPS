@@ -69,6 +69,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.overview_fragment.*
+import kotlinx.android.synthetic.main.overview_fragment.overview_apsmode
 import kotlinx.android.synthetic.main.overview_fragment.careportal_canulaage
 import kotlinx.android.synthetic.main.overview_fragment.careportal_insulinage
 import kotlinx.android.synthetic.main.overview_fragment.careportal_reservoirlevel
@@ -76,7 +77,6 @@ import kotlinx.android.synthetic.main.overview_fragment.careportal_sensorage
 import kotlinx.android.synthetic.main.overview_fragment.careportal_pbage
 import kotlinx.android.synthetic.main.overview_fragment.careportal_batterylevel
 import kotlinx.android.synthetic.main.overview_fragment.overview_activeprofile
-import kotlinx.android.synthetic.main.overview_fragment.overview_apsmode
 import kotlinx.android.synthetic.main.overview_fragment.overview_arrow
 import kotlinx.android.synthetic.main.overview_fragment.overview_basebasal
 import kotlinx.android.synthetic.main.overview_fragment.overview_bg
@@ -328,10 +328,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 R.id.overview_insulinbutton     -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, Runnable { InsulinDialog().show(manager, "Overview") })
                 R.id.overview_quickwizardbutton -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, Runnable { onClickQuickWizard() })
                 R.id.overview_carbsbutton       -> protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, Runnable { CarbsDialog().show(manager, "Overview") })
-
-                R.id.overview_pumpstatus        -> {
-                    if (activePlugin.activePump.isSuspended || !activePlugin.activePump.isInitialized) commandQueue.readStatus("RefreshClicked", null)
-                }
 
                 R.id.overview_cgmbutton         -> {
                     if (xdripPlugin.isEnabled(PluginType.BGSOURCE))
@@ -597,44 +593,64 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (Config.APS && pump.pumpDescription.isTempBasalCapable) {
             overview_apsmode?.visibility = View.VISIBLE
             when {
-                loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isSuperBolus -> {
-                    overview_apsmode?.text = String.format(resourceHelper.gs(R.string.loopsuperbolusfor), loopPlugin.minutesToEndOfSuspend())
-                    overview_apsmode?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-                    overview_apsmode?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
+                loopPlugin.isEnabled() && loopPlugin.isSuperBolus    -> {
+                    overview_apsmode.setImageResource(R.drawable.remove)
+                    overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+                    //overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopsuperbolusfor), loopPlugin.minutesToEndOfSuspend())
+//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
+//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 }
 
-                loopPlugin.isDisconnected                                        -> {
-                    overview_apsmode?.text = String.format(resourceHelper.gs(R.string.loopdisconnectedfor), loopPlugin.minutesToEndOfSuspend())
-                    overview_apsmode?.setBackgroundColor(resourceHelper.gc(R.color.ribbonCritical))
-                    overview_apsmode?.setTextColor(resourceHelper.gc(R.color.ribbonTextCritical))
+                loopPlugin.isDisconnected                                           -> {
+                    overview_apsmode.setImageResource(R.drawable.closedloop_disconnected)
+                    overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+//                    overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopdisconnectedfor), loopPlugin.minutesToEndOfSuspend())
+//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonCritical))
+//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextCritical))
                 }
 
-                loopPlugin.isEnabled(PluginType.LOOP) && loopPlugin.isSuspended  -> {
-                    overview_apsmode?.text = String.format(resourceHelper.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend())
-                    overview_apsmode?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-                    overview_apsmode?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
+                loopPlugin.isEnabled() && loopPlugin.isSuspended     -> {
+                    overview_apsmode.setImageResource(R.drawable.closedloop_pause)
+                    overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
+//                    overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend())
+//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
+//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 }
 
-                pump.isSuspended                                                 -> {
-                    overview_apsmode?.text = resourceHelper.gs(R.string.pumpsuspended)
-                    overview_apsmode?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
-                    overview_apsmode?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
+                pump.isSuspended                                                    -> {
+                    overview_apsmode.setImageResource(R.drawable.closedloop_pause)
+                    overview_apsmode_text?.text = ""
+//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.pumpsuspended)
+//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
+//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 }
 
-                loopPlugin.isEnabled(PluginType.LOOP)                            -> {
-                    overview_apsmode?.text = if (closedLoopEnabled.value()) resourceHelper.gs(R.string.closedloop) else resourceHelper.gs(R.string.openloop)
-                    overview_apsmode?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
-                    overview_apsmode?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
+                loopPlugin.isEnabled() && closedLoopEnabled.value()  -> {
+                    overview_apsmode.setImageResource(R.drawable.closedloop)
+                    overview_apsmode_text?.text = ""
+//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.closedloop)
+//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 }
 
-                else                                                             -> {
-                    overview_apsmode?.text = resourceHelper.gs(R.string.disabledloop)
-                    overview_apsmode?.setBackgroundColor(resourceHelper.gc(R.color.ribbonCritical))
-                    overview_apsmode?.setTextColor(resourceHelper.gc(R.color.ribbonTextCritical))
+                loopPlugin.isEnabled() && !closedLoopEnabled.value() -> {
+                    overview_apsmode.setImageResource(R.drawable.openloop)
+                    overview_apsmode_text?.text = ""
+//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.openloop)
+//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
+                }
+
+                else                                                                -> {
+                    overview_apsmode.setImageResource(R.drawable.remove)
+                    overview_apsmode_text?.text = ""
+//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.disabledloop)
+//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonCritical))
+//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextCritical))
                 }
             }
         } else {
-            overview_apsmode?.visibility = View.GONE
+            overview_apsmode_text?.visibility = View.GONE
         }
 
         // temp target

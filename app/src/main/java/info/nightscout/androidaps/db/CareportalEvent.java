@@ -106,7 +106,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
     }
 
     public String age(boolean useShortText, ResourceHelper resourceHelper) {
-        Map<TimeUnit, Long> diff = computeDiff(date, System.currentTimeMillis());
+        Map<TimeUnit, Long> diff = DateUtil.computeDiff(date, System.currentTimeMillis());
 
         String days = " " + resourceHelper.gs(R.string.days) + " ";
         String hours = " " + resourceHelper.gs(R.string.hours) + " ";
@@ -134,23 +134,6 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
                 ", json= " + json +
                 "}";
     }
-
-    //Map:{DAYS=1, HOURS=3, MINUTES=46, SECONDS=40, MILLISECONDS=0, MICROSECONDS=0, NANOSECONDS=0}
-    private static Map<TimeUnit, Long> computeDiff(long date1, long date2) {
-        long diffInMillies = date2 - date1;
-        List<TimeUnit> units = new ArrayList<>(EnumSet.allOf(TimeUnit.class));
-        Collections.reverse(units);
-        Map<TimeUnit, Long> result = new LinkedHashMap<>();
-        long milliesRest = diffInMillies;
-        for (TimeUnit unit : units) {
-            long diff = unit.convert(milliesRest, TimeUnit.MILLISECONDS);
-            long diffInMilliesForUnit = unit.toMillis(diff);
-            milliesRest = milliesRest - diffInMilliesForUnit;
-            result.put(unit, diff);
-        }
-        return result;
-    }
-
 
     public boolean isEvent5minBack(List<CareportalEvent> list, long time) {
         for (int i = 0; i < list.size(); i++) {

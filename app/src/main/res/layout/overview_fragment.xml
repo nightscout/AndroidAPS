@@ -31,62 +31,43 @@
 
             </androidx.recyclerview.widget.RecyclerView>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:id="@+id/overview_looplayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toTopOf="@+id/overview_pumpstatuslayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/overview_notifications">
 
                 <TextView
-                    android:id="@+id/overview_apsmode"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:paddingTop="3dp"
-                    android:paddingBottom="3dp"
-                    android:text="@string/openloop"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/overview_activeprofile"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-
-                <TextView
                     android:id="@+id/overview_activeprofile"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
                     android:paddingTop="3dp"
                     android:paddingBottom="3dp"
-                    android:text="@string/profile"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/overview_temptarget"
-                    app:layout_constraintStart_toEndOf="@+id/overview_apsmode"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:text="Profile"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:id="@+id/overview_temptarget"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
                     android:paddingTop="3dp"
                     android:paddingBottom="3dp"
-                    android:text="@string/temptargetshort"
+                    android:text="TempTarget"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/mdtp_white"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/overview_activeprofile"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textColor="@color/mdtp_white" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/overview_pumpstatuslayout"
@@ -291,7 +272,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:text="0.50U/h @17:35 1/30min"
+                    android:text="0.50U/h"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/overview_basebasal_label"
@@ -322,7 +303,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:text="0.50U/h @17:35 1/30min"
+                    android:text="0.50U/h"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/overview_extendedbolus_label"
@@ -358,6 +339,33 @@
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="@+id/overview_sensitivity_label"
                     app:layout_constraintStart_toEndOf="@+id/overview_sensitivity_colon" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="5dp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/overview_apsmode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:src="@drawable/closedloop" />
+
+                    <TextView
+                        android:id="@+id/overview_apsmode_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:text="Open Loop"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -518,11 +526,11 @@
         android:paddingEnd="5dp"
         android:text="@string/setbasalquestion"
         android:textColor="@color/colorAcceptTempButton"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/overview_buttons_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/overview_toppart_scrollbar"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toBottomOf="@id/overview_toppart_scrollbar" />
 
     <LinearLayout
         android:id="@+id/overview_buttons_layout"
