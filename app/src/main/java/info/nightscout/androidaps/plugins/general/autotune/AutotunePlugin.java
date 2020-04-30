@@ -56,7 +56,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.inject.Inject;
-
+import javax.inject.Singleton;
 
 /**
  * Created by Rumen Georgiev on 1/29/2018.
@@ -85,8 +85,8 @@ import javax.inject.Inject;
  *  TODO: add Preference for main settings (categorize_uam_as_basal, nb of days, may be advanced settings for % of adjustment (default 20%))
  */
 
+@Singleton
 public class AutotunePlugin extends PluginBase {
-
     private static AutotunePlugin tuneProfile = null;
     private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
     public static Profile profile;
@@ -109,11 +109,6 @@ public class AutotunePlugin extends PluginBase {
     public static Date lastRun=null;
     public boolean nsDataDownloaded = false;
     private PrepOutput prepOutput=null;
-
-//    public autotune() throws IOException {
-//    }
-
-    static AutotunePlugin autotunePlugin;
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final Context context;
@@ -122,8 +117,6 @@ public class AutotunePlugin extends PluginBase {
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
     private final Prep prep;
-
-
 
     @Inject
     public AutotunePlugin(
@@ -143,6 +136,7 @@ public class AutotunePlugin extends PluginBase {
                 .fragmentClass(AutotuneFragment.class.getName())
                 .pluginName(R.string.autotune)
                 .shortName(R.string.autotune_shortname)
+                .description(R.string.autotune_description)
                 .preferencesId(R.xml.pref_autotune),
                 aapsLogger, resourceHelper, injector
         );
@@ -157,18 +151,16 @@ public class AutotunePlugin extends PluginBase {
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
         this.prep = prep;
     }
-
+/*
 //    @Override
     public String getFragmentClass() {
         return AutotuneFragment.class.getName();
     }
 
-
-
     public void invoke(String initiator, boolean allowNotification) {
         // invoke
     }
-
+*/
 
     public void getProfile(){
         //get active profile
@@ -1430,7 +1422,7 @@ public class AutotunePlugin extends PluginBase {
             int basalIncrement = 60 * 60;
 
             try {
-                json.put("defaultProfile", MainApp.gs(R.string.tuneprofile_name));
+                json.put("defaultProfile", MainApp.gs(R.string.autotune_tunedprofile_name));
                 json.put("store", store);
                 convertedProfile.put("dia", profile.getDia());
                 convertedProfile.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("carb_ratio", 0d))));
@@ -1448,7 +1440,7 @@ public class AutotunePlugin extends PluginBase {
 
                 FS.createAutotunefile(FS.profilName(null), convertedProfile.toString(4));
 
-                store.put(MainApp.gs(R.string.tuneprofile_name), convertedProfile);
+                store.put(MainApp.gs(R.string.autotune_tunedprofile_name), convertedProfile);
                 //ProfileStore profileStore = new ProfileStore(json);
                 //SP.putString("autotuneprofile", profileStore.getData().toString());
                 //log.debug("Entered in ProfileStore "+profileStore.getSpecificProfile(MainApp.gs(R.string.tuneprofile_name)));
