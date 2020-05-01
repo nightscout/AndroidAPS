@@ -288,6 +288,21 @@ public class LoopPlugin extends PluginBase {
         return true;
     }
 
+    public boolean isLGS(){
+        Constraint<Boolean> closedLoopEnabled = constraintChecker.isClosedLoopAllowed();
+        Double MaxIOBallowed = constraintChecker.getMaxIOBAllowed().value();
+        String APSmode = sp.getString(R.string.key_aps_mode, "open");
+        Double LGSthreshold = 0d;
+        PumpInterface pump = activePlugin.getActivePump();
+        boolean isLGS = false;
+        if (!isSuspended() && !pump.isSuspended())
+            if (closedLoopEnabled.value())
+                if ((MaxIOBallowed.equals(LGSthreshold)) || (APSmode.equals("lgs")))
+                    isLGS = true;
+
+        return isLGS;
+    }
+
     public boolean isSuperBolus() {
         if (loopSuspendedTill == 0)
             return false;
