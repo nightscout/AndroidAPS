@@ -67,7 +67,7 @@ class MsgHistoryEvents_v2 constructor(
             .date(datetime)
             .source(Source.PUMP)
             .pumpId(datetime)
-        val extendedBolus = ExtendedBolus()
+        val extendedBolus = ExtendedBolus(injector)
             .date(datetime)
             .source(Source.PUMP)
             .pumpId(datetime)

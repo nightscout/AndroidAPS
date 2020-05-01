@@ -4,12 +4,12 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import dagger.android.DaggerService
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -21,8 +21,8 @@ class DummyService : DaggerService() {
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var mainApp: MainApp
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var notificationHolder: NotificationHolder
 
     private val disposable = CompositeDisposable()
 
@@ -32,14 +32,14 @@ class DummyService : DaggerService() {
         super.onCreate()
         // TODO: I guess this was moved here in order to adhere to the 5 seconds rule to call "startForeground" after a Service was called as Foreground service?
         // As onCreate() is not called every time a service is started, copied to onStartCommand().
-        startForeground(mainApp.notificationId(), mainApp.notification)
+        startForeground(notificationHolder.notificationID, notificationHolder.notification)
         disposable.add(rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(Schedulers.io())
             .subscribe({
                 aapsLogger.debug(LTag.CORE, "EventAppExit received")
                 stopSelf()
-            }) { fabricPrivacy.logException(it) }
+            }) { fabricPrivacy::logException }
         )
     }
 
@@ -52,7 +52,7 @@ class DummyService : DaggerService() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        startForeground(mainApp.notificationId(), mainApp.notification)
+        startForeground(notificationHolder.notificationID, notificationHolder.notification)
         return Service.START_STICKY
     }
 }

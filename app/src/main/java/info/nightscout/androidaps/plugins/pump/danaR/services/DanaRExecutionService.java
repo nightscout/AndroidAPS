@@ -150,7 +150,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
             MsgStatus statusMsg = new MsgStatus(aapsLogger, danaRPump);
             MsgStatusBasic statusBasicMsg = new MsgStatusBasic(aapsLogger, danaRPump);
             MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin, injector);
-            MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended(aapsLogger, danaRPump, activePlugin);
+            MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin);
             MsgCheckValue checkValue = new MsgCheckValue(aapsLogger, danaRPump, danaRPlugin);
 
             if (danaRPump.isNewPump()) {
@@ -259,7 +259,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.settingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStart(aapsLogger, constraintChecker, insulin, (byte) (durationInHalfHours & 0xFF)));
-        mSerialIOThread.sendMessage(new MsgStatusBolusExtended(aapsLogger, danaRPump, activePlugin));
+        mSerialIOThread.sendMessage(new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin));
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }
@@ -268,7 +268,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStop(aapsLogger));
-        mSerialIOThread.sendMessage(new MsgStatusBolusExtended(aapsLogger, danaRPump, activePlugin));
+        mSerialIOThread.sendMessage(new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin));
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }

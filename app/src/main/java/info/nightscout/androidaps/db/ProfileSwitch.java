@@ -76,7 +76,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     @Inject public ResourceHelper resourceHelper;
 
     public ProfileSwitch() {
-        this.injector = MainApp.instance().injector;
+        this.injector = MainApp.instance();
         injector.androidInjector().inject(this);
     }
 
