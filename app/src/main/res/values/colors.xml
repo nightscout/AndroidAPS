@@ -86,6 +86,7 @@
     <color name="ribbonCritical">#ff0400</color>
     <color name="ribbonTextDefault">#FFFFFF</color>
     <color name="ribbonTextWarning">#303030</color>
+    <color name="ribbonUnusual">#01017A</color>
     <color name="ribbonTextCritical">#FFFFFF</color>
 
     <color name="splashBackground">#2E2E2E</color>

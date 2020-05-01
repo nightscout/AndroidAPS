@@ -622,8 +622,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
 
                 loopPlugin.isEnabled(PluginType.LOOP)                            -> {
-                    overview_apsmode?.text = if (closedLoopEnabled.value()) resourceHelper.gs(R.string.closedloop) else resourceHelper.gs(R.string.openloop)
-                    overview_apsmode?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+                    val APSmode = sp.getString(R.string.key_aps_mode, "open")
+                    val isLGS = loopPlugin.isLGS
+                    overview_apsmode?.text = if (closedLoopEnabled.value()) if (isLGS) resourceHelper.gs(R.string.lgs) else  resourceHelper.gs(R.string.closedloop) else resourceHelper.gs(R.string.openloop)
+                    overview_apsmode?.setBackgroundColor(if (isLGS) resourceHelper.gc(R.color.ribbonUnusual) else resourceHelper.gc(R.color.ribbonDefault))
                     overview_apsmode?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 }
 
