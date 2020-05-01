@@ -89,9 +89,9 @@ import javax.inject.Singleton;
 public class AutotunePlugin extends PluginBase {
     private static AutotunePlugin tuneProfile = null;
     private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
-    public static Profile profile;
-    public static List<Double> basalsResult = new ArrayList<Double>();
-    public static List<Treatment> treatments;
+    private static Profile profile;
+    private static List<Double> basalsResult = new ArrayList<Double>();
+    private static List<Treatment> treatments;
     private List<BGDatum> CSFGlucoseData = new ArrayList<BGDatum>();
     private List<BGDatum> ISFGlucoseData = new ArrayList<BGDatum>();
     private List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
@@ -104,7 +104,7 @@ public class AutotunePlugin extends PluginBase {
     private static LongSparseArray<IobTotal> iobTable = new LongSparseArray<>(); // oldest at index 0
     private static Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<>();
     private static Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<>();
-    public static final int autotuneStartHour = 4;
+    private static final int autotuneStartHour = 4;
     public static String result ="Press Run";
     public static Date lastRun=null;
     public boolean nsDataDownloaded = false;
@@ -1326,7 +1326,7 @@ public class AutotunePlugin extends PluginBase {
                 opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
 
                 // get treatments from 6 hours (DIA duration) before first BG value
-                opts.setTreatments(new TreatmentService().getTreatmentDataFromTime(treatmentStart,treatmentEnd,false));
+                opts.setTreatments(treatmentsPlugin.getService().getTreatmentDataFromTime(treatmentStart,treatmentEnd,false));
                 // get basal temp and extended temp from 6 hours (DIA duration) before first BG value
                 opts.setTempBasalHistory(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(treatmentStart,treatmentEnd,false));
                 opts.setExtBolusHistory(MainApp.getDbHelper().getExtendedBolusDataFromTime(treatmentStart,treatmentEnd,false));

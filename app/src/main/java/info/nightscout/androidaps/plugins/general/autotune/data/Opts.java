@@ -28,6 +28,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 
+
 public class Opts {
     public Profile profile;
     public Profile pumpprofile;
@@ -40,12 +41,12 @@ public class Opts {
     public long end;
     public boolean categorize_uam_as_basal;
     public boolean tune_insulin_curve;
-    @Inject ProfileFunction profileFunction;
     //FATAL EXCEPTION shown in Logcat:
-    //    java.lang.NullPointerException: Attempt to invoke interface method 'info.nightscout.androidaps.interfaces.InsulinInterface info.nightscout.androidaps.interfaces.ActivePluginProvider.getActiveInsulin()' on a null object reference
-    //        at info.nightscout.androidaps.plugins.general.autotune.data.Opts.profiletoOrefJSON(Opts.java:273)
-    // Don't understand what's wrong (same line in AutotunePlugin #1483 works...)
-    // Line 273 = InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
+    //java.lang.NullPointerException: Attempt to invoke interface method 'info.nightscout.androidaps.data.Profile info.nightscout.androidaps.plugins.configBuilder.ProfileFunction.getProfile(long)' on a null object reference
+    //      at info.nightscout.androidaps.plugins.general.autotune.data.Opts.setTempBasalHistory(Opts.java:58)
+    //
+    // 2 lines below (@Inject) doesn't works and profileFunction or activePlugin are null objects...
+    @Inject ProfileFunction profileFunction;
     @Inject ActivePluginProvider activePlugin;
 
     public void setTempBasalHistory(List<TemporaryBasal> lt) {
@@ -108,33 +109,7 @@ public class Opts {
         return glucoseJson;
     }
 
-    /*
-    //For treatment export, add starttime and endtime to export dedicated files for each loop
-    public JSONArray pumpHistorytoJSON(long starttime, long endtime)  {
-        JSONArray json = new JSONArray();
-        try {
-            for (CareportalEvent cp:pumpHistory ) {
-                JSONObject cPjson = new JSONObject();
 
-                if(cp.date >= starttime && cp.date <= endtime && cp.isValid) {
-                    cPjson.put("_id", cp._id);
-                    cPjson.put("eventType",cp.eventType);
-                    cPjson.put("date",cp.date);
-                    cPjson.put("dateString",DateUtil.toISOAsUTC(cp.date));
-                    JSONObject object = new JSONObject(cp.json);
-                    Iterator it = object.keys();
-                    while (it.hasNext()) {
-                        String key = (String)it.next();
-                        cPjson.put(key, object.get(key));
-                    }
-                }
-                json.put(cPjson);
-            }
-        } catch (JSONException e) {}
-
-        return json;
-    }
-    */
     public JSONArray nsHistorytoJSON() {
         JSONArray json = new JSONArray();
         for (NsTreatment t: pumpHistory ) {
@@ -143,6 +118,55 @@ public class Opts {
         }
         return json;
     }
+
+
+    public JSONObject profiletoOrefJSON()  {
+        // Create a json profile with oref0 format
+        // Include min_5m_carbimpact, insulin type, single value for carb_ratio and isf
+        JSONObject json = new JSONObject();
+        JSONObject store = new JSONObject();
+        JSONObject convertedProfile = new JSONObject();
+        int basalIncrement = 60 ;
+        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
+
+        try {
+            json.put("min_5m_carbimpact",SP.getDouble("openapsama_min_5m_carbimpact", 3.0));
+            json.put("dia", profile.getDia());
+
+            JSONArray basals = new JSONArray();
+            for (int h = 0; h < 24; h++) {
+                int secondfrommidnight = h * 60 * 60;
+                String time;
+                time = (h<10 ? "0"+ h : h)  + ":00:00";
+                //basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", getProfileBasal(h)));
+                basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", profile.getBasalTimeFromMidnight(secondfrommidnight)));
+            };
+            json.put("basalprofile", basals);
+            int isfvalue = (int) profile.getIsfMgdl();
+            json.put("isfProfile",new JSONObject().put("sensitivities",new JSONArray().put(new JSONObject().put("i",0).put("start","00:00:00").put("sensitivity",isfvalue).put("offset",0).put("x",0).put("endoffset",1440))));
+            // json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("carb_ratio", 0d))));
+            json.put("carb_ratio", profile.getIc());
+            json.put("autosens_max", SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
+            json.put("autosens_min", SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")));
+            if (insulinInterface.getId() == InsulinInterface.OREF_ULTRA_RAPID_ACTING)
+                json.put("curve","ultra-rapid");
+            else if (insulinInterface.getId() == InsulinInterface.OREF_RAPID_ACTING)
+                json.put("curve","rapid-acting");
+            else if (insulinInterface.getId() == InsulinInterface.OREF_FREE_PEAK) {
+                json.put("curve", "bilinear");
+                json.put("insulinpeaktime",SP.getInt(MainApp.gs(R.string.key_insulin_oref_peak),75));
+            }
+
+        } catch (JSONException e) {}
+
+        return json;
+    }
+
+
+    /*********************************************************************************************************************************************
+     *  All code below is for helping data analysis if I see unconsistencies between AAPS data and NS data downloaded by oref0-autotune
+     *  (call in AutotunePlugin and line below could be removed in final version)
+     *********************************************************************************************************************************************/
 
     /*
     public JSONArray nsTreatmenttoJSON() {
@@ -174,7 +198,33 @@ public class Opts {
         return json;
     }
     */
+    /*
+    //For treatment export, add starttime and endtime to export dedicated files for each loop
+    public JSONArray pumpHistorytoJSON(long starttime, long endtime)  {
+        JSONArray json = new JSONArray();
+        try {
+            for (CareportalEvent cp:pumpHistory ) {
+                JSONObject cPjson = new JSONObject();
 
+                if(cp.date >= starttime && cp.date <= endtime && cp.isValid) {
+                    cPjson.put("_id", cp._id);
+                    cPjson.put("eventType",cp.eventType);
+                    cPjson.put("date",cp.date);
+                    cPjson.put("dateString",DateUtil.toISOAsUTC(cp.date));
+                    JSONObject object = new JSONObject(cp.json);
+                    Iterator it = object.keys();
+                    while (it.hasNext()) {
+                        String key = (String)it.next();
+                        cPjson.put(key, object.get(key));
+                    }
+                }
+                json.put(cPjson);
+            }
+        } catch (JSONException e) {}
+
+        return json;
+    }
+    */
     //For treatment export, add starttime and endtime to export dedicated files for each loop
     public JSONArray pumpExtBolusHistorytoJSON()  {
         JSONArray json = new JSONArray();
@@ -262,69 +312,5 @@ public class Opts {
             cPjson.put("carbs",null);
         } catch (JSONException e) {}
         return cPjson;
-    }
-
-
-
-    public JSONObject profiletoOrefJSON()  {
-        // Create a json profile with oref0 format
-        // Include min_5m_carbimpact, insulin type, single value for carb_ratio and isf
-        JSONObject json = new JSONObject();
-        JSONObject store = new JSONObject();
-        JSONObject convertedProfile = new JSONObject();
-        int basalIncrement = 60 ;
-        InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
-
-        try {
-            json.put("min_5m_carbimpact",SP.getDouble("openapsama_min_5m_carbimpact", 3.0));
-            json.put("dia", profile.getDia());
-
-            JSONArray basals = new JSONArray();
-            for (int h = 0; h < 24; h++) {
-                int secondfrommidnight = h * 60 * 60;
-                String time;
-                time = (h<10 ? "0"+ h : h)  + ":00:00";
-                //basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", getProfileBasal(h)));
-                basals.put(new JSONObject().put("start", time).put("minutes", h * basalIncrement).put("rate", profile.getBasalTimeFromMidnight(secondfrommidnight)));
-            };
-            json.put("basalprofile", basals);
-            int isfvalue = (int) profile.getIsfMgdl();
-            json.put("isfProfile",new JSONObject().put("sensitivities",new JSONArray().put(new JSONObject().put("i",0).put("start","00:00:00").put("sensitivity",isfvalue).put("offset",0).put("x",0).put("endoffset",1440))));
-            // json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("carb_ratio", 0d))));
-            json.put("carb_ratio", profile.getIc());
-            json.put("autosens_max", SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
-            json.put("autosens_min", SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")));
-            if (insulinInterface.getId() == InsulinInterface.OREF_ULTRA_RAPID_ACTING)
-                json.put("curve","ultra-rapid");
-            else if (insulinInterface.getId() == InsulinInterface.OREF_RAPID_ACTING)
-                json.put("curve","rapid-acting");
-            else if (insulinInterface.getId() == InsulinInterface.OREF_FREE_PEAK) {
-                json.put("curve", "bilinear");
-                json.put("insulinpeaktime",SP.getInt(MainApp.gs(R.string.key_insulin_oref_peak),75));
-            }
-
-        } catch (JSONException e) {}
-
-        return json;
-    }
-
-    public synchronized Double getProfileBasal(Integer hour){
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, hour);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-
-        return profile.getBasal(c.getTimeInMillis());
-    }
-
-    public synchronized Double getPumpProfileBasal(Integer hour){
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, hour);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-
-        return profile.getBasal(c.getTimeInMillis());
     }
 }
