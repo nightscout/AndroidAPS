@@ -1,19 +1,17 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.comm.action;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.PrimeService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.ActionInitializationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSetupProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.ActionInitializationException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSetupProgressException;
 
 public class PrimeAction implements OmnipodAction<StatusResponse> {
-    private static final Logger LOG = LoggerFactory.getLogger(PrimeAction.class);
 
     private final PrimeService service;
     private final PodSessionState podState;
@@ -29,11 +27,9 @@ public class PrimeAction implements OmnipodAction<StatusResponse> {
         this.podState = podState;
     }
 
-    public static void updatePrimingStatus(PodSessionState podState, StatusResponse statusResponse) {
+    public static void updatePrimingStatus(PodSessionState podState, StatusResponse statusResponse, AAPSLogger aapsLogger) {
         if (podState.getSetupProgress().equals(SetupProgress.PRIMING) && statusResponse.getPodProgressStatus().equals(PodProgressStatus.READY_FOR_BASAL_SCHEDULE)) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("Updating SetupProgress from PRIMING to PRIMING_FINISHED");
-            }
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Updating SetupProgress from PRIMING to PRIMING_FINISHED");
             podState.setSetupProgress(SetupProgress.PRIMING_FINISHED);
         }
     }
@@ -56,7 +52,7 @@ public class PrimeAction implements OmnipodAction<StatusResponse> {
         } else if (podState.getSetupProgress().equals(SetupProgress.PRIMING)) {
             // Check status
             StatusResponse statusResponse = communicationService.executeAction(new GetStatusAction(podState));
-            updatePrimingStatus(podState, statusResponse);
+            updatePrimingStatus(podState, statusResponse, communicationService.aapsLogger);
             return statusResponse;
         } else {
             throw new IllegalSetupProgressException(null, podState.getSetupProgress());

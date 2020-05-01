@@ -1,23 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver;
 
-import org.joda.time.LocalDateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Arrays;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
@@ -28,9 +19,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDe
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
-import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by andy on 4.8.2019
@@ -38,9 +28,8 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 @Singleton
 public class OmnipodPumpStatus extends PumpStatus {
 
-    //private static Logger LOG = LoggerFactory.getLogger(L.PUMP);
     private final ResourceHelper resourceHelper;
-    private final info.nightscout.androidaps.utils.sharedPreferences.SP sp;
+    private final SP sp;
     private final RileyLinkUtil rileyLinkUtil;
     private final RxBusWrapper rxBus;
 
@@ -60,9 +49,7 @@ public class OmnipodPumpStatus extends PumpStatus {
     public PodSessionState podSessionState;
     public PumpType pumpType;
 
-    private boolean rileyLinkAddressChanged = false;
-    private String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
-
+    public String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
 
     public String podNumber;
     public PodDeviceState podDeviceState = PodDeviceState.NeverContacted;
@@ -108,14 +95,11 @@ public class OmnipodPumpStatus extends PumpStatus {
     }
 
 
-
-
     public String getErrorInfo() {
         //verifyConfiguration();
 
         return (this.errorDescription == null) ? "-" : this.errorDescription;
     }
-
 
 
 //    public boolean setNotInPreInit() {
@@ -132,10 +116,6 @@ public class OmnipodPumpStatus extends PumpStatus {
         this.tempBasalLength = 0;
     }
 
-
-    private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMP);
-    }
 
     public TempBasalPair getTemporaryBasal() {
 
@@ -162,7 +142,6 @@ public class OmnipodPumpStatus extends PumpStatus {
                 ", tempBasalAmount=" + tempBasalAmount +
                 ", tempBasalLength=" + tempBasalLength +
                 ", podSessionState=" + podSessionState +
-                ", rileyLinkAddressChanged=" + rileyLinkAddressChanged +
                 ", regexMac='" + regexMac + '\'' +
                 ", podNumber='" + podNumber + '\'' +
                 ", podDeviceState=" + podDeviceState +

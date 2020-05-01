@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.comm;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -10,7 +7,6 @@ import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
@@ -23,14 +19,17 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicConverter;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
-import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.OmnipodAction;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommunicationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPacketTypeException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalResponseException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceOutOfSyncException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceResyncException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NotEnoughDataException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodFaultException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodReturnedErrorResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.OmnipodPacket;
@@ -44,29 +43,19 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodState;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommunicationException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPacketTypeException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalResponseException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceOutOfSyncException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceResyncException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NotEnoughDataException;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodFaultException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodReturnedErrorResponseException;
 
 /**
  * Created by andy on 6/29/18.
  */
 public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
 
-    @Inject AAPSLogger aapsLogger;
+    @Inject public AAPSLogger aapsLogger;
     @Inject OmnipodPumpStatus omnipodPumpStatus;
     @Inject OmnipodPumpPlugin omnipodPumpPlugin;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject ServiceTaskExecutor serviceTaskExecutor;
-
-    //private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
     public OmnipodCommunicationManager(HasAndroidInjector injector, RFSpy rfspy) {
         super(injector, rfspy);
@@ -140,9 +129,8 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
 
     public synchronized <T extends MessageBlock> T exchangeMessages(Class<T> responseClass, PodState podState, OmnipodMessage message, Integer addressOverride, Integer ackAddressOverride, boolean automaticallyResyncNonce) {
 
-            aapsLogger.debug(LTag.PUMPCOMM,"Exchanging OmnipodMessage [responseClass={}, podState={}, message={}, addressOverride={}, ackAddressOverride={}, automaticallyResyncNonce={}]: {}", //
-                    responseClass.getSimpleName(), podState, message, addressOverride, ackAddressOverride, automaticallyResyncNonce, message);
-
+        aapsLogger.debug(LTag.PUMPCOMM, "Exchanging OmnipodMessage [responseClass={}, podState={}, message={}, addressOverride={}, ackAddressOverride={}, automaticallyResyncNonce={}]: {}", //
+                responseClass.getSimpleName(), podState, message, addressOverride, ackAddressOverride, automaticallyResyncNonce, message);
 
         for (int i = 0; 2 > i; i++) {
 
@@ -235,8 +223,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
                 // so it's impossible for the pod to have received the message
                 newException.setCertainFailure(!lastPacket);
 
-
-                    aapsLogger.debug(LTag.PUMPCOMM,"Caught exception in transportMessages. Set certainFailure to {} because encodedMessage.length={}", newException.isCertainFailure(), encodedMessage.length);
+                aapsLogger.debug(LTag.PUMPCOMM, "Caught exception in transportMessages. Set certainFailure to {} because encodedMessage.length={}", newException.isCertainFailure(), encodedMessage.length);
 
                 throw newException;
             }
@@ -281,7 +268,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
             throw new NotEnoughDataException(receivedMessageData);
         } else if (messageBlocks.size() > 1) {
             // BS: don't expect this to happen
-                aapsLogger.error(LTag.PUMPCOMM,"Received more than one message block: {}", messageBlocks.toString());
+            aapsLogger.error(LTag.PUMPBTCOMM, "Received more than one message block: {}", messageBlocks.toString());
         }
 
         return messageBlocks.get(0);
@@ -308,10 +295,10 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
             if (RileyLinkBLEError.Timeout.equals(ex.getErrorCode())) {
                 quiet = true;
             } else {
-                aapsLogger.debug(LTag.PUMPCOMM,"Ignoring exception in ackUntilQuiet", ex);
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Ignoring exception in ackUntilQuiet", ex);
             }
         } catch (OmnipodException ex) {
-            aapsLogger.debug(LTag.PUMPCOMM,"Ignoring exception in ackUntilQuiet", ex);
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Ignoring exception in ackUntilQuiet", ex);
         } catch (Exception ex) {
             throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
         }
@@ -335,7 +322,7 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
             try {
                 response = sendAndListen(packet, responseTimeoutMilliseconds, repeatCount, 9, preambleExtensionMilliseconds, OmnipodPacket.class);
             } catch (RileyLinkCommunicationException | OmnipodException ex) {
-                    aapsLogger.debug(LTag.PUMPCOMM,"Ignoring exception in exchangePackets", ex);
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Ignoring exception in exchangePackets", ex);
             } catch (Exception ex) {
                 throw new CommunicationException(CommunicationException.Type.UNEXPECTED_EXCEPTION, ex);
             }

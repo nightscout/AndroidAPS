@@ -3,18 +3,12 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.EnumSet;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-
-import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AcknowledgeAlertsAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AssignAddressAction;
@@ -30,6 +24,11 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.SetBasalSched
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.SetTempBasalAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.InsertCannulaService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.PrimeService;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommunicationException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalDeliveryStatusException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSetupProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceOutOfSyncException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.command.CancelDeliveryCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoRecentPulseLog;
@@ -42,14 +41,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.SetupProgress;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodStateChangedHandler;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommunicationException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalDeliveryStatusException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSetupProgressException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceOutOfSyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.exception.OmnipodException;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.PodFaultException;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
-
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import io.reactivex.Completable;
 import io.reactivex.Flowable;
@@ -61,8 +54,6 @@ import io.reactivex.subjects.SingleSubject;
 public class OmnipodManager {
     private static final int ACTION_VERIFICATION_TRIES = 3;
 
-    //private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
-
     protected final OmnipodCommunicationManager communicationService;
     private final PodStateChangedHandler podStateChangedHandler;
     protected PodSessionState podState;
@@ -70,19 +61,23 @@ public class OmnipodManager {
     private ActiveBolusData activeBolusData;
     private final Object bolusDataMutex = new Object();
 
-    private HasAndroidInjector injector;
-    @Inject AAPSLogger aapsLogger;
-    @Inject SP sp;
+    //private HasAndroidInjector injector;
+    AAPSLogger aapsLogger;
+    SP sp;
 
-    public OmnipodManager(HasAndroidInjector injector,
+    public OmnipodManager(//HasAndroidInjector injector,
+                          AAPSLogger aapsLogger,
+                          SP sp,
                           OmnipodCommunicationManager communicationService,
                           PodSessionState podState,
                           PodStateChangedHandler podStateChangedHandler) {
-        this.injector = injector;
-        this.injector.androidInjector().inject(this);
+//        this.injector = injector;
+//        this.injector.androidInjector().inject(this);
         if (communicationService == null) {
             throw new IllegalArgumentException("Communication service cannot be null");
         }
+        this.aapsLogger = aapsLogger;
+        this.sp = sp;
         this.communicationService = communicationService;
         if (podState != null) {
             podState.setStateChangedHandler(podStateChangedHandler);
@@ -91,11 +86,11 @@ public class OmnipodManager {
         this.podStateChangedHandler = podStateChangedHandler;
     }
 
-    public OmnipodManager(HasAndroidInjector injector,
-                          OmnipodCommunicationManager communicationService,
-                          PodSessionState podState) {
-        this(injector, communicationService, podState, null);
-    }
+//    public OmnipodManager(HasAndroidInjector injector,
+//                          OmnipodCommunicationManager communicationService,
+//                          PodSessionState podState) {
+//        this(injector, communicationService, podState, null);
+//    }
 
     public synchronized Single<SetupActionResult> pairAndPrime() {
         logStartingCommandExecution("pairAndPrime");
@@ -121,7 +116,7 @@ public class OmnipodManager {
 
         return Single.timer(delayInSeconds, TimeUnit.SECONDS) //
                 .map(o -> verifySetupAction(statusResponse ->
-                        PrimeAction.updatePrimingStatus(podState, statusResponse), SetupProgress.PRIMING_FINISHED)) //
+                        PrimeAction.updatePrimingStatus(podState, statusResponse, aapsLogger), SetupProgress.PRIMING_FINISHED)) //
                 .observeOn(Schedulers.io());
     }
 
@@ -144,7 +139,7 @@ public class OmnipodManager {
 
         return Single.timer(delayInSeconds, TimeUnit.SECONDS) //
                 .map(o -> verifySetupAction(statusResponse ->
-                        InsertCannulaAction.updateCannulaInsertionStatus(podState, statusResponse), SetupProgress.COMPLETED)) //
+                        InsertCannulaAction.updateCannulaInsertionStatus(podState, statusResponse, aapsLogger), SetupProgress.COMPLETED)) //
                 .observeOn(Schedulers.io());
     }
 
@@ -254,9 +249,7 @@ public class OmnipodManager {
         try {
             return executeAndVerify(() -> {
                 StatusResponse statusResponse = communicationService.executeAction(new CancelDeliveryAction(podState, deliveryTypes, acknowledgementBeep));
-                if (isLoggingEnabled()) {
-                    aapsLogger.info(LTag.PUMPCOMM,"Status response after cancel delivery[types={}]: {}", deliveryTypes.toString(), statusResponse.toString());
-                }
+                aapsLogger.info(LTag.PUMPBTCOMM, "Status response after cancel delivery[types={}]: {}", deliveryTypes.toString(), statusResponse.toString());
                 return statusResponse;
             });
         } finally {
@@ -282,9 +275,7 @@ public class OmnipodManager {
             }
 
             // Catch uncertain exceptions as we still want to report bolus progress indication
-            if (isLoggingEnabled()) {
-                aapsLogger.error(LTag.PUMPCOMM,"Caught exception[certainFailure=false] in bolus", ex);
-            }
+            aapsLogger.error(LTag.PUMPBTCOMM, "Caught exception[certainFailure=false] in bolus", ex);
             commandDeliveryStatus = CommandDeliveryStatus.UNCERTAIN_FAILURE;
         } finally {
             logCommandExecutionFinished("bolus");
@@ -335,14 +326,10 @@ public class OmnipodManager {
                                 // Substract units not delivered in case of a Pod failure
                                 unitsNotDelivered = ex.getFaultEvent().getInsulinNotDelivered();
 
-                                if (isLoggingEnabled()) {
-                                    aapsLogger.debug(LTag.PUMPCOMM,"Caught PodFaultException in bolus completion verification", ex);
-                                }
+                                aapsLogger.debug(LTag.PUMPBTCOMM, "Caught PodFaultException in bolus completion verification", ex);
                                 break;
                             } catch (Exception ex) {
-                                if (isLoggingEnabled()) {
-                                    aapsLogger.debug(LTag.PUMPCOMM,"Ignoring exception in bolus completion verification", ex);
-                                }
+                                aapsLogger.debug(LTag.PUMPBTCOMM, "Ignoring exception in bolus completion verification", ex);
                             }
                         }
 
@@ -446,23 +433,19 @@ public class OmnipodManager {
 
         // Try to get pulse log for diagnostics
         // FIXME replace by storing to file
-        if (isLoggingEnabled()) {
-            try {
-                PodInfoResponse podInfoResponse = communicationService.executeAction(new GetPodInfoAction(podState, PodInfoType.RECENT_PULSE_LOG));
-                PodInfoRecentPulseLog pulseLogInfo = podInfoResponse.getPodInfo();
-                aapsLogger.info(LTag.PUMPCOMM,"Retrieved pulse log from the pod: {}", pulseLogInfo.toString());
-            } catch (Exception ex) {
-                aapsLogger.warn(LTag.PUMPCOMM,"Failed to retrieve pulse log from the pod", ex);
-            }
+        try {
+            PodInfoResponse podInfoResponse = communicationService.executeAction(new GetPodInfoAction(podState, PodInfoType.RECENT_PULSE_LOG));
+            PodInfoRecentPulseLog pulseLogInfo = podInfoResponse.getPodInfo();
+            aapsLogger.info(LTag.PUMPBTCOMM, "Retrieved pulse log from the pod: {}", pulseLogInfo.toString());
+        } catch (Exception ex) {
+            aapsLogger.warn(LTag.PUMPBTCOMM, "Failed to retrieve pulse log from the pod", ex);
         }
 
         try {
             // Always send acknowledgement beeps here. Matches the PDM's behavior
             communicationService.executeAction(new DeactivatePodAction(podState, true));
         } catch (PodFaultException ex) {
-            if (isLoggingEnabled()) {
-                aapsLogger.info(LTag.PUMPCOMM,"Ignoring PodFaultException in deactivatePod", ex);
-            }
+            aapsLogger.info(LTag.PUMPBTCOMM, "Ignoring PodFaultException in deactivatePod", ex);
         } finally {
             logCommandExecutionFinished("deactivatePod");
         }
@@ -471,9 +454,7 @@ public class OmnipodManager {
     }
 
     public void resetPodState(boolean forcedByUser) {
-        if (isLoggingEnabled()) {
-            aapsLogger.warn(LTag.PUMPCOMM,"resetPodState has been called. forcedByUser={}", forcedByUser);
-        }
+        aapsLogger.warn(LTag.PUMPBTCOMM, "resetPodState has been called. forcedByUser={}", forcedByUser);
         podState = null;
         sp.remove(OmnipodConst.Prefs.PodState);
     }
@@ -514,23 +495,18 @@ public class OmnipodManager {
             if (isCertainFailure(originalException)) {
                 throw originalException;
             } else {
-                if (isLoggingEnabled()) {
-                    aapsLogger.warn(LTag.PUMPCOMM,"Caught exception in executeAndVerify. Verifying command by using cancel none command to verify nonce", originalException);
-                }
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Caught exception in executeAndVerify. Verifying command by using cancel none command to verify nonce", originalException);
 
                 try {
                     logStartingCommandExecution("verifyCommand");
                     StatusResponse statusResponse = communicationService.sendCommand(StatusResponse.class, podState,
                             new CancelDeliveryCommand(podState.getCurrentNonce(), BeepType.NO_BEEP, DeliveryType.NONE), false);
-                    if (isLoggingEnabled()) {
-                        aapsLogger.info(LTag.PUMPCOMM,"Command status resolved to SUCCESS. Status response after cancelDelivery[types=DeliveryType.NONE]: {}", statusResponse);
-                    }
+                    aapsLogger.info(LTag.PUMPBTCOMM, "Command status resolved to SUCCESS. Status response after cancelDelivery[types=DeliveryType.NONE]: {}", statusResponse);
 
                     return statusResponse;
                 } catch (NonceOutOfSyncException verificationException) {
-                    if (isLoggingEnabled()) {
-                        aapsLogger.error(LTag.PUMPCOMM,"Command resolved to FAILURE (CERTAIN_FAILURE)", verificationException);
-                    }
+                    aapsLogger.error(LTag.PUMPBTCOMM, "Command resolved to FAILURE (CERTAIN_FAILURE)", verificationException);
+
                     if (originalException instanceof OmnipodException) {
                         ((OmnipodException) originalException).setCertainFailure(true);
                         throw originalException;
@@ -540,9 +516,7 @@ public class OmnipodManager {
                         throw newException;
                     }
                 } catch (Exception verificationException) {
-                    if (isLoggingEnabled()) {
-                        aapsLogger.error(LTag.PUMPCOMM,"Command unresolved (UNCERTAIN_FAILURE)", verificationException);
-                    }
+                    aapsLogger.error(LTag.PUMPBTCOMM, "Command unresolved (UNCERTAIN_FAILURE)", verificationException);
                     throw originalException;
                 } finally {
                     logCommandExecutionFinished("verifyCommand");
@@ -581,20 +555,11 @@ public class OmnipodManager {
     }
 
     private void logStartingCommandExecution(String action) {
-        if (isLoggingEnabled()) {
-            aapsLogger.debug(LTag.PUMPCOMM,"Starting command execution for action: " + action);
-        }
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Starting command execution for action: " + action);
     }
 
     private void logCommandExecutionFinished(String action) {
-        if (isLoggingEnabled()) {
-            aapsLogger.debug(LTag.PUMPCOMM,"Command execution finished for action: " + action);
-        }
-    }
-
-    // TODO remove this
-    private boolean isLoggingEnabled() {
-        return true;
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Command execution finished for action: " + action);
     }
 
     private static Duration calculateBolusDuration(double units, double deliveryRate) {

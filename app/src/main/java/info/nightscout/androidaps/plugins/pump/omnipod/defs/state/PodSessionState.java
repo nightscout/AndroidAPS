@@ -5,13 +5,15 @@ import com.google.gson.Gson;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import info.nightscout.androidaps.logging.L;
+import javax.inject.Inject;
+
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoFaultEvent;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSet;
@@ -26,10 +28,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmniCRC;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
+
 
 public class PodSessionState extends PodState {
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+
+    @Inject AAPSLogger aapsLogger;
+    @Inject SP sp;
+    @Inject OmnipodUtil omnipodUtil;
 
     private final Map<AlertSlot, AlertType> configuredAlerts;
     private transient PodStateChangedHandler stateChangedHandler;
@@ -50,8 +56,9 @@ public class PodSessionState extends PodState {
     private DeliveryStatus lastDeliveryStatus;
 
     public PodSessionState(DateTimeZone timeZone, int address, FirmwareVersion piVersion,
-                           FirmwareVersion pmVersion, int lot, int tid, int packetNumber, int messageNumber) {
+                           FirmwareVersion pmVersion, int lot, int tid, int packetNumber, int messageNumber, HasAndroidInjector injector) {
         super(address, messageNumber, packetNumber);
+        injectDaggerClass(injector);
         if (timeZone == null) {
             throw new IllegalArgumentException("Time zone can not be null");
         }
@@ -68,6 +75,10 @@ public class PodSessionState extends PodState {
         this.tid = tid;
         this.nonceState = new NonceState(lot, tid);
         handleUpdates();
+    }
+
+    public void injectDaggerClass(HasAndroidInjector injector) {
+        injector.androidInjector().inject(this);
     }
 
     public void setStateChangedHandler(PodStateChangedHandler handler) {
@@ -241,7 +252,7 @@ public class PodSessionState extends PodState {
 
         boolean newSuspendedState = statusResponse.getDeliveryStatus() == DeliveryStatus.SUSPENDED;
         if (suspended != newSuspendedState) {
-            LOG.info("Updating pod suspended state in updateFromStatusResponse. newSuspendedState={}, statusResponse={}", newSuspendedState, statusResponse.toString());
+            aapsLogger.info(LTag.PUMPCOMM, "Updating pod suspended state in updateFromStatusResponse. newSuspendedState={}, statusResponse={}", newSuspendedState, statusResponse.toString());
             suspended = newSuspendedState;
         }
         activeAlerts = statusResponse.getAlerts();
@@ -251,10 +262,10 @@ public class PodSessionState extends PodState {
     }
 
     private void handleUpdates() {
-        Gson gson = OmnipodUtil.getGsonInstance();
+        Gson gson = omnipodUtil.getGsonInstance();
         String gsonValue = gson.toJson(this);
-        LOG.info("PodSessionState-SP: Saved Session State to SharedPreferences: " + gsonValue);
-        SP.putString(OmnipodConst.Prefs.PodState, gsonValue);
+        aapsLogger.info(LTag.PUMPCOMM, "PodSessionState-SP: Saved Session State to SharedPreferences: " + gsonValue);
+        sp.putString(OmnipodConst.Prefs.PodState, gsonValue);
         if (stateChangedHandler != null) {
             stateChangedHandler.handle(this);
         }

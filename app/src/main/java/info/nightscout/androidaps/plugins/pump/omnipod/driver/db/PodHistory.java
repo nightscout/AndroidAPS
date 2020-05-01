@@ -3,12 +3,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.db;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbObjectBase;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 
 /**
@@ -16,8 +12,6 @@ import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
  */
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_POD_HISTORY)
 public class PodHistory implements DbObjectBase, Comparable<PodHistory> {
-
-    private static Logger log = LoggerFactory.getLogger(L.DATABASE);
 
     @DatabaseField(id = true)
     public long date;

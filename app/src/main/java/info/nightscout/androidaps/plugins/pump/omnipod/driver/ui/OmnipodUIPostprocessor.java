@@ -8,12 +8,8 @@ import java.util.Date;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCustomActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodResponseType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 
 /**
@@ -21,6 +17,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
  */
 
 public class OmnipodUIPostprocessor {
+
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
@@ -43,11 +40,11 @@ public class OmnipodUIPostprocessor {
         switch (uiTask.commandType) {
 
             case SetBolus: {
-                if (uiTask.returnData!=null) {
+                if (uiTask.returnData != null) {
 
                     PumpEnactResult result = uiTask.returnData;
 
-                    DetailedBolusInfo detailedBolusInfo = (DetailedBolusInfo)uiTask.getObjectFromParameters(0);
+                    DetailedBolusInfo detailedBolusInfo = (DetailedBolusInfo) uiTask.getObjectFromParameters(0);
 
                     if (result.success) {
                         boolean isSmb = detailedBolusInfo.isSMB;
@@ -58,7 +55,8 @@ public class OmnipodUIPostprocessor {
                         }
                     }
                 }
-            } break;
+            }
+            break;
 
             case CancelTemporaryBasal: {
                 pumpStatus.tempBasalStart = 0;
@@ -98,9 +96,6 @@ public class OmnipodUIPostprocessor {
                     LOG.trace("Post-processing not implemented for {}.", uiTask.commandType.name());
 
         }
-
-
-
 
 
     }

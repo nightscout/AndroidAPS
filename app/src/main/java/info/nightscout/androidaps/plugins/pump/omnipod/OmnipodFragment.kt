@@ -14,12 +14,9 @@ import info.nightscout.androidaps.events.EventPreferenceChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
@@ -35,9 +32,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefres
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil
 import info.nightscout.androidaps.queue.Callback
-import info.nightscout.androidaps.utils.*
+import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.Round
+import info.nightscout.androidaps.utils.T
+import info.nightscout.androidaps.utils.WarnColors
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -57,24 +59,17 @@ class OmnipodFragment : DaggerFragment() {
     @Inject lateinit var omnipodPumpPlugin: OmnipodPumpPlugin
     @Inject lateinit var warnColors: WarnColors
     @Inject lateinit var omnipodPumpStatus: OmnipodPumpStatus
+    @Inject lateinit var sp: SP
+    @Inject lateinit var omnipodUtil: OmnipodUtil
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val loopHandler = Handler()
     private lateinit var refreshLoop: Runnable
 
-
-
-
-
-    //private val LOG = LoggerFactory.getLogger(L.PUMP)
-    //private var disposable: CompositeDisposable = CompositeDisposable()
-    //private var podAvailable = false
-
     operator fun CompositeDisposable.plusAssign(disposable: Disposable) {
         add(disposable)
     }
-
 
     init {
         refreshLoop = Runnable {
@@ -139,12 +134,6 @@ class OmnipodFragment : DaggerFragment() {
             if (omnipodPumpPlugin.rileyLinkService?.verifyConfiguration() != true) {
                 displayNotConfiguredDialog()
             } else {
-//                val readPulseLog = AapsOmnipodManager.getInstance().readPulseLog()
-//
-//                OKDialog.show(MainApp.instance().applicationContext, resourceHelper.gs(R.string.action),
-//                        "Pulse Log:\n" + readPulseLog.toString(), null)
-//
-
                 omnipod_pod_debug.isEnabled = false
                 omnipodPumpPlugin.addPodStatusRequest(OmnipodStatusRequest.GetPodPulseLog);
                 commandQueue.readStatus("Clicked Refresh", object : Callback() {
@@ -152,7 +141,6 @@ class OmnipodFragment : DaggerFragment() {
                         activity?.runOnUiThread { omnipod_pod_debug.isEnabled = true }
                     }
                 })
-
             }
         }
 
@@ -167,44 +155,40 @@ class OmnipodFragment : DaggerFragment() {
         super.onResume()
         loopHandler.postDelayed(refreshLoop, T.mins(1).msecs())
         disposable += rxBus
-                .toObservable(EventOmnipodRefreshButtonState::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ omnipod_refresh.isEnabled = it.newState }, { fabricPrivacy.logException(it) })
+            .toObservable(EventOmnipodRefreshButtonState::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ omnipod_refresh.isEnabled = it.newState }, { fabricPrivacy.logException(it) })
         disposable += rxBus
-                .toObservable(EventOmnipodDeviceStatusChange::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    if (L.isEnabled(L.PUMP))
-                        aapsLogger.info(LTag.PUMP,"onStatusEvent(EventOmnipodDeviceStatusChange): {}", it)
-                    setDeviceStatus()
-                }, { fabricPrivacy.logException(it) })
+            .toObservable(EventOmnipodDeviceStatusChange::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                aapsLogger.info(LTag.PUMP, "onStatusEvent(EventOmnipodDeviceStatusChange): {}", it)
+                setDeviceStatus()
+            }, { fabricPrivacy.logException(it) })
         disposable += rxBus
-                .toObservable(EventOmnipodPumpValuesChanged::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
+            .toObservable(EventOmnipodPumpValuesChanged::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateGUI() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
-                .toObservable(EventOmnipodAcknowledgeAlertsChanged::class.java)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ updateAcknowledgeAlerts() }, { fabricPrivacy.logException(it) })
+            .toObservable(EventOmnipodAcknowledgeAlertsChanged::class.java)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ updateAcknowledgeAlerts() }, { fabricPrivacy.logException(it) })
         disposable += rxBus
-                .toObservable(EventPreferenceChange::class.java)
-                .observeOn(Schedulers.io())
-                .subscribe({ event ->
-                    setVisibilityOfPodDebugButton()
-                }, { fabricPrivacy.logException(it) })
-
+            .toObservable(EventPreferenceChange::class.java)
+            .observeOn(Schedulers.io())
+            .subscribe({ event ->
+                setVisibilityOfPodDebugButton()
+            }, { fabricPrivacy.logException(it) })
     }
 
-
     fun setVisibilityOfPodDebugButton() {
-        val isEnabled = SP.getBoolean(OmnipodConst.Prefs.PodDebuggingOptionsEnabled, false)
+        val isEnabled = sp.getBoolean(OmnipodConst.Prefs.PodDebuggingOptionsEnabled, false)
 
         if (isEnabled)
             omnipod_pod_debug.visibility = View.VISIBLE
         else
             omnipod_pod_debug.visibility = View.GONE
     }
-
 
     private fun displayNotConfiguredDialog() {
         context?.let {
@@ -219,41 +203,38 @@ class OmnipodFragment : DaggerFragment() {
         loopHandler.removeCallbacks(refreshLoop)
     }
 
-
     @Synchronized
     private fun setDeviceStatus() {
         //val omnipodPumpStatus: OmnipodPumpStatus = OmnipodUtil.getPumpStatus()
         // omnipodPumpStatus.rileyLinkServiceState = checkStatusSet(omnipodPumpStatus.rileyLinkServiceState,
         //         RileyLinkUtil.getServiceState()) as RileyLinkServiceState?
 
-
-
-        aapsLogger.info(LTag.PUMP,"setDeviceStatus: [pumpStatus={}]", omnipodPumpStatus)
+        aapsLogger.info(LTag.PUMP, "setDeviceStatus: [pumpStatus={}]", omnipodPumpStatus)
 
         val resourceId = omnipodPumpStatus.rileyLinkServiceState.getResourceId(RileyLinkTargetDevice.Omnipod)
         val rileyLinkError = omnipodPumpPlugin.rileyLinkService?.error
 
         omnipod_rl_status.text =
-                when {
-                    omnipodPumpStatus.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
-                    omnipodPumpStatus.rileyLinkServiceState.isConnecting                        -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
-                    omnipodPumpStatus.rileyLinkServiceState.isError && rileyLinkError == null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
-                    omnipodPumpStatus.rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
-                    else                                                                        -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
-                }
+            when {
+                omnipodPumpStatus.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> resourceHelper.gs(resourceId)
+                omnipodPumpStatus.rileyLinkServiceState.isConnecting                        -> "{fa-bluetooth-b spin}   " + resourceHelper.gs(resourceId)
+                omnipodPumpStatus.rileyLinkServiceState.isError && rileyLinkError == null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
+                omnipodPumpStatus.rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + resourceHelper.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.MedtronicPump))
+                else                                                                        -> "{fa-bluetooth-b}   " + resourceHelper.gs(resourceId)
+            }
         omnipod_rl_status.setTextColor(if (rileyLinkError != null) Color.RED else Color.WHITE)
 
         // omnipodPumpStatus.rileyLinkError = checkStatusSet(omnipodPumpStatus.rileyLinkError,
         //     RileyLinkUtil.getError()) as RileyLinkError?
 
         omnipod_errors.text =
-                omnipodPumpStatus.rileyLinkError?.let {
-                    resourceHelper.gs(it.getResourceId(RileyLinkTargetDevice.Omnipod))
-                } ?: "-"
+            omnipodPumpStatus.rileyLinkError?.let {
+                resourceHelper.gs(it.getResourceId(RileyLinkTargetDevice.Omnipod))
+            } ?: "-"
 
-        val driverState = OmnipodUtil.getDriverState();
+        val driverState = omnipodUtil.getDriverState();
 
-        aapsLogger.info(LTag.PUMP,"getDriverState: [driverState={}]", driverState)
+        aapsLogger.info(LTag.PUMP, "getDriverState: [driverState={}]", driverState)
 
         if (driverState == OmnipodDriverState.NotInitalized) {
             omnipod_pod_address.text = resourceHelper.gs(R.string.omnipod_pod_name_no_info)
@@ -273,7 +254,7 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_pod_status.text = omnipodPumpStatus.podSessionState.getSetupProgress().name
             omnipodPumpStatus.podAvailable = false
             omnipodPumpStatus.podNumber == omnipodPumpStatus.podSessionState.address.toString()
-        }else {
+        } else {
             omnipodPumpStatus.podLotNumber = "" + omnipodPumpStatus.podSessionState.lot
             omnipodPumpStatus.podAvailable = true
             omnipod_pod_address.text = omnipodPumpStatus.podSessionState.address.toString()
@@ -287,14 +268,15 @@ class OmnipodFragment : DaggerFragment() {
 
             when (podDeviceState) {
                 null,
-                PodDeviceState.Sleeping -> omnipod_pod_status.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
+                PodDeviceState.Sleeping             -> omnipod_pod_status.text = "{fa-bed}   " // + pumpStatus.pumpDeviceState.name());
                 PodDeviceState.NeverContacted,
                 PodDeviceState.WakingUp,
                 PodDeviceState.PumpUnreachable,
                 PodDeviceState.ErrorWhenCommunicating,
                 PodDeviceState.TimeoutWhenCommunicating,
                 PodDeviceState.InvalidConfiguration -> omnipod_pod_status.text = " " + resourceHelper.gs(podDeviceState.resourceId)
-                PodDeviceState.Active -> {
+
+                PodDeviceState.Active               -> {
 
                     omnipod_pod_status.text = "Active";
 //                val cmd = OmnipodUtil.getCurrentCommand()
@@ -314,12 +296,11 @@ class OmnipodFragment : DaggerFragment() {
 //                    }
 //                }
                 }
-                else -> aapsLogger.warn(LTag.PUMP,"Unknown pump state: " + omnipodPumpStatus.podDeviceState)
+
+                else                                -> aapsLogger.warn(LTag.PUMP, "Unknown pump state: " + omnipodPumpStatus.podDeviceState)
             }
 
-
         }
-
 
 //        pumpStatus.pumpDeviceState = checkStatusSet(pumpStatus.pumpDeviceState,
 //                OmnipodUtil.getPumpDeviceState()) as PumpDeviceState?
@@ -363,7 +344,6 @@ class OmnipodFragment : DaggerFragment() {
         }
     }
 
-
     private fun checkStatusSet(object1: Any?, object2: Any?): Any? {
         return if (object1 == null) {
             object2
@@ -381,8 +361,8 @@ class OmnipodFragment : DaggerFragment() {
         //val omnipodPumpStatus = OmnipodUtil.getPumpStatus()
         var pumpType = omnipodPumpStatus.pumpType
 
-        if (pumpType==null) {
-            aapsLogger.warn(LTag.PUMP,"PumpType was not set, reseting to Omnipod.")
+        if (pumpType == null) {
+            aapsLogger.warn(LTag.PUMP, "PumpType was not set, reseting to Omnipod.")
             pumpType = PumpType.Insulet_Omnipod;
         }
 
@@ -403,13 +383,13 @@ class OmnipodFragment : DaggerFragment() {
                     } else if (min < 1440) {
                         val h = (min / 60).toInt()
                         omnipod_lastconnection.text = (resourceHelper.gq(R.plurals.objective_hours, h, h) + " "
-                                + resourceHelper.gs(R.string.ago))
+                            + resourceHelper.gs(R.string.ago))
                     } else {
                         val h = (min / 60).toInt()
                         val d = h / 24
                         // h = h - (d * 24);
                         omnipod_lastconnection.text = (resourceHelper.gq(R.plurals.objective_days, d, d) + " "
-                                + resourceHelper.gs(R.string.ago))
+                            + resourceHelper.gs(R.string.ago))
                     }
                     //omnipod_lastconnection.setTextColor(Color.RED)
                 }
@@ -443,7 +423,7 @@ class OmnipodFragment : DaggerFragment() {
             omnipod_basabasalrate.text = resourceHelper.gs(R.string.pump_basebasalrate, pumpType.determineCorrectBasalSize(plugin.baseBasalRate))
 
             omnipod_tempbasal.text = activePlugin.activeTreatments
-                    .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: ""
+                .getTempBasalFromHistory(System.currentTimeMillis())?.toStringFull() ?: ""
 
             // reservoir
             if (Round.isSame(omnipodPumpStatus.reservoirRemainingUnits, 75.0)) {
@@ -470,11 +450,9 @@ class OmnipodFragment : DaggerFragment() {
 
     }
 
-
     private fun updateAcknowledgeAlerts() {
-            omnipod_pod_active_alerts_ack.isEnabled = omnipodPumpStatus.ackAlertsAvailable
-            omnipod_pod_active_alerts.text = omnipodPumpStatus.ackAlertsText
+        omnipod_pod_active_alerts_ack.isEnabled = omnipodPumpStatus.ackAlertsAvailable
+        omnipod_pod_active_alerts.text = omnipodPumpStatus.ackAlertsText
     }
-
 
 }

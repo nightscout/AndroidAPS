@@ -14,7 +14,10 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 public class OmnipodDashPumpStatus extends OmnipodPumpStatus {
 
     @Inject
-    public OmnipodDashPumpStatus(ResourceHelper resourceHelper, SP sp, RxBusWrapper rxBus, RileyLinkUtil rileyLinkUtil) {
+    public OmnipodDashPumpStatus(ResourceHelper resourceHelper,
+                                 SP sp,
+                                 RxBusWrapper rxBus,
+                                 RileyLinkUtil rileyLinkUtil) {
         super(resourceHelper, sp, rxBus, rileyLinkUtil);
         this.pumpType = PumpType.Insulet_Omnipod_Dash;
     }

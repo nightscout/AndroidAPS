@@ -13,8 +13,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,26 +21,32 @@ import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistory;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class PodHistoryActivity extends NoSplashAppCompatActivity {
 
-    private static Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    @Inject AAPSLogger aapsLogger;
+    @Inject OmnipodUtil omnipodUtil;
+    @Inject ResourceHelper resourceHelper;
 
-    Spinner historyTypeSpinner;
-    TextView statusView;
-    RecyclerView recyclerView;
-    LinearLayoutManager llm;
+    private Spinner historyTypeSpinner;
+    private TextView statusView;
+    private RecyclerView recyclerView;
+    private LinearLayoutManager linearLayoutManager;
 
     static TypeList showingType = null;
     static PumpHistoryEntryGroup selectedGroup = PumpHistoryEntryGroup.All;
@@ -73,7 +78,7 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
 
         this.filteredHistoryList.clear();
 
-        LOG.debug("Items on full list: {}", fullHistoryList.size());
+        aapsLogger.debug(LTag.PUMP, "Items on full list: {}", fullHistoryList.size());
 
         if (group == PumpHistoryEntryGroup.All) {
             this.filteredHistoryList.addAll(fullHistoryList);
@@ -90,7 +95,7 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
             this.recyclerViewAdapter.notifyDataSetChanged();
         }
 
-        LOG.debug("Items on filtered list: {}", filteredHistoryList.size());
+        aapsLogger.debug(LTag.PUMP, "Items on filtered list: {}", filteredHistoryList.size());
     }
 
 
@@ -128,13 +133,13 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.omnipod_pod_history_activity);
 
-        historyTypeSpinner = (Spinner) findViewById(R.id.omnipod_historytype);
-        statusView = (TextView) findViewById(R.id.omnipod_historystatus);
-        recyclerView = (RecyclerView) findViewById(R.id.omnipod_history_recyclerview);
-
+        historyTypeSpinner = findViewById(R.id.omnipod_historytype);
+        statusView = findViewById(R.id.omnipod_historystatus);
+        recyclerView = findViewById(R.id.omnipod_history_recyclerview);
         recyclerView.setHasFixedSize(true);
-        llm = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(llm);
+
+        linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
 
         prepareData();
 
@@ -188,23 +193,21 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
         PumpHistoryEntryGroup entryGroup;
         String name;
 
-
         TypeList(PumpHistoryEntryGroup entryGroup) {
             this.entryGroup = entryGroup;
             this.name = entryGroup.getTranslated();
         }
 
-
+        @NotNull
         @Override
         public String toString() {
             return name;
         }
     }
 
-    public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder> {
+    public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder> {
 
         List<PodHistory> historyList;
-
 
         RecyclerViewAdapter(List<PodHistory> historyList) {
             this.historyList = historyList;
@@ -212,17 +215,12 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
 
 
         public void setHistoryList(List<PodHistory> historyList) {
-            // this.historyList.clear();
-            // this.historyList.addAll(historyList);
-
             this.historyList = historyList;
-
             Collections.sort(this.historyList);
-
-            // this.notifyDataSetChanged();
         }
 
 
+        @NotNull
         @Override
         public HistoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.omnipod_pod_history_item, //
@@ -232,7 +230,7 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
 
 
         @Override
-        public void onBindViewHolder(HistoryViewHolder holder, int position) {
+        public void onBindViewHolder(@NotNull HistoryViewHolder holder, int position) {
             PodHistory record = historyList.get(position);
 
             if (record != null) {
@@ -250,8 +248,8 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                 switch (historyEntry.getPodDbEntryType()) {
 
                     case SetTemporaryBasal: {
-                        TempBasalPair tempBasalPair = OmnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), TempBasalPair.class);
-                        valueView.setText(MainApp.gs(R.string.omnipod_cmd_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
+                        TempBasalPair tempBasalPair = omnipodUtil.getGsonInstance().fromJson(historyEntry.getData(), TempBasalPair.class);
+                        valueView.setText(resourceHelper.gs(R.string.omnipod_cmd_tbr_value, tempBasalPair.getInsulinRate(), tempBasalPair.getDurationMinutes()));
                     }
                     break;
 
@@ -266,9 +264,9 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
                     case SetBolus: {
                         if (historyEntry.getData().contains(";")) {
                             String[] splitVal = historyEntry.getData().split(";");
-                            valueView.setText(MainApp.gs(R.string.omnipod_cmd_bolus_value_with_carbs, Double.valueOf(splitVal[0]), Double.valueOf(splitVal[1])));
+                            valueView.setText(resourceHelper.gs(R.string.omnipod_cmd_bolus_value_with_carbs, Double.valueOf(splitVal[0]), Double.valueOf(splitVal[1])));
                         } else {
-                            valueView.setText(MainApp.gs(R.string.omnipod_cmd_bolus_value, Double.valueOf(historyEntry.getData())));
+                            valueView.setText(resourceHelper.gs(R.string.omnipod_cmd_bolus_value, Double.valueOf(historyEntry.getData())));
                         }
                     }
                     break;
@@ -299,19 +297,15 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
         }
 
         private void setProfileValue(String data, TextView valueView) {
-            LOG.debug("Profile json:\n" + data);
+            aapsLogger.debug(LTag.PUMP, "Profile json:\n" + data);
 
             try {
-                Profile.ProfileValue[] profileValuesArray = OmnipodUtil.getGsonInstance().fromJson(data, Profile.ProfileValue[].class);
-
-                //profile = new Profile(new JSONObject(data), Constants.MGDL);
+                Profile.ProfileValue[] profileValuesArray = omnipodUtil.getGsonInstance().fromJson(data, Profile.ProfileValue[].class);
                 valueView.setText(ProfileUtil.getBasalProfilesDisplayable(profileValuesArray, PumpType.Insulet_Omnipod));
             } catch (Exception e) {
-                LOG.error("Problem parsing Profile json. Ex: {}, Data:\n{}", e.getMessage(), data);
+                aapsLogger.error(LTag.PUMP, "Problem parsing Profile json. Ex: {}, Data:\n{}", e.getMessage(), data);
                 valueView.setText("");
             }
-            //Profile profile = OmnipodUtil.getGsonInstance().fromJson(data, Profile.class);
-
         }
 
 
@@ -327,7 +321,7 @@ public class PodHistoryActivity extends NoSplashAppCompatActivity {
         }
 
 
-        static class HistoryViewHolder extends RecyclerView.ViewHolder {
+        class HistoryViewHolder extends RecyclerView.ViewHolder {
 
             TextView timeView;
             TextView typeView;

@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.ui;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 
 import dagger.android.HasAndroidInjector;
@@ -10,13 +7,9 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
-import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
@@ -40,8 +33,6 @@ public class OmnipodUITask {
     @Inject OmnipodUtil omnipodUtil;
 
     private final HasAndroidInjector injector;
-    
-    //private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     public OmnipodCommandType commandType;
     public PumpEnactResult returnData;
@@ -68,8 +59,8 @@ public class OmnipodUITask {
 
     public void execute(OmnipodCommunicationManagerInterface communicationManager) {
 
-        
-            aapsLogger.debug(LTag.PUMP,"OmnipodUITask: @@@ In execute. {}", commandType);
+
+        aapsLogger.debug(LTag.PUMP, "OmnipodUITask: @@@ In execute. {}", commandType);
 
         switch (commandType) {
 
@@ -111,8 +102,8 @@ public class OmnipodUITask {
                         responseType = PodResponseType.Acknowledgment;
                         break;
                     } catch (Exception ex) {
-                         {
-                            aapsLogger.warn(LTag.PUMP,"Failed to retrieve pulse log", ex);
+                        {
+                            aapsLogger.warn(LTag.PUMP, "Failed to retrieve pulse log", ex);
                         }
                         returnDataObject = null;
                         responseType = PodResponseType.Error;
@@ -149,7 +140,7 @@ public class OmnipodUITask {
                 break;
 
             default: {
-                aapsLogger.warn(LTag.PUMP,"This commandType is not supported (yet) - {}.", commandType);
+                aapsLogger.warn(LTag.PUMP, "This commandType is not supported (yet) - {}.", commandType);
                 responseType = PodResponseType.Error;
             }
 
@@ -203,15 +194,15 @@ public class OmnipodUITask {
     public void postProcess(OmnipodUIPostprocessor postprocessor) {
 
         EventOmnipodDeviceStatusChange statusChange;
-        
-        aapsLogger.debug(LTag.PUMP,"OmnipodUITask: @@@ postProcess. {}", commandType);
-        aapsLogger.debug(LTag.PUMP,"OmnipodUITask: @@@ postProcess. responseType={}", responseType);
+
+        aapsLogger.debug(LTag.PUMP, "OmnipodUITask: @@@ postProcess. {}", commandType);
+        aapsLogger.debug(LTag.PUMP, "OmnipodUITask: @@@ postProcess. responseType={}", responseType);
 
         if (responseType == PodResponseType.Data || responseType == PodResponseType.Acknowledgment) {
             postprocessor.postProcessData(this);
         }
 
-        aapsLogger.debug(LTag.PUMP,"OmnipodUITask: @@@ postProcess. responseType={}", responseType);
+        aapsLogger.debug(LTag.PUMP, "OmnipodUITask: @@@ postProcess. responseType={}", responseType);
 
         if (responseType == PodResponseType.Invalid) {
             statusChange = new EventOmnipodDeviceStatusChange(PodDeviceState.ErrorWhenCommunicating,
@@ -239,11 +230,6 @@ public class OmnipodUITask {
 
     public Object getParameter(int index) {
         return parameters[index];
-    }
-
-
-    private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMP);
     }
 
 

@@ -3,37 +3,22 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.ListFragment;
-
-import com.tech.freak.wizardpager.model.ModelCallbacks;
-import com.tech.freak.wizardpager.model.Page;
 import com.tech.freak.wizardpager.model.ReviewItem;
 import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
-import com.tech.freak.wizardpager.ui.ReviewFragment;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
@@ -113,7 +98,7 @@ public class PodInfoFragment extends DaggerFragment {
 //                1
 //        );
 
-        if (podSessionState==null)
+        if (podSessionState == null)
             return false;
 
         mCurrentReviewItems = new ArrayList<>();
@@ -152,19 +137,16 @@ public class PodInfoFragment extends DaggerFragment {
 
         private ArrayList<ReviewItem> dataSet;
         Context mContext;
+        private int lastPosition = -1;
 
         // View lookup cache
-
 
         public PodInfoAdapter(ArrayList<ReviewItem> data, Context context) {
             super(context, com.tech.freak.wizardpager.R.layout.list_item_review, data);
             this.dataSet = data;
-            this.mContext=context;
+            this.mContext = context;
         }
 
-
-
-        private int lastPosition = -1;
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -183,32 +165,25 @@ public class PodInfoFragment extends DaggerFragment {
                 viewHolder.txtName = (TextView) convertView.findViewById(android.R.id.text1);
                 viewHolder.txtType = (TextView) convertView.findViewById(android.R.id.text2);
 
-
-                result=convertView;
+                result = convertView;
 
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
-                result=convertView;
+                result = convertView;
             }
-
-
 
             viewHolder.txtName.setText(dataModel.getTitle());
             viewHolder.txtType.setText(dataModel.getDisplayValue());
 
-
             // Return the completed view to render on screen
             return convertView;
         }
-
     }
 
     private static class ViewHolder {
         TextView txtName;
         TextView txtType;
     }
-
-
 
 }

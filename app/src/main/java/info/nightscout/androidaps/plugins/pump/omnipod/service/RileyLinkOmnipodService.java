@@ -10,27 +10,19 @@ import com.google.gson.Gson;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUIPostprocessor;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
-import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
@@ -47,12 +39,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     @Inject OmnipodPumpPlugin omnipodPumpPlugin;
     @Inject OmnipodPumpStatus omnipodPumpStatus;
     @Inject OmnipodUtil omnipodUtil;
-
-    //@Inject MedtronicPumpPlugin medtronicPumpPlugin;
-    //@Inject MedtronicUtil medtronicUtil;
-    //@Inject MedtronicUIPostprocessor medtronicUIPostprocessor;
-    //@Inject MedtronicPumpStatus medtronicPumpStatus;
-
 
     private static RileyLinkOmnipodService instance;
 
@@ -77,7 +63,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        aapsLogger.warn(LTag.PUMPCOMM,"onConfigurationChanged");
+        aapsLogger.warn(LTag.PUMPCOMM, "onConfigurationChanged");
         super.onConfigurationChanged(newConfig);
     }
 
@@ -99,7 +85,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
      */
     public void initRileyLinkServiceData() {
 
-        // TODO
         rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.Omnipod;
 
         // get most recently used RileyLink address
@@ -111,22 +96,23 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
         initializeErosOmnipodManager();
 
-        aapsLogger.debug(LTag.PUMPCOMM,"RileyLinkOmnipodService newly constructed");
+        aapsLogger.debug(LTag.PUMPCOMM, "RileyLinkOmnipodService newly constructed");
         //omnipodPumpStatus = (OmnipodPumpStatus) omnipodPumpPlugin.getPumpStatusData();
     }
 
     private void initializeErosOmnipodManager() {
         if (AapsOmnipodManager.getInstance() == null) {
             PodSessionState podState = null;
-            if (sp.contains(OmnipodConst.Prefs.PodState)) {
+            if (sp.contains(OmnipodConst.Prefs.PodState) && omnipodUtil.getPodSessionState() == null) {
                 try {
-                    Gson gson = OmnipodUtil.getGsonInstance();
+                    Gson gson = omnipodUtil.getGsonInstance();
                     String storedPodState = sp.getString(OmnipodConst.Prefs.PodState, null);
-                    aapsLogger.info(LTag.PUMPCOMM,"PodSessionState-SP: loaded from SharedPreferences: " + storedPodState);
+                    aapsLogger.info(LTag.PUMPCOMM, "PodSessionState-SP: loaded from SharedPreferences: " + storedPodState);
                     podState = gson.fromJson(storedPodState, PodSessionState.class);
+                    podState.injectDaggerClass(injector);
                     omnipodUtil.setPodSessionState(podState);
                 } catch (Exception ex) {
-                    aapsLogger.error(LTag.PUMPCOMM,"Could not deserialize Pod state", ex);
+                    aapsLogger.error(LTag.PUMPCOMM, "Could not deserialize Pod state", ex);
                 }
             }
             OmnipodCommunicationManager omnipodCommunicationService = new OmnipodCommunicationManager(injector, rfspy);
@@ -134,7 +120,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             this.omnipodCommunicationManager = omnipodCommunicationService;
 
             this.aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podState, omnipodPumpStatus,
-                    omnipodUtil, aapsLogger, rxBus, resourceHelper, injector, activePlugin);
+                    omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin);
         } else {
             aapsOmnipodManager = AapsOmnipodManager.getInstance();
         }
@@ -148,16 +134,12 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     @Override
     public RileyLinkCommunicationManager getDeviceCommunicationManager() {
-//        if (omnipodCommunicationManager instanceof AapsOmnipodManager) { // Eros
-//            return ((AapsOmnipodManager) omnipodCommunicationManager).getCommunicationService();
-//        }
-//        // FIXME is this correct for Dash?
         return omnipodCommunicationManager;
     }
 
     @Override
     public void setPumpDeviceState(PumpDeviceState pumpDeviceState) {
-
+        this.omnipodPumpStatus.setPumpDeviceState(pumpDeviceState);
     }
 
 
@@ -194,25 +176,20 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     }
 
 
-
-
     public boolean verifyConfiguration() {
         try {
-            //String regexSN = "[0-9]{6}";
-            String regexMac = "([\\da-fA-F]{1,2}(?:\\:|$)){6}";
-
             omnipodPumpStatus.errorDescription = "-";
 
-            String rileyLinkAddress = info.nightscout.androidaps.utils.SP.getString(RileyLinkConst.Prefs.RileyLinkAddress, null);
+            String rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, null);
 
             if (rileyLinkAddress == null) {
-                aapsLogger.debug(LTag.PUMPCOMM,"RileyLink address invalid: null");
+                aapsLogger.debug(LTag.PUMPCOMM, "RileyLink address invalid: null");
                 omnipodPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_rileylink_address_invalid);
                 return false;
             } else {
-                if (!rileyLinkAddress.matches(regexMac)) {
+                if (!rileyLinkAddress.matches(omnipodPumpStatus.regexMac)) {
                     omnipodPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_rileylink_address_invalid);
-                    aapsLogger.debug(LTag.PUMPCOMM,"RileyLink address invalid: {}", rileyLinkAddress);
+                    aapsLogger.debug(LTag.PUMPCOMM, "RileyLink address invalid: {}", rileyLinkAddress);
                 } else {
                     if (!rileyLinkAddress.equals(this.omnipodPumpStatus.rileyLinkAddress)) {
                         this.omnipodPumpStatus.rileyLinkAddress = rileyLinkAddress;
@@ -228,7 +205,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             this.omnipodPumpStatus.podDebuggingOptionsEnabled = sp.getBoolean(OmnipodConst.Prefs.PodDebuggingOptionsEnabled, false);
             this.omnipodPumpStatus.timeChangeEventEnabled = sp.getBoolean(OmnipodConst.Prefs.TimeChangeEventEnabled, true);
 
-            aapsLogger.debug(LTag.PUMPCOMM,"Beeps [basal={}, bolus={}, SMB={}, TBR={}]", this.omnipodPumpStatus.beepBasalEnabled, this.omnipodPumpStatus.beepBolusEnabled, this.omnipodPumpStatus.beepSMBEnabled, this.omnipodPumpStatus.beepTBREnabled);
+            aapsLogger.debug(LTag.PUMPCOMM, "Beeps [basal={}, bolus={}, SMB={}, TBR={}]", this.omnipodPumpStatus.beepBasalEnabled, this.omnipodPumpStatus.beepBolusEnabled, this.omnipodPumpStatus.beepSMBEnabled, this.omnipodPumpStatus.beepTBREnabled);
 
             reconfigureService();
 
@@ -236,7 +213,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
         } catch (Exception ex) {
             this.omnipodPumpStatus.errorDescription = ex.getMessage();
-            aapsLogger.error(LTag.PUMPCOMM,"Error on Verification: " + ex.getMessage(), ex);
+            aapsLogger.error(LTag.PUMPCOMM, "Error on Verification: " + ex.getMessage(), ex);
             return false;
         }
     }

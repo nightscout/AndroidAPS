@@ -27,12 +27,10 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefreshButtonState;
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod_dash.comm.OmnipodDashCommunicationManager;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.TimeChangeType;
@@ -44,8 +42,10 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  *
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
+// FIXME this is just placeholder for now, but this should use most of OmnipodPumpPlugin implementation
 public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodPumpPluginInterface {
 
+    // TODO Dagger
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     protected static OmnipodDashPumpPlugin plugin = null;
@@ -68,14 +68,14 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
     @Inject
     public OmnipodDashPumpPlugin(HasAndroidInjector injector,
-                                  AAPSLogger aapsLogger,
-                                  RxBusWrapper rxBus,
-                                  Context context,
-                                  ResourceHelper resourceHelper,
-                                  ActivePluginProvider activePlugin,
-                                  SP sp,
-                                  CommandQueueProvider commandQueue,
-                                  FabricPrivacy fabricPrivacy) {
+                                 AAPSLogger aapsLogger,
+                                 RxBusWrapper rxBus,
+                                 Context context,
+                                 ResourceHelper resourceHelper,
+                                 ActivePluginProvider activePlugin,
+                                 SP sp,
+                                 CommandQueueProvider commandQueue,
+                                 FabricPrivacy fabricPrivacy) {
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
                         .fragmentClass(OmnipodFragment.class.getName()) //
