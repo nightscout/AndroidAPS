@@ -278,7 +278,7 @@ public class SafetyPlugin extends PluginBase implements ConstraintsInterface {
         if (openAPSSMBPlugin.isEnabled(PluginType.APS))
             maxIob.setIfSmaller(getAapsLogger(), hardLimits.maxIobSMB(), String.format(getResourceHelper().gs(R.string.limitingiob), hardLimits.maxIobSMB(), getResourceHelper().gs(R.string.hardlimit)), this);
         if ((apsmode.equals("lgs")))
-            maxIob.setIfSmaller(getAapsLogger(), hardLimits.maxIobLGS(), String.format(getResourceHelper().gs(R.string.limitingiob), hardLimits.maxIobLGS(), getResourceHelper().gs(R.string.lowglucosesuspend)), this);
+            maxIob.setIfSmaller(getAapsLogger(), hardLimits.getMAXIOB_LGS(), String.format(getResourceHelper().gs(R.string.limitingiob), hardLimits.getMAXIOB_LGS(), getResourceHelper().gs(R.string.lowglucosesuspend)), this);
 
         return maxIob;
     }
