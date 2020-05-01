@@ -81,7 +81,15 @@ class DanaRSPlugin @Inject constructor(
 
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
-        if (pref.key == resourceHelper.gs(R.string.key_danars_name)) pref.summary = sp.getString(R.string.key_danars_name, "")
+
+        if (pref.key == resourceHelper.gs(R.string.key_danars_name)) {
+            val value = sp.getStringOrNull(R.string.key_danars_name, null)
+            pref.summary = value
+                ?: resourceHelper.gs(R.string.rileylink_error_address_not_set_short)
+        }
+        if (pref.key == resourceHelper.gs(R.string.key_danars_password)) {
+            if (danaRPump.v3RSPump) pref
+        }
     }
 
     override fun onStart() {
@@ -204,7 +212,7 @@ class DanaRSPlugin @Inject constructor(
 
     // Pump interface
     override fun isInitialized(): Boolean {
-        return danaRPump.lastConnection > 0 && danaRPump.maxBasal > 0
+        return danaRPump.lastConnection > 0 && danaRPump.maxBasal > 0 && danaRPump.isRSPasswordOK
     }
 
     override fun isSuspended(): Boolean {
@@ -402,7 +410,6 @@ class DanaRSPlugin @Inject constructor(
 
     @Synchronized
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean): PumpEnactResult {
-        val pump = danaRPump
         val result = PumpEnactResult(injector)
         var percentAfterConstraint = constraintChecker.applyBasalPercentConstraints(Constraint(percent), profile).value()
         if (percentAfterConstraint < 0) {
@@ -421,8 +428,8 @@ class DanaRSPlugin @Inject constructor(
             result.success = true
             result.isTempCancel = false
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
-            result.duration = pump.tempBasalRemainingMin
-            result.percent = pump.tempBasalPercent
+            result.duration = danaRPump.tempBasalRemainingMin
+            result.percent = danaRPump.tempBasalPercent
             result.isPercent = true
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: Correct value already set")
             return result
@@ -435,13 +442,13 @@ class DanaRSPlugin @Inject constructor(
             val durationInHours = max(durationInMinutes / 60, 1)
             danaRSService?.tempBasal(percentAfterConstraint, durationInHours) ?: false
         }
-        if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percentAfterConstraint) {
+        if (connectionOK && danaRPump.isTempBasalInProgress && danaRPump.tempBasalPercent == percentAfterConstraint) {
             result.enacted = true
             result.success = true
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
             result.isTempCancel = false
-            result.duration = pump.tempBasalRemainingMin
-            result.percent = pump.tempBasalPercent
+            result.duration = danaRPump.tempBasalRemainingMin
+            result.percent = danaRPump.tempBasalPercent
             result.isPercent = true
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: OK")
             return result
@@ -454,16 +461,15 @@ class DanaRSPlugin @Inject constructor(
     }
 
     @Synchronized private fun setHighTempBasalPercent(percent: Int): PumpEnactResult {
-        val pump = danaRPump
         val result = PumpEnactResult(injector)
         val connectionOK = danaRSService?.highTempBasal(percent) ?: false
-        if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
+        if (connectionOK && danaRPump.isTempBasalInProgress && danaRPump.tempBasalPercent == percent) {
             result.enacted = true
             result.success = true
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
             result.isTempCancel = false
-            result.duration = pump.tempBasalRemainingMin
-            result.percent = pump.tempBasalPercent
+            result.duration = danaRPump.tempBasalRemainingMin
+            result.percent = danaRPump.tempBasalPercent
             result.isPercent = true
             aapsLogger.debug(LTag.PUMP, "setHighTempBasalPercent: OK")
             return result
@@ -477,7 +483,6 @@ class DanaRSPlugin @Inject constructor(
 
     @Synchronized
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
-        val pump = danaRPump
         var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(Constraint(insulin)).value()
         // needs to be rounded
         val durationInHalfHours = max(durationInMinutes / 30, 1)
@@ -488,23 +493,23 @@ class DanaRSPlugin @Inject constructor(
             result.enacted = false
             result.success = true
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
-            result.duration = pump.extendedBolusRemainingMinutes
-            result.absolute = pump.extendedBolusAbsoluteRate
+            result.duration = danaRPump.extendedBolusRemainingMinutes
+            result.absolute = danaRPump.extendedBolusAbsoluteRate
             result.isPercent = false
             result.isTempCancel = false
-            aapsLogger.debug(LTag.PUMP, "setExtendedBolus: Correct extended bolus already set. Current: " + pump.extendedBolusAmount + " Asked: " + insulinAfterConstraint)
+            aapsLogger.debug(LTag.PUMP, "setExtendedBolus: Correct extended bolus already set. Current: " + danaRPump.extendedBolusAmount + " Asked: " + insulinAfterConstraint)
             return result
         }
         val connectionOK = danaRSService?.extendedBolus(insulinAfterConstraint, durationInHalfHours)
             ?: false
-        if (connectionOK && pump.isExtendedInProgress && abs(pump.extendedBolusAbsoluteRate - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
+        if (connectionOK && danaRPump.isExtendedInProgress && abs(danaRPump.extendedBolusAbsoluteRate - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = true
             result.success = true
             result.comment = resourceHelper.gs(R.string.virtualpump_resultok)
             result.isTempCancel = false
-            result.duration = pump.extendedBolusRemainingMinutes
-            result.absolute = pump.extendedBolusAbsoluteRate
-            result.bolusDelivered = pump.extendedBolusAmount
+            result.duration = danaRPump.extendedBolusRemainingMinutes
+            result.absolute = danaRPump.extendedBolusAbsoluteRate
+            result.bolusDelivered = danaRPump.extendedBolusAmount
             result.isPercent = false
             aapsLogger.debug(LTag.PUMP, "setExtendedBolus: OK")
             return result
@@ -562,9 +567,8 @@ class DanaRSPlugin @Inject constructor(
     }
 
     override fun getJSONStatus(profile: Profile, profileName: String): JSONObject {
-        val pump = danaRPump
         val now = System.currentTimeMillis()
-        if (pump.lastConnection + 5 * 60 * 1000L < System.currentTimeMillis()) {
+        if (danaRPump.lastConnection + 5 * 60 * 1000L < System.currentTimeMillis()) {
             return JSONObject()
         }
         val pumpJson = JSONObject()
@@ -572,13 +576,13 @@ class DanaRSPlugin @Inject constructor(
         val status = JSONObject()
         val extended = JSONObject()
         try {
-            battery.put("percent", pump.batteryRemaining)
-            status.put("status", if (pump.pumpSuspended) "suspended" else "normal")
-            status.put("timestamp", DateUtil.toISOString(pump.lastConnection))
+            battery.put("percent", danaRPump.batteryRemaining)
+            status.put("status", if (danaRPump.pumpSuspended) "suspended" else "normal")
+            status.put("timestamp", DateUtil.toISOString(danaRPump.lastConnection))
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)
-            if (pump.lastBolusTime != 0L) {
-                extended.put("LastBolus", DateUtil.dateAndTimeString(pump.lastBolusTime))
-                extended.put("LastBolusAmount", pump.lastBolusAmount)
+            if (danaRPump.lastBolusTime != 0L) {
+                extended.put("LastBolus", DateUtil.dateAndTimeString(danaRPump.lastBolusTime))
+                extended.put("LastBolusAmount", danaRPump.lastBolusAmount)
             }
             val tb = treatmentsPlugin.getTempBasalFromHistory(now)
             if (tb != null) {
@@ -601,7 +605,7 @@ class DanaRSPlugin @Inject constructor(
             pumpJson.put("battery", battery)
             pumpJson.put("status", status)
             pumpJson.put("extended", extended)
-            pumpJson.put("reservoir", pump.reservoirRemainingUnits.toInt())
+            pumpJson.put("reservoir", danaRPump.reservoirRemainingUnits.toInt())
             pumpJson.put("clock", DateUtil.toISOString(now))
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
@@ -626,15 +630,14 @@ class DanaRSPlugin @Inject constructor(
     }
 
     override fun shortStatus(veryShort: Boolean): String {
-        val pump = danaRPump
         var ret = ""
-        if (pump.lastConnection != 0L) {
-            val agoMillis = System.currentTimeMillis() - pump.lastConnection
+        if (danaRPump.lastConnection != 0L) {
+            val agoMillis = System.currentTimeMillis() - danaRPump.lastConnection
             val agoMin = (agoMillis / 60.0 / 1000.0).toInt()
             ret += "LastConn: $agoMin minago\n"
         }
-        if (pump.lastBolusTime != 0L)
-            ret += "LastBolus: ${DecimalFormatter.to2Decimal(pump.lastBolusAmount)}U @${DateFormat.format("HH:mm", pump.lastBolusTime)}"
+        if (danaRPump.lastBolusTime != 0L)
+            ret += "LastBolus: ${DecimalFormatter.to2Decimal(danaRPump.lastBolusAmount)}U @${DateFormat.format("HH:mm", danaRPump.lastBolusTime)}"
 
         val activeTemp = treatmentsPlugin.getRealTempBasalFromHistory(System.currentTimeMillis())
         if (activeTemp != null)
@@ -645,10 +648,10 @@ class DanaRSPlugin @Inject constructor(
             ret += "Extended: $activeExtendedBolus\n"
 
         if (!veryShort) {
-            ret += "TDD: ${DecimalFormatter.to0Decimal(pump.dailyTotalUnits)} / ${pump.maxDailyTotalUnits} U"
+            ret += "TDD: ${DecimalFormatter.to0Decimal(danaRPump.dailyTotalUnits)} / ${danaRPump.maxDailyTotalUnits} U"
         }
-        ret += "Reserv: ${DecimalFormatter.to0Decimal(pump.reservoirRemainingUnits)} U"
-        ret += "Batt: ${pump.batteryRemaining}"
+        ret += "Reserv: ${DecimalFormatter.to0Decimal(danaRPump.reservoirRemainingUnits)} U"
+        ret += "Batt: ${danaRPump.batteryRemaining}"
         return ret
     }
 

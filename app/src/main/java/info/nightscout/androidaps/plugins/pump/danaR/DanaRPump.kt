@@ -119,6 +119,7 @@ class DanaRPump @Inject constructor(
 
     // DanaRS specific
     var rsPassword = ""
+    var v3RSPump = false;
 
     // User settings
     var timeDisplayType = 0
@@ -219,7 +220,10 @@ class DanaRPump @Inject constructor(
     }
 
     val isPasswordOK: Boolean
-        get() = !(password != -1 && password != sp.getInt(R.string.key_danar_password, -1))
+        get() = password == sp.getInt(R.string.key_danar_password, -2)
+
+    val isRSPasswordOK: Boolean
+        get() = rsPassword.equals(sp.getString(R.string.key_danars_password, ""), ignoreCase = true)
 
     fun reset() {
         aapsLogger.debug(LTag.PUMP, "DanaRPump reset")

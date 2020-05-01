@@ -379,6 +379,7 @@
     <string name="danar_history_refill">Refill</string>
     <string name="danar_history_syspend">Suspend</string>
     <string name="danar_history_connectingfor">Connecting for %1$d s</string>
+    <string name="danars_password_title">Pump password (v1 only)</string>
     <string name="danar_password_title">Pump password</string>
     <string name="wrongpumppassword">Wrong pump password!</string>
     <string name="pumpbusy">Pump is busy</string>
@@ -805,7 +806,6 @@
     <string name="danarspump">DanaRS</string>
     <string name="danarspump_shortname">Dana</string>
     <string name="selectedpump">Selected pump</string>
-    <string name="pairpump">Pair new pump</string>
     <string name="bolusspeed">Bolus speed</string>
     <string name="key_danars_bolusspeed" translatable="false">danars_bolusspeed</string>
     <string name="danar_setbasalstep001">Set basal step to 0.01 U/h</string>
@@ -1844,4 +1844,5 @@
     <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
     <string name="copyexistingvalues">Copy NS settings (if exists)?</string>
     <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
+    <string name="key_danars_password">danars_password</string>
 </resources>

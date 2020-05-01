@@ -8,24 +8,19 @@
         app:initialExpandedChildrenCount="0">
 
         <Preference
-            android:key="blescannner"
-            android:title="@string/pairpump">
+            android:key="@string/key_danars_name"
+            android:summary=""
+            android:title="@string/selectedpump">
             <intent android:action="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
         </Preference>
 
-        <EditTextPreference
-            android:key="@string/key_danars_name"
-            android:persistent="false"
-            android:selectable="false"
-            android:summary=""
-            android:title="@string/selectedpump" />
-
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:inputType="numberPassword"
-            android:key="@string/key_danar_password"
-            android:title="@string/danar_password_title"
-            validate:customRegexp="@string/fourdigitnumber"
-            validate:testErrorString="@string/error_mustbe4digitnumber"
+            android:digits="0123456789ABCDEF"
+            android:key="@string/key_danars_password"
+            android:title="@string/danars_password_title"
+            validate:customRegexp="@string/fourhexanumber"
+            validate:testErrorString="@string/error_mustbe4hexadidits"
             validate:testType="regexp" />
 
         <ListPreference

@@ -74,7 +74,7 @@ import info.nightscout.androidaps.utils.wizard.BolusWizard
 import info.nightscout.androidaps.utils.wizard.QuickWizardEntry
 import javax.inject.Singleton
 
-@Module(includes = [AppModule.AppBindings::class, PluginsModule::class, DanaRSCommModule::class])
+@Module(includes = [AppModule.AppBindings::class, PluginsModule::class])
 open class AppModule {
 
     @Provides

@@ -12,6 +12,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
+import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
@@ -22,6 +23,7 @@ import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRSMessageHashTabl
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet
 import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
 import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSPairingSuccess
+import info.nightscout.androidaps.utils.T
 import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.extensions.notify
 import info.nightscout.androidaps.utils.extensions.waitMillis
@@ -67,6 +69,7 @@ class BLEComm @Inject internal constructor(
         set(newValue) {
             bleEncryption.setEnhancedEncryption(newValue)
             field = newValue
+            danaRPump.v3RSPump = newValue
         }
     private var isEasyMode: Boolean = false
     private var isUnitUD: Boolean = false
@@ -550,11 +553,19 @@ class BLEComm @Inject internal constructor(
             var pass: Int = (decryptedBuffer[size - 1].toInt() and 0x000000FF shl 8) + (decryptedBuffer[size - 2].toInt() and 0x000000FF)
             pass = pass xor 3463
             danaRPump.rsPassword = Integer.toHexString(pass)
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Pump user password: " + Integer.toHexString(pass))
-            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
-            isConnected = true
-            isConnecting = false
-            aapsLogger.debug(LTag.PUMPBTCOMM, "RS connected and status read")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Pump user password: " + danaRPump.rsPassword)
+            if (!danaRPump.isRSPasswordOK) {
+                aapsLogger.error(LTag.PUMPBTCOMM, "Wrong pump password")
+                rxBus.send(EventNewNotification(Notification(Notification.WRONG_PUMP_PASSWORD, resourceHelper.gs(R.string.wrongpumppassword), Notification.URGENT)))
+                disconnect("WrongPassword")
+                SystemClock.sleep(T.mins(1).msecs())
+            } else {
+                rxBus.send(EventDismissNotification(Notification.WRONG_PUMP_PASSWORD))
+                rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
+                isConnected = true
+                isConnecting = false
+                aapsLogger.debug(LTag.PUMPBTCOMM, "RS connected and status read")
+            }
         }
     }
 
