@@ -1453,7 +1453,7 @@ public class AutotunePlugin extends PluginBase {
 
             // zip all autotune files created during the run
             //todo: AAPS freeze with line below don't understand why...
-            //FS.zipAutotune(lastRun);
+            FS.zipAutotune(lastRun);
 
             return result;
         } else

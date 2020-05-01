@@ -78,7 +78,7 @@ public class FS {
     /**********************************************************************************
      * create a zip file with all autotune files in autotune folder at the end of run
      *********************************************************************************/
-    /*
+
     public static void zipAutotune(Date lastRun) {
         if (lastRun!=null) {
             try {
@@ -114,7 +114,7 @@ public class FS {
         }
     }
 
-*/
+
 
     public static String formatDate(Date date){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
