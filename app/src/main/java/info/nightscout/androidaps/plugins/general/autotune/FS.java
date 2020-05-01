@@ -85,7 +85,8 @@ public class FS {
                 String zipFileName = "autotune-" + DateUtil.toISOString(lastRun, "yyyy-MM-dd'T'HH-mm", null) + ".zip";
                 File zipFile = new File(logDirectory, zipFileName);
                 ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)));
-                zipDirectory(zipFile, zipFile.getName(), out);
+                if (autotune_path != null)
+                    zipDirectory(autotune_path, zipFile.getName(), out);
                 out.flush();
                 out.close();
             } catch (IOException e) {}
