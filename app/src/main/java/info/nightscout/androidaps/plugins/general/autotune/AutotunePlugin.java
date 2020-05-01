@@ -1324,7 +1324,7 @@ public class AutotunePlugin extends PluginBase {
                 long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
                 long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
                 long treatmentEnd = glucoseEnd;
-
+                opts.pumpHistory=null;
                 // get 24 hours BG values from 4 AM to 4 AM next day
                 opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
 
@@ -1485,14 +1485,20 @@ public class AutotunePlugin extends PluginBase {
         Date startDate = new Date(runDate.getTime()-(nbDays+endDateOffset-1) * 24 * 60 * 60 * 1000L);
         InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
         int utcOffset = (int) ((DateUtil.fromISODateString(DateUtil.toISOString(runDate,null,null)).getTime()  - DateUtil.fromISODateString(DateUtil.toISOString(runDate)).getTime()) / (60 * 1000));
+        String startDateString = DateUtil.toISOString(firstloopstart,"yyyy-MM-dd",null);
+        String endDateString = DateUtil.toISOString(new Date(lastloopend.getTime()-24*60*60*1000L),"yyyy-MM-dd",null);
         try {
             jsonSettings.put("datestring",DateUtil.toISOString(runDate,null,null));
             jsonSettings.put("dateutc",DateUtil.toISOString(runDate));
             jsonSettings.put("utcOffset",utcOffset);
             jsonSettings.put("url_nightscout",SP.getString(R.string.key_nsclientinternal_url, ""));
             jsonSettings.put("nbdays", nbDays);
-            jsonSettings.put("startdate",DateUtil.toISOString(firstloopstart,"yyyy-MM-dd",null));
-            jsonSettings.put("enddate",DateUtil.toISOString(new Date(lastloopend.getTime()-24*60*60*1000L),"yyyy-MM-dd",null));
+            jsonSettings.put("startdate",startDateString);
+            jsonSettings.put("enddate",endDateString);
+            // oref0_command is for running oref0-autotune on a virtual machine in a dedicated ~/aaps subfolder
+            jsonSettings.put("oref0_command","oref0-autotune -d=~/aaps -n=" + SP.getString(R.string.key_nsclientinternal_url, "") + " -s="+startDateString+" -e=" + endDateString);
+            // aaps_command is for running modified oref0-autotune with exported data from aaps (ns-entries and ns-treatment json files copied in ~/aaps/autotune folder and pumpprofile.json copied in ~/aaps/settings/
+            jsonSettings.put("aaps_command","aaps-autotune -d=~/aaps -s="+startDateString+" -e=" + endDateString);
             jsonSettings.put("categorize_uam_as_basal",SP.getBoolean("categorize_uam_as_basal", false));
             jsonSettings.put("tune_insulin_curve",false);
             if (insulinInterface.getId() == InsulinInterface.OREF_ULTRA_RAPID_ACTING)
@@ -1504,7 +1510,7 @@ public class AutotunePlugin extends PluginBase {
                 jsonSettings.put("insulinpeaktime",SP.getInt(MainApp.gs(R.string.key_insulin_oref_peak),75));
             }
 
-            jsonString = jsonSettings.toString(4);
+            jsonString = jsonSettings.toString(4).replace("\\/","/");
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
