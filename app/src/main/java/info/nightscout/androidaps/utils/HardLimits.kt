@@ -72,10 +72,6 @@ class HardLimits @Inject constructor(
         return MAXIOB_SMB[loadAge()]
     }
 
-    fun maxIobLGS(): Double {
-        return MAXIOB_LGS
-    }
-
     fun maxBasal(): Double {
         return MAXBASAL[loadAge()]
     }
