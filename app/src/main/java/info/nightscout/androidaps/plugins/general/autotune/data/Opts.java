@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -28,7 +29,7 @@ import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 
-
+@Singleton
 public class Opts {
     public Profile profile;
     public Profile pumpprofile;

@@ -1300,6 +1300,9 @@ public class AutotunePlugin extends PluginBase {
         opts.profile=profile;
         opts.pumpprofile=profile;
         autotuneResult = profile;
+        // just for testing @Inject in Opts object
+        opts.setTempBasalHistory(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(starttime,endTime,false));
+        opts.pumpHistory = null;
         try {
             FS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(4));
         } catch (JSONException e) {}
