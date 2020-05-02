@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.plugins.general.maintenance
 
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.plugins.general.maintenance.formats.*
-import info.nightscout.androidaps.testing.mockers.AAPSMocker
 import info.nightscout.androidaps.testing.utils.SingleStringStorage
 import info.nightscout.androidaps.utils.CryptoUtil
 import info.nightscout.androidaps.utils.assumeAES256isSupported
@@ -24,19 +22,17 @@ import java.io.File
 
 @PowerMockIgnore("javax.crypto.*")
 @RunWith(PowerMockRunner::class)
-@PrepareForTest(AAPSMocker::class, MainApp::class, File::class, ResourceHelper::class)
+@PrepareForTest(File::class)
 
 class EncryptedPrefsFormatTest : TestBase() {
 
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var sp: SP
 
-    var cryptoUtil: CryptoUtil = CryptoUtil(aapsLogger)
+    private var cryptoUtil: CryptoUtil = CryptoUtil(aapsLogger)
 
     @Before
     fun mock() {
-        AAPSMocker.prepareMock()
-        AAPSMocker.resetMockedSharedPrefs()
         Mockito.`when`(resourceHelper.gs(ArgumentMatchers.anyInt())).thenReturn("mock translation")
     }
 
@@ -56,7 +52,7 @@ class EncryptedPrefsFormatTest : TestBase() {
 
         val storage = SingleStringStorage(frozenPrefs)
         val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
-        val prefs = encryptedFormat.loadPreferences(AAPSMocker.getMockedFile(), "sikret")
+        val prefs = encryptedFormat.loadPreferences(getMockedFile(), "sikret")
 
         assumeAES256isSupported(cryptoUtil)
 
@@ -82,7 +78,7 @@ class EncryptedPrefsFormatTest : TestBase() {
                 PrefsMetadataKey.ENCRYPTION to PrefMetadata(EncryptedPrefsFormat.FORMAT_KEY_ENC, PrefsStatus.OK)
             )
         )
-        encryptedFormat.savePreferences(AAPSMocker.getMockedFile(), prefs, "sikret")
+        encryptedFormat.savePreferences(getMockedFile(), prefs, "sikret")
         aapsLogger.debug(storage.contents)
     }
 
@@ -99,8 +95,8 @@ class EncryptedPrefsFormatTest : TestBase() {
                 PrefsMetadataKey.ENCRYPTION to PrefMetadata(EncryptedPrefsFormat.FORMAT_KEY_ENC, PrefsStatus.OK)
             )
         )
-        encryptedFormat.savePreferences(AAPSMocker.getMockedFile(), prefsIn, "tajemnica")
-        val prefsOut = encryptedFormat.loadPreferences(AAPSMocker.getMockedFile(), "tajemnica")
+        encryptedFormat.savePreferences(getMockedFile(), prefsIn, "tajemnica")
+        val prefsOut = encryptedFormat.loadPreferences(getMockedFile(), "tajemnica")
 
         assumeAES256isSupported(cryptoUtil)
 
@@ -129,7 +125,7 @@ class EncryptedPrefsFormatTest : TestBase() {
 
         val storage = SingleStringStorage(frozenPrefs)
         val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
-        val prefs = encryptedFormat.loadPreferences(AAPSMocker.getMockedFile(), "it-is-NOT-right-secret")
+        val prefs = encryptedFormat.loadPreferences(getMockedFile(), "it-is-NOT-right-secret")
 
         Assert.assertThat(prefs.values.size, CoreMatchers.`is`(0))
 
@@ -156,7 +152,7 @@ class EncryptedPrefsFormatTest : TestBase() {
 
         val storage = SingleStringStorage(frozenPrefs)
         val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
-        val prefs = encryptedFormat.loadPreferences(AAPSMocker.getMockedFile(), "sikret")
+        val prefs = encryptedFormat.loadPreferences(getMockedFile(), "sikret")
 
         assumeAES256isSupported(cryptoUtil)
 
@@ -183,7 +179,7 @@ class EncryptedPrefsFormatTest : TestBase() {
 
         val storage = SingleStringStorage(frozenPrefs)
         val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
-        val prefs = encryptedFormat.loadPreferences(AAPSMocker.getMockedFile(), "sikret")
+        val prefs = encryptedFormat.loadPreferences(getMockedFile(), "sikret")
 
         Assert.assertThat(prefs.values.size, CoreMatchers.`is`(0))
         Assert.assertThat(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, CoreMatchers.`is`(PrefsStatus.ERROR))
@@ -198,7 +194,7 @@ class EncryptedPrefsFormatTest : TestBase() {
 
         val storage = SingleStringStorage(frozenPrefs)
         val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
-        val prefs = encryptedFormat.loadPreferences(AAPSMocker.getMockedFile(), "sikret")
+        val prefs = encryptedFormat.loadPreferences(getMockedFile(), "sikret")
 
         Assert.assertThat(prefs.values.size, CoreMatchers.`is`(0))
         Assert.assertThat(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, CoreMatchers.`is`(PrefsStatus.ERROR))
@@ -210,7 +206,7 @@ class EncryptedPrefsFormatTest : TestBase() {
 
         val storage = SingleStringStorage(frozenPrefs)
         val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
-        encryptedFormat.loadPreferences(AAPSMocker.getMockedFile(), "sikret")
+        encryptedFormat.loadPreferences(getMockedFile(), "sikret")
     }
 
     @Test(expected = PrefFormatError::class)
@@ -229,7 +225,14 @@ class EncryptedPrefsFormatTest : TestBase() {
 
         val storage = SingleStringStorage(frozenPrefs)
         val encryptedFormat = EncryptedPrefsFormat(resourceHelper, cryptoUtil, storage)
-        encryptedFormat.loadPreferences(AAPSMocker.getMockedFile(), "sikret")
+        encryptedFormat.loadPreferences(getMockedFile(), "sikret")
     }
 
+    private fun getMockedFile(): File {
+        val file = Mockito.mock(File::class.java)
+        Mockito.`when`(file.exists()).thenReturn(true)
+        Mockito.`when`(file.canRead()).thenReturn(true)
+        Mockito.`when`(file.canWrite()).thenReturn(true)
+        return file
+    }
 }
