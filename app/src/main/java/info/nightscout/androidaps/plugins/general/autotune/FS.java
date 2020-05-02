@@ -1,14 +1,21 @@
 package info.nightscout.androidaps.plugins.general.autotune;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import info.nightscout.androidaps.plugins.general.maintenance.LoggerUtils;
+import info.nightscout.androidaps.utils.DateUtil;
 
 public class FS {
     static final String logDirectory = LoggerUtils.getLogDirectory();
@@ -66,9 +73,9 @@ public class FS {
 
     public static String profilName(Date dayrun) {
         String strdate = "";
-        String prefixe = "";
+        String prefixe = "aaps-";
         if (dayrun != null) {
-            prefixe = "new";
+            prefixe = "aaps-new";
             strdate= "." + formatDate(dayrun);
         }
         return prefixe + PROFIL + strdate + ".json";
@@ -82,7 +89,7 @@ public class FS {
     public static void zipAutotune(Date lastRun) {
         if (lastRun!=null) {
             try {
-                String zipFileName = "autotune-" + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".zip";
+                String zipFileName = "autotune_" + DateUtil.toISOString(lastRun, "yyyy-MM-dd_HH-mm-ss", null) + ".zip";
                 File zipFile = new File(logDirectory, zipFileName);
                 ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFile)));
                 if (autotune_path != null)

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.LongSparseArray;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Intervals;
@@ -116,6 +117,7 @@ public class AutotunePlugin extends PluginBase {
     private final ActivePluginProvider activePlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
+    //private final Prep prep;
 
     @Inject
     public AutotunePlugin(
@@ -127,6 +129,7 @@ public class AutotunePlugin extends PluginBase {
             Context context,
             ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
+     //       Prep prep,
             IobCobCalculatorPlugin iobCobCalculatorPlugin
     )  {
         super(new PluginDescription()
@@ -147,6 +150,7 @@ public class AutotunePlugin extends PluginBase {
         this.activePlugin = activePlugin;
         this.treatmentsPlugin = treatmentsPlugin;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
+    //    this.prep = prep;
     }
 
 //    @Override
@@ -1451,8 +1455,7 @@ public class AutotunePlugin extends PluginBase {
                 log.error("Unhandled exception", e);
             }
 
-            // zip all autotune files created during the run
-            //todo: AAPS freeze with line below don't understand why...
+            // zip all autotune files created during the run.
             FS.zipAutotune(lastRun);
 
             return result;
@@ -1518,21 +1521,7 @@ public class AutotunePlugin extends PluginBase {
         return jsonString;
     }
 
-    private long endTime(Date dateRun) {
-        Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(dateRun.getTime());
-        c.set(Calendar.HOUR_OF_DAY, autotuneStartHour);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        return c.getTimeInMillis() < dateRun.getTime() ? c.getTimeInMillis()  : c.getTimeInMillis() - 24 * 60 * 60 * 1000L;
-    }
-
-    public String formatDate(Date date){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        return dateFormat.format(date);
-    }
-
+    //todo replace round below by Round.roundTo function
     public static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
