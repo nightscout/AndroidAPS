@@ -187,6 +187,7 @@
 
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
+    <string name="lowglucosesuspend">Low Glucose Suspend</string>
     <string name="disabledloop">Loop Disabled</string>
     <string name="disableloop">Disable loop</string>
     <string name="enableloop">Enable loop</string>

@@ -625,6 +625,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 //                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 }
 
+                loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
+                    overview_apsmode.setImageResource(R.drawable.remove)
+                    overview_apsmode_text?.text = ""
+//                    overview_apsmode_text?.text = resourceHelper.gs(R.string.closedloop)
+//                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
+//                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
+                }
+
                 loopPlugin.isEnabled() && closedLoopEnabled.value()  -> {
                     overview_apsmode.setImageResource(R.drawable.closedloop)
                     overview_apsmode_text?.text = ""
