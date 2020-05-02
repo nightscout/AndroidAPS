@@ -10,6 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.inject.Inject;
 
 import dagger.android.DaggerService;
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
@@ -27,6 +29,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
@@ -40,9 +43,10 @@ public abstract class RileyLinkService extends DaggerService {
     @Inject protected Context context;
     @Inject protected RxBusWrapper rxBus;
     @Inject protected RileyLinkUtil rileyLinkUtil;
-    @Inject protected MedtronicUtil medtronicUtil; // TODO should be avoided here as it's MDT
+    @Inject protected HasAndroidInjector injector;
+    @Inject protected ResourceHelper resourceHelper;
     @Inject protected RileyLinkServiceData rileyLinkServiceData;
-    @Inject protected MedtronicPumpStatus medtronicPumpStatus;
+    @Inject protected ActivePluginProvider activePlugin;
 
     @NotNull protected RileyLinkBLE rileyLinkBLE; // android-bluetooth management, must be set in initRileyLinkServiceData
     protected BluetoothAdapter bluetoothAdapter;
@@ -202,11 +206,13 @@ public abstract class RileyLinkService extends DaggerService {
     }
 
 
+
+
     // FIXME: This needs to be run in a session so that is interruptable, has a separate thread, etc.
     public void doTuneUpDevice() {
 
         rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.TuneUpDevice);
-        medtronicPumpStatus.setPumpDeviceState(PumpDeviceState.Sleeping);
+        setPumpDeviceState(PumpDeviceState.Sleeping);
 
         double lastGoodFrequency = 0.0d;
 
@@ -236,6 +242,9 @@ public abstract class RileyLinkService extends DaggerService {
             rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.PumpConnectorReady);
         }
     }
+
+
+    public abstract void setPumpDeviceState(PumpDeviceState pumpDeviceState);
 
 
     public void disconnectRileyLink() {
@@ -272,4 +281,6 @@ public abstract class RileyLinkService extends DaggerService {
         else
             return null;
     }
+
+    public abstract boolean verifyConfiguration();
 }
