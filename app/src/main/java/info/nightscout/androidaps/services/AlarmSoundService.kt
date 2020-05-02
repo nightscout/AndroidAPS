@@ -6,17 +6,17 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.IBinder
 import dagger.android.DaggerService
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
+import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
 class AlarmSoundService : DaggerService() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var mainApp: MainApp
+    @Inject lateinit var notificationHolder: NotificationHolder
 
     private var player: MediaPlayer? = null
     private var resourceId = R.raw.error
@@ -26,11 +26,11 @@ class AlarmSoundService : DaggerService() {
     override fun onCreate() {
         super.onCreate()
         aapsLogger.debug(LTag.CORE, "onCreate")
-        startForeground(mainApp.notificationId(), mainApp.notification)
+        startForeground(notificationHolder.notificationID, notificationHolder.notification)
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        startForeground(mainApp.notificationId(), mainApp.notification)
+        startForeground(notificationHolder.notificationID, notificationHolder.notification)
 
         player?.let { if (it.isPlaying) it.stop() }
 

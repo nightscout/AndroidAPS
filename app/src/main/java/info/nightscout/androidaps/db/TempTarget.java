@@ -17,6 +17,7 @@ import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TEMPTARGETS)
 public class TempTarget implements Interval {
@@ -195,10 +196,10 @@ public class TempTarget implements Interval {
                 '}';
     }
 
-    public String friendlyDescription(String units) {
+    public String friendlyDescription(String units, ResourceHelper resourceHelper) {
         return Profile.toTargetRangeString(low, high, Constants.MGDL, units) +
                 units +
-                "@" + MainApp.gs(R.string.mins, durationInMinutes) +
+                "@" + resourceHelper.gs(R.string.mins, durationInMinutes) +
                 (reason != null && !reason.equals("") ? "(" + reason + ")" : "");
     }
 

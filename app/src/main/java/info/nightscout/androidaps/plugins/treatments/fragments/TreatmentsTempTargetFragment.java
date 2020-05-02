@@ -47,6 +47,7 @@ public class TreatmentsTempTargetFragment extends DaggerFragment {
     @Inject RxBusWrapper rxBus;
     @Inject ProfileFunction profileFunction;
     @Inject ResourceHelper resourceHelper;
+    @Inject FabricPrivacy fabricPrivacy;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -139,7 +140,7 @@ public class TreatmentsTempTargetFragment extends DaggerFragment {
                 remove.setOnClickListener(v -> {
                     final TempTarget tempTarget = (TempTarget) v.getTag();
                     OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.removerecord),
-                            resourceHelper.gs(R.string.careportal_temporarytarget) + ": " + tempTarget.friendlyDescription(profileFunction.getUnits()) +
+                            resourceHelper.gs(R.string.careportal_temporarytarget) + ": " + tempTarget.friendlyDescription(profileFunction.getUnits(), resourceHelper) +
                                     "\n" + DateUtil.dateAndTimeString(tempTarget.date),
                             (dialog, id) -> {
                                 final String _id = tempTarget._id;
@@ -189,7 +190,7 @@ public class TreatmentsTempTargetFragment extends DaggerFragment {
         disposable.add(rxBus
                 .toObservable(EventTempTargetChange.class)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(event -> updateGui(), exception -> FabricPrivacy.getInstance().logException(exception))
+                .subscribe(event -> updateGui(), fabricPrivacy::logException)
         );
         updateGui();
     }

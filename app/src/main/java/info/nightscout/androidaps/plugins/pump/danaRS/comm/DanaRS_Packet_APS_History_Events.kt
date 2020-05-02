@@ -78,7 +78,7 @@ open class DanaRS_Packet_APS_History_Events(
         val param1 = (intFromBuff(data, 7, 1) shl 8 and 0xFF00) + (intFromBuff(data, 8, 1) and 0xFF)
         val param2 = (intFromBuff(data, 9, 1) shl 8 and 0xFF00) + (intFromBuff(data, 10, 1) and 0xFF)
         val temporaryBasal = TemporaryBasal(injector).date(datetime).source(Source.PUMP).pumpId(datetime)
-        val extendedBolus = ExtendedBolus().date(datetime).source(Source.PUMP).pumpId(datetime)
+        val extendedBolus = ExtendedBolus(injector).date(datetime).source(Source.PUMP).pumpId(datetime)
         val status: String
         when (recordCode.toInt()) {
             DanaRPump.TEMPSTART         -> {

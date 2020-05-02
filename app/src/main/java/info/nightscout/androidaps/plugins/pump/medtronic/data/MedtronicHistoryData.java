@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.CareportalEvent;
@@ -74,6 +75,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class MedtronicHistoryData {
 
+    private final HasAndroidInjector injector;
     private final AAPSLogger aapsLogger;
     private final SP sp;
     private final ActivePluginProvider activePlugin;
@@ -101,6 +103,7 @@ public class MedtronicHistoryData {
 
     @Inject
     public MedtronicHistoryData(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             SP sp,
             ActivePluginProvider activePlugin,
@@ -109,6 +112,7 @@ public class MedtronicHistoryData {
     ) {
         this.allHistory = new ArrayList<>();
 
+        this.injector = injector;
         this.aapsLogger = aapsLogger;
         this.sp = sp;
         this.activePlugin = activePlugin;
@@ -534,7 +538,7 @@ public class MedtronicHistoryData {
             if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
             data.put("created_at", DateUtil.toISOString(date));
             data.put("eventType", event);
-            CareportalEvent careportalEvent = new CareportalEvent();
+            CareportalEvent careportalEvent = new CareportalEvent(injector);
             careportalEvent.date = date;
             careportalEvent.source = Source.USER;
             careportalEvent.eventType = event;
@@ -955,7 +959,7 @@ public class MedtronicHistoryData {
 
                 case Audio:
                 case Extended: {
-                    ExtendedBolus extendedBolus = new ExtendedBolus();
+                    ExtendedBolus extendedBolus = new ExtendedBolus(injector);
                     extendedBolus.date = tryToGetByLocalTime(bolus.atechDateTime);
                     extendedBolus.source = Source.PUMP;
                     extendedBolus.insulin = bolusDTO.getDeliveredAmount();
@@ -1022,7 +1026,7 @@ public class MedtronicHistoryData {
         String operation = "editTBR";
 
         if (temporaryBasalDb == null) {
-            temporaryBasalDb = new TemporaryBasal();
+            temporaryBasalDb = new TemporaryBasal(injector);
             temporaryBasalDb.date = tryToGetByLocalTime(treatment.atechDateTime);
 
             operation = "addTBR";
@@ -1056,7 +1060,7 @@ public class MedtronicHistoryData {
 
             if (tempBasal == null) {
                 // add
-                tempBasal = new TemporaryBasal();
+                tempBasal = new TemporaryBasal(injector);
                 tempBasal.date = tryToGetByLocalTime(tempBasalProcess.itemOne.atechDateTime);
 
                 tempBasal.source = Source.PUMP;
