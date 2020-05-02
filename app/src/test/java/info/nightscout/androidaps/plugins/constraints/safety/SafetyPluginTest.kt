@@ -242,4 +242,14 @@ class SafetyPluginTest : TestBaseWithProfile() {
     """.trimIndent(), d.getReasons(aapsLogger))
         Assert.assertEquals("Safety: Limiting IOB to 1.5 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
     }
+
+    @Test fun iobShouldBeZero() {
+        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("lgs")
+
+        // Apply IOB limits
+        var d = Constraint(hardLimits.MAXIOB_LGS)
+        d = safetyPlugin.applyMaxIOBConstraints(d)
+        Assert.assertEquals(0.0, d.value()!!)
+        Assert.assertEquals("Safety: Limiting IOB to 0.0 U because of Low Glucose Suspend", d.getMostLimitedReasons(aapsLogger))
+    }
 }
