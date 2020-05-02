@@ -117,7 +117,6 @@ public class AutotunePlugin extends PluginBase {
     private final ActivePluginProvider activePlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
-    //private final Prep prep;
 
     @Inject
     public AutotunePlugin(
@@ -129,7 +128,6 @@ public class AutotunePlugin extends PluginBase {
             Context context,
             ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
-     //       Prep prep,
             IobCobCalculatorPlugin iobCobCalculatorPlugin
     )  {
         super(new PluginDescription()
@@ -150,7 +148,6 @@ public class AutotunePlugin extends PluginBase {
         this.activePlugin = activePlugin;
         this.treatmentsPlugin = treatmentsPlugin;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
-    //    this.prep = prep;
     }
 
 //    @Override
@@ -1295,7 +1292,9 @@ public class AutotunePlugin extends PluginBase {
         FS.createAutotunefile(FS.SETTINGS,settings(lastRun,daysBack,new Date(starttime),new Date(endTime)));
 
         int toMgDl = 1;
-        Opts opts=new Opts();
+        //Todo correct after injection works in Opts
+        Opts opts=new Opts(activePlugin, profileFunction);
+        //Opts opts = new Opts();
         opts.categorize_uam_as_basal = SP.getBoolean("categorize_uam_as_basal", false);
 
         getProfile();
@@ -1357,9 +1356,10 @@ public class AutotunePlugin extends PluginBase {
                     log.debug("Day "+i+" of "+daysBack);
 
                     categorizeBGDatums(glucoseStart, glucoseEnd);
-                    Prep prep = new Prep();
+                    Prep prep = new Prep(profileFunction,this);
+                    //Prep prep = new Prep();
                     prep.categorizeBGDatums(opts); // line added for log and test
-                    //PrepOutput prepOutput = Prep.generate(opts);
+                    //PrepOutput prepOutput = prep.generate(opts);
                     FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(4));
 
                     tuneAllTheThings();

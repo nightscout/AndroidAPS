@@ -35,9 +35,19 @@ public class Prep {
     private boolean useNSData = false;
     public boolean nsDataDownloaded = false;
     private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
-    @Inject ProfileFunction profileFunction;
-    @Inject AutotunePlugin autotunePlugin;
+    private ProfileFunction profileFunction;
+    private AutotunePlugin autotunePlugin;
 
+ //   @Inject
+    public Prep(
+            ProfileFunction profileFunction,
+            AutotunePlugin autotunePlugin
+            ) {
+        this.profileFunction=profileFunction;
+        this.autotunePlugin=autotunePlugin;
+    }
+
+    public Prep() {}
 
     public PrepOutput categorizeBGDatums(Opts opts) throws JSONException, ParseException, IOException {
 

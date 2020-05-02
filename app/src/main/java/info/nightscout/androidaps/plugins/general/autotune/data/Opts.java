@@ -40,15 +40,24 @@ public class Opts {
     public long end;
     public boolean categorize_uam_as_basal;
     public boolean tune_insulin_curve;
-    //FATAL EXCEPTION shown in Logcat:
-    //java.lang.NullPointerException: Attempt to invoke interface method 'info.nightscout.androidaps.data.Profile info.nightscout.androidaps.plugins.configBuilder.ProfileFunction.getProfile(long)' on a null object reference
-    //      at info.nightscout.androidaps.plugins.general.autotune.data.Opts.setTempBasalHistory(Opts.java:58)
-    //
-    // 2 lines below (@Inject) doesn't works and profileFunction or activePlugin are null objects...
-    @Inject ProfileFunction profileFunction;
-    @Inject ActivePluginProvider activePlugin;
 
-    public void setTempBasalHistory(List<TemporaryBasal> lt) {
+    private ProfileFunction profileFunction;
+    private ActivePluginProvider activePlugin;
+
+    // @Inject
+        public Opts(
+                ActivePluginProvider activePlugin,
+                ProfileFunction profileFunction
+        ) {
+            this.activePlugin = activePlugin;
+            this.profileFunction=profileFunction;
+        }
+
+    public Opts() { }
+    // These constructors are not required if Injection works...
+
+
+    public void setTempBasalHistory( List<TemporaryBasal> lt) {
         if (pumpHistory==null)
             pumpHistory = new ArrayList<NsTreatment>();
         pumpTempBasalHistory=lt;
