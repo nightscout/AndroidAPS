@@ -67,11 +67,11 @@ class RandomBgPlugin @Inject constructor(
         super.onStop()
         loopHandler.removeCallbacks(refreshLoop)
     }
-
+/*
     override fun specialEnableCondition(): Boolean {
         return isRunningTest() || virtualPumpPlugin.isEnabled(PluginType.PUMP) && buildHelper.isEngineeringMode()
     }
-
+*/
     override fun handleNewData(intent: Intent) {
         if (!isEnabled(PluginType.BGSOURCE)) return
         val min = 70

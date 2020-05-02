@@ -69,14 +69,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.overview_fragment.*
-import kotlinx.android.synthetic.main.overview_fragment.overview_apsmode
-import kotlinx.android.synthetic.main.overview_fragment.careportal_canulaage
-import kotlinx.android.synthetic.main.overview_fragment.careportal_insulinage
-import kotlinx.android.synthetic.main.overview_fragment.careportal_reservoirlevel
-import kotlinx.android.synthetic.main.overview_fragment.careportal_sensorage
-import kotlinx.android.synthetic.main.overview_fragment.careportal_pbage
-import kotlinx.android.synthetic.main.overview_fragment.careportal_batterylevel
 import kotlinx.android.synthetic.main.overview_fragment.overview_activeprofile
+import kotlinx.android.synthetic.main.overview_fragment.overview_apsmode
 import kotlinx.android.synthetic.main.overview_fragment.overview_arrow
 import kotlinx.android.synthetic.main.overview_fragment.overview_basebasal
 import kotlinx.android.synthetic.main.overview_fragment.overview_bg
@@ -178,7 +172,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 inflater.inflate(R.layout.overview_fragment_nsclient, container, false)
 
             smallHeight || landscape                              ->
-                inflater.inflate(R.layout.overview_fragment_landscape, container, false)
+                inflater.inflate(R.layout.overview_fragment, container, false)
+//                inflater.inflate(R.layout.overview_fragment_landscape, container, false)
 
             else                                                  ->
                 inflater.inflate(R.layout.overview_fragment, container, false)
@@ -226,7 +221,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         super.onPause()
         disposable.clear()
         loopHandler.removeCallbacksAndMessages(null)
-        overview_apsmode?.let { unregisterForContextMenu(it) }
+        overview_apsmode_llayout?.let { unregisterForContextMenu(it) }
         overview_activeprofile?.let { unregisterForContextMenu(it) }
         overview_temptarget?.let { unregisterForContextMenu(it) }
     }
@@ -300,7 +295,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         loopHandler.postDelayed(refreshLoop, 60 * 1000L)
 
-        overview_apsmode?.let { registerForContextMenu(overview_apsmode) }
+        overview_apsmode_llayout?.let { registerForContextMenu(overview_apsmode) }
         overview_activeprofile?.let { registerForContextMenu(it) }
         overview_temptarget?.let { registerForContextMenu(it) }
         updateGUI("onResume")
@@ -566,9 +561,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             val glucoseStatus = GlucoseStatus(injector).glucoseStatusData
             if (glucoseStatus != null) {
-                overview_delta?.text = "Δ ${Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)} $units"
+                overview_delta?.text = "Δ ${Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)}"
                 overview_deltashort?.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                overview_avgdelta?.text = "øΔ15m: ${Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\nøΔ40m: ${Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
+                overview_avgdelta?.text = "Δ15m: ${Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units)}\nΔ40m: ${Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units)}"
             } else {
                 overview_delta?.text = "Δ " + resourceHelper.gs(R.string.notavailable)
                 overview_deltashort?.text = "---"
@@ -593,7 +588,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (Config.APS && pump.pumpDescription.isTempBasalCapable) {
             overview_apsmode?.visibility = View.VISIBLE
             when {
-                loopPlugin.isEnabled() && loopPlugin.isSuperBolus    -> {
+                loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
                     overview_apsmode.setImageResource(R.drawable.remove)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                     //overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopsuperbolusfor), loopPlugin.minutesToEndOfSuspend())
@@ -601,7 +596,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 //                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 }
 
-                loopPlugin.isDisconnected                                           -> {
+                loopPlugin.isDisconnected                                               -> {
                     overview_apsmode.setImageResource(R.drawable.closedloop_disconnected)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
 //                    overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopdisconnectedfor), loopPlugin.minutesToEndOfSuspend())
@@ -609,7 +604,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 //                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextCritical))
                 }
 
-                loopPlugin.isEnabled() && loopPlugin.isSuspended     -> {
+                loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
                     overview_apsmode.setImageResource(R.drawable.closedloop_pause)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
 //                    overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend())
@@ -617,7 +612,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 //                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextWarning))
                 }
 
-                pump.isSuspended                                                    -> {
+                pump.isSuspended                                                        -> {
+                    overview_apsmode_text?.setCompoundDrawables(null, resourceHelper.gd(R.drawable.closedloop_pause), null, null)
                     overview_apsmode.setImageResource(R.drawable.closedloop_pause)
                     overview_apsmode_text?.text = ""
 //                    overview_apsmode_text?.text = resourceHelper.gs(R.string.pumpsuspended)
@@ -633,7 +629,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 //                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 }
 
-                loopPlugin.isEnabled() && closedLoopEnabled.value()  -> {
+                loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
                     overview_apsmode.setImageResource(R.drawable.closedloop)
                     overview_apsmode_text?.text = ""
 //                    overview_apsmode_text?.text = resourceHelper.gs(R.string.closedloop)
@@ -641,7 +637,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 //                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 }
 
-                loopPlugin.isEnabled() && !closedLoopEnabled.value() -> {
+                loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
                     overview_apsmode.setImageResource(R.drawable.openloop)
                     overview_apsmode_text?.text = ""
 //                    overview_apsmode_text?.text = resourceHelper.gs(R.string.openloop)
@@ -649,7 +645,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 //                    overview_apsmode_text?.setTextColor(resourceHelper.gc(R.color.ribbonTextDefault))
                 }
 
-                else                                                                -> {
+                else                                                                    -> {
                     overview_apsmode.setImageResource(R.drawable.remove)
                     overview_apsmode_text?.text = ""
 //                    overview_apsmode_text?.text = resourceHelper.gs(R.string.disabledloop)
@@ -675,9 +671,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
         // Basal, TBR
         val activeTemp = treatmentsPlugin.getTempBasalFromHistory(System.currentTimeMillis())
-        overview_basebasal?.text = activeTemp?.let { if (resourceHelper.shortTextMode()) "T: " + activeTemp.toStringVeryShort() else activeTemp.toStringFull() }
+        overview_basebasal?.text = activeTemp?.let { if (resourceHelper.shortTextMode()) "T:" + activeTemp.toStringVeryShort() else activeTemp.toStringFull() }
             ?: resourceHelper.gs(R.string.pump_basebasalrate, profile.basal)
-        overview_basebasal?.setOnClickListener {
+        overview_basal_llayout?.setOnClickListener {
             var fullText = "${resourceHelper.gs(R.string.pump_basebasalrate_label)}: ${resourceHelper.gs(R.string.pump_basebasalrate, profile.basal)}"
             if (activeTemp != null)
                 fullText += "\n" + resourceHelper.gs(R.string.pump_tempbasal_label) + ": " + activeTemp.toStringFull()
@@ -687,6 +683,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         overview_basebasal?.setTextColor(activeTemp?.let { resourceHelper.gc(R.color.basal) }
             ?: resourceHelper.gc(R.color.defaulttextcolor))
+        overview_basebasal_icon.setImageResource(if (activeTemp != null) R.drawable.icon_cp_basal_start else R.drawable.icon_cp_basal_end)
 
         // Extended bolus
         val extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())
@@ -699,7 +696,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 OKDialog.show(it, resourceHelper.gs(R.string.extended_bolus), extendedBolus.toString())
             }
         }
+        overview_extended_llayout?.visibility = (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses).toVisibility()
 
+        // Active profile
         overview_activeprofile?.text = profileFunction.getProfileNameWithDuration()
         if (profile.percentage != 100 || profile.timeshift != 0) {
             overview_activeprofile?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
@@ -717,23 +716,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val bolusIob = treatmentsPlugin.lastCalculationTreatments.round()
         val basalIob = treatmentsPlugin.lastCalculationTempBasals.round()
         overview_iob?.text = when {
-            resourceHelper.shortTextMode()     -> {
+            resourceHelper.shortTextMode() ->
                 resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob)
-            }
 
-            resourceHelper.gb(R.bool.isTablet) -> {
-                resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob) + " (" +
-                    resourceHelper.gs(R.string.bolus) + ": " + resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob) +
-                    resourceHelper.gs(R.string.basal) + ": " + resourceHelper.gs(R.string.formatinsulinunits, basalIob.basaliob) + ")"
-            }
-
-            else                               -> {
+            else                           ->
                 resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob) + " (" +
                     resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob) + "/" +
                     resourceHelper.gs(R.string.formatinsulinunits, basalIob.basaliob) + ")"
-            }
         }
-        overview_iob?.setOnClickListener {
+        overview_iob_llayout?.setOnClickListener {
             activity?.let {
                 OKDialog.show(it, resourceHelper.gs(R.string.iob),
                     resourceHelper.gs(R.string.formatinsulinunits, bolusIob.iob + basalIob.basaliob) + "\n" +
@@ -751,7 +742,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         var cobText: String = resourceHelper.gs(R.string.value_unavailable_short)
         val cobInfo = iobCobCalculatorPlugin.getCobInfo(false, "Overview COB")
         if (cobInfo.displayCob != null) {
-            cobText = DecimalFormatter.to0Decimal(cobInfo.displayCob)
+            cobText = resourceHelper.gs(R.string.format_carbs, cobInfo.displayCob.toInt())
             if (cobInfo.futureCarbs > 0) cobText += "(" + DecimalFormatter.to0Decimal(cobInfo.futureCarbs) + ")"
         }
         overview_cob?.text = cobText
@@ -772,9 +763,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_uploader?.setOnClickListener { activity?.let { OKDialog.show(it, resourceHelper.gs(R.string.uploader), nsDeviceStatus.extendedUploaderStatus) } }
 
         // Sensitivity
-        iobCobCalculatorPlugin.getLastAutosensData("Overview")?.let { autosensData ->
-            overview_sensitivity?.text = String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
-        }
+        overview_sensitivity?.text =
+            iobCobCalculatorPlugin.getLastAutosensData("Overview")?.let { autosensData ->
+                String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
+            } ?: ""
 
         // ****** GRAPH *******
         GlobalScope.launch(Dispatchers.Main) {

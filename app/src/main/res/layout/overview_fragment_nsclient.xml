@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@+id/bg_tbr_layout"
+                app:layout_constraintBottom_toTopOf="@+id/info_layout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/overview_looplayout">
@@ -113,7 +113,7 @@
             </LinearLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/bg_tbr_layout"
+                android:id="@+id/info_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -374,7 +374,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/overview_bggraph"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/bg_tbr_layout">
+                app:layout_constraintTop_toBottomOf="@id/info_layout">
 
                 <ImageView
                     android:layout_width="40dp"

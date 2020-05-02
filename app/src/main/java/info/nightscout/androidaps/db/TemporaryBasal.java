@@ -508,9 +508,9 @@ public class TemporaryBasal implements Interval, DbObjectBase {
             } else {
                 rate = absoluteRate;
             }
-            return DecimalFormatter.to2Decimal(rate) + "U/h ";
+            return DecimalFormatter.to2Decimal(rate) + "U/h";
         } else { // percent
-            return percentRate + "% ";
+            return percentRate + "%";
         }
     }
 

@@ -477,7 +477,7 @@
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Ongoing Notification</string>
     <string name="old_data">OLD DATA</string>
-    <string name="minago">%1$d min ago</string>
+    <string name="minago">%1$dm ago</string>
     <string name="sms_minago">%1$dmin ago</string>
     <string name="localprofile">Local Profile</string>
     <string name="openapsama">OpenAPS AMA</string>
@@ -596,7 +596,7 @@
     <string name="wear_detailedIOB_title">Show detailed IOB</string>
     <string name="wear_detailedIOB_summary">Break down IOB into bolus and basal IOB on the watchface</string>
     <string name="nosuccess">not successful - please check phone</string>
-    <string name="notavailable">Not available</string>
+    <string name="notavailable">n/a</string>
     <string name="key_smscommunicator_allowednumbers" translatable="false">smscommunicator_allowednumbers</string>
     <string name="key_smscommunicator_remotecommandsallowed" translatable="false">smscommunicator_remotecommandsallowed</string>
     <string name="patientage">Patient age</string>
@@ -1026,7 +1026,7 @@
     <string name="key_fromNSAreCommingFakedExtendedBoluses" translatable="false">fromNSAreCommingFakedExtendedBoluses</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
     <string name="not_eng_mode_or_release">Engineering mode not enabled and not on release branch</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
+    <string name="pump_basebasalrate">%1$.2fU/h</string>
     <string name="combo_actvity_reading_basal_profile">Reading basal profile</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">The pump history has changed after the bolus calculation was performed. The bolus was not delivered. Please recalculate if a bolus is still needed.</string>
     <string name="combo_error_updating_treatment_record">Bolus successfully delivered, but adding the treatment entry failed. This can happen if two small boluses of the same size are administered within the last two minutes. Please check the pump history and treatment entries and use the Careportal to add missing entries. Make sure not to add any entries for the exact same minute and same amount.</string>
