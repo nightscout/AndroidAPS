@@ -7,8 +7,10 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
  */
 
 public class RileyLinkCommunicationException extends Exception {
+
     String extendedErrorText;
     private RileyLinkBLEError errorCode;
+
 
     public RileyLinkCommunicationException(RileyLinkBLEError errorCode, String extendedErrorText) {
         super(errorCode.getDescription());

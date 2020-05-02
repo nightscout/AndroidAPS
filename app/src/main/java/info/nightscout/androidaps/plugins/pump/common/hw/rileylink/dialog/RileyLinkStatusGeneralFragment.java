@@ -44,13 +44,6 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     @Inject ResourceHelper resourceHelper;
     @Inject MedtronicUtil medtronicUtil;
     @Inject AAPSLogger aapsLogger;
-
-    // TODO fix this is not correct
-    //@Inject RileyLinkUtil rileyLinkUtil;
-    //@Inject MedtronicUtil medtronicUtil;
-    //@Inject MedtronicPumpStatus medtronicPumpStatus;
-
-    //@Inject MedtronicPumpPlugin medtronicPumpPlugin;
     @Inject RileyLinkServiceData rileyLinkServiceData;
 
     TextView connectionStatus;
@@ -65,10 +58,6 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     TextView lastDeviceContact;
     TextView firmwareVersion;
 
-    //RileyLinkServiceData rileyLinkServiceData;
-
-    //MedtronicPumpStatus medtronicPumpStatus;
-    //OmnipodPumpStatus omnipodPumpStatus;
     boolean first = false;
 
 
@@ -139,13 +128,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
         }
 
-        // TODO add handling for Omnipod pump status
-// TODO refactor this Omnipod
-
         PumpPluginAbstract pumpPlugin = (PumpPluginAbstract)activePlugin.getActivePump();
-
-        //if (activePlugin)
-
 
         if (pumpPlugin.manufacturer()== ManufacturerType.Medtronic) {
             MedtronicPumpStatus medtronicPumpStatus = (MedtronicPumpStatus)pumpPlugin.getPumpStatusData();

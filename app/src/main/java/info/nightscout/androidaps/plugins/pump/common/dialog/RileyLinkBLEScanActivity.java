@@ -54,9 +54,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.utils.LocationHelper;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged;
-import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
-import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -68,8 +66,6 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
     @Inject RxBusWrapper rxBus;
     @Inject ResourceHelper resourceHelper;
     @Inject RileyLinkUtil rileyLinkUtil;
-    // TODO change this. Currently verifyConfiguration uses MDT data not only RL
-    // @Inject MedtronicPumpPlugin medtronicPumpPlugin;
     @Inject ActivePluginProvider activePlugin;
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 30241; // arbitrary.
@@ -118,10 +114,6 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
             String bleAddress = textview.getText().toString();
 
             sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
-
-            //RileyLinkUtil.getRileyLinkSelectPreference().setSummary(bleAddress);
-
-            // TODO refactor this
 
             PumpInterface activePump = activePlugin.getActivePump();
 

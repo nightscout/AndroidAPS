@@ -121,6 +121,7 @@ public class MedtronicPumpStatus extends PumpStatus {
         medtronicPumpMap.put("723", PumpType.Medtronic_523_723_Revel);
         medtronicPumpMap.put("554", PumpType.Medtronic_554_754_Veo);
         medtronicPumpMap.put("754", PumpType.Medtronic_554_754_Veo);
+
     }
 
     public Map<String, PumpType> getMedtronicPumpMap() {

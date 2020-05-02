@@ -240,7 +240,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
                 } else {
                     PumpType pumpType = medtronicPumpStatus.getMedtronicPumpMap().get(pumpTypePart);
                     medtronicPumpStatus.medtronicDeviceType = medtronicPumpStatus.getMedtronicDeviceTypeMap().get(pumpTypePart);
-                    //medtronicPumpPlugin.getPumpDescription().setPumpDescription(pumpType);
                     medtronicPumpPlugin.setPumpType(pumpType);
 
                     if (pumpTypePart.startsWith("7"))

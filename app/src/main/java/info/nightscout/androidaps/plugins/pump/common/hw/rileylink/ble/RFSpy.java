@@ -362,8 +362,6 @@ public class RFSpy {
                 break;
 
         }
-
-        //this.selectedTargetFrequency = frequency;
     }
 
 

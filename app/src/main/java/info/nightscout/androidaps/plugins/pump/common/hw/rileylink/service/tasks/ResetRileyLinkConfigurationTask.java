@@ -19,7 +19,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtro
  */
 public class ResetRileyLinkConfigurationTask extends PumpTask {
 
-    private static final String TAG = "ResetRileyLinkTask";
     @Inject ActivePluginProvider activePlugin;
     @Inject RxBusWrapper rxBus;
 
@@ -35,7 +34,6 @@ public class ResetRileyLinkConfigurationTask extends PumpTask {
 
     @Override
     public void run() {
-        // this is intended only for RL supported pump, so we can cast to PumpPluginAbstract
         RileyLinkPumpDevice pumpAbstract = (RileyLinkPumpDevice)activePlugin.getActivePump();
 
         rxBus.send(new EventRefreshButtonState(false));

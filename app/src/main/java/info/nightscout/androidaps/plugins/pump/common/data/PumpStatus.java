@@ -3,22 +3,15 @@ package info.nightscout.androidaps.plugins.pump.common.data;
 import java.util.Date;
 
 import info.nightscout.androidaps.data.ProfileStore;
-import info.nightscout.androidaps.interfaces.PumpDescription;
-import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpStatusType;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.resources.ResourceHelper;
-import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by andy on 4/28/18.
  */
 
 public abstract class PumpStatus {
-
-
 
     // connection
     public long lastDataTime;
