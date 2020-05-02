@@ -190,6 +190,7 @@ class MainActivity : NoSplashAppCompatActivity() {
             }
         }
         main_pager.adapter = pageAdapter
+        main_pager.offscreenPageLimit = 8 // This may cause more memory consumption
         checkPluginPreferences(main_pager)
 
         // Tabs
