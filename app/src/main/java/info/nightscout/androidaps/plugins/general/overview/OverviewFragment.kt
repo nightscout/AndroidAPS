@@ -68,31 +68,28 @@ import info.nightscout.androidaps.utils.wizard.QuickWizard
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.overview_fragment.*
-import kotlinx.android.synthetic.main.overview_fragment.overview_activeprofile
-import kotlinx.android.synthetic.main.overview_fragment.overview_apsmode
-import kotlinx.android.synthetic.main.overview_fragment.overview_arrow
-import kotlinx.android.synthetic.main.overview_fragment.overview_basebasal
-import kotlinx.android.synthetic.main.overview_fragment.overview_bg
-import kotlinx.android.synthetic.main.overview_fragment.overview_bggraph
-import kotlinx.android.synthetic.main.overview_fragment.overview_carbsbutton
-import kotlinx.android.synthetic.main.overview_fragment.overview_chartMenuButton
-import kotlinx.android.synthetic.main.overview_fragment.overview_cob
-import kotlinx.android.synthetic.main.overview_fragment.overview_extendedbolus
-import kotlinx.android.synthetic.main.overview_fragment.overview_insulinbutton
-import kotlinx.android.synthetic.main.overview_fragment.overview_iob
-import kotlinx.android.synthetic.main.overview_fragment.overview_iobcalculationprogess
-import kotlinx.android.synthetic.main.overview_fragment.overview_iobgraph
-import kotlinx.android.synthetic.main.overview_fragment.overview_looplayout
+import kotlinx.android.synthetic.main.overview_buttons_layout.*
+import kotlinx.android.synthetic.main.overview_buttons_layout.overview_carbsbutton
+import kotlinx.android.synthetic.main.overview_buttons_layout.overview_insulinbutton
+import kotlinx.android.synthetic.main.overview_buttons_layout.overview_quickwizardbutton
+import kotlinx.android.synthetic.main.overview_buttons_layout.overview_treatmentbutton
+import kotlinx.android.synthetic.main.overview_buttons_layout.overview_wizardbutton
 import kotlinx.android.synthetic.main.overview_fragment.overview_notifications
-import kotlinx.android.synthetic.main.overview_fragment.overview_pumpstatus
-import kotlinx.android.synthetic.main.overview_fragment.overview_pumpstatuslayout
-import kotlinx.android.synthetic.main.overview_fragment.overview_quickwizardbutton
-import kotlinx.android.synthetic.main.overview_fragment.overview_sensitivity
-import kotlinx.android.synthetic.main.overview_fragment.overview_temptarget
-import kotlinx.android.synthetic.main.overview_fragment.overview_treatmentbutton
-import kotlinx.android.synthetic.main.overview_fragment.overview_wizardbutton
 import kotlinx.android.synthetic.main.overview_fragment_nsclient_tablet.*
+import kotlinx.android.synthetic.main.overview_graphs_layout.overview_bggraph
+import kotlinx.android.synthetic.main.overview_graphs_layout.overview_chartMenuButton
+import kotlinx.android.synthetic.main.overview_graphs_layout.overview_iobcalculationprogess
+import kotlinx.android.synthetic.main.overview_graphs_layout.overview_iobgraph
+import kotlinx.android.synthetic.main.overview_info_layout.*
+import kotlinx.android.synthetic.main.overview_info_layout.overview_arrow
+import kotlinx.android.synthetic.main.overview_info_layout.overview_basebasal
+import kotlinx.android.synthetic.main.overview_info_layout.overview_bg
+import kotlinx.android.synthetic.main.overview_info_layout.overview_cob
+import kotlinx.android.synthetic.main.overview_info_layout.overview_extendedbolus
+import kotlinx.android.synthetic.main.overview_info_layout.overview_iob
+import kotlinx.android.synthetic.main.overview_info_layout.overview_sensitivity
+import kotlinx.android.synthetic.main.overview_loop_pumpstatus_layout.*
+import kotlinx.android.synthetic.main.overview_statuslights_layout.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -172,8 +169,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 inflater.inflate(R.layout.overview_fragment_nsclient, container, false)
 
             smallHeight || landscape                              ->
-                inflater.inflate(R.layout.overview_fragment, container, false)
-//                inflater.inflate(R.layout.overview_fragment_landscape, container, false)
+                inflater.inflate(R.layout.overview_fragment_landscape, container, false)
 
             else                                                  ->
                 inflater.inflate(R.layout.overview_fragment, container, false)
