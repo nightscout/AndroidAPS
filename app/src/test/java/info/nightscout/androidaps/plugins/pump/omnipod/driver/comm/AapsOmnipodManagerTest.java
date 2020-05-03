@@ -92,7 +92,7 @@ public class AapsOmnipodManagerTest {
         Profile profile = mock(Profile.class);
 
         Profile.ProfileValue value = mock(Profile.ProfileValue.class);
-        value.timeAsSeconds = 500;
+        value.timeAsSeconds = 1800;
         value.value = 0.5D;
 
         when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
@@ -144,20 +144,20 @@ public class AapsOmnipodManagerTest {
     }
 
     @Test
-    public void invalidProfileUnsupportedPrecision() {
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Unsupported basal rate precision");
-
+    public void roundsToSupportedPrecision() {
         Profile profile = mock(Profile.class);
 
         Profile.ProfileValue value = mock(Profile.ProfileValue.class);
-        value.timeAsSeconds = 500;
+        value.timeAsSeconds = 0;
         value.value = 0.04D;
 
         when(profile.getBasalValues()).thenReturn(new Profile.ProfileValue[]{
                 value,
         });
 
-        AapsOmnipodManager.mapProfileToBasalSchedule(profile);
+        BasalSchedule basalSchedule = AapsOmnipodManager.mapProfileToBasalSchedule(profile);
+        BasalScheduleEntry basalScheduleEntry = basalSchedule.getEntries().get(0);
+
+        assertEquals(0.05D, basalScheduleEntry.getRate(), 0.000001);
     }
 }
