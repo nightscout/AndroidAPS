@@ -127,7 +127,6 @@ open class AppModule {
     interface AppBindings {
 
         @Binds fun bindContext(mainApp: MainApp): Context
-        @Binds fun bindApplication(mainApp: MainApp): Application
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
 
         @Binds
