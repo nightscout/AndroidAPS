@@ -61,18 +61,14 @@ public class OmnipodManager {
     private ActiveBolusData activeBolusData;
     private final Object bolusDataMutex = new Object();
 
-    //private HasAndroidInjector injector;
-    AAPSLogger aapsLogger;
-    SP sp;
+    private AAPSLogger aapsLogger;
+    private SP sp;
 
-    public OmnipodManager(//HasAndroidInjector injector,
-                          AAPSLogger aapsLogger,
+    public OmnipodManager(AAPSLogger aapsLogger,
                           SP sp,
                           OmnipodCommunicationManager communicationService,
                           PodSessionState podState,
                           PodStateChangedHandler podStateChangedHandler) {
-//        this.injector = injector;
-//        this.injector.androidInjector().inject(this);
         if (communicationService == null) {
             throw new IllegalArgumentException("Communication service cannot be null");
         }
@@ -86,11 +82,6 @@ public class OmnipodManager {
         this.podStateChangedHandler = podStateChangedHandler;
     }
 
-//    public OmnipodManager(HasAndroidInjector injector,
-//                          OmnipodCommunicationManager communicationService,
-//                          PodSessionState podState) {
-//        this(injector, communicationService, podState, null);
-//    }
 
     public synchronized Single<SetupActionResult> pairAndPrime() {
         logStartingCommandExecution("pairAndPrime");
