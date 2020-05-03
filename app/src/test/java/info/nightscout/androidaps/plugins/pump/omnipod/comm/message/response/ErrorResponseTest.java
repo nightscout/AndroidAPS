@@ -45,7 +45,7 @@ public class ErrorResponseTest {
         ErrorResponse errorResponse = new ErrorResponse(ByteUtil.fromHexString("0603101308"));
         assertEquals(0x10, errorResponse.getErrorResponseCode());
         assertEquals(FaultEventCode.MESSAGE_LENGTH_TOO_LONG, errorResponse.getFaultEventCode());
-        assertEquals(PodProgressStatus.RUNNING_ABOVE_FIFTY_UNITS, errorResponse.getPodProgressStatus());
+        assertEquals(PodProgressStatus.ABOVE_FIFTY_UNITS, errorResponse.getPodProgressStatus());
 
         assertNull(errorResponse.getNonceSearchKey());
     }

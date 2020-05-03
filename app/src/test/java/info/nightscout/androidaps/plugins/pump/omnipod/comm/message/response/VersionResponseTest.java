@@ -72,7 +72,7 @@ public class VersionResponseTest {
         assertEquals(0x1f00ee87, versionResponse.getAddress());
         assertEquals(41847, versionResponse.getLot());
         assertEquals(240439, versionResponse.getTid());
-        assertEquals(PodProgressStatus.PAIRING_SUCCESS, versionResponse.getPodProgressStatus());
+        assertEquals(PodProgressStatus.PAIRING_COMPLETED, versionResponse.getPodProgressStatus());
         assertEquals("2.7.0", versionResponse.getPiVersion().toString());
         assertEquals("2.7.0", versionResponse.getPmVersion().toString());
         assertNull(versionResponse.getRssi());

@@ -56,8 +56,8 @@ public class SetupPodAction implements OmnipodAction<VersionResponse> {
         if(setupPodResponse.getAddress() != podState.getAddress()) {
             throw new IllegalMessageAddressException(podState.getAddress(), setupPodResponse.getAddress());
         }
-        if (setupPodResponse.getPodProgressStatus() != PodProgressStatus.PAIRING_SUCCESS) {
-            throw new IllegalPodProgressException(PodProgressStatus.PAIRING_SUCCESS, setupPodResponse.getPodProgressStatus());
+        if (setupPodResponse.getPodProgressStatus() != PodProgressStatus.PAIRING_COMPLETED) {
+            throw new IllegalPodProgressException(PodProgressStatus.PAIRING_COMPLETED, setupPodResponse.getPodProgressStatus());
         }
 
         podState.setSetupProgress(SetupProgress.POD_CONFIGURED);
