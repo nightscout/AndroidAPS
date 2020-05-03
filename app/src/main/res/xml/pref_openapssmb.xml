@@ -143,6 +143,12 @@
             android:summary="@string/low_temptarget_lowers_sensitivity_summary"
             android:title="@string/low_temptarget_lowers_sensitivity_title" />
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_smb_enable_carbs_suggestions"
+            android:summary="@string/enablecarbssuggestions_summary"
+            android:title="@string/enablecarbssuggestions" />
+            
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:key="@string/key_carbsReqThreshold"
             android:title="@string/carbsReqThreshold"

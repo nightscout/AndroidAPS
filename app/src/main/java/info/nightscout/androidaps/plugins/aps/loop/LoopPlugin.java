@@ -101,6 +101,8 @@ public class LoopPlugin extends PluginBase {
     private boolean isSuperBolus;
     private boolean isDisconnected;
 
+    private long carbsSuggestionsSuspendedUntil = 0;
+
     public class LastRun {
         public APSResult request = null;
         public APSResult constraintsProcessed = null;
@@ -431,6 +433,58 @@ public class LoopPlugin extends PluginBase {
             Constraint<Boolean> closedLoopEnabled = constraintChecker.isClosedLoopAllowed();
 
             if (closedLoopEnabled.value()) {
+
+                if (allowNotification) {
+                    if (resultAfterConstraints.isCarbsRequired()
+                            && resultAfterConstraints.carbsReq >= sp.getInt(R.string.key_smb_enable_carbs_suggestions_threshold, 0)
+                            && carbsSuggestionsSuspendedUntil < System.currentTimeMillis()) {
+
+                        Intent intentAction5m = new Intent(context, CarbSuggestionReceiver.class);
+                        intentAction5m.putExtra("ignoreDuration",5);
+                        PendingIntent pendingIntent5m = PendingIntent.getBroadcast(context,1, intentAction5m,PendingIntent.FLAG_UPDATE_CURRENT);
+                        NotificationCompat.Action actionIgnore5m = new
+                                NotificationCompat.Action(R.drawable.ic_notif_aaps, "Ignore 5m", pendingIntent5m);
+
+                        Intent intentAction15m = new Intent(context, CarbSuggestionReceiver.class);
+                        intentAction15m.putExtra("ignoreDuration",15);
+                        PendingIntent pendingIntent15m = PendingIntent.getBroadcast(context,1, intentAction15m,PendingIntent.FLAG_UPDATE_CURRENT);
+                        NotificationCompat.Action actionIgnore15m = new
+                                NotificationCompat.Action(R.drawable.ic_notif_aaps, "Ignore 15m", pendingIntent15m);
+
+                        Intent intentAction30m = new Intent(context, CarbSuggestionReceiver.class);
+                        intentAction30m.putExtra("ignoreDuration",30);
+                        PendingIntent pendingIntent30m = PendingIntent.getBroadcast(context,1, intentAction30m,PendingIntent.FLAG_UPDATE_CURRENT);
+                        NotificationCompat.Action actionIgnore30m = new
+                                NotificationCompat.Action(R.drawable.ic_notif_aaps, "Ignore 30m", pendingIntent30m);
+
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID);
+                        builder.setSmallIcon(R.drawable.notif_icon)
+                                .setContentTitle(resourceHelper.gs(R.string.carbssuggestion))
+                                .setContentText(resultAfterConstraints.getCarbsRequiredText())
+                                .setAutoCancel(true)
+                                .setPriority(Notification.PRIORITY_MAX)
+                                .setCategory(Notification.CATEGORY_ALARM)
+                                .addAction(actionIgnore5m)
+                                .addAction(actionIgnore15m)
+                                .addAction(actionIgnore30m)
+                                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+
+                        NotificationManager mNotificationManager =
+                                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+
+                        // mId allows you to update the notification later on.
+                        mNotificationManager.notify(Constants.notificationID, builder.build());
+                        rxBus.send(new EventNewOpenLoopNotification());
+
+                        // Send to Wear
+                        actionStringHandler.get().handleInitiate("changeRequest");
+
+                    } else {
+                        dismissSuggestion();
+                    }
+                }
+
                 if (resultAfterConstraints.isChangeRequested()
                         && !commandQueue.bolusInQueue()
                         && !commandQueue.isRunning(Command.CommandType.BOLUS)) {
@@ -489,36 +543,9 @@ public class LoopPlugin extends PluginBase {
                     if (sp.getBoolean("wearcontrol", false)) {
                         builder.setLocalOnly(true);
                     }
-
-                    // Creates an explicit intent for an Activity in your app
-                    Intent resultIntent = new Intent(context, MainActivity.class);
-
-                    // The stack builder object will contain an artificial back stack for the
-                    // started Activity.
-                    // This ensures that navigating backward from the Activity leads out of
-                    // your application to the Home screen.
-                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-                    stackBuilder.addParentStack(MainActivity.class);
-                    // Adds the Intent that starts the Activity to the top of the stack
-                    stackBuilder.addNextIntent(resultIntent);
-                    PendingIntent resultPendingIntent =
-                            stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                    builder.setContentIntent(resultPendingIntent);
-                    builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-                    NotificationManager mNotificationManager =
-                            (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                    // mId allows you to update the notification later on.
-                    mNotificationManager.notify(Constants.notificationID, builder.build());
-                    rxBus.send(new EventNewOpenLoopNotification());
-
-                    // Send to Wear
-                    actionStringHandler.get().handleInitiate("changeRequest");
+                    presentSuggestion(builder);
                 } else if (allowNotification) {
-                    // dismiss notifications
-                    NotificationManager notificationManager =
-                            (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.cancel(Constants.notificationID);
-                    actionStringHandler.get().handleInitiate("cancelChangeRequest");
+                    dismissSuggestion();
                 }
             }
 
@@ -526,6 +553,45 @@ public class LoopPlugin extends PluginBase {
         } finally {
             getAapsLogger().debug(LTag.APS, "invoke end");
         }
+    }
+
+    public void disableCarbSuggestions(int duartionMinutes) {
+        carbsSuggestionsSuspendedUntil = System.currentTimeMillis() + (duartionMinutes*60*1000);
+        dismissSuggestion();
+    }
+
+    private void presentSuggestion(NotificationCompat.Builder builder) {
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(context, MainActivity.class);
+
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        stackBuilder.addParentStack(MainActivity.class);
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(resultPendingIntent);
+        builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(Constants.notificationID, builder.build());
+        rxBus.send(new EventNewOpenLoopNotification());
+
+        // Send to Wear
+        actionStringHandler.get().handleInitiate("changeRequest");
+    }
+
+    private void dismissSuggestion() {
+        // dismiss notifications
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(Constants.notificationID);
+        actionStringHandler.get().handleInitiate("cancelChangeRequest");
     }
 
     public void acceptChangeRequest() {

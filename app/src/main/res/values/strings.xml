@@ -194,6 +194,8 @@
 
     <string name="lgs">LGS</string>
     <string name="openloop_newsuggestion">New suggestion available</string>
+    <string name="carbssuggestion">Carbs Suggestion</string>
+    <string name="unsupportedclientver">Unsupported version of NSClient</string>
     <string name="unsupportednsversion">Unsupported version of Nightscout</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
@@ -324,6 +326,7 @@
     <string name="percent">Percent</string>
     <string name="absolute">Absolute</string>
     <string name="canceltemp">Cancel temp basal</string>
+    <string name="carbsreq">"%dg Additional Carbs Required Within %d Minutes</string>
     <string name="smscommunicator">SMS Communicator</string>
     <string name="waitingforpumpresult">Waiting for result</string>
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
@@ -774,10 +777,16 @@
     <string name="smb_shortname">SMB</string>
     <string name="key_use_smb" translatable="false">use_smb</string>
     <string name="key_use_uam" translatable="false">use_uam</string>
+    <string name="key_smb_enable_carbs_suggestions" translatable="false">key_smb_enable_carbs_suggestions</string>
+    <string name="key_smb_enable_carbs_suggestions_threshold" translatable="false">key_smb_enable_carbs_suggestions_threshold</string>
     <string name="enableuam">Enable UAM</string>
     <string name="enablesmb">Enable SMB</string>
+    <string name="enablecarbssuggestions">Enable Carbs Suggestions</string>
+    <string name="enable_carbs_suggestions_threshold">Minimum Carbs Required For Suggestion</string>
+    <string name="enable_carbs_suggestions_threshold_summary">Minimum grams of carbs to display a carbs suggestion alert. Carbs suggestions below this number will not trigger a notification.</string>
     <string name="enablesmb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
     <string name="enableuam_summary">Detection of Unannounced meals</string>
+    <string name="enablecarbssuggestions_summary">Enable carbs suggestions when BG is predicted to go below threshold</string>
     <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
     <string name="insulin_oref_peak">IOB Curve Peak Time</string>
     <string name="insulin_peak_time">Peak Time [min]</string>
@@ -1828,4 +1837,6 @@
     <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
     <string name="copyexistingvalues">Copy NS settings (if exists)?</string>
     <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
+    <string name="cob_required">(20g needed in 45min)</string>
+    <string name="overview_carbs_required">(%dg needed in %dmin)</string>
 </resources>

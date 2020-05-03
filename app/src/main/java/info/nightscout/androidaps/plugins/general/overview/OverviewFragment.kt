@@ -742,6 +742,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         overview_cob?.text = cobText
 
         val lastRun = loopPlugin.lastRun
+
+        if (Config.APS && lastRun?.constraintsProcessed != null && lastRun?.constraintsProcessed.carbsReq > 0) {
+            overview_cob_required.visibility = View.VISIBLE
+            var carbsRequiredString: String = String.format(resourceHelper.gs(R.string.overview_carbs_required), lastRun?.constraintsProcessed?.carbsReq, lastRun?.constraintsProcessed?.carbsReqWithin)
+            overview_cob_required.text = carbsRequiredString
+        } else {
+            overview_cob_required.visibility = View.GONE
+        }
+
         val predictionsAvailable = if (Config.APS) lastRun?.request?.hasPredictions == true else Config.NSCLIENT
 
         // pump status from ns
