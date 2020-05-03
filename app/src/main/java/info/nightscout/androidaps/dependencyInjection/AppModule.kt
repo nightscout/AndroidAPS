@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.dependencyInjection
 
 import android.content.Context
-import androidx.preference.PreferenceManager
 import dagger.Binds
 import dagger.Lazy
 import dagger.Module
@@ -22,19 +21,12 @@ import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import info.nightscout.androidaps.utils.sharedPreferences.SPImplementation
 import info.nightscout.androidaps.utils.storage.FileStorage
 import info.nightscout.androidaps.utils.storage.Storage
 import javax.inject.Singleton
 
 @Module(includes = [AppModule.AppBindings::class, PluginsModule::class])
 open class AppModule {
-
-    @Provides
-    @Singleton
-    fun provideSharedPreferences(context: Context, resourceHelper: ResourceHelper): SP {
-        return SPImplementation(PreferenceManager.getDefaultSharedPreferences(context), resourceHelper)
-    }
 
     @Provides
     @Singleton
