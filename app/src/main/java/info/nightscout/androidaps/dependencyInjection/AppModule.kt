@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dependencyInjection
 
+import android.app.Application
 import android.content.Context
 import androidx.preference.PreferenceManager
 import dagger.Binds
@@ -91,12 +92,6 @@ open class AppModule {
 
     @Provides
     @Singleton
-    fun provideResources(mainApp: MainApp): ResourceHelper {
-        return ResourceHelperImplementation(mainApp)
-    }
-
-    @Provides
-    @Singleton
     fun provideAAPSLogger(): AAPSLogger {
         return AAPSLoggerProduction()
 /*        if (BuildConfig.DEBUG) {
@@ -132,6 +127,7 @@ open class AppModule {
     interface AppBindings {
 
         @Binds fun bindContext(mainApp: MainApp): Context
+        @Binds fun bindApplication(mainApp: MainApp): Application
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
 
         @Binds

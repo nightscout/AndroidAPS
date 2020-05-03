@@ -12,8 +12,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
-import info.nightscout.androidaps.Config
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import javax.inject.Inject
 
 /**
