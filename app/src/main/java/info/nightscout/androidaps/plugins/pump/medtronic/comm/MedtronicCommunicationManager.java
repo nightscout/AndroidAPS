@@ -92,6 +92,11 @@ public class MedtronicCommunicationManager extends RileyLinkCommunicationManager
         return (E) pumpMessage;
     }
 
+    @Override
+    public void setPumpDeviceState(PumpDeviceState pumpDeviceState) {
+        this.medtronicPumpStatus.setPumpDeviceState(pumpDeviceState);
+    }
+
     public void setDoWakeUpBeforeCommand(boolean doWakeUp) {
         this.doWakeUpBeforeCommand = doWakeUp;
     }

@@ -60,13 +60,12 @@ public class MedtronicPumpStatus extends PumpStatus {
 
 
     @Inject
-    public MedtronicPumpStatus(
-            ResourceHelper resourceHelper,
+    public MedtronicPumpStatus(ResourceHelper resourceHelper,
             SP sp,
             RxBusWrapper rxBus,
             RileyLinkUtil rileyLinkUtil
     ) {
-        super();
+        super(PumpType.Medtronic_522_722);
         this.resourceHelper = resourceHelper;
         this.sp = sp;
         this.rxBus = rxBus;
@@ -75,7 +74,7 @@ public class MedtronicPumpStatus extends PumpStatus {
     }
 
 
-    private void initSettings() {
+    public void initSettings() {
 
         this.activeProfileName = "STD";
         this.reservoirRemainingUnits = 75d;
