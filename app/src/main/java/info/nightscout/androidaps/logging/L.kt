@@ -2,36 +2,39 @@ package info.nightscout.androidaps.logging
 
 import androidx.preference.PreferenceManager
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-object L {
+@Singleton
+class L @Inject constructor(
+    private val sp: SP
+) {
+
     private var logElements: MutableList<LogElement> = ArrayList()
 
-    const val CORE = "CORE"
-    const val BGSOURCE = "BGSOURCE"
-    const val DATASERVICE = "DATASERVICE"
-    const val DATABASE = "DATABASE"
-    const val DATAFOOD = "DATAFOOD"
-    const val DATATREATMENTS = "DATATREATMENTS"
-    const val NSCLIENT = "NSCLIENT"
-    const val PUMP = "PUMP"
-    const val PUMPCOMM = "PUMPCOMM"
-    const val PUMPBTCOMM = "PUMPBTCOMM"
+    companion object {
+        @Deprecated("Use Dagger")
+        lateinit var instance: L
 
-    init {
-        LTag.values().forEach { logElements.add(LogElement(it)) }
+        @Deprecated("Use Dagger")
+        @JvmStatic
+        fun isEnabled(ltag: LTag): Boolean {
+            return instance.findByName(ltag.name).enabled
+        }
     }
 
-    private fun findByName(name: String): LogElement {
+    init {
+        instance= this
+        LTag.values().forEach { logElements.add(LogElement(it, sp)) }
+    }
+
+    fun findByName(name: String): LogElement {
         for (element in logElements) {
             if (element.name == name) return element
         }
-        return LogElement(false)
-    }
-
-    @JvmStatic
-    fun isEnabled(name: String): Boolean {
-        return findByName(name).enabled
+        return LogElement(false, sp)
     }
 
     fun getLogElements(): List<LogElement> {
@@ -45,21 +48,22 @@ object L {
     }
 
     class LogElement {
+        var sp : SP
         var name: String
         var defaultValue: Boolean
         var enabled: Boolean
         private var requiresRestart = false
 
-        internal constructor(tag: LTag) {
+        internal constructor(tag: LTag, sp: SP) {
+            this.sp = sp
             this.name = tag.tag
             this.defaultValue = tag.defaultValue
             this.requiresRestart = tag.requiresRestart
-            //TODO: remove after getting rid of old logging style "if (L.isEnabled(...))"
-            @Suppress("DEPRECATION")
-            enabled = PreferenceManager.getDefaultSharedPreferences(MainApp.instance()).getBoolean(getSPName(), defaultValue)
+            enabled = sp.getBoolean(getSPName(), defaultValue)
         }
 
-        internal constructor(defaultValue: Boolean) {
+        internal constructor(defaultValue: Boolean, sp: SP) {
+            this.sp = sp
             name = "NONEXISTING"
             this.defaultValue = defaultValue
             enabled = defaultValue
@@ -69,8 +73,7 @@ object L {
 
         fun enable(enabled: Boolean) {
             this.enabled = enabled
-            @Suppress("DEPRECATION")
-            PreferenceManager.getDefaultSharedPreferences(MainApp.instance()).edit().putBoolean(getSPName(), enabled).apply()
+            sp.putBoolean(getSPName(), enabled)
         }
 
         fun resetToDefault() {

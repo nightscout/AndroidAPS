@@ -92,7 +92,7 @@ public class NSClientService extends DaggerService {
     @Inject NSClientPlugin nsClientPlugin;
     @Inject BuildHelper buildHelper;
 
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     static public PowerManager.WakeLock mWakeLock;
@@ -178,7 +178,7 @@ public class NSClientService extends DaggerService {
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    if (L.isEnabled(L.NSCLIENT))
+                    if (L.isEnabled(LTag.NSCLIENT))
                         log.debug("EventAppExit received");
                     destroy();
                     stopSelf();
@@ -367,7 +367,7 @@ public class NSClientService extends DaggerService {
     private Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            if (L.isEnabled(L.NSCLIENT))
+            if (L.isEnabled(LTag.NSCLIENT))
                 log.debug("disconnect reason: {}", args);
             rxBus.send(new EventNSClientNewLog("NSCLIENT", "disconnect event"));
         }
@@ -804,7 +804,7 @@ public class NSClientService extends DaggerService {
             if (mSocket == null || !mSocket.connected()) return;
 
             if (lastResendTime > System.currentTimeMillis() - 10 * 1000L) {
-                if (L.isEnabled(L.NSCLIENT))
+                if (L.isEnabled(LTag.NSCLIENT))
                     log.debug("Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
                 return;
             }

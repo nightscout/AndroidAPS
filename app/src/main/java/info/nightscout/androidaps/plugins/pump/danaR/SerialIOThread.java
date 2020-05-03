@@ -4,13 +4,13 @@ import android.bluetooth.BluetoothSocket;
 import android.os.SystemClock;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageHashTableBase;
@@ -21,7 +21,7 @@ import info.nightscout.androidaps.utils.CRC;
  * Created by mike on 17.07.2016.
  */
 public class SerialIOThread extends AbstractSerialIOThread {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.PUMPBTCOMM);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.PUMPBTCOMM);
 
     private InputStream mInputStream = null;
     private OutputStream mOutputStream = null;
@@ -76,7 +76,7 @@ public class SerialIOThread extends AbstractSerialIOThread {
                         message = hashTable.findMessage(command);
                     }
 
-                    if (L.isEnabled(L.PUMPBTCOMM))
+                    if (L.isEnabled(LTag.PUMPBTCOMM))
                         log.debug("<<<<< " + message.getMessageName() + " " + MessageBase.toHexString(extractedBuff));
 
                     // process the message content
@@ -152,7 +152,7 @@ public class SerialIOThread extends AbstractSerialIOThread {
         processedMessage = message;
 
         byte[] messageBytes = message.getRawMessageBytes();
-        if (L.isEnabled(L.PUMPBTCOMM))
+        if (L.isEnabled(LTag.PUMPBTCOMM))
             log.debug(">>>>> " + message.getMessageName() + " " + MessageBase.toHexString(messageBytes));
 
         try {
@@ -172,11 +172,11 @@ public class SerialIOThread extends AbstractSerialIOThread {
         SystemClock.sleep(200);
         if (!message.isReceived()) {
             message.handleMessageNotReceived();
-            if (L.isEnabled(L.PUMPBTCOMM))
+            if (L.isEnabled(LTag.PUMPBTCOMM))
                 log.error("Reply not received " + message.getMessageName());
             if (message.getCommand() == 0xF0F1) {
                 danaRPump.setNewPump(false);
-                if (L.isEnabled(L.PUMPCOMM))
+                if (L.isEnabled(LTag.PUMPCOMM))
                     log.debug("Old firmware detected");
             }
         }
@@ -188,28 +188,28 @@ public class SerialIOThread extends AbstractSerialIOThread {
         try {
             mInputStream.close();
         } catch (Exception e) {
-            if (L.isEnabled(L.PUMPBTCOMM))
+            if (L.isEnabled(LTag.PUMPBTCOMM))
                 log.debug(e.getMessage());
         }
         try {
             mOutputStream.close();
         } catch (Exception e) {
-            if (L.isEnabled(L.PUMPBTCOMM))
+            if (L.isEnabled(LTag.PUMPBTCOMM))
                 log.debug(e.getMessage());
         }
         try {
             mRfCommSocket.close();
         } catch (Exception e) {
-            if (L.isEnabled(L.PUMPBTCOMM))
+            if (L.isEnabled(LTag.PUMPBTCOMM))
                 log.debug(e.getMessage());
         }
         try {
             System.runFinalization();
         } catch (Exception e) {
-            if (L.isEnabled(L.PUMPBTCOMM))
+            if (L.isEnabled(LTag.PUMPBTCOMM))
                 log.debug(e.getMessage());
         }
-        if (L.isEnabled(L.PUMPBTCOMM))
+        if (L.isEnabled(LTag.PUMPBTCOMM))
             log.debug("Disconnected: " + reason);
     }
 

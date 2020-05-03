@@ -18,13 +18,12 @@ package info.nightscout.androidaps.utils;
 import android.os.SystemClock;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /**
@@ -40,7 +39,7 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
  * </pre>
  */
 public class SntpClient {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.CORE);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.CORE);
 
     //private static final int REFERENCE_TIME_OFFSET = 16;
     private static final int ORIGINATE_TIME_OFFSET = 24;

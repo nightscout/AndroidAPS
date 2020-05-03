@@ -2,13 +2,12 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms;
 
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder;
@@ -23,7 +22,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDeco
 
 public class MedtronicCGMSHistoryDecoder extends MedtronicHistoryDecoder<CGMSHistoryEntry> {
 
-    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(L.PUMPCOMM);
+    private static final Logger LOG = StacktraceLoggerWrapper.getLogger(LTag.PUMPCOMM);
 
 
     // CGMSValuesWriter cgmsValuesWriter = null;

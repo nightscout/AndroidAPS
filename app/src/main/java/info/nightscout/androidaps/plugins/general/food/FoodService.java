@@ -16,7 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.events.EventFoodDatabaseChanged;
 import info.nightscout.androidaps.events.EventNsFood;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -43,7 +43,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
-    private Logger log = StacktraceLoggerWrapper.getLogger(L.DATAFOOD);
+    private Logger log = StacktraceLoggerWrapper.getLogger(LTag.DATAFOOD);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     private static final ScheduledExecutorService foodEventWorker = Executors.newSingleThreadScheduledExecutor();
@@ -98,7 +98,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public void onCreate() {
         super.onCreate();
         try {
-            if (L.isEnabled(L.DATAFOOD))
+            if (L.isEnabled(LTag.DATAFOOD))
                 log.info("onCreate");
             TableUtils.createTableIfNotExists(this.getConnectionSource(), Food.class);
         } catch (SQLException e) {
@@ -108,7 +108,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     }
 
     public void onUpgrade(ConnectionSource connectionSource, int oldVersion, int newVersion) {
-        if (L.isEnabled(L.DATAFOOD))
+        if (L.isEnabled(LTag.DATAFOOD))
             log.info("onUpgrade");
 //            this.resetFood();
     }
@@ -147,7 +147,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
 
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(L.DATAFOOD))
+                if (L.isEnabled(LTag.DATAFOOD))
                     log.debug("Firing EventFoodChange");
                 RxBus.Companion.getINSTANCE().send(event);
                 callback.setPost(null);
@@ -258,7 +258,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public void deleteByNSId(String _id) throws SQLException {
         Food stored = this.findByNSId(_id);
         if (stored != null) {
-            if (L.isEnabled(L.DATAFOOD))
+            if (L.isEnabled(LTag.DATAFOOD))
                 log.debug("Removing Food record from database: " + stored.toString());
             this.delete(stored);
         }
@@ -312,7 +312,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public void createOrUpdate(Food food) {
         try {
             this.getDao().createOrUpdate(food);
-            if (L.isEnabled(L.DATAFOOD))
+            if (L.isEnabled(LTag.DATAFOOD))
                 log.debug("Created or Updated: " + food.toString());
         } catch (SQLException e) {
             log.error("Unable to createOrUpdate Food", e);
@@ -323,7 +323,7 @@ public class FoodService extends OrmLiteBaseService<DatabaseHelper> {
     public void create(Food food) {
         try {
             this.getDao().create(food);
-            if (L.isEnabled(L.DATAFOOD))
+            if (L.isEnabled(LTag.DATAFOOD))
                 log.debug("New record: " + food.toString());
         } catch (SQLException e) {
             log.error("Unable to create Food", e);

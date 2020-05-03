@@ -11,7 +11,6 @@ import info.nightscout.androidaps.events.EventInitializationChanged
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
@@ -71,16 +70,15 @@ class DanaRUserOptionsActivity : NoSplashAppCompatActivity() {
 
         save_user_options.setOnClickListener { onSaveClick() }
 
-        if (L.isEnabled(L.PUMP))
-            aapsLogger.debug(LTag.PUMP,
-                "UserOptionsLoaded:" + (System.currentTimeMillis() - danaRPump.lastConnection) / 1000 + " s ago"
-                    + "\ntimeDisplayType:" + danaRPump.timeDisplayType
-                    + "\nbuttonScroll:" + danaRPump.buttonScrollOnOff
-                    + "\ntimeDisplayType:" + danaRPump.timeDisplayType
-                    + "\nlcdOnTimeSec:" + danaRPump.lcdOnTimeSec
-                    + "\nbackLight:" + danaRPump.backlightOnTimeSec
-                    + "\npumpUnits:" + danaRPump.units
-                    + "\nlowReservoir:" + danaRPump.lowReservoirRate)
+        aapsLogger.debug(LTag.PUMP,
+            "UserOptionsLoaded:" + (System.currentTimeMillis() - danaRPump.lastConnection) / 1000 + " s ago"
+                + "\ntimeDisplayType:" + danaRPump.timeDisplayType
+                + "\nbuttonScroll:" + danaRPump.buttonScrollOnOff
+                + "\ntimeDisplayType:" + danaRPump.timeDisplayType
+                + "\nlcdOnTimeSec:" + danaRPump.lcdOnTimeSec
+                + "\nbackLight:" + danaRPump.backlightOnTimeSec
+                + "\npumpUnits:" + danaRPump.units
+                + "\nlowReservoir:" + danaRPump.lowReservoirRate)
 
         danar_screentimeout.setParams(danaRPump.lcdOnTimeSec.toDouble(), 5.0, 240.0, 5.0, DecimalFormat("1"), false, save_user_options)
         danar_backlight.setParams(danaRPump.backlightOnTimeSec.toDouble(), 1.0, 60.0, 1.0, DecimalFormat("1"), false, save_user_options)
