@@ -84,7 +84,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     private static AapsOmnipodManager instance;
     private OmnipodPumpStatus pumpStatus;
-    private Integer nextPodAddress;
 
     private Date lastBolusTime;
     private Double lastBolusUnits;
@@ -99,7 +98,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             OmnipodUtil.setPodSessionState(podSessionState);
             updatePumpStatus(podSessionState);
         });
-        this.nextPodAddress = OmnipodUtil.getNextPodAddress();
         this.pumpStatus = _pumpStatus;
         instance = this;
     }
@@ -577,6 +575,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     private int obtainNextPodAddress() {
+        Integer nextPodAddress = OmnipodUtil.getNextPodAddress();
         if(nextPodAddress == null) {
             nextPodAddress = OmnipodManager.generateRandomAddress();
             OmnipodUtil.setNextPodAddress(nextPodAddress);
@@ -586,7 +585,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     private void removeNextPodAddress() {
-        nextPodAddress = null;
         OmnipodUtil.removeNextPodAddress();
     }
 
