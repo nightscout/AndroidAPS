@@ -57,6 +57,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask;
@@ -95,7 +96,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
 @Singleton
-public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInterface {
+public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInterface, RileyLinkPumpDevice {
 
     private final SP sp;
     private final RileyLinkUtil rileyLinkUtil;
@@ -234,6 +235,11 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         rileyLinkMedtronicService.resetRileyLinkConfiguration();
     }
 
+    @Override
+    public boolean hasTuneUp() {
+        return true;
+    }
+
     @Override public void doTuneUpDevice() {
         rileyLinkMedtronicService.doTuneUpDevice();
     }
@@ -328,6 +334,11 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
         return isServiceSet() && isInitialized;
     }
 
+
+    @Override
+    public void setIsBusy(boolean isBusy_) {
+        isBusy = isBusy_;
+    }
 
     @Override
     public boolean isBusy() {
