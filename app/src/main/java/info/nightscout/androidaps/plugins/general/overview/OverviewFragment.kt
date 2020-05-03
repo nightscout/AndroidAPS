@@ -57,6 +57,7 @@ import info.nightscout.androidaps.plugins.source.DexcomPlugin
 import info.nightscout.androidaps.plugins.source.XdripPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.CommandQueue
+import info.nightscout.androidaps.skins.SkinProvider
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
@@ -131,6 +132,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var overviewMenus: OverviewMenus
+    @Inject lateinit var skinProvider: SkinProvider
 
     private val disposable = CompositeDisposable()
 
@@ -161,19 +163,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         smallHeight = screenHeight <= Constants.SMALL_HEIGHT
         val landscape = screenHeight < screenWidth
 
-        return when {
-            resourceHelper.gb(R.bool.isTablet) && Config.NSCLIENT ->
-                inflater.inflate(R.layout.overview_fragment_nsclient_tablet, container, false)
-
-            Config.NSCLIENT                                       ->
-                inflater.inflate(R.layout.overview_fragment_nsclient, container, false)
-
-            smallHeight || landscape                              ->
-                inflater.inflate(R.layout.overview_fragment_landscape, container, false)
-
-            else                                                  ->
-                inflater.inflate(R.layout.overview_fragment, container, false)
-        }
+        return inflater.inflate(skinProvider.activeSkin().overviewLayout(landscape, resourceHelper.gb(R.bool.isTablet), smallHeight), container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
