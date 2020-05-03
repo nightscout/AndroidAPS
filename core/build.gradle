@@ -51,11 +51,16 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:$dagger_version"
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
+    //Logger
     implementation 'org.slf4j:slf4j-api:1.7.30'
+    //Fabric
     implementation 'com.google.firebase:firebase-core:17.3.0'
     implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
         transitive = true;
     }
+    //RxBus
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+    implementation "org.apache.commons:commons-lang3:3.9"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
