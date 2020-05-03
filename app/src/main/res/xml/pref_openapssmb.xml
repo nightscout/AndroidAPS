@@ -73,12 +73,6 @@
             android:summary="@string/enablesmbaftercarbs_summary"
             android:title="@string/enablesmbaftercarbs" />
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_skip_neutral_temps"
-            android:summary="@string/skip_neutral_temps_summary"
-            android:title="@string/skip_neutral_temps_title" />
-
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:defaultValue="3"
             android:digits="0123456789"
