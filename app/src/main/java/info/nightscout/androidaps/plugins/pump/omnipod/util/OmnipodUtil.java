@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
@@ -38,6 +39,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDevice
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod_dash.OmnipodDashPumpPlugin;
 import info.nightscout.androidaps.utils.OKDialog;
+import info.nightscout.androidaps.utils.SP;
 
 /**
  * Created by andy on 4/8/19.
@@ -47,7 +49,6 @@ public class OmnipodUtil extends RileyLinkUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
-    private static boolean lowLevelDebug = true;
     private static RileyLinkOmnipodService omnipodService;
     private static OmnipodPumpStatus omnipodPumpStatus;
     private static OmnipodCommandType currentCommand;
@@ -63,60 +64,13 @@ public class OmnipodUtil extends RileyLinkUtil {
         return gsonInstance;
     }
 
-    public static int makeUnsignedShort(int b2, int b1) {
-        int k = (b2 & 0xff) << 8 | b1 & 0xff;
-        return k;
-    }
-
-    public static byte[] getByteArrayFromUnsignedShort(int shortValue, boolean returnFixedSize) {
-        byte highByte = (byte) (shortValue >> 8 & 0xFF);
-        byte lowByte = (byte) (shortValue & 0xFF);
-
-        if (highByte > 0) {
-            return createByteArray(highByte, lowByte);
-        } else {
-            return returnFixedSize ? createByteArray(highByte, lowByte) : createByteArray(lowByte);
-        }
-
-    }
-
-
-    public static byte[] createByteArray(byte... data) {
-        return data;
-    }
-
-
-    public static byte[] createByteArray(List<Byte> data) {
-
-        byte[] array = new byte[data.size()];
-
-        for (int i = 0; i < data.size(); i++) {
-            array[i] = data.get(i);
-        }
-
-        return array;
-    }
-
-
-    public static boolean isLowLevelDebug() {
-        return lowLevelDebug;
-    }
-
-
-    public static void setLowLevelDebug(boolean lowLevelDebug) {
-        OmnipodUtil.lowLevelDebug = lowLevelDebug;
-    }
-
-
     public static OmnipodCommunicationManagerInterface getOmnipodCommunicationManager() {
         return (OmnipodCommunicationManagerInterface) RileyLinkUtil.rileyLinkCommunicationManager;
     }
 
-
     public static RileyLinkOmnipodService getOmnipodService() {
         return OmnipodUtil.omnipodService;
     }
-
 
     public static void setOmnipodService(RileyLinkOmnipodService medtronicService) {
         OmnipodUtil.omnipodService = medtronicService;
@@ -126,23 +80,19 @@ public class OmnipodUtil extends RileyLinkUtil {
         return OmnipodUtil.currentCommand;
     }
 
-
     // FIXME
     public static void setCurrentCommand(OmnipodCommandType currentCommand) {
         OmnipodUtil.currentCommand = currentCommand;
 
         if (currentCommand != null)
             historyRileyLink.add(new RLHistoryItem(currentCommand));
-
     }
-
 
     public static boolean isSame(Double d1, Double d2) {
         double diff = d1 - d2;
 
         return (Math.abs(diff) <= 0.000001);
     }
-
 
     public static void displayNotConfiguredDialog(Context context) {
         OKDialog.show(context, MainApp.gs(R.string.combo_warning),
@@ -239,12 +189,33 @@ public class OmnipodUtil extends RileyLinkUtil {
         return OmnipodDashPumpPlugin.getPlugin().isEnabled(PluginType.PUMP);
     }
 
-
     public static void setPumpType(PumpType pumpType) {
         OmnipodUtil.pumpType = pumpType;
     }
 
     public static PumpType getPumpType() {
         return pumpType;
+    }
+
+    public static Integer getNextPodAddress() {
+        if(SP.contains(OmnipodConst.Prefs.NextPodAddress)) {
+            int nextPodAddress = SP.getInt(OmnipodConst.Prefs.NextPodAddress, 0);
+            if (OmnipodManager.isValidAddress(nextPodAddress)) {
+                return nextPodAddress;
+            }
+        }
+        return null;
+    }
+
+    public static boolean hasNextPodAddress() {
+        return getNextPodAddress() != null;
+    }
+
+    public static void setNextPodAddress(int address) {
+        SP.putInt(OmnipodConst.Prefs.NextPodAddress, address);
+    }
+
+    public static void removeNextPodAddress() {
+        SP.remove(OmnipodConst.Prefs.NextPodAddress);
     }
 }

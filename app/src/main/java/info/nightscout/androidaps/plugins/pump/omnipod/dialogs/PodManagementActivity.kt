@@ -144,7 +144,7 @@ class PodManagementActivity : NoSplashAppCompatActivity() {
         val isPodSessionActive = (OmnipodUtil.getPodSessionState() != null)
 
         initpod_remove_pod.isEnabled = isPodSessionActive
-        initpod_reset_pod.isEnabled = isPodSessionActive
+        initpod_reset_pod.isEnabled = isPodSessionActive || OmnipodUtil.hasNextPodAddress()
 
         if (OmnipodUtil.getDriverState() == OmnipodDriverState.NotInitalized) {
             // if rileylink is not running we disable all operations

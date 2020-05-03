@@ -597,6 +597,10 @@ public class OmnipodManager {
         return 0x1f000000 | (new Random().nextInt() & 0x000fffff);
     }
 
+    public static boolean isValidAddress(int address) {
+        return (0x1f000000 | (address & 0x000fffff)) == address;
+    }
+
     public static class BolusCommandResult {
         private final CommandDeliveryStatus commandDeliveryStatus;
         private final SingleSubject<BolusDeliveryResult> deliveryResultSubject;

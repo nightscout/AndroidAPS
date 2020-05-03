@@ -84,6 +84,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
     private static AapsOmnipodManager instance;
     private OmnipodPumpStatus pumpStatus;
+    private Integer nextPodAddress;
 
     private Date lastBolusTime;
     private Double lastBolusUnits;
@@ -98,6 +99,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             OmnipodUtil.setPodSessionState(podSessionState);
             updatePumpStatus(podSessionState);
         });
+        this.nextPodAddress = OmnipodUtil.getNextPodAddress();
         this.pumpStatus = _pumpStatus;
         instance = this;
     }
@@ -171,8 +173,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         long time = System.currentTimeMillis();
         if (PodInitActionType.PairAndPrimeWizardStep.equals(podInitActionType)) {
             try {
-                // BS FIXME use static address for retries
-                int address = OmnipodManager.generateRandomAddress();
+                int address = obtainNextPodAddress();
 
                 Disposable disposable = delegate.pairAndPrime(address).subscribe(res -> //
                         handleSetupActionResult(podInitActionType, podInitReceiver, res, time, null));
@@ -279,6 +280,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         reportImplicitlyCanceledTbr();
 
         OmnipodUtil.setPodSessionState(null);
+        OmnipodUtil.removeNextPodAddress();
 
         addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.ResetPodState, null);
 
@@ -544,18 +546,15 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         }
     }
 
-
-    public long addSuccessToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
+    private long addSuccessToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
         return addToHistory(requestTime, entryType, data, true);
     }
 
-    public long addFailureToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
+    private long addFailureToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
         return addToHistory(requestTime, entryType, data, false);
     }
 
-
-    public long addToHistory(long requestTime, PodHistoryEntryType entryType, Object data, boolean success) {
-
+    private long addToHistory(long requestTime, PodHistoryEntryType entryType, Object data, boolean success) {
         PodHistory podHistory = new PodHistory(requestTime, entryType);
 
         if (data != null) {
@@ -572,7 +571,15 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         MainApp.getDbHelper().createOrUpdate(podHistory);
 
         return podHistory.getPumpId();
+    }
 
+    private int obtainNextPodAddress() {
+        if(nextPodAddress == null) {
+            nextPodAddress = OmnipodManager.generateRandomAddress();
+            OmnipodUtil.setNextPodAddress(nextPodAddress);
+        }
+
+        return nextPodAddress;
     }
 
     private void handleSetupActionResult(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, SetupActionResult res, long time, Profile profile) {
