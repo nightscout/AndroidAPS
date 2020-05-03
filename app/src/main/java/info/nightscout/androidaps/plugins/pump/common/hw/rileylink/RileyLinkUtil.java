@@ -18,6 +18,7 @@ import javax.inject.Singleton;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6b;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.BleAdvertisedData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceResult;
@@ -36,6 +37,9 @@ public class RileyLinkUtil {
 
     private RileyLinkEncodingType encoding;
     private Encoding4b6b encoding4b6b;
+
+    // TODO maybe not needed
+    private RileyLinkTargetFrequency rileyLinkTargetFrequency;
 
     @Inject
     public RileyLinkUtil() {
@@ -153,5 +157,9 @@ public class RileyLinkUtil {
 
     public Encoding4b6b getEncoding4b6b() {
         return encoding4b6b;
+    }
+
+    public void setRileyLinkTargetFrequency(RileyLinkTargetFrequency rileyLinkTargetFrequency_) {
+        this.rileyLinkTargetFrequency = rileyLinkTargetFrequency_;
     }
 }

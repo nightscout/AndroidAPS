@@ -57,13 +57,13 @@ public enum PumpType {
             new DoseSettings(0.01d, 15, 24 * 60, 0.05d), //
             PumpTempBasalType.Percent,
             new DoseSettings(10, 15, 24 * 60, 0d, 250d), PumpCapability.BasalRate_Duration15and30minAllowed, //
-            0.02d, null, 0.01d, DoseStepSize.InsightBolus, PumpCapability.InsightCapabilities, false, false), //
+            0.02d, null, 0.01d, DoseStepSize.InsightBolus, PumpCapability.InsightCapabilities), //
 
     AccuChekSolo("Accu-Chek Solo", ManufacturerType.Roche, "Solo", 0.01d, null, //
             new DoseSettings(0.01d, 15, 24 * 60, 0.05d), //
             PumpTempBasalType.Percent,
             new DoseSettings(10, 15, 24 * 60, 0d, 250d), PumpCapability.BasalRate_Duration15and30minAllowed, //
-            0.02d, null, 0.01d, DoseStepSize.InsightBolus, PumpCapability.InsightCapabilities, false, false), //
+            0.02d, null, 0.01d, DoseStepSize.InsightBolus, PumpCapability.InsightCapabilities), //
 
 
     // Animas

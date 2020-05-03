@@ -8,6 +8,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
+
 
 /**
  * Created by andy on 5/19/18.
@@ -23,6 +25,7 @@ public class RLHistoryItem {
 
     private RileyLinkTargetDevice targetDevice;
     private PumpDeviceState pumpDeviceState;
+    private OmnipodCommandType omnipodCommandType;
 
 
     public RLHistoryItem(RileyLinkServiceState serviceState, RileyLinkError errorCode,
@@ -47,6 +50,13 @@ public class RLHistoryItem {
         this.dateTime = new LocalDateTime();
         this.medtronicCommandType = medtronicCommandType;
         source = RLHistoryItemSource.MedtronicCommand;
+    }
+
+
+    public RLHistoryItem(OmnipodCommandType omnipodCommandType) {
+        this.dateTime = new LocalDateTime();
+        this.omnipodCommandType = omnipodCommandType;
+        source = RLHistoryItemSource.OmnipodCommand;
     }
 
 
@@ -78,6 +88,9 @@ public class RLHistoryItem {
 
             case MedtronicCommand:
                 return medtronicCommandType.name();
+
+            case OmnipodCommand:
+                return omnipodCommandType.name();
 
             default:
                 return "Unknown Description";
