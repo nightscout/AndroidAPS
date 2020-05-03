@@ -177,6 +177,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
                 Disposable disposable = delegate.pairAndPrime(address).subscribe(res -> //
                         handleSetupActionResult(podInitActionType, podInitReceiver, res, time, null));
+
+                removeNextPodAddress();
+
                 return new PumpEnactResult().success(true).enacted(true);
             } catch (Exception ex) {
                 String comment = handleAndTranslateException(ex);
@@ -580,6 +583,11 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         }
 
         return nextPodAddress;
+    }
+
+    private void removeNextPodAddress() {
+        nextPodAddress = null;
+        OmnipodUtil.removeNextPodAddress();
     }
 
     private void handleSetupActionResult(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, SetupActionResult res, long time, Profile profile) {
