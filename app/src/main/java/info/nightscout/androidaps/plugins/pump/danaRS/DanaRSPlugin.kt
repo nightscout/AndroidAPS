@@ -87,9 +87,6 @@ class DanaRSPlugin @Inject constructor(
             pref.summary = value
                 ?: resourceHelper.gs(R.string.rileylink_error_address_not_set_short)
         }
-        if (pref.key == resourceHelper.gs(R.string.key_danars_password)) {
-            if (danaRPump.v3RSPump) pref
-        }
     }
 
     override fun onStart() {
