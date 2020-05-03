@@ -195,7 +195,6 @@
     <string name="lgs">LGS</string>
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="carbssuggestion">Carbs Suggestion</string>
-    <string name="unsupportedclientver">Unsupported version of NSClient</string>
     <string name="unsupportednsversion">Unsupported version of Nightscout</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
@@ -777,8 +776,8 @@
     <string name="smb_shortname">SMB</string>
     <string name="key_use_smb" translatable="false">use_smb</string>
     <string name="key_use_uam" translatable="false">use_uam</string>
-    <string name="key_smb_enable_carbs_suggestions" translatable="false">key_smb_enable_carbs_suggestions</string>
-    <string name="key_smb_enable_carbs_suggestions_threshold" translatable="false">key_smb_enable_carbs_suggestions_threshold</string>
+    <string name="key_smb_enable_carbs_suggestions" translatable="false">smb_enable_carbs_suggestions</string>
+    <string name="key_smb_enable_carbs_suggestions_threshold" translatable="false">smb_enable_carbs_suggestions_threshold</string>
     <string name="enableuam">Enable UAM</string>
     <string name="enablesmb">Enable SMB</string>
     <string name="enablecarbssuggestions">Enable Carbs Suggestions</string>
