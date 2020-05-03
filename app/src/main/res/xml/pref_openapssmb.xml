@@ -152,6 +152,7 @@
         <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
             android:key="@string/key_carbsReqThreshold"
             android:title="@string/carbsReqThreshold"
+            android:summary="@string/carbsReqThreshold_summary"
             android:defaultValue="1"
             android:dialogMessage="@string/carbsReqThreshold_summary"
             android:digits="0123456789"
