@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.db.ExtendedBolus
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -10,6 +11,7 @@ import info.nightscout.androidaps.utils.DateUtil
 import kotlin.math.ceil
 
 class MsgStatusBolusExtended(
+    private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
     private val danaRPump: DanaRPump,
     private val activePlugin: ActivePluginProvider
@@ -60,11 +62,11 @@ class MsgStatusBolusExtended(
         if (extendedBolus != null) {
             if (danaRPump.isExtendedInProgress) {
                 if (extendedBolus.absoluteRate() != danaRPump.extendedBolusAbsoluteRate) { // Close current extended
-                    val exStop = ExtendedBolus(danaRPump.extendedBolusStart - 1000)
+                    val exStop = ExtendedBolus(injector, danaRPump.extendedBolusStart - 1000)
                     exStop.source = Source.USER
                     activePlugin.activeTreatments.addToHistoryExtendedBolus(exStop)
                     // Create new
-                    val newExtended = ExtendedBolus()
+                    val newExtended = ExtendedBolus(injector)
                         .date(danaRPump.extendedBolusStart)
                         .insulin(danaRPump.extendedBolusAmount)
                         .durationInMinutes(danaRPump.extendedBolusMinutes)
@@ -73,13 +75,13 @@ class MsgStatusBolusExtended(
                 }
             } else {
                 // Close current temp basal
-                val exStop = ExtendedBolus(now)
+                val exStop = ExtendedBolus(injector, now)
                     .source(Source.USER)
                 activePlugin.activeTreatments.addToHistoryExtendedBolus(exStop)
             }
         } else {
             if (danaRPump.isExtendedInProgress) { // Create new
-                val newExtended = ExtendedBolus()
+                val newExtended = ExtendedBolus(injector)
                     .date(danaRPump.extendedBolusStart)
                     .insulin(danaRPump.extendedBolusAmount)
                     .durationInMinutes(danaRPump.extendedBolusMinutes)

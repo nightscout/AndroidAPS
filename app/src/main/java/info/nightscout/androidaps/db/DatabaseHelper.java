@@ -44,6 +44,7 @@ import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
@@ -999,7 +1000,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void createTempBasalFromJsonIfNotExists(JSONObject trJson) {
         try {
             if (trJson.has("originalExtendedAmount")) { // extended bolus uploaded as temp basal
-                ExtendedBolus extendedBolus = new ExtendedBolus()
+                ExtendedBolus extendedBolus = new ExtendedBolus(MainApp.instance())
                         .source(Source.NIGHTSCOUT)
                         .date(trJson.getLong("mills"))
                         .pumpId(trJson.has("pumpId") ? trJson.getLong("pumpId") : 0)
@@ -1014,7 +1015,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
                 createOrUpdate(extendedBolus);
             } else if (trJson.has("isFakedTempBasal")) { // extended bolus end uploaded as temp basal end
-                ExtendedBolus extendedBolus = new ExtendedBolus();
+                ExtendedBolus extendedBolus = new ExtendedBolus(MainApp.instance());
                 extendedBolus.source = Source.NIGHTSCOUT;
                 extendedBolus.date = trJson.getLong("mills");
                 extendedBolus.pumpId = trJson.has("pumpId") ? trJson.getLong("pumpId") : 0;
@@ -1029,7 +1030,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
                 createOrUpdate(extendedBolus);
             } else {
-                TemporaryBasal tempBasal = new TemporaryBasal()
+                TemporaryBasal tempBasal = new TemporaryBasal( MainApp.instance())
                         .date(trJson.getLong("mills"))
                         .source(Source.NIGHTSCOUT)
                         .pumpId(trJson.has("pumpId") ? trJson.getLong("pumpId") : 0);
@@ -1288,7 +1289,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      */
 
     public void createExtendedBolusFromJsonIfNotExists(JSONObject json) {
-        ExtendedBolus extendedBolus = ExtendedBolus.createFromJson(json);
+        ExtendedBolus extendedBolus = ExtendedBolus.createFromJson(MainApp.instance(), json);
         if (extendedBolus != null)
             createOrUpdate(extendedBolus);
     }
@@ -1480,7 +1481,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             List<CareportalEvent> list = getDaoCareportalEvents().query(preparedQuery);
             CareportalEvent careportalEvent;
             if (list.size() == 0) {
-                careportalEvent = new CareportalEvent();
+                careportalEvent = new CareportalEvent(MainApp.instance());
                 careportalEvent.source = Source.NIGHTSCOUT;
                 if (L.isEnabled(L.DATABASE))
                     log.debug("Adding CareportalEvent record to database: " + trJson.toString());
@@ -1708,9 +1709,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 }
   */
 
-    public void createProfileSwitchFromJsonIfNotExists(JSONObject trJson) {
+    public void createProfileSwitchFromJsonIfNotExists(ActivePluginProvider activePluginProvider, JSONObject trJson) {
         try {
-            ProfileSwitch profileSwitch = new ProfileSwitch(MainApp.instance().injector);
+            ProfileSwitch profileSwitch = new ProfileSwitch(MainApp.instance());
             profileSwitch.date = trJson.getLong("mills");
             if (trJson.has("duration"))
                 profileSwitch.durationInMinutes = trJson.getInt("duration");
@@ -1725,7 +1726,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (trJson.has("profileJson"))
                 profileSwitch.profileJson = trJson.getString("profileJson");
             else {
-                ProfileInterface profileInterface = PluginStore.Companion.getInstance().getActiveProfileInterface();
+                ProfileInterface profileInterface = activePluginProvider.getActiveProfileInterface();
                 ProfileStore store = profileInterface.getProfile();
                 if (store != null) {
                     Profile profile = store.getSpecificProfile(profileSwitch.profileName);
