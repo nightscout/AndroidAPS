@@ -9,14 +9,16 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.FirmwareVersion;
-import info.nightscout.androidaps.testing.mockers.AAPSMocker;
+//import info.nightscout.androidaps.testing.mockers.AAPSMocker;
 import info.nightscout.androidaps.utils.SP;
 
 import static org.junit.Assert.assertEquals;
@@ -32,6 +34,8 @@ public class PodSessionStateTest {
 ////        AAPSMocker.mockSP();
 //    }
 
+    @Mock HasAndroidInjector hasAndroidInjector;
+
     //@Test
     public void times() {
         DateTimeZone timeZone = DateTimeZone.UTC;
@@ -45,7 +49,7 @@ public class PodSessionStateTest {
         PodSessionState podSessionState = new PodSessionState(timeZone, 0x0,
                 new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2),
-                0, 0, 0, 0);
+                0, 0, 0, 0, hasAndroidInjector);
 
         assertEquals(now, podSessionState.getTime());
         assertEquals(Duration.standardHours(1).plus(Duration.standardMinutes(2).plus(Duration.standardSeconds(3))), podSessionState.getScheduleOffset());
@@ -64,7 +68,7 @@ public class PodSessionStateTest {
         PodSessionState podSessionState = new PodSessionState(timeZone, 0x0,
                 new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2),
-                0, 0, 0, 0);
+                0, 0, 0, 0, hasAndroidInjector);
 
         DateTimeZone newTimeZone = DateTimeZone.forOffsetHours(2);
         DateTimeZone.setDefault(newTimeZone);
@@ -88,7 +92,7 @@ public class PodSessionStateTest {
         PodSessionState podSessionState = new PodSessionState(timeZone, 0x0,
                 new FirmwareVersion(1, 1, 1),
                 new FirmwareVersion(2, 2, 2),
-                0, 0, 0, 0);
+                0, 0, 0, 0, hasAndroidInjector);
 
         DateTimeZone newTimeZone = DateTimeZone.forOffsetHours(2);
         DateTimeZone.setDefault(newTimeZone);
