@@ -15,8 +15,6 @@ interface ResourceHelper {
     fun gsa(@ArrayRes id:Int): Array<String>
     fun openRawResourceFd(@RawRes id : Int) : AssetFileDescriptor?
 
-    fun getIcon() : Int
-    fun getNotificationIcon() : Int
     fun decodeResource(id : Int) : Bitmap
     fun getDisplayMetrics(): DisplayMetrics
     fun dpToPx(dp: Int): Int
