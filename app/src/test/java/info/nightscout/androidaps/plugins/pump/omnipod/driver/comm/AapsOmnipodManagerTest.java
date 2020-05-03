@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.comm;
 
 import org.joda.time.Duration;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -87,7 +88,7 @@ public class AapsOmnipodManagerTest {
     @Test
     public void invalidProfileNonZeroOffset() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("First basal schedule entry should have 0 offset");
+        thrown.expectMessage("Invalid start time");
 
         Profile profile = mock(Profile.class);
 
