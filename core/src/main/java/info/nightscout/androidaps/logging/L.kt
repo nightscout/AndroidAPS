@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.logging
 
-import androidx.preference.PreferenceManager
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import java.util.*
 import javax.inject.Inject

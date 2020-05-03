@@ -12,8 +12,6 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.AAPSLoggerProduction
-import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
@@ -33,10 +31,6 @@ open class AppModule {
     fun provideProfileFunction(injector: HasAndroidInjector, aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePluginProvider, fabricPrivacy: FabricPrivacy): ProfileFunction {
         return ProfileFunctionImplementation(injector, aapsLogger, sp, resourceHelper, activePlugin, fabricPrivacy)
     }
-
-    @Provides
-    @Singleton
-    fun provideAAPSLogger(l: L): AAPSLogger = AAPSLoggerProduction(l)
 
     @Provides
     fun providesPlugins(@PluginsModule.AllConfigs allConfigs: Map<@JvmSuppressWildcards Int, @JvmSuppressWildcards PluginBase>,
@@ -64,10 +58,7 @@ open class AppModule {
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
-
-        @Binds
-        fun bindActivePluginProvider(pluginStore: PluginStore): ActivePluginProvider
-
+        @Binds fun bindActivePluginProvider(pluginStore: PluginStore): ActivePluginProvider
         @Binds fun commandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
 
     }
