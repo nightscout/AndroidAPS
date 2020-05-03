@@ -310,6 +310,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Test
     fun iobAMAShouldBeLimited() {
         // No limit by default
+        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
         `when`(sp.getDouble(R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
         `when`(sp.getString(R.string.key_age, "")).thenReturn("teenage")
         openAPSAMAPlugin.setPluginEnabled(PluginType.APS, true)
@@ -325,6 +326,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Test
     fun iobSMBShouldBeLimited() {
         // No limit by default
+        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
         `when`(sp.getDouble(R.string.key_openapssmb_max_iob, 3.0)).thenReturn(3.0)
         `when`(sp.getString(R.string.key_age, "")).thenReturn("teenage")
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)

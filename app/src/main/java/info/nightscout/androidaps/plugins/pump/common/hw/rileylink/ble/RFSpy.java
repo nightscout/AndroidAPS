@@ -57,6 +57,7 @@ public class RFSpy {
     private UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
     private UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
     private UUID responseCountUUID = UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT);
+    private RileyLinkFirmwareVersion firmwareVersion;
     private String bleVersion; // We don't use it so no need of sofisticated logic
     private Double currentFrequencyMHz;
 
@@ -67,6 +68,12 @@ public class RFSpy {
         this.rileyLinkBle = rileyLinkBle;
         reader = new RFSpyReader(aapsLogger, rileyLinkBle);
     }
+
+
+    public RileyLinkFirmwareVersion getRLVersionCached() {
+        return firmwareVersion;
+    }
+
 
     public String getBLEVersionCached() {
         return bleVersion;

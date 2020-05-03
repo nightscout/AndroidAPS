@@ -8,7 +8,6 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
@@ -28,7 +27,6 @@ import androidx.appcompat.widget.Toolbar;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -38,14 +36,19 @@ import javax.inject.Inject;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes;
-import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged;
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodPumpValuesChanged;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -58,8 +61,7 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
     @Inject ResourceHelper resourceHelper;
     @Inject BlePreCheck blePrecheck;
     @Inject RileyLinkUtil rileyLinkUtil;
-    // TODO change this. Currently verifyConfiguration uses MDT data not only RL
-    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+    @Inject ActivePluginProvider activePlugin;
 
     private static final int PERMISSION_REQUEST_COARSE_LOCATION = 30241; // arbitrary.
     private static final int REQUEST_ENABLE_BT = 30242; // arbitrary
@@ -108,9 +110,24 @@ public class RileyLinkBLEScanActivity extends NoSplashAppCompatActivity {
 
             sp.putString(RileyLinkConst.Prefs.RileyLinkAddress, bleAddress);
 
-            medtronicPumpPlugin.getRileyLinkService().verifyConfiguration(); // force reloading of address
+            PumpInterface activePump = activePlugin.getActivePump();
 
-            rxBus.send(new EventMedtronicPumpConfigurationChanged());
+            if (activePump.manufacturer() == ManufacturerType.Medtronic) {
+                RileyLinkPumpDevice rileyLinkPump = (RileyLinkPumpDevice) activePump;
+                rileyLinkPump.getRileyLinkService().verifyConfiguration(); // force reloading of address
+
+                rxBus.send(new EventMedtronicPumpConfigurationChanged());
+
+            } else if (activePlugin.getActivePump().manufacturer() == ManufacturerType.Insulet) {
+                if (activePump.model() == PumpType.Insulet_Omnipod_Dash) {
+                    aapsLogger.error("Omnipod Dash not yet implemented.");
+                } else {
+                    RileyLinkPumpDevice rileyLinkPump = (RileyLinkPumpDevice) activePump;
+                    rileyLinkPump.getRileyLinkService().verifyConfiguration(); // force reloading of address
+
+                    rxBus.send(new EventOmnipodPumpValuesChanged());
+                }
+            }
 
             finish();
         });

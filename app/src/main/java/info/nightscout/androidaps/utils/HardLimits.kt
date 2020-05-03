@@ -45,6 +45,10 @@ class HardLimits @Inject constructor(
     val MAXIOB_SMB = doubleArrayOf(3.0, 7.0, 12.0, 25.0)
     val MAXBASAL = doubleArrayOf(2.0, 5.0, 10.0, 12.0)
 
+    //LGS Hard limits
+    //No IOB at all
+    val MAXIOB_LGS = 0.0
+
     private fun loadAge(): Int {
         val sp_age = sp.getString(R.string.key_age, "")
         val age: Int

@@ -4,10 +4,12 @@
     <string-array name="aps_modeArray">
         <item>@string/closedloop</item>
         <item>@string/openloop</item>
+        <item>@string/lowglucosesuspend</item>
     </string-array>
     <string-array name="aps_modeValues" translatable="false">
         <item>closed</item>
         <item>open</item>
+        <item>lgs</item>
     </string-array>
 
     <string-array name="unitsArray">

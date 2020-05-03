@@ -56,6 +56,7 @@ import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 
@@ -659,7 +660,7 @@ public class MedtronicHistoryData {
 
             Treatment treatment = (Treatment) dbObjectBase;
 
-            if (RileyLinkUtil.isSame(treatment.insulin, 0d)) {
+            if (Round.isSame(treatment.insulin, 0d)) {
                 removeList.add(dbObjectBase);
             }
         }
