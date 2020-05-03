@@ -3,14 +3,17 @@ package info.nightscout.androidaps.plugins.aps.openAPSSMB;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.inject.Inject;
+
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class DetermineBasalResultSMB extends APSResult {
+    @Inject SP sp;
 
     private double eventualBG;
     private double snoozeBG;
@@ -35,7 +38,7 @@ public class DetermineBasalResultSMB extends APSResult {
             if (result.has("snoozeBG")) snoozeBG = result.getDouble("snoozeBG");
             //if (result.has("insulinReq")) insulinReq = result.getDouble("insulinReq");
 
-            if (SP.getBoolean(R.string.key_smb_enable_carbs_suggestions, false)) {
+            if (sp.getBoolean(R.string.key_smb_enable_carbs_suggestions, false)) {
                 if (result.has("carbsReq")) carbsReq = result.getInt("carbsReq");
                 if (result.has("carbsReqWithin")) carbsReqWithin = result.getInt("carbsReqWithin");
             }
