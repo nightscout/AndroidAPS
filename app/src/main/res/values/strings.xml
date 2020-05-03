@@ -782,8 +782,6 @@
     <string name="enableuam">Enable UAM</string>
     <string name="enablesmb">Enable SMB</string>
     <string name="enablecarbssuggestions">Enable Carbs Suggestions</string>
-    <string name="enable_carbs_suggestions_threshold">Minimum Carbs Required For Suggestion</string>
-    <string name="enable_carbs_suggestions_threshold_summary">Minimum grams of carbs to display a carbs suggestion alert. Carbs suggestions below this number will not trigger a notification.</string>
     <string name="enablesmb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
     <string name="enableuam_summary">Detection of Unannounced meals</string>
     <string name="enablecarbssuggestions_summary">Enable carbs suggestions when BG is predicted to go below threshold</string>
@@ -891,8 +889,8 @@
     <string name="uamsmbmaxminutes">UAM SMB max minutes</string>
     <string name="uamsmbmaxminutes_summary">Max minutes of basal to limit SMB to for UAM</string>
     <string name="key_carbsReqThreshold" translatable="false">carbsReqThreshold</string>
-    <string name="carbsReqThreshold">Carb suggestion threshold</string>
-    <string name="carbsReqThreshold_summary">When Carbs are suggested, how many carbs will prompt a notification</string>
+    <string name="carbsReqThreshold">Minimum Carbs Required For Suggestion</string>
+    <string name="carbsReqThreshold_summary">Minimum grams of carbs to display a carbs suggestion alert. Carbs suggestions below this number will not trigger a notification.</string>
     <string name="unsupportedfirmware">Unsupported pump firmware</string>
     <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
     <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
