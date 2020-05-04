@@ -110,6 +110,8 @@ public class TemporaryBasal implements Interval, DbObjectBase {
     }
 
     public TemporaryBasal(ExtendedBolus extendedBolus) {
+        injector = MainApp.instance();
+        injector.androidInjector().inject(this);
         double basal = profileFunction.getProfile(extendedBolus.date).getBasal(extendedBolus.date);
         this.date = extendedBolus.date;
         this.isValid = extendedBolus.isValid;
