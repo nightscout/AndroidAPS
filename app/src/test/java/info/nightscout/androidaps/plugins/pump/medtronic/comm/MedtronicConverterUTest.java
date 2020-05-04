@@ -38,24 +38,4 @@ public class MedtronicConverterUTest {
         // byte[] data = new byte[] { 00 03 00 05 01 00 C8 00 A0 01 01 00 01 00 00 64 01 05 00 14 00 64 01 00 00 };
     }
 */
-
-
-//@Test
-    public void testLocale() {
-        Locale l = new Locale("en", "IE");
-
-        Locale.setDefault(l);
-
-        Date date = new Date();
-
-        System.out.println("Date: toLocaleString: " + date.toLocaleString());
-        System.out.println("Date: toString: " + date.toString());
-        System.out.println("Date: toGMTString: " + date.toGMTString());
-
-
-        for (String isoCountry : Locale.getISOCountries()) {
-            //System.out.println("ISO country: " + isoCountry);
-        }
-    }
-
 }
