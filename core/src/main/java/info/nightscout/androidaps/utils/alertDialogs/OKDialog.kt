@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.SystemClock
 import android.text.Spanned
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.extensions.runOnUiThread
 
 object OKDialog {
