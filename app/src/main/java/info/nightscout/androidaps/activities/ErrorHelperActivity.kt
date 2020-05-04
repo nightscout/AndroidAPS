@@ -18,8 +18,6 @@ class ErrorHelperActivity : DialogAppCompatActivity() {
         errorDialog.status = intent.getStringExtra("status")
         errorDialog.sound = intent.getIntExtra("soundid", R.raw.error)
         errorDialog.title = intent.getStringExtra("title")
-        //if (intent.hasExtra("clipboardContent"))
-        //    errorDialog.clipboardContent = intent.getStringExtra("clipboardContent")
         errorDialog.show(supportFragmentManager, "Error")
 
         if (sp.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {

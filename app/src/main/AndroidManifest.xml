@@ -54,7 +54,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -231,11 +230,11 @@
         <service
             android:name=".plugins.general.nsclient.services.NSClientService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true" />
         <service
             android:name=".services.AlarmSoundService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true" />
         <service
             android:name=".plugins.general.overview.notifications.DismissNotificationService"
             android:exported="false" />
@@ -297,6 +296,8 @@
             android:label="@string/title_activity_rileylink_settings"
             android:theme="@style/Theme.AppCompat.NoTitle" />
         <activity android:name=".plugins.pump.medtronic.dialog.MedtronicHistoryActivity" />
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
 
         <!-- Omnipod service and activities -->
         <service
