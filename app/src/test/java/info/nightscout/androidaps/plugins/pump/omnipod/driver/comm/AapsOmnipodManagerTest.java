@@ -87,7 +87,7 @@ public class AapsOmnipodManagerTest {
     @Test
     public void invalidProfileNonZeroOffset() {
         thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Invalid start time");
+        thrown.expectMessage("First basal schedule entry should have 0 offset");
 
         Profile profile = mock(Profile.class);
 
