@@ -316,14 +316,14 @@ public class AutotunePlugin extends PluginBase {
         sgv = MainApp.getDbHelper().getBgreadingsDataFromTime(from, to, false);
 
         if (sgv.size() < 1) {
-            log.debug("No SGV data");
+        //    log.debug("No SGV data");
             return;
         }
 
 
         treatments = treatmentsPlugin.getTreatmentsFromHistory();
 
-        log.debug("Treatmets size: "+treatments.size());
+        //log.debug("Treatmets size: "+treatments.size());
         //trim treatments size
         for (int i=0;i<treatments.size();i++){
             if(treatments.get(i).date<from || treatments.get(i).date>to){
@@ -334,7 +334,7 @@ public class AutotunePlugin extends PluginBase {
             e.printStackTrace();
         }*/
         if (treatments.size() < 1) {
-            log.debug("No treatments");
+         //   log.debug("No treatments");
             return;
         }
 
@@ -374,7 +374,7 @@ public class AutotunePlugin extends PluginBase {
                 lastBGTime = new Date(glucoseData[i-1].displayTime.replace('T', ' '));
             } else if (glucoseData[i-1].dateString) {
                 lastBGTime = new Date(glucoseData[i-1].dateString);*/
-            else { log.error("Could not determine last BG time"); }
+            //else { log.error("Could not determine last BG time"); }
             if(i>1) {
                 if (sgv.get(i).value < 39 || sgv.get(i - 1).value < 39) {
                     continue;
@@ -404,8 +404,8 @@ public class AutotunePlugin extends PluginBase {
         // go through the treatments and remove any that are older than the oldest glucose value
         //log.debug(treatments);
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss''");
-        log.debug("Treatments size before clear: "+treatments.size());
-        log.debug("Treatment(0) "+new Date(treatments.get(0).date).toString()+" last "+new Date(treatments.get(treatments.size()-1).date).toString());
+        //log.debug("Treatments size before clear: "+treatments.size());
+        //log.debug("Treatment(0) "+new Date(treatments.get(0).date).toString()+" last "+new Date(treatments.get(treatments.size()-1).date).toString());
         for (int i=treatments.size()-1; i>0; --i) {
             Treatment treatment = treatments.get(i);
             //log.debug(treatment);
@@ -455,7 +455,7 @@ public class AutotunePlugin extends PluginBase {
                     if (treatmentTime < BGTime) {
                         if (treatment.carbs >= 1) {
                             //                        Here I parse Integers not float like the original source categorize.js#136
-                            log.debug("Categorize 1-3 Adding carbs: " + treatment.carbs + " for date " + new Date(treatment.date).toLocaleString());
+        //                    log.debug("Categorize 1-3 Adding carbs: " + treatment.carbs + " for date " + new Date(treatment.date).toLocaleString());
                             mealCOB += (int) (treatment.carbs);
                             mealCarbs += (int) (treatment.carbs);
                             myCarbs = (int) treatment.carbs;
@@ -482,7 +482,8 @@ public class AutotunePlugin extends PluginBase {
                 }
                 avgDelta = (BG - bucketedData.get(i+4).value)/4;
                 delta = (BG - bucketedData.get(i+4).value);
-            } else { log.error("Could not find glucose data"); }
+            }
+         //   else { log.error("Could not find glucose data"); }
 
             avgDelta = avgDelta*100 / 100;
             glucoseDatum.AvgDelta = avgDelta;
@@ -580,7 +581,7 @@ public class AutotunePlugin extends PluginBase {
                 Profile profile;
                 profile = profileFunction.getProfile();
                 if (profile == null){
-                    log.debug("No profile selected");
+            //        log.debug("No profile selected");
                     return;
                 }
                 double ci = Math.max(deviation, sp.getDouble("openapsama_min_5m_carbimpact", 3.0));
@@ -602,7 +603,7 @@ public class AutotunePlugin extends PluginBase {
                     CRInitialIOB = iob.iob;
                     CRInitialBG = glucoseDatum.value;
                     CRInitialCarbTime = new Date(glucoseDatum.date);
-                    log.debug("CRInitialIOB: "+CRInitialIOB+" CRInitialBG: "+CRInitialBG+" CRInitialCarbTime: "+CRInitialCarbTime.toString());
+            //        log.debug("CRInitialIOB: "+CRInitialIOB+" CRInitialBG: "+CRInitialBG+" CRInitialCarbTime: "+CRInitialCarbTime.toString());
                 }
                 // keep calculatingCR as long as we have COB or enough IOB
                 if ( mealCOB > 0 && i>1 ) {
@@ -614,7 +615,7 @@ public class AutotunePlugin extends PluginBase {
                     double CREndIOB = iob.iob;
                     double CREndBG = glucoseDatum.value;
                     Date CREndTime = new Date(glucoseDatum.date);
-                    log.debug("CREndIOB: "+CREndIOB+" CREndBG: "+CREndBG+" CREndTime: "+CREndTime);
+            //        log.debug("CREndIOB: "+CREndIOB+" CREndBG: "+CREndBG+" CREndTime: "+CREndTime);
                     //TODO:Fix this one as it produces error
 //                    JSONObject CRDatum = new JSONObject("{\"CRInitialIOB\": "+CRInitialIOB+",   \"CRInitialBG\": "+CRInitialBG+",   \"CRInitialCarbTime\": "+CRInitialCarbTime+",   \"CREndIOB\": " +CREndIOB+",   \"CREndBG\": "+CREndBG+",   \"CREndTime\": "+CREndTime+                            ",   \"CRCarbs\": "+CRCarbs+"}");
                     String crDataString = "{\"CRInitialIOB\": "+CRInitialIOB+",   \"CRInitialBG\": "+CRInitialBG+",   \"CRInitialCarbTime\": "+CRInitialCarbTime.getTime()+",   \"CREndIOB\": " +CREndIOB+",   \"CREndBG\": "+CREndBG+",   \"CREndTime\": "+CREndTime.getTime()+",   \"CRCarbs\": "+CRCarbs+"}";
@@ -631,7 +632,7 @@ public class AutotunePlugin extends PluginBase {
                     int CRElapsedMinutes = Math.round((CREndTime.getTime() - CRInitialCarbTime.getTime()) / (1000 * 60));
                     //log.debug(CREndTime - CRInitialCarbTime, CRElapsedMinutes);
                     if ( CRElapsedMinutes < 60 || ( i==1 && mealCOB > 0 ) ) {
-                        log.debug("Ignoring "+CRElapsedMinutes+" m CR period.");
+            //            log.debug("Ignoring "+CRElapsedMinutes+" m CR period.");
                     } else {
                         CRData.add(crDatum);
                     }
@@ -661,7 +662,7 @@ public class AutotunePlugin extends PluginBase {
                 //log.debug(type);
                 if ( type.equals("csf") == false ) {
                     glucoseDatum.mealAbsorption = "start";
-                    log.debug(glucoseDatum.mealAbsorption+" carb absorption");
+        //            log.debug(glucoseDatum.mealAbsorption+" carb absorption");
                 }
                 type="csf";
                 glucoseDatum.mealCarbs = mealCarbs;
@@ -671,7 +672,7 @@ public class AutotunePlugin extends PluginBase {
                 // check previous "type" value, and if it was csf, set a mealAbsorption end flag
                 if ( type == "csf" ) {
                     CSFGlucoseData.get(CSFGlucoseData.size()-1).mealAbsorption = "end";
-                    log.debug(CSFGlucoseData.get(CSFGlucoseData.size()-1).mealAbsorption+" carb absorption");
+        //            log.debug(CSFGlucoseData.get(CSFGlucoseData.size()-1).mealAbsorption+" carb absorption");
                 }
 
                 if ((iob.iob > currentBasal || deviation > 6 || uam > 0) ) {
@@ -682,13 +683,13 @@ public class AutotunePlugin extends PluginBase {
                     }
                     if ( type != "uam" ) {
                         glucoseDatum.uamAbsorption = "start";
-                        log.debug(glucoseDatum.uamAbsorption+" unannnounced meal absorption");
+         //               log.debug(glucoseDatum.uamAbsorption+" unannnounced meal absorption");
                     }
                     type="uam";
                     UAMGlucoseData.add(glucoseDatum);
                 } else {
                     if ( type == "uam" ) {
-                        log.debug("end unannounced meal absorption");
+         //               log.debug("end unannounced meal absorption");
                     }
 
 
@@ -724,7 +725,7 @@ public class AutotunePlugin extends PluginBase {
             // debug line to print out all the things
 //            BGDateArray = BGDate.toString().split(" ");
 //            BGTime = BGDateArray[4];
-            log.debug(absorbing+" mealCOB: "+mealCOB+" mealCarbs: "+mealCarbs+" basalBGI: "+round(basalBGI,1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
+        //    log.debug(absorbing+" mealCOB: "+mealCOB+" mealCarbs: "+mealCarbs+" basalBGI: "+round(basalBGI,1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
 
 //        try {
@@ -750,12 +751,12 @@ public class AutotunePlugin extends PluginBase {
         int UAMLength = UAMGlucoseData.size();
         int basalLength = basalGlucoseData.size();
         if (categorize_uam_as_basal) {
-            log.debug("Categorizing all UAM data as basal.");
+        //    log.debug("Categorizing all UAM data as basal.");
             basalGlucoseData.addAll(UAMGlucoseData);
         } else if (2*basalLength < UAMLength) {
             //log.debug(basalGlucoseData, UAMGlucoseData);
-            log.debug("Warning: too many deviations categorized as UnAnnounced Meals");
-            log.debug("Adding",UAMLength,"UAM deviations to",basalLength,"basal ones");
+        //    log.debug("Warning: too many deviations categorized as UnAnnounced Meals");
+        //    log.debug("Adding",UAMLength,"UAM deviations to",basalLength,"basal ones");
             basalGlucoseData.addAll(UAMGlucoseData);
             //log.debug(basalGlucoseData);
             // if too much data is excluded as UAM, add in the UAM deviations, but then discard the highest 50%
@@ -767,19 +768,19 @@ public class AutotunePlugin extends PluginBase {
             }
             //log.debug(newBasalGlucose);
             basalGlucoseData = newBasalGlucose;
-            log.debug("and selecting the lowest 50%, leaving"+ basalGlucoseData.size()+"basal+UAM ones");
+        //    log.debug("and selecting the lowest 50%, leaving"+ basalGlucoseData.size()+"basal+UAM ones");
 
-            log.debug("Adding "+UAMLength+" UAM deviations to "+ISFLength+" ISF ones");
+        //    log.debug("Adding "+UAMLength+" UAM deviations to "+ISFLength+" ISF ones");
             ISFGlucoseData.addAll(UAMGlucoseData);
             //log.debug(ISFGlucoseData.length, UAMLength);
         }
         basalLength = basalGlucoseData.size();
         ISFLength = ISFGlucoseData.size();
         if ( 4*basalLength + ISFLength < CSFLength && ISFLength < 10 ) {
-            log.debug("Warning: too many deviations categorized as meals");
+        //    log.debug("Warning: too many deviations categorized as meals");
             //log.debug("Adding",CSFLength,"CSF deviations to",basalLength,"basal ones");
             //var basalGlucoseData = basalGlucoseData.concat(CSFGlucoseData);
-            log.debug("Adding",CSFLength,"CSF deviations to",ISFLength,"ISF ones");
+        //    log.debug("Adding",CSFLength,"CSF deviations to",ISFLength,"ISF ones");
             for(int ii = 0; ii< CSFGlucoseData.size()-1;ii++) {
                 ISFGlucoseData.add(CSFGlucoseData.get(ii));
             }
@@ -787,10 +788,10 @@ public class AutotunePlugin extends PluginBase {
         }
         prepOutput = new PrepOutput(CRData,CSFGlucoseData,ISFGlucoseData,basalGlucoseData);
 
-        log.debug("CRData: "+CRData.size());
-        log.debug("CSFGlucoseData: "+CSFGlucoseData.size());
-        log.debug("ISFGlucoseData: "+ISFGlucoseData.size());
-        log.debug("BasalGlucoseData: "+basalGlucoseData.size());
+        //log.debug("CRData: "+CRData.size());
+        //log.debug("CSFGlucoseData: "+CSFGlucoseData.size());
+        //log.debug("ISFGlucoseData: "+ISFGlucoseData.size());
+        //log.debug("BasalGlucoseData: "+basalGlucoseData.size());
 //        String returnJSON = "{\"CRData\":"+CRData.toString()+",\"CSFGlucoseData\": "+CSFGlucoseData.toString()+",\"ISFGlucoseData\": "+ISFGlucoseData.toString()+",\"basalGlucoseData\": "+basalGlucoseData.toString()+"}";
 //        log.debug("Returning: "+returnJSON);
         return;
