@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.LongSparseArray;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Intervals;
@@ -16,7 +15,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.plugins.general.autotune.AutotunePrep.Prep;
+import info.nightscout.androidaps.plugins.general.autotune.AutotunePrep.AutotunePrep;
 import info.nightscout.androidaps.plugins.general.autotune.data.BGDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.CRDatum;
 import info.nightscout.androidaps.plugins.general.autotune.data.Opts;
@@ -24,7 +23,6 @@ import info.nightscout.androidaps.plugins.general.autotune.data.PrepOutput;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
-import info.nightscout.androidaps.plugins.treatments.TreatmentService;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -1361,10 +1359,10 @@ public class AutotunePlugin extends PluginBase {
                     log.debug("Day "+i+" of "+daysBack);
 
                     categorizeBGDatums(glucoseStart, glucoseEnd);
-                    Prep prep = new Prep(injector);
-                    //Prep prep = new Prep();
-                    prep.categorizeBGDatums(opts); // line added for log and test
-                    //PrepOutput prepOutput = prep.generate(opts);
+                    AutotunePrep autotunePrep = new AutotunePrep(injector);
+                    //AutotunePrep autotunePrep = new AutotunePrep();
+                    autotunePrep.categorizeBGDatums(opts); // line added for log and test
+                    //PrepOutput prepOutput = autotunePrep.generate(opts);
                     FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(4));
 
                     tuneAllTheThings();

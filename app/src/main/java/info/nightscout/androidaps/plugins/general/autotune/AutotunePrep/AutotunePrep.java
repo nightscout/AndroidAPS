@@ -33,7 +33,7 @@ import info.nightscout.androidaps.utils.Round;
 
 
 @Singleton
-public class Prep {
+public class AutotunePrep {
     private boolean useNSData = false;
     public boolean nsDataDownloaded = false;
     private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
@@ -43,7 +43,7 @@ public class Prep {
     private final HasAndroidInjector injector;
 
     @Inject
-    public Prep(
+    public AutotunePrep(
             HasAndroidInjector injector
     ) {
         this.injector=injector;

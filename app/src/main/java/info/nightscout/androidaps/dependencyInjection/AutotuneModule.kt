@@ -17,7 +17,7 @@ abstract class AutotuneModule {
     @ContributesAndroidInjector abstract fun autoTunePrepOutputInjector(): PrepOutput
     @ContributesAndroidInjector abstract fun autoTuneTunedProfileInjector(): TunedProfile
     @ContributesAndroidInjector abstract fun autoTuneMealInjector(): Meal
-    @ContributesAndroidInjector abstract fun autoTunePrepInjector(): Prep
+    @ContributesAndroidInjector abstract fun autoTunePrepInjector(): AutotunePrep
 
     @ContributesAndroidInjector abstract fun autoTuneFSInjector(): FS
 }
