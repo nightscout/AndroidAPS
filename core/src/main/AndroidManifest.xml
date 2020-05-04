@@ -1,2 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="info.nightscout.androidaps.core" />
+    package="info.nightscout.androidaps.core" >
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+</manifest>
