@@ -8,6 +8,8 @@ import android.os.IBinder;
 
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.R;
@@ -180,10 +182,10 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         try {
             omnipodPumpStatus.errorDescription = "-";
 
-            String rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, null);
+            String rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
-            if (rileyLinkAddress == null) {
-                aapsLogger.debug(LTag.PUMPCOMM, "RileyLink address invalid: null");
+            if (StringUtils.isEmpty(rileyLinkAddress)) {
+                aapsLogger.debug(LTag.PUMPCOMM, "RileyLink address invalid: no address");
                 omnipodPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_rileylink_address_invalid);
                 return false;
             } else {
