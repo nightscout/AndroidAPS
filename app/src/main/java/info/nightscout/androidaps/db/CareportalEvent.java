@@ -26,7 +26,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSMbg;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
@@ -156,8 +156,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
         for (int i = 0; i < list.size(); i++) {
             CareportalEvent event = list.get(i);
             if (event.date <= time && event.date > (time - T.mins(5).msecs())) {
-                if (L.isEnabled(L.DATABASE))
-                    aapsLogger.debug("Found event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
+                aapsLogger.debug(LTag.DATABASE, "Found event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
                 return true;
             }
         }

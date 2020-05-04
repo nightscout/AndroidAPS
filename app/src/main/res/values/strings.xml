@@ -250,7 +250,6 @@
     <string name="openapsma_maxbasal_summary">This value is called max basal in OpenAPS context</string>
     <string name="openapsma_maxiob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
     <string name="openapsma_maxiob_summary">This value is called Max IOB in OpenAPS context\nThis is maximal insulin in [U] APS can deliver at once.</string>
-    <string name="dismiss">DISMISS</string>
     <string name="language" translatable="false">Language</string>
 
     <string name="password_preferences_encrypt_prompt">You will be asked for master password, which will be used to encrypt exported preferences.</string>
@@ -1761,7 +1760,6 @@
     <string name="timeformat24h">24h</string>
     <string name="automation_event">Automation event</string>
     <string name="alreadyset">Already set</string>
-    <string name="message">Message</string>
     <string name="clearqueueconfirm">Clear queue? All data in queue will be lost!</string>
     <string name="key_xdripstatus_detailediob" translatable="false">xdripstatus_detailediob</string>
     <string name="key_xdripstatus_showbgi" translatable="false">xdripstatus_showbgi</string>
@@ -1769,7 +1767,6 @@
     <string name="key_snoozedTo" translatable="false">snoozedTo</string>
     <string name="key_snooze_dst_in24h" translatable="false">snooze_dst_in24h</string>
     <string name="key_snooze_loopdisabled" translatable="false">snooze_loopdisabled</string>
-    <string name="key_enable_fabric" translatable="false">enable_fabric</string>
     <string name="sixdigitnumber" translatable="false">^\\d{6}</string>
     <string name="ebstopsloop">Use of Extended bolus feature will stop closed loop mode for the time of running extended bolus. Do you really want it?</string>
     <string name="closed_loop_disabled_with_eb">Closed loop disabled because of running Extended bolus</string>

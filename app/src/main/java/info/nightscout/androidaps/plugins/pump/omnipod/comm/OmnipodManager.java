@@ -82,7 +82,6 @@ public class OmnipodManager {
         this.podStateChangedHandler = podStateChangedHandler;
     }
 
-
     public synchronized Single<SetupActionResult> pairAndPrime() {
         logStartingCommandExecution("pairAndPrime");
 

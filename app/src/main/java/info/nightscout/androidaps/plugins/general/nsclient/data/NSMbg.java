@@ -3,13 +3,12 @@ package info.nightscout.androidaps.plugins.general.nsclient.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 public class NSMbg {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
     public long date;
     public double mbg;
     public String json;
