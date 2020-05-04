@@ -38,8 +38,6 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
  */
 public class RileyLinkMedtronicService extends RileyLinkService {
 
-    @Inject HasAndroidInjector injector;
-    @Inject ResourceHelper resourceHelper;
     @Inject MedtronicPumpPlugin medtronicPumpPlugin;
     @Inject MedtronicUtil medtronicUtil;
     @Inject MedtronicUIPostprocessor medtronicUIPostprocessor;
@@ -117,6 +115,12 @@ public class RileyLinkMedtronicService extends RileyLinkService {
 
     public MedtronicCommunicationManager getDeviceCommunicationManager() {
         return this.medtronicCommunicationManager;
+    }
+
+
+    @Override
+    public void setPumpDeviceState(PumpDeviceState pumpDeviceState) {
+        this.medtronicPumpStatus.setPumpDeviceState(pumpDeviceState);
     }
 
 
@@ -236,7 +240,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
                 } else {
                     PumpType pumpType = medtronicPumpStatus.getMedtronicPumpMap().get(pumpTypePart);
                     medtronicPumpStatus.medtronicDeviceType = medtronicPumpStatus.getMedtronicDeviceTypeMap().get(pumpTypePart);
-                    medtronicPumpPlugin.getPumpDescription().setPumpDescription(pumpType);
+                    medtronicPumpPlugin.setPumpType(pumpType);
 
                     if (pumpTypePart.startsWith("7"))
                         medtronicPumpStatus.reservoirFullUnits = 300;

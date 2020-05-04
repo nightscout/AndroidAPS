@@ -6,6 +6,7 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.data.ServiceTransport;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventRefreshButtonState;
@@ -33,11 +34,11 @@ public class WakeAndTuneTask extends PumpTask {
 
     @Override
     public void run() {
-        PumpPluginAbstract pump = (PumpPluginAbstract) activePlugin.getActivePump();
+        RileyLinkPumpDevice pumpDevice = (RileyLinkPumpDevice)activePlugin.getActivePump();
         rxBus.send(new EventRefreshButtonState(false));
-        MedtronicPumpPlugin.isBusy = true;
-        pump.doTuneUpDevice();
-        MedtronicPumpPlugin.isBusy = false;
+        pumpDevice.setIsBusy(true);
+        pumpDevice.doTuneUpDevice();
+        pumpDevice.setIsBusy(false);
         rxBus.send(new EventRefreshButtonState(true));
     }
 }

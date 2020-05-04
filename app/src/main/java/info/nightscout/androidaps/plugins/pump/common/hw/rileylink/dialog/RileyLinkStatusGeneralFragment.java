@@ -13,7 +13,15 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerFragment;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.PumpDescription;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
+import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
+import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
@@ -23,6 +31,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
@@ -31,11 +40,10 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 public class RileyLinkStatusGeneralFragment extends DaggerFragment implements RefreshableInterface {
 
-    @Inject RileyLinkUtil rileyLinkUtil;
-    @Inject MedtronicUtil medtronicUtil;
-    @Inject MedtronicPumpStatus medtronicPumpStatus;
+    @Inject ActivePluginProvider activePlugin;
     @Inject ResourceHelper resourceHelper;
-    @Inject MedtronicPumpPlugin medtronicPumpPlugin;
+    @Inject MedtronicUtil medtronicUtil;
+    @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;
 
     TextView connectionStatus;
@@ -120,15 +128,15 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
 
         }
 
-        // TODO add handling for Omnipod pump status
+        PumpPluginAbstract pumpPlugin = (PumpPluginAbstract)activePlugin.getActivePump();
 
-        if (medtronicPumpStatus != null) {
+        if (pumpPlugin.manufacturer()== ManufacturerType.Medtronic) {
+            MedtronicPumpStatus medtronicPumpStatus = (MedtronicPumpStatus)pumpPlugin.getPumpStatusData();
+
             this.deviceType.setText(resourceHelper.gs(RileyLinkTargetDevice.MedtronicPump.getResourceId()));
-            this.deviceModel.setText(medtronicPumpPlugin.getPumpDescription().pumpType.getDescription());
+            this.deviceModel.setText(pumpPlugin.getPumpType().getDescription());
             this.serialNumber.setText(medtronicPumpStatus.serialNumber);
             this.pumpFrequency.setText(resourceHelper.gs(medtronicPumpStatus.pumpFrequency.equals("medtronic_pump_frequency_us_ca") ? R.string.medtronic_pump_frequency_us_ca : R.string.medtronic_pump_frequency_worldwide));
-
-            // TODO extend when Omnipod used
 
             if (medtronicUtil.getMedtronicPumpModel() != null)
                 this.connectedDevice.setText("Medtronic " + medtronicUtil.getMedtronicPumpModel().getPumpModel());
@@ -143,7 +151,44 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
                 this.lastDeviceContact.setText(StringUtil.toDateTimeString(new LocalDateTime(
                         medtronicPumpStatus.lastDataTime)));
             else
-                this.lastDeviceContact.setText("Never");
+                this.lastDeviceContact.setText(resourceHelper.gs(R.string.common_never));
+        } else {
+
+            OmnipodPumpStatus omnipodPumpStatus = (OmnipodPumpStatus)pumpPlugin.getPumpStatusData();
+
+            this.deviceType.setText(resourceHelper.gs(RileyLinkTargetDevice.Omnipod.getResourceId()));
+            this.deviceModel.setText(pumpPlugin.getPumpType() == PumpType.Insulet_Omnipod ? "Eros" : "Dash");
+
+            if (pumpPlugin.getPumpType()== PumpType.Insulet_Omnipod_Dash) {
+                aapsLogger.error("Omnipod Dash not yet supported !!!");
+
+                this.pumpFrequency.setText("-");
+            } else {
+
+                this.pumpFrequency.setText(resourceHelper.gs(R.string.omnipod_frequency));
+
+                if (omnipodPumpStatus != null) {
+
+                    if (omnipodPumpStatus.podAvailable) {
+                        this.serialNumber.setText(omnipodPumpStatus.podLotNumber);
+                        this.connectedDevice.setText(omnipodPumpStatus.pumpType == PumpType.Insulet_Omnipod ? "Eros Pod" : "Dash Pod");
+                    } else {
+                        this.serialNumber.setText("??");
+                        this.connectedDevice.setText("-");
+                    }
+
+                    if (rileyLinkServiceData.lastGoodFrequency != null)
+                        this.lastUsedFrequency.setText(String.format(Locale.ENGLISH, "%.2f MHz",
+                                rileyLinkServiceData.lastGoodFrequency));
+
+                    if (omnipodPumpStatus.lastConnection != 0)
+                        this.lastDeviceContact.setText(StringUtil.toDateTimeString(new LocalDateTime(
+                                omnipodPumpStatus.lastDataTime)));
+                    else
+                        this.lastDeviceContact.setText(resourceHelper.gs(R.string.common_never));
+                }
+            }
+
         }
 
     }

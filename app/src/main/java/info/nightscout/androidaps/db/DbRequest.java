@@ -1,16 +1,13 @@
 package info.nightscout.androidaps.db;
 
-import com.google.common.base.Charsets;
-import com.google.common.hash.Hashing;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.utils.DateUtil;
 
@@ -21,7 +18,7 @@ import info.nightscout.androidaps.utils.DateUtil;
  */
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_DBREQUESTS)
 public class DbRequest {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.DATABASE);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.DATABASE);
 
     @DatabaseField(id = true)
     public String nsClientID = null;
@@ -88,9 +85,9 @@ public class DbRequest {
     public String log() {
         return
                 "\nnsClientID:" + nsClientID +
-                "\naction:" + action +
-                "\ncollection:" + collection +
-                "\ndata:" + data +
-                "\n_id:" + _id;
+                        "\naction:" + action +
+                        "\ncollection:" + collection +
+                        "\ndata:" + data +
+                        "\n_id:" + _id;
     }
 }

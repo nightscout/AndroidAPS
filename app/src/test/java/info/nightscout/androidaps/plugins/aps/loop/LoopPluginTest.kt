@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.HardLimits
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
@@ -49,11 +50,15 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
 
+    private lateinit var hardLimits: HardLimits
+
     lateinit var loopPlugin: LoopPlugin
 
     val injector = HasAndroidInjector { AndroidInjector { } }
     @Before fun prepareMock() {
-        loopPlugin = LoopPlugin(injector, aapsLogger, rxBus, sp, constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, actionStringHandler, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy)
+        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context)
+
+        loopPlugin = LoopPlugin(injector, aapsLogger, rxBus, sp, constraintChecker, resourceHelper, profileFunction, context, commandQueue, activePlugin, treatmentsPlugin, virtualPumpPlugin, actionStringHandler, iobCobCalculatorPlugin, receiverStatusStore, fabricPrivacy, hardLimits)
         `when`(activePlugin.getActivePump()).thenReturn(virtualPumpPlugin)
     }
 
@@ -61,6 +66,7 @@ class LoopPluginTest : TestBase() {
     fun testPluginInterface() {
         `when`(resourceHelper.gs(R.string.loop)).thenReturn("Loop")
         `when`(resourceHelper.gs(R.string.loop_shortname)).thenReturn("LOOP")
+        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
         val pumpDescription = PumpDescription()
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         Assert.assertEquals(LoopFragment::class.java.name, loopPlugin.pluginDescription.fragmentClass)
