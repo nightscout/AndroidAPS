@@ -31,8 +31,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionStat
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
-import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by andy on 4/8/19.
@@ -45,6 +45,7 @@ public class OmnipodUtil {
     private final RileyLinkUtil rileyLinkUtil;
     private final OmnipodPumpStatus omnipodPumpStatus;
     private final ActivePluginProvider activePlugins;
+    private final SP sp;
 
     private boolean lowLevelDebug = true;
     private OmnipodCommandType currentCommand;
@@ -61,12 +62,14 @@ public class OmnipodUtil {
             RxBusWrapper rxBus,
             RileyLinkUtil rileyLinkUtil,
             OmnipodPumpStatus omnipodPumpStatus,
+            SP sp,
             ActivePluginProvider activePlugins
     ) {
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.rileyLinkUtil = rileyLinkUtil;
         this.omnipodPumpStatus = omnipodPumpStatus;
+        this.sp = sp;
         this.activePlugins = activePlugins;
     }
 
@@ -192,8 +195,8 @@ public class OmnipodUtil {
     }
 
     public Integer getNextPodAddress() {
-        if(SP.contains(OmnipodConst.Prefs.NextPodAddress)) {
-            int nextPodAddress = SP.getInt(OmnipodConst.Prefs.NextPodAddress, 0);
+        if(sp.contains(OmnipodConst.Prefs.NextPodAddress)) {
+            int nextPodAddress = sp.getInt(OmnipodConst.Prefs.NextPodAddress, 0);
             if (OmnipodManager.isValidAddress(nextPodAddress)) {
                 return nextPodAddress;
             }
@@ -206,10 +209,10 @@ public class OmnipodUtil {
     }
 
     public void setNextPodAddress(int address) {
-        SP.putInt(OmnipodConst.Prefs.NextPodAddress, address);
+        sp.putInt(OmnipodConst.Prefs.NextPodAddress, address);
     }
 
     public void removeNextPodAddress() {
-        SP.remove(OmnipodConst.Prefs.NextPodAddress);
+        sp.remove(OmnipodConst.Prefs.NextPodAddress);
     }
 }
