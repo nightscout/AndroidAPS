@@ -89,33 +89,33 @@
 
         <!-- Receive new BG readings from other local apps -->
         <receiver
-            android:name=".receivers.DataReceiver"
-            android:enabled="true"
-            android:exported="true">
+                android:name=".receivers.DataReceiver"
+                android:enabled="true"
+                android:exported="true">
             <intent-filter>
                 <!-- Receiver from xDrip -->
-                <action android:name="com.eveningoutpost.dexdrip.BgEstimate" />
+                <action android:name="com.eveningoutpost.dexdrip.BgEstimate"/>
                 <!-- Receiver from 640g uploader -->
-                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
+                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR"/>
                 <!-- Receiver from glimp -->
-                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
+                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED"/>
                 <!-- Receiver from Dexcom -->
-                <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST" />
+                <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST"/>
                 <!-- Receiver from Poctech -->
-                <action android:name="com.china.poctech.data" />
+                <action android:name="com.china.poctech.data"/>
                 <!-- Receiver from Tomato -->
-                <action android:name="com.fanqies.tomatofn.BgEstimate" />
+                <action android:name="com.fanqies.tomatofn.BgEstimate"/>
             </intent-filter>
         </receiver>
 
         <!-- Receive new SMS messages -->
         <receiver
-            android:name=".receivers.SmsReceiver"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.BROADCAST_SMS">
+                android:name=".receivers.SmsReceiver"
+                android:enabled="true"
+                android:exported="true"
+                android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
             </intent-filter>
         </receiver>
 
@@ -145,8 +145,7 @@
         <!-- Service processing incomming data -->
         <service
             android:name=".services.DataService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+            android:exported="false" />
         <service
             android:name=".services.LocationService"
             android:exported="false" />
@@ -165,7 +164,7 @@
         <service
             android:name=".plugins.pump.danaRS.services.DanaRSService"
             android:enabled="true"
-            android:exported="false" />
+            android:exported="true" />
         <service
             android:name=".plugins.general.wear.wearintegration.WatchUpdaterService"
             android:exported="true">
@@ -287,7 +286,6 @@
             android:name=".plugins.pump.medtronic.service.RileyLinkMedtronicService"
             android:enabled="true"
             android:exported="true" />
-
         <activity android:name=".plugins.pump.common.dialog.RileyLinkBLEScanActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
