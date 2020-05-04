@@ -50,5 +50,7 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesStatsActivity(): StatsActivity
     @ContributesAndroidInjector abstract fun contributesSurveyActivity(): SurveyActivity
     @ContributesAndroidInjector abstract fun contributesTDDStatsActivity(): TDDStatsActivity
+    @ContributesAndroidInjector abstract fun contributesPodManagementActivity(): PodManagementActivity
+    @ContributesAndroidInjector abstract fun contributesPodHistoryActivity(): PodHistoryActivity
 
 }

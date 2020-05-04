@@ -21,7 +21,6 @@ import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
-import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
@@ -44,11 +43,10 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
  * @author Andy Rozman (andy.rozman@gmail.com)
  */
 // FIXME this is just placeholder for now, but this should use most of OmnipodPumpPlugin implementation
-    // not dagger compatible, but first step is done
 public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodPumpPluginInterface {
 
     // TODO Dagger
-    //private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
 
     protected static OmnipodDashPumpPlugin plugin = null;
     //private RileyLinkOmnipodService omnipodService;
@@ -68,7 +66,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
     private Profile currentProfile;
 
-    //@Inject
+    @Inject
     public OmnipodDashPumpPlugin(HasAndroidInjector injector,
                                  AAPSLogger aapsLogger,
                                  RxBusWrapper rxBus,
@@ -106,13 +104,13 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 //
 //            public void onServiceDisconnected(ComponentName name) {
 //                if (isLoggingEnabled())
-//                    aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is disconnected");
+//                    LOG.debug("RileyLinkOmnipodService is disconnected");
 //                omnipodService = null;
 //            }
 //
 //            public void onServiceConnected(ComponentName name, IBinder service) {
 //                if (isLoggingEnabled())
-//                    aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is connected");
+//                    LOG.debug("RileyLinkOmnipodService is connected");
 //                RileyLinkOmnipodService.LocalBinder mLocalBinder = (RileyLinkOmnipodService.LocalBinder) service;
 //                omnipodService = mLocalBinder.getServiceInstance();
 //
@@ -123,7 +121,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 //
 //                        if (OmnipodUtil.getPumpStatus() != null) {
 //                            if (isLoggingEnabled())
-//                                aapsLogger.debug(LTag.PUMP, "Starting OmniPod-RileyLink service");
+//                                LOG.debug("Starting OmniPod-RileyLink service");
 //                            if (OmnipodUtil.getPumpStatus().setNotInPreInit()) {
 //                                break;
 //                            }
@@ -173,7 +171,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
     @Override
     public boolean isInitialized() {
         if (displayConnectionMessages)
-            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isInitialized");
+            LOG.debug(getLogPrefix() + "isInitialized");
         return isServiceSet() && isInitialized;
     }
 
@@ -181,7 +179,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
     @Override
     public boolean isConnected() {
         if (displayConnectionMessages)
-            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isConnected");
+            LOG.debug(getLogPrefix() + "isConnected");
         return isServiceSet() && isServiceInitialized();
     }
 
@@ -189,7 +187,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
     @Override
     public boolean isConnecting() {
         if (displayConnectionMessages)
-            aapsLogger.debug(LTag.PUMP, getLogPrefix() + "isConnecting");
+            LOG.debug(getLogPrefix() + "isConnecting");
         return !isServiceSet() || !isServiceInitialized();
     }
 
@@ -226,7 +224,7 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
     private void initializePump(boolean realInit) {
 
-        aapsLogger.info(LTag.PUMP,getLogPrefix() + "initializePump - start");
+        LOG.info(getLogPrefix() + "initializePump - start");
 
         if (omnipodCommunicationManager == null) {
             omnipodCommunicationManager = OmnipodDashCommunicationManager.getInstance();

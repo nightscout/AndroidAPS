@@ -79,6 +79,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var localInsightPlugin: LocalInsightPlugin
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
+    @Inject lateinit var omnipodPumpPlugin: OmnipodPumpPlugin
     @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
@@ -174,6 +175,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(localInsightPlugin, rootKey, Config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(comboPlugin, rootKey, Config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, Config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(omnipodPumpPlugin, rootKey, Config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey, !Config.NSCLIENT)
             addPreferencesFromResourceIfEnabled(insulinOrefFreePeakPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(nsClientPlugin, rootKey)

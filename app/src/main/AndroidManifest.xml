@@ -300,6 +300,16 @@
             android:theme="@style/Theme.AppCompat.NoTitle" />
         <activity android:name=".plugins.pump.medtronic.dialog.MedtronicHistoryActivity" />
 
+        <!-- Omnipod service and activities -->
+        <service
+            android:name=".plugins.pump.omnipod.service.RileyLinkOmnipodService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".plugins.pump.omnipod.dialogs.PodManagementActivity" />
+        <activity android:name=".plugins.pump.omnipod.dialogs.PodHistoryActivity" />
+        <activity android:name="com.atech.android.library.wizardpager.WizardPagerActivity"
+                  android:theme="@style/AppTheme.NoActionBar"/>
 
         <uses-library
             android:name="org.apache.http.legacy"
