@@ -160,6 +160,7 @@ android {
         }
         firebaseDisable {
             System.setProperty("disableFirebase", "true")
+            ext.enableCrashlytics = false
         }
     }
     productFlavors {
