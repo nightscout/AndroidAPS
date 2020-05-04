@@ -3,9 +3,8 @@ package info.nightscout.androidaps.plugins.aps.loop;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 
 /*
@@ -366,7 +365,7 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 */
 
 public class DeviceStatus {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
 
     public String device = null;
     public JSONObject pump = null;

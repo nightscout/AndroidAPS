@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.dependencyInjection
 
 import android.content.Context
-import androidx.preference.PreferenceManager
 import dagger.Binds
 import dagger.Lazy
 import dagger.Module
@@ -13,16 +12,13 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.AAPSLoggerProduction
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.resources.ResourceHelperImplementation
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import info.nightscout.androidaps.utils.sharedPreferences.SPImplementation
 import info.nightscout.androidaps.utils.storage.FileStorage
 import info.nightscout.androidaps.utils.storage.Storage
 import javax.inject.Singleton
@@ -36,32 +32,8 @@ open class AppModule {
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(context: Context, resourceHelper: ResourceHelper): SP {
-        return SPImplementation(PreferenceManager.getDefaultSharedPreferences(context), resourceHelper)
-    }
-
-    @Provides
-    @Singleton
     fun provideProfileFunction(injector: HasAndroidInjector, aapsLogger: AAPSLogger, sp: SP, resourceHelper: ResourceHelper, activePlugin: ActivePluginProvider, fabricPrivacy: FabricPrivacy): ProfileFunction {
         return ProfileFunctionImplementation(injector, aapsLogger, sp, resourceHelper, activePlugin, fabricPrivacy)
-    }
-
-    @Provides
-    @Singleton
-    fun provideResources(mainApp: MainApp): ResourceHelper {
-        return ResourceHelperImplementation(mainApp)
-    }
-
-    @Provides
-    @Singleton
-    fun provideAAPSLogger(): AAPSLogger {
-        return AAPSLoggerProduction()
-/*        if (BuildConfig.DEBUG) {
-            AAPSLoggerDebug()
-        } else {
-            AAPSLoggerProduction()
-        }
- */
     }
 
     @Provides
@@ -90,10 +62,7 @@ open class AppModule {
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
-
-        @Binds
-        fun bindActivePluginProvider(pluginStore: PluginStore): ActivePluginProvider
-
+        @Binds fun bindActivePluginProvider(pluginStore: PluginStore): ActivePluginProvider
         @Binds fun commandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
 
     }

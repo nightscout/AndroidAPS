@@ -1,11 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
-import info.nightscout.androidaps.logging.L.isEnabled
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper.Companion.getLogger
-import org.slf4j.Logger
 
 class MsgSetTempBasalStop(
     private val aapsLogger: AAPSLogger

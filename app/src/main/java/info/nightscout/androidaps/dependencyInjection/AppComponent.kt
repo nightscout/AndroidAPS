@@ -5,6 +5,7 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.core.dependencyInjection.CoreModule
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.ProfileStore
 import info.nightscout.androidaps.data.PumpEnactResult
@@ -53,6 +54,7 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AndroidInjectionModule::class,
+        CoreModule::class,
         ActivitiesModule::class,
         FragmentsModule::class,
         AppModule::class,
