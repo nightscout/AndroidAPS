@@ -22,6 +22,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface;
@@ -253,13 +254,11 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
             if (event.date <= time && event.date > (time - T.mins(5).msecs())) {
                 if (zeroDurationOnly) {
                     if (event.durationInMinutes == 0) {
-                        if (L.isEnabled(L.DATABASE))
-                            aapsLogger.debug("Found ProfileSwitch event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
+                        aapsLogger.debug(LTag.DATABASE, "Found ProfileSwitch event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
                         return true;
                     }
                 } else {
-                    if (L.isEnabled(L.DATABASE))
-                        aapsLogger.debug("Found ProfileSwitch event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
+                    aapsLogger.debug(LTag.DATABASE, "Found ProfileSwitch event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
                     return true;
                 }
             }

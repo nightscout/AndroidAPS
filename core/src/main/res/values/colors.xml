@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#40bbaa</color>
+
+    <color name="dialog_title_background">#303030</color>
+    <color name="activity_title_background">#121212</color>
+    <color name="dialog_title_color">#FFFFFF</color>
+    <color name="dialog_title_icon_tint">#FFFFFF</color>
+
+    <color name="warningAlertBackground">#FFFB8C00</color>
+    <color name="warningAlertHeaderText">#FF000000</color>
+
+    <color name="errorAlertBackground">#FFFF5555</color>
+    <color name="errorAlertHeaderText">#FF000000</color>
+
+</resources>

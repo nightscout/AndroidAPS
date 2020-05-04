@@ -3,10 +3,10 @@ package info.nightscout.androidaps.plugins.general.nsclient.acks;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.events.Event;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.events.EventNSClientRestart;
@@ -16,7 +16,7 @@ import io.socket.client.Ack;
  * Created by mike on 29.12.2015.
  */
 public class NSAddAck extends Event implements Ack {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
     public String _id = null;
     public String nsClientID = null;
     public JSONObject json = null;
@@ -48,7 +48,7 @@ public class NSAddAck extends Event implements Ack {
                     RxBus.Companion.getINSTANCE().send(new EventNSClientRestart());
                     return;
                 }
-                if (L.isEnabled(L.NSCLIENT))
+                if (L.isEnabled(LTag.NSCLIENT))
                     log.debug("DBACCESS " + response.getString("result"));
             }
             return;

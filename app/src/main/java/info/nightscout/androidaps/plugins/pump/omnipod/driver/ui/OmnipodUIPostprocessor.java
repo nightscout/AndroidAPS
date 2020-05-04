@@ -8,6 +8,7 @@ import java.util.Date;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
@@ -19,7 +20,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 public class OmnipodUIPostprocessor {
 
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMP);
+    private static final Logger LOG = LoggerFactory.getLogger(LTag.PUMP.name());
 
     private OmnipodPumpStatus pumpStatus;
     private OmnipodPumpPluginInterface omnipodPumpPlugin;
@@ -102,7 +103,7 @@ public class OmnipodUIPostprocessor {
 
 
     private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMP);
+        return L.isEnabled(LTag.PUMP);
     }
 
     public RxBusWrapper getRxBus() {
