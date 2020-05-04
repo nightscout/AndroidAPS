@@ -10,13 +10,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUITask
 @Suppress("unused")
 abstract class OmnipodModule {
 
-    @ContributesAndroidInjector
-    abstract fun omnipodCommunicationManagerProvider(): OmnipodCommunicationManager
-
-    @ContributesAndroidInjector
-    abstract fun omnipodUITaskProvider(): OmnipodUITask
-
-    @ContributesAndroidInjector
-    abstract fun aapsOmnipodManagerProvider(): AapsOmnipodManager
+    @ContributesAndroidInjector abstract fun omnipodCommunicationManagerProvider(): OmnipodCommunicationManager
+    @ContributesAndroidInjector abstract fun omnipodUITaskProvider(): OmnipodUITask
+    @ContributesAndroidInjector abstract fun aapsOmnipodManagerProvider(): AapsOmnipodManager
 
 }
