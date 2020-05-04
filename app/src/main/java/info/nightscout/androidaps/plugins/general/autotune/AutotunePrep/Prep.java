@@ -11,7 +11,9 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
@@ -30,24 +32,22 @@ import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.Round;
 
 
-
+@Singleton
 public class Prep {
     private boolean useNSData = false;
     public boolean nsDataDownloaded = false;
     private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
-    private ProfileFunction profileFunction;
-    private AutotunePlugin autotunePlugin;
+    @Inject ProfileFunction profileFunction;
+    @Inject AutotunePlugin autotunePlugin;
+    private final HasAndroidInjector injector;
 
- //   @Inject
+    @Inject
     public Prep(
-            ProfileFunction profileFunction,
-            AutotunePlugin autotunePlugin
-            ) {
-        this.profileFunction=profileFunction;
-        this.autotunePlugin=autotunePlugin;
+            HasAndroidInjector injector
+    ) {
+        this.injector=injector;
+        this.injector.androidInjector().inject(this);
     }
-
-    public Prep() {}
 
     public PrepOutput categorizeBGDatums(Opts opts) throws JSONException, ParseException, IOException {
 
@@ -57,7 +57,7 @@ public class Prep {
 
         Profile profileData = opts.profile;
 
-        List<BgReading> glucoseData = new ArrayList<BgReading>(); // opts.glucose;    //Todo: Philoul add glucose inputs in opts
+        List<BgReading> glucoseData = new ArrayList<BgReading>();
 
         for (int i = 0; i < opts.glucose.size(); i++) {
             if (opts.glucose.get(i).value > 39) {
@@ -428,7 +428,7 @@ public class Prep {
 //****************************************************************************************************************************************
 // categorize.js Lines 372-383
         for (CRDatum crDatum : CRData) {
-            Opts dosedOpts = new Opts();
+            Opts dosedOpts = new Opts(injector);
             dosedOpts.treatments = treatments;
             dosedOpts.start = crDatum.CRInitialCarbTime;
             dosedOpts.end = crDatum.CREndTime;

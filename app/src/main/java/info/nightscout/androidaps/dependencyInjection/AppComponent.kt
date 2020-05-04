@@ -59,6 +59,7 @@ import javax.inject.Singleton
         ReceiversModule::class,
         ServicesModule::class,
         AutomationModule::class,
+        AutotuneModule::class,
         CommandQueueModule::class,
         ObjectivesModule::class,
         WizardModule::class,

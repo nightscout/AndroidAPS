@@ -13,6 +13,7 @@ import java.util.TimeZone;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
@@ -22,6 +23,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -40,21 +42,21 @@ public class Opts {
     public long end;
     public boolean categorize_uam_as_basal;
     public boolean tune_insulin_curve;
+    @Inject AAPSLogger aapsLogger;
+    @Inject ProfileFunction profileFunction;
+    @Inject ActivePluginProvider activePlugin;
+//    @Inject public info.nightscout.androidaps.utils.sharedPreferences.SP sp;
 
-    private ProfileFunction profileFunction;
-    private ActivePluginProvider activePlugin;
+    private final HasAndroidInjector injector;
 
-    // @Inject
-        public Opts(
-                ActivePluginProvider activePlugin,
-                ProfileFunction profileFunction
-        ) {
-            this.activePlugin = activePlugin;
-            this.profileFunction=profileFunction;
-        }
+    public Opts(
+        HasAndroidInjector injector
+    ) {
+        this.injector = injector;
+        this.injector.androidInjector().inject(this);
+    }
 
-    public Opts() { }
-    // These constructors are not required if Injection works...
+
 
 
     public void setTempBasalHistory( List<TemporaryBasal> lt) {

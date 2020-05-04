@@ -117,6 +117,7 @@ public class AutotunePlugin extends PluginBase {
     private final ActivePluginProvider activePlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
+    public final HasAndroidInjector injector;
 
     @Inject
     public AutotunePlugin(
@@ -148,6 +149,7 @@ public class AutotunePlugin extends PluginBase {
         this.activePlugin = activePlugin;
         this.treatmentsPlugin = treatmentsPlugin;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
+        this.injector = injector;
     }
 
 //    @Override
@@ -1293,8 +1295,8 @@ public class AutotunePlugin extends PluginBase {
 
         int toMgDl = 1;
         //Todo correct after injection works in Opts
-        Opts opts=new Opts(activePlugin, profileFunction);
-        //Opts opts = new Opts();
+        //Opts opts=new Opts(activePlugin, profileFunction);
+        Opts opts = new Opts(injector);
         opts.categorize_uam_as_basal = SP.getBoolean("categorize_uam_as_basal", false);
 
         getProfile();
@@ -1356,7 +1358,7 @@ public class AutotunePlugin extends PluginBase {
                     log.debug("Day "+i+" of "+daysBack);
 
                     categorizeBGDatums(glucoseStart, glucoseEnd);
-                    Prep prep = new Prep(profileFunction,this);
+                    Prep prep = new Prep(injector);
                     //Prep prep = new Prep();
                     prep.categorizeBGDatums(opts); // line added for log and test
                     //PrepOutput prepOutput = prep.generate(opts);
