@@ -42,7 +42,7 @@ public class StatusResponseTest {
         StatusResponse statusResponse = new StatusResponse(bytes);
 
         assertEquals(DeliveryStatus.NORMAL, statusResponse.getDeliveryStatus());
-        assertEquals(PodProgressStatus.RUNNING_ABOVE_FIFTY_UNITS, statusResponse.getPodProgressStatus());
+        assertEquals(PodProgressStatus.ABOVE_FIFTY_UNITS, statusResponse.getPodProgressStatus());
         assertNull("Reservoir level should be null", statusResponse.getReservoirLevel());
         assertEquals(Duration.standardMinutes(1307).getMillis(), statusResponse.getTimeActive().getMillis());
         assertEquals(60.05, statusResponse.getInsulinDelivered(), 0.000001);
@@ -59,7 +59,7 @@ public class StatusResponseTest {
         StatusResponse statusResponse = new StatusResponse(bytes);
 
         assertEquals(DeliveryStatus.NORMAL, statusResponse.getDeliveryStatus());
-        assertEquals(PodProgressStatus.RUNNING_BELOW_FIFTY_UNITS, statusResponse.getPodProgressStatus());
+        assertEquals(PodProgressStatus.FIFTY_OR_LESS_UNITS, statusResponse.getPodProgressStatus());
         assertEquals(24.4, statusResponse.getReservoirLevel(), 0.000001);
         assertEquals(Duration.standardMinutes(4261).getMillis(), statusResponse.getTimeActive().getMillis());
         assertEquals(156.7, statusResponse.getInsulinDelivered(), 0.000001);
@@ -93,7 +93,7 @@ public class StatusResponseTest {
 
         assertTrue(Duration.standardMinutes(3547).isEqual(statusResponse.getTimeActive()));
         assertEquals(DeliveryStatus.NORMAL, statusResponse.getDeliveryStatus());
-        assertEquals(PodProgressStatus.RUNNING_BELOW_FIFTY_UNITS, statusResponse.getPodProgressStatus());
+        assertEquals(PodProgressStatus.FIFTY_OR_LESS_UNITS, statusResponse.getPodProgressStatus());
         assertEquals(129.45, statusResponse.getInsulinDelivered(), 0.00001);
         assertEquals(46.00, statusResponse.getReservoirLevel(), 0.00001);
         assertEquals(2.2, statusResponse.getInsulinNotDelivered(), 0.0001);

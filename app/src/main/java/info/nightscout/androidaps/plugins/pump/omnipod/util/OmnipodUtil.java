@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPodType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
@@ -30,6 +31,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionStat
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
+import info.nightscout.androidaps.utils.SP;
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 
 /**
@@ -43,7 +45,6 @@ public class OmnipodUtil {
     private final RileyLinkUtil rileyLinkUtil;
     private final OmnipodPumpStatus omnipodPumpStatus;
     private final ActivePluginProvider activePlugins;
-
 
     private boolean lowLevelDebug = true;
     private OmnipodCommandType currentCommand;
@@ -91,7 +92,6 @@ public class OmnipodUtil {
         if (currentCommand != null)
             rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(currentCommand));
     }
-
 
     public static void displayNotConfiguredDialog(Context context) {
         OKDialog.showConfirmation(context, MainApp.gs(R.string.combo_warning),
@@ -182,7 +182,6 @@ public class OmnipodUtil {
         omnipodPumpStatus.pumpType = pumpType_;
     }
 
-
     public PumpType getPumpType() {
         return omnipodPumpStatus.pumpType;
     }
@@ -192,4 +191,25 @@ public class OmnipodUtil {
         return this.gsonInstance;
     }
 
+    public Integer getNextPodAddress() {
+        if(SP.contains(OmnipodConst.Prefs.NextPodAddress)) {
+            int nextPodAddress = SP.getInt(OmnipodConst.Prefs.NextPodAddress, 0);
+            if (OmnipodManager.isValidAddress(nextPodAddress)) {
+                return nextPodAddress;
+            }
+        }
+        return null;
+    }
+
+    public boolean hasNextPodAddress() {
+        return getNextPodAddress() != null;
+    }
+
+    public void setNextPodAddress(int address) {
+        SP.putInt(OmnipodConst.Prefs.NextPodAddress, address);
+    }
+
+    public void removeNextPodAddress() {
+        SP.remove(OmnipodConst.Prefs.NextPodAddress);
+    }
 }

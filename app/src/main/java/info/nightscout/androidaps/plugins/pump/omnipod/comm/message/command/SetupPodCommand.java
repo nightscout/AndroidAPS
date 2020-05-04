@@ -6,7 +6,7 @@ import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.MessageBlockType;
 
-public class ConfigurePodCommand extends MessageBlock {
+public class SetupPodCommand extends MessageBlock {
 
     private static final byte PACKET_TIMEOUT_LIMIT = 0x04;
 
@@ -15,7 +15,7 @@ public class ConfigurePodCommand extends MessageBlock {
     private final DateTime date;
     private final int address;
 
-    public ConfigurePodCommand(int address, DateTime date, int lot, int tid) {
+    public SetupPodCommand(int address, DateTime date, int lot, int tid) {
         this.address = address;
         this.lot = lot;
         this.tid = tid;
@@ -46,7 +46,7 @@ public class ConfigurePodCommand extends MessageBlock {
 
     @Override
     public String toString() {
-        return "ConfigurePodCommand{" +
+        return "SetupPodCommand{" +
                 "lot=" + lot +
                 ", tid=" + tid +
                 ", date=" + date +

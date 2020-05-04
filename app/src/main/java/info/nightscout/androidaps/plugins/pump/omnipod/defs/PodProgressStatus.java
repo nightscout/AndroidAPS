@@ -1,22 +1,22 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.defs;
 
 public enum PodProgressStatus {
-    INITIAL_VALUE((byte) 0x00),
-    TANK_POWER_ACTIVATED((byte) 0x01),
-    TANK_FILL_COMPLETED((byte) 0x02),
-    PAIRING_SUCCESS((byte) 0x03),
+    INITIALIZED((byte) 0x00),
+    MEMORY_INITIALIZED((byte) 0x01),
+    REMINDER_INITIALIZED((byte) 0x02),
+    PAIRING_COMPLETED((byte) 0x03),
     PRIMING((byte) 0x04),
-    READY_FOR_BASAL_SCHEDULE((byte) 0x05),
-    READY_FOR_CANNULA_INSERTION((byte) 0x06),
-    CANNULA_INSERTING((byte) 0x07),
-    RUNNING_ABOVE_FIFTY_UNITS((byte) 0x08),
-    RUNNING_BELOW_FIFTY_UNITS((byte) 0x09),
-    ONE_NOT_USED_BUT_IN_33((byte) 0x0a),
-    TWO_NOT_USED_BUT_IN_33((byte) 0x0b),
-    THREE_NOT_USED_BUT_IN_33((byte) 0x0c),
-    FAULT_EVENT_OCCURRED((byte) 0x0d),
-    FAILED_TO_INITIALIZE_IN_TIME((byte) 0x0e),
-    INACTIVE((byte) 0x0f);
+    PRIMING_COMPLETED((byte) 0x05),
+    BASAL_INITIALIZED((byte) 0x06),
+    INSERTING_CANNULA((byte) 0x07),
+    ABOVE_FIFTY_UNITS((byte) 0x08),
+    FIFTY_OR_LESS_UNITS((byte) 0x09),
+    ONE_NOT_USED((byte) 0x0a),
+    TWO_NOT_USED((byte) 0x0b),
+    THREE_NOT_USED((byte) 0x0c),
+    FAULT_EVENT_OCCURRED((byte) 0x0d), // Fault event occurred (a "screamer")
+    ACTIVATION_TIME_EXCEEDED((byte) 0x0e), // Took > 2 hours from progress 2 to 3 or > 1 hour from 3 to 8
+    INACTIVE((byte) 0x0f); // Pod deactivated or a fatal packet state error
 
     private byte value;
 
@@ -38,6 +38,6 @@ public enum PodProgressStatus {
     }
 
     public boolean isReadyForDelivery() {
-        return this == RUNNING_ABOVE_FIFTY_UNITS || this == RUNNING_BELOW_FIFTY_UNITS;
+        return this == ABOVE_FIFTY_UNITS || this == FIFTY_OR_LESS_UNITS;
     }
 }
