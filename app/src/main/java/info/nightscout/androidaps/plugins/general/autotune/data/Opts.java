@@ -27,7 +27,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 
 public class Opts {
@@ -45,6 +45,7 @@ public class Opts {
     @Inject AAPSLogger aapsLogger;
     @Inject ProfileFunction profileFunction;
     @Inject ActivePluginProvider activePlugin;
+    @Inject SP sp;
 //    @Inject public info.nightscout.androidaps.utils.sharedPreferences.SP sp;
 
     private final HasAndroidInjector injector;
@@ -140,7 +141,7 @@ public class Opts {
         InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
 
         try {
-            json.put("min_5m_carbimpact",SP.getDouble("openapsama_min_5m_carbimpact", 3.0));
+            json.put("min_5m_carbimpact",sp.getDouble("openapsama_min_5m_carbimpact", 3.0));
             json.put("dia", profile.getDia());
 
             JSONArray basals = new JSONArray();
@@ -156,15 +157,15 @@ public class Opts {
             json.put("isfProfile",new JSONObject().put("sensitivities",new JSONArray().put(new JSONObject().put("i",0).put("start","00:00:00").put("sensitivity",isfvalue).put("offset",0).put("x",0).put("endoffset",1440))));
             // json.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", previousResult.optDouble("carb_ratio", 0d))));
             json.put("carb_ratio", profile.getIc());
-            json.put("autosens_max", SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_max, "1.2")));
-            json.put("autosens_min", SafeParse.stringToDouble(SP.getString(R.string.key_openapsama_autosens_min, "0.7")));
+            json.put("autosens_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")));
+            json.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")));
             if (insulinInterface.getId() == InsulinInterface.OREF_ULTRA_RAPID_ACTING)
                 json.put("curve","ultra-rapid");
             else if (insulinInterface.getId() == InsulinInterface.OREF_RAPID_ACTING)
                 json.put("curve","rapid-acting");
             else if (insulinInterface.getId() == InsulinInterface.OREF_FREE_PEAK) {
                 json.put("curve", "bilinear");
-                json.put("insulinpeaktime",SP.getInt(MainApp.gs(R.string.key_insulin_oref_peak),75));
+                json.put("insulinpeaktime",sp.getInt(MainApp.gs(R.string.key_insulin_oref_peak),75));
             }
 
         } catch (JSONException e) {}

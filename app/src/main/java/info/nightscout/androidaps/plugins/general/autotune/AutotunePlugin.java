@@ -33,7 +33,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.Round;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -117,6 +117,7 @@ public class AutotunePlugin extends PluginBase {
     private final ActivePluginProvider activePlugin;
     private final TreatmentsPlugin treatmentsPlugin;
     private final IobCobCalculatorPlugin iobCobCalculatorPlugin;
+    private final SP sp;
     public final HasAndroidInjector injector;
 
     @Inject
@@ -127,6 +128,7 @@ public class AutotunePlugin extends PluginBase {
             ResourceHelper resourceHelper,
             ProfileFunction profileFunction,
             Context context,
+            SP sp,
             ActivePluginProvider activePlugin,
             TreatmentsPlugin treatmentsPlugin,
             IobCobCalculatorPlugin iobCobCalculatorPlugin
@@ -150,6 +152,7 @@ public class AutotunePlugin extends PluginBase {
         this.treatmentsPlugin = treatmentsPlugin;
         this.iobCobCalculatorPlugin = iobCobCalculatorPlugin;
         this.injector = injector;
+        this.sp=sp;
     }
 
 //    @Override
@@ -211,7 +214,7 @@ public class AutotunePlugin extends PluginBase {
                 // instead of dividing the DIA that only worked on the bilinear curves,
                 // multiply the time the treatment is seen active.
                 long timeSinceTreatment = time - t.date;
-                long snoozeTime = t.date + (long) (timeSinceTreatment * SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
+                long snoozeTime = t.date + (long) (timeSinceTreatment * sp.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
                 Iob bIOB = t.iobCalc(snoozeTime, dia);
                 total.bolussnooze += bIOB.iobContrib;
             }
@@ -300,7 +303,7 @@ public class AutotunePlugin extends PluginBase {
         // sortBGdata
         // sort treatments
         //starting variable at 0
-        boolean categorize_uam_as_basal = SP.getBoolean("categorize_uam_as_basal", false);
+        boolean categorize_uam_as_basal = false;
         List<BgReading> sgv = new ArrayList<BgReading>();
         CSFGlucoseData = new ArrayList<BGDatum>();
         ISFGlucoseData = new ArrayList<BGDatum>();
@@ -582,7 +585,7 @@ public class AutotunePlugin extends PluginBase {
                     log.debug("No profile selected");
                     return;
                 }
-                double ci = Math.max(deviation, SP.getDouble("openapsama_min_5m_carbimpact", 3.0));
+                double ci = Math.max(deviation, sp.getDouble("openapsama_min_5m_carbimpact", 3.0));
                 double absorbed = ci * profile.getIc() / sens;
                 // Store the COB, and use it as the starting point for the next data point.
                 mealCOB = Math.max(0, mealCOB-absorbed);
@@ -821,9 +824,9 @@ public class AutotunePlugin extends PluginBase {
         double pumpCarbRatio = 0d;
         double pumpCSF = 0d;
         // Autosens constraints
-        double autotuneMax = SafeParse.stringToDouble(SP.getString("openapsama_autosens_max", "1.2"));
-        double autotuneMin = SafeParse.stringToDouble(SP.getString("openapsama_autosens_min", "0.7"));
-        double min5minCarbImpact = SP.getDouble("openapsama_min_5m_carbimpact", 3.0);
+        double autotuneMax = SafeParse.stringToDouble(sp.getString("openapsama_autosens_max", "1.2"));
+        double autotuneMin = SafeParse.stringToDouble(sp.getString("openapsama_autosens_min", "0.7"));
+        double min5minCarbImpact = sp.getDouble("openapsama_min_5m_carbimpact", 3.0);
         //log.debug(pumpBasalProfile);
 //        var basalProfile = previousAutotune.basalprofile;
         //log.debug(basalProfile);
@@ -1297,7 +1300,7 @@ public class AutotunePlugin extends PluginBase {
         //Todo correct after injection works in Opts
         //Opts opts=new Opts(activePlugin, profileFunction);
         Opts opts = new Opts(injector);
-        opts.categorize_uam_as_basal = SP.getBoolean("categorize_uam_as_basal", false);
+        opts.categorize_uam_as_basal = sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false);
 
         getProfile();
         if(profile.equals(null))
@@ -1449,7 +1452,7 @@ public class AutotunePlugin extends PluginBase {
 
                 store.put(MainApp.gs(R.string.autotune_tunedprofile_name), convertedProfile);
                 //ProfileStore profileStore = new ProfileStore(json);
-                //SP.putString("autotuneprofile", profileStore.getData().toString());
+                //sp.putString("autotuneprofile", profileStore.getData().toString());
                 //log.debug("Entered in ProfileStore "+profileStore.getSpecificProfile(MainApp.gs(R.string.tuneprofile_name)));
 // TODO: check line below modified by philoul => need to be verify...
 //                RxBus.INSTANCE.send(new EventProfileStoreChanged());
@@ -1496,15 +1499,15 @@ public class AutotunePlugin extends PluginBase {
             jsonSettings.put("datestring",DateUtil.toISOString(runDate,null,null));
             jsonSettings.put("dateutc",DateUtil.toISOString(runDate));
             jsonSettings.put("utcOffset",utcOffset);
-            jsonSettings.put("url_nightscout",SP.getString(R.string.key_nsclientinternal_url, ""));
+            jsonSettings.put("url_nightscout", sp.getString(R.string.key_nsclientinternal_url, ""));
             jsonSettings.put("nbdays", nbDays);
             jsonSettings.put("startdate",startDateString);
             jsonSettings.put("enddate",endDateString);
             // oref0_command is for running oref0-autotune on a virtual machine in a dedicated ~/aaps subfolder
-            jsonSettings.put("oref0_command","oref0-autotune -d=~/aaps -n=" + SP.getString(R.string.key_nsclientinternal_url, "") + " -s="+startDateString+" -e=" + endDateString);
+            jsonSettings.put("oref0_command","oref0-autotune -d=~/aaps -n=" + sp.getString(R.string.key_nsclientinternal_url, "") + " -s="+startDateString+" -e=" + endDateString);
             // aaps_command is for running modified oref0-autotune with exported data from aaps (ns-entries and ns-treatment json files copied in ~/aaps/autotune folder and pumpprofile.json copied in ~/aaps/settings/
             jsonSettings.put("aaps_command","aaps-autotune -d=~/aaps -s="+startDateString+" -e=" + endDateString);
-            jsonSettings.put("categorize_uam_as_basal",SP.getBoolean("categorize_uam_as_basal", false));
+            jsonSettings.put("categorize_uam_as_basal",sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false));
             jsonSettings.put("tune_insulin_curve",false);
             if (insulinInterface.getId() == InsulinInterface.OREF_ULTRA_RAPID_ACTING)
                 jsonSettings.put("curve","ultra-rapid");
@@ -1512,7 +1515,7 @@ public class AutotunePlugin extends PluginBase {
                 jsonSettings.put("curve","rapid-acting");
             else if (insulinInterface.getId() == InsulinInterface.OREF_FREE_PEAK) {
                 jsonSettings.put("curve", "bilinear");
-                jsonSettings.put("insulinpeaktime",SP.getInt(MainApp.gs(R.string.key_insulin_oref_peak),75));
+                jsonSettings.put("insulinpeaktime",sp.getInt(R.string.key_insulin_oref_peak,75));
             }
 
             jsonString = jsonSettings.toString(4).replace("\\/","/");

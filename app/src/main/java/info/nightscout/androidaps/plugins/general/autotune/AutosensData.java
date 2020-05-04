@@ -16,7 +16,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by mike on 25.04.2017.
@@ -27,6 +27,7 @@ public class AutosensData {
     @Inject SensitivityAAPSPlugin sensitivityAAPSPlugin;
     @Inject SensitivityWeightedAveragePlugin sensitivityWeightedAveragePlugin;
     @Inject ProfileFunction profileFunction;
+    @Inject SP sp;
 
     class CarbsInPast {
         long time = 0L;
@@ -39,7 +40,7 @@ public class AutosensData {
             carbs = t.carbs;
             remaining = t.carbs;
             if (sensitivityAAPSPlugin.isEnabled(PluginType.SENSITIVITY) || sensitivityWeightedAveragePlugin.isEnabled(PluginType.SENSITIVITY)) {
-                double maxAbsorptionHours = SP.getDouble(R.string.key_absorption_maxtime, 4d);
+                double maxAbsorptionHours = sp.getDouble(R.string.key_absorption_maxtime, 4d);
 //                Profile profile = ConfigBuilderPlugin.getPlugin().getActiveProfileInterface().getProfile(t.date);
                 Profile profile = profileFunction.getProfile(time);
                 double sens = Profile.toMgdl(profile.getIsfMgdl(t.date), profile.getUnits());
@@ -47,7 +48,7 @@ public class AutosensData {
                 min5minCarbImpact = t.carbs / (maxAbsorptionHours * 60 / 5) * sens / ic;
                 //log.debug("Min 5m carbs impact for " + carbs + "g @" + new Date(t.date).toLocaleString() + " for " + maxAbsorptionHours + "h calculated to " + min5minCarbImpact + " ISF: " + sens + " IC: " + ic);
             } else {
-                min5minCarbImpact = SP.getDouble("openapsama_min_5m_carbimpact", 3.0);
+                min5minCarbImpact = sp.getDouble("openapsama_min_5m_carbimpact", 3.0);
             }
         }
     }

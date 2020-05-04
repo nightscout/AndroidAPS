@@ -11,13 +11,13 @@ import info.nightscout.androidaps.plugins.general.autotune.AutotunePrep.*
 abstract class AutotuneModule {
     @ContributesAndroidInjector abstract fun autoTuneBGDatumInjector(): BGDatum
     @ContributesAndroidInjector abstract fun autoTuneCRDatumInjector(): CRDatum
-    @ContributesAndroidInjector abstract fun autoTuneIobInputsInjector(): IobInputs
+//    @ContributesAndroidInjector abstract fun autoTuneIobInputsInjector(): IobInputs
     @ContributesAndroidInjector abstract fun autoTuneNsTreatmentInjector(): NsTreatment
     @ContributesAndroidInjector abstract fun autoTuneOptsInjector(): Opts
     @ContributesAndroidInjector abstract fun autoTunePrepOutputInjector(): PrepOutput
-    @ContributesAndroidInjector abstract fun autoTuneTunedProfileInjector(): TunedProfile
+//    @ContributesAndroidInjector abstract fun autoTuneTunedProfileInjector(): TunedProfile
     @ContributesAndroidInjector abstract fun autoTuneMealInjector(): Meal
     @ContributesAndroidInjector abstract fun autoTunePrepInjector(): Prep
 
-    @ContributesAndroidInjector abstract fun autoTuneFSInjector(): FS
+//    @ContributesAndroidInjector abstract fun autoTuneFSInjector(): FS
 }

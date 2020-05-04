@@ -30,7 +30,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.profile.ns.NSProfilePlugin;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by Rumen Georgiev on 1/29/2018.
@@ -41,6 +41,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
     private static Logger log = LoggerFactory.getLogger(AutotuneFragment.class);
     @Inject NSProfilePlugin nsProfilePlugin;
     @Inject AutotunePlugin autotunePlugin;
+    @Inject SP sp;
 
     public AutotuneFragment() {super();}
 
@@ -69,7 +70,7 @@ public class AutotuneFragment extends DaggerFragment implements View.OnClickList
             tuneProfileSwitch.setVisibility(View.GONE);
             tuneProfileSwitch.setOnClickListener(this);
 
-            tune_days.setText(SP.getString("autotune_default_tune_days","5"));
+            tune_days.setText(sp.getString(R.string.key_autotune_default_tune_days,"5"));
             warningView.setText("Don't run tune for more than 5 days back! It will cause app crashes and too much data usage! Don't even try to run without WiFi connectivity!");
             resultView.setText(AutotunePlugin.result);
             String latRunTxt = AutotunePlugin.lastRun != null ? DateUtil.dateAndTimeString(AutotunePlugin.lastRun) : "";

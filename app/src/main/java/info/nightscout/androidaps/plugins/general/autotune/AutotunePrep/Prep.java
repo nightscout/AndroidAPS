@@ -28,7 +28,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.autotune.data.NsTreatment;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.Round;
 
 
@@ -39,6 +39,7 @@ public class Prep {
     private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
     @Inject ProfileFunction profileFunction;
     @Inject AutotunePlugin autotunePlugin;
+    @Inject SP sp;
     private final HasAndroidInjector injector;
 
     @Inject
@@ -267,7 +268,7 @@ public class Prep {
                     return null;
                 }
                 profile = profileFunction.getProfile();
-                double ci = Math.max(deviation, SP.getDouble("openapsama_min_5m_carbimpact", 3.0));
+                double ci = Math.max(deviation, sp.getDouble("openapsama_min_5m_carbimpact", 3.0));
                 double absorbed = ci * profile.getIc() / sens;
                 // Store the COB, and use it as the starting point for the next data point.
                 mealCOB = Math.max(0, mealCOB - absorbed);
