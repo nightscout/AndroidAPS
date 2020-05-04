@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
         android:key="@string/key_autotune_plugin"
-        android:title="@string/autotune_settings">
+        android:title="@string/autotune_settings"
+        app:initialExpandedChildrenCount="0">
 
         <SwitchPreference
             android:defaultValue="false"
@@ -24,4 +26,4 @@
             android:title="@string/autotune_default_tune_days_title" />
 
     </PreferenceCategory>
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>
