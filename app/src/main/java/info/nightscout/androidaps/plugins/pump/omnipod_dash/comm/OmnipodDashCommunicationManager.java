@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
@@ -26,7 +27,9 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
 
     // TODO Dagger
 
-    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+    //private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
+
+    private AAPSLogger aapsLogger;
 
     private static OmnipodDashCommunicationManager omnipodCommunicationManager;
     private String errorMessage;
@@ -59,10 +62,6 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
         return this.errorMessage;
     }
 
-
-    private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMPCOMM);
-    }
 
 
     @Override
