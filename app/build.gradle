@@ -30,8 +30,6 @@ ext {
     dexmakerVersion = "1.2"
     retrofit2Version = '2.8.1'
     okhttp3Version = '4.6.0'
-    coroutinesVersion = '1.3.5'
-    activityVersion = '1.2.0-alpha03'
 }
 
 

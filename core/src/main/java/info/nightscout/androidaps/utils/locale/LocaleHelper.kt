@@ -5,7 +5,7 @@ import android.content.ContextWrapper
 import android.os.Build
 import android.os.LocaleList
 import androidx.preference.PreferenceManager
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import java.util.*
 
 object LocaleHelper {
