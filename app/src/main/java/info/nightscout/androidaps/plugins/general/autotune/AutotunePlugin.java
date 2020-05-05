@@ -1,7 +1,10 @@
 package info.nightscout.androidaps.plugins.general.autotune;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.LongSparseArray;
+
+import androidx.annotation.RequiresApi;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.MainApp;
@@ -46,6 +49,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -1293,7 +1297,7 @@ public class AutotunePlugin extends PluginBase {
             endTime -= 24 * 60 * 60 * 1000L;
         long starttime = endTime - daysBack * 24 * 60 *  60 * 1000L;
 
-        FS.createAutotunefile(FS.SETTINGS,settings(lastRun,daysBack,new Date(starttime),new Date(endTime)));
+        FS.createAutotunefile(FS.SETTINGS,settings(lastRun,daysBack,new Date(starttime),new Date(endTime)),true);
 
         int toMgDl = 1;
         //Todo correct after injection works in Opts
@@ -1301,32 +1305,31 @@ public class AutotunePlugin extends PluginBase {
         Opts opts = new Opts(injector);
         opts.categorize_uam_as_basal = sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false);
 
-        getProfile();
+        profile = profileFunction.getProfile(now);
         if(profile.equals(null))
             return null;
         opts.profile=profile;
+        opts.profilename=profileFunction.getProfileName();
+
         opts.pumpprofile=profile;
+        opts.pumpprofilename=profileFunction.getProfileName();
         autotuneResult = profile;
-        // just for testing @Inject in Opts object
-        opts.setTempBasalHistory(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(starttime,endTime,false));
-        opts.pumpHistory = null;
         try {
+            FS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(4),true);
             FS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(4));
         } catch (JSONException e) {}
-// TODO: Philoul retrieve the units from the main app parameters instead of the profile
-        if(profile.getUnits().equals("mmol"))
+
+        if(sp.getString(R.string.key_units, "mg/dl").equals("mmol"))
             toMgDl = 18;
-        log.debug("ActiveProfile units: " + profile.getUnits()+" so divisor is "+toMgDl);
+        log.debug("AAPS units: " + sp.getString(R.string.key_units, "mg/dl") +" so divisor is "+toMgDl);
 
         if(daysBack < 1){
             return "Sorry I cannot do it for less than 1 day!";
         } else {
-//            for (int i = daysBack; i > 0; i--) {
             for (int i = 0; i < daysBack; i++) {
 //                tunedBasalsInit();
                 long timeBack = i * 24 * 60 * 60 * 1000L;
-//                long glucoseStart = starttime - timeBack + 4 * 24 * 60 *60 *1000L;
-//                long glucoseEnd = starttime - timeBack + 28 * 24 * 60 *60 *1000L;
+
                 long glucoseStart = starttime + timeBack;
                 long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
                 long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
@@ -1482,22 +1485,20 @@ public class AutotunePlugin extends PluginBase {
 
     }
 
-    private String settings (Date runDate, int nbDays,Date firstloopstart, Date lastloopend) {
-        JSONObject jsonSettings = new JSONObject();
-        int endDateOffset = 1;
+    private String settings (Date runDate, int nbDays, Date firstloopstart, Date lastloopend) {
         String jsonString="";
-        if(runDate.getHours()<4)
-            endDateOffset++;
-        Date endDate = new Date(runDate.getTime()-endDateOffset* 24 * 60 * 60 * 1000L);
-        Date startDate = new Date(runDate.getTime()-(nbDays+endDateOffset-1) * 24 * 60 * 60 * 1000L);
+        JSONObject jsonSettings = new JSONObject();
         InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
         int utcOffset = (int) ((DateUtil.fromISODateString(DateUtil.toISOString(runDate,null,null)).getTime()  - DateUtil.fromISODateString(DateUtil.toISOString(runDate)).getTime()) / (60 * 1000));
         String startDateString = DateUtil.toISOString(firstloopstart,"yyyy-MM-dd",null);
         String endDateString = DateUtil.toISOString(new Date(lastloopend.getTime()-24*60*60*1000L),"yyyy-MM-dd",null);
+
         try {
             jsonSettings.put("datestring",DateUtil.toISOString(runDate,null,null));
             jsonSettings.put("dateutc",DateUtil.toISOString(runDate));
             jsonSettings.put("utcOffset",utcOffset);
+            jsonSettings.put("units",sp.getString(R.string.key_units, "mg/dl"));
+            //jsonSettings.put("zoneid",ZoneId.systemDefault());
             jsonSettings.put("url_nightscout", sp.getString(R.string.key_nsclientinternal_url, ""));
             jsonSettings.put("nbdays", nbDays);
             jsonSettings.put("startdate",startDateString);

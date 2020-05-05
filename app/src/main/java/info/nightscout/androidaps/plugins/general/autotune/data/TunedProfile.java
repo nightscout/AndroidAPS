@@ -4,6 +4,7 @@ import info.nightscout.androidaps.data.Profile;
 
 public class TunedProfile extends Profile {
     private Profile profile;
+    public String profilename;
     private ProfileValue pv;
     public double currentBasal;
     public Double AvgISF;
@@ -22,16 +23,16 @@ public class TunedProfile extends Profile {
 
     }
 
-    private void getAvgISF() {
-        Double AvgISF=0d;
-
-
-    }
-
-    double getAvgCR() {
+    public double getAvgISF() {
         Double AvgISF=0d;
 
         return AvgISF;
+    }
+
+    public double getAvgIC() {
+        Double AvgIC=0d;
+
+        return AvgIC;
     }
 
     public Profile getProfile() {

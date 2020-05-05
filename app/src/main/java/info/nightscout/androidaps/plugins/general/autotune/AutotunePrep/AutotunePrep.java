@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -26,6 +27,7 @@ import info.nightscout.androidaps.plugins.general.autotune.data.TunedProfile;
 import info.nightscout.androidaps.plugins.general.autotune.AutotunePlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.autotune.data.NsTreatment;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -40,6 +42,7 @@ public class AutotunePrep {
     @Inject ProfileFunction profileFunction;
     @Inject AutotunePlugin autotunePlugin;
     @Inject SP sp;
+    @Inject IobCobCalculatorPlugin iobCobCalculatorPlugin;
     private final HasAndroidInjector injector;
 
     @Inject
@@ -187,7 +190,7 @@ public class AutotunePrep {
                 log.error("Could not find glucose data");
             }
 
-            avgDelta = avgDelta * 100 / 100;
+            avgDelta = Round.roundTo(avgDelta,0.01);
             glucoseDatum.AvgDelta = avgDelta;
 
             //sens = ISF
@@ -225,7 +228,7 @@ public class AutotunePrep {
             double basal3hAgo = opts.pumpprofile.getBasal(BGTime-3*60*60*1000);
 
             double sum = currentPumpBasal + basal1hAgo + basal2hAgo + basal3hAgo;
-            iobInputs.profile.currentBasal = Math.round((sum/4)*1000)/1000;
+            iobInputs.profile.currentBasal = Round.roundTo(sum/4 , 0.001);
 
             // this is the current autotuned basal, used for everything else besides IOB calculations
             //double currentBasal = AutotunePlugin.getBasal(hourOfDay);
@@ -233,18 +236,25 @@ public class AutotunePrep {
 
             //log.debug(currentBasal,basal1hAgo,basal2hAgo,basal3hAgo,IOBInputs.profile.currentBasal);
             // basalBGI is BGI of basal insulin activity.
-            double basalBGI = Math.round((currentBasal * sens / 60 * 5) * 100) / 100; // U/hr * mg/dL/U * 1 hr / 60 minutes * 5 = mg/dL/5m
+            double basalBGI = Round.roundTo((currentBasal * sens / 60 * 5),0.01); // U/hr * mg/dL/U * 1 hr / 60 minutes * 5 = mg/dL/5m
             //console.log(JSON.stringify(IOBInputs.profile));
             // call iob since calculated elsewhere
 //****************************************************************************************************************************************
             //todo Calculate iob or check initial proposition below
             //var getIOB = require('../iob');
             //var iob = getIOB(IOBInputs)[0];
-            IobTotal iob = autotunePlugin.calculateFromTreatmentsAndTemps(BGTime);
+            //IobTotal iob = autotunePlugin.calculateFromTreatmentsAndTemps(BGTime);
+            IobTotal iob;
+            iob = iobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(BGTime, profileData);
             //log.debug(JSON.stringify(iob));
+            log.debug("IobTotal calculateFromTreatmentsAndTemps Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob);
+
+            iob = iobCobCalculatorPlugin.calculateAbsInsulinFromTreatmentsAndTempsSynchronized(BGTime, profileData );
+
+            log.debug("IobTotal calculateAbsInsulinFromTreatmentsAndTemps Iob Activity: " + iob.activity + " Iob Basal: " + iob.basaliob + " Iob: " + iob.iob);
 
             // activity times ISF times 5 minutes is BGI
-            double BGI = Math.round((-iob.activity * sens * 5) * 100) / 100;
+            double BGI = Round.roundTo((-iob.activity * sens * 5) , 0.01);
             // datum = one glucose data point (being prepped to store in output)
             glucoseDatum.BGI = BGI;
             // calculating deviation
@@ -408,7 +418,7 @@ public class AutotunePrep {
             // debug line to print out all the things
 //            BGDateArray = BGDate.toString().split(" ");
 //            BGTime = BGDateArray[4];
-//            log.debug(absorbing+" mealCOB: "+mealCOB+" mealCarbs: "+mealCarbs+" basalBGI: "+round(basalBGI,1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
+            log.debug(absorbing+" mealCOB: "+mealCOB+" mealCarbs: "+mealCarbs+" basalBGI: "+Round.roundTo(basalBGI,0.1)+" BGI: "+BGI+" IOB: "+iob.iob+" at "+new Date(BGTime).toString()+" dev: "+deviation+" avgDelta: "+avgDelta +" "+ type);
         }
 
 

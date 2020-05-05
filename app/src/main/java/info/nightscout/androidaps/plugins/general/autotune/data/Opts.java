@@ -32,7 +32,9 @@ import info.nightscout.androidaps.utils.SafeParse;
 
 public class Opts {
     public Profile profile;
+    public String profilename;
     public Profile pumpprofile;
+    public String pumpprofilename;
     public List<BgReading> glucose;
     public List<NsTreatment> pumpHistory;
     public List<ExtendedBolus> pumpExtBolusHistory;
@@ -141,6 +143,7 @@ public class Opts {
         InsulinInterface insulinInterface = activePlugin.getActiveInsulin();
 
         try {
+            json.put("name",profilename);
             json.put("min_5m_carbimpact",sp.getDouble("openapsama_min_5m_carbimpact", 3.0));
             json.put("dia", profile.getDia());
 
