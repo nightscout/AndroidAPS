@@ -162,6 +162,8 @@ public class Opts {
             json.put("carb_ratio", profile.getIc());
             json.put("autosens_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")));
             json.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")));
+            json.put("units",sp.getString(R.string.key_units, "mg/dl"));
+            json.put("timezone",TimeZone.getDefault().getID());
             if (insulinInterface.getId() == InsulinInterface.OREF_ULTRA_RAPID_ACTING)
                 json.put("curve","ultra-rapid");
             else if (insulinInterface.getId() == InsulinInterface.OREF_RAPID_ACTING)

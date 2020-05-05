@@ -49,7 +49,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
+import java.util.TimeZone;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -1351,11 +1351,11 @@ public class AutotunePlugin extends PluginBase {
 
                     // for debugging only, all these files are included in ns-treatments
                     // only meals and bolus
-                    FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatmentstoJSON().toString(4).replace("\\/", "/"));
+                    //FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatmentstoJSON().toString(4).replace("\\/", "/"));
                     //only temp basal
-                    FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistorytoJSON().toString(4).replace("\\/", "/"));
+                    //FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistorytoJSON().toString(4).replace("\\/", "/"));
                     //only extended
-                    FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpExtBolusHistorytoJSON().toString(4).replace("\\/", "/"));
+                    //FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpExtBolusHistorytoJSON().toString(4).replace("\\/", "/"));
 
                     //ns-treatments files are for result compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
                     FS.createAutotunefile("ns-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.nsHistorytoJSON().toString(4).replace("\\/", "/"));
@@ -1450,7 +1450,7 @@ public class AutotunePlugin extends PluginBase {
                 convertedProfile.put("target_high", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", profile.getTargetHighMgdl())));
                 convertedProfile.put("units", profile.getUnits());
 
-                FS.createAutotunefile(FS.profilName(null), convertedProfile.toString(4));
+                FS.createAutotunefile(FS.profilName(null), convertedProfile.toString(4).replace("\\/","/"));
 
                 store.put(MainApp.gs(R.string.autotune_tunedprofile_name), convertedProfile);
                 //ProfileStore profileStore = new ProfileStore(json);
@@ -1498,7 +1498,7 @@ public class AutotunePlugin extends PluginBase {
             jsonSettings.put("dateutc",DateUtil.toISOString(runDate));
             jsonSettings.put("utcOffset",utcOffset);
             jsonSettings.put("units",sp.getString(R.string.key_units, "mg/dl"));
-            //jsonSettings.put("zoneid",ZoneId.systemDefault());
+            jsonSettings.put("timezone",TimeZone.getDefault().getID());
             jsonSettings.put("url_nightscout", sp.getString(R.string.key_nsclientinternal_url, ""));
             jsonSettings.put("nbdays", nbDays);
             jsonSettings.put("startdate",startDateString);
