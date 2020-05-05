@@ -156,7 +156,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment() {
                         args.putInt("mode", ProfileViewerDialog.Mode.RUNNING_PROFILE.ordinal)
                         val pvd = ProfileViewerDialog()
                         pvd.arguments = args
-                        fragmentManager?.let { pvd.show(it, "ProfileViewDialog") }
+                        pvd.show(childFragmentManager, "ProfileViewDialog")
                     }
                 }
             }

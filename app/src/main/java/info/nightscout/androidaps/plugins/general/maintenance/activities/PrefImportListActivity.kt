@@ -58,7 +58,7 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
 
             init {
                 itemView.isClickable = true
-                itemView.setOnClickListener { v: View ->
+                itemView.setOnClickListener {
                     val prefFile = fileName.tag as PrefsFile
                     val i = Intent()
 
