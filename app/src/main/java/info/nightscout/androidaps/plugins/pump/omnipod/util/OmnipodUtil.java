@@ -136,7 +136,7 @@ public class OmnipodUtil {
                 .registerTypeAdapter(DateTimeZone.class, (JsonDeserializer<DateTimeZone>) (json, typeOfT, context) ->
                         DateTimeZone.forID(json.getAsString()));
 
-        return gsonBuilder.create();
+        return gsonBuilder.excludeFieldsWithoutExposeAnnotation().create();
     }
 
 
@@ -214,5 +214,13 @@ public class OmnipodUtil {
 
     public void removeNextPodAddress() {
         sp.remove(OmnipodConst.Prefs.NextPodAddress);
+    }
+
+    public AAPSLogger getAapsLogger() {
+        return this.aapsLogger;
+    }
+
+    public SP getSp() {
+        return this.sp;
     }
 }

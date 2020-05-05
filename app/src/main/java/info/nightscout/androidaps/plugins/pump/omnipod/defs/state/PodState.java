@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.defs.state;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.StatusResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoFaultEvent;
+import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
 public abstract class PodState {
     protected final int address;

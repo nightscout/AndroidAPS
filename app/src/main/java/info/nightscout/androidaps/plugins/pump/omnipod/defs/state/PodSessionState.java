@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.defs.state;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -37,22 +38,38 @@ public class PodSessionState extends PodState {
     @Inject SP sp;
     @Inject OmnipodUtil omnipodUtil;
 
+    @Expose
     private final Map<AlertSlot, AlertType> configuredAlerts;
+    @Expose
     private transient PodStateChangedHandler stateChangedHandler;
+    @Expose
     private DateTime activatedAt;
+    @Expose
     private DateTime expiresAt;
+    @Expose
     private final FirmwareVersion piVersion;
+    @Expose
     private final FirmwareVersion pmVersion;
+    @Expose
     private final int lot;
+    @Expose
     private final int tid;
+    @Expose
     private Double reservoirLevel;
+    @Expose
     private boolean suspended;
 
+    @Expose
     private DateTimeZone timeZone;
+    @Expose
     private NonceState nonceState;
+    @Expose
     private SetupProgress setupProgress;
+    @Expose
     private AlertSet activeAlerts;
+    @Expose
     private BasalSchedule basalSchedule;
+    @Expose
     private DeliveryStatus lastDeliveryStatus;
 
     public PodSessionState(DateTimeZone timeZone, int address, FirmwareVersion piVersion,

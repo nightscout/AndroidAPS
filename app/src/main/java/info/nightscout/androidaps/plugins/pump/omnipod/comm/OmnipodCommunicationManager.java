@@ -55,9 +55,9 @@ public class OmnipodCommunicationManager extends RileyLinkCommunicationManager {
 
     @Inject public AAPSLogger aapsLogger;
     @Inject OmnipodPumpStatus omnipodPumpStatus;
-    @Inject OmnipodPumpPlugin omnipodPumpPlugin;
-    @Inject RileyLinkServiceData rileyLinkServiceData;
-    @Inject ServiceTaskExecutor serviceTaskExecutor;
+    //@Inject OmnipodPumpPlugin omnipodPumpPlugin;
+    //@Inject RileyLinkServiceData rileyLinkServiceData;
+    //@Inject ServiceTaskExecutor serviceTaskExecutor;
 
     public OmnipodCommunicationManager(HasAndroidInjector injector, RFSpy rfspy) {
         super(injector, rfspy);
