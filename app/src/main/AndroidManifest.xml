@@ -86,6 +86,7 @@
             android:launchMode="singleTask" />
         <activity android:name=".plugins.pump.danaRS.activities.EnterPinActivity"
             android:launchMode="singleTask" />
+        <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity" />
         <activity android:name=".historyBrowser.HistoryBrowseActivity" />
         <activity android:name=".activities.SurveyActivity" />
         <activity android:name=".activities.StatsActivity" />

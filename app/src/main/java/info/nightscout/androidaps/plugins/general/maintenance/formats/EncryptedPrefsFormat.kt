@@ -27,6 +27,16 @@ class EncryptedPrefsFormat @Inject constructor(
         val FORMAT_KEY_NOENC = "aaps_structured"
 
         private val KEY_CONSCIENCE = "if you remove/change this, please make sure you know the consequences!"
+        private val FORMAT_TEST_REGEX = Regex("(\\\"format\\\"\\s*\\:\\s*\\\"aaps_[^\"]*\\\")")
+    }
+
+    override fun isPreferencesFile(file: File, preloadedContents: String?): Boolean {
+        return if (file.absolutePath.endsWith(".json")) {
+            val contents = preloadedContents ?: storage.getFileContents(file)
+            FORMAT_TEST_REGEX.containsMatchIn(contents)
+        } else {
+            false
+        }
     }
 
     override fun savePreferences(file: File, prefs: Prefs, masterPassword: String?) {
@@ -97,7 +107,6 @@ class EncryptedPrefsFormat @Inject constructor(
     override fun loadPreferences(file: File, masterPassword: String?): Prefs {
 
         val entries: MutableMap<String, String> = mutableMapOf()
-        val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = mutableMapOf()
         val issues = LinkedList<String>()
         try {
 
@@ -105,25 +114,11 @@ class EncryptedPrefsFormat @Inject constructor(
             val fileContents = jsonBody.replace(Regex("(?is)(\\\"file_hash\\\"\\s*\\:\\s*\\\")([^\"]*)(\\\")"), "$1--to-be-calculated--$3")
             val calculatedFileHash = cryptoUtil.hmac256(fileContents, KEY_CONSCIENCE)
             val container = JSONObject(jsonBody)
+            val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = loadMetadata(container)
 
-            if (container.has(PrefsMetadataKey.FILE_FORMAT.key) && container.has("security") && container.has("content") && container.has("metadata")) {
+            if (container.has(PrefsMetadataKey.FILE_FORMAT.key) && container.has("security") && container.has("content")) {
                 val fileFormat = container.getString(PrefsMetadataKey.FILE_FORMAT.key)
-
-                if ((fileFormat != FORMAT_KEY_ENC) && (fileFormat != FORMAT_KEY_NOENC)) {
-                    throw PrefFormatError("Unsupported file format: " + fileFormat)
-                }
-
-                val meta = container.getJSONObject("metadata")
                 val security = container.getJSONObject("security")
-
-                metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(fileFormat, PrefsStatus.OK)
-                for (key in meta.keys()) {
-                    val metaKey = PrefsMetadataKey.fromKey(key)
-                    if (metaKey != null) {
-                        metadata[metaKey] = PrefMetadata(meta.getString(key), PrefsStatus.OK)
-                    }
-                }
-
                 val encrypted = fileFormat == FORMAT_KEY_ENC
                 var secure: PrefsStatus = PrefsStatus.OK
                 var decryptedOk = false
@@ -208,8 +203,6 @@ class EncryptedPrefsFormat @Inject constructor(
                 }
 
                 metadata[PrefsMetadataKey.ENCRYPTION] = PrefMetadata(encryptionDescStr, secure, issuesStr)
-            } else {
-                metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(resourceHelper.gs(R.string.prefdecrypt_wrong_json), PrefsStatus.ERROR)
             }
 
             return Prefs(entries, metadata)
@@ -221,6 +214,37 @@ class EncryptedPrefsFormat @Inject constructor(
         } catch (e: JSONException) {
             throw PrefFormatError("Mallformed preferences JSON file: " + e)
         }
+    }
+
+    override fun loadMetadata(contents: String?): PrefMetadataMap {
+        contents?.let {
+            val container = JSONObject(contents)
+            return loadMetadata(container)
+        }
+        return mutableMapOf()
+    }
+
+    private fun loadMetadata(container: JSONObject): MutableMap<PrefsMetadataKey, PrefMetadata> {
+        val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = mutableMapOf()
+        if (container.has(PrefsMetadataKey.FILE_FORMAT.key) && container.has("security") && container.has("content") && container.has("metadata")) {
+            val fileFormat = container.getString(PrefsMetadataKey.FILE_FORMAT.key)
+            if ((fileFormat != FORMAT_KEY_ENC) && (fileFormat != FORMAT_KEY_NOENC)) {
+                metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(resourceHelper.gs(R.string.metadata_format_other), PrefsStatus.ERROR)
+            } else {
+                val meta = container.getJSONObject("metadata")
+                metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(fileFormat, PrefsStatus.OK)
+                for (key in meta.keys()) {
+                    val metaKey = PrefsMetadataKey.fromKey(key)
+                    if (metaKey != null) {
+                        metadata[metaKey] = PrefMetadata(meta.getString(key), PrefsStatus.OK)
+                    }
+                }
+            }
+        } else {
+            metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(resourceHelper.gs(R.string.prefdecrypt_wrong_json), PrefsStatus.ERROR)
+        }
+
+        return metadata;
     }
 
 }

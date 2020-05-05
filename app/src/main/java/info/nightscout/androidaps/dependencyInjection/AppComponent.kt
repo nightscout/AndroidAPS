@@ -70,6 +70,7 @@ import javax.inject.Singleton
         OverviewModule::class,
         DataClassesModule::class,
         SMSModule::class,
+        UIModule::class,
         DanaRSCommModule::class
     ]
 )
