@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="key_enable_fabric" translatable="false">enable_fabric</string>
+    <string name="key_language" translatable="false">language</string>
+
     <string name="confirmation">Confirmation</string>
     <string name="message">Message</string>
     <string name="ok">OK</string>
