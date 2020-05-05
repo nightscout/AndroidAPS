@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="-4dp"
-            android:src="@drawable/closedloop" />
+            android:src="@drawable/loop_closed" />
 
         <TextView
             android:id="@+id/overview_apsmode_text"

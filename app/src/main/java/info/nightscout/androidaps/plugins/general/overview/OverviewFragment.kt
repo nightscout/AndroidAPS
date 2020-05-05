@@ -575,7 +575,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overview_apsmode?.visibility = View.VISIBLE
             when {
                 loopPlugin.isEnabled() && loopPlugin.isSuperBolus                       -> {
-                    overview_apsmode.setImageResource(R.drawable.remove)
+                    overview_apsmode.setImageResource(R.drawable.loop_superbolus)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
                     //overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopsuperbolusfor), loopPlugin.minutesToEndOfSuspend())
 //                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
@@ -583,7 +583,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
 
                 loopPlugin.isDisconnected                                               -> {
-                    overview_apsmode.setImageResource(R.drawable.closedloop_disconnected)
+                    overview_apsmode.setImageResource(R.drawable.loop_disconnected)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
 //                    overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopdisconnectedfor), loopPlugin.minutesToEndOfSuspend())
 //                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonCritical))
@@ -591,7 +591,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
 
                 loopPlugin.isEnabled() && loopPlugin.isSuspended                        -> {
-                    overview_apsmode.setImageResource(R.drawable.closedloop_pause)
+                    overview_apsmode.setImageResource(R.drawable.loop_paused)
                     overview_apsmode_text?.text = DateUtil.age(loopPlugin.minutesToEndOfSuspend() * 60000L, true, resourceHelper)
 //                    overview_apsmode_text?.text = String.format(resourceHelper.gs(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend())
 //                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
@@ -599,8 +599,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
 
                 pump.isSuspended                                                        -> {
-                    overview_apsmode_text?.setCompoundDrawables(null, resourceHelper.gd(R.drawable.closedloop_pause), null, null)
-                    overview_apsmode.setImageResource(R.drawable.closedloop_pause)
+                    overview_apsmode.setImageResource(R.drawable.loop_paused)
                     overview_apsmode_text?.text = ""
 //                    overview_apsmode_text?.text = resourceHelper.gs(R.string.pumpsuspended)
 //                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonWarning))
@@ -608,7 +607,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value() && loopPlugin.isLGS -> {
-                    overview_apsmode.setImageResource(R.drawable.remove)
+                    overview_apsmode.setImageResource(R.drawable.loop_lgs)
                     overview_apsmode_text?.text = ""
 //                    overview_apsmode_text?.text = resourceHelper.gs(R.string.closedloop)
 //                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
@@ -616,7 +615,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
 
                 loopPlugin.isEnabled() && closedLoopEnabled.value()                     -> {
-                    overview_apsmode.setImageResource(R.drawable.closedloop)
+                    overview_apsmode.setImageResource(R.drawable.loop_closed)
                     overview_apsmode_text?.text = ""
 //                    overview_apsmode_text?.text = resourceHelper.gs(R.string.closedloop)
 //                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
@@ -624,7 +623,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
 
                 loopPlugin.isEnabled() && !closedLoopEnabled.value()                    -> {
-                    overview_apsmode.setImageResource(R.drawable.openloop)
+                    overview_apsmode.setImageResource(R.drawable.loop_open)
                     overview_apsmode_text?.text = ""
 //                    overview_apsmode_text?.text = resourceHelper.gs(R.string.openloop)
 //                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonDefault))
@@ -632,7 +631,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
 
                 else                                                                    -> {
-                    overview_apsmode.setImageResource(R.drawable.remove)
+                    overview_apsmode.setImageResource(R.drawable.loop_disabled)
                     overview_apsmode_text?.text = ""
 //                    overview_apsmode_text?.text = resourceHelper.gs(R.string.disabledloop)
 //                    overview_apsmode_text?.setBackgroundColor(resourceHelper.gc(R.color.ribbonCritical))
