@@ -110,7 +110,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             if (sp.contains(OmnipodConst.Prefs.PodState) && omnipodUtil.getPodSessionState() == null) {
                 try {
                     Gson gson = omnipodUtil.getGsonInstance();
-                    String storedPodState = sp.getString(OmnipodConst.Prefs.PodState, null);
+                    String storedPodState = sp.getString(OmnipodConst.Prefs.PodState, "");
                     aapsLogger.info(LTag.PUMPCOMM, "PodSessionState-SP: loaded from SharedPreferences: " + storedPodState);
                     podState = gson.fromJson(storedPodState, PodSessionState.class);
                     podState.injectDaggerClass(injector);
