@@ -19,6 +19,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCons
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
@@ -88,6 +89,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     public void initRileyLinkServiceData() {
 
         rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.Omnipod;
+        rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod;
 
         // get most recently used RileyLink address
         rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
@@ -206,6 +208,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             this.omnipodPumpStatus.beepTBREnabled = sp.getBoolean(OmnipodConst.Prefs.BeepTBREnabled, true);
             this.omnipodPumpStatus.podDebuggingOptionsEnabled = sp.getBoolean(OmnipodConst.Prefs.PodDebuggingOptionsEnabled, false);
             this.omnipodPumpStatus.timeChangeEventEnabled = sp.getBoolean(OmnipodConst.Prefs.TimeChangeEventEnabled, true);
+            rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod;
 
             aapsLogger.debug(LTag.PUMPCOMM, "Beeps [basal={}, bolus={}, SMB={}, TBR={}]", this.omnipodPumpStatus.beepBasalEnabled, this.omnipodPumpStatus.beepBolusEnabled, this.omnipodPumpStatus.beepSMBEnabled, this.omnipodPumpStatus.beepTBREnabled);
 
