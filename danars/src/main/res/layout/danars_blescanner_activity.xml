@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".plugins.pump.danaRS.activities.BLEScanActivity">
+    tools:context="info.nightscout.androidaps.plugins.pump.danaRS.activities.BLEScanActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/pairing"
+            android:contentDescription="@string/danars_pairing"
             android:src="@drawable/ic_bluetooth_white_48dp" />
 
         <TextView
@@ -27,7 +27,7 @@
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:text="@string/pairing"
+            android:text="@string/danars_pairing"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 

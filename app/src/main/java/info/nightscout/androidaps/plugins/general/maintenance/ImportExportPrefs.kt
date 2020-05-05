@@ -217,7 +217,7 @@ class ImportExportPrefs @Inject constructor(
 
     fun importSharedPreferences(fragment: Fragment) {
         fragment.activity?.let { fragmentAct ->
-            val callForPrefFile = fragmentAct.prepareCall(PrefsFileContract()) {
+            val callForPrefFile = fragmentAct.registerForActivityResult(PrefsFileContract()) {
                 it?.let {
                     importSharedPreferences(fragmentAct, it)
                 }
@@ -227,7 +227,7 @@ class ImportExportPrefs @Inject constructor(
     }
 
     fun importSharedPreferences(activity: FragmentActivity) {
-        val callForPrefFile = activity.prepareCall(PrefsFileContract()) {
+        val callForPrefFile = activity.registerForActivityResult(PrefsFileContract()) {
             it?.let {
                 importSharedPreferences(activity, it)
             }

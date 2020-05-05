@@ -13,9 +13,7 @@ import info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEScanAct
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
 import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRHistoryActivity
 import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRUserOptionsActivity
-import info.nightscout.androidaps.plugins.pump.danaRS.activities.BLEScanActivity
 import info.nightscout.androidaps.plugins.pump.danaRS.activities.EnterPinActivity
-import info.nightscout.androidaps.plugins.pump.danaRS.activities.PairingHelperActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingInformationActivity
@@ -26,7 +24,6 @@ import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 @Suppress("unused")
 abstract class ActivitiesModule {
 
-    @ContributesAndroidInjector abstract fun contributesBLEScanActivity(): BLEScanActivity
     @ContributesAndroidInjector abstract fun contributeBolusProgressHelperActivity(): BolusProgressHelperActivity
     @ContributesAndroidInjector abstract fun contributeDanaRHistoryActivity(): DanaRHistoryActivity
     @ContributesAndroidInjector abstract fun contributeDanaRUserOptionsActivity(): DanaRUserOptionsActivity
@@ -39,7 +36,6 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesLogSettingActivity(): LogSettingActivity
     @ContributesAndroidInjector abstract fun contributeMainActivity(): MainActivity
     @ContributesAndroidInjector abstract fun contributesMedtronicHistoryActivity(): MedtronicHistoryActivity
-    @ContributesAndroidInjector abstract fun contributesPairingHelperActivity(): PairingHelperActivity
     @ContributesAndroidInjector abstract fun contributesPreferencesActivity(): PreferencesActivity
     @ContributesAndroidInjector abstract fun contributesQuickWizardListActivity(): QuickWizardListActivity
     @ContributesAndroidInjector abstract fun contributesRequestDexcomPermissionActivity(): RequestDexcomPermissionActivity

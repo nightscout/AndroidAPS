@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_danars_address" translatable="false">danars_address</string>
+    <string name="key_danars_name" translatable="false">danars_name</string>
+
+    <string name="danars_pairing">Pairing</string>
+    <string name="danars_nodeviceavailable">No device found so far</string>
+    <string name="danars_pairingok">Pairing OK</string>
+    <string name="danars_pairingtimedout">Pairing timed out</string>
+    <string name="danars_waitingforpairing">Waiting for pairing on pump</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+
+</resources>

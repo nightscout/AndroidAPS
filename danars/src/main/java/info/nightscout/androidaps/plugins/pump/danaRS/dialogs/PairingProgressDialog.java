@@ -17,7 +17,7 @@ import android.widget.TextView;
 import javax.inject.Inject;
 
 import dagger.android.support.DaggerDialogFragment;
-import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.danars.R;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.pump.danaRS.activities.PairingHelperActivity;
 import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSPairingSuccess;
@@ -63,7 +63,7 @@ public class PairingProgressDialog extends DaggerDialogFragment {
                     if (activity != null) {
                         activity.runOnUiThread(() -> {
                             progressBar.setProgress(100);
-                            statusView.setText(R.string.pairingok);
+                            statusView.setText(R.string.danars_pairingok);
                             try {
                                 Thread.sleep(1000);
                             } catch (InterruptedException ignored) {
@@ -84,7 +84,7 @@ public class PairingProgressDialog extends DaggerDialogFragment {
             if (activity != null) {
                 activity.runOnUiThread(() -> {
                     progressBar.setProgress(100);
-                    statusView.setText(R.string.pairingtimedout);
+                    statusView.setText(R.string.danars_pairingtimedout);
                     button.setVisibility(View.VISIBLE);
                 });
             }
@@ -140,7 +140,7 @@ public class PairingProgressDialog extends DaggerDialogFragment {
     private void setViews() {
         progressBar.setMax(100);
         progressBar.setProgress(0);
-        statusView.setText(resourceHelper.gs(R.string.waitingforpairing));
+        statusView.setText(resourceHelper.gs(R.string.danars_waitingforpairing));
         button.setVisibility(View.GONE);
         button.setOnClickListener(v -> dismiss());
         handler.post(runnable);

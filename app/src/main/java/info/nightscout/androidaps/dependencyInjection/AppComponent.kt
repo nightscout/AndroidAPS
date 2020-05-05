@@ -6,6 +6,7 @@ import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.core.dependencyInjection.CoreModule
+import info.nightscout.androidaps.danars.dependencyInjection.DanaRSActivitiesModule
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.ProfileStore
 import info.nightscout.androidaps.data.PumpEnactResult
@@ -71,7 +72,8 @@ import javax.inject.Singleton
         DataClassesModule::class,
         SMSModule::class,
         UIModule::class,
-        DanaRSCommModule::class
+        DanaRSCommModule::class,
+        DanaRSActivitiesModule::class
     ]
 )
 interface AppComponent : AndroidInjector<MainApp> {

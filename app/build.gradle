@@ -243,6 +243,7 @@ dependencies {
     wearApp project(':wear')
 
     implementation project(':core')
+    implementation project(':danars')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.google.android.gms:play-services-wearable:17.0.0'

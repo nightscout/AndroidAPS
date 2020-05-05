@@ -798,17 +798,11 @@
     <string name="activate_profile">Activate profile</string>
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
-    <string name="waitingforpairing">Waiting for pairing on pump</string>
-    <string name="pairingok">Pairing OK</string>
-    <string name="pairingtimedout">Pairing timed out</string>
     <string name="pairing">Pairing</string>
     <string name="key_danars_pairingkey" translatable="false">danars_pairing_key_</string>
     <string name="key_danars_v3_randompairingkey" translatable="false">danars_v3_randompairing_key_</string>
     <string name="key_danars_v3_pairingkey" translatable="false">danars_v3_pairing_key_</string>
     <string name="key_danars_v3_randomsynckey" translatable="false">danars_v3_randomsync_key_</string>
-    <string name="key_danars_address" translatable="false">danars_address</string>
-    <string name="key_danars_name" translatable="false">danars_name</string>
-    <string name="danars_nodeviceavailable">No device found so far</string>
     <string name="emptyreservoir">Empty reservoir</string>
     <string name="bloodsugarmeasurementalert">Blood sugar measurement alert</string>
     <string name="remaininsulinalert">Remaining insulin level</string>
