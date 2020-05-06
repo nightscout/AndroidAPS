@@ -619,15 +619,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         if (omnipodUtil.getPodSessionState() != null) {
             podSessionState = omnipodUtil.getPodSessionState();
         } else {
-            String podState = sp.getString(OmnipodConst.Prefs.PodState, "");
-
-            aapsLogger.info(LTag.PUMP, "PodSessionState-SP: loaded from SharedPreferences: " + podState);
-
-            if (StringUtils.isNotEmpty(podState)) {
-                podSessionState = omnipodUtil.getGsonInstance().fromJson(podState, PodSessionState.class);
-                podSessionState.injectDaggerClass(injector);
-                omnipodUtil.setPodSessionState(podSessionState);
-            }
+            podSessionState = omnipodUtil.loadSessionState();
         }
 
 
