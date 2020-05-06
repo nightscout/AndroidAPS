@@ -5,12 +5,9 @@ import android.content.Context
 import android.content.res.AssetFileDescriptor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
-import androidx.annotation.ArrayRes
-import androidx.annotation.BoolRes
-import androidx.annotation.ColorRes
-import androidx.annotation.PluralsRes
-import androidx.annotation.StringRes
+import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import info.nightscout.androidaps.core.R
 import javax.inject.Inject
@@ -28,6 +25,8 @@ class ResourceHelperImplementation @Inject constructor(private val context: Cont
         context.resources.getQuantityString(id, quantity, *args)
 
     override fun gc(@ColorRes id: Int): Int = ContextCompat.getColor(context, id)
+
+    override fun gd(@DrawableRes id: Int): Drawable? = context.getDrawable(id)
 
     override fun gb(@BoolRes id: Int): Boolean = context.resources.getBoolean(id)
 

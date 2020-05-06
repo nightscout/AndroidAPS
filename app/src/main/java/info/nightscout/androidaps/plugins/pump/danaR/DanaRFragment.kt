@@ -71,21 +71,19 @@ class DanaRFragment : DaggerFragment() {
 
         danar_history.setOnClickListener { startActivity(Intent(context, DanaRHistoryActivity::class.java)) }
         danar_viewprofile.setOnClickListener {
-            fragmentManager?.let { fragmentManager ->
-                val profile = danaRPump.createConvertedProfile()?.getDefaultProfile()
-                    ?: return@let
-                val profileName = danaRPump.createConvertedProfile()?.getDefaultProfileName()
-                    ?: return@let
-                val args = Bundle()
-                args.putLong("time", DateUtil.now())
-                args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
-                args.putString("customProfile", profile.data.toString())
-                args.putString("customProfileUnits", profile.units)
-                args.putString("customProfileName", profileName)
-                val pvd = ProfileViewerDialog()
-                pvd.arguments = args
-                pvd.show(fragmentManager, "ProfileViewDialog")
-            }
+            val profile = danaRPump.createConvertedProfile()?.getDefaultProfile()
+                ?: return@setOnClickListener
+            val profileName = danaRPump.createConvertedProfile()?.getDefaultProfileName()
+                ?: return@setOnClickListener
+            val args = Bundle()
+            args.putLong("time", DateUtil.now())
+            args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
+            args.putString("customProfile", profile.data.toString())
+            args.putString("customProfileUnits", profile.units)
+            args.putString("customProfileName", profileName)
+            val pvd = ProfileViewerDialog()
+            pvd.arguments = args
+            pvd.show(childFragmentManager, "ProfileViewDialog")
         }
         danar_stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
         danar_user_options.setOnClickListener { startActivity(Intent(context, DanaRUserOptionsActivity::class.java)) }

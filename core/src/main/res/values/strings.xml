@@ -1,4 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="key_enable_fabric" translatable="false">enable_fabric</string>
+    <string name="key_language" translatable="false">language</string>
+
+    <string name="confirmation">Confirmation</string>
+    <string name="message">Message</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="dismiss">DISMISS</string>
+
+    <string name="rileylink_scanner_ble_not_supported">Bluetooth Low Energy not supported.</string>
+    <string name="rileylink_scanner_ble_not_enabled">Bluetooth not enabled.</string>
+    <string name="location_not_found_title">Location Is Not Enabled</string>
+    <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
+
 </resources>

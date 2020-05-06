@@ -6,12 +6,12 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
-import android.os.Environment
 import android.provider.Settings
+import androidx.activity.invoke
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.PreferencesActivity
@@ -22,9 +22,9 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.maintenance.formats.*
 import info.nightscout.androidaps.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.androidaps.utils.DateUtil
+import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog.show
-import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.alertDialogs.PrefImportSummaryDialog
 import info.nightscout.androidaps.utils.alertDialogs.TwoMessagesAlertDialog
 import info.nightscout.androidaps.utils.alertDialogs.WarningDialog
@@ -32,8 +32,6 @@ import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.protection.PasswordCheck
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import org.joda.time.DateTime
-import org.joda.time.Days
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -51,36 +49,24 @@ private val PERMISSIONS_STORAGE = arrayOf(
     Manifest.permission.WRITE_EXTERNAL_STORAGE
 )
 
-private const val IMPORT_AGE_NOT_YET_OLD_DAYS = 60
-
 @Singleton
 class ImportExportPrefs @Inject constructor(
     private var log: AAPSLogger,
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
     private val buildHelper: BuildHelper,
-    private val otp: OneTimePassword,
     private val rxBus: RxBusWrapper,
     private val passwordCheck: PasswordCheck,
     private val classicPrefsFormat: ClassicPrefsFormat,
-    private val encryptedPrefsFormat: EncryptedPrefsFormat
+    private val encryptedPrefsFormat: EncryptedPrefsFormat,
+    private val prefFileList: PrefFileListProvider
 ) {
 
     val TAG = LTag.CORE
 
-    private val path = File(Environment.getExternalStorageDirectory().toString())
-
-    private val file = File(path, resourceHelper.gs(R.string.app_name) + "Preferences")
-    private val encFile = File(path, resourceHelper.gs(R.string.app_name) + "Preferences.json")
-
-    fun prefsImportFile(): File {
-        return if (encFile.exists()) encFile else file
-    }
-
     fun prefsFileExists(): Boolean {
-        return encFile.exists() || file.exists()
+        return prefFileList.listPreferenceFiles().size > 0
     }
-
 
     fun exportSharedPreferences(f: Fragment) {
         f.activity?.let { exportSharedPreferences(it) }
@@ -135,9 +121,6 @@ class ImportExportPrefs @Inject constructor(
         return name
     }
 
-    private fun getCurrentDeviceModelString() =
-        Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")"
-
     private fun prefsEncryptionIsDisabled() =
         buildHelper.isEngineeringMode() && !sp.getBoolean(resourceHelper.gs(R.string.key_maintenance_encrypt_exported_prefs), true)
 
@@ -173,36 +156,41 @@ class ImportExportPrefs @Inject constructor(
         return true
     }
 
-    private fun askToConfirmExport(activity: Activity, then: ((password: String) -> Unit)) {
+    private fun askToConfirmExport(activity: Activity, fileToExport: File, then: ((password: String) -> Unit)) {
         if (!prefsEncryptionIsDisabled() && !assureMasterPasswordSet(activity, R.string.nav_export)) return
 
         TwoMessagesAlertDialog.showAlert(activity, resourceHelper.gs(R.string.nav_export),
-            resourceHelper.gs(R.string.export_to) + " " + encFile + " ?",
+            resourceHelper.gs(R.string.export_to) + " " + fileToExport + " ?",
             resourceHelper.gs(R.string.password_preferences_encrypt_prompt), {
             askForMasterPassIfNeeded(activity, R.string.preferences_export_canceled, then)
-        }, null,  R.drawable.ic_header_export)
+        }, null, R.drawable.ic_header_export)
     }
 
-    private fun askToConfirmImport(activity: Activity, fileToImport: File, then: ((password: String) -> Unit)) {
+    private fun askToConfirmImport(activity: Activity, fileToImport: PrefsFile, then: ((password: String) -> Unit)) {
 
-        if (encFile.exists()) {
+        if (fileToImport.handler == PrefsFormatsHandler.ENCRYPTED) {
             if (!assureMasterPasswordSet(activity, R.string.nav_import)) return
 
             TwoMessagesAlertDialog.showAlert(activity, resourceHelper.gs(R.string.nav_import),
-                resourceHelper.gs(R.string.import_from) + " " + fileToImport + " ?",
+                resourceHelper.gs(R.string.import_from) + " " + fileToImport.file + " ?",
                 resourceHelper.gs(R.string.password_preferences_decrypt_prompt), {
                 askForMasterPass(activity, R.string.preferences_import_canceled, then)
             }, null, R.drawable.ic_header_import)
 
         } else {
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.nav_import),
-                resourceHelper.gs(R.string.import_from) + " " + fileToImport + " ?",
+                resourceHelper.gs(R.string.import_from) + " " + fileToImport.file + " ?",
                 Runnable { then("") })
         }
     }
 
     private fun exportSharedPreferences(activity: Activity) {
-        askToConfirmExport(activity) { password ->
+
+        prefFileList.ensureExportDirExists()
+        val legacyFile = prefFileList.legacyFile()
+        val newFile = prefFileList.newExportFile()
+
+        askToConfirmExport(activity, newFile) { password ->
             try {
                 val entries: MutableMap<String, String> = mutableMapOf()
                 for ((key, value) in sp.getAll()) {
@@ -211,12 +199,14 @@ class ImportExportPrefs @Inject constructor(
 
                 val prefs = Prefs(entries, prepareMetadata(activity))
 
-                classicPrefsFormat.savePreferences(file, prefs)
-                encryptedPrefsFormat.savePreferences(encFile, prefs, password)
+                if (BuildConfig.DEBUG && buildHelper.isEngineeringMode()) {
+                    classicPrefsFormat.savePreferences(legacyFile, prefs)
+                }
+                encryptedPrefsFormat.savePreferences(newFile, prefs, password)
 
                 ToastUtils.okToast(activity, resourceHelper.gs(R.string.exported))
             } catch (e: FileNotFoundException) {
-                ToastUtils.errorToast(activity, resourceHelper.gs(R.string.filenotfound) + " " + encFile)
+                ToastUtils.errorToast(activity, resourceHelper.gs(R.string.filenotfound) + " " + newFile)
                 log.error(TAG, "Unhandled exception", e)
             } catch (e: IOException) {
                 ToastUtils.errorToast(activity, e.message)
@@ -226,21 +216,38 @@ class ImportExportPrefs @Inject constructor(
     }
 
     fun importSharedPreferences(fragment: Fragment) {
-        fragment.activity?.let { importSharedPreferences(it) }
+        fragment.activity?.let { fragmentAct ->
+            val callForPrefFile = fragmentAct.registerForActivityResult(PrefsFileContract()) {
+                it?.let {
+                    importSharedPreferences(fragmentAct, it)
+                }
+            }
+            callForPrefFile.invoke()
+        }
     }
 
-    fun importSharedPreferences(activity: Activity) {
+    fun importSharedPreferences(activity: FragmentActivity) {
+        val callForPrefFile = activity.registerForActivityResult(PrefsFileContract()) {
+            it?.let {
+                importSharedPreferences(activity, it)
+            }
+        }
+        callForPrefFile.invoke()
+    }
 
-        val importFile = prefsImportFile()
+    private fun importSharedPreferences(activity: Activity, importFile: PrefsFile) {
 
         askToConfirmImport(activity, importFile) { password ->
 
-            val format: PrefsFormat = if (encFile.exists()) encryptedPrefsFormat else classicPrefsFormat
+            val format: PrefsFormat = when (importFile.handler) {
+                PrefsFormatsHandler.CLASSIC   -> classicPrefsFormat
+                PrefsFormatsHandler.ENCRYPTED -> encryptedPrefsFormat
+            }
 
             try {
 
-                val prefs = format.loadPreferences(importFile, password)
-                prefs.metadata = checkMetadata(prefs.metadata)
+                val prefs = format.loadPreferences(importFile.file, password)
+                prefs.metadata = prefFileList.checkMetadata(prefs.metadata)
 
                 // import is OK when we do not have errors (warnings are allowed)
                 val importOk = checkIfImportIsOk(prefs)
@@ -274,45 +281,6 @@ class ImportExportPrefs @Inject constructor(
                 ToastUtils.errorToast(activity, e.message)
             }
         }
-    }
-
-    // check metadata for known issues, change their status and add info with explanations
-    private fun checkMetadata(metadata: Map<PrefsMetadataKey, PrefMetadata>): Map<PrefsMetadataKey, PrefMetadata> {
-        val meta = metadata.toMutableMap()
-
-         meta[PrefsMetadataKey.AAPS_FLAVOUR]?.let { flavour ->
-             val flavourOfPrefs = flavour.value
-             if (flavour.value != BuildConfig.FLAVOR) {
-                 flavour.status = PrefsStatus.WARN
-                 flavour.info = resourceHelper.gs(R.string.metadata_warning_different_flavour, flavourOfPrefs, BuildConfig.FLAVOR)
-             }
-         }
-
-        meta[PrefsMetadataKey.DEVICE_MODEL]?.let { model ->
-            if (model.value != getCurrentDeviceModelString()) {
-                model.status = PrefsStatus.WARN
-                model.info = resourceHelper.gs(R.string.metadata_warning_different_device)
-            }
-        }
-
-        meta[PrefsMetadataKey.CREATED_AT]?.let { createdAt ->
-            try {
-                val date1 = DateTime.parse(createdAt.value);
-                val date2 = DateTime.now()
-
-                val daysOld = Days.daysBetween(date1.toLocalDate(), date2.toLocalDate()).getDays()
-
-                if (daysOld > IMPORT_AGE_NOT_YET_OLD_DAYS) {
-                    createdAt.status = PrefsStatus.WARN
-                    createdAt.info = resourceHelper.gs(R.string.metadata_warning_old_export, daysOld.toString())
-                }
-            } catch (e: Exception) {
-                createdAt.status = PrefsStatus.WARN
-                createdAt.info = resourceHelper.gs(R.string.metadata_warning_date_format)
-            }
-        }
-
-        return meta
     }
 
     private fun checkIfImportIsOk(prefs: Prefs): Boolean {
