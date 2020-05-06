@@ -142,7 +142,7 @@ public class OmnipodUtil {
                 .registerTypeAdapter(DateTimeZone.class, (JsonDeserializer<DateTimeZone>) (json, typeOfT, context) ->
                         DateTimeZone.forID(json.getAsString()));
 
-        return gsonBuilder.excludeFieldsWithoutExposeAnnotation().create();
+        return gsonBuilder.create();
     }
 
 
@@ -201,7 +201,7 @@ public class OmnipodUtil {
     }
 
     public Integer getNextPodAddress() {
-        if(sp.contains(OmnipodConst.Prefs.NextPodAddress)) {
+        if (sp.contains(OmnipodConst.Prefs.NextPodAddress)) {
             int nextPodAddress = sp.getInt(OmnipodConst.Prefs.NextPodAddress, 0);
             if (OmnipodManager.isValidAddress(nextPodAddress)) {
                 return nextPodAddress;
