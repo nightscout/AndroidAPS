@@ -7,6 +7,7 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.Round;
 
 public class NsTreatment {
     //Common properties
@@ -70,7 +71,7 @@ public class NsTreatment {
     private void _NsTreatment (TemporaryBasal t) {
         _id=t._id;
         date=t.date;
-        absoluteRate=t.absoluteRate;
+        absoluteRate= Round.roundTo(t.absoluteRate,0.001);
         isValid=t.isValid;
         isEndingEvent=t.isEndingEvent();
         eventType = TEMPBASAL;
@@ -92,14 +93,16 @@ public class NsTreatment {
             cPjson.put("insulin",insulin > 0 ? insulin : JSONObject.NULL);
             cPjson.put("carbs",carbs > 0 ? carbs : JSONObject.NULL );
             if(eventType==TEMPBASAL) {
-                if (!isEndingEvent)
+                if (!isEndingEvent) {
                     cPjson.put("duration", duration);
-                cPjson.put("absolute", absoluteRate);
-                cPjson.put("rate", absoluteRate);
-                cPjson.put("percent", percentRate);
+                    cPjson.put("absolute", absoluteRate);
+                    cPjson.put("rate", absoluteRate);
+                    // cPjson.put("percent", percentRate - 100);
+                    cPjson.put("isFakeExtended", isFakeExtended);
+                }
                 cPjson.put("enteredBy", enteredBy);
-                cPjson.put("isEnding", isEndingEvent);
-                cPjson.put("isFakeExtended", isFakeExtended);
+                //cPjson.put("isEnding", isEndingEvent);
+
             } else {
                 cPjson.put("isSMB", isSMB);
                 cPjson.put("isMealBolus", mealBolus);

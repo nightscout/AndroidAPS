@@ -1315,8 +1315,8 @@ public class AutotunePlugin extends PluginBase {
         opts.pumpprofilename=profileFunction.getProfileName();
         autotuneResult = profile;
         try {
-            FS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(4),true);
-            FS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(4));
+            FS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(2),true);
+            FS.createAutotunefile("pumpprofile.json", opts.profiletoOrefJSON().toString(2));
         } catch (JSONException e) {}
 
         if(sp.getString(R.string.key_units, "mg/dl").equals("mmol"))
@@ -1333,7 +1333,8 @@ public class AutotunePlugin extends PluginBase {
                 long glucoseStart = starttime + timeBack;
                 long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
                 long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
-                long treatmentEnd = glucoseEnd;
+                //add 12hours for data analysis
+                long treatmentEnd = glucoseEnd + 12 * 60 * 60 * 1000L;
                 opts.pumpHistory=null;
                 // get 24 hours BG values from 4 AM to 4 AM next day
                 opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
@@ -1347,7 +1348,7 @@ public class AutotunePlugin extends PluginBase {
 
                 try {
                     //ns-entries files are for result compare with oref0 autotune on virtual machine
-                    FS.createAutotunefile("ns-entries." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(4));
+                    FS.createAutotunefile("ns-entries." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(2));
 
                     // for debugging only, all these files are included in ns-treatments
                     // only meals and bolus
@@ -1358,7 +1359,7 @@ public class AutotunePlugin extends PluginBase {
                     //FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpExtBolusHistorytoJSON().toString(4).replace("\\/", "/"));
 
                     //ns-treatments files are for result compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
-                    FS.createAutotunefile("ns-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.nsHistorytoJSON().toString(4).replace("\\/", "/"));
+                    FS.createAutotunefile("ns-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.nsHistorytoJSON().toString(2).replace("\\/", "/"));
 
                     log.debug("Day "+i+" of "+daysBack);
 
@@ -1367,7 +1368,7 @@ public class AutotunePlugin extends PluginBase {
                     //AutotunePrep autotunePrep = new AutotunePrep();
                     autotunePrep.categorizeBGDatums(opts); // line added for log and test
                     //PrepOutput prepOutput = autotunePrep.generate(opts);
-                    FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(4));
+                    FS.createAutotunefile("aaps-autotune." + FS.formatDate(new Date(glucoseStart)) + ".json", prepOutput.toString(2));
 
                     tuneAllTheThings();
                 } catch (JSONException e) {
