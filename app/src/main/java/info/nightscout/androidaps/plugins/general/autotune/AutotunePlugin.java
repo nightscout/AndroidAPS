@@ -1328,36 +1328,20 @@ public class AutotunePlugin extends PluginBase {
         } else {
             for (int i = 0; i < daysBack; i++) {
 //                tunedBasalsInit();
-                long timeBack = i * 24 * 60 * 60 * 1000L;
 
-                long glucoseStart = starttime + timeBack;
-                long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
-                long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
-                //add 12hours for data analysis
-                long treatmentEnd = glucoseEnd + 12 * 60 * 60 * 1000L;
-                opts.pumpHistory=null;
                 // get 24 hours BG values from 4 AM to 4 AM next day
-                opts.glucose = MainApp.getDbHelper().getBgreadingsDataFromTime(glucoseStart, glucoseEnd, false);
+                long glucoseStart = starttime + i * 24 * 60 * 60 * 1000L;
+                long glucoseEnd = glucoseStart + 24 * 60 * 60 * 1000L;
+                // get 30 hours treatments starting 6 hours before first BG value and ending 4 AM next day
+                long treatmentStart = glucoseStart - 6 * 60 * 60 * 1000L;
+                long treatmentEnd = glucoseEnd;
 
-                // get treatments from 6 hours (DIA duration) before first BG value
-                opts.setTreatments(treatmentsPlugin.getService().getTreatmentDataFromTime(treatmentStart,treatmentEnd,false));
-                // get basal temp and extended temp from 6 hours (DIA duration) before first BG value
-                opts.setTempBasalHistory(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(treatmentStart,treatmentEnd,false));
-                opts.setExtBolusHistory(MainApp.getDbHelper().getExtendedBolusDataFromTime(treatmentStart,treatmentEnd,false));
-                // merge in pumpHistory Basal temp and extended temp but keep at this step both file for testing
+                opts.setGlucose(glucoseStart, glucoseEnd, false);
+                opts.setTreaments(treatmentStart,treatmentEnd,false);
 
                 try {
                     //ns-entries files are for result compare with oref0 autotune on virtual machine
                     FS.createAutotunefile("ns-entries." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.glucosetoJSON().toString(2));
-
-                    // for debugging only, all these files are included in ns-treatments
-                    // only meals and bolus
-                    //FS.createAutotunefile("aaps-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.treatmentstoJSON().toString(4).replace("\\/", "/"));
-                    //only temp basal
-                    //FS.createAutotunefile("aaps-tempbasal." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpTempBasalHistorytoJSON().toString(4).replace("\\/", "/"));
-                    //only extended
-                    //FS.createAutotunefile("aaps-extbolus." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.pumpExtBolusHistorytoJSON().toString(4).replace("\\/", "/"));
-
                     //ns-treatments files are for result compare with oref0 autotune on virtual machine (include treatments ,tempBasal and extended
                     FS.createAutotunefile("ns-treatments." + FS.formatDate(new Date(glucoseStart)) + ".json", opts.nsHistorytoJSON().toString(2).replace("\\/", "/"));
 
