@@ -413,7 +413,11 @@ public abstract class RileyLinkCommunicationManager {
         lastGoodReceiverCommunicationTime = System.currentTimeMillis();
 
         sp.putLong(RileyLinkConst.Prefs.LastGoodDeviceCommunicationTime, lastGoodReceiverCommunicationTime);
-        getPumpStatus().setLastCommunicationToNow();
+        PumpStatus pumpStatus = getPumpStatus();
+
+        if(pumpStatus != null) {
+            pumpStatus.setLastCommunicationToNow();
+        }
     }
 
 
