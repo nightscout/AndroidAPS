@@ -33,12 +33,14 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class PodSessionState extends PodState {
 
-    @Inject AAPSLogger aapsLogger;
-    @Inject SP sp;
-    @Inject OmnipodUtil omnipodUtil;
+    @Inject transient AAPSLogger aapsLogger;
+    @Inject transient SP sp;
+    @Inject transient OmnipodUtil omnipodUtil;
+
+    private transient PodStateChangedHandler stateChangedHandler;
 
     private final Map<AlertSlot, AlertType> configuredAlerts;
-    private transient PodStateChangedHandler stateChangedHandler;
+    private DateTimeZone timeZone;
     private DateTime activatedAt;
     private DateTime expiresAt;
     private final FirmwareVersion piVersion;
@@ -47,8 +49,6 @@ public class PodSessionState extends PodState {
     private final int tid;
     private Double reservoirLevel;
     private boolean suspended;
-
-    private DateTimeZone timeZone;
     private NonceState nonceState;
     private SetupProgress setupProgress;
     private AlertSet activeAlerts;

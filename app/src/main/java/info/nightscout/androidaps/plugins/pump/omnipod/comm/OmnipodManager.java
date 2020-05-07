@@ -5,6 +5,7 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.Duration;
 
 import java.util.EnumSet;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -14,7 +15,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AcknowledgeAl
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.AssignAddressAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.BolusAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.CancelDeliveryAction;
-import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.ConfigurePodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.DeactivatePodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.GetPodInfoAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.GetStatusAction;
@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.InsertCannula
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.PrimeAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.SetBasalScheduleAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.SetTempBasalAction;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.SetupPodAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.InsertCannulaService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.action.service.PrimeService;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommunicationException;
@@ -61,18 +62,14 @@ public class OmnipodManager {
     private ActiveBolusData activeBolusData;
     private final Object bolusDataMutex = new Object();
 
-    //private HasAndroidInjector injector;
-    AAPSLogger aapsLogger;
-    SP sp;
+    private AAPSLogger aapsLogger;
+    private SP sp;
 
-    public OmnipodManager(//HasAndroidInjector injector,
-                          AAPSLogger aapsLogger,
+    public OmnipodManager(AAPSLogger aapsLogger,
                           SP sp,
                           OmnipodCommunicationManager communicationService,
                           PodSessionState podState,
                           PodStateChangedHandler podStateChangedHandler) {
-//        this.injector = injector;
-//        this.injector.androidInjector().inject(this);
         if (communicationService == null) {
             throw new IllegalArgumentException("Communication service cannot be null");
         }
@@ -86,25 +83,18 @@ public class OmnipodManager {
         this.podStateChangedHandler = podStateChangedHandler;
     }
 
-//    public OmnipodManager(HasAndroidInjector injector,
-//                          OmnipodCommunicationManager communicationService,
-//                          PodSessionState podState) {
-//        this(injector, communicationService, podState, null);
-//    }
-
-    public synchronized Single<SetupActionResult> pairAndPrime() {
+    public synchronized Single<SetupActionResult> pairAndPrime(int address) {
         logStartingCommandExecution("pairAndPrime");
 
         try {
-            if (podState == null) {
+            if (podState == null || podState.getSetupProgress().isBefore(SetupProgress.POD_CONFIGURED)) {
+                // Always send both 0x07 and 0x03 on retries
                 podState = communicationService.executeAction(
-                        new AssignAddressAction(podStateChangedHandler));
-            } else if (SetupProgress.PRIMING.isBefore(podState.getSetupProgress())) {
-                throw new IllegalSetupProgressException(SetupProgress.ADDRESS_ASSIGNED, podState.getSetupProgress());
-            }
+                        new AssignAddressAction(podStateChangedHandler, address));
 
-            if (SetupProgress.ADDRESS_ASSIGNED.equals(podState.getSetupProgress())) {
-                communicationService.executeAction(new ConfigurePodAction(podState));
+                communicationService.executeAction(new SetupPodAction(podState));
+            } else if (SetupProgress.PRIMING.isBefore(podState.getSetupProgress())) {
+                throw new IllegalSetupProgressException(SetupProgress.POD_CONFIGURED, podState.getSetupProgress());
             }
 
             communicationService.executeAction(new PrimeAction(new PrimeService(), podState));
@@ -572,6 +562,15 @@ public class OmnipodManager {
 
     public static boolean isCertainFailure(Exception ex) {
         return ex instanceof OmnipodException && ((OmnipodException) ex).isCertainFailure();
+    }
+
+    public static int generateRandomAddress() {
+        // Create random address with 20 bits to match PDM, could easily use 24 bits instead
+        return 0x1f000000 | (new Random().nextInt() & 0x000fffff);
+    }
+
+    public static boolean isValidAddress(int address) {
+        return (0x1f000000 | (address & 0x000fffff)) == address;
     }
 
     public static class BolusCommandResult {

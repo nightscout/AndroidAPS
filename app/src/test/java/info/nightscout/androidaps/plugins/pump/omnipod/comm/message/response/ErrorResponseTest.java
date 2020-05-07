@@ -3,7 +3,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response;
 import org.junit.Test;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.ErrorResponseType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -33,14 +34,19 @@ public class ErrorResponseTest {
         byte[] encodedData = ByteUtil.fromHexString("060314fa92");
 
         ErrorResponse errorResponse = new ErrorResponse(encodedData);
-        assertEquals(ErrorResponseType.BAD_NONCE, errorResponse.getErrorResponseType());
-        // TODO add assertion one nonce search key (obtain captures first)
+        assertEquals(ErrorResponse.ERROR_RESPONSE_CODE_BAD_NONCE, errorResponse.getErrorResponseCode());
+        // TODO add assertion on nonce search key (obtain captures first)
+        assertNull(errorResponse.getFaultEventCode());
+        assertNull(errorResponse.getPodProgressStatus());
     }
 
     @Test
-    public void testUnknownError() {
-        ErrorResponse errorResponse = new ErrorResponse(ByteUtil.fromHexString("060307fa92"));
+    public void testOtherError() {
+        ErrorResponse errorResponse = new ErrorResponse(ByteUtil.fromHexString("0603101308"));
+        assertEquals(0x10, errorResponse.getErrorResponseCode());
+        assertEquals(FaultEventCode.MESSAGE_LENGTH_TOO_LONG, errorResponse.getFaultEventCode());
+        assertEquals(PodProgressStatus.ABOVE_FIFTY_UNITS, errorResponse.getPodProgressStatus());
 
-        assertNull(errorResponse.getErrorResponseType());
+        assertNull(errorResponse.getNonceSearchKey());
     }
 }
