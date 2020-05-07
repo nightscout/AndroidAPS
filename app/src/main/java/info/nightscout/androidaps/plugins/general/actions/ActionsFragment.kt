@@ -25,14 +25,15 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.SingleClickButton
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.plusAssign
-import info.nightscout.androidaps.utils.resources.ResourceHelper
-import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.extensions.toVisibility
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.resources.ResourceHelper
+import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.actions_fragment.*
@@ -68,19 +69,19 @@ class ActionsFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         actions_profileswitch.setOnClickListener {
-            fragmentManager?.let { ProfileSwitchDialog().show(it, "Actions") }
+            ProfileSwitchDialog().show(childFragmentManager, "Actions")
         }
         actions_temptarget.setOnClickListener {
-            fragmentManager?.let { TempTargetDialog().show(it, "Actions") }
+            TempTargetDialog().show(childFragmentManager, "Actions")
         }
         actions_extendedbolus.setOnClickListener {
             activity?.let { activity ->
-                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, Runnable {
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable {
                     OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.extended_bolus), resourceHelper.gs(R.string.ebstopsloop),
                         Runnable {
-                            fragmentManager?.let { ExtendedBolusDialog().show(it, "Actions") }
+                            ExtendedBolusDialog().show(childFragmentManager, "Actions")
                         }, null)
-                })
+                }))
             }
         }
         actions_extendedbolus_cancel.setOnClickListener {
@@ -101,7 +102,7 @@ class ActionsFragment : DaggerFragment() {
             }
         }
         actions_settempbasal.setOnClickListener {
-            fragmentManager?.let { TempBasalDialog().show(it, "Actions") }
+            TempBasalDialog().show(childFragmentManager, "Actions")
         }
         actions_canceltempbasal.setOnClickListener {
             if (activePlugin.activeTreatments.isTempBasalInProgress) {
@@ -122,25 +123,25 @@ class ActionsFragment : DaggerFragment() {
         }
         actions_fill.setOnClickListener {
             activity?.let { activity ->
-                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, Runnable { fragmentManager?.let { FillDialog().show(it, "FillDialog") } })
+                protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable(Runnable { FillDialog().show(childFragmentManager, "FillDialog") }))
             }
         }
         actions_historybrowser.setOnClickListener { startActivity(Intent(context, HistoryBrowseActivity::class.java)) }
         actions_tddstats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
         actions_bgcheck.setOnClickListener {
-            fragmentManager?.let { CareDialog().setOptions(CareDialog.EventType.BGCHECK, R.string.careportal_bgcheck).show(it, "Actions") }
+            CareDialog().setOptions(CareDialog.EventType.BGCHECK, R.string.careportal_bgcheck).show(childFragmentManager, "Actions")
         }
         actions_cgmsensorinsert.setOnClickListener {
-            fragmentManager?.let { CareDialog().setOptions(CareDialog.EventType.SENSOR_INSERT, R.string.careportal_cgmsensorinsert).show(it, "Actions") }
+            CareDialog().setOptions(CareDialog.EventType.SENSOR_INSERT, R.string.careportal_cgmsensorinsert).show(childFragmentManager, "Actions")
         }
         actions_pumpbatterychange.setOnClickListener {
-            fragmentManager?.let { CareDialog().setOptions(CareDialog.EventType.BATTERY_CHANGE, R.string.careportal_pumpbatterychange).show(it, "Actions") }
+            CareDialog().setOptions(CareDialog.EventType.BATTERY_CHANGE, R.string.careportal_pumpbatterychange).show(childFragmentManager, "Actions")
         }
         actions_note.setOnClickListener {
-            fragmentManager?.let { CareDialog().setOptions(CareDialog.EventType.NOTE, R.string.careportal_note).show(it, "Actions") }
+            CareDialog().setOptions(CareDialog.EventType.NOTE, R.string.careportal_note).show(childFragmentManager, "Actions")
         }
         actions_exercise.setOnClickListener {
-            fragmentManager?.let { CareDialog().setOptions(CareDialog.EventType.EXERCISE, R.string.careportal_exercise).show(it, "Actions") }
+            CareDialog().setOptions(CareDialog.EventType.EXERCISE, R.string.careportal_exercise).show(childFragmentManager, "Actions")
         }
 
         sp.putBoolean(R.string.key_objectiveuseactions, true)

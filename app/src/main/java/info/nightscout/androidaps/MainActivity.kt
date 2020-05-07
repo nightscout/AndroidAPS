@@ -47,7 +47,6 @@ import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionChec
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
-import info.nightscout.androidaps.utils.tabs.TabPageAdapter
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.LocaleHelper
@@ -58,6 +57,8 @@ import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.tabs.TabPageAdapter
+import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
@@ -160,12 +161,9 @@ class MainActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null,
-            Runnable {
-                OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() })
-            },
-            Runnable {
-                OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() })
-            })
+            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }) }),
+            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }) })
+        )
     }
 
     private fun setWakeLock() {
@@ -197,6 +195,7 @@ class MainActivity : NoSplashAppCompatActivity() {
             }
         }
         main_pager.adapter = pageAdapter
+        main_pager.offscreenPageLimit = 8 // This may cause more memory consumption
         checkPluginPreferences(main_pager)
 
         // Tabs

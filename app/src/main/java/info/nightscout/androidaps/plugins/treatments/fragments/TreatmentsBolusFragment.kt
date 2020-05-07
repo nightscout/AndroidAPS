@@ -145,12 +145,10 @@ class TreatmentsBolusFragment : DaggerFragment() {
             init {
                 calculation.setOnClickListener {
                     val treatment = it.tag as Treatment
-                    fragmentManager?.let { fragmentManager ->
-                        if (treatment.getBoluscalc() != null) {
-                            val wizardDialog = WizardInfoDialog()
-                            wizardDialog.setData(treatment.getBoluscalc()!!)
-                            wizardDialog.show(fragmentManager, "WizardInfoDialog")
-                        }
+                    if (treatment.getBoluscalc() != null) {
+                        val wizardDialog = WizardInfoDialog()
+                        wizardDialog.setData(treatment.getBoluscalc()!!)
+                        wizardDialog.show(childFragmentManager, "WizardInfoDialog")
                     }
                 }
                 calculation.paintFlags = calculation.paintFlags or Paint.UNDERLINE_TEXT_FLAG

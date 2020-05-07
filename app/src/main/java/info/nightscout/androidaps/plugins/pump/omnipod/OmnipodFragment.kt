@@ -176,7 +176,7 @@ class OmnipodFragment : DaggerFragment() {
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(Schedulers.io())
-            .subscribe({ event ->
+            .subscribe({
                 setVisibilityOfPodDebugButton()
             }, { fabricPrivacy.logException(it) })
     }

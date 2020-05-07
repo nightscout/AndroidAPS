@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.general.maintenance.formats
 
+import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.storage.Storage
@@ -19,6 +20,11 @@ class ClassicPrefsFormat @Inject constructor(
         val FORMAT_KEY = "aaps_old"
     }
 
+    override fun isPreferencesFile(file: File, preloadedContents: String?): Boolean {
+        val contents = preloadedContents ?: storage.getFileContents(file)
+        return contents.contains("units::" + Constants.MGDL) || contents.contains("units::" + Constants.MMOL)
+    }
+
     override fun savePreferences(file: File, prefs: Prefs, masterPassword: String?) {
         try {
             val contents = prefs.values.entries.joinToString("\n") { entry ->
@@ -35,7 +41,6 @@ class ClassicPrefsFormat @Inject constructor(
     override fun loadPreferences(file: File, masterPassword: String?): Prefs {
         var lineParts: Array<String>
         val entries: MutableMap<String, String> = mutableMapOf()
-        val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = mutableMapOf()
         try {
 
             val rawLines = storage.getFileContents(file).split("\n")
@@ -46,15 +51,19 @@ class ClassicPrefsFormat @Inject constructor(
                 }
             }
 
-            metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(FORMAT_KEY, PrefsStatus.WARN, resourceHelper.gs(R.string.metadata_warning_outdated_format))
-
-            return Prefs(entries, metadata)
+            return Prefs(entries, loadMetadata())
 
         } catch (e: FileNotFoundException) {
             throw PrefFileNotFoundError(file.absolutePath)
         } catch (e: IOException) {
             throw PrefIOError(file.absolutePath)
         }
+    }
+
+    override fun loadMetadata(contents: String?): PrefMetadataMap {
+        val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = mutableMapOf()
+        metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(FORMAT_KEY, PrefsStatus.WARN, resourceHelper.gs(R.string.metadata_warning_outdated_format))
+        return metadata
     }
 
 }

@@ -6,6 +6,7 @@ import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.activities.*
 import info.nightscout.androidaps.historyBrowser.HistoryBrowseActivity
 import info.nightscout.androidaps.plugins.general.maintenance.activities.LogSettingActivity
+import info.nightscout.androidaps.plugins.general.maintenance.activities.PrefImportListActivity
 import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity
 import info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEScanActivity
@@ -18,8 +19,6 @@ import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertAc
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingInformationActivity
 import info.nightscout.androidaps.plugins.pump.medtronic.dialog.MedtronicHistoryActivity
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodHistoryActivity
-import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 
 @Module
@@ -50,5 +49,5 @@ abstract class ActivitiesModule {
     @ContributesAndroidInjector abstract fun contributesStatsActivity(): StatsActivity
     @ContributesAndroidInjector abstract fun contributesSurveyActivity(): SurveyActivity
     @ContributesAndroidInjector abstract fun contributesTDDStatsActivity(): TDDStatsActivity
-
+    @ContributesAndroidInjector abstract fun contributesPrefImportListActivity(): PrefImportListActivity
 }
