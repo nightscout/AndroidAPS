@@ -14,16 +14,12 @@ import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventNewBasalProfile
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.events.EventTreatmentChange
-import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.interfaces.PluginBase
-import info.nightscout.androidaps.interfaces.PluginDescription
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.events.EventOpenAPSUpdateGui
+import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSDeviceStatus
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
@@ -53,8 +49,9 @@ class DataBroadcastPlugin @Inject constructor(
     private val nsDeviceStatus: NSDeviceStatus,
     private val loopPlugin: LoopPlugin,
     private val activePlugin: ActivePluginProvider,
-    private var receiverStatusStore: ReceiverStatusStore
-
+    private var receiverStatusStore: ReceiverStatusStore,
+    private val config: Config,
+    private val databaseHelper: DatabaseHelperInterface
 
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
@@ -131,7 +128,7 @@ class DataBroadcastPlugin @Inject constructor(
         bundle.putDouble("glucoseMgdl", lastBG.value)   // last BG in mgdl
         bundle.putLong("glucoseTimeStamp", lastBG.date) // timestamp
         bundle.putString("units", profileFunction.getUnits()) // units used in AAPS "mg/dl" or "mmol"
-        bundle.putString("slopeArrow", lastBG.directionToSymbol()) // direction arrow as string
+        bundle.putString("slopeArrow", lastBG.directionToSymbol(databaseHelper)) // direction arrow as string
         bundle.putDouble("deltaMgdl", glucoseStatus.delta) // bg delta in mgdl
         bundle.putDouble("avgDeltaMgdl", glucoseStatus.avgdelta) // average bg delta
         bundle.putDouble("high", defaultValueHelper.determineHighLine()) // predefined top value of in range (green area)
@@ -158,7 +155,7 @@ class DataBroadcastPlugin @Inject constructor(
         bundle.putInt("phoneBattery", receiverStatusStore.batteryLevel)
         bundle.putInt("rigBattery", nsDeviceStatus.uploaderStatus.replace("%", "").trim { it <= ' ' }.toInt())
 
-        if (Config.APS && loopPlugin.lastRun?.lastTBREnact != 0L) { //we are AndroidAPS
+        if (config.APS && loopPlugin.lastRun?.lastTBREnact != 0L) { //we are AndroidAPS
             bundle.putLong("suggestedTimeStamp", loopPlugin.lastRun?.lastAPSRun ?: -1L)
             bundle.putString("suggested", loopPlugin.lastRun?.request?.json().toString())
             if (loopPlugin.lastRun?.tbrSetByPump != null && loopPlugin.lastRun?.tbrSetByPump?.enacted == true) {

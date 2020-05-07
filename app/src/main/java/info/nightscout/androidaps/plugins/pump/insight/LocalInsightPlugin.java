@@ -53,7 +53,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.common.ManufacturerType;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
@@ -132,7 +132,7 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_erro
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCanceLException;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.TimeChangeType;
@@ -208,7 +208,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             SP sp,
             CommandQueueProvider commandQueue,
             ProfileFunction profileFunction,
-            Context context
+            Context context,
+            Config config
     ) {
         super(new PluginDescription()
                         .pluginName(R.string.insight_local)
@@ -216,7 +217,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
                         .mainType(PluginType.PUMP)
                         .description(R.string.description_pump_insight_local)
                         .fragmentClass(LocalInsightFragment.class.getName())
-                        .preferencesId(Config.APS ? R.xml.pref_insight_local_full : R.xml.pref_insight_local_pumpcontrol),
+                        .preferencesId(config.getAPS() ? R.xml.pref_insight_local_full : R.xml.pref_insight_local_pumpcontrol),
                 injector, aapsLogger, resourceHelper, commandQueue
 
         );

@@ -6,19 +6,19 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class IconsProvider @Inject constructor() {
+class IconsProvider @Inject constructor(private val config: Config) {
 
     fun getIcon(): Int =
         when {
-            Config.NSCLIENT    -> R.mipmap.ic_yellowowl
-            Config.PUMPCONTROL -> R.mipmap.ic_pumpcontrol
+            config.NSCLIENT    -> R.mipmap.ic_yellowowl
+            config.PUMPCONTROL -> R.mipmap.ic_pumpcontrol
             else               -> R.mipmap.ic_launcher
         }
 
     fun getNotificationIcon(): Int =
         when {
-            Config.NSCLIENT    -> R.drawable.ic_notif_nsclient
-            Config.PUMPCONTROL -> R.drawable.ic_notif_pumpcontrol
+            config.NSCLIENT    -> R.drawable.ic_notif_nsclient
+            config.PUMPCONTROL -> R.drawable.ic_notif_pumpcontrol
             else               -> R.drawable.ic_notif_aaps
         }
 }

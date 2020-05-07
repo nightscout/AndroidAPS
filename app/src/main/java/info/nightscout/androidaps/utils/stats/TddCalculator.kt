@@ -10,7 +10,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -85,21 +85,21 @@ class TddCalculator @Inject constructor(
         return totalTdd
     }
 
-    fun stats(): Spanned {
+    fun stats(dateUtil: DateUtil): Spanned {
         val tdds = calculate(7)
         val averageTdd = averageTDD(tdds)
         return HtmlHelper.fromHtml(
             "<b>" + resourceHelper.gs(R.string.tdd) + ":</b><br>" +
-                toText(tdds) +
+                toText(tdds, dateUtil) +
                 "<b>" + resourceHelper.gs(R.string.average) + ":</b><br>" +
                 averageTdd.toText(resourceHelper, tdds.size())
         )
     }
 
-    private fun toText(tdds: LongSparseArray<TDD>): String {
+    private fun toText(tdds: LongSparseArray<TDD>, dateUtil: DateUtil): String {
         var t = ""
         for (i in 0 until tdds.size()) {
-            t += "${tdds.valueAt(i).toText(resourceHelper)}<br>"
+            t += "${tdds.valueAt(i).toText(resourceHelper, dateUtil)}<br>"
         }
         return t
     }

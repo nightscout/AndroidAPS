@@ -7,7 +7,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -29,7 +29,8 @@ class LocalAlertUtils @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val activePlugin: ActivePluginProvider,
     private val profileFunction: ProfileFunction,
-    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin
+    private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
+    private val config: Config
 ) {
 
     fun missedReadingsThreshold(): Long {
@@ -43,7 +44,7 @@ class LocalAlertUtils @Inject constructor(
     fun checkPumpUnreachableAlarm(lastConnection: Long, isStatusOutdated: Boolean, isDisconnected: Boolean) {
         val alarmTimeoutExpired = lastConnection + pumpUnreachableThreshold() < System.currentTimeMillis()
         val nextAlarmOccurrenceReached = sp.getLong("nextPumpDisconnectedAlarm", 0L) < System.currentTimeMillis()
-        if (Config.APS && sp.getBoolean(resourceHelper.gs(R.string.key_enable_pump_unreachable_alert), true)
+        if (config.APS && sp.getBoolean(resourceHelper.gs(R.string.key_enable_pump_unreachable_alert), true)
             && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !isDisconnected) {
             aapsLogger.debug(LTag.CORE, "Generating pump unreachable alarm. lastConnection: " + DateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated)
             val n = Notification(Notification.PUMP_UNREACHABLE, resourceHelper.gs(R.string.pump_unreachable), Notification.URGENT)

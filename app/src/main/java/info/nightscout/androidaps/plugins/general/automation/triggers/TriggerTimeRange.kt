@@ -12,12 +12,14 @@ import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabe
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper.safeGetInt
 import info.nightscout.androidaps.utils.MidnightTime
-import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
+import javax.inject.Inject
 
 // Trigger for time range ( from 10:00AM till 13:00PM )
 class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
 
+    @Inject lateinit var dateUtil: DateUtil
+    
     // in minutes since midnight 60 means 1AM
     var range = InputTimeRange(injector)
 
@@ -31,7 +33,7 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
         range.end = triggerTimeRange.range.end
     }
 
-    fun period(start: Int, end:Int) : TriggerTimeRange {
+    fun period(start: Int, end: Int): TriggerTimeRange {
         this.range.start = start
         this.range.end = end
         return this
@@ -70,7 +72,7 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyName(): Int = R.string.time_range
 
     override fun friendlyDescription(): String =
-        resourceHelper.gs(R.string.timerange_value, DateUtil.timeString(toMills(range.start)), DateUtil.timeString(toMills(range.end)))
+        resourceHelper.gs(R.string.timerange_value, dateUtil.timeString(toMills(range.start)), dateUtil.timeString(toMills(range.end)))
 
     override fun icon(): Optional<Int?> = Optional.of(R.drawable.ic_access_alarm_24dp)
 

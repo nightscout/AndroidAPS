@@ -9,7 +9,6 @@ import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInf
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRSTestBase
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

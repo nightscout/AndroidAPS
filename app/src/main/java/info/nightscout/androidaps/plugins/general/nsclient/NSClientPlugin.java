@@ -11,7 +11,6 @@ import android.text.Html;
 import android.text.Spanned;
 
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceScreen;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -58,6 +57,7 @@ public class NSClientPlugin extends PluginBase {
     private final ResourceHelper resourceHelper;
     private final Context context;
     private final SP sp;
+    private final Config config;
 
     public Handler handler;
 
@@ -81,7 +81,8 @@ public class NSClientPlugin extends PluginBase {
             ResourceHelper resourceHelper,
             Context context,
             SP sp,
-            NsClientReceiverDelegate nsClientReceiverDelegate
+            NsClientReceiverDelegate nsClientReceiverDelegate,
+            Config config
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.GENERAL)
@@ -99,8 +100,9 @@ public class NSClientPlugin extends PluginBase {
         this.context = context;
         this.sp = sp;
         this.nsClientReceiverDelegate = nsClientReceiverDelegate;
+        this.config = config;
 
-        if (Config.NSCLIENT) {
+        if (config.getNSCLIENT()) {
             getPluginDescription().alwaysEnabled(true).visibleByDefault(true);
         }
         if (handler == null) {
@@ -184,7 +186,7 @@ public class NSClientPlugin extends PluginBase {
     public void preprocessPreferences(@NotNull PreferenceFragmentCompat preferenceFragment) {
         super.preprocessPreferences(preferenceFragment);
 
-        if (Config.NSCLIENT) {
+        if (config.getNSCLIENT()) {
             preferenceFragment.findPreference(resourceHelper.gs(R.string.key_statuslights_overview_advanced));
         }
     }

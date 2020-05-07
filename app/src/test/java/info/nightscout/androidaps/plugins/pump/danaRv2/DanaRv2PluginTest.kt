@@ -12,7 +12,6 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

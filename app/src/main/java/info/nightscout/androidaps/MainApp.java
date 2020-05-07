@@ -14,14 +14,19 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
+import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -40,7 +45,7 @@ import info.nightscout.androidaps.utils.ActivityMonitor;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
-public class MainApp extends DaggerApplication {
+public class MainApp extends DaggerApplication implements DatabaseHelperInterface {
 
     static MainApp sInstance;
     private static Resources sResources;
@@ -56,6 +61,8 @@ public class MainApp extends DaggerApplication {
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject KeepAliveReceiver.KeepAliveManager keepAliveManager;
     @Inject List<PluginBase> plugins;
+
+    @Inject StaticInjector staticInjector; // TODO remove , fake only to initialize
 
     @Override
     public void onCreate() {
@@ -165,5 +172,9 @@ public class MainApp extends DaggerApplication {
         unregisterActivityLifecycleCallbacks(activityMonitor);
         keepAliveManager.cancelAlarm(this);
         super.onTerminate();
+    }
+
+    @NotNull @Override public List<BgReading> getAllBgreadingsDataFromTime(long mills, boolean ascending) {
+        return getDbHelper().getAllBgreadingsDataFromTime(mills, ascending);
     }
 }

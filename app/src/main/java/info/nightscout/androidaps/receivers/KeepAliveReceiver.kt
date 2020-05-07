@@ -16,7 +16,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.queue.commands.Command
@@ -38,7 +38,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var localAlertUtils: LocalAlertUtils
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
-
+    @Inject lateinit var config: Config
 
     companion object {
         private val KEEP_ALIVE_MILLISECONDS = T.mins(5).msecs()
@@ -100,8 +100,8 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     // IOB displayed in NS
     private fun checkAPS() {
         var shouldUploadStatus = false
-        if (Config.NSCLIENT) return
-        if (Config.PUMPCONTROL) shouldUploadStatus = true
+        if (config.NSCLIENT) return
+        if (config.PUMPCONTROL) shouldUploadStatus = true
         else if (!loopPlugin.isEnabled() || iobCobCalculatorPlugin.actualBg() == null)
             shouldUploadStatus = true
         else if (DateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true

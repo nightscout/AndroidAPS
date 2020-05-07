@@ -40,6 +40,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -73,7 +74,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             } else {
                 @SuppressLint("SetTextI18n")
                 if (extendedBolus.isInProgress) holder.date.text = DateUtil.dateAndTimeString(extendedBolus.date)
-                else holder.date.text = DateUtil.dateAndTimeString(extendedBolus.date) + " - " + DateUtil.timeString(extendedBolus.end())
+                else holder.date.text = DateUtil.dateAndTimeString(extendedBolus.date) + " - " + dateUtil.timeString(extendedBolus.end())
 
                 holder.duration.text = resourceHelper.gs(R.string.format_mins, extendedBolus.durationInMinutes)
                 holder.insulin.text = resourceHelper.gs(R.string.formatinsulinunits, extendedBolus.insulin)

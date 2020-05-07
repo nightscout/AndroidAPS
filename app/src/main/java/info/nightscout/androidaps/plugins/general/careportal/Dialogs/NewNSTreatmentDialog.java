@@ -44,14 +44,14 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus;
@@ -61,9 +61,9 @@ import info.nightscout.androidaps.utils.DefaultValueHelper;
 import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.NumberPicker;
-import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.Translator;
+import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -79,6 +79,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject HardLimits hardLimits;
     @Inject Translator translator;
+    @Inject DateUtil dateUtil;
 
     private static OptionsToShow options;
     private static @StringRes int event;
@@ -168,7 +169,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
         dateButton = view.findViewById(R.id.careportal_newnstreatment_eventdate);
         timeButton = view.findViewById(R.id.careportal_newnstreatment_eventtime);
         dateButton.setText(DateUtil.dateString(eventTime));
-        timeButton.setText(DateUtil.timeString(eventTime));
+        timeButton.setText(dateUtil.timeString(eventTime));
         dateButton.setOnClickListener(this);
         timeButton.setOnClickListener(this);
 
@@ -484,7 +485,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
         eventTime.setHours(hourOfDay);
         eventTime.setMinutes(minute);
         eventTime.setSeconds(this.seconds++); // randomize seconds to prevent creating record of the same time, if user choose time manually
-        timeButton.setText(DateUtil.timeString(eventTime));
+        timeButton.setText(dateUtil.timeString(eventTime));
         updateBGforDateTime();
     }
 

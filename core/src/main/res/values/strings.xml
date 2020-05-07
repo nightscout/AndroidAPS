@@ -2,16 +2,124 @@
 <resources>
     <string name="key_enable_fabric" translatable="false">enable_fabric</string>
     <string name="key_language" translatable="false">language</string>
+    <string name="key_units" translatable="false">units</string>
+    <string name="key_loop_openmode_min_change" translatable="false">loop_openmode_min_change</string>
+    <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
+    <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
+    <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
+    <string name="key_danar_visualizeextendedaspercentage" translatable="false">danar_visualizeextendedaspercentage"</string>
+    <string name="key_danar_useextended" translatable="false">danar_useextended</string>
+    <string name="key_eatingsoon_duration" translatable="false">eatingsoon_duration</string>
+    <string name="key_eatingsoon_target" translatable="false">eatingsoon_target</string>
+    <string name="key_activity_duration" translatable="false">activity_duration</string>
+    <string name="key_activity_target" translatable="false">activity_target</string>
+    <string name="key_hypo_duration" translatable="false">hypo_duration</string>
+    <string name="key_hypo_target" translatable="false">hypo_target</string>
+    <string name="key_low_mark" translatable="false">low_mark</string>
+    <string name="key_high_mark" translatable="false">high_mark</string>
 
+    <!--    Dialogs-->
     <string name="confirmation">Confirmation</string>
     <string name="message">Message</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="dismiss">DISMISS</string>
 
+    <!--    BlePreCheck-->
     <string name="rileylink_scanner_ble_not_supported">Bluetooth Low Energy not supported.</string>
     <string name="rileylink_scanner_ble_not_enabled">Bluetooth not enabled.</string>
     <string name="location_not_found_title">Location Is Not Enabled</string>
     <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
+
+    <!--    DateUtil-->
+    <string name="minago">%1$dm ago</string>
+    <string name="hoursago">%1$.1fh ago</string>
+    <string name="shorthour">h</string>
+    <string name="days">days</string>
+    <string name="hours">hours</string>
+    <string name="unit_second">second</string>
+    <string name="unit_minute">minute</string>
+    <string name="unit_hour">hour</string>
+    <string name="unit_day">day</string>
+    <string name="unit_week">week</string>
+    <string name="unit_seconds">seconds</string>
+    <string name="unit_minutes">minutes</string>
+    <string name="unit_hours">hours</string>
+    <string name="unit_days">days</string>
+    <string name="unit_weeks">weeks</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Basal values not aligned to hours: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Basal value replaced by minimal supported value: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basal value replaced by maximum supported value: %1$s</string>
+    <string name="profile_per_unit">/U</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+
+    <!--    ProfileFunction-->
+    <string name="noprofileselected">No profile selected</string>
+
+    <!--    PumpType-->
+    <string name="virtualpump_pump_def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
+
+    <!--    APSResult-->
+    <string name="canceltemp">Cancel temp basal</string>
+    <string name="let_temp_basal_run">Let temp basal run</string>
+    <string name="rate">Rate</string>
+    <string name="duration">Duration</string>
+    <string name="reason">Reason</string>
+    <string name="nochangerequested">No change requested</string>
+
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Invalid profile: %1$s</string>
+
+    <!--    Temptarget-->
+    <string name="mins">%1$dmin</string>
+
+    <!--    TDD-->
+    <string name="tddformat"><![CDATA[<b>%1$s:</b> ∑: <b>%2$.2f</b> Bol: <b>%3$.2f</b> Bas: <b>%4$.2f</b>]]></string>
+
+    <!--    Translator-->
+    <string name="careportal_bgcheck">BG Check</string>
+    <string name="careportal_announcement">Announcement</string>
+    <string name="careportal_note">Note</string>
+    <string name="careportal_question">Question</string>
+    <string name="careportal_exercise">Exercise</string>
+    <string name="careportal_pumpsitechange">Pump Site Change</string>
+    <string name="careportal_cgmsensorinsert">CGM Sensor Insert</string>
+    <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
+    <string name="careportal_insulincartridgechange">Insulin Cartridge Change</string>
+    <string name="careportal_profileswitch">Profile switch</string>
+    <string name="careportal_snackbolus">Snack Bolus</string>
+    <string name="careportal_mealbolus">Meal Bolus</string>
+    <string name="careportal_correctionbolus">Correction Bolus</string>
+    <string name="careportal_combobolus">Combo Bolus</string>
+    <string name="careportal_tempbasalstart">Temp Basal Start</string>
+    <string name="careportal_tempbasalend">Temp Basal End</string>
+    <string name="careportal_carbscorrection">Carbs correction</string>
+    <string name="careportal_openapsoffline">OpenAPS Offline</string>
+    <string name="careportal_pumpbatterychange">Pump Battery Change</string>
+    <string name="careportal_temporarytarget">Temporary target</string>
+    <string name="careportal_temporarytargetcancel">Temporary target cancel</string>
+    <string name="glucosetype_finger">Finger</string>
+    <string name="glucosetype_sensor">Sensor</string>
+    <string name="manual">Manual</string>
+    <string name="unknown">unknown</string>
+
+    <!--    Command-->
+    <string name="connectiontimedout">Connection timed out</string>
+
+    <!--    PumpEnactResult-->
+    <string name="enacted">Enacted</string>
+    <string name="comment">Comment</string>
+    <string name="success">Success</string>
+    <string name="percent">Percent</string>
+    <string name="absolute">Absolute</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="waitingforpumpresult">Waiting for result</string>
+    <string name="smb_shortname">SMB</string>
 
 </resources>

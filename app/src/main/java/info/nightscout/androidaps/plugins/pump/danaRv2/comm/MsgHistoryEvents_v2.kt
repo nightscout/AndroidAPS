@@ -27,6 +27,7 @@ class MsgHistoryEvents_v2 constructor(
     val rxBus: RxBusWrapper,
     val treatmentsPlugin: TreatmentsPlugin,
     private val injector: HasAndroidInjector,
+    private val dateUtil: DateUtil,
     var from: Long = 0
 ) : MessageBase() {
 
@@ -78,13 +79,13 @@ class MsgHistoryEvents_v2 constructor(
                 temporaryBasal.percentRate = param1
                 temporaryBasal.durationInMinutes = param2
                 treatmentsPlugin.addToHistoryTempBasal(temporaryBasal)
-                status = "TEMPSTART " + DateUtil.timeString(datetime)
+                status = "TEMPSTART " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.TEMPSTOP          -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT TEMPSTOP (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime))
                 treatmentsPlugin.addToHistoryTempBasal(temporaryBasal)
-                status = "TEMPSTOP " + DateUtil.timeString(datetime)
+                status = "TEMPSTOP " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.EXTENDEDSTART     -> {
@@ -92,13 +93,13 @@ class MsgHistoryEvents_v2 constructor(
                 extendedBolus.insulin = param1 / 100.0
                 extendedBolus.durationInMinutes = param2
                 treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus)
-                status = "EXTENDEDSTART " + DateUtil.timeString(datetime)
+                status = "EXTENDEDSTART " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.EXTENDEDSTOP      -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT EXTENDEDSTOP (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus)
-                status = "EXTENDEDSTOP " + DateUtil.timeString(datetime)
+                status = "EXTENDEDSTOP " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.BOLUS             -> {
@@ -110,7 +111,7 @@ class MsgHistoryEvents_v2 constructor(
                 detailedBolusInfo.insulin = param1 / 100.0
                 val newRecord = treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false)
                 aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
-                status = "BOLUS " + DateUtil.timeString(datetime)
+                status = "BOLUS " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.DUALBOLUS         -> {
@@ -122,7 +123,7 @@ class MsgHistoryEvents_v2 constructor(
                 detailedBolusInfo.insulin = param1 / 100.0
                 val newRecord = treatmentsPlugin.addToHistoryTreatment(detailedBolusInfo, false)
                 aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT DUALBOLUS (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
-                status = "DUALBOLUS " + DateUtil.timeString(datetime)
+                status = "DUALBOLUS " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.DUALEXTENDEDSTART -> {
@@ -130,38 +131,38 @@ class MsgHistoryEvents_v2 constructor(
                 extendedBolus.insulin = param1 / 100.0
                 extendedBolus.durationInMinutes = param2
                 treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus)
-                status = "DUALEXTENDEDSTART " + DateUtil.timeString(datetime)
+                status = "DUALEXTENDEDSTART " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.DUALEXTENDEDSTOP  -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT DUALEXTENDEDSTOP (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus)
-                status = "DUALEXTENDEDSTOP " + DateUtil.timeString(datetime)
+                status = "DUALEXTENDEDSTOP " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.SUSPENDON         -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT SUSPENDON (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")")
-                status = "SUSPENDON " + DateUtil.timeString(datetime)
+                status = "SUSPENDON " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.SUSPENDOFF        -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT SUSPENDOFF (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")")
-                status = "SUSPENDOFF " + DateUtil.timeString(datetime)
+                status = "SUSPENDOFF " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.REFILL            -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT REFILL (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
-                status = "REFILL " + DateUtil.timeString(datetime)
+                status = "REFILL " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.PRIME             -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT PRIME (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
-                status = "PRIME " + DateUtil.timeString(datetime)
+                status = "PRIME " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.PROFILECHANGE     -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT PROFILECHANGE (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " No: " + param1 + " CurrentRate: " + param2 / 100.0 + "U/h")
-                status = "PROFILECHANGE " + DateUtil.timeString(datetime)
+                status = "PROFILECHANGE " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.CARBS             -> {
@@ -172,12 +173,12 @@ class MsgHistoryEvents_v2 constructor(
                 emptyCarbsInfo.pumpId = datetime
                 val newRecord = treatmentsPlugin.addToHistoryTreatment(emptyCarbsInfo, false)
                 aapsLogger.debug(LTag.PUMPBTCOMM, (if (newRecord) "**NEW** " else "") + "EVENT CARBS (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Carbs: " + param1 + "g")
-                status = "CARBS " + DateUtil.timeString(datetime)
+                status = "CARBS " + dateUtil.timeString(datetime)
             }
 
             else                        -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Event: " + recordCode + " " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Param1: " + param1 + " Param2: " + param2)
-                status = "UNKNOWN " + DateUtil.timeString(datetime)
+                status = "UNKNOWN " + dateUtil.timeString(datetime)
             }
         }
         if (datetime > danaRv2Plugin.lastEventTimeLoaded) danaRv2Plugin.lastEventTimeLoaded = datetime

@@ -24,13 +24,14 @@ class ObjectivesPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     private val activePlugin: ActivePluginProvider,
-    private val sp: SP
+    private val sp: SP,
+    private val config: Config
 
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.CONSTRAINTS)
     .fragmentClass(ObjectivesFragment::class.qualifiedName)
-    .alwaysEnabled(Config.APS)
-    .showInList(Config.APS)
+    .alwaysEnabled(config.APS)
+    .showInList(config.APS)
     .pluginName(R.string.objectives)
     .shortName(R.string.objectives_shortname)
     .description(R.string.description_objectives),

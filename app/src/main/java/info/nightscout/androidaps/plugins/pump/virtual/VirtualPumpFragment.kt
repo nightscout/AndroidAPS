@@ -84,6 +84,6 @@ class VirtualPumpFragment : DaggerFragment() {
         val pumpType = virtualPumpPlugin.pumpType
 
         virtualpump_type?.text = pumpType?.description
-        virtualpump_type_def?.text = pumpType?.getFullDescription(resourceHelper.gs(R.string.virtualpump_pump_def), pumpType.hasExtendedBasals())
+        virtualpump_type_def?.text = pumpType?.getFullDescription(resourceHelper.gs(R.string.virtualpump_pump_def), pumpType.hasExtendedBasals(), resourceHelper)
     }
 }

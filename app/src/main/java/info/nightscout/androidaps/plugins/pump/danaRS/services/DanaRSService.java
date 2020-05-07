@@ -27,7 +27,7 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -75,7 +75,7 @@ import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_History
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_Option_Get_Pump_Time;
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_Option_Get_User_Option;
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_Option_Set_Pump_Time;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -101,6 +101,7 @@ public class DanaRSService extends DaggerService {
     @Inject ActivePluginProvider activePlugin;
     @Inject ConstraintChecker constraintChecker;
     @Inject DetailedBolusInfoStorage detailedBolusInfoStorage;
+    @Inject DateUtil dateUtil;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -271,10 +272,10 @@ public class DanaRSService extends DaggerService {
 
         DanaRS_Packet_APS_History_Events msg;
         if (lastHistoryFetched == 0) {
-            msg = new DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, injector, 0);
+            msg = new DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, injector, dateUtil, 0);
             aapsLogger.debug(LTag.PUMPCOMM, "Loading complete event history");
         } else {
-            msg = new DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, injector, lastHistoryFetched);
+            msg = new DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, injector, dateUtil, lastHistoryFetched);
             aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + DateUtil.dateAndTimeString(lastHistoryFetched));
         }
         bleComm.sendMessage(msg);

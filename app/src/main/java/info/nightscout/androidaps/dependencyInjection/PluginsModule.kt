@@ -1,13 +1,9 @@
 package info.nightscout.androidaps.dependencyInjection
 
 import dagger.Binds
-import dagger.Lazy
 import dagger.Module
-import dagger.Provides
 import dagger.multibindings.IntKey
 import dagger.multibindings.IntoMap
-import dagger.multibindings.IntoSet
-import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
