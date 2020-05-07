@@ -6,6 +6,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -23,6 +24,41 @@ class VersionCheckerUtilsKtTest : TestBase() {
 
     @Before fun setup() {
         versionCheckerUtils = VersionCheckerUtils(aapsLogger, sp, resourceHelper, rxBus, context)
+    }
+
+    @Test
+    fun `should handle invalid version`() {
+        assertArrayEquals(intArrayOf(), versionCheckerUtils.versionDigits("definitely not version string"))
+    }
+
+    @Test
+    fun `should handle empty version`() {
+        assertArrayEquals(intArrayOf(), versionCheckerUtils.versionDigits(""))
+    }
+
+    @Test
+    fun `should parse 2 digit version`() {
+        assertArrayEquals(intArrayOf(0, 999), versionCheckerUtils.versionDigits("0.999-beta"))
+    }
+
+    @Test
+    fun `should parse 3 digit version`() {
+        assertArrayEquals(intArrayOf(6, 83, 93), versionCheckerUtils.versionDigits("6.83.93"))
+    }
+
+    @Test
+    fun `should parse 4 digit version`() {
+        assertArrayEquals(intArrayOf(42, 7, 13, 101), versionCheckerUtils.versionDigits("42.7.13.101"))
+    }
+
+    @Test
+    fun `should parse 4 digit version with extra`() {
+        assertArrayEquals(intArrayOf(1, 2, 3, 4), versionCheckerUtils.versionDigits("1.2.3.4-RC5"))
+    }
+
+    @Test
+    fun `should parse version but only 4 digits are taken`() {
+        assertArrayEquals(intArrayOf(67, 8, 31, 5), versionCheckerUtils.versionDigits("67.8.31.5.153.4.2"))
     }
 
     /*

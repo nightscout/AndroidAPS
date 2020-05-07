@@ -212,7 +212,7 @@ class ObjectivesFragment : DaggerFragment() {
                             bundle.putInt("currentTask", taskPosition)
                             dialog.arguments = bundle
                             ObjectivesExamDialog.objective = objective
-                            fragmentManager?.let { dialog.show(it, "ObjectivesFragment") }
+                            dialog.show(childFragmentManager, "ObjectivesFragment")
                         }
                     }
                     // horizontal line

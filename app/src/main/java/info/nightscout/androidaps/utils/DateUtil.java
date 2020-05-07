@@ -11,11 +11,18 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -268,6 +275,42 @@ public class DateUtil {
 
     public static int getTimeZoneOffsetMinutes(final long timestamp) {
         return TimeZone.getDefault().getOffset(timestamp) / 60000;
+    }
+
+    //Map:{DAYS=1, HOURS=3, MINUTES=46, SECONDS=40, MILLISECONDS=0, MICROSECONDS=0, NANOSECONDS=0}
+    public static Map<TimeUnit, Long> computeDiff(long date1, long date2) {
+        long diffInMillies = date2 - date1;
+        List<TimeUnit> units = new ArrayList<>(EnumSet.allOf(TimeUnit.class));
+        Collections.reverse(units);
+        Map<TimeUnit, Long> result = new LinkedHashMap<>();
+        long milliesRest = diffInMillies;
+        for (TimeUnit unit : units) {
+            long diff = unit.convert(milliesRest, TimeUnit.MILLISECONDS);
+            long diffInMilliesForUnit = unit.toMillis(diff);
+            milliesRest = milliesRest - diffInMilliesForUnit;
+            result.put(unit, diff);
+        }
+        return result;
+    }
+
+    public static String age(long milliseconds, boolean useShortText, ResourceHelper resourceHelper) {
+        Map<TimeUnit, Long> diff = computeDiff(0L, milliseconds);
+
+        String days = " " + resourceHelper.gs(R.string.days) + " ";
+        String hours = " " + resourceHelper.gs(R.string.hours) + " ";
+        String minutes = " " + resourceHelper.gs(R.string.unit_minutes) + " ";
+
+        if (useShortText) {
+            days = resourceHelper.gs(R.string.shortday);
+            hours = resourceHelper.gs(R.string.shorthour);
+            minutes = resourceHelper.gs(R.string.shortminute);
+        }
+
+        String result = "";
+        if (diff.get(TimeUnit.DAYS) > 0) result += diff.get(TimeUnit.DAYS) + days;
+        if (diff.get(TimeUnit.HOURS) > 0) result += diff.get(TimeUnit.HOURS) + hours;
+        if (diff.get(TimeUnit.DAYS) == 0) result += diff.get(TimeUnit.MINUTES) + minutes;
+        return result;
     }
 
     public static String niceTimeScalar(long t, ResourceHelper resourceHelper) {
