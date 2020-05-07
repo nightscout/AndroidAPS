@@ -427,6 +427,7 @@ public class AutotunePrep {
         iobInputs.treatments = opts.treatments;
         // todo: var find_insulin = require('../iob/history');
         //  treatments = find_insulin(IOBInputs);
+//****************************************************************************************************************************************
 
         /* Code template for IOB calculation trom tempBasal Object
         IobTotal iob = new IobTotal(now);
@@ -436,7 +437,6 @@ public class AutotunePrep {
          */
 
 
-//****************************************************************************************************************************************
 // categorize.js Lines 372-383
         for (CRDatum crDatum : CRData) {
             Opts dosedOpts = new Opts(injector);

@@ -25,6 +25,7 @@ import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.plugins.general.food.FoodPlugin;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -53,6 +54,11 @@ public class Opts {
 //    @Inject public info.nightscout.androidaps.utils.sharedPreferences.SP sp;
 
     private final HasAndroidInjector injector;
+
+    public Opts() {
+        injector = MainApp.instance();
+        injector.androidInjector().inject(this);
+    }
 
     public Opts(
         HasAndroidInjector injector

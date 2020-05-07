@@ -1300,9 +1300,8 @@ public class AutotunePlugin extends PluginBase {
         FS.createAutotunefile(FS.SETTINGS,settings(lastRun,daysBack,new Date(starttime),new Date(endTime)),true);
 
         int toMgDl = 1;
-        //Todo correct after injection works in Opts
-        //Opts opts=new Opts(activePlugin, profileFunction);
-        Opts opts = new Opts(injector);
+        //Opts opts = new Opts(injector);
+        Opts opts = new Opts();
         opts.categorize_uam_as_basal = sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false);
 
         profile = profileFunction.getProfile(now);
