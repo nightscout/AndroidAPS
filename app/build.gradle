@@ -129,18 +129,13 @@ android {
         targetSdkVersion 28
         multiDexEnabled true
         versionCode 1500
-        version "2.7-omnipod-0.4-dagger-SNAPSHOT"
+        version "2.6.5-dev"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
         buildConfigField "String", "HEAD", '"' + generateGitBuild() + '"'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         // if you change minSdkVersion to less than 11, you need to change executeTask for wear
-
-        // OMNIPOD: Keep track of what commit from the main repository we're on, these fields aren't actually used anywhere
-        buildConfigField "String", "DEV_VERSION", '"2.6.5-dev"'
-        buildConfigField "String", "DEV_VERSION_COMMIT", '"b87155ead499167b3d42a73e3daf808494f10a2d"'
-        buildConfigField "String", "DEV_VERSION_COMMIT_DATE", '"24.4.2020"' // 24th April
 
         ndk {
             moduleName "BleCommandUtil"
