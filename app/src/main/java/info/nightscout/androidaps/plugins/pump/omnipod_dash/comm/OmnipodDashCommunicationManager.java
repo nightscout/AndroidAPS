@@ -18,12 +18,14 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
  * Created by andy on 4.8.2019
  */
 // TODO refactor to use dagger, just commented out errors
+// TODO is this class used? remove if not
 public class OmnipodDashCommunicationManager implements OmnipodCommunicationManagerInterface {
 
     // TODO Dagger
 
 //    private static final Logger LOG = LoggerFactory.getLogger(L.PUMPCOMM);
 
+    // i didn't find where you instantiate this
     private static OmnipodDashCommunicationManager omnipodCommunicationManager;
     private String errorMessage;
 
@@ -38,6 +40,7 @@ public class OmnipodDashCommunicationManager implements OmnipodCommunicationMana
         return null;
     }
 
+    @Deprecated
     public static OmnipodDashCommunicationManager getInstance() {
         return omnipodCommunicationManager;
     }
