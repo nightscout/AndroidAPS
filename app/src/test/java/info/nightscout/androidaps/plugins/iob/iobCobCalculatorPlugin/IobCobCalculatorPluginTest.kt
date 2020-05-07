@@ -42,6 +42,7 @@ class IobCobCalculatorPluginTest : TestBase() {
     @Mock lateinit var sensitivityWeightedAveragePlugin: SensitivityWeightedAveragePlugin
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var fabricPrivacy: FabricPrivacy
+    @Mock lateinit var dateUtil: DateUtil
 
     lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
@@ -52,13 +53,14 @@ class IobCobCalculatorPluginTest : TestBase() {
                 it.defaultValueHelper = defaultValueHelper
                 it.resourceHelper = resourceHelper
                 it.profileFunction = profileFunction
+                it.dateUtil = dateUtil
             }
         }
     }
 
     @Before
     fun mock() {
-        iobCobCalculatorPlugin = IobCobCalculatorPlugin(injector, aapsLogger, rxBus, sp, resourceHelper, profileFunction, activePlugin, treatmentsPlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy)
+        iobCobCalculatorPlugin = IobCobCalculatorPlugin(injector, aapsLogger, rxBus, sp, resourceHelper, profileFunction, activePlugin, treatmentsPlugin, sensitivityOref1Plugin, sensitivityAAPSPlugin, sensitivityWeightedAveragePlugin, fabricPrivacy, dateUtil)
     }
 
     @Test

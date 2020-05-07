@@ -73,6 +73,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     @Inject public AAPSLogger aapsLogger;
     @Inject public RxBusWrapper rxBus;
     @Inject public ResourceHelper resourceHelper;
+    @Inject public DateUtil dateUtil;
 
     public ProfileSwitch() {
         this.injector = StaticInjector.Companion.getInstance();
@@ -233,11 +234,11 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     @Override
     public boolean isValid() {
-        boolean isValid = getProfileObject() != null && getProfileObject().isValid(DateUtil.dateAndTimeString(date));
+        boolean isValid = getProfileObject() != null && getProfileObject().isValid(dateUtil.dateAndTimeString(date));
         ProfileSwitch active = treatmentsPlugin.getProfileSwitchFromHistory(DateUtil.now());
         long activeProfileSwitchDate = active != null ? active.date : -1L;
         if (!isValid && date == activeProfileSwitchDate)
-            createNotificationInvalidProfile(DateUtil.dateAndTimeString(date));
+            createNotificationInvalidProfile(dateUtil.dateAndTimeString(date));
         return isValid;
     }
 
@@ -246,17 +247,17 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
         rxBus.send(new EventNewNotification(notification));
     }
 
-    public static boolean isEvent5minBack(AAPSLogger aapsLogger, List<ProfileSwitch> list, long time, boolean zeroDurationOnly) {
+    public boolean isEvent5minBack(List<ProfileSwitch> list, long time, boolean zeroDurationOnly) {
         for (int i = 0; i < list.size(); i++) {
             ProfileSwitch event = list.get(i);
             if (event.date <= time && event.date > (time - T.mins(5).msecs())) {
                 if (zeroDurationOnly) {
                     if (event.durationInMinutes == 0) {
-                        aapsLogger.debug(LTag.DATABASE, "Found ProfileSwitch event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
+                        aapsLogger.debug(LTag.DATABASE, "Found ProfileSwitch event for time: " + dateUtil.dateAndTimeString(time) + " " + event.toString());
                         return true;
                     }
                 } else {
-                    aapsLogger.debug(LTag.DATABASE, "Found ProfileSwitch event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
+                    aapsLogger.debug(LTag.DATABASE, "Found ProfileSwitch event for time: " + dateUtil.dateAndTimeString(time) + " " + event.toString());
                     return true;
                 }
             }
@@ -314,7 +315,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     public String toString() {
         return "ProfileSwitch{" +
                 "date=" + date +
-                "date=" + DateUtil.dateAndTimeString(date) +
+                "date=" + dateUtil.dateAndTimeString(date) +
                 ", isValid=" + isValid +
                 ", duration=" + durationInMinutes +
                 ", profileName=" + profileName +

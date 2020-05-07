@@ -13,6 +13,7 @@ import java.util.*
 abstract class DanaRS_Packet_History_(
     protected val aapsLogger: AAPSLogger,
     protected val rxBus: RxBusWrapper,
+    protected val dateUtil: DateUtil,
     protected val from: Long
 ) : DanaRS_Packet() {
 
@@ -36,7 +37,7 @@ abstract class DanaRS_Packet_History_(
         hour = cal[Calendar.HOUR_OF_DAY]
         min = cal[Calendar.MINUTE]
         sec = cal[Calendar.SECOND]
-        aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + DateUtil.dateAndTimeString(cal.timeInMillis))
+        aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + dateUtil.dateAndTimeString(cal.timeInMillis))
     }
 
     override fun getRequestParams(): ByteArray {
@@ -85,7 +86,7 @@ abstract class DanaRS_Packet_History_(
             val historyCode = byteArrayToInt(getBytes(data, DATA_START + 7, 1))
             val paramByte8 = historyCode.toByte()
             val value: Int = (data[DATA_START + 8].toInt() and 0xFF shl 8) + (data[DATA_START + 9].toInt() and 0xFF)
-            aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + DateUtil.dateAndTimeString(datetimewihtsec) + " Code: " + historyCode + " Value: " + value)
+            aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + dateUtil.dateAndTimeString(datetimewihtsec) + " Code: " + historyCode + " Value: " + value)
             val danaRHistoryRecord = DanaRHistoryRecord()
             danaRHistoryRecord.setBytes(data)
             // danaRHistoryRecord.recordCode is different from DanaR codes
@@ -197,7 +198,7 @@ abstract class DanaRS_Packet_History_(
                 }
             }
             MainApp.getDbHelper().createOrUpdate(danaRHistoryRecord)
-            rxBus.send(EventDanaRSyncStatus(DateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType))
+            rxBus.send(EventDanaRSyncStatus(dateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType))
         }
     }
 

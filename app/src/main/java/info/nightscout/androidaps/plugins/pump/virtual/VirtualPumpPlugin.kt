@@ -52,7 +52,8 @@ class VirtualPumpPlugin @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val treatmentsPlugin: TreatmentsPlugin,
     commandQueue: CommandQueueProvider,
-    private val config: Config
+    private val config: Config,
+    private val dateUtil: DateUtil
 ) : PumpPluginBase(PluginDescription()
     .mainType(PluginType.PUMP)
     .fragmentClass(VirtualPumpFragment::class.java.name)
@@ -356,13 +357,13 @@ class VirtualPumpPlugin @Inject constructor(
             val tb = treatmentsPlugin.getTempBasalFromHistory(now)
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile))
-                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date))
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date))
                 extended.put("TempBasalRemaining", tb.plannedRemainingMinutes)
             }
             val eb = treatmentsPlugin.getExtendedBolusFromHistory(now)
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate())
-                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date))
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date))
                 extended.put("ExtendedBolusRemaining", eb.plannedRemainingMinutes)
             }
             status.put("timestamp", DateUtil.toISOString(now))

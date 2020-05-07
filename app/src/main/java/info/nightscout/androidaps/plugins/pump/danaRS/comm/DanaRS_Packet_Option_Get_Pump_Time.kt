@@ -9,7 +9,8 @@ import java.util.*
 
 class DanaRS_Packet_Option_Get_Pump_Time(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
+    private val danaRPump: DanaRPump,
+    private val dateUtil: DateUtil
 ) : DanaRS_Packet() {
 
     init {
@@ -39,7 +40,7 @@ class DanaRS_Packet_Option_Get_Pump_Time(
         val time = Date(100 + year, month - 1, day, hour, min, sec)
         danaRPump.pumpTime = time.time
         failed = year == month && month == day && day == hour && hour == min && min == sec && sec == 1
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + DateUtil.dateAndTimeString(time))
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + dateUtil.dateAndTimeString(time))
     }
 
     override fun handleMessageNotReceived() {

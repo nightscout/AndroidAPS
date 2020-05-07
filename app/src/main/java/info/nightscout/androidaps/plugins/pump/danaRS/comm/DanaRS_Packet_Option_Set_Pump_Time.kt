@@ -8,6 +8,7 @@ import java.util.*
 
 class DanaRS_Packet_Option_Set_Pump_Time(
     private val aapsLogger: AAPSLogger,
+    private val dateUtil: DateUtil,
     private var time: Long = 0
 ) : DanaRS_Packet() {
 
@@ -15,7 +16,7 @@ class DanaRS_Packet_Option_Set_Pump_Time(
 
     init {
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_OPTION__SET_PUMP_TIME
-        aapsLogger.debug(LTag.PUMPCOMM, "Setting pump time " + DateUtil.dateAndTimeString(time))
+        aapsLogger.debug(LTag.PUMPCOMM, "Setting pump time " + dateUtil.dateAndTimeString(time))
     }
 
     override fun getRequestParams(): ByteArray {

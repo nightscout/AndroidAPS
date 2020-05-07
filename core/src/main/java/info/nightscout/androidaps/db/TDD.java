@@ -46,11 +46,10 @@ public class TDD {
     }
 
 
-    @Override
-    public String toString() {
+    public String toString(DateUtil dateUtil) {
         return "TDD [" +
                 "date=" + date +
-                "date(str)=" + DateUtil.dateAndTimeString(date) +
+                "date(str)=" + dateUtil.dateAndTimeString(date) +
                 ", bolus=" + bolus +
                 ", basal=" + basal +
                 ", total=" + total +

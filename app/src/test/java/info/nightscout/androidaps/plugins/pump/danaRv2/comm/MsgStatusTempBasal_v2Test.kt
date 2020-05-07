@@ -10,7 +10,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgStatusTempBasal_v2Test : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgStatusTempBasal_v2(aapsLogger, danaRPump)
+        val packet = MsgStatusTempBasal_v2(aapsLogger, danaRPump, dateUtil)
         // test message decoding
         packet.handleMessage(createArray(34, 1.toByte()))
         Assert.assertEquals(true, danaRPump.isTempBasalInProgress)

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.utils
 
+import android.content.Context
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -14,6 +15,7 @@ import java.util.*
 @RunWith(PowerMockRunner::class)
 class DateUtilTest : TestBase() {
 
+    @Mock lateinit var context: Context
     @Mock lateinit var resourceHelper: ResourceHelper
 
     @Test
@@ -46,22 +48,22 @@ class DateUtilTest : TestBase() {
     }
 
     @Test fun timeStringTest() {
-        Assert.assertTrue(DateUtil.timeString(Date(1513902750000L)).contains("32"))
-        Assert.assertTrue(DateUtil.timeString(1513902750000L).contains("32"))
+        Assert.assertTrue(DateUtil(context, resourceHelper).timeString(Date(1513902750000L)).contains("32"))
+        Assert.assertTrue(DateUtil(context, resourceHelper).timeString(1513902750000L).contains("32"))
     }
 
     @Test fun dateAndTimeStringTest() {
-        Assert.assertTrue(DateUtil.dateAndTimeString(1513902750000L).contains("22"))
-        Assert.assertTrue(DateUtil.dateAndTimeString(1513902750000L).contains("32"))
-        Assert.assertTrue(DateUtil.dateAndTimeString(Date(1513902750000L)).contains("22"))
-        Assert.assertTrue(DateUtil.dateAndTimeString(Date(1513902750000L)).contains("32"))
+        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeString(1513902750000L).contains("22"))
+        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeString(1513902750000L).contains("32"))
+        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeString(Date(1513902750000L)).contains("22"))
+        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeString(Date(1513902750000L)).contains("32"))
     }
 
     @Test fun dateAndTimeRangeStringTest() {
-        Assert.assertTrue(DateUtil.dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("22"))
-        Assert.assertTrue(DateUtil.dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("32"))
-        Assert.assertTrue(DateUtil.dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("22"))
-        Assert.assertTrue(DateUtil.dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("32"))
+        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("22"))
+        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("32"))
+        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("22"))
+        Assert.assertTrue(DateUtil(context, resourceHelper).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("32"))
     }
 
     /*

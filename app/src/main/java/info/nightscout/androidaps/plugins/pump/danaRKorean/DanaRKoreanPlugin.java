@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.services.DanaRKoreanExecutionService;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -60,10 +61,10 @@ public class DanaRKoreanPlugin extends AbstractDanaRPlugin {
             ConstraintChecker constraintChecker,
             TreatmentsPlugin treatmentsPlugin,
             SP sp,
-            CommandQueueProvider commandQueue
-
+            CommandQueueProvider commandQueue,
+            DateUtil dateUtil
     ) {
-        super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue, rxBus, treatmentsPlugin, sp);
+        super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue, rxBus, treatmentsPlugin, sp, dateUtil);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.resourceHelper = resourceHelper;

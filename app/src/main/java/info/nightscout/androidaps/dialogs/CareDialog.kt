@@ -167,7 +167,7 @@ class CareDialog : DialogFragmentWithDate() {
         eventTime -= eventTime % 1000
 
         if (eventTimeChanged)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(eventTime))
+            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         json.put("created_at", DateUtil.toISOString(eventTime))
         json.put("mills", eventTime)

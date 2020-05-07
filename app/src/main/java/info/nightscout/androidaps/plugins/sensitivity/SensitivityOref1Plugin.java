@@ -35,7 +35,8 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
 
-    private ProfileFunction profileFunction;
+    private final ProfileFunction profileFunction;
+    private final DateUtil dateUtil;
 
     @Inject
     public SensitivityOref1Plugin(
@@ -43,7 +44,8 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
             AAPSLogger aapsLogger,
             ResourceHelper resourceHelper,
             SP sp,
-            ProfileFunction profileFunction
+            ProfileFunction profileFunction,
+            DateUtil dateUtil
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.SENSITIVITY)
@@ -56,6 +58,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
                 injector, aapsLogger, resourceHelper, sp
         );
         this.profileFunction = profileFunction;
+        this.dateUtil = dateUtil;
     }
 
     @Override
@@ -79,7 +82,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
         // the current
         AutosensData current = iobCobCalculatorPlugin.getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
-            getAapsLogger().debug(LTag.AUTOSENS, "No autosens data available. toTime: " + DateUtil.dateAndTimeString(toTime) + " lastDataTime: " + iobCobCalculatorPlugin.lastDataTime());
+            getAapsLogger().debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + iobCobCalculatorPlugin.lastDataTime());
             return new AutosensResult();
         }
 
@@ -125,7 +128,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
                 }
 
                 // reset deviations after profile switch
-                if (ProfileSwitch.isEvent5minBack(getAapsLogger(), profileSwitches, autosensData.time, true)) {
+                if (new ProfileSwitch(getInjector()).isEvent5minBack(profileSwitches, autosensData.time, true)) {
                     deviationsArray.clear();
                     pastSensitivity += "(PROFILESWITCH)";
                 }
@@ -241,7 +244,7 @@ public class SensitivityOref1Plugin extends AbstractSensitivityPlugin {
                 sensResultArray.get(key) + comparison, deviationsHour.get(key).size());
 
         getAapsLogger().debug(LTag.AUTOSENS, "Sensitivity to: "
-                + DateUtil.dateAndTimeString(toTime) +
+                + dateUtil.dateAndTimeString(toTime) +
                 " ratio: " + output.ratio
                 + " mealCOB: " + current.cob);
 

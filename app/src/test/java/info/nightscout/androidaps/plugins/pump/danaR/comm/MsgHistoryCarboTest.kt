@@ -9,7 +9,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class MsgHistoryCarboTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgHistoryCarbo(aapsLogger, RxBusWrapper())
+        val packet = MsgHistoryCarbo(aapsLogger, RxBusWrapper(), dateUtil)
         // nothing left to test
     }
 }

@@ -31,8 +31,9 @@ class TddCalculator @Inject constructor(
     val sp: SP,
     val activePlugin: ActivePluginProvider,
     val profileFunction: ProfileFunction,
-    fabricPrivacy: FabricPrivacy
-) : TreatmentsPlugin(injector, aapsLogger, rxBus, resourceHelper, mainApp, sp, profileFunction, activePlugin, fabricPrivacy) {
+    fabricPrivacy: FabricPrivacy,
+    private val dateUtil: DateUtil
+) : TreatmentsPlugin(injector, aapsLogger, rxBus, resourceHelper, mainApp, sp, profileFunction, activePlugin, fabricPrivacy, dateUtil) {
 
     init {
         service = TreatmentService(injector) // plugin is not started
@@ -85,18 +86,18 @@ class TddCalculator @Inject constructor(
         return totalTdd
     }
 
-    fun stats(dateUtil: DateUtil): Spanned {
+    fun stats(): Spanned {
         val tdds = calculate(7)
         val averageTdd = averageTDD(tdds)
         return HtmlHelper.fromHtml(
             "<b>" + resourceHelper.gs(R.string.tdd) + ":</b><br>" +
-                toText(tdds, dateUtil) +
+                toText(tdds) +
                 "<b>" + resourceHelper.gs(R.string.average) + ":</b><br>" +
                 averageTdd.toText(resourceHelper, tdds.size())
         )
     }
 
-    private fun toText(tdds: LongSparseArray<TDD>, dateUtil: DateUtil): String {
+    private fun toText(tdds: LongSparseArray<TDD>): String {
         var t = ""
         for (i in 0 until tdds.size()) {
             t += "${tdds.valueAt(i).toText(resourceHelper, dateUtil)}<br>"

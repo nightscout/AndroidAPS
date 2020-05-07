@@ -65,6 +65,7 @@ public class IobCobThread extends Thread {
     @Inject BuildHelper buildHelper;
     @Inject Profiler profiler;
     @Inject FabricPrivacy fabricPrivacy;
+    @Inject DateUtil dateUtil;
 
     private final HasAndroidInjector injector;
     private boolean bgDataReload;
@@ -119,7 +120,7 @@ public class IobCobThread extends Thread {
                 }
 
                 long prevDataTime = IobCobCalculatorPlugin.roundUpTime(bucketed_data.get(bucketed_data.size() - 3).date);
-                aapsLogger.debug(LTag.AUTOSENS, "Prev data time: " + DateUtil.dateAndTimeString(prevDataTime));
+                aapsLogger.debug(LTag.AUTOSENS, "Prev data time: " + dateUtil.dateAndTimeString(prevDataTime));
                 AutosensData previous = autosensDataTable.get(prevDataTime);
                 // start from oldest to be able sub cob
                 for (int i = bucketed_data.size() - 4; i >= 0; i--) {
@@ -302,7 +303,7 @@ public class IobCobThread extends Thread {
                     previous = autosensData;
                     if (bgTime < now())
                         autosensDataTable.put(bgTime, autosensData);
-                    aapsLogger.debug(LTag.AUTOSENS, "Running detectSensitivity from: " + DateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + DateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + iobCobCalculatorPlugin.lastDataTime());
+                    aapsLogger.debug(LTag.AUTOSENS, "Running detectSensitivity from: " + dateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + dateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + iobCobCalculatorPlugin.lastDataTime());
                     AutosensResult sensitivity = iobCobCalculatorPlugin.detectSensitivityWithLock(oldestTimeWithData, bgTime);
                     aapsLogger.debug(LTag.AUTOSENS, "Sensitivity result: " + sensitivity.toString());
                     autosensData.autosensResult = sensitivity;

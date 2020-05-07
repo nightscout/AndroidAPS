@@ -10,7 +10,8 @@ import info.nightscout.androidaps.utils.DateUtil
 
 open class MsgHistoryAll(
     val aapsLogger: AAPSLogger,
-    val rxBus: RxBusWrapper
+    val rxBus: RxBusWrapper,
+    private val dateUtil: DateUtil
 ) : MessageBase() {
 
     init {
@@ -138,6 +139,6 @@ open class MsgHistoryAll(
             17.toByte()                       -> failed = true
         }
         MainApp.getDbHelper().createOrUpdate(danaRHistoryRecord)
-        rxBus.send(EventDanaRSyncStatus(DateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType))
+        rxBus.send(EventDanaRSyncStatus(dateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType))
     }
 }

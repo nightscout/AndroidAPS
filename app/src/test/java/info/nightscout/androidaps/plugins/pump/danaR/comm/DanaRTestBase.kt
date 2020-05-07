@@ -7,6 +7,7 @@ import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
 import org.mockito.Mock
@@ -16,6 +17,7 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePluginProvider: ActivePluginProvider
+    @Mock lateinit var dateUtil: DateUtil
 
     val injector = HasAndroidInjector {
         AndroidInjector {

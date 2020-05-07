@@ -11,7 +11,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class DanaRS_Packet_Basal_Get_Temporary_Basal_StateTest : DanaRSTestBase() {
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Basal_Get_Temporary_Basal_State(aapsLogger, danaRPump)
+        val packet = DanaRS_Packet_Basal_Get_Temporary_Basal_State(aapsLogger, danaRPump, dateUtil)
         // test message decoding
         val array = ByteArray(100)
         putByteToArray(array, 0, 1.toByte())

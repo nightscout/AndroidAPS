@@ -11,7 +11,6 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -29,8 +28,8 @@ public class AutosensData implements DataPointWithLabelInterface {
     @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
     @Inject ResourceHelper resourceHelper;
-    @Inject ActivePluginProvider activePlugin;
     @Inject ProfileFunction profileFunction;
+    @Inject DateUtil dateUtil;
 
     public AutosensData(HasAndroidInjector injector) {
         injector.androidInjector().inject(this);
@@ -56,7 +55,7 @@ public class AutosensData implements DataPointWithLabelInterface {
                 double sens = profile.getIsfMgdl(t.date);
                 double ic = profile.getIc(t.date);
                 min5minCarbImpact = t.carbs / (maxAbsorptionHours * 60 / 5) * sens / ic;
-                aapsLogger.debug(LTag.AUTOSENS, "Min 5m carbs impact for " + carbs + "g @" + DateUtil.dateAndTimeString(t.date) + " for " + maxAbsorptionHours + "h calculated to " + min5minCarbImpact + " ISF: " + sens + " IC: " + ic);
+                aapsLogger.debug(LTag.AUTOSENS, "Min 5m carbs impact for " + carbs + "g @" + dateUtil.dateAndTimeString(t.date) + " for " + maxAbsorptionHours + "h calculated to " + min5minCarbImpact + " ISF: " + sens + " IC: " + ic);
             } else {
                 min5minCarbImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact);
             }
@@ -71,7 +70,7 @@ public class AutosensData implements DataPointWithLabelInterface {
 
         @Override
         public String toString() {
-            return String.format(Locale.ENGLISH, "CarbsInPast: time: %s carbs: %.02f min5minCI: %.02f remaining: %.2f", DateUtil.dateAndTimeString(time), carbs, min5minCarbImpact, remaining);
+            return String.format(Locale.ENGLISH, "CarbsInPast: time: %s carbs: %.02f min5minCI: %.02f remaining: %.2f", dateUtil.dateAndTimeString(time), carbs, min5minCarbImpact, remaining);
         }
     }
 
@@ -107,7 +106,7 @@ public class AutosensData implements DataPointWithLabelInterface {
     @Override
     public String toString() {
         return String.format(Locale.ENGLISH, "AutosensData: %s pastSensitivity=%s  delta=%.02f  avgDelta=%.02f bgi=%.02f deviation=%.02f avgDeviation=%.02f absorbed=%.02f carbsFromBolus=%.02f cob=%.02f autosensRatio=%.02f slopeFromMaxDeviation=%.02f slopeFromMinDeviation=%.02f activeCarbsList=%s",
-                DateUtil.dateAndTimeString(time), pastSensitivity, delta, avgDelta, bgi, deviation, avgDeviation, absorbed, carbsFromBolus, cob, autosensResult.ratio, slopeFromMaxDeviation, slopeFromMinDeviation, activeCarbsList.toString());
+                dateUtil.dateAndTimeString(time), pastSensitivity, delta, avgDelta, bgi, deviation, avgDeviation, absorbed, carbsFromBolus, cob, autosensResult.ratio, slopeFromMaxDeviation, slopeFromMinDeviation, activeCarbsList.toString());
     }
 
     public List<CarbsInPast> cloneCarbsList() {
@@ -134,7 +133,7 @@ public class AutosensData implements DataPointWithLabelInterface {
                 activeCarbsList.remove(i--);
                 if (c.remaining > 0)
                     cob -= c.remaining;
-                aapsLogger.debug(LTag.AUTOSENS, "Removing carbs at " + DateUtil.dateAndTimeString(toTime) + " after " + maxAbsorptionHours + "h > " + c.toString());
+                aapsLogger.debug(LTag.AUTOSENS, "Removing carbs at " + dateUtil.dateAndTimeString(toTime) + " after " + maxAbsorptionHours + "h > " + c.toString());
             }
         }
     }

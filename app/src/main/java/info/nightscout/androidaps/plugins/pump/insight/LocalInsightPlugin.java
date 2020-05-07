@@ -150,6 +150,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
     private final CommandQueueProvider commandQueue;
     private final ProfileFunction profileFunction;
     private final Context context;
+    private final DateUtil dateUtil;
 
     public static final String ALERT_CHANNEL_ID = "AndroidAPS-InsightAlert";
 
@@ -209,7 +210,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             CommandQueueProvider commandQueue,
             ProfileFunction profileFunction,
             Context context,
-            Config config
+            Config config,
+            DateUtil dateUtil
     ) {
         super(new PluginDescription()
                         .pluginName(R.string.insight_local)
@@ -229,6 +231,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
         this.commandQueue = commandQueue;
         this.profileFunction = profileFunction;
         this.context = context;
+        this.dateUtil = dateUtil;
 
         pumpDescription = new PumpDescription();
         pumpDescription.setPumpDescription(PumpType.AccuChekInsightBluetooth);
@@ -996,13 +999,13 @@ public class LocalInsightPlugin extends PumpPluginBase implements PumpInterface,
             TemporaryBasal tb = treatmentsPlugin.getTempBasalFromHistory(now);
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
-                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
             ExtendedBolus eb = treatmentsPlugin.getExtendedBolusFromHistory(now);
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
-                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date));
                 extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
             }
             extended.put("BaseBasalRate", getBaseBasalRate());

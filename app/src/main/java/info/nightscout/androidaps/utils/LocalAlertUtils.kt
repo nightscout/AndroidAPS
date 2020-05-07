@@ -30,7 +30,8 @@ class LocalAlertUtils @Inject constructor(
     private val activePlugin: ActivePluginProvider,
     private val profileFunction: ProfileFunction,
     private val iobCobCalculatorPlugin: IobCobCalculatorPlugin,
-    private val config: Config
+    private val config: Config,
+    private val dateUtil: DateUtil
 ) {
 
     fun missedReadingsThreshold(): Long {
@@ -46,7 +47,7 @@ class LocalAlertUtils @Inject constructor(
         val nextAlarmOccurrenceReached = sp.getLong("nextPumpDisconnectedAlarm", 0L) < System.currentTimeMillis()
         if (config.APS && sp.getBoolean(resourceHelper.gs(R.string.key_enable_pump_unreachable_alert), true)
             && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !isDisconnected) {
-            aapsLogger.debug(LTag.CORE, "Generating pump unreachable alarm. lastConnection: " + DateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated)
+            aapsLogger.debug(LTag.CORE, "Generating pump unreachable alarm. lastConnection: " + dateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated)
             val n = Notification(Notification.PUMP_UNREACHABLE, resourceHelper.gs(R.string.pump_unreachable), Notification.URGENT)
             n.soundId = R.raw.alarm
             sp.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold())

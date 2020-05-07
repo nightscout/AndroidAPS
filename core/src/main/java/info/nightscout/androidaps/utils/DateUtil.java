@@ -44,19 +44,10 @@ public class DateUtil {
     private final Context context;
     private final ResourceHelper resourceHelper;
 
-    @Deprecated
-    private static DateUtil instance;
-
     @Inject
     public DateUtil(Context context, ResourceHelper resourceHelper) {
         this.context = context;
         this.resourceHelper = resourceHelper;
-        instance = this;
-    }
-
-    @Deprecated
-    public static DateUtil getInstance() {
-        return instance;
     }
 
     /**
@@ -206,22 +197,22 @@ public class DateUtil {
         return new DateTime(mills).toString(DateTimeFormat.fullTime());
     }
 
-    public static String dateAndTimeString(Date date) {
-        return dateString(date) + " " + instance.timeString(date);
+    public String dateAndTimeString(Date date) {
+        return dateString(date) + " " + timeString(date);
     }
 
-    public static String dateAndTimeRangeString(long start, long end) {
-        return dateAndTimeString(start) + " - " + instance.timeString(end);
+    public String dateAndTimeRangeString(long start, long end) {
+        return dateAndTimeString(start) + " - " + timeString(end);
     }
 
-    public static String dateAndTimeString(long mills) {
+    public String dateAndTimeString(long mills) {
         if (mills == 0) return "";
-        return dateString(mills) + " " + instance.timeString(mills);
+        return dateString(mills) + " " + timeString(mills);
     }
 
-    public static String dateAndTimeAndSecondsString(long mills) {
+    public String dateAndTimeAndSecondsString(long mills) {
         if (mills == 0) return "";
-        return dateString(mills) + " " + instance.timeStringWithSeconds(mills);
+        return dateString(mills) + " " + timeStringWithSeconds(mills);
     }
 
     public static String dateAndTimeFullString(long mills) {
@@ -245,11 +236,11 @@ public class DateUtil {
 
     private static LongSparseArray<String> timeStrings = new LongSparseArray<>();
 
-    public static String timeStringFromSeconds(int seconds) {
+    public String timeStringFromSeconds(int seconds) {
         String cached = timeStrings.get(seconds);
         if (cached != null)
             return cached;
-        String t = instance.timeString(toDate(seconds));
+        String t = timeString(toDate(seconds));
         timeStrings.put(seconds, t);
         return t;
     }

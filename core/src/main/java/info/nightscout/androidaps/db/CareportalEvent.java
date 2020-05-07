@@ -38,6 +38,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
     @Inject ResourceHelper resourceHelper;
     @Inject AAPSLogger aapsLogger;
     @Inject Translator translator;
+    @Inject DateUtil dateUtil;
 
     @DatabaseField(id = true)
     public long date;
@@ -122,7 +123,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
     public String toString() {
         return "CareportalEvent{" +
                 "date= " + date +
-                ", date= " + DateUtil.dateAndTimeString(date) +
+                ", date= " + dateUtil.dateAndTimeString(date) +
                 ", isValid= " + isValid +
                 ", _id= " + _id +
                 ", eventType= " + eventType +
@@ -134,7 +135,7 @@ public class CareportalEvent implements DataPointWithLabelInterface, Interval {
         for (int i = 0; i < list.size(); i++) {
             CareportalEvent event = list.get(i);
             if (event.date <= time && event.date > (time - T.mins(5).msecs())) {
-                aapsLogger.debug(LTag.DATABASE, "Found event for time: " + DateUtil.dateAndTimeString(time) + " " + event.toString());
+                aapsLogger.debug(LTag.DATABASE, "Found event for time: " + dateUtil.dateAndTimeString(time) + " " + event.toString());
                 return true;
             }
         }

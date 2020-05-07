@@ -145,7 +145,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         val timeOffset = overview_insulin_time.value.toInt()
         val time = DateUtil.now() + T.mins(timeOffset.toLong()).msecs()
         if (timeOffset != 0)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(time))
+            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(time))
 
         val notes = notes.text.toString()
         if (notes.isNotEmpty())

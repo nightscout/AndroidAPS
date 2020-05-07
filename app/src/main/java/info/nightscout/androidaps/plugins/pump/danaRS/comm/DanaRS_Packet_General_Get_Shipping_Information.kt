@@ -8,7 +8,8 @@ import info.nightscout.androidaps.utils.DateUtil
 
 class DanaRS_Packet_General_Get_Shipping_Information(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
+    private val danaRPump: DanaRPump,
+    private val dateUtil: DateUtil
 ) : DanaRS_Packet() {
 
     init {
@@ -31,7 +32,7 @@ class DanaRS_Packet_General_Get_Shipping_Information(
         dataSize = 3
         danaRPump.shippingCountry = asciiStringFromBuff(data, dataIndex, dataSize)
         aapsLogger.debug(LTag.PUMPCOMM, "Serial number: " + danaRPump.serialNumber)
-        aapsLogger.debug(LTag.PUMPCOMM, "Shipping date: " + DateUtil.dateAndTimeString(danaRPump.shippingDate))
+        aapsLogger.debug(LTag.PUMPCOMM, "Shipping date: " + dateUtil.dateAndTimeString(danaRPump.shippingDate))
         aapsLogger.debug(LTag.PUMPCOMM, "Shipping country: " + danaRPump.shippingCountry)
     }
 

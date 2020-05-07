@@ -11,7 +11,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class DanaRS_Packet_History_DailyTest : DanaRSTestBase() {
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_History_Daily(aapsLogger, rxBus, System.currentTimeMillis())
+        val packet = DanaRS_Packet_History_Daily(aapsLogger, rxBus, dateUtil, System.currentTimeMillis())
         Assert.assertEquals("REVIEW__DAILY", packet.friendlyName)
     }
 }

@@ -33,6 +33,7 @@ public class BgReading implements DataPointWithLabelInterface {
     @Inject public DefaultValueHelper defaultValueHelper;
     @Inject public ProfileFunction profileFunction;
     @Inject public ResourceHelper resourceHelper;
+    @Inject public DateUtil dateUtil;
 
     @DatabaseField(id = true)
     public long date;
@@ -66,7 +67,8 @@ public class BgReading implements DataPointWithLabelInterface {
         injector.androidInjector().inject(this);
     }
 
-    public BgReading(NSSgv sgv) {
+    public BgReading(HasAndroidInjector injector, NSSgv sgv) {
+        injector.androidInjector().inject(this);
         date = sgv.getMills();
         value = sgv.getMgdl();
         raw = sgv.getFiltered() != null ? sgv.getFiltered() : value;
@@ -125,7 +127,7 @@ public class BgReading implements DataPointWithLabelInterface {
     public String toString() {
         return "BgReading{" +
                 "date=" + date +
-                ", date=" + DateUtil.dateAndTimeString(date) +
+                ", date=" + dateUtil.dateAndTimeString(date) +
                 ", value=" + value +
                 ", direction=" + direction +
                 ", raw=" + raw +

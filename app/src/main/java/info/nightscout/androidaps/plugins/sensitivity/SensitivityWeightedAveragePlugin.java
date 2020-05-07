@@ -32,7 +32,7 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin {
 
     private SP sp;
-    private ResourceHelper resourceHelper;
+    private DateUtil dateUtil;
     private ProfileFunction profileFunction;
 
     @Inject
@@ -41,7 +41,8 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
             AAPSLogger aapsLogger,
             ResourceHelper resourceHelper,
             SP sp,
-            ProfileFunction profileFunction
+            ProfileFunction profileFunction,
+            DateUtil dateUtil
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.SENSITIVITY)
@@ -52,7 +53,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
                 injector, aapsLogger, resourceHelper, sp
         );
         this.sp = sp;
-        this.resourceHelper = resourceHelper;
+        this.dateUtil = dateUtil;
         this.profileFunction = profileFunction;
     }
 
@@ -62,9 +63,9 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
 
         String age = sp.getString(R.string.key_age, "");
         int defaultHours = 24;
-        if (age.equals(resourceHelper.gs(R.string.key_adult))) defaultHours = 24;
-        if (age.equals(resourceHelper.gs(R.string.key_teenage))) defaultHours = 4;
-        if (age.equals(resourceHelper.gs(R.string.key_child))) defaultHours = 4;
+        if (age.equals(getResourceHelper().gs(R.string.key_adult))) defaultHours = 24;
+        if (age.equals(getResourceHelper().gs(R.string.key_teenage))) defaultHours = 4;
+        if (age.equals(getResourceHelper().gs(R.string.key_child))) defaultHours = 4;
         int hoursForDetection = sp.getInt(R.string.key_openapsama_autosens_period, defaultHours);
 
         if (autosensDataTable == null || autosensDataTable.size() < 4) {
@@ -74,7 +75,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
 
         AutosensData current = iobCobCalculatorPlugin.getAutosensData(toTime); // this is running inside lock already
         if (current == null) {
-            getAapsLogger().debug(LTag.AUTOSENS, "No autosens data available. toTime: " + DateUtil.dateAndTimeString(toTime) + " lastDataTime: " + iobCobCalculatorPlugin.lastDataTime());
+            getAapsLogger().debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + iobCobCalculatorPlugin.lastDataTime());
             return new AutosensResult();
         }
 
@@ -117,7 +118,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
             }
 
             // reset deviations after profile switch
-            if (ProfileSwitch.isEvent5minBack(getAapsLogger(), profileSwitches, autosensData.time, true)) {
+            if (new ProfileSwitch(getInjector()).isEvent5minBack(profileSwitches, autosensData.time, true)) {
                 data.clear();
                 pastSensitivity += "(PROFILESWITCH)";
             }
@@ -145,10 +146,10 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
         }
 
         if (data.size() == 0) {
-            getAapsLogger().debug(LTag.AUTOSENS, "Data size: " + data.size() + " fromTime: " + DateUtil.dateAndTimeString(fromTime) + " toTime: " + DateUtil.dateAndTimeString(toTime));
+            getAapsLogger().debug(LTag.AUTOSENS, "Data size: " + data.size() + " fromTime: " + dateUtil.dateAndTimeString(fromTime) + " toTime: " + dateUtil.dateAndTimeString(toTime));
             return new AutosensResult();
         } else {
-            getAapsLogger().debug(LTag.AUTOSENS, "Data size: " + data.size() + " fromTime: " + DateUtil.dateAndTimeString(fromTime) + " toTime: " + DateUtil.dateAndTimeString(toTime));
+            getAapsLogger().debug(LTag.AUTOSENS, "Data size: " + data.size() + " fromTime: " + dateUtil.dateAndTimeString(fromTime) + " toTime: " + dateUtil.dateAndTimeString(toTime));
         }
 
         double weightedsum = 0;
@@ -192,7 +193,7 @@ public class SensitivityWeightedAveragePlugin extends AbstractSensitivityPlugin 
                 sensResult, data.size());
 
         getAapsLogger().debug(LTag.AUTOSENS, "Sensitivity to: "
-                + DateUtil.dateAndTimeString(toTime) +
+                + dateUtil.dateAndTimeString(toTime) +
                 " ratio: " + output.ratio
                 + " mealCOB: " + current.cob);
 

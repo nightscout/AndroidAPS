@@ -42,6 +42,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -109,7 +110,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
         override fun onBindViewHolder(holder: TreatmentsViewHolder, position: Int) {
             val profile = profileFunction.getProfile() ?: return
             val t = treatments[position]
-            holder.date.text = DateUtil.dateAndTimeString(t.date)
+            holder.date.text = dateUtil.dateAndTimeString(t.date)
             holder.insulin.text = resourceHelper.gs(R.string.formatinsulinunits, t.insulin)
             holder.carbs.text = resourceHelper.gs(R.string.format_carbs, t.carbs.toInt())
             val iob = t.iobCalc(System.currentTimeMillis(), profile.dia)
@@ -158,7 +159,7 @@ class TreatmentsBolusFragment : DaggerFragment() {
                         val text = resourceHelper.gs(R.string.configbuilder_insulin) + ": " +
                             resourceHelper.gs(R.string.formatinsulinunits, treatment.insulin) + "\n" +
                             resourceHelper.gs(R.string.carbs) + ": " + resourceHelper.gs(R.string.format_carbs, treatment.carbs.toInt()) + "\n" +
-                            resourceHelper.gs(R.string.date) + ": " + DateUtil.dateAndTimeString(treatment.date)
+                            resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(treatment.date)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             if (treatment.source == Source.PUMP) {
                                 treatment.isValid = false

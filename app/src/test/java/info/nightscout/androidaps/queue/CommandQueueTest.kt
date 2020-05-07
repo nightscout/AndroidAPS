@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.Lazy
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -38,7 +39,7 @@ class CommandQueueTest : TestBaseWithProfile() {
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var sp: SP
 
-    private val buildHelper = BuildHelper()
+    private val buildHelper = BuildHelper(Config())
 
     val injector = HasAndroidInjector {
         AndroidInjector {

@@ -404,7 +404,7 @@ public class TemporaryBasal implements Interval, DbObjectBase {
     public String toString() {
         return "TemporaryBasal{" +
                 "date=" + date +
-                ", date=" + DateUtil.dateAndTimeString(date) +
+                ", date=" + dateUtil.dateAndTimeString(date) +
                 ", isValid=" + isValid +
                 ", pumpId=" + pumpId +
                 ", _id=" + _id +

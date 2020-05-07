@@ -36,6 +36,7 @@ public class PodSessionState extends PodState {
     @Inject AAPSLogger aapsLogger;
     @Inject SP sp;
     @Inject OmnipodUtil omnipodUtil;
+    @Inject DateUtil dateUtil;
 
     private final Map<AlertSlot, AlertType> configuredAlerts;
     private transient PodStateChangedHandler stateChangedHandler;
@@ -112,7 +113,7 @@ public class PodSessionState extends PodState {
     }
 
     public String getExpiryDateAsString() {
-        return expiresAt == null ? "???" : DateUtil.dateAndTimeString(expiresAt.toDate());
+        return expiresAt == null ? "???" : dateUtil.dateAndTimeString(expiresAt.toDate());
     }
 
     public FirmwareVersion getPiVersion() {

@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -26,6 +27,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
+    @Mock lateinit var dateUtil: DateUtil
 
     val rxBus = RxBusWrapper()
 
@@ -37,12 +39,14 @@ open class TestBaseWithProfile : TestBase() {
                 it.resourceHelper = resourceHelper
                 it.rxBus = rxBus
                 it.fabricPrivacy = fabricPrivacy
+                it.configInterface = Config()
             }
             if (it is ProfileSwitch) {
                 it.treatmentsPlugin = treatmentsPlugin
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
+                it.dateUtil = dateUtil
             }
             if (it is Treatment) {
                 it.activePlugin = activePluginProvider

@@ -9,6 +9,7 @@ import java.util.*
 
 class DanaRS_Packet_APS_Set_Event_History(
     private val aapsLogger: AAPSLogger,
+    private val dateUtil: DateUtil,
     private var packetType: Int,
     private var time: Long,
     private var param1: Int,
@@ -18,7 +19,7 @@ class DanaRS_Packet_APS_Set_Event_History(
     init {
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY
         if ((packetType == DanaRPump.CARBS || packetType == DanaRPump.BOLUS) && param1 <= 0) this.param1 = 0
-        aapsLogger.debug(LTag.PUMPCOMM, "Set history entry: " + DateUtil.dateAndTimeString(time) + " type: " + packetType + " param1: " + param1 + " param2: " + param2)
+        aapsLogger.debug(LTag.PUMPCOMM, "Set history entry: " + dateUtil.dateAndTimeString(time) + " type: " + packetType + " param1: " + param1 + " param2: " + param2)
     }
 
     override fun getRequestParams(): ByteArray {

@@ -95,7 +95,7 @@ class TriggerBgTest : TriggerTestBase() {
 
     private fun generateOneCurrentRecordBgData(): List<BgReading> {
         val list: MutableList<BgReading> = ArrayList()
-        list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":214,\"mills\":" + (now - 1) + ",\"direction\":\"Flat\"}"))))
+        list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":214,\"mills\":" + (now - 1) + ",\"direction\":\"Flat\"}"))))
         return list
     }
 }

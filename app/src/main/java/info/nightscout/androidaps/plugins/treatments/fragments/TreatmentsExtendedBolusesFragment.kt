@@ -64,7 +64,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
             holder.ph.visibility = if (extendedBolus.source == Source.PUMP) View.VISIBLE else View.GONE
             holder.ns.visibility = if (NSUpload.isIdValid(extendedBolus._id)) View.VISIBLE else View.GONE
             if (extendedBolus.isEndingEvent) {
-                holder.date.text = DateUtil.dateAndTimeString(extendedBolus.date)
+                holder.date.text = dateUtil.dateAndTimeString(extendedBolus.date)
                 holder.duration.text = resourceHelper.gs(R.string.cancel)
                 holder.insulin.text = ""
                 holder.realDuration.text = ""
@@ -73,8 +73,8 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                 holder.ratio.text = ""
             } else {
                 @SuppressLint("SetTextI18n")
-                if (extendedBolus.isInProgress) holder.date.text = DateUtil.dateAndTimeString(extendedBolus.date)
-                else holder.date.text = DateUtil.dateAndTimeString(extendedBolus.date) + " - " + dateUtil.timeString(extendedBolus.end())
+                if (extendedBolus.isInProgress) holder.date.text = dateUtil.dateAndTimeString(extendedBolus.date)
+                else holder.date.text = dateUtil.dateAndTimeString(extendedBolus.date) + " - " + dateUtil.timeString(extendedBolus.end())
 
                 holder.duration.text = resourceHelper.gs(R.string.format_mins, extendedBolus.durationInMinutes)
                 holder.insulin.text = resourceHelper.gs(R.string.formatinsulinunits, extendedBolus.insulin)
@@ -113,7 +113,7 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment() {
                         showConfirmation(it, resourceHelper.gs(R.string.removerecord),
                             """
                 ${resourceHelper.gs(R.string.extended_bolus)}
-                ${resourceHelper.gs(R.string.date)}: ${DateUtil.dateAndTimeString(extendedBolus.date)}
+                ${resourceHelper.gs(R.string.date)}: ${dateUtil.dateAndTimeString(extendedBolus.date)}
                 """.trimIndent(), DialogInterface.OnClickListener { _: DialogInterface, _: Int ->
                             val id = extendedBolus._id
                             if (NSUpload.isIdValid(id)) NSUpload.removeCareportalEntryFromNS(id)

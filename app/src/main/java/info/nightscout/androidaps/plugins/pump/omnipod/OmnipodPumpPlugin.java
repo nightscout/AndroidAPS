@@ -73,6 +73,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodRefres
 import info.nightscout.androidaps.plugins.pump.omnipod.service.RileyLinkOmnipodService;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.Round;
 import info.nightscout.androidaps.utils.TimeChangeType;
@@ -136,7 +137,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             CommandQueueProvider commandQueue,
             FabricPrivacy fabricPrivacy,
             RileyLinkServiceData rileyLinkServiceData,
-            ServiceTaskExecutor serviceTaskExecutor) {
+            ServiceTaskExecutor serviceTaskExecutor,
+            DateUtil dateUtil
+    ) {
 
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
@@ -146,7 +149,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                         .preferencesId(R.xml.pref_omnipod) //
                         .description(R.string.description_pump_omnipod), //
                 PumpType.Insulet_Omnipod,
-                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy
+                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil
         );
         this.rileyLinkServiceData = rileyLinkServiceData;
         this.serviceTaskExecutor = serviceTaskExecutor;
@@ -232,8 +235,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                                 ActivePluginProvider activePlugin,
                                 info.nightscout.androidaps.utils.sharedPreferences.SP sp,
                                 CommandQueueProvider commandQueue,
-                                FabricPrivacy fabricPrivacy) {
-        super(pluginDescription, pumpType, injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy);
+                                FabricPrivacy fabricPrivacy,
+                                DateUtil dateUtil
+    ) {
+        super(pluginDescription, pumpType, injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil);
 
 //        this.rileyLinkUtil = rileyLinkUtil;
 //        this.medtronicUtil = medtronicUtil;

@@ -30,6 +30,7 @@ import java.util.*
 @PrepareForTest(IobCobCalculatorPlugin::class, DateUtil::class)
 class GlucoseStatusTest : TestBase() {
 
+    @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculatorPlugin
 
     val injector = HasAndroidInjector {
@@ -37,6 +38,9 @@ class GlucoseStatusTest : TestBase() {
             if (it is GlucoseStatus) {
                 it.aapsLogger = aapsLogger
                 it.iobCobCalculatorPlugin = iobCobCalculatorPlugin
+            }
+            if (it is BgReading) {
+                it.dateUtil = dateUtil
             }
         }
     }
@@ -129,14 +133,14 @@ class GlucoseStatusTest : TestBase() {
     private fun generateValidBgData(): List<BgReading> {
         val list: MutableList<BgReading> = ArrayList()
         try {
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":214,\"mills\":1514766900000,\"direction\":\"Flat\"}"))))
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":216,\"mills\":1514766600000,\"direction\":\"Flat\"}")))) // +2
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":219,\"mills\":1514766300000,\"direction\":\"Flat\"}")))) // +3
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":223,\"mills\":1514766000000,\"direction\":\"Flat\"}")))) // +4
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":222,\"mills\":1514765700000,\"direction\":\"Flat\"}"))))
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":224,\"mills\":1514765400000,\"direction\":\"Flat\"}"))))
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":226,\"mills\":1514765100000,\"direction\":\"Flat\"}"))))
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":228,\"mills\":1514764800000,\"direction\":\"Flat\"}"))))
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":214,\"mills\":1514766900000,\"direction\":\"Flat\"}"))))
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":216,\"mills\":1514766600000,\"direction\":\"Flat\"}")))) // +2
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":219,\"mills\":1514766300000,\"direction\":\"Flat\"}")))) // +3
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":223,\"mills\":1514766000000,\"direction\":\"Flat\"}")))) // +4
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":222,\"mills\":1514765700000,\"direction\":\"Flat\"}"))))
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":224,\"mills\":1514765400000,\"direction\":\"Flat\"}"))))
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":226,\"mills\":1514765100000,\"direction\":\"Flat\"}"))))
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":228,\"mills\":1514764800000,\"direction\":\"Flat\"}"))))
         } catch (e: JSONException) {
             throw RuntimeException(e)
         }
@@ -146,9 +150,9 @@ class GlucoseStatusTest : TestBase() {
     private fun generateMostRecentBgData(): List<BgReading> {
         val list: MutableList<BgReading> = ArrayList()
         try {
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":214,\"mills\":1514766900000,\"direction\":\"Flat\"}"))))
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":216,\"mills\":1514766800000,\"direction\":\"Flat\"}")))) // +2
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":216,\"mills\":1514766600000,\"direction\":\"Flat\"}"))))
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":214,\"mills\":1514766900000,\"direction\":\"Flat\"}"))))
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":216,\"mills\":1514766800000,\"direction\":\"Flat\"}")))) // +2
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":216,\"mills\":1514766600000,\"direction\":\"Flat\"}"))))
         } catch (e: JSONException) {
             throw RuntimeException(e)
         }
@@ -162,7 +166,7 @@ class GlucoseStatusTest : TestBase() {
     private fun generateOldBgData(): List<BgReading> {
         val list: MutableList<BgReading> = ArrayList()
         try {
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":228,\"mills\":1514764800000,\"direction\":\"Flat\"}"))))
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":228,\"mills\":1514764800000,\"direction\":\"Flat\"}"))))
         } catch (e: JSONException) {
             throw RuntimeException(e)
         }
@@ -172,7 +176,7 @@ class GlucoseStatusTest : TestBase() {
     private fun generateOneCurrentRecordBgData(): List<BgReading> {
         val list: MutableList<BgReading> = ArrayList()
         try {
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":214,\"mills\":1514766900000,\"direction\":\"Flat\"}"))))
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":214,\"mills\":1514766900000,\"direction\":\"Flat\"}"))))
         } catch (e: JSONException) {
             throw RuntimeException(e)
         }
@@ -185,15 +189,15 @@ class GlucoseStatusTest : TestBase() {
             val endTime = 1514766900000L
             val latestReading = 100.0
             // Now
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":$latestReading,\"mills\":$endTime,\"direction\":\"Flat\"}"))))
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":$latestReading,\"mills\":$endTime,\"direction\":\"Flat\"}"))))
             // One minute ago
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":" + latestReading + ",\"mills\":" + (endTime - 1000 * 60 * 1) + ",\"direction\":\"Flat\"}"))))
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":" + latestReading + ",\"mills\":" + (endTime - 1000 * 60 * 1) + ",\"direction\":\"Flat\"}"))))
             // Two minutes ago
-            list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":" + latestReading + ",\"mills\":" + (endTime - 1000 * 60 * 2) + ",\"direction\":\"Flat\"}"))))
+            list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":" + latestReading + ",\"mills\":" + (endTime - 1000 * 60 * 2) + ",\"direction\":\"Flat\"}"))))
 
             // Three minutes and beyond at constant rate
             for (i in 3..49) {
-                list.add(BgReading(NSSgv(JSONObject("{\"mgdl\":" + (latestReading + i * 2) + ",\"mills\":" + (endTime - 1000 * 60 * i) + ",\"direction\":\"Flat\"}"))))
+                list.add(BgReading(injector, NSSgv(JSONObject("{\"mgdl\":" + (latestReading + i * 2) + ",\"mills\":" + (endTime - 1000 * 60 * i) + ",\"direction\":\"Flat\"}"))))
             }
         } catch (e: JSONException) {
             throw RuntimeException(e)

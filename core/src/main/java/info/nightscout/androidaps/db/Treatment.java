@@ -37,6 +37,7 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     @Inject public ResourceHelper resourceHelper;
     @Inject public ProfileFunction profileFunction;
     @Inject public ActivePluginProvider activePlugin;
+    @Inject public DateUtil dateUtil;
 
     public static final String TABLE_TREATMENTS = "Treatments";
 
@@ -108,7 +109,7 @@ public class Treatment implements DataPointWithLabelInterface, DbObjectBase {
     @NonNull public String toString() {
         return "Treatment{" +
                 "date= " + date +
-                ", date= " + DateUtil.dateAndTimeString(date) +
+                ", date= " + dateUtil.dateAndTimeString(date) +
                 ", isValid= " + isValid +
                 ", isSMB= " + isSMB +
                 ", _id= " + _id +

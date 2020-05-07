@@ -59,6 +59,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected RxBusWrapper rxBus;
     protected TreatmentsPlugin treatmentsPlugin;
     protected SP sp;
+    protected DateUtil dateUtil;
 
     protected AbstractDanaRPlugin(
             HasAndroidInjector injector,
@@ -69,7 +70,8 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             CommandQueueProvider commandQueue,
             RxBusWrapper rxBus,
             TreatmentsPlugin treatmentsPlugin,
-            SP sp
+            SP sp,
+            DateUtil dateUtil
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
@@ -85,6 +87,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         this.rxBus = rxBus;
         this.treatmentsPlugin = treatmentsPlugin;
         this.sp = sp;
+        this.dateUtil = dateUtil;
     }
 
     @Override
@@ -349,19 +352,19 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             status.put("timestamp", DateUtil.toISOString(pump.getLastConnection()));
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             if (pump.getLastBolusTime() != 0) {
-                extended.put("LastBolus", DateUtil.dateAndTimeString(pump.getLastBolusTime()));
+                extended.put("LastBolus", dateUtil.dateAndTimeString(pump.getLastBolusTime()));
                 extended.put("LastBolusAmount", pump.getLastBolusAmount());
             }
             TemporaryBasal tb = treatmentsPlugin.getRealTempBasalFromHistory(now);
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile));
-                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
             ExtendedBolus eb = treatmentsPlugin.getExtendedBolusFromHistory(now);
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
-                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date));
                 extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
             }
             extended.put("BaseBasalRate", getBaseBasalRate());

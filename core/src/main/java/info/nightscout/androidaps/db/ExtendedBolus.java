@@ -212,7 +212,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     public String log() {
         return "ExtendedBolus{" +
                 "date= " + date +
-                ", date= " + DateUtil.dateAndTimeString(date) +
+                ", date= " + dateUtil.dateAndTimeString(date) +
                 ", isValid=" + isValid +
                 ", _id= " + _id +
                 ", pumpId= " + pumpId +

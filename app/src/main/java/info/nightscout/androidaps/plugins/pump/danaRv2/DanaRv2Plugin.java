@@ -66,9 +66,10 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             TreatmentsPlugin treatmentsPlugin,
             SP sp,
             CommandQueueProvider commandQueue,
-            DetailedBolusInfoStorage detailedBolusInfoStorage
+            DetailedBolusInfoStorage detailedBolusInfoStorage,
+            DateUtil dateUtil
     ) {
-        super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue, rxBus, treatmentsPlugin, sp);
+        super(injector, danaRPump, resourceHelper, constraintChecker, aapsLogger, commandQueue, rxBus, treatmentsPlugin, sp, dateUtil);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.resourceHelper = resourceHelper;

@@ -182,10 +182,10 @@ public class TempTarget implements Interval {
         else return DecimalFormatter.to1Decimal(low * Constants.MGDL_TO_MMOLL);
     }
 
-    public String toString() {
+    public String toString(DateUtil dateUtil) {
         return "TemporaryTarget{" +
                 "date=" + date +
-                "date=" + DateUtil.dateAndTimeString(date) +
+                "date=" + dateUtil.dateAndTimeString(date) +
                 ", isValid=" + isValid +
                 ", duration=" + durationInMinutes +
                 ", reason=" + reason +

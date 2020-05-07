@@ -16,13 +16,12 @@ class StatsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var tirCalculator: TirCalculator
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var activityMonitor: ActivityMonitor
-    @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stats)
 
-        stats_tdds.text = tddCalculator.stats(dateUtil)
+        stats_tdds.text = tddCalculator.stats()
         stats_tir.text = tirCalculator.stats()
         stats_activity.text = activityMonitor.stats()
 

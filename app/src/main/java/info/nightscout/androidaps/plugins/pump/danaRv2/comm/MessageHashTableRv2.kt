@@ -47,11 +47,11 @@ class MessageHashTableRv2 @Inject constructor(
         put(MsgBolusStartWithSpeed(aapsLogger, constraintChecker, danaRPump, 0.0, 0))       // 0x0104 CMD_MEALINS_START_DATA_SPEED
         put(MsgBolusProgress(aapsLogger, resourceHelper, rxBus, danaRPump))             // 0x0202 CMD_PUMP_THIS_REMAINDER_MEAL_INS
         put(MsgStatusProfile(aapsLogger, danaRPump))             // 0x0204 CMD_PUMP_CALCULATION_SETTING
-        put(MsgStatusTempBasal_v2(aapsLogger, danaRPump))        // 0x0205 CMD_PUMP_EXERCISE_MODE
+        put(MsgStatusTempBasal_v2(aapsLogger, danaRPump, dateUtil))        // 0x0205 CMD_PUMP_EXERCISE_MODE
         put(MsgStatusBolusExtended_v2(aapsLogger, danaRPump))    // 0x0207 CMD_PUMP_EXPANS_INS_I
         put(MsgStatusBasic(aapsLogger, danaRPump))               // 0x020A CMD_PUMP_INITVIEW_I
         put(MsgStatus(aapsLogger, danaRPump))                    // 0x020B CMD_PUMP_STATUS
-        put(MsgInitConnStatusTime(aapsLogger, rxBus, resourceHelper, danaRPump, danaRPlugin, danaRKoreanPlugin, configBuilderPlugin, commandQueue))        // 0x0301 CMD_PUMPINIT_TIME_INFO
+        put(MsgInitConnStatusTime(aapsLogger, rxBus, resourceHelper, danaRPump, danaRPlugin, danaRKoreanPlugin, configBuilderPlugin, commandQueue, dateUtil))        // 0x0301 CMD_PUMPINIT_TIME_INFO
         put(MsgInitConnStatusBolus(aapsLogger, rxBus, resourceHelper, danaRPump))       // 0x0302 CMD_PUMPINIT_BOLUS_INFO
         put(MsgInitConnStatusBasic(aapsLogger, danaRPump))       // 0x0303 CMD_PUMPINIT_INIT_INFO
         put(MsgInitConnStatusOption(aapsLogger, rxBus, resourceHelper, danaRPump, activePlugin))      // 0x0304 CMD_PUMPINIT_OPTION
@@ -63,15 +63,15 @@ class MessageHashTableRv2 @Inject constructor(
         put(MsgError(aapsLogger, rxBus, resourceHelper, danaRPump))                     // 0x0601 CMD_PUMPOWAY_SYSTEM_STATUS
         put(MsgPCCommStart(aapsLogger))               // 0x3001 CMD_CONNECT
         put(MsgPCCommStop(aapsLogger))                // 0x3002 CMD_DISCONNECT
-        put(MsgHistoryBolus(aapsLogger, rxBus))              // 0x3101 CMD_HISTORY_MEAL_INS
-        put(MsgHistoryDailyInsulin(aapsLogger, rxBus))       // 0x3102 CMD_HISTORY_DAY_INS
-        put(MsgHistoryGlucose(aapsLogger, rxBus))            // 0x3104 CMD_HISTORY_GLUCOSE
-        put(MsgHistoryAlarm(aapsLogger, rxBus))              // 0x3105 CMD_HISTORY_ALARM
-        put(MsgHistoryError(aapsLogger, rxBus))              // 0x3106 CMD_HISTORY_ERROR
-        put(MsgHistoryCarbo(aapsLogger, rxBus))              // 0x3107 CMD_HISTORY_CARBOHY
-        put(MsgHistoryRefill(aapsLogger, rxBus))             // 0x3108 CMD_HISTORY_REFILL
-        put(MsgHistorySuspend(aapsLogger, rxBus))            // 0x3109 CMD_HISTORY_SUSPEND
-        put(MsgHistoryBasalHour(aapsLogger, rxBus))          // 0x310A CMD_HISTORY_BASAL_HOUR
+        put(MsgHistoryBolus(aapsLogger, rxBus, dateUtil))              // 0x3101 CMD_HISTORY_MEAL_INS
+        put(MsgHistoryDailyInsulin(aapsLogger, rxBus, dateUtil))       // 0x3102 CMD_HISTORY_DAY_INS
+        put(MsgHistoryGlucose(aapsLogger, rxBus, dateUtil))            // 0x3104 CMD_HISTORY_GLUCOSE
+        put(MsgHistoryAlarm(aapsLogger, rxBus, dateUtil))              // 0x3105 CMD_HISTORY_ALARM
+        put(MsgHistoryError(aapsLogger, rxBus, dateUtil))              // 0x3106 CMD_HISTORY_ERROR
+        put(MsgHistoryCarbo(aapsLogger, rxBus, dateUtil))              // 0x3107 CMD_HISTORY_CARBOHY
+        put(MsgHistoryRefill(aapsLogger, rxBus, dateUtil))             // 0x3108 CMD_HISTORY_REFILL
+        put(MsgHistorySuspend(aapsLogger, rxBus, dateUtil))            // 0x3109 CMD_HISTORY_SUSPEND
+        put(MsgHistoryBasalHour(aapsLogger, rxBus, dateUtil))          // 0x310A CMD_HISTORY_BASAL_HOUR
         put(MsgHistoryDone(aapsLogger, danaRPump))               // 0x31F1 CMD_HISTORY_DONT_USED
         put(MsgSettingBasal(aapsLogger, danaRPump, danaRPlugin))        // 0x3202 CMD_SETTING_V_BASAL_INS_I
         put(MsgSettingMeal(aapsLogger, rxBus, resourceHelper, danaRPump, danaRKoreanPlugin))        // 0x3203 CMD_SETTING_V_MEAL_SETTING_I
@@ -80,7 +80,7 @@ class MessageHashTableRv2 @Inject constructor(
         put(MsgSettingBasalProfileAll(aapsLogger, danaRPump))    // 0x3206 CMD_SETTING_V_BASAL_PROFILE_ALL
         put(MsgSettingShippingInfo(aapsLogger, danaRPump))       // 0x3207 CMD_SETTING_V_SHIPPING_I
         put(MsgSettingGlucose(aapsLogger, danaRPump))            // 0x3209 CMD_SETTING_V_GLUCOSEandEASY
-        put(MsgSettingPumpTime(aapsLogger, danaRPump))           // 0x320A CMD_SETTING_V_TIME_I
+        put(MsgSettingPumpTime(aapsLogger, danaRPump, dateUtil))           // 0x320A CMD_SETTING_V_TIME_I
         put(MsgSettingUserOptions(aapsLogger, danaRPump))        // 0x320B CMD_SETTING_V_USER_OPTIONS
         put(MsgSettingActiveProfile(aapsLogger, danaRPump))      // 0x320C CMD_SETTING_V_PROFILE_NUMBER
         put(MsgSettingProfileRatiosAll(aapsLogger, danaRPump))   // 0x320D CMD_SETTING_V_CIR_CF_VALUE
@@ -89,9 +89,9 @@ class MessageHashTableRv2 @Inject constructor(
         put(MsgSetUserOptions(aapsLogger, danaRPump))            // 0x330B CMD_SETTING_USER_OPTIONS_S
         put(MsgSetActivateBasalProfile(aapsLogger, 0.toByte()))   // 0x330C CMD_SETTING_PROFILE_NUMBER_S
         put(MsgHistoryAllDone(aapsLogger, danaRPump))            // 0x41F1 CMD_HISTORY_ALL_DONE
-        put(MsgHistoryAll(aapsLogger, rxBus))                // 0x41F2 CMD_HISTORY_ALL
+        put(MsgHistoryAll(aapsLogger, rxBus, dateUtil))                // 0x41F2 CMD_HISTORY_ALL
         put(MsgHistoryNewDone(aapsLogger, danaRPump))            // 0x42F1 CMD_HISTORY_NEW_DONE
-        put(MsgHistoryNew(aapsLogger, rxBus))                // 0x42F2 CMD_HISTORY_NEW
+        put(MsgHistoryNew(aapsLogger, rxBus, dateUtil))                // 0x42F2 CMD_HISTORY_NEW
         put(MsgCheckValue_v2(aapsLogger, rxBus, resourceHelper, danaRPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue))        // 0xF0F1 CMD_PUMP_CHECK_VALUE
         put(MsgStatusAPS_v2(aapsLogger, danaRPump))              // 0xE001 CMD_PUMPSTATUS_APS
         put(MsgSetAPSTempBasalStart_v2(aapsLogger, 0, false, false))   // 0xE002 CMD_PUMPSET_APSTEMP

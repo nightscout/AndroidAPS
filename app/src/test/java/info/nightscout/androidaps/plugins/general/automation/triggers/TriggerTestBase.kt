@@ -4,6 +4,7 @@ import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
+import info.nightscout.androidaps.db.BgReading
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.automation.AutomationPlugin
@@ -51,6 +52,15 @@ open class TriggerTestBase : TestBaseWithProfile() {
             if (it is TriggerBg) {
                 it.profileFunction = profileFunction
             }
+            if (it is TriggerTime) {
+                it.dateUtil = dateUtil
+            }
+            if (it is TriggerTimeRange) {
+                it.dateUtil = dateUtil
+            }
+            if (it is TriggerRecurringTime) {
+                it.dateUtil = dateUtil
+            }
             if (it is TriggerBTDevice) {
                 it.context = context
                 it.automationPlugin = automationPlugin
@@ -67,6 +77,9 @@ open class TriggerTestBase : TestBaseWithProfile() {
             }
             if (it is StaticLabel) {
                 it.resourceHelper = resourceHelper
+            }
+            if (it is BgReading) {
+                it.dateUtil = dateUtil
             }
         }
     }

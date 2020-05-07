@@ -14,18 +14,19 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
@@ -63,10 +64,8 @@ import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgStatusBolusExtended
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
-import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
@@ -143,7 +142,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
             MsgStatus statusMsg = new MsgStatus(aapsLogger, danaRPump);
             MsgStatusBasic statusBasicMsg = new MsgStatusBasic(aapsLogger, danaRPump);
             MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin, injector);
-            MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin);
+            MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin, dateUtil);
             MsgCheckValue checkValue = new MsgCheckValue(aapsLogger, danaRPump, danaRPlugin);
 
             if (danaRPump.isNewPump()) {
@@ -187,7 +186,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatiosAll(aapsLogger, danaRPump));
                 mSerialIOThread.sendMessage(new MsgSettingUserOptions(aapsLogger, danaRPump));
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumptime)));
-                mSerialIOThread.sendMessage(new MsgSettingPumpTime(aapsLogger, danaRPump));
+                mSerialIOThread.sendMessage(new MsgSettingPumpTime(aapsLogger, danaRPump, dateUtil));
                 if (danaRPump.getPumpTime() == 0) {
                     // initial handshake was not successfull
                     // deinitialize pump
@@ -200,8 +199,8 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                 long timeDiff = (danaRPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
                 aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");
                 if (Math.abs(timeDiff) > 10) {
-                    mSerialIOThread.sendMessage(new MsgSetTime(aapsLogger, new Date()));
-                    mSerialIOThread.sendMessage(new MsgSettingPumpTime(aapsLogger, danaRPump));
+                    mSerialIOThread.sendMessage(new MsgSetTime(aapsLogger, dateUtil, new Date()));
+                    mSerialIOThread.sendMessage(new MsgSettingPumpTime(aapsLogger, danaRPump, dateUtil));
                     timeDiff = (danaRPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");
                 }
@@ -252,7 +251,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.settingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStart(aapsLogger, constraintChecker, insulin, (byte) (durationInHalfHours & 0xFF)));
-        mSerialIOThread.sendMessage(new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin));
+        mSerialIOThread.sendMessage(new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin, dateUtil));
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }
@@ -261,7 +260,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStop(aapsLogger));
-        mSerialIOThread.sendMessage(new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin));
+        mSerialIOThread.sendMessage(new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin, dateUtil));
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }
@@ -350,7 +349,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                                 t.insulin = danaRPump.getLastBolusAmount();
                                 aapsLogger.debug(LTag.PUMP, "Used bolus amount from history: " + danaRPump.getLastBolusAmount());
                             } else {
-                                aapsLogger.debug(LTag.PUMP, "Bolus amount in history too old: " + DateUtil.dateAndTimeString(danaRPump.getLastBolusTime()));
+                                aapsLogger.debug(LTag.PUMP, "Bolus amount in history too old: " + dateUtil.dateAndTimeString(danaRPump.getLastBolusTime()));
                             }
                             synchronized (o) {
                                 o.notify();

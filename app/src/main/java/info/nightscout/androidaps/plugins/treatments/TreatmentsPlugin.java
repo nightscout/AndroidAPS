@@ -76,6 +76,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private final ProfileFunction profileFunction;
     private final ActivePluginProvider activePlugin;
     private final FabricPrivacy fabricPrivacy;
+    private final DateUtil dateUtil;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -100,7 +101,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             SP sp,
             ProfileFunction profileFunction,
             ActivePluginProvider activePlugin,
-            FabricPrivacy fabricPrivacy
+            FabricPrivacy fabricPrivacy,
+            DateUtil dateUtil
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.TREATMENT)
@@ -119,6 +121,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         this.profileFunction = profileFunction;
         this.activePlugin = activePlugin;
         this.fabricPrivacy = fabricPrivacy;
+        this.dateUtil = dateUtil;
     }
 
     @Override
@@ -339,7 +342,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     last = t.date;
             }
         }
-        getAapsLogger().debug(LTag.DATATREATMENTS, "Last bolus time: " + DateUtil.dateAndTimeString(last));
+        getAapsLogger().debug(LTag.DATATREATMENTS, "Last bolus time: " + dateUtil.dateAndTimeString(last));
         return last;
     }
 
@@ -354,7 +357,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     last = t.date;
             }
         }
-        getAapsLogger().debug(LTag.DATATREATMENTS, "Last manual bolus time: " + DateUtil.dateAndTimeString(last));
+        getAapsLogger().debug(LTag.DATATREATMENTS, "Last manual bolus time: " + dateUtil.dateAndTimeString(last));
         return last;
     }
 
@@ -643,7 +646,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (!allowUpdate && !creatOrUpdateResult.success) {
             getAapsLogger().error("Treatment could not be added to DB", new Exception());
 
-            String status = String.format(resourceHelper.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs, DateUtil.dateAndTimeString(treatment.date));
+            String status = String.format(resourceHelper.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs, dateUtil.dateAndTimeString(treatment.date));
 
             Intent i = new Intent(context, ErrorHelperActivity.class);
             i.putExtra("soundid", R.raw.error);

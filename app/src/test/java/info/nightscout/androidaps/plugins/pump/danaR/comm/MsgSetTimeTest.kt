@@ -10,7 +10,7 @@ import java.util.*
 class MsgSetTimeTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgSetTime(aapsLogger, Date(System.currentTimeMillis()))
+        val packet = MsgSetTime(aapsLogger, dateUtil, Date(System.currentTimeMillis()))
 
         // test message decoding
         packet.handleMessage(createArray(34, 7.toByte()))

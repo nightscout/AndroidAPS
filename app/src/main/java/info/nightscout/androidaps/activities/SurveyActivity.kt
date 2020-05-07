@@ -31,7 +31,6 @@ class SurveyActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var activityMonitor: ActivityMonitor
     @Inject lateinit var defaultProfile: DefaultProfile
-    @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +42,7 @@ class SurveyActivity : NoSplashAppCompatActivity() {
         val profileList = profileStore?.getProfileList() ?: return
         survey_spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
 
-        survey_tdds.text = tddCalculator.stats(dateUtil)
+        survey_tdds.text = tddCalculator.stats()
         survey_tir.text = tirCalculator.stats()
         survey_activity.text = activityMonitor.stats()
 

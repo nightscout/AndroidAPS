@@ -78,13 +78,13 @@ public class TreatmentsTempTargetFragment extends DaggerFragment {
             holder.ph.setVisibility(tempTarget.source == Source.PUMP ? View.VISIBLE : View.GONE);
             holder.ns.setVisibility(NSUpload.isIdValid(tempTarget._id) ? View.VISIBLE : View.GONE);
             if (!tempTarget.isEndingEvent()) {
-                holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date) + " - " + dateUtil.timeString(tempTarget.originalEnd()));
+                holder.date.setText(dateUtil.dateAndTimeString(tempTarget.date) + " - " + dateUtil.timeString(tempTarget.originalEnd()));
                 holder.duration.setText(DecimalFormatter.to0Decimal(tempTarget.durationInMinutes) + " min");
                 holder.low.setText(tempTarget.lowValueToUnitsToString(units));
                 holder.high.setText(tempTarget.highValueToUnitsToString(units));
                 holder.reason.setText(tempTarget.reason);
             } else {
-                holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date));
+                holder.date.setText(dateUtil.dateAndTimeString(tempTarget.date));
                 holder.duration.setText(R.string.cancel);
                 holder.low.setText("");
                 holder.high.setText("");
@@ -142,7 +142,7 @@ public class TreatmentsTempTargetFragment extends DaggerFragment {
                     final TempTarget tempTarget = (TempTarget) v.getTag();
                     OKDialog.showConfirmation(getContext(), resourceHelper.gs(R.string.removerecord),
                             resourceHelper.gs(R.string.careportal_temporarytarget) + ": " + tempTarget.friendlyDescription(profileFunction.getUnits(), resourceHelper) +
-                                    "\n" + DateUtil.dateAndTimeString(tempTarget.date),
+                                    "\n" + dateUtil.dateAndTimeString(tempTarget.date),
                             (dialog, id) -> {
                                 final String _id = tempTarget._id;
                                 if (NSUpload.isIdValid(_id)) {

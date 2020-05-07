@@ -699,7 +699,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
         if (data.has("created_at")) {
             ret += resourceHelper.gs(R.string.event_time_label);
             ret += ": ";
-            ret += DateUtil.dateAndTimeString(eventTime);
+            ret += dateUtil.dateAndTimeString(eventTime);
             ret += "\n";
         }
         if (data.has("enteredBy")) {
