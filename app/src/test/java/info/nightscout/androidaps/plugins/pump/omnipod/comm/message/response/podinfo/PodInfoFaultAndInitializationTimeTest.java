@@ -5,7 +5,7 @@ import org.joda.time.Duration;
 import org.junit.Test;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -15,7 +15,7 @@ public class PodInfoFaultAndInitializationTimeTest {
     public void testDecoding() {
         PodInfoFaultAndInitializationTime podInfoFaultAndInitializationTime = new PodInfoFaultAndInitializationTime(ByteUtil.fromHexString("059200010000000000000000091912170e")); // From https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/PodInfoTests.swift
 
-        assertEquals(FaultEventType.BAD_PUMP_REQ_2_STATE, podInfoFaultAndInitializationTime.getFaultEventType());
+        assertEquals(FaultEventCode.BAD_PUMP_REQ_2_STATE, podInfoFaultAndInitializationTime.getFaultEventCode());
         assertTrue(Duration.standardMinutes(1).isEqual(podInfoFaultAndInitializationTime.getTimeFaultEvent()));
 
         DateTime dateTime = podInfoFaultAndInitializationTime.getInitializationTime();

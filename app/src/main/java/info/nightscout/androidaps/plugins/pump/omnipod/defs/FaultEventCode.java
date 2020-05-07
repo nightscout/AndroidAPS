@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.defs;
 
 import java.util.Locale;
 
-public enum FaultEventType {
+public enum FaultEventCode {
     NO_FAULTS((byte) 0x00),
     FAILED_FLASH_ERASE((byte) 0x01),
     FAILED_FLASH_STORE((byte) 0x02),
@@ -124,17 +124,17 @@ public enum FaultEventType {
 
     private byte value;
 
-    FaultEventType(byte value) {
+    FaultEventCode(byte value) {
         this.value = value;
     }
 
-    public static FaultEventType fromByte(byte value) {
-        for (FaultEventType type : values()) {
+    public static FaultEventCode fromByte(byte value) {
+        for (FaultEventCode type : values()) {
             if (type.value == value) {
                 return type;
             }
         }
-        throw new IllegalArgumentException("Unknown FaultEventType: " + value);
+        throw new IllegalArgumentException("Unknown FaultEventCode: " + value);
     }
 
     public byte getValue() {

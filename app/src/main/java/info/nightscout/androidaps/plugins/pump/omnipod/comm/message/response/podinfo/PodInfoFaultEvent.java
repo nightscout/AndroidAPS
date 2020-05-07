@@ -5,7 +5,7 @@ import org.joda.time.Duration;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.LogEventErrorCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
@@ -19,7 +19,7 @@ public class PodInfoFaultEvent extends PodInfo {
     private final double insulinNotDelivered;
     private final byte podMessageCounter;
     private final double totalInsulinDelivered;
-    private final FaultEventType faultEventType;
+    private final FaultEventCode faultEventCode;
     private final Duration faultEventTime;
     private final Double reservoirLevel;
     private final Duration timeSinceActivation;
@@ -44,7 +44,7 @@ public class PodInfoFaultEvent extends PodInfo {
         insulinNotDelivered = OmnipodConst.POD_PULSE_SIZE * ByteUtil.toInt(encodedData[3], encodedData[4]);
         podMessageCounter = encodedData[5];
         totalInsulinDelivered = OmnipodConst.POD_PULSE_SIZE * ByteUtil.toInt(encodedData[6], encodedData[7]);
-        faultEventType = FaultEventType.fromByte(encodedData[8]);
+        faultEventCode = FaultEventCode.fromByte(encodedData[8]);
 
         int minutesSinceActivation = ByteUtil.toInt(encodedData[9], encodedData[10]);
         if (minutesSinceActivation == 0xffff) {
@@ -99,8 +99,8 @@ public class PodInfoFaultEvent extends PodInfo {
         return totalInsulinDelivered;
     }
 
-    public FaultEventType getFaultEventType() {
-        return faultEventType;
+    public FaultEventCode getFaultEventCode() {
+        return faultEventCode;
     }
 
     public Duration getFaultEventTime() {
@@ -155,7 +155,7 @@ public class PodInfoFaultEvent extends PodInfo {
                 ", insulinNotDelivered=" + insulinNotDelivered +
                 ", podMessageCounter=" + podMessageCounter +
                 ", totalInsulinDelivered=" + totalInsulinDelivered +
-                ", faultEventType=" + faultEventType +
+                ", faultEventCode=" + faultEventCode +
                 ", faultEventTime=" + faultEventTime +
                 ", reservoirLevel=" + reservoirLevel +
                 ", timeSinceActivation=" + timeSinceActivation +

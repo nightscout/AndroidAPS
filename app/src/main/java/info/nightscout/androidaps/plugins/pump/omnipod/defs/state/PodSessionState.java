@@ -38,8 +38,10 @@ public class PodSessionState extends PodState {
     @Inject OmnipodUtil omnipodUtil;
     @Inject DateUtil dateUtil;
 
-    private final Map<AlertSlot, AlertType> configuredAlerts;
     private transient PodStateChangedHandler stateChangedHandler;
+
+    private final Map<AlertSlot, AlertType> configuredAlerts;
+    private DateTimeZone timeZone;
     private DateTime activatedAt;
     private DateTime expiresAt;
     private final FirmwareVersion piVersion;
@@ -48,8 +50,6 @@ public class PodSessionState extends PodState {
     private final int tid;
     private Double reservoirLevel;
     private boolean suspended;
-
-    private DateTimeZone timeZone;
     private NonceState nonceState;
     private SetupProgress setupProgress;
     private AlertSet activeAlerts;

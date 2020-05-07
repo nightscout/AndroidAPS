@@ -624,15 +624,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         if (omnipodUtil.getPodSessionState() != null) {
             podSessionState = omnipodUtil.getPodSessionState();
         } else {
-            String podState = sp.getString(OmnipodConst.Prefs.PodState, null);
-
-            aapsLogger.info(LTag.PUMP, "PodSessionState-SP: loaded from SharedPreferences: " + podState);
-
-            if (podState != null) {
-                podSessionState = omnipodUtil.getGsonInstance().fromJson(podState, PodSessionState.class);
-                podSessionState.injectDaggerClass(injector);
-                omnipodUtil.setPodSessionState(podSessionState);
-            }
+            podSessionState = omnipodUtil.loadSessionState();
         }
 
 
@@ -1022,7 +1014,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
                 // Don't trigger an alert when we exceeded the thresholds, but the last communication was successful
                 // This happens when we simply didn't need to send any commands to the pump
-                return false;
             }
         }
 

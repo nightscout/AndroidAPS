@@ -46,12 +46,12 @@ public abstract class PodState {
         this.packetNumber = packetNumber;
     }
 
-    public void increaseMessageNumber(int increment) {
-        setMessageNumber((messageNumber + increment) & 0b1111);
+    public void increaseMessageNumber() {
+        setMessageNumber((messageNumber + 1) & 0b1111);
     }
 
-    public void increasePacketNumber(int increment) {
-        setPacketNumber((packetNumber + increment) & 0b11111);
+    public void increasePacketNumber() {
+        setPacketNumber((packetNumber + 1) & 0b11111);
     }
 
     public boolean hasFaultEvent() {
