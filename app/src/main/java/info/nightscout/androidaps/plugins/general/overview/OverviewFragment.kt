@@ -667,7 +667,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         overview_basebasal?.setTextColor(activeTemp?.let { resourceHelper.gc(R.color.basal) }
             ?: resourceHelper.gc(R.color.defaulttextcolor))
-        overview_basebasal_icon.setImageResource(if (activeTemp != null) R.drawable.icon_cp_basal_start else R.drawable.icon_cp_basal_end)
+        overview_basebasal_icon.setImageResource(if (activeTemp == null) R.drawable.icon_cp_basal_start else R.drawable.icon_cp_basal_end)
 
         // Extended bolus
         val extendedBolus = treatmentsPlugin.getExtendedBolusFromHistory(System.currentTimeMillis())
