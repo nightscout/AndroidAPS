@@ -299,6 +299,7 @@ public class RFSpy {
     private void configureRadioForRegion(RileyLinkTargetFrequency frequency) {
 
         // we update registers only on first run, or if region changed
+        aapsLogger.error(LTag.PUMPBTCOMM, "RileyLinkTargetFrequency: " + frequency);
 
         switch (frequency) {
             case Medtronic_WorldWide: {
