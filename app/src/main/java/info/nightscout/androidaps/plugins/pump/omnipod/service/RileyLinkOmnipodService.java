@@ -23,12 +23,16 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUIComm;
+import info.nightscout.androidaps.plugins.pump.medtronic.comm.ui.MedtronicUIPostprocessor;
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIComm;
+import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUIPostprocessor;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 
@@ -42,6 +46,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     @Inject OmnipodPumpPlugin omnipodPumpPlugin;
     @Inject OmnipodPumpStatus omnipodPumpStatus;
     @Inject OmnipodUtil omnipodUtil;
+    @Inject OmnipodUIPostprocessor omnipodUIPostprocessor;
 
     private static RileyLinkOmnipodService instance;
 
@@ -52,6 +57,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     private boolean rileyLinkAddressChanged = false;
     private boolean inPreInit = true;
 
+    OmnipodUIComm omnipodUIComm;
 
     public RileyLinkOmnipodService() {
         super();
@@ -123,13 +129,21 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             //omnipodCommunicationService.setPumpStatus(omnipodPumpStatus);
             this.omnipodCommunicationManager = omnipodCommunicationService;
 
+
             this.aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podState, omnipodPumpStatus,
                     omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin);
+
+            omnipodUIComm = new OmnipodUIComm(injector, aapsLogger, omnipodUtil, omnipodUIPostprocessor, aapsOmnipodManager);
+
         } else {
             aapsOmnipodManager = AapsOmnipodManager.getInstance();
         }
     }
 
+
+    public OmnipodUIComm getDeviceCommandExecutor() {
+        return this.omnipodUIComm;
+    }
 
     public void resetRileyLinkConfiguration() {
         rfspy.resetRileyLinkConfiguration();

@@ -24,5 +24,4 @@ abstract class OmnipodModule {
     @ContributesAndroidInjector abstract fun initPodRefreshAction(): InitPodRefreshAction
     @ContributesAndroidInjector abstract fun podSessionState(): PodSessionState
 
-
 }

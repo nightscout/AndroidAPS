@@ -53,6 +53,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotifi
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
+import info.nightscout.androidaps.plugins.pump.common.defs.DeviceCommandExecutor;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -325,6 +326,11 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
     @Nullable
     public RileyLinkMedtronicService getRileyLinkService() {
         return rileyLinkMedtronicService;
+    }
+
+    @Override
+    public DeviceCommandExecutor getDeviceCommandExecutor() {
+        return this.rileyLinkMedtronicService.getMedtronicUIComm(); // TODO fix this
     }
 
     @Override

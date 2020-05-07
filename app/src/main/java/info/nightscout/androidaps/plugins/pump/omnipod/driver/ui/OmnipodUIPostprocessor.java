@@ -5,18 +5,22 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.pump.omnipod.OmnipodPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodPumpPluginInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 
 /**
  * Created by andy on 4.8.2019
  */
-
+@Singleton
 public class OmnipodUIPostprocessor {
 
 
@@ -26,8 +30,8 @@ public class OmnipodUIPostprocessor {
     private OmnipodPumpPluginInterface omnipodPumpPlugin;
     private RxBusWrapper rxBus;
 
-
-    public OmnipodUIPostprocessor(OmnipodPumpPluginInterface plugin, OmnipodPumpStatus pumpStatus) {
+    @Inject
+    public OmnipodUIPostprocessor(OmnipodPumpPlugin plugin, OmnipodPumpStatus pumpStatus) {
         this.pumpStatus = pumpStatus;
         this.omnipodPumpPlugin = plugin;
         this.rxBus = plugin.getRxBus();

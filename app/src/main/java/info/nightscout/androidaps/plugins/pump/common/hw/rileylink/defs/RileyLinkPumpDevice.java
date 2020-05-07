@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs;
 
+import info.nightscout.androidaps.plugins.pump.common.defs.DeviceCommandExecutor;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 
 public interface RileyLinkPumpDevice {
@@ -15,5 +16,7 @@ public interface RileyLinkPumpDevice {
     void doTuneUpDevice();
 
     RileyLinkService getRileyLinkService();
+
+    DeviceCommandExecutor getDeviceCommandExecutor();
 
 }

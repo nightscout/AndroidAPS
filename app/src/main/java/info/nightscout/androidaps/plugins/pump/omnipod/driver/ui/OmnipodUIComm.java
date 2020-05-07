@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.driver.ui;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.pump.common.defs.DeviceCommandExecutor;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
@@ -10,14 +11,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodUtil;
 /**
  * Created by andy on 4.8.2019
  */
-public class OmnipodUIComm {
+public class OmnipodUIComm implements DeviceCommandExecutor {
 
     private final HasAndroidInjector injector;
     private final AAPSLogger aapsLogger;
     private final OmnipodUtil omnipodUtil;
     private final OmnipodCommunicationManagerInterface omnipodCommunicationManager;
     private final OmnipodUIPostprocessor omnipodUIPostprocessor;
-
 
     public OmnipodUIComm(
             HasAndroidInjector injector,

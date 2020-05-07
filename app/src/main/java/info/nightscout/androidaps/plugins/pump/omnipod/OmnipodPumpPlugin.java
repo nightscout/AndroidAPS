@@ -49,6 +49,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.PumpPluginAbstract;
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.data.TempBasalPair;
+import info.nightscout.androidaps.plugins.pump.common.defs.DeviceCommandExecutor;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -96,7 +97,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     private RileyLinkOmnipodService rileyLinkOmnipodService;
     private OmnipodUtil omnipodUtil;
     protected OmnipodPumpStatus omnipodPumpStatus = null;
-    protected OmnipodUIComm omnipodUIComm;
+    //protected OmnipodUIComm omnipodUIComm;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -432,6 +433,11 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         return rileyLinkOmnipodService;
     }
 
+    @Override
+    public OmnipodUIComm getDeviceCommandExecutor() {
+        return rileyLinkOmnipodService.getDeviceCommandExecutor();
+    }
+
 
     private synchronized void clearBusyQueue() {
 
@@ -505,7 +511,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
             for (OmnipodStatusRequest omnipodStatusRequest : omnipodStatusRequestList) {
                 if (omnipodStatusRequest == OmnipodStatusRequest.GetPodPulseLog) {
-                    OmnipodUITask omnipodUITask = omnipodUIComm.executeCommand(omnipodStatusRequest.getCommandType());
+                    OmnipodUITask omnipodUITask = getDeviceCommandExecutor().executeCommand(omnipodStatusRequest.getCommandType());
 
                     PodInfoRecentPulseLog result = (PodInfoRecentPulseLog) omnipodUITask.returnDataObject;
 
@@ -527,7 +533,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                     }
 
                 } else {
-                    omnipodUIComm.executeCommand(omnipodStatusRequest.getCommandType());
+                    getDeviceCommandExecutor().executeCommand(omnipodStatusRequest.getCommandType());
                 }
                 removeList.add(omnipodStatusRequest);
             }
@@ -535,7 +541,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             omnipodStatusRequestList.removeAll(removeList);
 
         } else if (this.hasTimeDateOrTimeZoneChanged) {
-            OmnipodUITask omnipodUITask = omnipodUIComm.executeCommand(OmnipodCommandType.SetTime);
+            OmnipodUITask omnipodUITask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.SetTime);
 
             if (omnipodUITask.wasCommandSuccessful()) {
                 this.hasTimeDateOrTimeZoneChanged = false;
@@ -724,7 +730,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         try {
 
-            OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.SetBolus,
+            OmnipodUITask responseTask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.SetBolus,
                     detailedBolusInfo);
 
             PumpEnactResult result = responseTask.getResult();
@@ -757,7 +763,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         setRefreshButtonEnabled(false);
 
-        OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.CancelBolus);
+        OmnipodUITask responseTask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.CancelBolus);
 
         PumpEnactResult result = responseTask.getResult();
 
@@ -826,7 +832,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 //        }
 
         // now start new TBR
-        OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.SetTemporaryBasal,
+        OmnipodUITask responseTask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.SetTemporaryBasal,
                 absoluteRate, durationInMinutes);
 
         PumpEnactResult result = responseTask.getResult();
@@ -879,7 +885,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
         }
 
-        OmnipodUITask responseTask2 = omnipodUIComm.executeCommand(OmnipodCommandType.CancelTemporaryBasal);
+        OmnipodUITask responseTask2 = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.CancelTemporaryBasal);
 
         PumpEnactResult result = responseTask2.getResult();
 
@@ -923,7 +929,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
         setRefreshButtonEnabled(false);
 
-        OmnipodUITask responseTask = omnipodUIComm.executeCommand(OmnipodCommandType.SetBasalProfile,
+        OmnipodUITask responseTask = getDeviceCommandExecutor().executeCommand(OmnipodCommandType.SetBasalProfile,
                 profile);
 
         PumpEnactResult result = responseTask.getResult();
