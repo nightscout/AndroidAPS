@@ -124,7 +124,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             this.omnipodCommunicationManager = omnipodCommunicationService;
 
             this.aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podState, omnipodPumpStatus,
-                    omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin);
+                    omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin, this);
         } else {
             aapsOmnipodManager = AapsOmnipodManager.getInstance();
         }

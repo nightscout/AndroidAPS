@@ -519,13 +519,13 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                     } else {
                         aapsLogger.warn(LTag.PUMP, "Result was NOT null.");
 
-                        Intent i = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+                        Intent i = new Intent(context, ErrorHelperActivity.class);
                         i.putExtra("soundid", 0);
                         i.putExtra("status", "Pulse Log (copied to clipboard):\n" + result.toString());
                         i.putExtra("title", resourceHelper.gs(R.string.combo_warning));
                         i.putExtra("clipboardContent", result.toString());
                         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        MainApp.instance().startActivity(i);
+                        context.startActivity(i);
 
 //                        OKDialog.show(MainApp.instance().getApplicationContext(), MainApp.gs(R.string.action),
 //                                "Pulse Log:\n" + result.toString(), null);

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.comm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
@@ -83,42 +84,47 @@ import io.reactivex.disposables.Disposable;
 
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
 
-    private OmnipodUtil omnipodUtil;
-    private AAPSLogger aapsLogger;
-    private RxBusWrapper rxBus;
-    private ResourceHelper resourceHelper;
-    private HasAndroidInjector injector;
-    private ActivePluginProvider activePlugin;
-    private OmnipodPumpStatus pumpStatus;
+    private final OmnipodUtil omnipodUtil;
+    private final AAPSLogger aapsLogger;
+    private final RxBusWrapper rxBus;
+    private final ResourceHelper resourceHelper;
+    private final HasAndroidInjector injector;
+    private final ActivePluginProvider activePlugin;
+    private final OmnipodPumpStatus pumpStatus;
+    private final Context context;
 
     private final OmnipodManager delegate;
 
+    @Deprecated
     private static AapsOmnipodManager instance;
 
     private Date lastBolusTime;
     private Double lastBolusUnits;
 
+    @Deprecated
     public static AapsOmnipodManager getInstance() {
         return instance;
     }
 
     public AapsOmnipodManager(OmnipodCommunicationManager communicationService,
                               PodSessionState podState,
-                              OmnipodPumpStatus _pumpStatus,
+                              OmnipodPumpStatus pumpStatus,
                               OmnipodUtil omnipodUtil,
                               AAPSLogger aapsLogger,
                               RxBusWrapper rxBus,
                               SP sp,
                               ResourceHelper resourceHelper,
                               HasAndroidInjector injector,
-                              ActivePluginProvider activePlugin) {
+                              ActivePluginProvider activePlugin,
+                              Context context) {
         this.omnipodUtil = omnipodUtil;
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
         this.injector = injector;
         this.activePlugin = activePlugin;
-        this.pumpStatus = _pumpStatus;
+        this.pumpStatus = pumpStatus;
+        this.context = context;
 
         delegate = new OmnipodManager(aapsLogger, sp, communicationService, podState, podSessionState -> {
             // Handle pod state changes
@@ -460,12 +466,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return new PumpEnactResult(injector).success(true).enacted(true);
     }
 
-    @Override
-    public void setPumpStatus(OmnipodPumpStatus pumpStatus) {
-        this.pumpStatus = pumpStatus;
-        updatePumpStatus(delegate.getPodState());
-    }
-
     // TODO should we add this to the OmnipodCommunicationManager interface?
     public PumpEnactResult getPodInfo(PodInfoType podInfoType) {
         long time = System.currentTimeMillis();
@@ -706,12 +706,12 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
     }
 
     private void showErrorDialog(String message, Integer sound) {
-        Intent intent = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+        Intent intent = new Intent(context, ErrorHelperActivity.class);
         intent.putExtra("soundid", sound == null ? 0 : sound);
         intent.putExtra("status", message);
         intent.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        MainApp.instance().startActivity(intent);
+        context.startActivity(intent);
     }
 
     private void showNotification(String message, int urgency, Integer sound) {
