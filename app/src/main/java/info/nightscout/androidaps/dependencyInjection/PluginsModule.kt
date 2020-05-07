@@ -352,12 +352,6 @@ abstract class PluginsModule {
     @IntKey(480)
     abstract fun bindConfigBuilderPlugin(plugin: ConfigBuilderPlugin): PluginBase
 
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(490)
-    abstract fun bindOmnipodPumpPlugin(plugin: OmnipodPumpPlugin): PluginBase
-
     @Qualifier
     annotation class AllConfigs
 

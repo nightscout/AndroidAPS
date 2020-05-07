@@ -69,8 +69,7 @@ import javax.inject.Singleton
         PreferencesModule::class,
         OverviewModule::class,
         DataClassesModule::class,
-        SMSModule::class,
-        OmnipodModule::class
+        SMSModule::class
     ]
 )
 interface AppComponent : AndroidInjector<MainApp> {
