@@ -18,6 +18,7 @@ abstract class AutotuneModule {
     @ContributesAndroidInjector abstract fun autoTuneTunedProfileInjector(): TunedProfile
     @ContributesAndroidInjector abstract fun autoTuneMealInjector(): Meal
     @ContributesAndroidInjector abstract fun autoTunePrepInjector(): AutotunePrep
+    @ContributesAndroidInjector abstract fun autoTuneIobInjector(): Iob
 
     @ContributesAndroidInjector abstract fun autoTuneFSInjector(): FS
 }

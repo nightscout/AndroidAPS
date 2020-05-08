@@ -34,6 +34,7 @@ import info.nightscout.androidaps.interfaces.PluginType;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.Round;
+import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 import info.nightscout.androidaps.utils.SafeParse;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -1291,8 +1292,10 @@ public class AutotunePlugin extends PluginBase {
         c.set(Calendar.SECOND, 0);
         c.set(Calendar.MILLISECOND, 0);
 
-        long endTime = c.getTimeInMillis();
-        // new version of autotune starts at 4 AM
+        //long endTime = c.getTimeInMillis();
+        // Today at 4 AM
+        long endTime = DateUtil.toTimeMinutesFromMidnight(now, 4*60);
+        // Check if 4 AM is before now
         if (endTime > now)
             endTime -= 24 * 60 * 60 * 1000L;
         long starttime = endTime - daysBack * 24 * 60 *  60 * 1000L;

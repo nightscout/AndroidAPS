@@ -3,6 +3,11 @@ package info.nightscout.androidaps.plugins.general.autotune.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.PublicKey;
+
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.plugins.treatments.Treatment;
@@ -28,18 +33,17 @@ public class NsTreatment {
     public TemporaryBasal temporaryBasal;
     public Double absoluteRate;
     public boolean isEndingEvent;
-    public int duration;
+    public int duration;            // msec converted in minutes
     public boolean isFakeExtended;
     public String enteredBy;
     public int percentRate;
     public boolean isAbsolute;
     public ExtendedBolus extendedBolus;
     private String origin;
-    public static final String TEMPBASAL="Temp Basal";
-    public static final String BOLUSWIZARD="Bolus Wizard";
-    public static final String CARBCORRECTION="Carb Correction";
-    public static final String CORRECTIONBOLUS="Correction Bolus";
-    public static final String ENTEREDBY="openaps://AndroidAPS";
+
+    //CarePortalEvents
+    public CareportalEvent careportalEvent;
+    public String json;
 
 
     public NsTreatment(Treatment t) {
@@ -51,14 +55,28 @@ public class NsTreatment {
         isSMB=t.isSMB;
         isValid=t.isValid;
         mealBolus=t.mealBolus;
+
         if(insulin > 0 && carbs > 0)
-            eventType = BOLUSWIZARD;
+            eventType = CareportalEvent.BOLUSWIZARD;
         else if (carbs > 0)
-            eventType = CARBCORRECTION;
+            eventType = CareportalEvent.CARBCORRECTION;
         else
-            eventType = CORRECTIONBOLUS;
+            eventType = CareportalEvent.CORRECTIONBOLUS;
         created_at = DateUtil.toISOString(t.date);
     }
+
+    public NsTreatment (CareportalEvent t) {
+        careportalEvent = t;
+        _id=t._id;
+        date=t.date;
+        created_at = DateUtil.toISOString(t.date);
+        eventType = t.eventType;
+        duration= Math.round(t.getDuration() / 60f / 1000);
+        isValid=t.isValid;
+        json=t.json;
+    }
+
+
     public NsTreatment (TemporaryBasal t) {
         temporaryBasal=t;
         _NsTreatment(t);
@@ -74,8 +92,8 @@ public class NsTreatment {
         absoluteRate= Round.roundTo(t.absoluteRate,0.001);
         isValid=t.isValid;
         isEndingEvent=t.isEndingEvent();
-        eventType = TEMPBASAL;
-        enteredBy = ENTEREDBY;
+        eventType = CareportalEvent.TEMPBASAL;
+        enteredBy = "openaps://" + MainApp.gs(R.string.app_name);
         duration = t.getRealDuration();
         percentRate = t.percentRate;
         isFakeExtended = t.isFakeExtended;
@@ -83,6 +101,7 @@ public class NsTreatment {
         isAbsolute = t.isAbsolute;
     }
 
+    //todo: See NSUpload to be as close as possible for each event type
     public JSONObject toJson() {
         JSONObject cPjson = new JSONObject();
         try {
@@ -92,7 +111,7 @@ public class NsTreatment {
             cPjson.put("created_at",created_at);
             cPjson.put("insulin",insulin > 0 ? insulin : JSONObject.NULL);
             cPjson.put("carbs",carbs > 0 ? carbs : JSONObject.NULL );
-            if(eventType==TEMPBASAL) {
+            if(eventType==CareportalEvent.TEMPBASAL) {
                 if (!isEndingEvent) {
                     cPjson.put("duration", duration);
                     cPjson.put("absolute", absoluteRate);

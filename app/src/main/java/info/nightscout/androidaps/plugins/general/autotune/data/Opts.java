@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -18,6 +19,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
@@ -41,6 +43,8 @@ public class Opts {
     public List<NsTreatment> pumpHistory;
     public List<ExtendedBolus> pumpExtBolusHistory;
     public List<TemporaryBasal> pumpTempBasalHistory;
+    public List<CareportalEvent> careportalEvents;
+    public List<NsTreatment> nsTreatments;
     public List<Treatment> treatments;
     public long start;
     public long end;
@@ -78,6 +82,7 @@ public class Opts {
         setTempBasalHistory(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(from,to,ascending));
         setExtBolusHistory(MainApp.getDbHelper().getExtendedBolusDataFromTime(from,to,ascending));
         setTreatments(treatmentsPlugin.getService().getTreatmentDataFromTime(from,to,ascending));
+        careportalEvents=MainApp.getDbHelper().getCareportalEvents(from,to,ascending);
         if (ascending)
             Collections.sort(pumpHistory, (o1, o2) -> (int) (o1.date  - o2.date) );
         else
@@ -110,7 +115,19 @@ public class Opts {
         if (pumpHistory==null)
             pumpHistory = new ArrayList<NsTreatment>();
         treatments=lt;
+        nsTreatments = new ArrayList<NsTreatment>();
         for (Treatment t:treatments) {
+            pumpHistory.add(new NsTreatment(t));
+            nsTreatments.add(new NsTreatment(t));
+        }
+
+    }
+
+    private void setCareportalEvents(List<CareportalEvent> lt) {
+        if (pumpHistory==null)
+            pumpHistory = new ArrayList<NsTreatment>();
+        careportalEvents=lt;
+        for (CareportalEvent t:careportalEvents) {
             pumpHistory.add(new NsTreatment(t));
         }
     }

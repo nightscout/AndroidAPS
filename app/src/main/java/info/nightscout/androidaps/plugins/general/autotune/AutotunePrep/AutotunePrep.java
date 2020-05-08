@@ -55,9 +55,9 @@ public class AutotunePrep {
 
     public PrepOutput categorizeBGDatums(Opts opts) throws JSONException, ParseException, IOException {
 
-        List<Treatment> treatments = opts.treatments;
+        List<NsTreatment> treatments = opts.nsTreatments;
         // this sorts the treatments collection in order.
-        Collections.sort(treatments, (o1, o2) -> (int) (o2.getDate() - o1.getDate()));
+        Collections.sort(treatments, (o1, o2) -> (int) (o2.date - o1.date));
 
         Profile profileData = opts.profile;
 
@@ -78,6 +78,7 @@ public class AutotunePrep {
         // pumpHistory of oref0 are splitted in pumpHistory (for temp basals or extended bolus) and treatments (for bolus, meal bolus or correction carbs)
         iobInputs.history = opts.pumpHistory;
         iobInputs.treatments = opts.treatments;
+        iobInputs.careportalEvents = opts.careportalEvents;
         List<BGDatum> CSFGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> ISFGlucoseData = new ArrayList<BGDatum>();
         List<BGDatum> basalGlucoseData = new ArrayList<BGDatum>();
@@ -111,7 +112,7 @@ public class AutotunePrep {
         // go through the treatments and remove any that are older than the oldest glucose value
         //console.error(treatments);
         for (int i=treatments.size()-1; i>0; --i) {
-            Treatment treatment = treatments.get(i);
+            NsTreatment treatment = treatments.get(i);
             //console.error(treatment);
             if (treatment != null) {
                 BGDatum glucoseDatum = bucketedData.get(bucketedData.size()-1);
@@ -134,17 +135,18 @@ public class AutotunePrep {
         boolean absorbing = false;
         boolean uam = false; // unannounced meal
         double mealCOB = 0d;
-        int mealCarbs = 0;
-        int CRCarbs = 0;
+        double mealCarbs = 0;
+        double CRCarbs = 0;
         String type = "";
 
-        Double CRInitialIOB=0d;
-        Double CRInitialBG=0d;
+        double CRInitialIOB=0d;
+        double CRInitialBG=0d;
         long CRInitialCarbTime=0L;
 
         //categorize.js#123
         // main for loop
         List<NsTreatment> fullHistory = iobInputs.history ;//IOBInputs.history;
+
 
         for (int i = bucketedData.size() - 5; i > 0; --i) {
             BGDatum glucoseDatum = bucketedData.get(i);
@@ -154,17 +156,17 @@ public class AutotunePrep {
             // As we're processing each data point, go through the treatment.carbs and see if any of them are older than
             // the current BG data point.  If so, add those carbs to COB.
 
-            Treatment treatment = treatments.size() > 0 ? treatments.get(treatments.size()-1) : null;
-            int myCarbs = 0;
+            NsTreatment treatment = treatments.size() > 0 ? treatments.get(treatments.size()-1) : null;
+            double myCarbs = 0;
             if (treatment != null) {
 
                 if (treatment.date < BGTime) {
                     if (treatment.carbs >= 1) {
                         // Here I parse Integers not float like the original source categorize.js#136
 
-                        mealCOB += (int) (treatment.carbs);
-                        mealCarbs += (int) (treatment.carbs);
-                        myCarbs = (int) treatment.carbs;
+                        mealCOB += treatment.carbs;
+                        mealCarbs += treatment.carbs;
+                        myCarbs = treatment.carbs;
 
                     }
                     treatments.remove(treatments.size()-1);
@@ -358,7 +360,7 @@ public class AutotunePrep {
                     log.debug(glucoseDatum.mealAbsorption + " carb absorption");
                 }
                 type = "csf";
-                glucoseDatum.mealCarbs = mealCarbs;
+                glucoseDatum.mealCarbs = (int) mealCarbs;
                 //if (i == 0) { glucoseDatum.mealAbsorption = "end"; }
                 CSFGlucoseData.add(glucoseDatum);
             } else {
@@ -426,7 +428,8 @@ public class AutotunePrep {
         iobInputs.history = opts.pumpHistory;
         iobInputs.treatments = opts.treatments;
         // todo: var find_insulin = require('../iob/history');
-        //  treatments = find_insulin(IOBInputs);
+        Iob iob = new Iob();
+        treatments = iob.find_insulin(iobInputs);
 //****************************************************************************************************************************************
 
         /* Code template for IOB calculation trom tempBasal Object
@@ -440,7 +443,7 @@ public class AutotunePrep {
 // categorize.js Lines 372-383
         for (CRDatum crDatum : CRData) {
             Opts dosedOpts = new Opts(injector);
-            dosedOpts.treatments = treatments;
+            dosedOpts.nsTreatments = treatments;
             dosedOpts.start = crDatum.CRInitialCarbTime;
             dosedOpts.end = crDatum.CREndTime;
             crDatum.CRInsulin = dosed(dosedOpts);
@@ -515,7 +518,7 @@ public class AutotunePrep {
     private static double dosed(Opts opts) {
         long start = opts.start;
         long end = opts.end;
-        List<Treatment> treatments = opts.treatments;
+        List<NsTreatment> treatments = opts.nsTreatments;
         Profile profile_data = opts.profile;
         double insulinDosed = 0;
         if (treatments.size()==0) {
@@ -523,7 +526,7 @@ public class AutotunePrep {
             return 0;
         }
 
-        for (Treatment treatment:treatments ) {
+        for (NsTreatment treatment:treatments ) {
             if(treatment.insulin != 0 && treatment.date > start && treatment.date <= end) {
                 insulinDosed += treatment.insulin;
             }
