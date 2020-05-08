@@ -195,7 +195,7 @@ open class DanaRS_Packet_APS_History_Events(
                 status = "PRIMECANNULA " + dateUtil.timeString(datetime)
             }
 
-            else                        -> {
+            else                                                                                         -> {
                 aapsLogger.debug(LTag.PUMPCOMM, "Event: " + recordCode + " " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Param1: " + param1 + " Param2: " + param2)
                 status = "UNKNOWN " + dateUtil.timeString(datetime)
             }

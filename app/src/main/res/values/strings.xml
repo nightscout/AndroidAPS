@@ -557,7 +557,6 @@
     <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
     <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
     <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
-    <string name="key_danar_password" translatable="false">danar_password</string>
     <string name="clearlog">Clear log</string>
     <string name="key_nsclientinternal_autoscroll" translatable="false">nsclientinternal_autoscroll</string>
     <string name="key_nsclientinternal_paused" translatable="false">nsclientinternal_paused</string>
@@ -1758,7 +1757,6 @@
     <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
     <string name="copyexistingvalues">Copy NS settings (if exists)?</string>
     <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
-    <string name="key_danars_password">danars_password</string>
     <string name="classic_desrciption">Original skin</string>
     <string name="buttonson_desrciption">Buttons are always displayed on bottom of screen</string>
     <string name="key_skin" translatable="false">skin</string>

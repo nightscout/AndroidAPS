@@ -5,7 +5,6 @@ import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.powermock.modules.junit4.PowerMockRunner
-import kotlin.experimental.and
 
 @RunWith(PowerMockRunner::class)
 class MsgSettingUserOptionsTest : DanaRTestBase() {

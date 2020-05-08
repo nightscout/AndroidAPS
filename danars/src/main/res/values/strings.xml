@@ -2,6 +2,8 @@
 <resources>
     <string name="key_danars_address" translatable="false">danars_address</string>
     <string name="key_danars_name" translatable="false">danars_name</string>
+    <string name="key_danar_password" translatable="false">danar_password</string>
+    <string name="key_danars_password">danars_password</string>
 
     <string name="danars_pairing">Pairing</string>
     <string name="danars_nodeviceavailable">No device found so far</string>
