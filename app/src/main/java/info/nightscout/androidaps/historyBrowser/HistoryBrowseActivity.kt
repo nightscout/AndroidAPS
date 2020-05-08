@@ -18,7 +18,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
 import info.nightscout.androidaps.plugins.general.overview.graphData.GraphData
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished
@@ -54,6 +54,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var overviewMenus: OverviewMenus
+    @Inject lateinit var dateUtil: DateUtil
 
     private val disposable = CompositeDisposable()
 
@@ -117,7 +118,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             cal.set(Calendar.MONTH, monthOfYear)
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             start = cal.timeInMillis
-            historybrowse_date?.text = DateUtil.dateAndTimeString(start)
+            historybrowse_date?.text = dateUtil.dateAndTimeString(start)
             updateGUI("onClickDate")
             runCalculation("onClickDate")
         }
@@ -236,7 +237,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
 
         val lowLine = defaultValueHelper.determineLowLine()
         val highLine = defaultValueHelper.determineHighLine()
-        historybrowse_date?.text = DateUtil.dateAndTimeString(start)
+        historybrowse_date?.text = dateUtil.dateAndTimeString(start)
         historybrowse_zoom?.text = rangeToDisplay.toString()
 
         GlobalScope.launch(Dispatchers.Main) {
@@ -248,7 +249,7 @@ class HistoryBrowseActivity : NoSplashAppCompatActivity() {
             withContext(Dispatchers.Default) {
                 val fromTime: Long = start + T.secs(100).msecs()
                 val toTime: Long = start + T.hours(rangeToDisplay.toLong()).msecs()
-                aapsLogger.debug(LTag.UI, "Period: " + DateUtil.dateAndTimeString(fromTime) + " - " + DateUtil.dateAndTimeString(toTime))
+                aapsLogger.debug(LTag.UI, "Period: " + dateUtil.dateAndTimeString(fromTime) + " - " + dateUtil.dateAndTimeString(toTime))
                 val pointer = System.currentTimeMillis()
 
                 // **** In range Area ****

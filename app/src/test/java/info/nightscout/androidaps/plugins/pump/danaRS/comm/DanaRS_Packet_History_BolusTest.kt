@@ -20,7 +20,11 @@ class DanaRS_Packet_History_BolusTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
+<<<<<<< HEAD
         val packet = DanaRS_Packet_History_Bolus(packetInjector, System.currentTimeMillis())
+=======
+        val packet = DanaRS_Packet_History_Bolus(aapsLogger, rxBus, dateUtil, System.currentTimeMillis())
+>>>>>>> origin/dev
         Assert.assertEquals("REVIEW__BOLUS", packet.friendlyName)
     }
 }

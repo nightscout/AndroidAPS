@@ -20,7 +20,7 @@ import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
@@ -67,7 +67,9 @@ class ActionStringHandler @Inject constructor(
     private val danaRSPlugin: DanaRSPlugin,
     private val danaRPump: DanaRPump,
     private val hardLimits: HardLimits,
-    private val carbsGenerator: CarbsGenerator
+    private val carbsGenerator: CarbsGenerator,
+    private val dateUtil: DateUtil,
+    private val config: Config
 ) {
 
     private val TIMEOUT = 65 * 1000
@@ -278,7 +280,7 @@ class ActionStringHandler @Inject constructor(
             val starttimestamp = System.currentTimeMillis() + starttime * 60 * 1000
             val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
             rMessage += resourceHelper.gs(R.string.carbs) + ": " + carbsAfterConstraints + "g"
-            rMessage += "\n" + resourceHelper.gs(R.string.time) + ": " + DateUtil.timeString(starttimestamp)
+            rMessage += "\n" + resourceHelper.gs(R.string.time) + ": " + dateUtil.timeString(starttimestamp)
             rMessage += "\n" + resourceHelper.gs(R.string.duration) + ": " + duration + "h"
             if (carbsAfterConstraints - carbs != 0) {
                 rMessage += "\n" + resourceHelper.gs(R.string.constraintapllied)
@@ -409,8 +411,8 @@ class ActionStringHandler @Inject constructor(
                 ret += "APS: " + (aps as PluginBase).name
                 val lastRun = loopPlugin.lastRun
                 if (lastRun != null) {
-                    ret += "\nLast Run: " + DateUtil.timeString(lastRun.lastAPSRun)
-                    if (lastRun.lastTBREnact != 0L) ret += "\nLast Enact: " + DateUtil.timeString(lastRun.lastTBREnact)
+                    ret += "\nLast Run: " + dateUtil.timeString(lastRun.lastAPSRun)
+                    if (lastRun.lastTBREnact != 0L) ret += "\nLast Enact: " + dateUtil.timeString(lastRun.lastTBREnact)
                 }
             } else {
                 ret += "LOOP DISABLED\n"
@@ -422,7 +424,7 @@ class ActionStringHandler @Inject constructor(
     private val targetsStatus: String
         get() {
             var ret = ""
-            if (!Config.APS) {
+            if (!config.APS) {
                 return "Targets only apply in APS mode!"
             }
             val profile = profileFunction.getProfile() ?: return "No profile set :("
@@ -430,7 +432,7 @@ class ActionStringHandler @Inject constructor(
             val tempTarget = activePlugin.activeTreatments.tempTargetFromHistory
             if (tempTarget != null) {
                 ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.low, tempTarget.low, Constants.MGDL, profileFunction.getUnits())
-                ret += "\nuntil: " + DateUtil.timeString(tempTarget.originalEnd())
+                ret += "\nuntil: " + dateUtil.timeString(tempTarget.originalEnd())
                 ret += "\n\n"
             }
             ret += "DEFAULT RANGE: "
@@ -442,7 +444,7 @@ class ActionStringHandler @Inject constructor(
     private val oAPSResultStatus: String
         get() {
             var ret = ""
-            if (!Config.APS)
+            if (!config.APS)
                 return "Only apply in APS mode!"
             val usedAPS = activePlugin.activeAPS
             val result = usedAPS.lastAPSResult ?: return "Last result not available!"

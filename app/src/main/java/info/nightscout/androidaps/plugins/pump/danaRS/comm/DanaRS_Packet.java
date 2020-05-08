@@ -17,10 +17,12 @@ import java.util.Date;
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import info.nightscout.androidaps.utils.DateUtil;
 
 public class DanaRS_Packet {
 
     @Inject AAPSLogger aapsLogger;
+    @Inject DateUtil dateUtil;
 
     protected HasAndroidInjector injector;
 

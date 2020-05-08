@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/omnipod_name">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-        <info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference
-            android:id="@+id/rileylink_mac_address_omnipod"
+    <PreferenceCategory
+        android:title="@string/omnipod_name"
+        app:initialExpandedChildrenCount="0">
+
+        <Preference
             android:enabled="true"
+            android:key="@string/key_rileylink_mac_address"
             android:summary=""
-            android:title="RileyLink Configuration"
-            android:key="@string/key_rileylink_mac_address">
+            android:title="RileyLink Configuration">
             <intent android:action="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEScanActivity" />
-        </info.nightscout.androidaps.plugins.pump.common.ui.RileyLinkSelectPreference>
+        </Preference>
 
         <SwitchPreference
             android:defaultValue="true"
@@ -42,4 +45,4 @@
             android:title="@string/omnipod_config_timechange_enabled" />
 
     </PreferenceCategory>
-</PreferenceScreen>
+</androidx.preference.PreferenceScreen>

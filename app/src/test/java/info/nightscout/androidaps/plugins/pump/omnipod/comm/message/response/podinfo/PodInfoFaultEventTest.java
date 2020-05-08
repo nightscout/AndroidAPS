@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.DeliveryStatus;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.LogEventErrorCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodProgressStatus;
 
@@ -20,11 +20,11 @@ public class PodInfoFaultEventTest {
     public void testPodInfoFaultEventNoFaultAlerts() {
         PodInfoFaultEvent podInfoFaultEvent = new PodInfoFaultEvent(ByteUtil.fromHexString("02080100000a003800000003ff008700000095ff0000"));
 
-        assertEquals(PodProgressStatus.RUNNING_ABOVE_FIFTY_UNITS, podInfoFaultEvent.getPodProgressStatus());
+        assertEquals(PodProgressStatus.ABOVE_FIFTY_UNITS, podInfoFaultEvent.getPodProgressStatus());
         assertEquals(DeliveryStatus.NORMAL, podInfoFaultEvent.getDeliveryStatus());
         assertEquals(0, podInfoFaultEvent.getInsulinNotDelivered(), 0.000001);
         assertEquals(0x0a, podInfoFaultEvent.getPodMessageCounter());
-        assertEquals(FaultEventType.NO_FAULTS, podInfoFaultEvent.getFaultEventType());
+        assertEquals(FaultEventCode.NO_FAULTS, podInfoFaultEvent.getFaultEventCode());
         assertTrue(Duration.ZERO.isEqual(podInfoFaultEvent.getFaultEventTime()));
         assertNull(podInfoFaultEvent.getReservoirLevel());
         assertTrue(Duration.standardSeconds(8100).isEqual(podInfoFaultEvent.getTimeSinceActivation()));
@@ -44,14 +44,14 @@ public class PodInfoFaultEventTest {
         assertEquals(DeliveryStatus.SUSPENDED, podInfoFaultEvent.getDeliveryStatus());
         assertEquals(0, podInfoFaultEvent.getInsulinNotDelivered(), 0.000001);
         assertEquals(0x09, podInfoFaultEvent.getPodMessageCounter());
-        assertEquals(FaultEventType.PRIME_OPEN_COUNT_TOO_LOW, podInfoFaultEvent.getFaultEventType());
+        assertEquals(FaultEventCode.PRIME_OPEN_COUNT_TOO_LOW, podInfoFaultEvent.getFaultEventCode());
         assertTrue(Duration.standardSeconds(60).isEqual(podInfoFaultEvent.getFaultEventTime()));
         assertNull(podInfoFaultEvent.getReservoirLevel());
         assertTrue(Duration.standardSeconds(60).isEqual(podInfoFaultEvent.getTimeSinceActivation()));
         assertEquals(0, podInfoFaultEvent.getUnacknowledgedAlerts().getRawValue());
         assertFalse(podInfoFaultEvent.isFaultAccessingTables());
         assertEquals(LogEventErrorCode.NONE, podInfoFaultEvent.getLogEventErrorType());
-        assertEquals(PodProgressStatus.READY_FOR_BASAL_SCHEDULE, podInfoFaultEvent.getPodProgressStatusAtTimeOfFirstLoggedFaultEvent());
+        assertEquals(PodProgressStatus.PRIMING_COMPLETED, podInfoFaultEvent.getPodProgressStatusAtTimeOfFirstLoggedFaultEvent());
         assertEquals(2, podInfoFaultEvent.getReceiverLowGain());
         assertEquals(46, podInfoFaultEvent.getRadioRSSI());
     }
@@ -65,13 +65,13 @@ public class PodInfoFaultEventTest {
         assertEquals(101.7, podInfoFaultEvent.getTotalInsulinDelivered(), 0.000001);
         assertEquals(0, podInfoFaultEvent.getInsulinNotDelivered(), 0.000001);
         assertEquals(0x04, podInfoFaultEvent.getPodMessageCounter());
-        assertEquals(FaultEventType.BASAL_OVER_INFUSION_PULSE, podInfoFaultEvent.getFaultEventType());
+        assertEquals(FaultEventCode.BASAL_OVER_INFUSION_PULSE, podInfoFaultEvent.getFaultEventCode());
         assertTrue(Duration.standardMinutes(2559).isEqual(podInfoFaultEvent.getFaultEventTime()));
         assertNull(podInfoFaultEvent.getReservoirLevel());
         assertEquals(0, podInfoFaultEvent.getUnacknowledgedAlerts().getRawValue());
         assertFalse(podInfoFaultEvent.isFaultAccessingTables());
         assertEquals(LogEventErrorCode.NONE, podInfoFaultEvent.getLogEventErrorType());
-        assertEquals(PodProgressStatus.RUNNING_ABOVE_FIFTY_UNITS, podInfoFaultEvent.getPodProgressStatusAtTimeOfFirstLoggedFaultEvent());
+        assertEquals(PodProgressStatus.ABOVE_FIFTY_UNITS, podInfoFaultEvent.getPodProgressStatusAtTimeOfFirstLoggedFaultEvent());
         assertEquals(0, podInfoFaultEvent.getReceiverLowGain());
         assertEquals(35, podInfoFaultEvent.getRadioRSSI());
     }
@@ -85,13 +85,13 @@ public class PodInfoFaultEventTest {
         assertEquals(11.8, podInfoFaultEvent.getTotalInsulinDelivered(), 0.000001);
         assertEquals(0.05, podInfoFaultEvent.getInsulinNotDelivered(), 0.000001);
         assertEquals(0x02, podInfoFaultEvent.getPodMessageCounter());
-        assertEquals(FaultEventType.OCCLUSION_CHECK_ABOVE_THRESHOLD, podInfoFaultEvent.getFaultEventType());
+        assertEquals(FaultEventCode.OCCLUSION_CHECK_ABOVE_THRESHOLD, podInfoFaultEvent.getFaultEventCode());
         assertTrue(Duration.standardMinutes(616).isEqual(podInfoFaultEvent.getFaultEventTime()));
         assertNull(podInfoFaultEvent.getReservoirLevel());
         assertEquals(0, podInfoFaultEvent.getUnacknowledgedAlerts().getRawValue());
         assertFalse(podInfoFaultEvent.isFaultAccessingTables());
         assertEquals(LogEventErrorCode.INTERNAL_2_BIT_VARIABLE_SET_AND_MANIPULATED_IN_MAIN_LOOP_ROUTINES_2, podInfoFaultEvent.getLogEventErrorType());
-        assertEquals(PodProgressStatus.RUNNING_ABOVE_FIFTY_UNITS, podInfoFaultEvent.getPodProgressStatusAtTimeOfFirstLoggedFaultEvent());
+        assertEquals(PodProgressStatus.ABOVE_FIFTY_UNITS, podInfoFaultEvent.getPodProgressStatusAtTimeOfFirstLoggedFaultEvent());
         assertEquals(2, podInfoFaultEvent.getReceiverLowGain());
         assertEquals(39, podInfoFaultEvent.getRadioRSSI());
     }
@@ -105,13 +105,13 @@ public class PodInfoFaultEventTest {
         assertEquals(11.8, podInfoFaultEvent.getTotalInsulinDelivered(), 0.000001);
         assertEquals(3276.75, podInfoFaultEvent.getInsulinNotDelivered(), 0.000001); // Insane and will not happen, but this verifies that we convert it to an unsigned int
         assertEquals(0x02, podInfoFaultEvent.getPodMessageCounter());
-        assertEquals(FaultEventType.OCCLUSION_CHECK_ABOVE_THRESHOLD, podInfoFaultEvent.getFaultEventType());
+        assertEquals(FaultEventCode.OCCLUSION_CHECK_ABOVE_THRESHOLD, podInfoFaultEvent.getFaultEventCode());
         assertTrue(Duration.standardMinutes(616).isEqual(podInfoFaultEvent.getFaultEventTime()));
         assertNull(podInfoFaultEvent.getReservoirLevel());
         assertEquals(0, podInfoFaultEvent.getUnacknowledgedAlerts().getRawValue());
         assertFalse(podInfoFaultEvent.isFaultAccessingTables());
         assertEquals(LogEventErrorCode.INTERNAL_2_BIT_VARIABLE_SET_AND_MANIPULATED_IN_MAIN_LOOP_ROUTINES_2, podInfoFaultEvent.getLogEventErrorType());
-        assertEquals(PodProgressStatus.RUNNING_ABOVE_FIFTY_UNITS, podInfoFaultEvent.getPodProgressStatusAtTimeOfFirstLoggedFaultEvent());
+        assertEquals(PodProgressStatus.ABOVE_FIFTY_UNITS, podInfoFaultEvent.getPodProgressStatusAtTimeOfFirstLoggedFaultEvent());
         assertEquals(2, podInfoFaultEvent.getReceiverLowGain());
         assertEquals(39, podInfoFaultEvent.getRadioRSSI());
     }

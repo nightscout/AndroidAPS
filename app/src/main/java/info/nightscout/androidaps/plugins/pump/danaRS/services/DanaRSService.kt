@@ -13,6 +13,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.dialogs.BolusProgressDialog
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventInitializationChanged
@@ -20,11 +21,11 @@ import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
@@ -35,7 +36,6 @@ import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRNewStatus
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.plugins.pump.danaRS.comm.*
-import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.queue.commands.Command
 import info.nightscout.androidaps.utils.DateUtil
@@ -66,6 +66,7 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var bleComm: BLEComm
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var dateUtil: DateUtil
 
     private val disposable = CompositeDisposable()
     private val mBinder: IBinder = LocalBinder()
@@ -215,7 +216,7 @@ class DanaRSService : DaggerService() {
             aapsLogger.debug(LTag.PUMPCOMM, "Loading complete event history")
         } else {
             msg = DanaRS_Packet_APS_History_Events(injector, lastHistoryFetched)
-            aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + DateUtil.dateAndTimeString(lastHistoryFetched))
+            aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + dateUtil.dateAndTimeString(lastHistoryFetched))
         }
         sendMessage(msg)
         while (!danaRPump.historyDoneReceived && bleComm.isConnected) {

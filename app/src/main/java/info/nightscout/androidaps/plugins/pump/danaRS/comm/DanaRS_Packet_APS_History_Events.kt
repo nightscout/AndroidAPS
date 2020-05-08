@@ -54,7 +54,7 @@ open class DanaRS_Packet_APS_History_Events(
         hour = cal[Calendar.HOUR_OF_DAY]
         min = cal[Calendar.MINUTE]
         sec = cal[Calendar.SECOND]
-        aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + DateUtil.dateAndTimeString(cal.timeInMillis))
+        aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + dateUtil.dateAndTimeString(cal.timeInMillis))
         danaRPump.historyDoneReceived = false
     }
 
@@ -85,31 +85,31 @@ open class DanaRS_Packet_APS_History_Events(
         val status: String
         when (recordCode.toInt()) {
             DanaRPump.TEMPSTART         -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "EVENT TEMPSTART (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Ratio: " + param1 + "% Duration: " + param2 + "min")
+                aapsLogger.debug(LTag.PUMPCOMM, "EVENT TEMPSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Ratio: " + param1 + "% Duration: " + param2 + "min")
                 temporaryBasal.percentRate = param1
                 temporaryBasal.durationInMinutes = param2
                 activePlugin.activeTreatments.addToHistoryTempBasal(temporaryBasal)
-                status = "TEMPSTART " + DateUtil.timeString(datetime)
+                status = "TEMPSTART " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.TEMPSTOP          -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "EVENT TEMPSTOP (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime))
+                aapsLogger.debug(LTag.PUMPCOMM, "EVENT TEMPSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime))
                 activePlugin.activeTreatments.addToHistoryTempBasal(temporaryBasal)
-                status = "TEMPSTOP " + DateUtil.timeString(datetime)
+                status = "TEMPSTOP " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.EXTENDEDSTART     -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "EVENT EXTENDEDSTART (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
+                aapsLogger.debug(LTag.PUMPCOMM, "EVENT EXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 extendedBolus.insulin = param1 / 100.0
                 extendedBolus.durationInMinutes = param2
                 activePlugin.activeTreatments.addToHistoryExtendedBolus(extendedBolus)
-                status = "EXTENDEDSTART " + DateUtil.timeString(datetime)
+                status = "EXTENDEDSTART " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.EXTENDEDSTOP      -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "EVENT EXTENDEDSTOP (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
+                aapsLogger.debug(LTag.PUMPCOMM, "EVENT EXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 activePlugin.activeTreatments.addToHistoryExtendedBolus(extendedBolus)
-                status = "EXTENDEDSTOP " + DateUtil.timeString(datetime)
+                status = "EXTENDEDSTOP " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.BOLUS             -> {
@@ -120,8 +120,8 @@ open class DanaRS_Packet_APS_History_Events(
                 detailedBolusInfo.pumpId = datetime
                 detailedBolusInfo.insulin = param1 / 100.0
                 val newRecord = activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
-                aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
-                status = "BOLUS " + DateUtil.timeString(datetime)
+                aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT BOLUS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
+                status = "BOLUS " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.DUALBOLUS         -> {
@@ -132,51 +132,51 @@ open class DanaRS_Packet_APS_History_Events(
                 detailedBolusInfo.pumpId = datetime
                 detailedBolusInfo.insulin = param1 / 100.0
                 val newRecord = activePlugin.activeTreatments.addToHistoryTreatment(detailedBolusInfo, false)
-                aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT DUALBOLUS (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
-                status = "DUALBOLUS " + DateUtil.timeString(datetime)
+                aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT DUALBOLUS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Bolus: " + param1 / 100.0 + "U Duration: " + param2 + "min")
+                status = "DUALBOLUS " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.DUALEXTENDEDSTART -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "EVENT DUALEXTENDEDSTART (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
+                aapsLogger.debug(LTag.PUMPCOMM, "EVENT DUALEXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 extendedBolus.insulin = param1 / 100.0
                 extendedBolus.durationInMinutes = param2
                 activePlugin.activeTreatments.addToHistoryExtendedBolus(extendedBolus)
-                status = "DUALEXTENDEDSTART " + DateUtil.timeString(datetime)
+                status = "DUALEXTENDEDSTART " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.DUALEXTENDEDSTOP  -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "EVENT DUALEXTENDEDSTOP (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
+                aapsLogger.debug(LTag.PUMPCOMM, "EVENT DUALEXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 activePlugin.activeTreatments.addToHistoryExtendedBolus(extendedBolus)
-                status = "DUALEXTENDEDSTOP " + DateUtil.timeString(datetime)
+                status = "DUALEXTENDEDSTOP " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.SUSPENDON         -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "EVENT SUSPENDON (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")")
-                status = "SUSPENDON " + DateUtil.timeString(datetime)
+                aapsLogger.debug(LTag.PUMPCOMM, "EVENT SUSPENDON (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")")
+                status = "SUSPENDON " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.SUSPENDOFF        -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "EVENT SUSPENDOFF (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")")
-                status = "SUSPENDOFF " + DateUtil.timeString(datetime)
+                aapsLogger.debug(LTag.PUMPCOMM, "EVENT SUSPENDOFF (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")")
+                status = "SUSPENDOFF " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.REFILL            -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "EVENT REFILL (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
+                aapsLogger.debug(LTag.PUMPCOMM, "EVENT REFILL (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
                 if (sp.getBoolean(R.string.key_rs_loginsulinchange, true))
                     FillDialog.generateCareportalEvent(CareportalEvent.INSULINCHANGE, datetime, resourceHelper.gs(R.string.danarspump), resourceHelper, sp, injector)
-                status = "REFILL " + DateUtil.timeString(datetime)
+                status = "REFILL " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.PRIME             -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "EVENT PRIME (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
+                aapsLogger.debug(LTag.PUMPCOMM, "EVENT PRIME (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
                 if (sp.getBoolean(R.string.key_rs_logcanulachange, true))
                     FillDialog.generateCareportalEvent(CareportalEvent.SITECHANGE, datetime, resourceHelper.gs(R.string.danarspump), resourceHelper, sp, injector)
-                status = "PRIME " + DateUtil.timeString(datetime)
+                status = "PRIME " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.PROFILECHANGE     -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "EVENT PROFILECHANGE (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " No: " + param1 + " CurrentRate: " + param2 / 100.0 + "U/h")
-                status = "PROFILECHANGE " + DateUtil.timeString(datetime)
+                aapsLogger.debug(LTag.PUMPCOMM, "EVENT PROFILECHANGE (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " No: " + param1 + " CurrentRate: " + param2 / 100.0 + "U/h")
+                status = "PROFILECHANGE " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.CARBS             -> {
@@ -186,18 +186,18 @@ open class DanaRS_Packet_APS_History_Events(
                 emptyCarbsInfo.source = Source.PUMP
                 emptyCarbsInfo.pumpId = datetime
                 val newRecord = activePlugin.activeTreatments.addToHistoryTreatment(emptyCarbsInfo, false)
-                aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT CARBS (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Carbs: " + param1 + "g")
-                status = "CARBS " + DateUtil.timeString(datetime)
+                aapsLogger.debug(LTag.PUMPCOMM, (if (newRecord) "**NEW** " else "") + "EVENT CARBS (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Carbs: " + param1 + "g")
+                status = "CARBS " + dateUtil.timeString(datetime)
             }
 
             DanaRPump.PRIMECANNULA      -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "EVENT PRIMECANNULA(" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
-                status = "PRIMECANNULA " + DateUtil.timeString(datetime)
+                aapsLogger.debug(LTag.PUMPCOMM, "EVENT PRIMECANNULA(" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
+                status = "PRIMECANNULA " + dateUtil.timeString(datetime)
             }
 
             else                        -> {
-                aapsLogger.debug(LTag.PUMPCOMM, "Event: " + recordCode + " " + DateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Param1: " + param1 + " Param2: " + param2)
-                status = "UNKNOWN " + DateUtil.timeString(datetime)
+                aapsLogger.debug(LTag.PUMPCOMM, "Event: " + recordCode + " " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Param1: " + param1 + " Param2: " + param2)
+                status = "UNKNOWN " + dateUtil.timeString(datetime)
             }
         }
         if (datetime > danaRPump.lastEventTimeLoaded) danaRPump.lastEventTimeLoaded = datetime

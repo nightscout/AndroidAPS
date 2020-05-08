@@ -37,9 +37,8 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewB
 import info.nightscout.androidaps.plugins.pump.common.data.PumpStatus;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpDriverState;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -66,6 +65,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
     protected ResourceHelper resourceHelper;
     protected CommandQueueProvider commandQueue;
     protected SP sp;
+    protected DateUtil dateUtil;
 
     /*
         protected static final PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult().success(false)
@@ -93,7 +93,8 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             ActivePluginProvider activePlugin,
             SP sp,
             Context context,
-            FabricPrivacy fabricPrivacy
+            FabricPrivacy fabricPrivacy,
+            DateUtil dateUtil
     ) {
 
         super(pluginDescription, injector, aapsLogger, resourceHelper, commandQueue);
@@ -108,7 +109,7 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
         pumpDescription.setPumpDescription(pumpType);
         this.pumpType = pumpType;
-
+        this.dateUtil = dateUtil;
     }
 
 
@@ -346,14 +347,14 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate",
                         tb.tempBasalConvertedToAbsolute(System.currentTimeMillis(), profile));
-                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
 
             ExtendedBolus eb = activePlugin.getActiveTreatments().getExtendedBolusFromHistory(System.currentTimeMillis());
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
-                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date));
                 extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
             }
 

@@ -8,6 +8,8 @@ import android.os.IBinder;
 
 import com.google.gson.Gson;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.inject.Inject;
 
 import info.nightscout.androidaps.R;
@@ -17,6 +19,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCons
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkBLE;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService;
@@ -86,6 +89,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
     public void initRileyLinkServiceData() {
 
         rileyLinkServiceData.targetDevice = RileyLinkTargetDevice.Omnipod;
+        rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod;
 
         // get most recently used RileyLink address
         rileyLinkServiceData.rileylinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
@@ -106,7 +110,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             if (sp.contains(OmnipodConst.Prefs.PodState) && omnipodUtil.getPodSessionState() == null) {
                 try {
                     Gson gson = omnipodUtil.getGsonInstance();
-                    String storedPodState = sp.getString(OmnipodConst.Prefs.PodState, null);
+                    String storedPodState = sp.getString(OmnipodConst.Prefs.PodState, "");
                     aapsLogger.info(LTag.PUMPCOMM, "PodSessionState-SP: loaded from SharedPreferences: " + storedPodState);
                     podState = gson.fromJson(storedPodState, PodSessionState.class);
                     podState.injectDaggerClass(injector);
@@ -120,7 +124,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             this.omnipodCommunicationManager = omnipodCommunicationService;
 
             this.aapsOmnipodManager = new AapsOmnipodManager(omnipodCommunicationService, podState, omnipodPumpStatus,
-                    omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin);
+                    omnipodUtil, aapsLogger, rxBus, sp, resourceHelper, injector, activePlugin, this);
         } else {
             aapsOmnipodManager = AapsOmnipodManager.getInstance();
         }
@@ -180,10 +184,10 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         try {
             omnipodPumpStatus.errorDescription = "-";
 
-            String rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, null);
+            String rileyLinkAddress = sp.getString(RileyLinkConst.Prefs.RileyLinkAddress, "");
 
-            if (rileyLinkAddress == null) {
-                aapsLogger.debug(LTag.PUMPCOMM, "RileyLink address invalid: null");
+            if (StringUtils.isEmpty(rileyLinkAddress)) {
+                aapsLogger.debug(LTag.PUMPCOMM, "RileyLink address invalid: no address");
                 omnipodPumpStatus.errorDescription = resourceHelper.gs(R.string.medtronic_error_rileylink_address_invalid);
                 return false;
             } else {
@@ -204,6 +208,7 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             this.omnipodPumpStatus.beepTBREnabled = sp.getBoolean(OmnipodConst.Prefs.BeepTBREnabled, true);
             this.omnipodPumpStatus.podDebuggingOptionsEnabled = sp.getBoolean(OmnipodConst.Prefs.PodDebuggingOptionsEnabled, false);
             this.omnipodPumpStatus.timeChangeEventEnabled = sp.getBoolean(OmnipodConst.Prefs.TimeChangeEventEnabled, true);
+            rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod;
 
             aapsLogger.debug(LTag.PUMPCOMM, "Beeps [basal={}, bolus={}, SMB={}, TBR={}]", this.omnipodPumpStatus.beepBasalEnabled, this.omnipodPumpStatus.beepBolusEnabled, this.omnipodPumpStatus.beepSMBEnabled, this.omnipodPumpStatus.beepTBREnabled);
 

@@ -6,7 +6,7 @@ import android.os.Bundle
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.services.Intents
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject

@@ -18,7 +18,7 @@ enum class LTag(val tag: String, val defaultValue : Boolean = true, val requires
     NOTIFICATION("NOTIFICATION"),
     NSCLIENT("NSCLIENT"),
     PUMP("PUMP"),
-    PUMPBTCOMM("PUMPBTCOMM", defaultValue = false),
+    PUMPBTCOMM("PUMPBTCOMM", defaultValue = true),
     PUMPCOMM("PUMPCOMM"),
     PUMPQUEUE("PUMPQUEUE"),
     PROFILE("PROFILE"),

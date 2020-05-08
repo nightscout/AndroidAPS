@@ -17,7 +17,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.common.ManufacturerType
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
@@ -51,14 +51,16 @@ class VirtualPumpPlugin @Inject constructor(
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val treatmentsPlugin: TreatmentsPlugin,
-    commandQueue: CommandQueueProvider
+    commandQueue: CommandQueueProvider,
+    private val config: Config,
+    private val dateUtil: DateUtil
 ) : PumpPluginBase(PluginDescription()
     .mainType(PluginType.PUMP)
     .fragmentClass(VirtualPumpFragment::class.java.name)
     .pluginName(R.string.virtualpump)
     .shortName(R.string.virtualpump_shortname)
     .preferencesId(R.xml.pref_virtualpump)
-    .neverVisible(Config.NSCLIENT)
+    .neverVisible(config.NSCLIENT)
     .description(R.string.description_pump_virtual)
     .setDefault(),
     injector, aapsLogger, resourceHelper, commandQueue
@@ -131,7 +133,7 @@ class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun isFakingTempsByExtendedBoluses(): Boolean {
-        return Config.NSCLIENT && getFakingStatus()
+        return config.NSCLIENT && getFakingStatus()
     }
 
     override fun loadTDDs(): PumpEnactResult { //no result, could read DB in the future?
@@ -355,13 +357,13 @@ class VirtualPumpPlugin @Inject constructor(
             val tb = treatmentsPlugin.getTempBasalFromHistory(now)
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile))
-                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date))
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date))
                 extended.put("TempBasalRemaining", tb.plannedRemainingMinutes)
             }
             val eb = treatmentsPlugin.getExtendedBolusFromHistory(now)
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate())
-                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date))
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date))
                 extended.put("ExtendedBolusRemaining", eb.plannedRemainingMinutes)
             }
             status.put("timestamp", DateUtil.toISOString(now))

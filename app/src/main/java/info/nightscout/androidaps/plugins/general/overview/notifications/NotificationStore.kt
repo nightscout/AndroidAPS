@@ -38,7 +38,8 @@ class NotificationStore @Inject constructor(
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
     private val context: Context,
-    private val iconsProvider: IconsProvider
+    private val iconsProvider: IconsProvider,
+    private val dateUtil: DateUtil
 ) {
 
     var store: MutableList<Notification> = ArrayList()
@@ -192,7 +193,7 @@ class NotificationStore @Inject constructor(
             if (notification.buttonText != 0) holder.dismiss.setText(notification.buttonText)
             else holder.dismiss.setText(R.string.snooze)
             @Suppress("SetTextI18n")
-            holder.text.text = DateUtil.timeString(notification.date) + " " + notification.text
+            holder.text.text = dateUtil.timeString(notification.date) + " " + notification.text
             when (notification.level) {
                 Notification.URGENT       -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationUrgent))
                 Notification.NORMAL       -> holder.cv.setBackgroundColor(resourceHelper.gc(R.color.notificationNormal))

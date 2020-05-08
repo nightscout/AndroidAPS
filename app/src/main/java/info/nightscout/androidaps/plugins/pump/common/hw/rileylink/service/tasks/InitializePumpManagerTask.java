@@ -66,7 +66,6 @@ public class InitializePumpManagerTask extends ServiceTask {
             lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency;
         }
 
-        // TODO Omnipod/Dagger needs refactoring
         RileyLinkCommunicationManager rileyLinkCommunicationManager = ((RileyLinkPumpDevice) activePlugin.getActivePump()).getRileyLinkService().getDeviceCommunicationManager();
 
         if (activePlugin.getActivePump().manufacturer() == ManufacturerType.Medtronic) {
@@ -102,9 +101,8 @@ public class InitializePumpManagerTask extends ServiceTask {
                 rileyLinkServiceData.lastGoodFrequency = lastGoodFrequency;
             }
 
-
             rileyLinkServiceData.setRileyLinkServiceState(RileyLinkServiceState.RileyLinkReady);
-            rileyLinkUtil.setRileyLinkTargetFrequency(RileyLinkTargetFrequency.Omnipod);
+            rileyLinkServiceData.rileyLinkTargetFrequency = RileyLinkTargetFrequency.Omnipod; // TODO shouldn't be needed
 
             aapsLogger.info(LTag.PUMPCOMM, "Setting radio frequency to {} MHz", lastGoodFrequency);
 

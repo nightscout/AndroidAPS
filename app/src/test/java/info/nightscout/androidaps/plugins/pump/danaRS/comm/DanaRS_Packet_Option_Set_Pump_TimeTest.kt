@@ -20,8 +20,12 @@ class DanaRS_Packet_Option_Set_Pump_TimeTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
+<<<<<<< HEAD
         val date = Date()
         val packet = DanaRS_Packet_Option_Set_Pump_Time(packetInjector, date.time)
+=======
+        val packet = DanaRS_Packet_Option_Set_Pump_Time(aapsLogger, dateUtil, DateUtil.now())
+>>>>>>> origin/dev
         // test params
         val params = packet.requestParams
         Assert.assertEquals((date.year - 100 and 0xff).toByte(), params[0]) // 2019 -> 19

@@ -20,6 +20,7 @@ import java.util.*
 @PrepareForTest(MainApp::class)
 class DanaRS_Packet_History_AlarmTest : DanaRSTestBase() {
 
+<<<<<<< HEAD
     @Mock lateinit var databaseHelper: DatabaseHelper
 
     @Before
@@ -58,6 +59,10 @@ class DanaRS_Packet_History_AlarmTest : DanaRSTestBase() {
         Assert.assertEquals(Date(119, 1, 4, 20, 11, 35).time, packet.danaRHistoryRecord.recordDate)
         Assert.assertEquals("Occlusion", packet.danaRHistoryRecord.recordAlarm)
         Assert.assertEquals(3.56, packet.danaRHistoryRecord.recordValue, 0.01)
+=======
+    @Test fun runTest() {
+        val packet = DanaRS_Packet_History_Alarm(aapsLogger, rxBus, dateUtil, System.currentTimeMillis())
+>>>>>>> origin/dev
         Assert.assertEquals("REVIEW__ALARM", packet.friendlyName)
     }
 }

@@ -15,14 +15,15 @@ import javax.inject.Singleton
 class CareportalPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
-    resourceHelper: ResourceHelper
+    resourceHelper: ResourceHelper,
+    config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(CareportalFragment::class.java.name)
     .pluginName(R.string.careportal)
     .shortName(R.string.careportal_shortname)
-    .visibleByDefault(Config.NSCLIENT)
-    .enableByDefault(Config.NSCLIENT)
+    .visibleByDefault(config.NSCLIENT)
+    .enableByDefault(config.NSCLIENT)
     .description(R.string.description_careportal),
     aapsLogger, resourceHelper, injector
 )

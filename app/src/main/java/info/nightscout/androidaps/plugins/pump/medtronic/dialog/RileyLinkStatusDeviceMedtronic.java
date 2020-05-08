@@ -18,6 +18,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.pump.common.dialog.RefreshableInterface;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
 import info.nightscout.androidaps.plugins.pump.common.utils.StringUtil;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
@@ -32,6 +33,7 @@ import info.nightscout.androidaps.utils.resources.ResourceHelper;
 public class RileyLinkStatusDeviceMedtronic extends DaggerFragment implements RefreshableInterface {
 
     @Inject ResourceHelper resourceHelper;
+    @Inject DateUtil dateUtil;
 
     // @BindView(R.id.rileylink_history_list)
     ListView listView;
@@ -153,7 +155,7 @@ public class RileyLinkStatusDeviceMedtronic extends DaggerFragment implements Re
             }
 
             RLHistoryItem item = historyItemList.get(i);
-            viewHolder.itemTime.setText(StringUtil.toDateTimeString(item.getDateTime()));
+            viewHolder.itemTime.setText(StringUtil.toDateTimeString(dateUtil, item.getDateTime()));
             viewHolder.itemSource.setText("Riley Link"); // for now
             viewHolder.itemDescription.setText(item.getDescription(resourceHelper));
 

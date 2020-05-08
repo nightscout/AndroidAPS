@@ -49,6 +49,8 @@ class ObjectivesFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var objectivesPlugin: ObjectivesPlugin
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
+    @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var sntpClient: SntpClient
 
     private val objectivesAdapter = ObjectivesAdapter()
     private val handler = Handler(Looper.getMainLooper())
@@ -221,7 +223,7 @@ class ObjectivesFragment : DaggerFragment() {
                     holder.progress.addView(separator, LinearLayout.LayoutParams.MATCH_PARENT, 2)
                 }
             }
-            holder.accomplished.text = resourceHelper.gs(R.string.accomplished, DateUtil.dateAndTimeString(objective.accomplishedOn))
+            holder.accomplished.text = resourceHelper.gs(R.string.accomplished, dateUtil.dateAndTimeString(objective.accomplishedOn))
             holder.accomplished.setTextColor(-0x3e3e3f)
             holder.verify.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
@@ -236,7 +238,7 @@ class ObjectivesFragment : DaggerFragment() {
                     Thread {
                         NtpProgressDialog().show((context as AppCompatActivity).supportFragmentManager, "NtpCheck")
                         rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.timedetection), 0))
-                        SntpClient.ntpTime(object : SntpClient.Callback() {
+                        sntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
                                 aapsLogger.debug("NTP time: $time System time: ${DateUtil.now()}")
                                 SystemClock.sleep(300)
@@ -275,7 +277,7 @@ class ObjectivesFragment : DaggerFragment() {
                     Thread {
                         NtpProgressDialog().show((context as AppCompatActivity).supportFragmentManager, "NtpCheck")
                         rxBus.send(EventNtpStatus(resourceHelper.gs(R.string.timedetection), 0))
-                        SntpClient.ntpTime(object : SntpClient.Callback() {
+                        sntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
                                 aapsLogger.debug("NTP time: $time System time: ${DateUtil.now()}")
                                 SystemClock.sleep(300)

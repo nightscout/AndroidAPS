@@ -23,6 +23,7 @@ class SmsCommunicatorFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy : FabricPrivacy
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
+    @Inject lateinit var dateUtil: DateUtil
 
     private val disposable = CompositeDisposable()
 
@@ -61,15 +62,15 @@ class SmsCommunicatorFragment : DaggerFragment() {
             val sms = smsCommunicatorPlugin.messages[x]
             when {
                 sms.ignored  -> {
-                    logText += DateUtil.timeString(sms.date) + " &lt;&lt;&lt; " + "░ " + sms.phoneNumber + " <b>" + sms.text + "</b><br>"
+                    logText += dateUtil.timeString(sms.date) + " &lt;&lt;&lt; " + "░ " + sms.phoneNumber + " <b>" + sms.text + "</b><br>"
                 }
 
                 sms.received -> {
-                    logText += DateUtil.timeString(sms.date) + " &lt;&lt;&lt; " + (if (sms.processed) "● " else "○ ") + sms.phoneNumber + " <b>" + sms.text + "</b><br>"
+                    logText += dateUtil.timeString(sms.date) + " &lt;&lt;&lt; " + (if (sms.processed) "● " else "○ ") + sms.phoneNumber + " <b>" + sms.text + "</b><br>"
                 }
 
                 sms.sent     -> {
-                    logText += DateUtil.timeString(sms.date) + " &gt;&gt;&gt; " + (if (sms.processed) "● " else "○ ") + sms.phoneNumber + " <b>" + sms.text + "</b><br>"
+                    logText += dateUtil.timeString(sms.date) + " &gt;&gt;&gt; " + (if (sms.processed) "● " else "○ ") + sms.phoneNumber + " <b>" + sms.text + "</b><br>"
                 }
             }
         }

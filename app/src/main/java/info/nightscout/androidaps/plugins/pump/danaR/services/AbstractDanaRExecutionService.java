@@ -21,7 +21,6 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventBTChange;
-import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
@@ -41,7 +40,7 @@ import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgHistorySuspend;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgPCCommStart;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgPCCommStop;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.ToastUtils;
@@ -63,6 +62,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     @Inject ResourceHelper resourceHelper;
     @Inject DanaRPump danaRPump;
     @Inject FabricPrivacy fabricPrivacy;
+    @Inject DateUtil dateUtil;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -229,31 +229,31 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
         MessageBase msg = null;
         switch (type) {
             case RecordTypes.RECORD_TYPE_ALARM:
-                msg = new MsgHistoryAlarm(aapsLogger, rxBus);
+                msg = new MsgHistoryAlarm(aapsLogger, rxBus, dateUtil);
                 break;
             case RecordTypes.RECORD_TYPE_BASALHOUR:
-                msg = new MsgHistoryBasalHour(aapsLogger, rxBus);
+                msg = new MsgHistoryBasalHour(aapsLogger, rxBus, dateUtil);
                 break;
             case RecordTypes.RECORD_TYPE_BOLUS:
-                msg = new MsgHistoryBolus(aapsLogger, rxBus);
+                msg = new MsgHistoryBolus(aapsLogger, rxBus, dateUtil);
                 break;
             case RecordTypes.RECORD_TYPE_CARBO:
-                msg = new MsgHistoryCarbo(aapsLogger, rxBus);
+                msg = new MsgHistoryCarbo(aapsLogger, rxBus, dateUtil);
                 break;
             case RecordTypes.RECORD_TYPE_DAILY:
-                msg = new MsgHistoryDailyInsulin(aapsLogger, rxBus);
+                msg = new MsgHistoryDailyInsulin(aapsLogger, rxBus, dateUtil);
                 break;
             case RecordTypes.RECORD_TYPE_ERROR:
-                msg = new MsgHistoryError(aapsLogger, rxBus);
+                msg = new MsgHistoryError(aapsLogger, rxBus, dateUtil);
                 break;
             case RecordTypes.RECORD_TYPE_GLUCOSE:
-                msg = new MsgHistoryGlucose(aapsLogger, rxBus);
+                msg = new MsgHistoryGlucose(aapsLogger, rxBus, dateUtil);
                 break;
             case RecordTypes.RECORD_TYPE_REFILL:
-                msg = new MsgHistoryRefill(aapsLogger, rxBus);
+                msg = new MsgHistoryRefill(aapsLogger, rxBus, dateUtil);
                 break;
             case RecordTypes.RECORD_TYPE_SUSPEND:
-                msg = new MsgHistorySuspend(aapsLogger, rxBus);
+                msg = new MsgHistorySuspend(aapsLogger, rxBus, dateUtil);
                 break;
         }
         danaRPump.setHistoryDoneReceived(false);

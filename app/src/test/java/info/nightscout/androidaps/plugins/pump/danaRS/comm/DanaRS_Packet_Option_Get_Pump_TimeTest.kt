@@ -21,6 +21,7 @@ class DanaRS_Packet_Option_Get_Pump_TimeTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
+<<<<<<< HEAD
         val packet = DanaRS_Packet_Option_Get_Pump_Time(packetInjector)
         val array = createArray(8, 0.toByte()) // 6 + 2
         putByteToArray(array, 0, 19) // year 2019
@@ -32,6 +33,17 @@ class DanaRS_Packet_Option_Get_Pump_TimeTest : DanaRSTestBase() {
 
         packet.handleMessage(array)
         Assert.assertEquals(DateTime(2019, 2, 4, 20, 11, 35).millis, danaRPump.pumpTime)
+=======
+        val packet = DanaRS_Packet_Option_Get_Pump_Time(aapsLogger, danaRPump, dateUtil)
+        // test params
+        Assert.assertEquals(null, packet.requestParams)
+        // test message decoding
+        packet.handleMessage(createArray(8, 0.toByte()))
+        Assert.assertEquals(false, packet.failed)
+        // this should fail
+        packet.handleMessage(createArray(8, 1.toByte()))
+        Assert.assertEquals(true, packet.failed)
+>>>>>>> origin/dev
         Assert.assertEquals("OPTION__GET_PUMP_TIME", packet.friendlyName)
     }
 }

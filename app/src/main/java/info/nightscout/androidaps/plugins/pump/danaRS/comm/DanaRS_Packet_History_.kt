@@ -7,7 +7,6 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRSyncStatus
-import info.nightscout.androidaps.utils.DateUtil
 import org.joda.time.DateTime
 import java.util.*
 import javax.inject.Inject
@@ -40,7 +39,7 @@ abstract class DanaRS_Packet_History_(
         hour = cal[Calendar.HOUR_OF_DAY]
         min = cal[Calendar.MINUTE]
         sec = cal[Calendar.SECOND]
-        aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + DateUtil.dateAndTimeString(cal.timeInMillis))
+        aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + dateUtil.dateAndTimeString(cal.timeInMillis))
     }
 
     override fun getRequestParams(): ByteArray {
@@ -89,7 +88,7 @@ abstract class DanaRS_Packet_History_(
             val historyCode = byteArrayToInt(getBytes(data, DATA_START + 7, 1))
             val paramByte8 = historyCode.toByte()
             val value: Int = (data[DATA_START + 8].toInt() and 0xFF shl 8) + (data[DATA_START + 9].toInt() and 0xFF)
-            aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + DateUtil.dateAndTimeString(datetimewihtsec.millis) + " Code: " + historyCode + " Value: " + value)
+            aapsLogger.debug(LTag.PUMPCOMM, "History packet: " + recordCode + " Date: " + dateUtil.dateAndTimeString(datetimewihtsec.millis) + " Code: " + historyCode + " Value: " + value)
             danaRHistoryRecord.setBytes(data)
             // danaRHistoryRecord.recordCode is different from DanaR codes
 // set in switch for every type
@@ -200,7 +199,7 @@ abstract class DanaRS_Packet_History_(
                 }
             }
             MainApp.getDbHelper().createOrUpdate(danaRHistoryRecord)
-            rxBus.send(EventDanaRSyncStatus(DateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType))
+            rxBus.send(EventDanaRSyncStatus(dateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType))
         }
     }
 

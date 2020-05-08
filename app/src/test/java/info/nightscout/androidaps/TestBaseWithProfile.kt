@@ -3,15 +3,14 @@ package info.nightscout.androidaps
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.data.ProfileStore
+import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.db.ProfileSwitch
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
-import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.AAPSLoggerTest
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
-import info.nightscout.androidaps.plugins.treatments.Treatment
+import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -28,6 +27,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
+    @Mock lateinit var dateUtil: DateUtil
 
     val rxBus = RxBusWrapper()
 
@@ -39,12 +39,14 @@ open class TestBaseWithProfile : TestBase() {
                 it.resourceHelper = resourceHelper
                 it.rxBus = rxBus
                 it.fabricPrivacy = fabricPrivacy
+                it.configInterface = Config()
             }
             if (it is ProfileSwitch) {
                 it.treatmentsPlugin = treatmentsPlugin
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus
                 it.resourceHelper = resourceHelper
+                it.dateUtil = dateUtil
             }
             if (it is Treatment) {
                 it.activePlugin = activePluginProvider

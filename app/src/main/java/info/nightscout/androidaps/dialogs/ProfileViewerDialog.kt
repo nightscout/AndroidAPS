@@ -23,6 +23,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var dateUtil: DateUtil
 
     private var time: Long = 0
 
@@ -67,7 +68,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             Mode.RUNNING_PROFILE -> {
                 profile = treatmentsPlugin.getProfileSwitchFromHistory(time)?.profileObject
                 profileName = treatmentsPlugin.getProfileSwitchFromHistory(time)?.customizedName
-                date = DateUtil.dateAndTimeString(treatmentsPlugin.getProfileSwitchFromHistory(time)?.date
+                date = dateUtil.dateAndTimeString(treatmentsPlugin.getProfileSwitchFromHistory(time)?.date
                     ?: 0)
                 profileview_datelayout.visibility = View.VISIBLE
             }

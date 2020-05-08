@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.data;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpStatusType;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.utils.DateUtil;

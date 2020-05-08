@@ -33,12 +33,19 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 public class PodSessionState extends PodState {
 
-    @Inject AAPSLogger aapsLogger;
-    @Inject SP sp;
-    @Inject OmnipodUtil omnipodUtil;
+    @Inject transient AAPSLogger aapsLogger;
+    @Inject transient SP sp;
+    @Inject transient OmnipodUtil omnipodUtil;
+    @Inject transient DateUtil dateUtil;
 
-    private final Map<AlertSlot, AlertType> configuredAlerts;
     private transient PodStateChangedHandler stateChangedHandler;
+
+    // TODO
+    // the problem you have with injection in this class is that you are mixing
+    // data storing and handlind. Move these member variables to extra class you can
+    // easy serialize and load it here by setData(dataInOtherClass)
+    private final Map<AlertSlot, AlertType> configuredAlerts;
+    private DateTimeZone timeZone;
     private DateTime activatedAt;
     private DateTime expiresAt;
     private final FirmwareVersion piVersion;
@@ -47,8 +54,6 @@ public class PodSessionState extends PodState {
     private final int tid;
     private Double reservoirLevel;
     private boolean suspended;
-
-    private DateTimeZone timeZone;
     private NonceState nonceState;
     private SetupProgress setupProgress;
     private AlertSet activeAlerts;
@@ -77,10 +82,12 @@ public class PodSessionState extends PodState {
         handleUpdates();
     }
 
+    @Deprecated
     public void injectDaggerClass(HasAndroidInjector injector) {
         injector.androidInjector().inject(this);
     }
 
+    @Deprecated
     public void setStateChangedHandler(PodStateChangedHandler handler) {
         // FIXME this is an ugly workaround for not being able to serialize the PodStateChangedHandler
         if (stateChangedHandler != null) {
@@ -112,7 +119,7 @@ public class PodSessionState extends PodState {
     }
 
     public String getExpiryDateAsString() {
-        return expiresAt == null ? "???" : DateUtil.dateAndTimeString(expiresAt.toDate());
+        return expiresAt == null ? "???" : dateUtil.dateAndTimeString(expiresAt.toDate());
     }
 
     public FirmwareVersion getPiVersion() {

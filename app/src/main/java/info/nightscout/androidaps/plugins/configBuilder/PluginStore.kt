@@ -9,7 +9,8 @@ import javax.inject.Singleton
 
 @Singleton
 class PluginStore @Inject constructor(
-    val aapsLogger: AAPSLogger
+    private val aapsLogger: AAPSLogger,
+    private val config: Config
 ) : ActivePluginProvider {
 
     lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
@@ -68,7 +69,7 @@ class PluginStore @Inject constructor(
         var pluginsInCategory: ArrayList<PluginBase>?
 
         // PluginType.APS
-        if (!Config.NSCLIENT && !Config.PUMPCONTROL) {
+        if (!config.NSCLIENT && !config.PUMPCONTROL) {
             pluginsInCategory = getSpecificPluginsList(PluginType.APS)
             activeAPS = getTheOneEnabledInArray(pluginsInCategory, PluginType.APS) as APSInterface?
             if (activeAPS == null) {

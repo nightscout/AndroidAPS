@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRKorean.services;
 
-import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.SystemClock;
 
@@ -16,9 +14,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.dialogs.BolusProgressDialog;
-import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
-import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
@@ -28,7 +24,7 @@ import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -59,14 +55,11 @@ import info.nightscout.androidaps.plugins.pump.danaRKorean.comm.MessageHashTable
 import info.nightscout.androidaps.plugins.pump.danaRKorean.comm.MsgCheckValue_k;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.comm.MsgSettingBasal_k;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.comm.MsgStatusBasic_k;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.queue.commands.Command;
 import info.nightscout.androidaps.utils.DateUtil;
-import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     @Inject AAPSLogger aapsLogger;
@@ -82,6 +75,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     @Inject MessageHashTableRKorean messageHashTableRKorean;
     @Inject ActivePluginProvider activePlugin;
     @Inject ProfileFunction profileFunction;
+    @Inject DateUtil dateUtil;
 
     public DanaRKoreanExecutionService() {
     }
@@ -139,7 +133,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             //MsgStatus_k statusMsg = new MsgStatus_k();
             MsgStatusBasic_k statusBasicMsg = new MsgStatusBasic_k(aapsLogger, danaRPump);
             MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal(aapsLogger, danaRPump, activePlugin, injector);
-            MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin);
+            MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin, dateUtil);
             MsgCheckValue_k checkValue = new MsgCheckValue_k(aapsLogger, danaRPump, danaRKoreanPlugin);
 
             if (danaRPump.isNewPump()) {
@@ -179,7 +173,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 mSerialIOThread.sendMessage(new MsgSettingGlucose(aapsLogger, danaRPump));
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios(aapsLogger, danaRPump));
                 rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.gettingpumptime)));
-                mSerialIOThread.sendMessage(new MsgSettingPumpTime(aapsLogger, danaRPump));
+                mSerialIOThread.sendMessage(new MsgSettingPumpTime(aapsLogger, danaRPump, dateUtil));
                 if (danaRPump.getPumpTime() == 0) {
                     // initial handshake was not successfull
                     // deinitialize pump
@@ -193,8 +187,8 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 if (Math.abs(timeDiff) > 10) {
                     waitForWholeMinute(); // Dana can set only whole minute
                     // add 10sec to be sure we are over minute (will be cutted off anyway)
-                    mSerialIOThread.sendMessage(new MsgSetTime(aapsLogger, new Date(DateUtil.now() + T.secs(10).msecs())));
-                    mSerialIOThread.sendMessage(new MsgSettingPumpTime(aapsLogger, danaRPump));
+                    mSerialIOThread.sendMessage(new MsgSetTime(aapsLogger, dateUtil, new Date(DateUtil.now() + T.secs(10).msecs())));
+                    mSerialIOThread.sendMessage(new MsgSettingPumpTime(aapsLogger, danaRPump, dateUtil));
                     timeDiff = (danaRPump.getPumpTime() - System.currentTimeMillis()) / 1000L;
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds");
                 }
@@ -245,7 +239,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.settingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStart(aapsLogger, constraintChecker, insulin, (byte) (durationInHalfHours & 0xFF)));
-        mSerialIOThread.sendMessage(new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin));
+        mSerialIOThread.sendMessage(new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin, dateUtil));
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }
@@ -254,7 +248,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         rxBus.send(new EventPumpStatusChanged(resourceHelper.gs(R.string.stoppingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStop(aapsLogger));
-        mSerialIOThread.sendMessage(new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin));
+        mSerialIOThread.sendMessage(new MsgStatusBolusExtended(injector, aapsLogger, danaRPump, activePlugin, dateUtil));
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING));
         return true;
     }

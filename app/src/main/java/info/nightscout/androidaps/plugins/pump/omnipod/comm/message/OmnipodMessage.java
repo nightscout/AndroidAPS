@@ -97,6 +97,10 @@ public class OmnipodMessage {
         }
     }
 
+    public int getAddress() {
+        return address;
+    }
+
     public List<MessageBlock> getMessageBlocks() {
         return messageBlocks;
     }
@@ -134,7 +138,6 @@ public class OmnipodMessage {
         }
         return false;
     }
-
 
     @Override
     public String toString() {

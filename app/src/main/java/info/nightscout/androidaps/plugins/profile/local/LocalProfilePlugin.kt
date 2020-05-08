@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.data.ProfileStore
+import info.nightscout.androidaps.interfaces.ProfileStore
 import info.nightscout.androidaps.events.EventProfileStoreChanged
 import info.nightscout.androidaps.interfaces.PluginBase
 import info.nightscout.androidaps.interfaces.PluginDescription
@@ -14,7 +14,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
@@ -52,11 +52,6 @@ class LocalProfilePlugin @Inject constructor(
     var rawProfile: ProfileStore? = null
 
     private val defaultArray = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]"
-
-    companion object {
-        @JvmStatic
-        val LOCAL_PROFILE = "LocalProfile"
-    }
 
     override fun onStart() {
         super.onStart()
@@ -122,7 +117,7 @@ class LocalProfilePlugin @Inject constructor(
     fun storeSettings(activity: Activity? = null) {
         for (i in 0 until numOfProfiles) {
             profiles[i].run {
-                val LOCAL_PROFILE_NUMBERED = LOCAL_PROFILE + "_" + i + "_"
+                val LOCAL_PROFILE_NUMBERED = Constants.LOCAL_PROFILE + "_" + i + "_"
                 sp.putString(LOCAL_PROFILE_NUMBERED + "name", name!!)
                 sp.putBoolean(LOCAL_PROFILE_NUMBERED + "mgdl", mgdl)
                 sp.putDouble(LOCAL_PROFILE_NUMBERED + "dia", dia)
@@ -133,7 +128,7 @@ class LocalProfilePlugin @Inject constructor(
                 sp.putString(LOCAL_PROFILE_NUMBERED + "targethigh", targetHigh.toString())
             }
         }
-        sp.putInt(LOCAL_PROFILE + "_profiles", numOfProfiles)
+        sp.putInt(Constants.LOCAL_PROFILE + "_profiles", numOfProfiles)
 
         createAndStoreConvertedProfile()
         isEdited = false
@@ -154,20 +149,20 @@ class LocalProfilePlugin @Inject constructor(
 
     @Synchronized
     fun loadSettings() {
-        if (sp.contains(LOCAL_PROFILE + "mgdl")) {
+        if (sp.contains(Constants.LOCAL_PROFILE + "mgdl")) {
             doConversion()
             return
         }
 
-        numOfProfiles = sp.getInt(LOCAL_PROFILE + "_profiles", 0)
+        numOfProfiles = sp.getInt(Constants.LOCAL_PROFILE + "_profiles", 0)
         profiles.clear()
         numOfProfiles = max(numOfProfiles, 1) // create at least one default profile if none exists
 
         for (i in 0 until numOfProfiles) {
             val p = SingleProfile()
-            val LOCAL_PROFILE_NUMBERED = LOCAL_PROFILE + "_" + i + "_"
+            val LOCAL_PROFILE_NUMBERED = Constants.LOCAL_PROFILE + "_" + i + "_"
 
-            p.name = sp.getString(LOCAL_PROFILE_NUMBERED + "name", LOCAL_PROFILE + i)
+            p.name = sp.getString(LOCAL_PROFILE_NUMBERED + "name", Constants.LOCAL_PROFILE + i)
             if (isExistingName(p.name)) continue
             p.mgdl = sp.getBoolean(LOCAL_PROFILE_NUMBERED + "mgdl", false)
             p.dia = sp.getDouble(LOCAL_PROFILE_NUMBERED + "dia", Constants.defaultDIA)
@@ -240,10 +235,10 @@ class LocalProfilePlugin @Inject constructor(
         aapsLogger.debug(LTag.PROFILE, "Loading stored settings")
         val p = SingleProfile()
 
-        p.mgdl = sp.getBoolean(LOCAL_PROFILE + "mgdl", profileFunction.getUnits() == Constants.MGDL)
-        p.dia = sp.getDouble(LOCAL_PROFILE + "dia", Constants.defaultDIA)
+        p.mgdl = sp.getBoolean(Constants.LOCAL_PROFILE + "mgdl", profileFunction.getUnits() == Constants.MGDL)
+        p.dia = sp.getDouble(Constants.LOCAL_PROFILE + "dia", Constants.defaultDIA)
         try {
-            p.ic = JSONArray(sp.getString(LOCAL_PROFILE + "ic", defaultArray))
+            p.ic = JSONArray(sp.getString(Constants.LOCAL_PROFILE + "ic", defaultArray))
         } catch (e1: JSONException) {
             try {
                 p.ic = JSONArray(defaultArray)
@@ -252,7 +247,7 @@ class LocalProfilePlugin @Inject constructor(
         }
 
         try {
-            p.isf = JSONArray(sp.getString(LOCAL_PROFILE + "isf", defaultArray))
+            p.isf = JSONArray(sp.getString(Constants.LOCAL_PROFILE + "isf", defaultArray))
         } catch (e1: JSONException) {
             try {
                 p.isf = JSONArray(defaultArray)
@@ -261,7 +256,7 @@ class LocalProfilePlugin @Inject constructor(
         }
 
         try {
-            p.basal = JSONArray(sp.getString(LOCAL_PROFILE + "basal", defaultArray))
+            p.basal = JSONArray(sp.getString(Constants.LOCAL_PROFILE + "basal", defaultArray))
         } catch (e1: JSONException) {
             try {
                 p.basal = JSONArray(defaultArray)
@@ -270,7 +265,7 @@ class LocalProfilePlugin @Inject constructor(
         }
 
         try {
-            p.targetLow = JSONArray(sp.getString(LOCAL_PROFILE + "targetlow", defaultArray))
+            p.targetLow = JSONArray(sp.getString(Constants.LOCAL_PROFILE + "targetlow", defaultArray))
         } catch (e1: JSONException) {
             try {
                 p.targetLow = JSONArray(defaultArray)
@@ -279,23 +274,23 @@ class LocalProfilePlugin @Inject constructor(
         }
 
         try {
-            p.targetHigh = JSONArray(sp.getString(LOCAL_PROFILE + "targethigh", defaultArray))
+            p.targetHigh = JSONArray(sp.getString(Constants.LOCAL_PROFILE + "targethigh", defaultArray))
         } catch (e1: JSONException) {
             try {
                 p.targetHigh = JSONArray(defaultArray)
             } catch (ignored: JSONException) {
             }
         }
-        p.name = LOCAL_PROFILE
+        p.name = Constants.LOCAL_PROFILE
 
-        sp.remove(LOCAL_PROFILE + "mgdl")
-        sp.remove(LOCAL_PROFILE + "mmol")
-        sp.remove(LOCAL_PROFILE + "dia")
-        sp.remove(LOCAL_PROFILE + "ic")
-        sp.remove(LOCAL_PROFILE + "isf")
-        sp.remove(LOCAL_PROFILE + "basal")
-        sp.remove(LOCAL_PROFILE + "targetlow")
-        sp.remove(LOCAL_PROFILE + "targethigh")
+        sp.remove(Constants.LOCAL_PROFILE + "mgdl")
+        sp.remove(Constants.LOCAL_PROFILE + "mmol")
+        sp.remove(Constants.LOCAL_PROFILE + "dia")
+        sp.remove(Constants.LOCAL_PROFILE + "ic")
+        sp.remove(Constants.LOCAL_PROFILE + "isf")
+        sp.remove(Constants.LOCAL_PROFILE + "basal")
+        sp.remove(Constants.LOCAL_PROFILE + "targetlow")
+        sp.remove(Constants.LOCAL_PROFILE + "targethigh")
 
         currentProfileIndex = 0
         numOfProfiles = 1
@@ -352,13 +347,13 @@ class LocalProfilePlugin @Inject constructor(
     fun addNewProfile() {
         var free = 0
         for (i in 1..10000) {
-            if (rawProfile?.getSpecificProfile(LOCAL_PROFILE + i) == null) {
+            if (rawProfile?.getSpecificProfile(Constants.LOCAL_PROFILE + i) == null) {
                 free = i
                 break
             }
         }
         val p = SingleProfile()
-        p.name = LOCAL_PROFILE + free
+        p.name = Constants.LOCAL_PROFILE + free
         p.mgdl = profileFunction.getUnits() == Constants.MGDL
         p.dia = Constants.defaultDIA
         p.ic = JSONArray(defaultArray)

@@ -4,7 +4,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
-import info.nightscout.androidaps.utils.DateUtil
 import javax.inject.Inject
 import kotlin.math.ceil
 
@@ -37,7 +36,7 @@ class DanaRS_Packet_Basal_Get_Temporary_Basal_State(
         aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal percent: " + danaRPump.tempBasalPercent)
         aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal remaining min: $tempBasalRemainingMin")
         aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal total sec: " + danaRPump.tempBasalTotalSec)
-        aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal start: " + DateUtil.dateAndTimeString(tempBasalStart))
+        aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal start: " + dateUtil.dateAndTimeString(tempBasalStart))
     }
 
     override fun getFriendlyName(): String {

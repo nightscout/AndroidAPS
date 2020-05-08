@@ -14,7 +14,8 @@ class MsgStatusBolusExtended(
     private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
     private val danaRPump: DanaRPump,
-    private val activePlugin: ActivePluginProvider
+    private val activePlugin: ActivePluginProvider,
+    private val dateUtil: DateUtil
 ) : MessageBase() {
 
     init {
@@ -48,7 +49,7 @@ class MsgStatusBolusExtended(
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus amount: $extendedBolusAmount")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus so far in minutes: $extendedBolusSoFarInMinutes")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus absolute rate: $extendedBolusAbsoluteRate")
-        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus start: " + DateUtil.dateAndTimeString(extendedBolusStart))
+        aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus start: " + dateUtil.dateAndTimeString(extendedBolusStart))
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus remaining minutes: $extendedBolusRemainingMinutes")
     }
 

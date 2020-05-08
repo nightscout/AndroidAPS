@@ -20,7 +20,11 @@ class DanaRS_Packet_History_Blood_GlucoseTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
+<<<<<<< HEAD
         val packet = DanaRS_Packet_History_Blood_Glucose(packetInjector, System.currentTimeMillis())
+=======
+        val packet = DanaRS_Packet_History_Blood_Glucose(aapsLogger, rxBus, dateUtil, System.currentTimeMillis())
+>>>>>>> origin/dev
         Assert.assertEquals("REVIEW__BLOOD_GLUCOSE", packet.friendlyName)
     }
 }

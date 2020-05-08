@@ -9,7 +9,8 @@ import java.util.*
 
 class MsgSettingPumpTime(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
+    private val danaRPump: DanaRPump,
+    private val dateUtil: DateUtil
 ) : MessageBase() {
 
     init {
@@ -26,7 +27,7 @@ class MsgSettingPumpTime(
             intFromBuff(bytes, 1, 1),
             intFromBuff(bytes, 0, 1)
         ).millis
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump time: " + DateUtil.dateAndTimeString(time) + " Phone time: " + Date())
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump time: " + dateUtil.dateAndTimeString(time) + " Phone time: " + Date())
         danaRPump.pumpTime = time
     }
 

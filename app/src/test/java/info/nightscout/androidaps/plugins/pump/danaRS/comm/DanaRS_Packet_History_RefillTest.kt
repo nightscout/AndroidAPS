@@ -20,7 +20,11 @@ class DanaRS_Packet_History_RefillTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
+<<<<<<< HEAD
         val packet = DanaRS_Packet_History_Refill(packetInjector, System.currentTimeMillis())
+=======
+        val packet = DanaRS_Packet_History_Refill(aapsLogger, rxBus, dateUtil, System.currentTimeMillis())
+>>>>>>> origin/dev
         Assert.assertEquals("REVIEW__REFILL", packet.friendlyName)
     }
 }

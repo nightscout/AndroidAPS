@@ -54,7 +54,11 @@ class DanaRS_Packet_Bolus_Set_Step_Bolus_StartTest : DanaRSTestBase() {
 
     @Before
     fun mock() {
+<<<<<<< HEAD
         danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump, detailedBolusInfoStorage, fabricPrivacy)
+=======
+        danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump, detailedBolusInfoStorage, dateUtil)
+>>>>>>> origin/dev
         Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
     }
 }

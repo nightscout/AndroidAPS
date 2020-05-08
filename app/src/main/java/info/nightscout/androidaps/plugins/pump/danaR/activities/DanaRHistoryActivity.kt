@@ -21,7 +21,7 @@ import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
@@ -47,6 +47,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var dateUtil: DateUtil
 
     private val disposable = CompositeDisposable()
 
@@ -143,7 +144,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
 
         override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
             val record = historyList[position]
-            holder.time.text = DateUtil.dateAndTimeString(record.recordDate)
+            holder.time.text = dateUtil.dateAndTimeString(record.recordDate)
             holder.value.text = DecimalFormatter.to2Decimal(record.recordValue)
             holder.stringValue.text = record.stringRecordValue
             holder.bolusType.text = record.bolusType

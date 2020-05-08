@@ -1153,7 +1153,6 @@
     <string name="recurringTime">Herhaal tijd</string>
     <string name="every">Elke</string>
     <string name="never">Nooit</string>
-    <string name="mins">%1$dmin</string>
     <string name="condition">Voorwaarde:</string>
     <string name="action">Actie:</string>
     <string name="iob_u">IOB [E]:</string>

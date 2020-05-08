@@ -11,7 +11,7 @@ import java.util.*
 class MsgSettingPumpTimeTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        val packet = MsgSettingPumpTime(aapsLogger, danaRPump)
+        val packet = MsgSettingPumpTime(aapsLogger, danaRPump, dateUtil)
         danaRPump.units = DanaRPump.UNITS_MGDL
         // test message decoding
         val bytes = createArray(34, 7.toByte())

@@ -28,7 +28,7 @@ public class PrimeAction implements OmnipodAction<StatusResponse> {
     }
 
     public static void updatePrimingStatus(PodSessionState podState, StatusResponse statusResponse, AAPSLogger aapsLogger) {
-        if (podState.getSetupProgress().equals(SetupProgress.PRIMING) && statusResponse.getPodProgressStatus().equals(PodProgressStatus.READY_FOR_BASAL_SCHEDULE)) {
+        if (podState.getSetupProgress().equals(SetupProgress.PRIMING) && statusResponse.getPodProgressStatus().equals(PodProgressStatus.PRIMING_COMPLETED)) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Updating SetupProgress from PRIMING to PRIMING_FINISHED");
             podState.setSetupProgress(SetupProgress.PRIMING_FINISHED);
         }

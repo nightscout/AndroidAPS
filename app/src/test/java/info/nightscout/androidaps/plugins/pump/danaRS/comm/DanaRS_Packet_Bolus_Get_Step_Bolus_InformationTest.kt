@@ -23,6 +23,7 @@ class DanaRS_Packet_Bolus_Get_Step_Bolus_InformationTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
+<<<<<<< HEAD
         val packet = DanaRS_Packet_Bolus_Get_Step_Bolus_Information(packetInjector)
 
         val array = createArray(13, 0.toByte()) // 11 + 2
@@ -44,6 +45,17 @@ class DanaRS_Packet_Bolus_Get_Step_Bolus_InformationTest : DanaRSTestBase() {
         Assert.assertEquals(12.5, danaRPump.lastBolusAmount, 0.01)
         Assert.assertEquals(25.0, danaRPump.maxBolus, 0.01)
         Assert.assertEquals(1.0, danaRPump.bolusStep, 0.01)
+=======
+        val packet = DanaRS_Packet_Bolus_Get_Step_Bolus_Information(aapsLogger, danaRPump, dateUtil)
+        Assert.assertEquals(null, packet.requestParams)
+        // test message decoding
+        packet.handleMessage(createArray(34, 0.toByte()))
+        Assert.assertEquals(false, packet.failed)
+        packet.handleMessage(createArray(34, 1.toByte()))
+        val valueRequested: Int = (1 and 0x000000FF shl 8) + (1 and 0x000000FF)
+        Assert.assertEquals(valueRequested / 100.0, danaRPump.lastBolusAmount, 0.0)
+        Assert.assertEquals(true, packet.failed)
+>>>>>>> origin/dev
         Assert.assertEquals("BOLUS__GET_STEP_BOLUS_INFORMATION", packet.friendlyName)
     }
 }

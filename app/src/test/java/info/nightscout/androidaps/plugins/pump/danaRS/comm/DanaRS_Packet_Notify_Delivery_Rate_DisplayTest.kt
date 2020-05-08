@@ -9,7 +9,11 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
+<<<<<<< HEAD
 import info.nightscout.androidaps.plugins.treatments.Treatment
+=======
+import info.nightscout.androidaps.db.Treatment
+>>>>>>> origin/dev
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -67,7 +71,12 @@ class DanaRS_Packet_Notify_Delivery_Rate_DisplayTest : DanaRSTestBase() {
 
     @Before
     fun mock() {
+<<<<<<< HEAD
         danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump, detailedBolusInfoStorage, fabricPrivacy)
         danaRPump.bolusingTreatment = Treatment(packetInjector)
+=======
+        danaRSPlugin = DanaRSPlugin(HasAndroidInjector { AndroidInjector { Unit } }, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump, detailedBolusInfoStorage, dateUtil)
+        danaRSPlugin.bolusingTreatment = Treatment(treatmentInjector)
+>>>>>>> origin/dev
     }
 }

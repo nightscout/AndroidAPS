@@ -4,7 +4,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
-import info.nightscout.androidaps.utils.DateUtil
 import org.joda.time.DateTime
 import javax.inject.Inject
 
@@ -40,7 +39,7 @@ class DanaRS_Packet_Option_Get_Pump_Time(
         val sec = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         val time = DateTime(2000 + year, month, day, hour, min, sec)
         danaRPump.pumpTime = time.millis
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + DateUtil.dateAndTimeString(time.millis))
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + dateUtil.dateAndTimeString(time.millis))
     }
 
     override fun handleMessageNotReceived() {

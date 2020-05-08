@@ -4,7 +4,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
-import info.nightscout.androidaps.utils.DateUtil
 import javax.inject.Inject
 
 class DanaRS_Packet_General_Get_Shipping_Information(
@@ -33,7 +32,7 @@ class DanaRS_Packet_General_Get_Shipping_Information(
         dataSize = 3
         danaRPump.shippingCountry = asciiStringFromBuff(data, dataIndex, dataSize)
         aapsLogger.debug(LTag.PUMPCOMM, "Serial number: " + danaRPump.serialNumber)
-        aapsLogger.debug(LTag.PUMPCOMM, "Shipping date: " + DateUtil.dateAndTimeString(danaRPump.shippingDate))
+        aapsLogger.debug(LTag.PUMPCOMM, "Shipping date: " + dateUtil.dateAndTimeString(danaRPump.shippingDate))
         aapsLogger.debug(LTag.PUMPCOMM, "Shipping country: " + danaRPump.shippingCountry)
     }
 

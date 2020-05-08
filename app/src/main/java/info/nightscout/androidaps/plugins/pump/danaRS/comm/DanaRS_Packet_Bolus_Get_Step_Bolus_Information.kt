@@ -4,7 +4,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
-import info.nightscout.androidaps.utils.DateUtil
 import org.joda.time.DateTime
 import javax.inject.Inject
 
@@ -33,7 +32,7 @@ class DanaRS_Packet_Bolus_Get_Step_Bolus_Information(
         aapsLogger.debug(LTag.PUMPCOMM, "Result: $error")
         aapsLogger.debug(LTag.PUMPCOMM, "BolusType: $bolusType")
         aapsLogger.debug(LTag.PUMPCOMM, "Initial bolus amount: " + danaRPump.initialBolusAmount + " U")
-        aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + DateUtil.dateAndTimeString(danaRPump.lastBolusTime))
+        aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + dateUtil.dateAndTimeString(danaRPump.lastBolusTime))
         aapsLogger.debug(LTag.PUMPCOMM, "Last bolus amount: " + danaRPump.lastBolusAmount)
         aapsLogger.debug(LTag.PUMPCOMM, "Max bolus: " + danaRPump.maxBolus + " U")
         aapsLogger.debug(LTag.PUMPCOMM, "Bolus step: " + danaRPump.bolusStep + " U")

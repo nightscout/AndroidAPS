@@ -11,7 +11,7 @@ class MsgHistoryAlarmTest : DanaRTestBase() {
     val rxBus = RxBusWrapper()
 
     @Test fun runTest() {
-        val packet = MsgHistoryAlarm(aapsLogger, rxBus)
+        val packet = MsgHistoryAlarm(aapsLogger, rxBus, dateUtil)
         // nothing left to test
     }
 }

@@ -20,7 +20,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.overview.StatusLightHandler
 import info.nightscout.androidaps.queue.Callback
@@ -54,6 +54,7 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var buildHelper: BuildHelper
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var config: Config
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -239,7 +240,7 @@ class ActionsFragment : DaggerFragment() {
             if (!pump.pumpDescription.isRefillingCapable || !pump.isInitialized || pump.isSuspended) View.GONE
             else View.VISIBLE
 
-        actions_temptarget?.visibility = Config.APS.toVisibility()
+        actions_temptarget?.visibility = config.APS.toVisibility()
         actions_tddstats?.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
         statusLightHandler.updateStatusLights(careportal_canulaage, careportal_insulinage, null, careportal_sensorage, careportal_pbage, null)
         checkPumpCustomActions()

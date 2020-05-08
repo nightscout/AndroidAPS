@@ -13,6 +13,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
+import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.events.EventAppExit
 import info.nightscout.androidaps.events.EventConfigBuilderChange
 import info.nightscout.androidaps.interfaces.*
@@ -21,7 +22,6 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.common.ManufacturerType
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomAction
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
@@ -34,7 +34,6 @@ import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes
 import info.nightscout.androidaps.plugins.pump.danaRS.events.EventDanaRSDeviceChange
 import info.nightscout.androidaps.plugins.pump.danaRS.services.DanaRSService
-import info.nightscout.androidaps.plugins.treatments.Treatment
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.*
 import info.nightscout.androidaps.utils.resources.ResourceHelper
@@ -62,7 +61,8 @@ class DanaRSPlugin @Inject constructor(
     commandQueue: CommandQueueProvider,
     private val danaRPump: DanaRPump,
     private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
-    private val fabricPrivacy: FabricPrivacy
+    private val fabricPrivacy: FabricPrivacy,
+    private val dateUtil: DateUtil
 ) : PumpPluginBase(PluginDescription()
     .mainType(PluginType.PUMP)
     .fragmentClass(DanaRFragment::class.java.name)
@@ -578,19 +578,19 @@ class DanaRSPlugin @Inject constructor(
             status.put("timestamp", DateUtil.toISOString(danaRPump.lastConnection))
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)
             if (danaRPump.lastBolusTime != 0L) {
-                extended.put("LastBolus", DateUtil.dateAndTimeString(danaRPump.lastBolusTime))
+                extended.put("LastBolus", dateUtil.dateAndTimeString(danaRPump.lastBolusTime))
                 extended.put("LastBolusAmount", danaRPump.lastBolusAmount)
             }
             val tb = treatmentsPlugin.getTempBasalFromHistory(now)
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(now, profile))
-                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date))
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.date))
                 extended.put("TempBasalRemaining", tb.plannedRemainingMinutes)
             }
             val eb = treatmentsPlugin.getExtendedBolusFromHistory(now)
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate())
-                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date))
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.date))
                 extended.put("ExtendedBolusRemaining", eb.plannedRemainingMinutes)
             }
             extended.put("BaseBasalRate", baseBasalRate)

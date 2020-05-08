@@ -4,7 +4,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption
-import info.nightscout.androidaps.utils.DateUtil
 import org.joda.time.DateTime
 import javax.inject.Inject
 
@@ -38,7 +37,7 @@ class DanaRS_Packet_General_Get_More_Information(
         aapsLogger.debug(LTag.PUMPCOMM, "Daily total units: " + danaRPump.dailyTotalUnits.toString() + " U")
         aapsLogger.debug(LTag.PUMPCOMM, "Is extended in progress: " + danaRPump.isExtendedInProgress)
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus remaining minutes: " + danaRPump.extendedBolusRemainingMinutes)
-        aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + DateUtil.dateAndTimeAndSecondsString(danaRPump.lastBolusTime))
+        aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + dateUtil.dateAndTimeAndSecondsString(danaRPump.lastBolusTime))
         aapsLogger.debug(LTag.PUMPCOMM, "Last bolus amount: " + danaRPump.lastBolusAmount)
     }
 

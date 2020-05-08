@@ -20,7 +20,11 @@ class DanaRS_Packet_History_CarbohydrateTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
+<<<<<<< HEAD
         val packet = DanaRS_Packet_History_Carbohydrate(packetInjector, System.currentTimeMillis())
+=======
+        val packet = DanaRS_Packet_History_Carbohydrate(aapsLogger, rxBus, dateUtil, System.currentTimeMillis())
+>>>>>>> origin/dev
         Assert.assertEquals("REVIEW__CARBOHYDRATE", packet.friendlyName)
     }
 }

@@ -20,7 +20,11 @@ class DanaRS_Packet_History_TemporaryTest : DanaRSTestBase() {
     }
 
     @Test fun runTest() {
+<<<<<<< HEAD
         val packet = DanaRS_Packet_History_Temporary(packetInjector, System.currentTimeMillis())
+=======
+        val packet = DanaRS_Packet_History_Temporary(aapsLogger, rxBus, dateUtil, System.currentTimeMillis())
+>>>>>>> origin/dev
         Assert.assertEquals("REVIEW__TEMPORARY", packet.friendlyName)
     }
 }

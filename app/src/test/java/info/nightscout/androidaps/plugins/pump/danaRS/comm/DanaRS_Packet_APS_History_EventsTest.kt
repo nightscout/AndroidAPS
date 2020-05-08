@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
@@ -19,6 +20,7 @@ import java.util.*
 @PrepareForTest(RxBusWrapper::class, DetailedBolusInfoStorage::class, DanaRSPlugin::class)
 class DanaRS_Packet_APS_History_EventsTest : DanaRSTestBase() {
 
+    @Mock lateinit var context: Context
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
 
