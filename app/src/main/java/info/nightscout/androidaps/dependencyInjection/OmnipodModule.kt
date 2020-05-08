@@ -6,8 +6,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.OmnipodCommunication
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodHistoryActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
+import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitActionFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodTask
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitPodRefreshAction
+import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.RemoveActionFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUITask
 
@@ -19,9 +21,16 @@ abstract class OmnipodModule {
     @ContributesAndroidInjector abstract fun contributesPodManagementActivity(): PodManagementActivity
     @ContributesAndroidInjector abstract fun contributesPodHistoryActivity(): PodHistoryActivity
 
+    // Fragments
+    @ContributesAndroidInjector abstract fun initActionFragment() : InitActionFragment
+    @ContributesAndroidInjector abstract fun removeActionFragment() : RemoveActionFragment
+
+    // Service
     @ContributesAndroidInjector abstract fun omnipodCommunicationManagerProvider(): OmnipodCommunicationManager
-    @ContributesAndroidInjector abstract fun omnipodUITaskProvider(): OmnipodUITask
     @ContributesAndroidInjector abstract fun aapsOmnipodManagerProvider(): AapsOmnipodManager
+
+    // Data
+    @ContributesAndroidInjector abstract fun omnipodUITaskProvider(): OmnipodUITask
     @ContributesAndroidInjector abstract fun initPodRefreshAction(): InitPodRefreshAction
     @ContributesAndroidInjector abstract fun podSessionState(): PodSessionState
     @ContributesAndroidInjector abstract fun initPodTask() : InitPodTask
