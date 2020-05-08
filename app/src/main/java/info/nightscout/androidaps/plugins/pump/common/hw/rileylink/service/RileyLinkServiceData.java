@@ -3,9 +3,11 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
+import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
@@ -14,6 +16,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 
 /**
  * Created by andy on 16/05/2018.
@@ -25,6 +28,7 @@ public class RileyLinkServiceData {
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkUtil rileyLinkUtil;
     @Inject RxBusWrapper rxBus;
+    @Inject ActivePluginProvider activePlugin;
 
     boolean tuneUpDone = false;
     public RileyLinkError rileyLinkError;
@@ -79,7 +83,10 @@ public class RileyLinkServiceData {
             aapsLogger.info(LTag.PUMP, "RileyLink State Changed: {} {}", newState, errorCode == null ? "" : " - Error State: " + errorCode.name());
 
             rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(rileyLinkServiceState, errorCode, targetDevice));
-            rxBus.send(new EventMedtronicDeviceStatusChange(newState, errorCode));
+            if (activePlugin.getActivePump().manufacturer()== ManufacturerType.Medtronic)
+                rxBus.send(new EventMedtronicDeviceStatusChange(newState, errorCode));
+            else
+                rxBus.send(new EventOmnipodDeviceStatusChange(newState, errorCode));
             return null;
 
         } else {

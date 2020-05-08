@@ -18,6 +18,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpDeviceState;
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.state.PodSessionState;
+import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.omnipod.util.OmnipodConst;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
@@ -187,7 +188,7 @@ public class OmnipodPumpStatus extends PumpStatus {
 
         rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(pumpDeviceState, RileyLinkTargetDevice.Omnipod));
 
-        rxBus.send(new EventMedtronicDeviceStatusChange(pumpDeviceState));
+        rxBus.send(new EventOmnipodDeviceStatusChange(pumpDeviceState));
     }
 
 }

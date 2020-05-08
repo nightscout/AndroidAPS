@@ -204,6 +204,17 @@ class OmnipodFragment : DaggerFragment() {
     }
 
     @Synchronized
+    private fun setDeviceStatus(event : EventOmnipodDeviceStatusChange) {
+
+
+        
+    }
+
+
+
+
+
+    @Synchronized
     private fun setDeviceStatus() {
         //val omnipodPumpStatus: OmnipodPumpStatus = OmnipodUtil.getPumpStatus()
         // omnipodPumpStatus.rileyLinkServiceState = checkStatusSet(omnipodPumpStatus.rileyLinkServiceState,

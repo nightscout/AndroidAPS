@@ -235,15 +235,6 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                                 CommandQueueProvider commandQueue,
                                 FabricPrivacy fabricPrivacy) {
         super(pluginDescription, pumpType, injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy);
-
-//        this.rileyLinkUtil = rileyLinkUtil;
-//        this.medtronicUtil = medtronicUtil;
-//        this.sp = sp;
-//        this.medtronicPumpStatus = medtronicPumpStatus;
-//        this.medtronicHistoryData = medtronicHistoryData;
-//        this.rileyLinkServiceData = rileyLinkServiceData;
-//        this.serviceTaskExecutor = serviceTaskExecutor;
-
     }
 
     @Deprecated
@@ -424,7 +415,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     @Override
     public void doTuneUpDevice() {
-        rileyLinkOmnipodService.doTuneUpDevice();
+        //rileyLinkOmnipodService.doTuneUpDevice();
     }
 
 
