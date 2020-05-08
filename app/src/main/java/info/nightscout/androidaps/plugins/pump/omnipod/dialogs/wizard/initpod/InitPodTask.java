@@ -6,6 +6,7 @@ import android.view.View;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager;
@@ -18,8 +19,8 @@ public class InitPodTask extends AsyncTask<Void, Void, String> {
     @Inject ProfileFunction profileFunction;
     private InitActionFragment initActionFragment;
 
-    public InitPodTask(InitActionFragment initActionFragment) {
-
+    public InitPodTask(HasAndroidInjector injector, InitActionFragment initActionFragment) {
+        injector.androidInjector().inject(this);
         this.initActionFragment = initActionFragment;
     }
 

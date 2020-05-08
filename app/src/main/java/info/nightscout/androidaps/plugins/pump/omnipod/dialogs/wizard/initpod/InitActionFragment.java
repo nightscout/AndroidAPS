@@ -26,6 +26,8 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+import dagger.android.HasAndroidInjector;
+import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
@@ -35,7 +37,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitReceiver;
 /**
  * Created by andy on 12/11/2019
  */
-public class InitActionFragment extends Fragment implements PodInitReceiver {
+public class InitActionFragment extends DaggerFragment implements PodInitReceiver {
     private static final String ARG_KEY = "key";
 
     protected PageFragmentCallbacks mCallbacks;
@@ -52,6 +54,8 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
     protected InitActionFragment instance;
 
     protected PumpEnactResult callResult;
+
+    @Inject HasAndroidInjector injector;
 
 
     public static InitActionFragment create(String key, PodInitActionType podInitActionType) {
@@ -125,7 +129,7 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
                 }
             });
 
-            new InitPodTask(instance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new InitPodTask(injector, instance).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         });
 
         return rootView;
@@ -165,7 +169,7 @@ public class InitActionFragment extends Fragment implements PodInitReceiver {
         //System.out.println("ACTION: setUserVisibleHint="+ isVisibleToUser);
         if (isVisibleToUser) {
             //System.out.println("ACTION: Visible");
-            new InitPodTask(this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            new InitPodTask(injector, this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
         } else {
             System.out.println("ACTION: Not visible");
