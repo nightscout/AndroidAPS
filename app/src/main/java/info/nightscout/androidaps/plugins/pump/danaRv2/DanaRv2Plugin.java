@@ -200,7 +200,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.success = false;
             result.bolusDelivered = 0d;
             result.carbsDelivered = 0d;
-            result.comment = resourceHelper.gs(R.string.danar_invalidinput);
+            result.comment = resourceHelper.gs(R.string.invalidinput);
             aapsLogger.error("deliverTreatment: Invalid input");
             return result;
         }
@@ -301,7 +301,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             result.isTempCancel = false;
             result.enacted = false;
             result.success = false;
-            result.comment = resourceHelper.gs(R.string.danar_invalidinput);
+            result.comment = resourceHelper.gs(R.string.invalidinput);
             aapsLogger.error("setTempBasalPercent: Invalid input");
             return result;
         }

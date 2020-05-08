@@ -6,7 +6,7 @@ import android.util.AttributeSet
 import androidx.preference.EditTextPreference
 import androidx.preference.EditTextPreference.OnBindEditTextListener
 import androidx.preference.PreferenceViewHolder
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 
 class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int)
     : EditTextPreference(ctx, attrs, defStyleAttr, defStyleRes) {

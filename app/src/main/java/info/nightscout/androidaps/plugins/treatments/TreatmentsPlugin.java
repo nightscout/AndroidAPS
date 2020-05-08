@@ -75,6 +75,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private final ResourceHelper resourceHelper;
     private final ProfileFunction profileFunction;
     private final ActivePluginProvider activePlugin;
+    private final NSUpload nsUpload;
     private final FabricPrivacy fabricPrivacy;
     private final DateUtil dateUtil;
 
@@ -101,6 +102,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             SP sp,
             ProfileFunction profileFunction,
             ActivePluginProvider activePlugin,
+            NSUpload nsUpload,
             FabricPrivacy fabricPrivacy,
             DateUtil dateUtil
     ) {
@@ -122,6 +124,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         this.activePlugin = activePlugin;
         this.fabricPrivacy = fabricPrivacy;
         this.dateUtil = dateUtil;
+        this.nsUpload = nsUpload;
     }
 
     @Override
@@ -553,13 +556,13 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (newRecordCreated) {
             if (extendedBolus.durationInMinutes == 0) {
                 if (activePlugin.getActivePump().isFakingTempsByExtendedBoluses())
-                    NSUpload.uploadTempBasalEnd(extendedBolus.date, true, extendedBolus.pumpId);
+                    nsUpload.uploadTempBasalEnd(extendedBolus.date, true, extendedBolus.pumpId);
                 else
-                    NSUpload.uploadExtendedBolusEnd(extendedBolus.date, extendedBolus.pumpId);
+                    nsUpload.uploadExtendedBolusEnd(extendedBolus.date, extendedBolus.pumpId);
             } else if (activePlugin.getActivePump().isFakingTempsByExtendedBoluses())
-                NSUpload.uploadTempBasalStartAbsolute(new TemporaryBasal(extendedBolus), extendedBolus.insulin);
+                nsUpload.uploadTempBasalStartAbsolute(new TemporaryBasal(extendedBolus), extendedBolus.insulin);
             else
-                NSUpload.uploadExtendedBolus(extendedBolus);
+                nsUpload.uploadExtendedBolus(extendedBolus);
         }
         return newRecordCreated;
     }
@@ -586,11 +589,11 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         boolean newRecordCreated = MainApp.getDbHelper().createOrUpdate(tempBasal);
         if (newRecordCreated) {
             if (tempBasal.durationInMinutes == 0)
-                NSUpload.uploadTempBasalEnd(tempBasal.date, false, tempBasal.pumpId);
+                nsUpload.uploadTempBasalEnd(tempBasal.date, false, tempBasal.pumpId);
             else if (tempBasal.isAbsolute)
-                NSUpload.uploadTempBasalStartAbsolute(tempBasal, null);
+                nsUpload.uploadTempBasalStartAbsolute(tempBasal, null);
             else
-                NSUpload.uploadTempBasalStartPercent(tempBasal, profileFunction.getProfile(tempBasal.date));
+                nsUpload.uploadTempBasalStartPercent(tempBasal, profileFunction.getProfile(tempBasal.date));
         }
         return newRecordCreated;
     }
@@ -641,7 +644,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             //log.debug("Adding new Treatment record" + carbsTreatment);
         }
         if (newRecordCreated && detailedBolusInfo.isValid)
-            NSUpload.uploadTreatmentRecord(detailedBolusInfo);
+            nsUpload.uploadTreatmentRecord(detailedBolusInfo);
 
         if (!allowUpdate && !creatOrUpdateResult.success) {
             getAapsLogger().error("Treatment could not be added to DB", new Exception());
@@ -710,7 +713,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     public void addToHistoryTempTarget(TempTarget tempTarget) {
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
         MainApp.getDbHelper().createOrUpdate(tempTarget);
-        NSUpload.uploadTempTarget(tempTarget, profileFunction);
+        nsUpload.uploadTempTarget(tempTarget, profileFunction);
     }
 
     @Override
@@ -733,7 +736,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
         rxBus.send(new EventDismissNotification(Notification.PROFILE_SWITCH_MISSING));
         MainApp.getDbHelper().createOrUpdate(profileSwitch);
-        NSUpload.uploadProfileSwitch(profileSwitch);
+        nsUpload.uploadProfileSwitch(profileSwitch);
     }
 
     @Override

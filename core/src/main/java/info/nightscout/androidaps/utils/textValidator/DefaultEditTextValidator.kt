@@ -7,7 +7,7 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.textValidator.validators.*
 
 class DefaultEditTextValidator : EditTextValidator {

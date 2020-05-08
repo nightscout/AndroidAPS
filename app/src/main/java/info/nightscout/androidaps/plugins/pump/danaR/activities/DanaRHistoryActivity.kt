@@ -151,7 +151,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
             holder.duration.text = DecimalFormatter.to0Decimal(record.recordDuration.toDouble())
             holder.alarm.text = record.recordAlarm
             when (showingType) {
-                RecordTypes.RECORD_TYPE_ALARM                                                                                                                                                              -> {
+                RecordTypes.RECORD_TYPE_ALARM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
                     holder.stringValue.visibility = View.GONE
@@ -163,7 +163,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
                     holder.alarm.visibility = View.VISIBLE
                 }
 
-                RecordTypes.RECORD_TYPE_BOLUS                                                                                                                                                              -> {
+                RecordTypes.RECORD_TYPE_BOLUS                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
                     holder.stringValue.visibility = View.GONE
@@ -175,7 +175,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
                     holder.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_DAILY                                                                                                                                                              -> {
+                RecordTypes.RECORD_TYPE_DAILY                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -> {
                     holder.dailyBasal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBasal)
                     holder.dailyBolus.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus)
                     holder.dailyTotal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus + record.recordDailyBasal)
@@ -191,7 +191,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
                     holder.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_GLUCOSE                                                                                                                                                            -> {
+                RecordTypes.RECORD_TYPE_GLUCOSE                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          -> {
                     holder.value.text = Profile.toUnitsString(record.recordValue, record.recordValue * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
@@ -216,7 +216,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
                     holder.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_SUSPEND                                                                                                                                                            -> {
+                RecordTypes.RECORD_TYPE_SUSPEND                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.GONE
                     holder.stringValue.visibility = View.VISIBLE

@@ -1,31 +1,29 @@
 package info.nightscout.androidaps.plugins.general.nsclient;
 
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.preference.PreferenceManager;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.slf4j.Logger;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
+import javax.inject.Singleton;
+
+import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DbRequest;
@@ -33,27 +31,50 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface;
+import info.nightscout.androidaps.interfaces.LoopInterface;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.UploadQueueInterface;
+import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.DeviceStatus;
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.JsonHelper;
-import info.nightscout.androidaps.utils.SP;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
+import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
  * Created by mike on 26.05.2017.
  */
+@Singleton
 public class NSUpload {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
 
-    public static void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
+    private final AAPSLogger aapsLogger;
+    private final ResourceHelper resourceHelper;
+    private final SP sp;
+    private final Context context;
+    private final UploadQueueInterface uploadQueue;
+
+    public NSUpload(
+            AAPSLogger aapsLogger,
+            ResourceHelper resourceHelper,
+            SP sp,
+            Context context,
+            UploadQueueInterface uploadQueue
+    ) {
+        this.aapsLogger = aapsLogger;
+        this.resourceHelper = resourceHelper;
+        this.sp = sp;
+        this.context = context;
+        this.uploadQueue = uploadQueue;
+    }
+
+    public void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
         try {
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPBASAL);
@@ -63,19 +84,18 @@ public class NSUpload {
             if (temporaryBasal.pumpId != 0)
                 data.put("pumpId", temporaryBasal.pumpId);
             data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
-            data.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));
+            data.put("enteredBy", "openaps://" + "AndroidAPS");
             if (originalExtendedAmount != null)
                 data.put("originalExtendedAmount", originalExtendedAmount); // for back synchronization
-            UploadQueue.add(new DbRequest("dbAdd", "treatments", data));
+            uploadQueue.add(new DbRequest("dbAdd", "treatments", data));
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
-    public static void uploadTempBasalStartPercent(TemporaryBasal temporaryBasal, Profile profile) {
+    public void uploadTempBasalStartPercent(TemporaryBasal temporaryBasal, Profile profile) {
         try {
-            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-            boolean useAbsolute = SP.getBoolean("ns_sync_use_absolute", false);
+            boolean useAbsolute = sp.getBoolean("ns_sync_use_absolute", false);
             double absoluteRate = 0;
             if (profile != null) {
                 absoluteRate = profile.getBasal(temporaryBasal.date) * temporaryBasal.percentRate / 100d;
@@ -97,31 +117,31 @@ public class NSUpload {
                 if (temporaryBasal.pumpId != 0)
                     data.put("pumpId", temporaryBasal.pumpId);
                 data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
-                data.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));
-                UploadQueue.add(new DbRequest("dbAdd", "treatments", data));
+                data.put("enteredBy", "openaps://" + "AndroidAPS");
+                uploadQueue.add(new DbRequest("dbAdd", "treatments", data));
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
-    public static void uploadTempBasalEnd(long time, boolean isFakedTempBasal, long pumpId) {
+    public void uploadTempBasalEnd(long time, boolean isFakedTempBasal, long pumpId) {
         try {
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPBASAL);
             data.put("created_at", DateUtil.toISOString(time));
-            data.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));
+            data.put("enteredBy", "openaps://" + "AndroidAPS");
             if (isFakedTempBasal)
                 data.put("isFakedTempBasal", isFakedTempBasal);
             if (pumpId != 0)
                 data.put("pumpId", pumpId);
-            UploadQueue.add(new DbRequest("dbAdd", "treatments", data));
+            uploadQueue.add(new DbRequest("dbAdd", "treatments", data));
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
-    public static void uploadExtendedBolus(ExtendedBolus extendedBolus) {
+    public void uploadExtendedBolus(ExtendedBolus extendedBolus) {
         try {
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.COMBOBOLUS);
@@ -133,14 +153,14 @@ public class NSUpload {
             if (extendedBolus.pumpId != 0)
                 data.put("pumpId", extendedBolus.pumpId);
             data.put("created_at", DateUtil.toISOString(extendedBolus.date));
-            data.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));
-            UploadQueue.add(new DbRequest("dbAdd", "treatments", data));
+            data.put("enteredBy", "openaps://" + "AndroidAPS");
+            uploadQueue.add(new DbRequest("dbAdd", "treatments", data));
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
-    public static void uploadExtendedBolusEnd(long time, long pumpId) {
+    public void uploadExtendedBolusEnd(long time, long pumpId) {
         try {
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.COMBOBOLUS);
@@ -150,59 +170,59 @@ public class NSUpload {
             data.put("enteredinsulin", 0);
             data.put("relative", 0);
             data.put("created_at", DateUtil.toISOString(time));
-            data.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));
+            data.put("enteredBy", "openaps://" + "AndroidAPS");
             if (pumpId != 0)
                 data.put("pumpId", pumpId);
-            UploadQueue.add(new DbRequest("dbAdd", "treatments", data));
+            uploadQueue.add(new DbRequest("dbAdd", "treatments", data));
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
-    public static void uploadDeviceStatus(LoopPlugin loopPlugin, IobCobCalculatorPlugin iobCobCalculatorPlugin, ProfileFunction profileFunction, PumpInterface pumpInterface, ReceiverStatusStore receiverStatusStore) {
+    public void uploadDeviceStatus(LoopInterface loopPlugin, IobCobCalculatorInterface iobCobCalculatorPlugin, ProfileFunction profileFunction, PumpInterface pumpInterface, ReceiverStatusStore receiverStatusStore) {
         Profile profile = profileFunction.getProfile();
         String profileName = profileFunction.getProfileName();
 
         if (profile == null) {
-            log.error("Profile is null. Skipping upload");
+            aapsLogger.error("Profile is null. Skipping upload");
             return;
         }
 
         DeviceStatus deviceStatus = new DeviceStatus();
         try {
-            LoopPlugin.LastRun lastRun = loopPlugin.lastRun;
-            if (lastRun != null && lastRun.lastAPSRun > System.currentTimeMillis() - 300 * 1000L) {
+            LoopInterface.LastRun lastRun = loopPlugin.getLastRun();
+            if (lastRun != null && lastRun.getLastAPSRun() > System.currentTimeMillis() - 300 * 1000L) {
                 // do not send if result is older than 1 min
-                APSResult apsResult = lastRun.request;
-                apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
+                APSResult apsResult = lastRun.getRequest();
+                apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.getLastAPSRun()));
                 deviceStatus.suggested = apsResult.json();
 
-                deviceStatus.iob = lastRun.request.iob.json();
-                deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
+                deviceStatus.iob = lastRun.getRequest().iob.json();
+                deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.getLastAPSRun()));
 
                 JSONObject requested = new JSONObject();
 
-                if (lastRun.tbrSetByPump != null && lastRun.tbrSetByPump.enacted) { // enacted
-                    deviceStatus.enacted = lastRun.request.json();
-                    deviceStatus.enacted.put("rate", lastRun.tbrSetByPump.json(profile).get("rate"));
-                    deviceStatus.enacted.put("duration", lastRun.tbrSetByPump.json(profile).get("duration"));
+                if (lastRun.getTbrSetByPump() != null && lastRun.getTbrSetByPump().enacted) { // enacted
+                    deviceStatus.enacted = lastRun.getRequest().json();
+                    deviceStatus.enacted.put("rate", lastRun.getTbrSetByPump().json(profile).get("rate"));
+                    deviceStatus.enacted.put("duration", lastRun.getTbrSetByPump().json(profile).get("duration"));
                     deviceStatus.enacted.put("recieved", true);
-                    requested.put("duration", lastRun.request.duration);
-                    requested.put("rate", lastRun.request.rate);
+                    requested.put("duration", lastRun.getRequest().duration);
+                    requested.put("rate", lastRun.getRequest().rate);
                     requested.put("temp", "absolute");
                     deviceStatus.enacted.put("requested", requested);
                 }
-                if (lastRun.smbSetByPump != null && lastRun.smbSetByPump.enacted) { // enacted
+                if (lastRun.getTbrSetByPump() != null && lastRun.getTbrSetByPump().enacted) { // enacted
                     if (deviceStatus.enacted == null) {
-                        deviceStatus.enacted = lastRun.request.json();
+                        deviceStatus.enacted = lastRun.getRequest().json();
                     }
-                    deviceStatus.enacted.put("smb", lastRun.smbSetByPump.bolusDelivered);
-                    requested.put("smb", lastRun.request.smb);
+                    deviceStatus.enacted.put("smb", lastRun.getTbrSetByPump().bolusDelivered);
+                    requested.put("smb", lastRun.getRequest().smb);
                     deviceStatus.enacted.put("requested", requested);
                 }
             } else {
                 if (L.isEnabled(LTag.NSCLIENT))
-                    log.debug("OpenAPS data too old to upload, sending iob only");
+                    aapsLogger.debug("OpenAPS data too old to upload, sending iob only");
                 IobTotal[] iob = iobCobCalculatorPlugin.calculateIobArrayInDia(profile);
                 if (iob.length > 0) {
                     deviceStatus.iob = iob[0].json();
@@ -219,13 +239,13 @@ public class NSUpload {
             deviceStatus.uploaderBattery = batteryLevel;
 
             deviceStatus.created_at = DateUtil.toISOString(new Date());
-            UploadQueue.add(new DbRequest("dbAdd", "devicestatus", deviceStatus.mongoRecord()));
+            uploadQueue.add(new DbRequest("dbAdd", "devicestatus", deviceStatus.mongoRecord()));
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
-    public static void uploadTreatmentRecord(DetailedBolusInfo detailedBolusInfo) {
+    public void uploadTreatmentRecord(DetailedBolusInfo detailedBolusInfo) {
         JSONObject data = new JSONObject();
         try {
             data.put("eventType", detailedBolusInfo.eventType);
@@ -248,21 +268,21 @@ public class NSUpload {
                 data.put("notes", detailedBolusInfo.notes);
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
         uploadCareportalEntryToNS(data);
     }
 
-    public static void uploadProfileSwitch(ProfileSwitch profileSwitch) {
+    public void uploadProfileSwitch(ProfileSwitch profileSwitch) {
         try {
             JSONObject data = getJson(profileSwitch);
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
-    public static void uploadTempTarget(TempTarget tempTarget, ProfileFunction profileFunction) {
+    public void uploadTempTarget(TempTarget tempTarget, ProfileFunction profileFunction) {
         try {
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPORARYTARGET);
@@ -274,21 +294,21 @@ public class NSUpload {
                 data.put("units", profileFunction.getUnits());
             }
             data.put("created_at", DateUtil.toISOString(tempTarget.date));
-            data.put("enteredBy", MainApp.gs(R.string.app_name));
+            data.put("enteredBy", "AndroidAPS");
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
-    public static void updateProfileSwitch(ProfileSwitch profileSwitch) {
+    public void updateProfileSwitch(ProfileSwitch profileSwitch) {
         try {
             JSONObject data = getJson(profileSwitch);
             if (profileSwitch._id != null) {
-                UploadQueue.add(new DbRequest("dbUpdate", "treatments", profileSwitch._id, data));
+                uploadQueue.add(new DbRequest("dbUpdate", "treatments", profileSwitch._id, data));
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
@@ -305,12 +325,12 @@ public class NSUpload {
             data.put("percentage", profileSwitch.percentage);
         }
         data.put("created_at", DateUtil.toISOString(profileSwitch.date));
-        data.put("enteredBy", MainApp.gs(R.string.app_name));
+        data.put("enteredBy", "AndroidAPS");
 
         return data;
     }
 
-    public static void uploadCareportalEntryToNS(JSONObject data) {
+    public void uploadCareportalEntryToNS(JSONObject data) {
         try {
             if (data.has("preBolus") && data.has("carbs")) {
                 JSONObject prebolus = new JSONObject();
@@ -325,48 +345,48 @@ public class NSUpload {
                 uploadCareportalEntryToNS(prebolus);
             }
             DbRequest dbr = new DbRequest("dbAdd", "treatments", data);
-            log.debug("Prepared: " + dbr.log());
-            UploadQueue.add(dbr);
+            aapsLogger.debug("Prepared: " + dbr.log());
+            uploadQueue.add(dbr);
         } catch (Exception e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
 
     }
 
-    public static void removeCareportalEntryFromNS(String _id) {
-        UploadQueue.add(new DbRequest("dbRemove", "treatments", _id));
+    public void removeCareportalEntryFromNS(String _id) {
+        uploadQueue.add(new DbRequest("dbRemove", "treatments", _id));
     }
 
-    public static void uploadOpenAPSOffline(CareportalEvent event) {
+    public void uploadOpenAPSOffline(CareportalEvent event) {
         try {
             JSONObject data = new JSONObject(event.json);
             data.put("created_at", DateUtil.toISOString(event.date));
-            data.put("enteredBy", "openaps://" + MainApp.gs(R.string.app_name));
-            UploadQueue.add(new DbRequest("dbAdd", "treatments", data));
+            data.put("enteredBy", "openaps://" + "AndroidAPS");
+            uploadQueue.add(new DbRequest("dbAdd", "treatments", data));
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
     }
 
-    public static void uploadError(String error) {
+    public void uploadError(String error) {
         uploadError(error, new Date());
     }
 
-    public static void uploadError(String error, Date date) {
+    public void uploadError(String error, Date date) {
         JSONObject data = new JSONObject();
         try {
             data.put("eventType", "Announcement");
             data.put("created_at", DateUtil.toISOString(date));
-            data.put("enteredBy", SP.getString("careportal_enteredby", MainApp.gs(R.string.app_name)));
+            data.put("enteredBy", sp.getString("careportal_enteredby", "AndroidAPS"));
             data.put("notes", error);
             data.put("isAnnouncement", true);
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
-        UploadQueue.add(new DbRequest("dbAdd", "treatments", data));
+        uploadQueue.add(new DbRequest("dbAdd", "treatments", data));
     }
 
-    public static void uploadBg(BgReading reading, String source) {
+    public void uploadBg(BgReading reading, String source) {
         JSONObject data = new JSONObject();
         try {
             data.put("device", source);
@@ -376,56 +396,56 @@ public class NSUpload {
             data.put("direction", reading.direction);
             data.put("type", "sgv");
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
-        UploadQueue.add(new DbRequest("dbAdd", "entries", data));
+        uploadQueue.add(new DbRequest("dbAdd", "entries", data));
     }
 
-    public static void uploadAppStart() {
-        if (SP.getBoolean(R.string.key_ns_logappstartedevent, true)) {
+    public void uploadAppStart() {
+        if (sp.getBoolean(R.string.key_ns_logappstartedevent, true)) {
             JSONObject data = new JSONObject();
             try {
                 data.put("eventType", "Note");
                 data.put("created_at", DateUtil.toISOString(new Date()));
-                data.put("notes", MainApp.gs(R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL);
+                data.put("notes", resourceHelper.gs(R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL);
             } catch (JSONException e) {
-                log.error("Unhandled exception", e);
+                aapsLogger.error("Unhandled exception", e);
             }
-            UploadQueue.add(new DbRequest("dbAdd", "treatments", data));
+            uploadQueue.add(new DbRequest("dbAdd", "treatments", data));
         }
     }
 
-    public static void uploadProfileStore(JSONObject profileStore) {
-        if (SP.getBoolean(R.string.key_ns_uploadlocalprofile, false)) {
-            UploadQueue.add(new DbRequest("dbAdd", "profile", profileStore));
+    public void uploadProfileStore(JSONObject profileStore) {
+        if (sp.getBoolean(R.string.key_ns_uploadlocalprofile, false)) {
+            uploadQueue.add(new DbRequest("dbAdd", "profile", profileStore));
         }
     }
 
-    public static void uploadEvent(String careportalEvent, long time, @Nullable String notes) {
+    public void uploadEvent(String careportalEvent, long time, @Nullable String notes) {
         JSONObject data = new JSONObject();
         try {
             data.put("eventType", careportalEvent);
             data.put("created_at", DateUtil.toISOString(time));
-            data.put("enteredBy", SP.getString("careportal_enteredby", MainApp.gs(R.string.app_name)));
+            data.put("enteredBy", sp.getString("careportal_enteredby", "AndroidAPS"));
             if (notes != null) {
                 data.put("notes", notes);
             }
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
-        UploadQueue.add(new DbRequest("dbAdd", "treatments", data));
+        uploadQueue.add(new DbRequest("dbAdd", "treatments", data));
     }
 
-    public static void removeFoodFromNS(String _id) {
+    public void removeFoodFromNS(String _id) {
         try {
-            UploadQueue.add(new DbRequest("dbRemove", "food", _id));
+            uploadQueue.add(new DbRequest("dbRemove", "food", _id));
         } catch (Exception e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
 
     }
 
-    public static void sendToXdrip(BgReading bgReading) {
+    public void sendToXdrip(BgReading bgReading) {
         final String XDRIP_PLUS_NS_EMULATOR = "com.eveningoutpost.dexdrip.NS_EMULATOR";
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US);
 
@@ -450,22 +470,22 @@ public class NSUpload {
             bundle.putString("data", entriesBody.toString());
             final Intent intent = new Intent(XDRIP_PLUS_NS_EMULATOR);
             intent.putExtras(bundle).addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            MainApp.instance().sendBroadcast(intent);
-            List<ResolveInfo> receivers = MainApp.instance().getPackageManager().queryBroadcastReceivers(intent, 0);
+            context.sendBroadcast(intent);
+            List<ResolveInfo> receivers = context.getPackageManager().queryBroadcastReceivers(intent, 0);
             if (receivers.size() < 1) {
-                log.debug("No xDrip receivers found. ");
+                aapsLogger.debug("No xDrip receivers found. ");
             } else {
-                log.debug(receivers.size() + " xDrip receivers");
+                aapsLogger.debug(receivers.size() + " xDrip receivers");
             }
 
 
         } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            aapsLogger.error("Unhandled exception", e);
         }
 
     }
 
-    public static void createNSTreatment(JSONObject data, ProfileStore profileStore, ProfileFunction profileFunction, long eventTime) {
+    public void createNSTreatment(JSONObject data, ProfileStore profileStore, ProfileFunction profileFunction, long eventTime) {
         if (JsonHelper.safeGetString(data, "eventType", "").equals(CareportalEvent.PROFILESWITCH)) {
             ProfileSwitch profileSwitch = profileFunction.prepareProfileSwitch(
                     profileStore,

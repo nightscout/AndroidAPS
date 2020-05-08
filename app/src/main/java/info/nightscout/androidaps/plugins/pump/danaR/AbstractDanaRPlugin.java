@@ -224,7 +224,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             result.isTempCancel = false;
             result.enacted = false;
             result.success = false;
-            result.comment = getResourceHelper().gs(R.string.danar_invalidinput);
+            result.comment = getResourceHelper().gs(R.string.invalidinput);
             getAapsLogger().error("setTempBasalPercent: Invalid input");
             return result;
         }

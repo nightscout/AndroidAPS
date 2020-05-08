@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.utils;
 
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
-
 /**
  * class contains useful String functions
  */

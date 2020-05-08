@@ -16,6 +16,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbRequest;
+import info.nightscout.androidaps.interfaces.UploadQueueInterface;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
@@ -27,7 +28,7 @@ import info.nightscout.androidaps.utils.SP;
 /**
  * Created by mike on 21.02.2016.
  */
-public class UploadQueue {
+public class UploadQueue implements UploadQueueInterface {
     private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
 
     public static String status() {

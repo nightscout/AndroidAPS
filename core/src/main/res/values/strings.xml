@@ -17,6 +17,34 @@
     <string name="key_hypo_target" translatable="false">hypo_target</string>
     <string name="key_low_mark" translatable="false">low_mark</string>
     <string name="key_high_mark" translatable="false">high_mark</string>
+    <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
+    <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
+    <string name="key_ns_uploadlocalprofile" translatable="false">ns_uploadlocalprofile</string>
+
+    <!--    General-->
+    <string name="error">Error</string>
+    <string name="not_set_short">Not set</string>
+    <string name="failedupdatebasalprofile">Failed to update basal profile</string>
+    <string name="profile_set_ok">Basal profile in pump updated</string>
+    <string name="invalidinput">Invalid input data</string>
+    <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
+    <string name="goingtodeliver">Going to deliver %1$.2fU</string>
+    <string name="waitingforpump">Waiting for pump</string>
+    <string name="connectingfor">Connecting for %1$d s</string>
+    <string name="handshaking">Handshaking</string>
+    <string name="connecting">Connecting</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="disconnecting">Disconnecting</string>
+    <string name="androidaps_start">AndroidAPS started</string>
+
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
+    <string name="pumplimit">pump limit</string>
+    <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
+    <string name="itmustbepositivevalue">it must be positive value</string>
+    <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
+    <string name="pumpNotInitializedProfileNotSet">Pump not initialized, profile not set!</string>
 
     <!--    Dialogs-->
     <string name="confirmation">Confirmation</string>

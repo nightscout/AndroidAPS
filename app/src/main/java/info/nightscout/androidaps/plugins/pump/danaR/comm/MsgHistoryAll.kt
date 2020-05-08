@@ -136,7 +136,7 @@ open class MsgHistoryAll(
                 danaRHistoryRecord.stringRecordValue = strRecordValue
             }
 
-            17.toByte()                       -> failed = true
+            17.toByte()                                                                                             -> failed = true
         }
         MainApp.getDbHelper().createOrUpdate(danaRHistoryRecord)
         rxBus.send(EventDanaRSyncStatus(dateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType))

@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.pump.danaRS.activities
 
 import android.os.Bundle
 import android.util.Base64
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
@@ -56,7 +56,7 @@ class EnterPinActivity : NoSplashAppCompatActivity() {
                     bleComm.finishV3Pairing()
                     finish()
                 }
-                else OKDialog.show(this, resourceHelper.gs(R.string.error), resourceHelper.gs(R.string.danar_invalidinput))
+                else OKDialog.show(this, resourceHelper.gs(R.string.error), resourceHelper.gs(R.string.invalidinput))
             }
         }
         cancel.setOnClickListener { finish() }

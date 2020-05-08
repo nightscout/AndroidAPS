@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.events
 
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 class EventPumpStatusChanged : EventStatus {
@@ -46,7 +46,7 @@ class EventPumpStatusChanged : EventStatus {
     // status for startup wizard
     override fun getStatus(resourceHelper: ResourceHelper): String {
         return when (status) {
-            Status.CONNECTING    -> String.format(resourceHelper.gs(R.string.danar_history_connectingfor), secondsElapsed)
+            Status.CONNECTING    -> String.format(resourceHelper.gs(R.string.connectingfor), secondsElapsed)
             Status.HANDSHAKING   -> resourceHelper.gs(R.string.handshaking)
             Status.CONNECTED     -> resourceHelper.gs(R.string.connected)
             Status.PERFORMING    -> performingAction

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.dialogs
 
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -9,9 +10,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.MainApp
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.services.AlarmSoundService
 import kotlinx.android.synthetic.main.dialog_error.*
@@ -19,7 +19,6 @@ import javax.inject.Inject
 
 class ErrorDialog : DaggerDialogFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var mainApp: MainApp
 
     var helperActivity: ErrorHelperActivity? = null
     var status: String = ""
@@ -82,16 +81,16 @@ class ErrorDialog : DaggerDialogFragment() {
 
     private fun startAlarm() {
         if (sound != 0) {
-            val alarm = Intent(mainApp, AlarmSoundService::class.java)
+            val alarm = Intent(context, AlarmSoundService::class.java)
             alarm.putExtra("soundid", sound)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                mainApp.startForegroundService(alarm)
+                context?.startForegroundService(alarm)
             } else {
-                mainApp.startService(alarm)
+                context?.startService(alarm)
             }
         }
     }
 
     private fun stopAlarm() =
-        mainApp.stopService(Intent(mainApp, AlarmSoundService::class.java))
+        context?.stopService(Intent(context, AlarmSoundService::class.java))
 }

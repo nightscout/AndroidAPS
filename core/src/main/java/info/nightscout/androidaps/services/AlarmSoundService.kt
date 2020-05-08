@@ -6,17 +6,17 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.IBinder
 import dagger.android.DaggerService
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.interfaces.NotificationHolderInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject
 
 class AlarmSoundService : DaggerService() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var notificationHolder: NotificationHolder
+    @Inject lateinit var notificationHolder: NotificationHolderInterface
 
     private var player: MediaPlayer? = null
     private var resourceId = R.raw.error

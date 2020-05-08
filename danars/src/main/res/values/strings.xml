@@ -4,13 +4,28 @@
     <string name="key_danars_name" translatable="false">danars_name</string>
     <string name="key_danar_password" translatable="false">danar_password</string>
     <string name="key_danars_password">danars_password</string>
+    <string name="key_danars_bolusspeed" translatable="false">danars_bolusspeed</string>
+    <string name="key_danars_pairingkey" translatable="false">danars_pairing_key_</string>
+    <string name="key_danars_v3_randompairingkey" translatable="false">danars_v3_randompairing_key_</string>
+    <string name="key_danars_v3_pairingkey" translatable="false">danars_v3_pairing_key_</string>
+    <string name="key_danars_v3_randomsynckey" translatable="false">danars_v3_randomsync_key_</string>
+    <string name="key_rs_logcanulachange" translatable="false">rs_logcanulachange</string>
+    <string name="key_rs_loginsulinchange" translatable="false">rs_loginsulinchange</string>
 
     <string name="danars_pairing">Pairing</string>
     <string name="danars_nodeviceavailable">No device found so far</string>
     <string name="danars_pairingok">Pairing OK</string>
     <string name="danars_pairingtimedout">Pairing timed out</string>
     <string name="danars_waitingforpairing">Waiting for pairing on pump</string>
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
+    <string name="danarspump">DanaRS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="description_pump_dana_rs">Pump integration for DANA Diabecare RS pumps</string>
+    <string name="maxbolusviolation">Max bolus violation</string>
+    <string name="commanderror">Command error</string>
+    <string name="speederror">Speed error</string>
+    <string name="insulinlimitviolation">Insulin limit violation</string>
+    <string name="boluserrorcode">Asked: %1$.2fU Delivered: %2$.2fU Error code: %3$s</string>
+    <string name="danar_valuenotsetproperly">Value not set properly</string>
+    <string name="danar_setbasalstep001">Set basal step to 0.01 U/h</string>
 
 </resources>

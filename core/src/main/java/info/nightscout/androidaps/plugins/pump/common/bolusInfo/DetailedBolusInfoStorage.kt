@@ -2,9 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.bolusInfo
 
 import info.nightscout.androidaps.data.DetailedBolusInfo
 import info.nightscout.androidaps.logging.AAPSLogger
-import info.nightscout.androidaps.logging.L
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper
 import info.nightscout.androidaps.utils.T
 import java.util.*
 import javax.inject.Inject

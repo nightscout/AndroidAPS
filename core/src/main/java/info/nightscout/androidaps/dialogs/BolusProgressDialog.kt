@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.BolusProgressHelperActivity
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.logging.AAPSLogger
@@ -71,7 +71,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
         savedInstanceState?.let {
             amount = it.getDouble("amount")
         }
-        overview_bolusprogress_title.text = resourceHelper.gs(R.string.overview_bolusprogress_goingtodeliver, amount)
+        overview_bolusprogress_title.text = resourceHelper.gs(R.string.goingtodeliver, amount)
         overview_bolusprogress_stop.setOnClickListener {
             aapsLogger.debug(LTag.UI, "Stop bolus delivery button pressed")
             stopPressed = true
