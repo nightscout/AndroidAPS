@@ -9,6 +9,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActi
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitActionFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.initpod.InitPodTask
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.InitPodRefreshAction
+import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.pages.PodInfoFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.wizard.removepod.RemoveActionFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.comm.AapsOmnipodManager
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.ui.OmnipodUITask
@@ -24,6 +25,7 @@ abstract class OmnipodModule {
     // Fragments
     @ContributesAndroidInjector abstract fun initActionFragment() : InitActionFragment
     @ContributesAndroidInjector abstract fun removeActionFragment() : RemoveActionFragment
+    @ContributesAndroidInjector abstract fun podInfoFragment() : PodInfoFragment
 
     // Service
     @ContributesAndroidInjector abstract fun omnipodCommunicationManagerProvider(): OmnipodCommunicationManager
