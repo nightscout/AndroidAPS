@@ -85,8 +85,9 @@ public class RileyLinkServiceData {
             rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(rileyLinkServiceState, errorCode, targetDevice));
             if (activePlugin.getActivePump().manufacturer()== ManufacturerType.Medtronic)
                 rxBus.send(new EventMedtronicDeviceStatusChange(newState, errorCode));
-            else
+            else {
                 rxBus.send(new EventOmnipodDeviceStatusChange(newState, errorCode));
+            }
             return null;
 
         } else {

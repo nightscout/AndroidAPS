@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodStatusRequest
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodDeviceState
 import info.nightscout.androidaps.plugins.pump.omnipod.dialogs.PodManagementActivity
@@ -61,6 +62,7 @@ class OmnipodFragment : DaggerFragment() {
     @Inject lateinit var omnipodPumpStatus: OmnipodPumpStatus
     @Inject lateinit var sp: SP
     @Inject lateinit var omnipodUtil: OmnipodUtil
+    @Inject lateinit var rileyLinkServiceData: RileyLinkServiceData
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -207,7 +209,7 @@ class OmnipodFragment : DaggerFragment() {
     private fun setDeviceStatus(event : EventOmnipodDeviceStatusChange) {
 
 
-        
+
     }
 
 
@@ -222,8 +224,8 @@ class OmnipodFragment : DaggerFragment() {
 
         aapsLogger.info(LTag.PUMP, "setDeviceStatus: [pumpStatus={}]", omnipodPumpStatus)
 
-        val resourceId = omnipodPumpStatus.rileyLinkServiceState.getResourceId(RileyLinkTargetDevice.Omnipod)
-        val rileyLinkError = omnipodPumpPlugin.rileyLinkService?.error
+        val resourceId = rileyLinkServiceData.rileyLinkServiceState.getResourceId(RileyLinkTargetDevice.Omnipod)
+        val rileyLinkError = rileyLinkServiceData.rileyLinkError
 
         omnipod_rl_status.text =
             when {
