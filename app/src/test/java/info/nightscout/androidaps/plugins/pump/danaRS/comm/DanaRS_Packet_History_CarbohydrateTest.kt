@@ -12,19 +12,18 @@ class DanaRS_Packet_History_CarbohydrateTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_History_Carbohydrate) {
+            if (it is DanaRS_Packet) {
                 it.aapsLogger = aapsLogger
+                it.dateUtil = dateUtil
+            }
+            if (it is DanaRS_Packet_History_Carbohydrate) {
                 it.rxBus = rxBus
             }
         }
     }
 
     @Test fun runTest() {
-<<<<<<< HEAD
         val packet = DanaRS_Packet_History_Carbohydrate(packetInjector, System.currentTimeMillis())
-=======
-        val packet = DanaRS_Packet_History_Carbohydrate(aapsLogger, rxBus, dateUtil, System.currentTimeMillis())
->>>>>>> origin/dev
         Assert.assertEquals("REVIEW__CARBOHYDRATE", packet.friendlyName)
     }
 }

@@ -16,8 +16,11 @@ class DanaRS_Packet_APS_Set_Event_HistoryTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_APS_Set_Event_History) {
+            if (it is DanaRS_Packet) {
                 it.aapsLogger = aapsLogger
+                it.dateUtil = dateUtil
+            }
+            if (it is DanaRS_Packet_APS_Set_Event_History) {
             }
         }
     }

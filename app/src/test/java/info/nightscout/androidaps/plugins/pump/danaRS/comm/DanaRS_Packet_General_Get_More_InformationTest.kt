@@ -13,15 +13,17 @@ class DanaRS_Packet_General_Get_More_InformationTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_General_Get_More_Information) {
+            if (it is DanaRS_Packet) {
                 it.aapsLogger = aapsLogger
+                it.dateUtil = dateUtil
+            }
+            if (it is DanaRS_Packet_General_Get_More_Information) {
                 it.danaRPump = danaRPump
             }
         }
     }
 
     @Test fun runTest() {
-<<<<<<< HEAD
         var packet = DanaRS_Packet_General_Get_More_Information(packetInjector)
 
         packet.handleMessage(createArray(14, 0.toByte()))
@@ -48,19 +50,6 @@ class DanaRS_Packet_General_Get_More_InformationTest : DanaRSTestBase() {
         Assert.assertEquals(25, lastBolus.minutes)
         Assert.assertEquals(1.7, danaRPump.lastBolusAmount, 0.01)
 
-=======
-        var packet = DanaRS_Packet_General_Get_More_Information(aapsLogger, danaRPump, dateUtil)
-        Assert.assertEquals(null, packet.requestParams)
-        // test message decoding
-        // test for the length message
-        packet.handleMessage(createArray(13, 0.toByte()))
-        Assert.assertEquals(true, packet.failed)
-        packet = DanaRS_Packet_General_Get_More_Information(aapsLogger, danaRPump, dateUtil)
-        packet.handleMessage(createArray(15, 0.toByte()))
-        Assert.assertEquals(false, packet.failed)
-        packet.handleMessage(createArray(15, 161.toByte()))
-        Assert.assertEquals(true, packet.failed)
->>>>>>> origin/dev
         Assert.assertEquals("REVIEW__GET_MORE_INFORMATION", packet.friendlyName)
     }
 }

@@ -12,19 +12,18 @@ class DanaRS_Packet_History_All_HistoryTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_History_All_History) {
+            if (it is DanaRS_Packet) {
                 it.aapsLogger = aapsLogger
+                it.dateUtil = dateUtil
+            }
+            if (it is DanaRS_Packet_History_All_History) {
                 it.rxBus = rxBus
             }
         }
     }
 
     @Test fun runTest() {
-<<<<<<< HEAD
         val packet = DanaRS_Packet_History_All_History(packetInjector, System.currentTimeMillis())
-=======
-        val packet = DanaRS_Packet_History_All_History(aapsLogger, rxBus, dateUtil, System.currentTimeMillis())
->>>>>>> origin/dev
         Assert.assertEquals("REVIEW__ALL_HISTORY", packet.friendlyName)
     }
 }

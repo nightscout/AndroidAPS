@@ -2,14 +2,10 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.db.Treatment
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
-<<<<<<< HEAD
-import info.nightscout.androidaps.plugins.treatments.Treatment
-=======
-import info.nightscout.androidaps.db.Treatment
->>>>>>> origin/dev
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

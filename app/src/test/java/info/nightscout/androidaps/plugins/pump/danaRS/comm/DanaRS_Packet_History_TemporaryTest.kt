@@ -12,19 +12,18 @@ class DanaRS_Packet_History_TemporaryTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_History_Temporary) {
+            if (it is DanaRS_Packet) {
                 it.aapsLogger = aapsLogger
+                it.dateUtil = dateUtil
+            }
+            if (it is DanaRS_Packet_History_Temporary) {
                 it.rxBus = rxBus
             }
         }
     }
 
     @Test fun runTest() {
-<<<<<<< HEAD
         val packet = DanaRS_Packet_History_Temporary(packetInjector, System.currentTimeMillis())
-=======
-        val packet = DanaRS_Packet_History_Temporary(aapsLogger, rxBus, dateUtil, System.currentTimeMillis())
->>>>>>> origin/dev
         Assert.assertEquals("REVIEW__TEMPORARY", packet.friendlyName)
     }
 }

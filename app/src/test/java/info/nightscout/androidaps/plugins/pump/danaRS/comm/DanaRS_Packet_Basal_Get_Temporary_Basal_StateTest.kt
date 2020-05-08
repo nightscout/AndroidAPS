@@ -14,8 +14,11 @@ class DanaRS_Packet_Basal_Get_Temporary_Basal_StateTest : DanaRSTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is DanaRS_Packet_Basal_Get_Temporary_Basal_State) {
+            if (it is DanaRS_Packet) {
                 it.aapsLogger = aapsLogger
+                it.dateUtil = dateUtil
+            }
+            if (it is DanaRS_Packet_Basal_Get_Temporary_Basal_State) {
                 it.danaRPump = danaRPump
             }
         }
