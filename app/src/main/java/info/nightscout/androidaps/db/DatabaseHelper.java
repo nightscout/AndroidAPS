@@ -31,6 +31,7 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.ProfileStore;
@@ -52,7 +53,6 @@ import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightBolusID;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightHistoryOffset;
 import info.nightscout.androidaps.plugins.pump.insight.database.InsightPumpID;

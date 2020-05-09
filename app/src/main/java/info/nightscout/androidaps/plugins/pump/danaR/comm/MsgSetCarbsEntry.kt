@@ -15,7 +15,7 @@ class MsgSetCarbsEntry(
         aapsLogger.debug(LTag.PUMPBTCOMM, "New message")
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = time
-        AddParamByte(RecordTypes.RECORD_TYPE_CARBO)
+        AddParamByte(info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_CARBO)
         AddParamByte((calendar[Calendar.YEAR] % 100).toByte())
         AddParamByte((calendar[Calendar.MONTH] + 1).toByte())
         AddParamByte(calendar[Calendar.DAY_OF_MONTH].toByte())

@@ -6,7 +6,7 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.ProfileFunction
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Before
@@ -30,7 +30,7 @@ open class DanaRTestBase : TestBase() {
         }
     }
 
-    lateinit var danaRPump: DanaRPump
+    lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
 
     fun createArray(length: Int, fillWith: Byte): ByteArray {
         val ret = ByteArray(length)
@@ -61,6 +61,6 @@ open class DanaRTestBase : TestBase() {
 
     @Before
     fun setup() {
-        danaRPump = DanaRPump(aapsLogger, sp, injector)
+        danaRPump = info.nightscout.androidaps.dana.DanaRPump(aapsLogger, sp, injector)
     }
 }

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -12,7 +12,7 @@ class MsgSettingPumpTimeTest : DanaRTestBase() {
 
     @Test fun runTest() {
         val packet = MsgSettingPumpTime(aapsLogger, danaRPump, dateUtil)
-        danaRPump.units = DanaRPump.UNITS_MGDL
+        danaRPump.units = info.nightscout.androidaps.dana.DanaRPump.UNITS_MGDL
         // test message decoding
         val bytes = createArray(34, 7.toByte())
         val time = Date(

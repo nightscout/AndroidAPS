@@ -64,8 +64,8 @@
         <activity
             android:name=".activities.ErrorHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
-        <activity android:name=".plugins.pump.danaR.activities.DanaRHistoryActivity" />
-        <activity android:name=".plugins.pump.danaR.activities.DanaRUserOptionsActivity" />
+        <activity android:name="info.nightscout.androidaps.dana.activities.DanaRHistoryActivity" />
+        <activity android:name="info.nightscout.androidaps.dana.activities.DanaRUserOptionsActivity" />
         <activity android:name=".activities.TDDStatsActivity" />
         <activity android:name=".plugins.general.overview.activities.QuickWizardListActivity">
             <intent-filter>
@@ -74,7 +74,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".plugins.pump.danaRS.activities.BLEScanActivity">
+        <activity android:name="info.nightscout.androidaps.danars.activities.BLEScanActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpDanaRS.activities.BLEScanActivity" />
 
@@ -82,9 +82,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".plugins.pump.danaRS.activities.PairingHelperActivity"
+            android:name="info.nightscout.androidaps.danars.activities.PairingHelperActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".plugins.pump.danaRS.activities.EnterPinActivity"
+        <activity android:name="info.nightscout.androidaps.danars.activities.EnterPinActivity"
             android:launchMode="singleTask" />
         <activity android:name=".plugins.general.maintenance.activities.PrefImportListActivity" />
         <activity android:name=".historyBrowser.HistoryBrowseActivity" />
@@ -166,7 +166,7 @@
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".plugins.pump.danaRS.services.DanaRSService"
+            android:name="info.nightscout.androidaps.danars.services.DanaRSService"
             android:enabled="true"
             android:exported="true" />
         <service

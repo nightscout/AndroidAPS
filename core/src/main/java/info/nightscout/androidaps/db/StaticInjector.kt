@@ -7,14 +7,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-@Deprecated("Only until DB is refactored")
 class StaticInjector @Inject constructor(
     private val injector: HasAndroidInjector
 ) : HasAndroidInjector {
     companion object {
-        @Deprecated("Only until DB is refactored")
         private var instance : StaticInjector? = null
 
+        @Deprecated("Only until DB is refactored")
         fun getInstance() : StaticInjector {
             if (instance == null) throw IllegalStateException("StaticInjector not initialized")
             return instance!!

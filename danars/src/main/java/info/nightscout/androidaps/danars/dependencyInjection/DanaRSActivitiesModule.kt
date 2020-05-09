@@ -2,8 +2,8 @@ package info.nightscout.androidaps.danars.dependencyInjection
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.plugins.pump.danaRS.activities.BLEScanActivity
-import info.nightscout.androidaps.plugins.pump.danaRS.activities.PairingHelperActivity
+import info.nightscout.androidaps.danars.activities.BLEScanActivity
+import info.nightscout.androidaps.danars.activities.PairingHelperActivity
 
 @Module
 @Suppress("unused")

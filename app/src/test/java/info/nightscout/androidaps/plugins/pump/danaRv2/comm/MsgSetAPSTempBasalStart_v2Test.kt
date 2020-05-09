@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.danaRv2.comm
 
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase.intFromBuff
-import info.nightscout.androidaps.plugins.pump.danaRS.comm.DanaRS_Packet_APS_Basal_Set_Temporary_Basal.Companion.PARAM30MIN
+import info.nightscout.androidaps.danars.comm.DanaRS_Packet_APS_Basal_Set_Temporary_Basal.Companion.PARAM30MIN
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

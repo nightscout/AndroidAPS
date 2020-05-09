@@ -11,7 +11,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
@@ -74,7 +74,7 @@ class MsgHistoryEvents_v2 constructor(
             .pumpId(datetime)
         val status: String
         when (recordCode.toInt()) {
-            DanaRPump.TEMPSTART         -> {
+            info.nightscout.androidaps.dana.DanaRPump.TEMPSTART         -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT TEMPSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Ratio: " + param1 + "% Duration: " + param2 + "min")
                 temporaryBasal.percentRate = param1
                 temporaryBasal.durationInMinutes = param2
@@ -82,13 +82,13 @@ class MsgHistoryEvents_v2 constructor(
                 status = "TEMPSTART " + dateUtil.timeString(datetime)
             }
 
-            DanaRPump.TEMPSTOP          -> {
+            info.nightscout.androidaps.dana.DanaRPump.TEMPSTOP          -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT TEMPSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime))
                 treatmentsPlugin.addToHistoryTempBasal(temporaryBasal)
                 status = "TEMPSTOP " + dateUtil.timeString(datetime)
             }
 
-            DanaRPump.EXTENDEDSTART     -> {
+            info.nightscout.androidaps.dana.DanaRPump.EXTENDEDSTART     -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT EXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 extendedBolus.insulin = param1 / 100.0
                 extendedBolus.durationInMinutes = param2
@@ -96,13 +96,13 @@ class MsgHistoryEvents_v2 constructor(
                 status = "EXTENDEDSTART " + dateUtil.timeString(datetime)
             }
 
-            DanaRPump.EXTENDEDSTOP      -> {
+            info.nightscout.androidaps.dana.DanaRPump.EXTENDEDSTOP      -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT EXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus)
                 status = "EXTENDEDSTOP " + dateUtil.timeString(datetime)
             }
 
-            DanaRPump.BOLUS             -> {
+            info.nightscout.androidaps.dana.DanaRPump.BOLUS             -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
                     ?: DetailedBolusInfo()
                 detailedBolusInfo.date = datetime
@@ -114,7 +114,7 @@ class MsgHistoryEvents_v2 constructor(
                 status = "BOLUS " + dateUtil.timeString(datetime)
             }
 
-            DanaRPump.DUALBOLUS         -> {
+            info.nightscout.androidaps.dana.DanaRPump.DUALBOLUS         -> {
                 val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(datetime, param1 / 100.0)
                     ?: DetailedBolusInfo()
                 detailedBolusInfo.date = datetime
@@ -126,7 +126,7 @@ class MsgHistoryEvents_v2 constructor(
                 status = "DUALBOLUS " + dateUtil.timeString(datetime)
             }
 
-            DanaRPump.DUALEXTENDEDSTART -> {
+            info.nightscout.androidaps.dana.DanaRPump.DUALEXTENDEDSTART -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT DUALEXTENDEDSTART (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U Duration: " + param2 + "min")
                 extendedBolus.insulin = param1 / 100.0
                 extendedBolus.durationInMinutes = param2
@@ -134,38 +134,38 @@ class MsgHistoryEvents_v2 constructor(
                 status = "DUALEXTENDEDSTART " + dateUtil.timeString(datetime)
             }
 
-            DanaRPump.DUALEXTENDEDSTOP  -> {
+            info.nightscout.androidaps.dana.DanaRPump.DUALEXTENDEDSTOP  -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT DUALEXTENDEDSTOP (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Delivered: " + param1 / 100.0 + "U RealDuration: " + param2 + "min")
                 treatmentsPlugin.addToHistoryExtendedBolus(extendedBolus)
                 status = "DUALEXTENDEDSTOP " + dateUtil.timeString(datetime)
             }
 
-            DanaRPump.SUSPENDON         -> {
+            info.nightscout.androidaps.dana.DanaRPump.SUSPENDON         -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT SUSPENDON (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")")
                 status = "SUSPENDON " + dateUtil.timeString(datetime)
             }
 
-            DanaRPump.SUSPENDOFF        -> {
+            info.nightscout.androidaps.dana.DanaRPump.SUSPENDOFF        -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT SUSPENDOFF (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")")
                 status = "SUSPENDOFF " + dateUtil.timeString(datetime)
             }
 
-            DanaRPump.REFILL            -> {
+            info.nightscout.androidaps.dana.DanaRPump.REFILL            -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT REFILL (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
                 status = "REFILL " + dateUtil.timeString(datetime)
             }
 
-            DanaRPump.PRIME             -> {
+            info.nightscout.androidaps.dana.DanaRPump.PRIME             -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT PRIME (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " Amount: " + param1 / 100.0 + "U")
                 status = "PRIME " + dateUtil.timeString(datetime)
             }
 
-            DanaRPump.PROFILECHANGE     -> {
+            info.nightscout.androidaps.dana.DanaRPump.PROFILECHANGE     -> {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "EVENT PROFILECHANGE (" + recordCode + ") " + dateUtil.dateAndTimeString(datetime) + " (" + datetime + ")" + " No: " + param1 + " CurrentRate: " + param2 / 100.0 + "U/h")
                 status = "PROFILECHANGE " + dateUtil.timeString(datetime)
             }
 
-            DanaRPump.CARBS             -> {
+            info.nightscout.androidaps.dana.DanaRPump.CARBS             -> {
                 val emptyCarbsInfo = DetailedBolusInfo()
                 emptyCarbsInfo.carbs = param1.toDouble()
                 emptyCarbsInfo.date = datetime

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,8 +18,8 @@ class MsgCheckValueTest : DanaRTestBase() {
 
         // test message decoding
         val array = ByteArray(100)
-        putByteToArray(array, 0, DanaRPump.EXPORT_MODEL.toByte())
+        putByteToArray(array, 0, info.nightscout.androidaps.dana.DanaRPump.EXPORT_MODEL.toByte())
         packet.handleMessage(array)
-        Assert.assertEquals(DanaRPump.EXPORT_MODEL, danaRPump.hwModel)
+        Assert.assertEquals(info.nightscout.androidaps.dana.DanaRPump.EXPORT_MODEL, danaRPump.hwModel)
     }
 }

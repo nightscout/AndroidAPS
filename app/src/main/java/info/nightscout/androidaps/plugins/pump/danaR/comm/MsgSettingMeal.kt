@@ -8,7 +8,7 @@ import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
@@ -16,7 +16,7 @@ class MsgSettingMeal(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump,
+    private val danaRPump: info.nightscout.androidaps.dana.DanaRPump,
     private val danaRKoreanPlugin: DanaRKoreanPlugin
 ) : MessageBase() {
 

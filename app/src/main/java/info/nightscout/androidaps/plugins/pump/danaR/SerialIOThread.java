@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import info.nightscout.androidaps.dana.DanaRPump;
 import info.nightscout.androidaps.logging.L;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;

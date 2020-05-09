@@ -242,6 +242,7 @@ dependencies {
     wearApp project(':wear')
 
     implementation project(':core')
+    implementation project(':dana')
     implementation project(':danars')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')

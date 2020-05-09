@@ -12,9 +12,9 @@ import info.nightscout.androidaps.plugins.general.overview.activities.QuickWizar
 import info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity
 import info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEScanActivity
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
-import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRHistoryActivity
-import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRUserOptionsActivity
-import info.nightscout.androidaps.plugins.pump.danaRS.activities.EnterPinActivity
+import info.nightscout.androidaps.dana.activities.DanaRHistoryActivity
+import info.nightscout.androidaps.dana.activities.DanaRUserOptionsActivity
+import info.nightscout.androidaps.danars.activities.EnterPinActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingActivity
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingInformationActivity
@@ -26,8 +26,8 @@ import info.nightscout.androidaps.setupwizard.SetupWizardActivity
 abstract class ActivitiesModule {
 
     @ContributesAndroidInjector abstract fun contributeBolusProgressHelperActivity(): BolusProgressHelperActivity
-    @ContributesAndroidInjector abstract fun contributeDanaRHistoryActivity(): DanaRHistoryActivity
-    @ContributesAndroidInjector abstract fun contributeDanaRUserOptionsActivity(): DanaRUserOptionsActivity
+    @ContributesAndroidInjector abstract fun contributeDanaRHistoryActivity(): info.nightscout.androidaps.dana.activities.DanaRHistoryActivity
+    @ContributesAndroidInjector abstract fun contributeDanaRUserOptionsActivity(): info.nightscout.androidaps.dana.activities.DanaRUserOptionsActivity
     @ContributesAndroidInjector abstract fun contributeEnterPinActivity(): EnterPinActivity
     @ContributesAndroidInjector abstract fun contributeErrorHelperActivity(): ErrorHelperActivity
     @ContributesAndroidInjector abstract fun contributesHistoryBrowseActivity(): HistoryBrowseActivity

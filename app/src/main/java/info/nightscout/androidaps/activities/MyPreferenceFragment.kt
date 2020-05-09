@@ -37,7 +37,7 @@ import info.nightscout.androidaps.plugins.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
+import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin

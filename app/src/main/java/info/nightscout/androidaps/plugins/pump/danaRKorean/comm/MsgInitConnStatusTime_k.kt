@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -21,7 +21,7 @@ class MsgInitConnStatusTime_k(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump,
+    private val danaRPump: info.nightscout.androidaps.dana.DanaRPump,
     private val danaRPlugin: DanaRPlugin,
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
     private val configBuilderPlugin: ConfigBuilderPlugin,

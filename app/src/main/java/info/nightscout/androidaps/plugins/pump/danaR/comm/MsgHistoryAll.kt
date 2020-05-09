@@ -36,7 +36,7 @@ open class MsgHistoryAll(
         danaRHistoryRecord.setBytes(bytes)
         var messageType = ""
         when (recordCode) {
-            RecordTypes.RECORD_TYPE_BOLUS     -> {
+            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_BOLUS     -> {
                 danaRHistoryRecord.recordDate = datetime
                 when (0xF0 and paramByte8.toInt()) {
                     0xA0 -> {
@@ -65,56 +65,56 @@ open class MsgHistoryAll(
                 danaRHistoryRecord.recordValue = value * 0.01
             }
 
-            RecordTypes.RECORD_TYPE_DAILY     -> {
+            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_DAILY     -> {
                 messageType += "dailyinsulin"
                 danaRHistoryRecord.recordDate = date
                 danaRHistoryRecord.recordDailyBasal = dailyBasal
                 danaRHistoryRecord.recordDailyBolus = dailyBolus
             }
 
-            RecordTypes.RECORD_TYPE_PRIME     -> {
+            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_PRIME     -> {
                 messageType += "prime"
                 danaRHistoryRecord.recordDate = datetimewihtsec
                 danaRHistoryRecord.recordValue = value * 0.01
             }
 
-            RecordTypes.RECORD_TYPE_ERROR     -> {
+            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_ERROR     -> {
                 messageType += "error"
                 danaRHistoryRecord.recordDate = datetimewihtsec
                 danaRHistoryRecord.recordValue = value * 0.01
             }
 
-            RecordTypes.RECORD_TYPE_REFILL    -> {
+            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_REFILL    -> {
                 messageType += "refill"
                 danaRHistoryRecord.recordDate = datetimewihtsec
                 danaRHistoryRecord.recordValue = value * 0.01
             }
 
-            RecordTypes.RECORD_TYPE_BASALHOUR -> {
+            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_BASALHOUR -> {
                 messageType += "basal hour"
                 danaRHistoryRecord.recordDate = datetimewihtsec
                 danaRHistoryRecord.recordValue = value * 0.01
             }
 
-            RecordTypes.RECORD_TYPE_TB        -> {
+            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_TB        -> {
                 messageType += "tb"
                 danaRHistoryRecord.recordDate = datetimewihtsec
                 danaRHistoryRecord.recordValue = value * 0.01
             }
 
-            RecordTypes.RECORD_TYPE_GLUCOSE   -> {
+            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_GLUCOSE   -> {
                 messageType += "glucose"
                 danaRHistoryRecord.recordDate = datetimewihtsec
                 danaRHistoryRecord.recordValue = value
             }
 
-            RecordTypes.RECORD_TYPE_CARBO     -> {
+            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_CARBO     -> {
                 messageType += "carbo"
                 danaRHistoryRecord.recordDate = datetimewihtsec
                 danaRHistoryRecord.recordValue = value
             }
 
-            RecordTypes.RECORD_TYPE_ALARM     -> {
+            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_ALARM     -> {
                 messageType += "alarm"
                 danaRHistoryRecord.recordDate = datetimewihtsec
                 var strAlarm = "None"
@@ -128,7 +128,7 @@ open class MsgHistoryAll(
                 danaRHistoryRecord.recordValue = value * 0.01
             }
 
-            RecordTypes.RECORD_TYPE_SUSPEND   -> {
+            info.nightscout.androidaps.dana.comm.RecordTypes.RECORD_TYPE_SUSPEND   -> {
                 messageType += "suspend"
                 danaRHistoryRecord.recordDate = datetimewihtsec
                 var strRecordValue = "Off"
@@ -136,7 +136,7 @@ open class MsgHistoryAll(
                 danaRHistoryRecord.stringRecordValue = strRecordValue
             }
 
-            17.toByte()                                                                                             -> failed = true
+            17.toByte()                                                            -> failed = true
         }
         MainApp.getDbHelper().createOrUpdate(danaRHistoryRecord)
         rxBus.send(EventDanaRSyncStatus(dateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType))

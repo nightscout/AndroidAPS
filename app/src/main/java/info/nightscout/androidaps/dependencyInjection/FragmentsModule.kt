@@ -34,8 +34,8 @@ import info.nightscout.androidaps.plugins.profile.ns.NSProfileFragment
 import info.nightscout.androidaps.plugins.pump.combo.ComboFragment
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusGeneralFragment
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusHistoryFragment
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRFragment
-import info.nightscout.androidaps.plugins.pump.danaRS.dialogs.PairingProgressDialog
+import info.nightscout.androidaps.dana.DanaRFragment
+import info.nightscout.androidaps.danars.dialogs.PairingProgressDialog
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightFragment
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicFragment
 import info.nightscout.androidaps.plugins.pump.medtronic.dialog.RileyLinkStatusDeviceMedtronic
@@ -61,7 +61,7 @@ abstract class FragmentsModule {
     @ContributesAndroidInjector
     abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
 
-    @ContributesAndroidInjector abstract fun contributesDanaRFragment(): DanaRFragment
+    @ContributesAndroidInjector abstract fun contributesDanaRFragment(): info.nightscout.androidaps.dana.DanaRFragment
     @ContributesAndroidInjector abstract fun contributesFoodFragment(): FoodFragment
     @ContributesAndroidInjector abstract fun contributesInsulinFragment(): InsulinFragment
     @ContributesAndroidInjector abstract fun contributesLocalProfileFragment(): LocalProfileFragment

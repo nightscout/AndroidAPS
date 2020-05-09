@@ -6,14 +6,14 @@ import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 
 class MsgError(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump,
+    private val danaRPump: info.nightscout.androidaps.dana.DanaRPump,
     private val nsUpload: NSUpload
 ) : MessageBase() {
 

@@ -6,12 +6,12 @@ import info.nightscout.androidaps.db.TemporaryBasal
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import kotlin.math.ceil
 
 class MsgStatusTempBasal(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump,
+    private val danaRPump: info.nightscout.androidaps.dana.DanaRPump,
     private val activePlugin: ActivePluginProvider,
     private val injector: HasAndroidInjector
 ) : MessageBase() {

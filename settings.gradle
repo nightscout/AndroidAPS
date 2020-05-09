@@ -1,1 +1,2 @@
 include ':app', ':wear', ':core', ':danars'
+include ':dana'

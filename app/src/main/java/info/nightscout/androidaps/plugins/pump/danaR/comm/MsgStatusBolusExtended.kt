@@ -6,14 +6,14 @@ import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import info.nightscout.androidaps.utils.DateUtil
 import kotlin.math.ceil
 
 class MsgStatusBolusExtended(
     private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump,
+    private val danaRPump: info.nightscout.androidaps.dana.DanaRPump,
     private val activePlugin: ActivePluginProvider,
     private val dateUtil: DateUtil
 ) : MessageBase() {

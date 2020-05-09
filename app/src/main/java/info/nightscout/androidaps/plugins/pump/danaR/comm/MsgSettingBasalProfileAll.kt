@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import java.util.*
 
 /**
@@ -15,7 +15,7 @@ import java.util.*
  */
 class MsgSettingBasalProfileAll(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
+    private val danaRPump: info.nightscout.androidaps.dana.DanaRPump
 ) : MessageBase() {
 
     override fun handleMessage(bytes: ByteArray) {

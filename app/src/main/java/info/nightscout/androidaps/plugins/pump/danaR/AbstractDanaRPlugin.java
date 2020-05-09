@@ -9,8 +9,11 @@ import java.util.Date;
 import java.util.List;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.dana.DanaPumpInterface;
+import info.nightscout.androidaps.dana.DanaRFragment;
+import info.nightscout.androidaps.dana.DanaRPump;
+import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -36,7 +39,6 @@ import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
-import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.pump.danaR.services.AbstractDanaRExecutionService;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -52,7 +54,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by mike on 28.01.2018.
  */
 
-public abstract class AbstractDanaRPlugin extends PumpPluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface {
+public abstract class AbstractDanaRPlugin extends PumpPluginBase implements PumpInterface, DanaRInterface, ConstraintsInterface, DanaPumpInterface {
     protected AbstractDanaRExecutionService sExecutionService;
 
     protected CompositeDisposable disposable = new CompositeDisposable();
@@ -520,5 +522,8 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @Override
     public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
+    }
+
+    @Override public void clearPairing() {
     }
 }

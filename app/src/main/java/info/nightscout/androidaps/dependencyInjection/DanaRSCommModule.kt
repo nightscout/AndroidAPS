@@ -2,7 +2,7 @@ package info.nightscout.androidaps.dependencyInjection
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.plugins.pump.danaRS.comm.*
+import info.nightscout.androidaps.danars.comm.*
 
 @Module
 @Suppress("unused")

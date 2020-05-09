@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
@@ -21,7 +21,7 @@ class MsgCheckValue_v2(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump,
+    private val danaRPump: info.nightscout.androidaps.dana.DanaRPump,
     private val danaRPlugin: DanaRPlugin,
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
     private val danaRv2Plugin: DanaRv2Plugin,
@@ -41,7 +41,7 @@ class MsgCheckValue_v2(
         danaRPump.hwModel = intFromBuff(bytes, 0, 1)
         danaRPump.protocol = intFromBuff(bytes, 1, 1)
         danaRPump.productCode = intFromBuff(bytes, 2, 1)
-        if (danaRPump.hwModel != DanaRPump.EXPORT_MODEL) {
+        if (danaRPump.hwModel != info.nightscout.androidaps.dana.DanaRPump.EXPORT_MODEL) {
             danaRPump.reset()
             val notification = Notification(Notification.WRONG_DRIVER, resourceHelper.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))

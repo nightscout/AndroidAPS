@@ -29,7 +29,7 @@ class DanaRPluginTest : TestBaseWithProfile() {
     @Mock lateinit var sp: SP
     @Mock lateinit var commandQueue: CommandQueueProvider
 
-    lateinit var danaRPump: DanaRPump
+    lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
 
     private lateinit var danaRPlugin: DanaRPlugin
 
@@ -43,7 +43,7 @@ class DanaRPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.pumplimit)).thenReturn("pump limit")
         `when`(resourceHelper.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(resourceHelper.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
-        danaRPump = DanaRPump(aapsLogger, sp, injector)
+        danaRPump = info.nightscout.androidaps.dana.DanaRPump(aapsLogger, sp, injector)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, treatmentsPlugin, sp, commandQueue, danaRPump, dateUtil)
     }
 

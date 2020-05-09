@@ -10,7 +10,7 @@ import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -30,7 +30,7 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
     @Mock lateinit var sp: SP
     @Mock lateinit var commandQueue: CommandQueueProvider
 
-    lateinit var danaRPump: DanaRPump
+    lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
 
     private lateinit var danaRPlugin: DanaRKoreanPlugin
 
@@ -44,7 +44,7 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
         `when`(resourceHelper.gs(R.string.pumplimit)).thenReturn("pump limit")
         `when`(resourceHelper.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(resourceHelper.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
-        danaRPump = DanaRPump(aapsLogger, sp, injector)
+        danaRPump = info.nightscout.androidaps.dana.DanaRPump(aapsLogger, sp, injector)
         danaRPlugin = DanaRKoreanPlugin(injector, aapsLogger, rxBus, danaRPump, context, resourceHelper, constraintChecker, treatmentsPlugin, sp, commandQueue, dateUtil)
     }
 

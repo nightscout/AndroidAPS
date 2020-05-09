@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -11,7 +11,7 @@ class MsgStatusProfileTest : DanaRTestBase() {
 
     @Test fun runTest() {
         val packet = MsgStatusProfile(aapsLogger, danaRPump)
-        danaRPump.units = DanaRPump.UNITS_MGDL
+        danaRPump.units = info.nightscout.androidaps.dana.DanaRPump.UNITS_MGDL
         // test message decoding
         packet.handleMessage(createArray(34, 7.toByte()))
         Assert.assertEquals(MessageBase.intFromBuff(createArray(10, 7.toByte()), 0, 2), danaRPump.currentCIR)

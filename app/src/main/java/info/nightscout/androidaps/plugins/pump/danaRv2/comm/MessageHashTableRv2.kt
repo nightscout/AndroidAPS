@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaR.comm.*
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
@@ -27,7 +27,7 @@ class MessageHashTableRv2 @Inject constructor(
     rxBus: RxBusWrapper,
     resourceHelper: ResourceHelper,
     constraintChecker: ConstraintChecker,
-    danaRPump: DanaRPump,
+    danaRPump: info.nightscout.androidaps.dana.DanaRPump,
     danaRPlugin: DanaRPlugin,
     danaRKoreanPlugin: DanaRKoreanPlugin,
     danaRv2Plugin: DanaRv2Plugin,

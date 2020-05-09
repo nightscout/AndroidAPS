@@ -24,9 +24,9 @@ import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
+import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.treatments.CarbsGenerator
@@ -65,7 +65,7 @@ class ActionStringHandler @Inject constructor(
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
     private val danaRv2Plugin: DanaRv2Plugin,
     private val danaRSPlugin: DanaRSPlugin,
-    private val danaRPump: DanaRPump,
+    private val danaRPump: info.nightscout.androidaps.dana.DanaRPump,
     private val hardLimits: HardLimits,
     private val carbsGenerator: CarbsGenerator,
     private val dateUtil: DateUtil,

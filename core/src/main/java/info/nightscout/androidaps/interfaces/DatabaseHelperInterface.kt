@@ -7,7 +7,6 @@ import info.nightscout.androidaps.db.DanaRHistoryRecord
 import info.nightscout.androidaps.db.DbRequest
 import info.nightscout.androidaps.db.TDD
 
-@Deprecated("Remove with new DB")
 interface DatabaseHelperInterface {
 
     fun getAllBgreadingsDataFromTime(mills: Long, ascending: Boolean): List<BgReading>

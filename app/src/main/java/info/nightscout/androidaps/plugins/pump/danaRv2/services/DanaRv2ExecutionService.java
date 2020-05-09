@@ -14,6 +14,8 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.activities.ErrorHelperActivity;
+import info.nightscout.androidaps.dana.DanaRPump;
+import info.nightscout.androidaps.dana.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Treatment;
@@ -36,7 +38,6 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewB
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaR.SerialIOThread;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgBolusStart;
@@ -62,7 +63,6 @@ import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgSettingShippingInfo
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgSettingUserOptions;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgStatus;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgStatusBasic;
-import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.pump.danaR.services.AbstractDanaRExecutionService;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;

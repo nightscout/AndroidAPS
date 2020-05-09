@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.androidaps.plugins.pump.danaR.services.AbstractDanaRExecutionService
 import info.nightscout.androidaps.plugins.pump.danaR.services.DanaRExecutionService
 import info.nightscout.androidaps.plugins.pump.danaRKorean.services.DanaRKoreanExecutionService
-import info.nightscout.androidaps.plugins.pump.danaRS.services.DanaRSService
+import info.nightscout.androidaps.danars.services.DanaRSService
 import info.nightscout.androidaps.plugins.pump.danaRv2.services.DanaRv2ExecutionService
 import info.nightscout.androidaps.plugins.pump.insight.InsightAlertService
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService

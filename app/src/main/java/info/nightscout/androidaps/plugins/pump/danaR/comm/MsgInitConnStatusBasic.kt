@@ -2,11 +2,11 @@ package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 
 class MsgInitConnStatusBasic(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
+    private val danaRPump: info.nightscout.androidaps.dana.DanaRPump
 ) : MessageBase() {
 
     init {
@@ -33,10 +33,10 @@ class MsgInitConnStatusBasic(
         val extendedBolusRate = intFromBuff(bytes, 18, 2) / 100.0
         danaRPump.batteryRemaining = intFromBuff(bytes, 20, 1)
         val bolusConfig = intFromBuff(bytes, 21, 1)
-        val deliveryPrime = bolusConfig and DanaRPump.DELIVERY_PRIME != 0
-        val deliveryStepBolus = bolusConfig and DanaRPump.DELIVERY_STEP_BOLUS != 0
-        val deliveryBasal = bolusConfig and DanaRPump.DELIVERY_BASAL != 0
-        val deliveryExtBolus = bolusConfig and DanaRPump.DELIVERY_EXT_BOLUS != 0
+        val deliveryPrime = bolusConfig and info.nightscout.androidaps.dana.DanaRPump.DELIVERY_PRIME != 0
+        val deliveryStepBolus = bolusConfig and info.nightscout.androidaps.dana.DanaRPump.DELIVERY_STEP_BOLUS != 0
+        val deliveryBasal = bolusConfig and info.nightscout.androidaps.dana.DanaRPump.DELIVERY_BASAL != 0
+        val deliveryExtBolus = bolusConfig and info.nightscout.androidaps.dana.DanaRPump.DELIVERY_EXT_BOLUS != 0
         aapsLogger.debug(LTag.PUMPCOMM, "Delivery prime: $deliveryPrime")
         aapsLogger.debug(LTag.PUMPCOMM, "Delivery step bolus: $deliveryStepBolus")
         aapsLogger.debug(LTag.PUMPCOMM, "Delivery basal: $deliveryBasal")

@@ -7,6 +7,7 @@ import info.nightscout.androidaps.interfaces.Constraint
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
@@ -40,11 +41,12 @@ class MessageHashTable_rv2Test : DanaRTestBase() {
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Mock lateinit var nsUpload: NSUpload
 
     @Test
     fun runTest() {
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
-        val messageHashTableRv2 = MessageHashTableRv2(aapsLogger, rxBus, resourceHelper, constraintChecker, danaRPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue, activePlugin, detailedBolusInfoStorage, treatmentsPlugin, injector, DateUtil(context, resourceHelper))
+        val messageHashTableRv2 = MessageHashTableRv2(aapsLogger, rxBus, resourceHelper, constraintChecker, danaRPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue, activePlugin, detailedBolusInfoStorage, treatmentsPlugin, nsUpload, injector, DateUtil(context, resourceHelper))
         val forTesting: MessageBase = MsgStatusAPS_v2(aapsLogger, danaRPump)
         val testPacket: MessageBase = messageHashTableRv2.findMessage(forTesting.command)
         Assert.assertEquals(0xE001, testPacket.command.toLong())

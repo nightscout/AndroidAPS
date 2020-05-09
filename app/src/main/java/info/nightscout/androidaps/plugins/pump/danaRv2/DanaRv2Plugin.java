@@ -13,6 +13,7 @@ import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.dana.DanaRPump;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -27,7 +28,6 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.plugins.pump.danaR.AbstractDanaRPlugin;
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin;

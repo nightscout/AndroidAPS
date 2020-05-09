@@ -3,11 +3,11 @@ package info.nightscout.androidaps.plugins.pump.danaR.comm
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 
 class MsgCheckValue(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump,
+    private val danaRPump: info.nightscout.androidaps.dana.DanaRPump,
     private val danaRPlugin: DanaRPlugin
 ) : MessageBase() {
 
@@ -22,7 +22,7 @@ class MsgCheckValue(
         danaRPump.hwModel = intFromBuff(bytes, 0, 1)
         danaRPump.protocol = intFromBuff(bytes, 1, 1)
         danaRPump.productCode = intFromBuff(bytes, 2, 1)
-        if (danaRPump.hwModel != DanaRPump.EXPORT_MODEL) {
+        if (danaRPump.hwModel != info.nightscout.androidaps.dana.DanaRPump.EXPORT_MODEL) {
             danaRPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected")
         }

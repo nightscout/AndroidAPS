@@ -2,11 +2,11 @@ package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
+import info.nightscout.androidaps.dana.DanaRPump
 
 class MsgSettingProfileRatiosAll(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
+    private val danaRPump: info.nightscout.androidaps.dana.DanaRPump
 ) : MessageBase() {
 
     init {
@@ -15,7 +15,7 @@ class MsgSettingProfileRatiosAll(
     }
 
     override fun handleMessage(bytes: ByteArray) {
-        if (danaRPump.units == DanaRPump.UNITS_MGDL) {
+        if (danaRPump.units == info.nightscout.androidaps.dana.DanaRPump.UNITS_MGDL) {
             danaRPump.morningCIR = intFromBuff(bytes, 0, 2)
             danaRPump.morningCF = intFromBuff(bytes, 2, 2).toDouble()
             danaRPump.afternoonCIR = intFromBuff(bytes, 4, 2)
@@ -34,7 +34,7 @@ class MsgSettingProfileRatiosAll(
             danaRPump.nightCIR = intFromBuff(bytes, 12, 2)
             danaRPump.nightCF = intFromBuff(bytes, 14, 2) / 100.0
         }
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaRPump.units == DanaRPump.UNITS_MGDL) "MGDL" else "MMOL")
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump units: " + if (danaRPump.units == info.nightscout.androidaps.dana.DanaRPump.UNITS_MGDL) "MGDL" else "MMOL")
         aapsLogger.debug(LTag.PUMPCOMM, "Current pump morning CIR: " + danaRPump.morningCIR)
         aapsLogger.debug(LTag.PUMPCOMM, "Current pump morning CF: " + danaRPump.morningCF)
         aapsLogger.debug(LTag.PUMPCOMM, "Current pump afternoon CIR: " + danaRPump.afternoonCIR)

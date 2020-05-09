@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.danaR.services;
 
-import android.content.Context;
 import android.os.Binder;
 import android.os.SystemClock;
 
@@ -12,6 +11,8 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.dana.DanaRPump;
+import info.nightscout.androidaps.dana.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Treatment;
@@ -25,14 +26,12 @@ import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump;
 import info.nightscout.androidaps.plugins.pump.danaR.SerialIOThread;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageHashTableR;
@@ -62,7 +61,6 @@ import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgStatus;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgStatusBasic;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.MsgStatusTempBasal;
-import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.Command;
@@ -77,9 +75,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
     @Inject DanaRPump danaRPump;
     @Inject DanaRPlugin danaRPlugin;
     @Inject DanaRKoreanPlugin danaRKoreanPlugin;
-    @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject CommandQueueProvider commandQueue;
-    @Inject Context context;
     @Inject MessageHashTableR messageHashTableR;
     @Inject ActivePluginProvider activePlugin;
     @Inject ProfileFunction profileFunction;

@@ -14,12 +14,14 @@ import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.androidaps.plugins.constraints.safety.SafetyPlugin
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
+import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
-import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
+import info.nightscout.androidaps.dana.DanaRPump
+import info.nightscout.androidaps.danars.DanaRSPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
@@ -57,9 +59,11 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
     @Mock lateinit var profiler: Profiler
+    @Mock lateinit var nsUpload: NSUpload
+    @Mock lateinit var uploadQueue: UploadQueue
 
     private var buildHelper = BuildHelper(Config())
-    lateinit var danaRPump: DanaRPump
+    lateinit var danaRPump: info.nightscout.androidaps.dana.DanaRPump
 
     lateinit var constraintChecker: ConstraintChecker
     private lateinit var safetyPlugin: SafetyPlugin
@@ -109,13 +113,13 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         constraintChecker = ConstraintChecker(activePlugin)
 
-        danaRPump = DanaRPump(aapsLogger, sp, injector)
-        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context)
+        danaRPump = info.nightscout.androidaps.dana.DanaRPump(aapsLogger, sp, injector)
+        hardLimits = HardLimits(aapsLogger, rxBus, sp, resourceHelper, context, nsUpload)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, resourceHelper, activePlugin, sp, Config())
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, resourceHelper, profileFunction, treatmentsPlugin, sp, commandQueue, context)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, treatmentsPlugin, sp, commandQueue, danaRPump, dateUtil)
-        danaRSPlugin = DanaRSPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, treatmentsPlugin, sp, commandQueue, danaRPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil)
-        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, treatmentsPlugin, sp, commandQueue, profileFunction, context, Config(), dateUtil)
+        danaRSPlugin = DanaRSPlugin(injector, aapsLogger, rxBus, context, resourceHelper, constraintChecker, profileFunction, activePluginProvider, sp, commandQueue, danaRPump, detailedBolusInfoStorage, fabricPrivacy, dateUtil, Config())
+        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, resourceHelper, treatmentsPlugin, sp, commandQueue, profileFunction, nsUpload, context, uploadQueue, Config(), dateUtil)
         openAPSSMBPlugin = OpenAPSSMBPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits, profiler, fabricPrivacy)
         openAPSAMAPlugin = OpenAPSAMAPlugin(injector, aapsLogger, rxBus, constraintChecker, resourceHelper, profileFunction, context, activePlugin, treatmentsPlugin, iobCobCalculatorPlugin, hardLimits, profiler, fabricPrivacy)
         safetyPlugin = SafetyPlugin(injector, aapsLogger, resourceHelper, sp, rxBus, constraintChecker, openAPSAMAPlugin, openAPSSMBPlugin, sensitivityOref1Plugin, activePlugin, hardLimits, buildHelper, treatmentsPlugin, Config())
