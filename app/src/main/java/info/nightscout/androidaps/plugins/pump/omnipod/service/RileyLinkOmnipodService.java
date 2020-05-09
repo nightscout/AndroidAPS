@@ -115,12 +115,13 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             PodSessionState podState = null;
             if (sp.contains(OmnipodConst.Prefs.PodState) && omnipodUtil.getPodSessionState() == null) {
                 try {
-                    Gson gson = omnipodUtil.getGsonInstance();
-                    String storedPodState = sp.getString(OmnipodConst.Prefs.PodState, "");
-                    aapsLogger.info(LTag.PUMPCOMM, "PodSessionState-SP: loaded from SharedPreferences: " + storedPodState);
-                    podState = gson.fromJson(storedPodState, PodSessionState.class);
-                    podState.injectDaggerClass(injector);
-                    omnipodUtil.setPodSessionState(podState);
+                    omnipodUtil.loadSessionState();
+//                    Gson gson = omnipodUtil.getGsonInstance();
+//                    String storedPodState = sp.getString(OmnipodConst.Prefs.PodState, "");
+//                    aapsLogger.info(LTag.PUMPCOMM, "PodSessionState-SP: loaded from SharedPreferences: " + storedPodState);
+//                    podState = gson.fromJson(storedPodState, PodSessionState.class);
+//                    podState.injectDaggerClass(injector);
+//                    omnipodUtil.setPodSessionState(podState);
                 } catch (Exception ex) {
                     aapsLogger.error(LTag.PUMPCOMM, "Could not deserialize Pod state", ex);
                 }
@@ -175,22 +176,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
 
     public boolean isInitialized() {
         return RileyLinkServiceState.isReady(rileyLinkServiceData.rileyLinkServiceState);
-    }
-
-
-    @Override
-    public String getDeviceSpecificBroadcastsIdentifierPrefix() {
-        return null;
-    }
-
-
-    public boolean handleDeviceSpecificBroadcasts(Intent intent) {
-        return false;
-    }
-
-
-    @Override
-    public void registerDeviceSpecificBroadcasts(IntentFilter intentFilter) {
     }
 
 

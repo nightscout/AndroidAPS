@@ -34,7 +34,7 @@ public class RileyLinkServiceData {
     public RileyLinkError rileyLinkError;
     public RileyLinkServiceState rileyLinkServiceState = RileyLinkServiceState.NotStarted;
     public RileyLinkFirmwareVersion firmwareVersion;
-    public RileyLinkTargetFrequency rileyLinkTargetFrequency;
+    public RileyLinkTargetFrequency rileyLinkTargetFrequency; // TODO this might not be correct place
 
     public String rileylinkAddress;
     long lastTuneUpTime = 0L;
@@ -45,7 +45,7 @@ public class RileyLinkServiceData {
     // radio version
     public RileyLinkFirmwareVersion versionCC110;
 
-    public RileyLinkTargetDevice targetDevice;
+    public RileyLinkTargetDevice targetDevice; // TODO this might not be correct place
 
     // Medtronic Pump
     public String pumpID;

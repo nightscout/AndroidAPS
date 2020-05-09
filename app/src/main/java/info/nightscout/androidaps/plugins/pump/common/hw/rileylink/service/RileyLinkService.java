@@ -114,21 +114,6 @@ public abstract class RileyLinkService extends DaggerService {
     }
 
 
-    /**
-     * Prefix for Device specific broadcast identifier prefix (for example MSG_PUMP_ for pump or
-     * MSG_POD_ for Omnipod)
-     *
-     * @return
-     */
-    public abstract String getDeviceSpecificBroadcastsIdentifierPrefix();
-
-
-    public abstract boolean handleDeviceSpecificBroadcasts(Intent intent);
-
-
-    public abstract void registerDeviceSpecificBroadcasts(IntentFilter intentFilter);
-
-
     public abstract RileyLinkCommunicationManager getDeviceCommunicationManager();
 
     // Here is where the wake-lock begins:

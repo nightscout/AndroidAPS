@@ -139,8 +139,8 @@ android {
 
         // OMNIPOD: Keep track of what commit from the main repository we're on, these fields aren't actually used anywhere
         buildConfigField "String", "DEV_VERSION", '"2.6.5-dev"'
-        buildConfigField "String", "DEV_VERSION_COMMIT", '"b87155ead499167b3d42a73e3daf808494f10a2d"'
-        buildConfigField "String", "DEV_VERSION_COMMIT_DATE", '"24.4.2020"' // 24th April
+        buildConfigField "String", "DEV_VERSION_COMMIT", '"cf291b3adc2a8df06fd99220b59b500298c8e56f"'
+        buildConfigField "String", "DEV_VERSION_COMMIT_DATE", '"6.5.2020"' // 6th May
 
         ndk {
             moduleName "BleCommandUtil"
