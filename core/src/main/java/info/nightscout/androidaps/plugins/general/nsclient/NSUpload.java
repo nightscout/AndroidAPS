@@ -18,8 +18,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
@@ -29,8 +31,10 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
 import info.nightscout.androidaps.interfaces.IobCobCalculatorInterface;
 import info.nightscout.androidaps.interfaces.LoopInterface;
 import info.nightscout.androidaps.interfaces.ProfileFunction;
@@ -54,24 +58,31 @@ import info.nightscout.androidaps.utils.sharedPreferences.SP;
 @Singleton
 public class NSUpload {
 
+    private final HasAndroidInjector injector;
     private final AAPSLogger aapsLogger;
     private final ResourceHelper resourceHelper;
     private final SP sp;
     private final Context context;
     private final UploadQueueInterface uploadQueue;
+    private final DatabaseHelperInterface databaseHelper;
 
+    @Inject
     public NSUpload(
+            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             ResourceHelper resourceHelper,
             SP sp,
             Context context,
-            UploadQueueInterface uploadQueue
+            UploadQueueInterface uploadQueue,
+            DatabaseHelperInterface databaseHelper
     ) {
+        this.injector = injector;
         this.aapsLogger = aapsLogger;
         this.resourceHelper = resourceHelper;
         this.sp = sp;
         this.context = context;
         this.uploadQueue = uploadQueue;
+        this.databaseHelper = databaseHelper;
     }
 
     public void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
@@ -179,7 +190,7 @@ public class NSUpload {
         }
     }
 
-    public void uploadDeviceStatus(LoopInterface loopPlugin, IobCobCalculatorInterface iobCobCalculatorPlugin, ProfileFunction profileFunction, PumpInterface pumpInterface, ReceiverStatusStore receiverStatusStore) {
+    public void uploadDeviceStatus(LoopInterface loopPlugin, IobCobCalculatorInterface iobCobCalculatorPlugin, ProfileFunction profileFunction, PumpInterface pumpInterface, ReceiverStatusStore receiverStatusStore, String version) {
         Profile profile = profileFunction.getProfile();
         String profileName = profileFunction.getProfileName();
 
@@ -230,7 +241,7 @@ public class NSUpload {
                 }
             }
             deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
-            JSONObject pumpstatus = pumpInterface.getJSONStatus(profile, profileName);
+            JSONObject pumpstatus = pumpInterface.getJSONStatus(profile, profileName, version);
             if (pumpstatus != null) {
                 deviceStatus.pump = pumpstatus;
             }
@@ -508,4 +519,28 @@ public class NSUpload {
             return true;
         return false;
     }
+
+    public void generateCareportalEvent(String eventType, long time, String notes) {
+        CareportalEvent careportalEvent = new CareportalEvent(injector);
+        careportalEvent.source = Source.USER;
+        careportalEvent.date = time;
+        careportalEvent.json = generateJson(eventType, time, notes).toString();
+        careportalEvent.eventType = eventType;
+        databaseHelper.createOrUpdate(careportalEvent);
+        uploadEvent(eventType, time, notes);
+    }
+
+    private JSONObject generateJson(String careportalEvent, long time, String notes) {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("eventType", careportalEvent);
+            data.put("created_at", DateUtil.toISOString(time));
+            data.put("mills", time);
+            data.put("enteredBy", sp.getString("careportal_enteredby", "AndroidAPS"));
+            if (!notes.isEmpty()) data.put("notes", notes);
+        } catch (JSONException ignored) {
+        }
+        return data;
+    }
+
 }

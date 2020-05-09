@@ -35,6 +35,7 @@ class FoodFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var foodPlugin: FoodPlugin
+    @Inject lateinit var nsUpload: NSUpload
 
     private val disposable = CompositeDisposable()
     private lateinit var unfiltered: List<Food>
@@ -200,7 +201,7 @@ class FoodFragment : DaggerFragment() {
                     activity?.let { activity ->
                         showConfirmation(activity, resourceHelper.gs(R.string.confirmation), resourceHelper.gs(R.string.removerecord) + "\n" + food.name, DialogInterface.OnClickListener { _: DialogInterface?, _: Int ->
                             if (food._id != null && food._id != "") {
-                                NSUpload.removeFoodFromNS(food._id)
+                                nsUpload.removeFoodFromNS(food._id)
                             }
                             foodPlugin.service?.delete(food)
                         }, null)

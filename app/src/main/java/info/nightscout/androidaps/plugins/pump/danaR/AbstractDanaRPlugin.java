@@ -366,7 +366,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     }
 
     @NonNull @Override
-    public JSONObject getJSONStatus(Profile profile, String profilename) {
+    public JSONObject getJSONStatus(Profile profile, String profilename, String version) {
         DanaRPump pump = danaRPump;
         long now = System.currentTimeMillis();
         if (pump.getLastConnection() + 5 * 60 * 1000L < System.currentTimeMillis()) {
@@ -380,7 +380,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             battery.put("percent", pump.getBatteryRemaining());
             status.put("status", pump.getPumpSuspended() ? "suspended" : "normal");
             status.put("timestamp", DateUtil.toISOString(pump.getLastConnection()));
-            extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
+            extended.put("Version", version);
             if (pump.getLastBolusTime() != 0) {
                 extended.put("LastBolus", dateUtil.dateAndTimeString(pump.getLastBolusTime()));
                 extended.put("LastBolusAmount", pump.getLastBolusAmount());

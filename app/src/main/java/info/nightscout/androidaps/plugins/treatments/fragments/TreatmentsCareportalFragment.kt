@@ -38,6 +38,8 @@ class TreatmentsCareportalFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var translator: Translator
+    @Inject lateinit var nsUpload: NSUpload
+    @Inject lateinit var uploadQueue: UploadQueue
     @Inject lateinit var dateUtil: DateUtil
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -66,9 +68,9 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                         val careportalEvent = events[i]
                         if (careportalEvent.json.contains(resourceHelper.gs(R.string.androidaps_start))) {
                             if (NSUpload.isIdValid(careportalEvent._id))
-                                NSUpload.removeCareportalEntryFromNS(careportalEvent._id)
+                                nsUpload.removeCareportalEntryFromNS(careportalEvent._id)
                             else
-                                UploadQueue.removeID("dbAdd", careportalEvent._id)
+                                uploadQueue.removeID("dbAdd", careportalEvent._id)
                             MainApp.getDbHelper().delete(careportalEvent)
                         }
                     }
@@ -136,9 +138,9 @@ class TreatmentsCareportalFragment : DaggerFragment() {
                             resourceHelper.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(careportalEvent.date)
                         OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.removerecord), text, Runnable {
                             if (NSUpload.isIdValid(careportalEvent._id))
-                                NSUpload.removeCareportalEntryFromNS(careportalEvent._id)
+                                nsUpload.removeCareportalEntryFromNS(careportalEvent._id)
                             else
-                                UploadQueue.removeID("dbAdd", careportalEvent._id)
+                                uploadQueue.removeID("dbAdd", careportalEvent._id)
                             MainApp.getDbHelper().delete(careportalEvent)
                         }, null)
                     }

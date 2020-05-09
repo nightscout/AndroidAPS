@@ -8,13 +8,16 @@ import dagger.Provides
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.MainApp
+import info.nightscout.androidaps.db.DatabaseHelperProvider
 import info.nightscout.androidaps.interfaces.*
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.configBuilder.PluginStore
 import info.nightscout.androidaps.plugins.configBuilder.ProfileFunctionImplementation
+import info.nightscout.androidaps.plugins.general.nsclient.UploadQueue
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.queue.CommandQueue
 import info.nightscout.androidaps.utils.FabricPrivacy
+import info.nightscout.androidaps.utils.androidNotification.NotificationHolder
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
 import info.nightscout.androidaps.utils.storage.FileStorage
@@ -61,11 +64,12 @@ open class AppModule {
 
         @Binds fun bindContext(mainApp: MainApp): Context
         @Binds fun bindInjector(mainApp: MainApp): HasAndroidInjector
-        @Binds fun bindDatabaseHelperInterface(mainApp: MainApp): DatabaseHelperInterface
         @Binds fun bindActivePluginProvider(pluginStore: PluginStore): ActivePluginProvider
         @Binds fun commandQueueProvider(commandQueue: CommandQueue): CommandQueueProvider
         @Binds fun configInterfaceProvider(config: Config): ConfigInterface
         @Binds fun treatmentInterfaceProvider(treatmentsPlugin: TreatmentsPlugin): TreatmentsInterface
-
+        @Binds fun provideDatabaseHelperInterface(databaseHelperProvider: DatabaseHelperProvider): DatabaseHelperInterface
+        @Binds fun provideUploadQueueInterface(uploadQueue: UploadQueue): UploadQueueInterface
+        @Binds fun provideNotificationHolderInterface(notificationHolder: NotificationHolder): NotificationHolderInterface
     }
 }

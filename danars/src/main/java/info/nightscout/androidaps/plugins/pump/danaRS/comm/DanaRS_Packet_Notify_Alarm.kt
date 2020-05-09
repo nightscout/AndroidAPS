@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
@@ -17,6 +17,7 @@ class DanaRS_Packet_Notify_Alarm(
 
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var resourceHelper: ResourceHelper
+    @Inject lateinit var nsUpload: NSUpload
 
     init {
         type = BleEncryption.DANAR_PACKET__TYPE_NOTIFY
@@ -57,7 +58,7 @@ class DanaRS_Packet_Notify_Alarm(
         }
         val notification = Notification(Notification.USERMESSAGE, errorString, Notification.URGENT)
         rxBus.send(EventNewNotification(notification))
-        NSUpload.uploadError(errorString)
+        nsUpload.uploadError(errorString)
     }
 
     override fun getFriendlyName(): String {

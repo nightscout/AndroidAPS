@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.constraints.objectives.dialogs
+package info.nightscout.androidaps.dialogs
 
 import android.os.Bundle
 import android.os.SystemClock
@@ -6,11 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
+import info.nightscout.androidaps.events.EventNtpStatus
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.constraints.objectives.events.EventNtpStatus
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.plusAssign
 import info.nightscout.androidaps.utils.resources.ResourceHelper

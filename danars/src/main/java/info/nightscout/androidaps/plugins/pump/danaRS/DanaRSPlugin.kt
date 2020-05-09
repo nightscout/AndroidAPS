@@ -562,7 +562,7 @@ class DanaRSPlugin @Inject constructor(
         }
     }
 
-    override fun getJSONStatus(profile: Profile, profileName: String): JSONObject {
+    override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
         val now = System.currentTimeMillis()
         if (danaRPump.lastConnection + 5 * 60 * 1000L < System.currentTimeMillis()) {
             return JSONObject()
@@ -575,7 +575,7 @@ class DanaRSPlugin @Inject constructor(
             battery.put("percent", danaRPump.batteryRemaining)
             status.put("status", if (danaRPump.pumpSuspended) "suspended" else "normal")
             status.put("timestamp", DateUtil.toISOString(danaRPump.lastConnection))
-            extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)
+            extended.put("Version", version)
             if (danaRPump.lastBolusTime != 0L) {
                 extended.put("LastBolus", dateUtil.dateAndTimeString(danaRPump.lastBolusTime))
                 extended.put("LastBolusAmount", danaRPump.lastBolusAmount)

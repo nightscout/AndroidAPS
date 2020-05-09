@@ -8,15 +8,16 @@ import android.content.Intent
 import android.os.PowerManager
 import android.os.SystemClock
 import dagger.android.DaggerBroadcastReceiver
+import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.events.EventProfileNeedsUpdate
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.androidaps.queue.commands.Command
@@ -39,6 +40,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
     @Inject lateinit var config: Config
+    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var dateUtil: DateUtil
 
     companion object {
@@ -108,7 +110,7 @@ class KeepAliveReceiver : DaggerBroadcastReceiver() {
         else if (DateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
         if (DateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY) && shouldUploadStatus) {
             lastIobUpload = DateUtil.now()
-            NSUpload.uploadDeviceStatus(loopPlugin, iobCobCalculatorPlugin, profileFunction, activePlugin.activePump, receiverStatusStore)
+            nsUpload.uploadDeviceStatus(loopPlugin, iobCobCalculatorPlugin, profileFunction, activePlugin.activePump, receiverStatusStore, BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION)
         }
     }
 

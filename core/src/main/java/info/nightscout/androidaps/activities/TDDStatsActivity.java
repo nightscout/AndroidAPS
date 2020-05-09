@@ -29,23 +29,18 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.core.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TDD;
+import info.nightscout.androidaps.events.EventDanaRSyncStatus;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.CommandQueueProvider;
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.interfaces.ProfileFunction;
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRSyncStatus;
-import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin;
-import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin;
-import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin;
-import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.SafeParse;
@@ -61,13 +56,8 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
     @Inject SP sp;
     @Inject ProfileFunction profileFunction;
     @Inject ActivePluginProvider activePlugin;
-    @Inject DanaRSPlugin danaRSPlugin;
-    @Inject DanaRPlugin danaRPlugin;
-    @Inject DanaRv2Plugin danaRv2Plugin;
-    @Inject DanaRKoreanPlugin danaRKoreanPlugin;
-    @Inject LocalInsightPlugin localInsightPlugin;
-    @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject CommandQueueProvider commandQueue;
+    @Inject DatabaseHelperInterface databaseHelper;
     @Inject FabricPrivacy fabricPrivacy;
 
     private CompositeDisposable disposable = new CompositeDisposable();
@@ -300,7 +290,7 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
     }
 
     private void loadDataFromDB() {
-        historyList = MainApp.getDbHelper().getTDDs();
+        historyList = databaseHelper.getTDDs();
 
         //only use newest 10
         historyList = historyList.subList(0, Math.min(10, historyList.size()));
@@ -527,7 +517,8 @@ public class TDDStatsActivity extends NoSplashAppCompatActivity {
 
     public boolean isOldData(List<TDD> historyList) {
 
-        boolean startsYesterday = danaRPlugin.isEnabled() || danaRSPlugin.isEnabled() || danaRv2Plugin.isEnabled() || danaRKoreanPlugin.isEnabled() || localInsightPlugin.isEnabled();
+        PumpType type = activePlugin.getActivePump().getPumpDescription().pumpType;
+        boolean startsYesterday = type == PumpType.DanaR || type == PumpType.DanaRS || type == PumpType.DanaRv2 || type == PumpType.DanaRKorean || type == PumpType.AccuChekInsight;
 
         DateFormat df = new SimpleDateFormat("dd.MM.", Locale.getDefault());
         return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).date)).equals(df.format(new Date(System.currentTimeMillis() - (startsYesterday ? 1000 * 60 * 60 * 24 : 0))))));

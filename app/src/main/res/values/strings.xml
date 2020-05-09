@@ -124,7 +124,6 @@
     <string name="sms_delta">Delta:</string>
 
     <string name="configbuilder">Config Builder</string>
-    <string name="objectives">Objectives</string>
     <string name="overview">Overview</string>
     <string name="nsprofile">NS Profile</string>
     <string name="simpleprofile">Simple profile</string>
@@ -288,7 +287,6 @@
     <string name="save">Save</string>
     <string name="nobtadapter">No bluetooth adapter found</string>
     <string name="devicenotfound">Selected device not found</string>
-    <string name="connectionerror">Pump connection error</string>
     <string name="danar_iob_label">Pump IOB</string>
     <string name="danar_dailyunits">Daily units</string>
     <string name="pump_lastbolus_label">Last bolus</string>
@@ -316,7 +314,6 @@
     <string name="smscommunicator_mealbolusdelivered_tt">Target %1$s for %2$d minutes</string>
     <string name="smscommunicator_tt_set">Target %1$s for %2$d minutes set successfully</string>
     <string name="smscommunicator_tt_canceled">Temp Target canceled successfully</string>
-    <string name="bolusdelivering">Delivering %1$.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Allow remote commands via SMS</string>
     <string name="danarprofile">DanaR profile settings</string>
     <string name="danarprofile_dia">DIA [h]</string>
@@ -334,27 +331,12 @@
     <string name="danar_alarm">alarm</string>
     <string name="danar_totaluploaded">Total %1$d records uploaded</string>
     <string name="danar_sbolus">S bolus</string>
-    <string name="danar_history_alarm">Alarms</string>
-    <string name="danar_history_basalhours">Basal Hours</string>
-    <string name="danar_history_bolus">Boluses</string>
-    <string name="danar_history_carbohydrates">Carbohydrates</string>
-    <string name="danar_history_dailyinsulin">Daily insulin</string>
-    <string name="danar_history_errors">Errors</string>
-    <string name="danar_history_glucose">Glucose</string>
-    <string name="danar_history_refill">Refill</string>
-    <string name="danar_history_syspend">Suspend</string>
     <string name="danars_password_title">Pump password (v1 only)</string>
     <string name="danar_password_title">Pump password</string>
-    <string name="wrongpumppassword">Wrong pump password!</string>
-    <string name="pumpbusy">Pump is busy</string>
-    <string name="overview_bolusprogress_delivered">Delivered</string>
-    <string name="overview_bolusprogress_stoped">Stopped</string>
     <string name="bolusstopped">Bolus stopped</string>
     <string name="bolusstopping">Stopping bolus</string>
-    <string name="occlusion">Occlusion</string>
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
-    <string name="youareonallowedlimit">You reached allowed limit</string>
     <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
     <string name="smscommunicator_loophasbeenenabled">Loop has been enabled</string>
     <string name="smscommunicator_loopisdisabled">Loop is disabled</string>
@@ -418,16 +400,10 @@
     <string name="wear">Wear</string>
     <string name="resend_all_data">Resend All Data</string>
     <string name="open_settings_on_wear">Open Settings on Wear</string>
-    <string name="pumperror">Pump Error</string>
-    <string name="lowbattery">Low Battery</string>
-    <string name="basalcompare">Delivering less than preset basal rate</string>
-    <string name="pumpshutdown">Pump Shutdown</string>
-    <string name="batterydischarged">Pump Battery Discharged</string>
     <string name="danarkoreanpump">DanaR Korean</string>
     <string name="basal_rate">Basal rate:</string>
     <string name="profile_set_failed">Setting of basal profile failed</string>
     <string name="danar_disableeasymode">Disable EasyUI mode in pump</string>
-    <string name="danar_enableextendedbolus">Enable extended boluses on pump</string>
     <string name="danar_switchtouhmode">Change mode from U/d to U/h on pump</string>
     <string name="basalvaluebelowminimum">Basal value below minimum. Profile not set!</string>
     <string name="sms_actualbg">BG:</string>
@@ -451,20 +427,6 @@
     <string name="hypo">Hypo</string>
     <string name="activity">Activity</string>
     <string name="removerecord">Remove record</string>
-    <string name="danar_stats">DanaR Stats</string>
-    <string name="danar_stats_cumulative_tdd">Cumulative TDD</string>
-    <string name="danar_stats_expweight">Exponentially Weighted TDD</string>
-    <string name="danar_stats_basalrate">Basal</string>
-    <string name="danar_stats_bolus">Bolus</string>
-    <string name="danar_stats_tdd">TDD</string>
-    <string name="danar_stats_date">Date</string>
-    <string name="danar_stats_ratio">Ratio</string>
-    <string name="danar_stats_amount_days"># Days</string>
-    <string name="danar_stats_weight">Weight</string>
-    <string name="danar_stats_warning_Message">Possibly inaccurate if using boluses for priming/filling!</string>
-    <string name="danar_stats_olddata_Message">Old Data Please Press "RELOAD"</string>
-    <string name="danar_stats_tbb">Total Base Basal</string>
-    <string name="danar_stats_tbb2">TBB * 2</string>
     <string name="initializing">Initializing ...</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
@@ -486,7 +448,6 @@
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
     <string name="advancedsettings_title">Advanced Settings</string>
     <string name="key_advancedsettings" translatable="false">key_advancedsettings</string>
-    <string name="dana_model">%1$s\nModel: %2$02X\nProtocol: %3$02X\nCode: %4$02X</string>
     <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3 This is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4 This is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
@@ -511,17 +472,9 @@
     <string name="smscommunicator_calibrationsent">Calibration sent. Receiving must be enabled in xDrip.</string>
     <string name="smscommunicator_calibrationfailed">xDrip is not receiving calibrations</string>
     <string name="pumpsuspended">Pump suspended</string>
-    <string name="gettingpumpstatus">Getting pump status</string>
-    <string name="settingtempbasal">Setting temp basal</string>
-    <string name="stoppingtempbasal">Stopping temp basal</string>
-    <string name="settingextendedbolus">Setting extended bolus</string>
-    <string name="stoppingextendedbolus">Stopping extended bolus</string>
-    <string name="updatingbasalrates">Updating basal rates</string>
     <string name="executing">Executing</string>
     <string name="virtualpump_settings">Virtual pump settings</string>
     <string name="virtualpump_uploadstatus_title">Upload status to NS</string>
-    <string name="wrongpassword">Wrong password</string>
-    <string name="approachingdailylimit">Approaching insulin daily limit</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="nsclientinternal_url">URL:</string>
@@ -735,10 +688,6 @@
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
     <string name="pairing">Pairing</string>
-    <string name="emptyreservoir">Empty reservoir</string>
-    <string name="bloodsugarmeasurementalert">Blood sugar measurement alert</string>
-    <string name="remaininsulinalert">Remaining insulin level</string>
-    <string name="missedbolus">Missed bolus</string>
     <string name="selectedpump">Selected pump</string>
     <string name="bolusspeed">Bolus speed</string>
     <string name="serialnumber">Serial number</string>
@@ -753,12 +702,6 @@
     <string name="activity_target">activity target</string>
     <string name="hypo_duration">hypo duration</string>
     <string name="hypo_target">hypo target</string>
-    <string name="danar_history_prime">Prime</string>
-    <string name="gettingextendedbolusstatus">Getting extended bolus status</string>
-    <string name="gettingbolusstatus">Getting bolus status</string>
-    <string name="gettingtempbasalstatus">Getting temporary basal status</string>
-    <string name="gettingpumpsettings">Getting pump settings</string>
-    <string name="gettingpumptime">Getting pump time</string>
     <string name="reuse">reuse</string>
     <string name="wearcontrol_title">Controls from Watch</string>
     <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
@@ -770,9 +713,6 @@
     <string name="shortprotein">Pr</string>
     <string name="shortfat">Fat</string>
     <string name="active"><![CDATA[<Active>]]></string>
-    <string name="waitingforestimatedbolusend">Waiting for bolus end. Remaining %1$d sec.</string>
-    <string name="processinghistory">Processing event</string>
-    <string name="startingbolus">Starting bolus delivery</string>
     <string name="executingrightnow">Command is executed right now</string>
     <string name="pumpdrivercorrected">Pump driver corrected</string>
     <string name="pump_unreachable">Pump unreachable</string>
@@ -809,7 +749,6 @@
     <string name="key_carbsReqThreshold" translatable="false">carbsReqThreshold</string>
     <string name="carbsReqThreshold">Carb suggestion threshold</string>
     <string name="carbsReqThreshold_summary">When Carbs are suggested, how many carbs will prompt a notification</string>
-    <string name="unsupportedfirmware">Unsupported pump firmware</string>
     <string name="dexcomg5_xdripupload_title">Send BG data to xDrip+</string>
     <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
     <string name="dexcomg5_xdripupload_summary">In xDrip+ select 640g/Eversense data source</string>
@@ -871,10 +810,7 @@
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
     <string name="insightpump_shortname">Sight</string>
     <string name="ago">ago</string>
-    <string name="format_hours">%1$.2f h</string>
-    <string name="format_mins">%1$d mins</string>
-    <string name="format_mins_short">%1$dm</string>
-    <string name="key_enableSMB_always" translatable="false">enableSMB_always</string>
+     <string name="key_enableSMB_always" translatable="false">enableSMB_always</string>
     <string name="key_enableSMB_with_COB" translatable="false">enableSMB_with_COB</string>
     <string name="key_enableSMB_with_temptarget" translatable="false">enableSMB_with_temptarget</string>
     <string name="key_enableSMB_after_carbs" translatable="false">enableSMB_after_carbs</string>
@@ -946,7 +882,6 @@
     <string name="key_fromNSAreCommingFakedExtendedBoluses" translatable="false">fromNSAreCommingFakedExtendedBoluses</string>
     <string name="engineering_mode_enabled">Engineering mode enabled</string>
     <string name="not_eng_mode_or_release">Engineering mode not enabled and not on release branch</string>
-    <string name="pump_basebasalrate">%1$.2fU/h</string>
     <string name="combo_actvity_reading_basal_profile">Reading basal profile</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">The pump history has changed after the bolus calculation was performed. The bolus was not delivered. Please recalculate if a bolus is still needed.</string>
     <string name="combo_error_updating_treatment_record">Bolus successfully delivered, but adding the treatment entry failed. This can happen if two small boluses of the same size are administered within the last two minutes. Please check the pump history and treatment entries and use the Careportal to add missing entries. Make sure not to add any entries for the exact same minute and same amount.</string>
@@ -995,7 +930,6 @@
     <string name="food_short">Food</string>
     <string name="iobcobcalculator" translatable="false">IobCobCalculator</string>
     <string name="reset">reset</string>
-    <string name="waitingfortimesynchronization">Waiting for time synchronization (%1$d sec)</string>
     <string name="loopdisconnectedfor">Disconnected (%1$d m)</string>
     <string name="key_openapssmb_max_iob" translatable="false">openapsmb_max_iob</string>
     <string name="openapssmb_maxiob_title">Maximum total IOB OpenAPS can\'t go over [U]</string>
@@ -1079,20 +1013,6 @@
     <string name="request">Request</string>
     <string name="insulinsourcesetup">Configure Insulin plugin</string>
     <string name="exit">Exit</string>
-    <string name="danar_useroptions">User options</string>
-    <string name="danar_timedisplay">Display time format</string>
-    <string name="danar_buttonscroll">Button scroll</string>
-    <string name="danar_beep">Beep on button press</string>
-    <string name="danar_pumpalarm">Alarm</string>
-    <string name="danar_pumpalarm_sound">Sound</string>
-    <string name="danar_pumpalarm_vibrate">Vibrate</string>
-    <string name="danar_pumpalarm_both">Both</string>
-    <string name="danar_screentimeout">LCD on time [seconds]</string>
-    <string name="danar_backlight">Backlight on time [seconds]</string>
-    <string name="danar_glucoseunits">Glucose units</string>
-    <string name="danar_shutdown">Shutdown [hours]</string>
-    <string name="danar_lowreservoir">Low reservoir [Units]</string>
-    <string name="danar_saveuseroptions">Save options to pump</string>
     <string name="option_on">On</string>
     <string name="option_off">Off</string>
     <string name="open_navigation">Open navigation</string>
@@ -1118,8 +1038,6 @@
     <string name="sensitivity_raises_target_summary">When sensitivity is detected, raise the target glucose</string>
     <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named QUICK INFO using the 360 configuration software.</string>
     <string name="custom">Custom</string>
-    <string name="largetimedifftitle">Large Time Difference</string>
-    <string name="largetimediff">Large time difference:\nTime in pump is off by more than 1.5 hours.\nPlease adjust the time manually on the pump and make sure that reading the history from the pump does not cause unexpected behaviour.\nIf possible, remove the history from the pump before changing the time or disable the closed loop for one DIA after the last wrong history entry but minimum one DIA from now.</string>
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
     <string name="careportal_removestartedevents">Clean AndroidAPS started</string>
     <string name="storedsettingsfound">Stored settings found</string>
@@ -1156,9 +1074,7 @@
     <string name="loop_openmode_min_change">Minimal request change [%]</string>
     <string name="loop_openmode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
-    <string name="pairfirst">Please pair your pump with your phone!</string>
     <string name="searching_for_devices">Searching for devices…</string>
-    <string name="please_wait">Please wait…</string>
     <string name="pairing_completed">Pairing completed</string>
     <string name="code_compare">Do the codes displayed on this device and on your pump match?</string>
     <string name="insight_pairing">Insight pairing</string>
@@ -1334,7 +1250,6 @@
     <string name="very_old_version">very old version</string>
     <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after %2$d days, loop will be disabled after %3$d days</string>
     <string name="twohours">2h</string>
-    <string name="formatinsulinunits">%1$.2fU</string>
 
     <string name="dexcom_app_patched">Dexcom App (patched)</string>
     <string name="dexcom_short">DXCM</string>
@@ -1565,7 +1480,6 @@
     <string name="insulinFromCob"><![CDATA[COB vs IOB: <font color=\'%1$s\'>%2$+.2fU</font>]]></string>
     <string name="bolusconstraintappliedwarning"><![CDATA[<font color=\'%1$s\'>Bolus constraint applied: %2$.2fU to %3$.2fU</font>]]></string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Slow carbs absorption detected: %2$d%% of time. Double check your calculation. COB can be overestimated thus more insulin could be given !!!!!</font>]]></string>
-    <string name="reservoirvalue">%1$.0f / %2$d U</string>
     <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
     <string name="partialboluswizard">Deliver this part of bolus wizard result [%]</string>
     <string name="deliverpartofboluswizard">Bolus wizard performs calculation but only this part of calculated insulin is delivered. Useful with SMB algorithm.</string>
@@ -1575,7 +1489,6 @@
     <string name="timerange_value">Time is between %1$s and %2$s</string>
     <string name="between">Between </string>
 
-    <string name="close">Close</string>
     <string name="increasingmaxbasal">Increasing max basal value because setting is lower than your max basal in profile</string>
     <string name="smscommunicator_messagebody">Invalid message body</string>
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
@@ -1594,7 +1507,6 @@
     <string name="common_off">Off</string>
     <string name="objectives_button_unfinish">Clear finished</string>
     <string name="objectives_button_unstart">Clear started</string>
-    <string name="timedetection">Time detection</string>
     <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
     <string name="time_or_timezone_change">Time and/or Timezone change on pump</string>
     <string name="nopumpselected">No pump selected</string>
@@ -1695,8 +1607,6 @@
     <string name="press_ok_on_the_pump">Press OK on the pump\nand enter 2 displayed numbers\nKeep display on pump ON by pressing minus button until you finish entering code.</string>
     <string name="num1pin">1: (12 digits)</string>
     <string name="num2pin">2: (8 digits)</string>
-    <string name="resetpairing">Reset pairing information?</string>
-    <string name="invalidpairing">Invalid pairing information. Requesting new pairing</string>
     <string name="onconnect">On connect</string>
     <string name="ondisconnect">On disconnect</string>
     <string name="overview_show_predictions">Predictions</string>

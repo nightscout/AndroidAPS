@@ -78,6 +78,7 @@ public class MedtronicHistoryData {
     private final AAPSLogger aapsLogger;
     private final SP sp;
     private final ActivePluginProvider activePlugin;
+    private final NSUpload nsUpload;
     private final MedtronicUtil medtronicUtil;
     private final MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder;
 
@@ -106,6 +107,7 @@ public class MedtronicHistoryData {
             AAPSLogger aapsLogger,
             SP sp,
             ActivePluginProvider activePlugin,
+            NSUpload nsUpload,
             MedtronicUtil medtronicUtil,
             MedtronicPumpHistoryDecoder medtronicPumpHistoryDecoder
     ) {
@@ -115,6 +117,7 @@ public class MedtronicHistoryData {
         this.aapsLogger = aapsLogger;
         this.sp = sp;
         this.activePlugin = activePlugin;
+        this.nsUpload = nsUpload;
         this.medtronicUtil = medtronicUtil;
         this.medtronicPumpHistoryDecoder = medtronicPumpHistoryDecoder;
     }
@@ -543,7 +546,7 @@ public class MedtronicHistoryData {
             careportalEvent.eventType = event;
             careportalEvent.json = data.toString();
             MainApp.getDbHelper().createOrUpdate(careportalEvent);
-            NSUpload.uploadCareportalEntryToNS(data);
+            nsUpload.uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
             aapsLogger.error("Unhandled exception", e);
         }

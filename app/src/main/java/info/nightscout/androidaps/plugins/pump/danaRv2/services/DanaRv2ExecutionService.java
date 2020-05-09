@@ -99,6 +99,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject DetailedBolusInfoStorage detailedBolusInfoStorage;
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject ProfileFunction profileFunction;
+    @Inject NSUpload nsUpload;
     @Inject SP sp;
     @Inject DateUtil dateUtil;
 
@@ -255,7 +256,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, resourceHelper.gs(R.string.approachingdailylimit), Notification.URGENT);
                     rxBus.send(new EventNewNotification(reportFail));
-                    NSUpload.uploadError(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaRPump.getDailyTotalUnits() + "/" + danaRPump.getMaxDailyTotalUnits() + "U");
+                    nsUpload.uploadError(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaRPump.getDailyTotalUnits() + "/" + danaRPump.getMaxDailyTotalUnits() + "U");
                     lastApproachingDailyLimit = System.currentTimeMillis();
                 }
             }

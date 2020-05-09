@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#40bbaa</color>
 
+    <!--    Fragments-->
+    <color name="colorInitializingBorder">#00695c</color>
+
     <!--    Dialogs-->
     <color name="dialog_title_background">#303030</color>
     <color name="activity_title_background">#121212</color>
@@ -16,6 +19,7 @@
 
     <!--    Treatment-->
     <color name="tempbasal">#C803A9F4</color>
+    <color name="listdelimiter">#505050</color>
 
     <!--    BgReading-->
     <color name="inrange">#00FF00</color>

@@ -5,7 +5,7 @@ import info.nightscout.androidaps.db.DanaRHistoryRecord
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRSyncStatus
+import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.utils.DateUtil
 
 open class MsgHistoryAll(

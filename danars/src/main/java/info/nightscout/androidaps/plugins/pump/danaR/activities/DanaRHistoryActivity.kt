@@ -10,22 +10,21 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.DanaRHistoryRecord
 import info.nightscout.androidaps.events.EventPumpStatusChanged
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.PluginType
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.interfaces.ProfileFunction
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes
-import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRSyncStatus
-import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
+import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DecimalFormatter
@@ -44,9 +43,9 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
-    @Inject lateinit var danaRSPlugin: DanaRSPlugin
+    @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var commandQueue: CommandQueueProvider
+    @Inject lateinit var databaseHelper: DatabaseHelperInterface
     @Inject lateinit var dateUtil: DateUtil
 
     private val disposable = CompositeDisposable()
@@ -87,8 +86,9 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
         danar_history_recyclerview.adapter = RecyclerViewAdapter(historyList)
         danar_history_status.visibility = View.GONE
 
-        val isKorean = danaRKoreanPlugin.isEnabled(PluginType.PUMP)
-        val isRS = danaRSPlugin.isEnabled(PluginType.PUMP)
+        val pump = activePlugin.activePump
+        val isKorean = pump.pumpDescription.pumpType == PumpType.DanaRKorean
+        val isRS = pump.pumpDescription.pumpType == PumpType.DanaRS
 
         // Types
         val typeList = ArrayList<TypeList>()
@@ -151,7 +151,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
             holder.duration.text = DecimalFormatter.to0Decimal(record.recordDuration.toDouble())
             holder.alarm.text = record.recordAlarm
             when (showingType) {
-                RecordTypes.RECORD_TYPE_ALARM                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -> {
+                RecordTypes.RECORD_TYPE_ALARM                                                                                                                                                              -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
                     holder.stringValue.visibility = View.GONE
@@ -163,7 +163,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
                     holder.alarm.visibility = View.VISIBLE
                 }
 
-                RecordTypes.RECORD_TYPE_BOLUS                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -> {
+                RecordTypes.RECORD_TYPE_BOLUS                                                                                                                                                              -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
                     holder.stringValue.visibility = View.GONE
@@ -175,7 +175,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
                     holder.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_DAILY                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            -> {
+                RecordTypes.RECORD_TYPE_DAILY                                                                                                                                                              -> {
                     holder.dailyBasal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBasal)
                     holder.dailyBolus.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus)
                     holder.dailyTotal.text = resourceHelper.gs(R.string.formatinsulinunits, record.recordDailyBolus + record.recordDailyBasal)
@@ -191,7 +191,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
                     holder.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_GLUCOSE                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          -> {
+                RecordTypes.RECORD_TYPE_GLUCOSE                                                                                                                                                            -> {
                     holder.value.text = Profile.toUnitsString(record.recordValue, record.recordValue * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE
@@ -216,7 +216,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
                     holder.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_SUSPEND                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          -> {
+                RecordTypes.RECORD_TYPE_SUSPEND                                                                                                                                                            -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.GONE
                     holder.stringValue.visibility = View.VISIBLE
@@ -248,7 +248,7 @@ class DanaRHistoryActivity : NoSplashAppCompatActivity() {
     }
 
     private fun loadDataFromDB(type: Byte) {
-        historyList = MainApp.getDbHelper().getDanaRHistoryRecordsByType(type)
+        historyList = databaseHelper.getDanaRHistoryRecordsByType(type)
         runOnUiThread { danar_history_recyclerview?.swapAdapter(RecyclerViewAdapter(historyList), false) }
     }
 

@@ -2,7 +2,7 @@ package info.nightscout.androidaps.utils
 
 import android.graphics.Color
 import android.widget.TextView
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import javax.inject.Inject

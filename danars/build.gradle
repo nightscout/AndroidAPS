@@ -54,8 +54,14 @@ dependencies {
     implementation "androidx.activity:activity:${activityVersion}"
     implementation "androidx.activity:activity-ktx:${activityVersion}"
 
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
+
+    implementation 'net.danlew:android.joda:2.10.6'
+
     // Graphview cannot be upgraded
     implementation "com.jjoe64:graphview:4.0.1"
+
+    implementation "com.joanzapata.iconify:android-iconify-fontawesome:2.2.2"
 
     implementation "com.google.dagger:dagger-android:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"

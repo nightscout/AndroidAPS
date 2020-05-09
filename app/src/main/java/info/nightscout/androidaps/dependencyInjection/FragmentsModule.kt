@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.aps.openAPSSMB.OpenAPSSMBFragment
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.ObjectivesFragment
 import info.nightscout.androidaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
-import info.nightscout.androidaps.plugins.constraints.objectives.dialogs.NtpProgressDialog
+import info.nightscout.androidaps.dialogs.NtpProgressDialog
 import info.nightscout.androidaps.plugins.general.actions.ActionsFragment
 import info.nightscout.androidaps.plugins.general.automation.AutomationFragment
 import info.nightscout.androidaps.plugins.general.automation.dialogs.ChooseActionDialog

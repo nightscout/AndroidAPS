@@ -3,20 +3,15 @@ package info.nightscout.androidaps.plugins.pump.danaRS.comm;
 import android.annotation.TargetApi;
 import android.os.Build;
 
-import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.logging.AAPSLogger;
-import info.nightscout.androidaps.logging.LTag;
-import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption;
-
-import org.slf4j.Logger;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
+import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.logging.AAPSLogger;
+import info.nightscout.androidaps.logging.LTag;
+import info.nightscout.androidaps.plugins.pump.danaRS.encryption.BleEncryption;
 import info.nightscout.androidaps.utils.DateUtil;
 
 public class DanaRS_Packet {

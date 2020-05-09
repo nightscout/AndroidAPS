@@ -9,9 +9,9 @@ import android.view.WindowManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.core.R
 import info.nightscout.androidaps.data.Profile
-import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import kotlinx.android.synthetic.main.close.*
@@ -22,7 +22,7 @@ import javax.inject.Inject
 class ProfileViewerDialog : DaggerDialogFragment() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var treatmentsPlugin: TreatmentsPlugin
+    @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var dateUtil: DateUtil
 
     private var time: Long = 0
@@ -66,9 +66,9 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         val date: String?
         when (mode) {
             Mode.RUNNING_PROFILE -> {
-                profile = treatmentsPlugin.getProfileSwitchFromHistory(time)?.profileObject
-                profileName = treatmentsPlugin.getProfileSwitchFromHistory(time)?.customizedName
-                date = dateUtil.dateAndTimeString(treatmentsPlugin.getProfileSwitchFromHistory(time)?.date
+                profile = activePlugin.activeTreatments.getProfileSwitchFromHistory(time)?.profileObject
+                profileName = activePlugin.activeTreatments.getProfileSwitchFromHistory(time)?.customizedName
+                date = dateUtil.dateAndTimeString(activePlugin.activeTreatments.getProfileSwitchFromHistory(time)?.date
                     ?: 0)
                 profileview_datelayout.visibility = View.VISIBLE
             }

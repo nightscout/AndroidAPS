@@ -22,7 +22,8 @@ class TomatoPlugin @Inject constructor(
     injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val sp: SP
+    private val sp: SP,
+    private val nsUpload: NSUpload
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -46,10 +47,10 @@ class TomatoPlugin @Inject constructor(
         bgReading.date = bundle.getLong("com.fanqies.tomatofn.Extras.Time")
         val isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Tomato")
         if (isNew && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-            NSUpload.uploadBg(bgReading, "AndroidAPS-Tomato")
+            nsUpload.uploadBg(bgReading, "AndroidAPS-Tomato")
         }
         if (isNew && sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-            NSUpload.sendToXdrip(bgReading)
+            nsUpload.sendToXdrip(bgReading)
         }
     }
 }

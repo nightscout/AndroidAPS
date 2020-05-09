@@ -29,7 +29,8 @@ class EversensePlugin @Inject constructor(
     private val sp: SP,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val nsUpload: NSUpload
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
@@ -77,10 +78,10 @@ class EversensePlugin @Inject constructor(
                     bgReading.raw = 0.0
                     val isNew = MainApp.getDbHelper().createIfNotExists(bgReading, "Eversense")
                     if (isNew && sp.getBoolean(R.string.key_dexcomg5_nsupload, false)) {
-                        NSUpload.uploadBg(bgReading, "AndroidAPS-Eversense")
+                        nsUpload.uploadBg(bgReading, "AndroidAPS-Eversense")
                     }
                     if (isNew && sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
-                        NSUpload.sendToXdrip(bgReading)
+                        nsUpload.sendToXdrip(bgReading)
                     }
                 }
             }
@@ -103,7 +104,7 @@ class EversensePlugin @Inject constructor(
                             data.put("glucoseType", "Finger")
                             data.put("glucose", calibrationGlucoseLevels[i])
                             data.put("units", Constants.MGDL)
-                            NSUpload.uploadCareportalEntryToNS(data)
+                            nsUpload.uploadCareportalEntryToNS(data)
                         }
                     } catch (e: JSONException) {
                         aapsLogger.error("Unhandled exception", e)

@@ -12,11 +12,12 @@ import javax.inject.Singleton
 
 @Singleton
 class HardLimits @Inject constructor(
-    val aapsLogger: AAPSLogger,
-    val rxBus: RxBusWrapper,
-    val sp: SP,
-    val resourceHelper: ResourceHelper,
-    val context: Context
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBusWrapper,
+    private val sp: SP,
+    private val resourceHelper: ResourceHelper,
+    private val context: Context,
+    private val nsUpload: NSUpload
 ) {
 
     val CHILD = 0
@@ -90,7 +91,7 @@ class HardLimits @Inject constructor(
             msg += ".\n"
             msg += String.format(resourceHelper.gs(R.string.valuelimitedto), value, newvalue)
             aapsLogger.error(msg)
-            NSUpload.uploadError(msg)
+            nsUpload.uploadError(msg)
             ToastUtils.showToastInUiThread(context, rxBus, msg, R.raw.error)
         }
         return newvalue

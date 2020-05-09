@@ -13,7 +13,8 @@ class MsgError(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBusWrapper,
     private val resourceHelper: ResourceHelper,
-    private val danaRPump: DanaRPump
+    private val danaRPump: DanaRPump,
+    private val nsUpload: NSUpload
 ) : MessageBase() {
 
     init {
@@ -41,6 +42,6 @@ class MsgError(
             failed = false
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Error detected: $errorString")
-        NSUpload.uploadError(errorString)
+        nsUpload.uploadError(errorString)
     }
 }

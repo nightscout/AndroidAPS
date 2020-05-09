@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.SystemClock
 import android.util.Base64
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
+import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
@@ -45,7 +45,8 @@ class BLEComm @Inject internal constructor(
     private val danaRSMessageHashTable: DanaRSMessageHashTable,
     private val danaRPump: DanaRPump,
     private val danaRSPlugin: DanaRSPlugin,
-    private val bleEncryption: BleEncryption
+    private val bleEncryption: BleEncryption,
+    private val nsUpload: NSUpload
 ) {
 
     companion object {
@@ -481,7 +482,7 @@ class BLEComm @Inject internal constructor(
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRS_Packet.toHexString(decryptedBuffer))
             mSendQueue.clear()
             rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, resourceHelper.gs(R.string.pumperror)))
-            NSUpload.uploadError(resourceHelper.gs(R.string.pumperror))
+            nsUpload.uploadError(resourceHelper.gs(R.string.pumperror))
             val n = Notification(Notification.PUMPERROR, resourceHelper.gs(R.string.pumperror), Notification.URGENT)
             rxBus.send(EventNewNotification(n))
             // response BUSY: error status

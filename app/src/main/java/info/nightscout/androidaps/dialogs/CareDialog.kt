@@ -36,6 +36,7 @@ class CareDialog : DialogFragmentWithDate() {
     @Inject lateinit var mainApp: MainApp
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var translator: Translator
 
     enum class EventType {
@@ -197,7 +198,7 @@ class CareDialog : DialogFragmentWithDate() {
                 careportalEvent.json = json.toString()
                 aapsLogger.debug("USER ENTRY: CAREPORTAL ${careportalEvent.eventType} json: ${careportalEvent.json}")
                 MainApp.getDbHelper().createOrUpdate(careportalEvent)
-                NSUpload.uploadCareportalEntryToNS(json)
+                nsUpload.uploadCareportalEntryToNS(json)
             }, null)
         }
         return true

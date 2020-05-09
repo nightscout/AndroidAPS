@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper

@@ -78,6 +78,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
     @Inject ActivePluginProvider activePlugin;
     @Inject TreatmentsPlugin treatmentsPlugin;
     @Inject HardLimits hardLimits;
+    @Inject NSUpload nsUpload;
     @Inject Translator translator;
     @Inject DateUtil dateUtil;
 
@@ -714,7 +715,7 @@ public class NewNSTreatmentDialog extends DaggerDialogFragment implements View.O
 
     private void confirmNSTreatmentCreation() {
         final JSONObject data = gatherData();
-        OKDialog.showConfirmation(getContext(), translator.translate(JsonHelper.safeGetString(data, "eventType", resourceHelper.gs(R.string.overview_treatment_label))), buildConfirmText(data), () -> NSUpload.createNSTreatment(data, profileStore, profileFunction, eventTime.getTime()));
+        OKDialog.showConfirmation(getContext(), translator.translate(JsonHelper.safeGetString(data, "eventType", resourceHelper.gs(R.string.overview_treatment_label))), buildConfirmText(data), () -> nsUpload.createNSTreatment(data, profileStore, profileFunction, eventTime.getTime()));
     }
 
 

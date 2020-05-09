@@ -1,22 +1,20 @@
 package info.nightscout.androidaps.plugins.pump.danaR.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import info.nightscout.androidaps.Constants
-import info.nightscout.androidaps.MainApp
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
 import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.events.EventInitializationChanged
+import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
-import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
-import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.extensions.plusAssign
@@ -34,20 +32,17 @@ class DanaRUserOptionsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var resourceHelper: ResourceHelper
-    @Inject lateinit var mainApp: MainApp
-    @Inject lateinit var danaRSPlugin: DanaRSPlugin
-    @Inject lateinit var danaRPlugin: DanaRPlugin
-    @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
+    @Inject lateinit var context: Context
     @Inject lateinit var danaRPump: DanaRPump
+    @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var commandQueue: CommandQueueProvider
 
     private val disposable = CompositeDisposable()
 
     // This is for Dana pumps only
-    private fun isRS() = danaRSPlugin.isEnabled(PluginType.PUMP)
-
-    private fun isDanaR() = danaRPlugin.isEnabled(PluginType.PUMP)
-    private fun isDanaRv2() = danaRv2Plugin.isEnabled(PluginType.PUMP)
+    private fun isRS() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRS
+    private fun isDanaR() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaR
+    private fun isDanaRv2() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRv2
 
     @Synchronized
     override fun onResume() {
@@ -153,12 +148,12 @@ class DanaRUserOptionsActivity : NoSplashAppCompatActivity() {
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    val i = Intent(mainApp, ErrorHelperActivity::class.java)
+                    val i = Intent(context, ErrorHelperActivity::class.java)
                     i.putExtra("soundid", R.raw.boluserror)
                     i.putExtra("status", result.comment)
                     i.putExtra("title", resourceHelper.gs(R.string.pumperror))
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    mainApp.startActivity(i)
+                    context.startActivity(i)
                 }
             }
         })

@@ -1733,7 +1733,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 }
   */
 
-    public void createProfileSwitchFromJsonIfNotExists(ActivePluginProvider activePluginProvider, JSONObject trJson) {
+    public void createProfileSwitchFromJsonIfNotExists(ActivePluginProvider activePluginProvider, NSUpload nsUpload, JSONObject trJson) {
         try {
             ProfileSwitch profileSwitch = new ProfileSwitch(MainApp.instance());
             profileSwitch.date = trJson.getLong("mills");
@@ -1759,7 +1759,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         if (L.isEnabled(LTag.DATABASE))
                             log.debug("Profile switch prefilled with JSON from local store");
                         // Update data in NS
-                        NSUpload.updateProfileSwitch(profileSwitch);
+                        nsUpload.updateProfileSwitch(profileSwitch);
                     } else {
                         if (L.isEnabled(LTag.DATABASE))
                             log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());

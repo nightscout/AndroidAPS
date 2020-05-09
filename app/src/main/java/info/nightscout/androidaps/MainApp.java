@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.StaticInjector;
 import info.nightscout.androidaps.dependencyInjection.DaggerAppComponent;
@@ -45,7 +46,7 @@ import info.nightscout.androidaps.utils.ActivityMonitor;
 import info.nightscout.androidaps.utils.LocaleHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
-public class MainApp extends DaggerApplication implements DatabaseHelperInterface {
+public class MainApp extends DaggerApplication {
 
     static MainApp sInstance;
     private static Resources sResources;
@@ -57,6 +58,7 @@ public class MainApp extends DaggerApplication implements DatabaseHelperInterfac
     @Inject ActivityMonitor activityMonitor;
     @Inject VersionCheckerUtils versionCheckersUtils;
     @Inject SP sp;
+    @Inject NSUpload nsUpload;
 
     @Inject ConfigBuilderPlugin configBuilderPlugin;
     @Inject KeepAliveReceiver.KeepAliveManager keepAliveManager;
@@ -99,7 +101,7 @@ public class MainApp extends DaggerApplication implements DatabaseHelperInterfac
         pluginStore.setPlugins(plugins);
         configBuilderPlugin.initialize();
 
-        NSUpload.uploadAppStart();
+        nsUpload.uploadAppStart();
 
         new Thread(() -> keepAliveManager.setAlarm(this)).start();
         doMigrations();
@@ -172,9 +174,5 @@ public class MainApp extends DaggerApplication implements DatabaseHelperInterfac
         unregisterActivityLifecycleCallbacks(activityMonitor);
         keepAliveManager.cancelAlarm(this);
         super.onTerminate();
-    }
-
-    @NotNull @Override public List<BgReading> getAllBgreadingsDataFromTime(long mills, boolean ascending) {
-        return getDbHelper().getAllBgreadingsDataFromTime(mills, ascending);
     }
 }

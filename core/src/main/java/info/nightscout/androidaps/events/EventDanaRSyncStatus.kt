@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.danaR.events
+package info.nightscout.androidaps.events
 
 import info.nightscout.androidaps.events.Event
 

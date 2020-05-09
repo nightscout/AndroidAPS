@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.db.DanaRHistoryRecord
+import info.nightscout.androidaps.interfaces.DatabaseHelperInterface
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes
-import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRSyncStatus
+import info.nightscout.androidaps.events.EventDanaRSyncStatus
 import org.joda.time.DateTime
 import java.util.*
 import javax.inject.Inject
@@ -17,6 +17,7 @@ abstract class DanaRS_Packet_History_(
 ) : DanaRS_Packet(injector) {
 
     @Inject lateinit var rxBus: RxBusWrapper
+    @Inject lateinit var databaseHelper: DatabaseHelperInterface
 
     protected var year = 0
     protected var month = 0
@@ -198,7 +199,7 @@ abstract class DanaRS_Packet_History_(
                     danaRHistoryRecord.stringRecordValue = strRecordValue
                 }
             }
-            MainApp.getDbHelper().createOrUpdate(danaRHistoryRecord)
+            databaseHelper.createOrUpdate(danaRHistoryRecord)
             rxBus.send(EventDanaRSyncStatus(dateUtil.dateAndTimeString(danaRHistoryRecord.recordDate) + " " + messageType))
         }
     }

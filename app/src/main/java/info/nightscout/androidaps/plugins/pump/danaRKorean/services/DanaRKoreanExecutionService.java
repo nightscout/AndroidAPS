@@ -75,6 +75,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     @Inject MessageHashTableRKorean messageHashTableRKorean;
     @Inject ActivePluginProvider activePlugin;
     @Inject ProfileFunction profileFunction;
+    @Inject NSUpload nsUpload;
     @Inject DateUtil dateUtil;
 
     public DanaRKoreanExecutionService() {
@@ -203,7 +204,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, resourceHelper.gs(R.string.approachingdailylimit), Notification.URGENT);
                     rxBus.send(new EventNewNotification(reportFail));
-                    NSUpload.uploadError(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaRPump.getDailyTotalUnits() + "/" + danaRPump.getMaxDailyTotalUnits() + "U");
+                    nsUpload.uploadError(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaRPump.getDailyTotalUnits() + "/" + danaRPump.getMaxDailyTotalUnits() + "U");
                     lastApproachingDailyLimit = System.currentTimeMillis();
                 }
             }

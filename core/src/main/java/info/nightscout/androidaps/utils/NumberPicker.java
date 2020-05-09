@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.core.R;
 
 /**
  * Created by mike on 28.06.2016.

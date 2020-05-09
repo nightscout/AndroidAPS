@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.constraints.objectives.events
+package info.nightscout.androidaps.events
 
 import info.nightscout.androidaps.events.Event
 

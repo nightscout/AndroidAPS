@@ -531,9 +531,9 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
 
         }
 
-        final LoopPlugin.LastRun finalLastRun = loopPlugin.lastRun;
-        if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.request.hasPredictions && finalLastRun.constraintsProcessed != null) {
-            List<BgReading> predArray = finalLastRun.constraintsProcessed.getPredictions();
+        final LoopPlugin.LastRun finalLastRun = loopPlugin.getLastRun();
+        if (sp.getBoolean("wear_predictions", true) && finalLastRun != null && finalLastRun.getRequest().hasPredictions && finalLastRun.getConstraintsProcessed() != null) {
+            List<BgReading> predArray = finalLastRun.getConstraintsProcessed().getPredictions();
 
             if (!predArray.isEmpty()) {
                 for (BgReading bg : predArray) {
@@ -715,7 +715,7 @@ public class WatchUpdaterService extends WearableListenerService implements Goog
             //OpenAPS status
             if (config.getAPS()) {
                 //we are AndroidAPS
-                openApsStatus = loopPlugin.lastRun != null && loopPlugin.lastRun.lastTBREnact != 0 ? loopPlugin.lastRun.lastTBREnact : -1;
+                openApsStatus = loopPlugin.getLastRun() != null && loopPlugin.getLastRun().getLastTBREnact() != 0 ? loopPlugin.getLastRun().getLastTBREnact() : -1;
             } else {
                 //NSClient or remote
                 openApsStatus = NSDeviceStatus.getOpenApsTimestamp();

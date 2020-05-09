@@ -7,6 +7,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.danaR.DanaRPump
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
@@ -28,6 +29,7 @@ class MessageHashTableR @Inject constructor(
     configBuilderPlugin: ConfigBuilderPlugin,
     commandQueue: CommandQueueProvider,
     activePlugin: ActivePluginProvider,
+    nsUpload: NSUpload,
     injector: HasAndroidInjector,
     dateUtil: DateUtil
 ) : MessageHashTableBase {
@@ -54,7 +56,7 @@ class MessageHashTableR @Inject constructor(
         put(MsgSetTempBasalStop(aapsLogger))          // 0x0403 CMD_PUMPSET_EXERCISE_STOP
         put(MsgSetExtendedBolusStop(aapsLogger))      // 0x0406 CMD_PUMPSET_EXPANS_INS_STOP
         put(MsgSetExtendedBolusStart(aapsLogger, constraintChecker, 0.0, 0))     // 0x0407 CMD_PUMPSET_EXPANS_INS_S
-        put(MsgError(aapsLogger, rxBus, resourceHelper, danaRPump))                     // 0x0601 CMD_PUMPOWAY_SYSTEM_STATUS
+        put(MsgError(aapsLogger, rxBus, resourceHelper, danaRPump, nsUpload))                     // 0x0601 CMD_PUMPOWAY_SYSTEM_STATUS
         put(MsgPCCommStart(aapsLogger))               // 0x3001 CMD_CONNECT
         put(MsgPCCommStop(aapsLogger))                // 0x3002 CMD_DISCONNECT
         put(MsgHistoryBolus(aapsLogger, rxBus, dateUtil))              // 0x3101 CMD_HISTORY_MEAL_INS

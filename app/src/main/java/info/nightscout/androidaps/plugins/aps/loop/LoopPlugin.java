@@ -22,6 +22,7 @@ import javax.inject.Singleton;
 
 import dagger.Lazy;
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -103,7 +104,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
     private boolean isSuperBolus;
     private boolean isDisconnected;
 
-    @Nullable public LastRun lastRun = null;
+    @Nullable private LastRun lastRun = null;
 
     @Nullable @Override public LastRun getLastRun() {
         return lastRun;
@@ -412,7 +413,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
             lastRun.setLastSMBEnact(0);
             lastRun.setLastSMBRequest(0);
 
-            nsUpload.uploadDeviceStatus(this, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump(), receiverStatusStore);
+            nsUpload.uploadDeviceStatus(this, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump(), receiverStatusStore, BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
 
             if (isSuspended()) {
                 getAapsLogger().debug(LTag.APS, resourceHelper.gs(R.string.loopsuspended));
@@ -537,7 +538,7 @@ public class LoopPlugin extends PluginBase implements LoopInterface {
                     lastRun.setLastTBRRequest(lastRun.getLastAPSRun());
                     lastRun.setLastTBREnact(DateUtil.now());
                     lastRun.setLastOpenModeAccept(DateUtil.now());
-                    nsUpload.uploadDeviceStatus(lp, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump(), receiverStatusStore);
+                    nsUpload.uploadDeviceStatus(lp, iobCobCalculatorPlugin, profileFunction, activePlugin.getActivePump(), receiverStatusStore, BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
                     sp.incInt(R.string.key_ObjectivesmanualEnacts);
                 }
                 rxBus.send(new EventAcceptOpenLoopChange());

@@ -10,6 +10,7 @@ import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.Constants
 import info.nightscout.androidaps.activities.ErrorHelperActivity
+import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.data.PumpEnactResult
 import info.nightscout.androidaps.db.Treatment
@@ -65,6 +66,7 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var bleComm: BLEComm
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var nsUpload: NSUpload
     @Inject lateinit var dateUtil: DateUtil
 
     private val disposable = CompositeDisposable()
@@ -192,7 +194,7 @@ class DanaRSService : DaggerService() {
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
                     val reportFail = Notification(Notification.APPROACHING_DAILY_LIMIT, resourceHelper.gs(R.string.approachingdailylimit), Notification.URGENT)
                     rxBus.send(EventNewNotification(reportFail))
-                    NSUpload.uploadError(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits + "U")
+                    nsUpload.uploadError(resourceHelper.gs(R.string.approachingdailylimit) + ": " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits + "U")
                     lastApproachingDailyLimit = System.currentTimeMillis()
                 }
             }

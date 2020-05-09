@@ -9,7 +9,6 @@
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
     <color name="actionsConfirm">#FFFF00</color>
-    <color name="listdelimiter">#505050</color>
     <color name="tabBgColorSelected">#FF33B5E5</color>
     <color name="deviations">#FF0000</color>
     <color name="cobAlert">#7484E2</color>
@@ -30,7 +29,6 @@
 
 
     <color name="mdtp_accent_color">#40bbaa</color>
-    <color name="colorInitializingBorder">#00695c</color>
 
     <color name="cardColorBackground">#121212</color>
     <color name="cardObjectiveText">#779ECB</color>

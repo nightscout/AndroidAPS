@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.TDDStatsActivity
+import info.nightscout.androidaps.danars.R
 import info.nightscout.androidaps.dialogs.ProfileViewerDialog
 import info.nightscout.androidaps.events.EventExtendedBolusChange
 import info.nightscout.androidaps.events.EventInitializationChanged
@@ -16,15 +16,14 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.events.EventTempBasalChange
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.interfaces.PluginType
 import info.nightscout.androidaps.interfaces.PumpInterface
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRHistoryActivity
 import info.nightscout.androidaps.plugins.pump.danaR.activities.DanaRUserOptionsActivity
 import info.nightscout.androidaps.plugins.pump.danaR.events.EventDanaRNewStatus
-import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.plugins.pump.danaRS.DanaRSPlugin
 import info.nightscout.androidaps.queue.events.EventQueueChanged
 import info.nightscout.androidaps.utils.DateUtil
@@ -46,7 +45,6 @@ class DanaRFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var commandQueue: CommandQueueProvider
     @Inject lateinit var activePlugin: ActivePluginProvider
-    @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var danaRSPlugin: DanaRSPlugin
     @Inject lateinit var danaRPump: DanaRPump
     @Inject lateinit var resourceHelper: ResourceHelper
@@ -223,7 +221,7 @@ class DanaRFragment : DaggerFragment() {
         }
         //hide user options button if not an RS pump or old firmware
         // also excludes pump with model 03 because of untested error
-        val isKorean = danaRKoreanPlugin.isEnabled(PluginType.PUMP)
+        val isKorean = activePlugin.activePump.pumpDescription.pumpType == PumpType.DanaRKorean
         if (isKorean || pump.hwModel == 0 || pump.hwModel == 3) {
             danar_user_options?.visibility = View.GONE
         }
