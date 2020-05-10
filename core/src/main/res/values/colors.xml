@@ -8,6 +8,8 @@
     <color name="mdtp_button_color">@color/mdtp_accent_color</color>
     <color name="mdtp_white">#ffffff</color>
     <color name="mdtp_line_dark">#808080</color>
+    <color name="colorLightGray">#d8d8d8</color>
+    <color name="cardColorBackground">#121212</color>
 
     <!--    Fragments-->
     <color name="colorInitializingBorder">#00695c</color>

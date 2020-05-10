@@ -15,7 +15,6 @@
     <color name="inrangebackground">#2800FF00</color>
     <color name="basebasal">#C83F51B5</color>
     <color name="graphgrid">#757575</color>
-    <color name="colorLightGray">#d8d8d8</color>
     <color name="warning">#ff1a1a</color>
     <color name="error_background">#66FC0000</color>
     <color name="ok_background">#323232</color>
@@ -30,7 +29,6 @@
 
     <color name="mdtp_accent_color">#40bbaa</color>
 
-    <color name="cardColorBackground">#121212</color>
     <color name="cardObjectiveText">#779ECB</color>
 
     <color name="linearBlockBackground">#3e3d3d</color>
