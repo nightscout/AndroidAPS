@@ -812,10 +812,12 @@
     <string name="raise_notifications_as_android_notifications">Use system notifications for alerts and notifications</string>
     <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
     <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
+    <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
     <string name="localalertsettings_title">Local alerts</string>
     <string name="enable_missed_bg_readings_alert">Alert if no BG data is received</string>
     <string name="enable_pump_unreachable_alert">Alert if pump is unreachable</string>
     <string name="pump_unreachable_threshold">Pump unreachable threshold [min]</string>
+    <string name="enable_carbs_req_alert">Alert if carbs are required</string>
     <string name="key_pump_unreachable_threshold" translatable="false">pump_unreachable_threshold</string>
     <string name="key_missed_bg_readings_threshold" translatable="false">missed_bg_readings_threshold</string>
     <string name="urgent_alarm">Urgent Alarm</string>
@@ -946,8 +948,11 @@
     <string name="wear_notifysmb_title">Notify on SMB</string>
     <string name="wear_notifysmb_summary">Show SMB on the watch like a standard bolus.</string>
     <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
+    <string name="key_ns_create_announcements_from_carbs_req" translatable="false">ns_create_announcements_from_carbs_req</string>
     <string name="ns_create_announcements_from_errors_title">Create announcements from errors</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Create announcements from carbs required alerts</string>
     <string name="ns_create_announcements_from_errors_summary">Create Nightscout announcement for error dialogs and local alerts (also viewable in Careportal under Treatments)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Create Nightscout announcements for carbs required alerts</string>
     <string name="eversense_shortname" translatable="false">EVR</string>
     <string name="wear_predictions_summary">Show the predictions on the watchface.</string>
     <string name="wear_predictions_title">Predictions</string>
