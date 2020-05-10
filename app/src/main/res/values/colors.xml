@@ -70,13 +70,6 @@
 
     <color name="splashBackground">#2E2E2E</color>
 
-    <color name="toastBorder">#666666</color>
-    <color name="toastBase">#ffffff</color>
-    <color name="toastOk">#77dd77</color>
-    <color name="toastError">#ff0400</color>
-    <color name="toastWarn">#FF8C00</color>
-    <color name="toastInfo">#03A9F4</color>
-
     <color name="metadataOk">#77dd77</color>
     <color name="metadataTextWarning">#FF8C00</color>
     <color name="metadataTextError">#FF5555</color>

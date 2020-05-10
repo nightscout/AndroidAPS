@@ -88,6 +88,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:drawableStart="@drawable/icon_actions_refill"
-        android:text="@string/danar_historyreload" />
+        android:text="@string/reload" />
 
 </RelativeLayout>

@@ -5,7 +5,7 @@
     android:focusableInTouchMode="true"
     android:minWidth="300dp"
     android:orientation="vertical"
-    tools:context=".dialogs.ProfileViewerDialog">
+    tools:context="info.nightscout.androidaps.dialogs.ProfileViewerDialog">
 
     <LinearLayout
         android:layout_width="match_parent"

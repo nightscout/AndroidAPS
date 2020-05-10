@@ -3,6 +3,11 @@
     <color name="colorPrimary">#212121</color>
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#40bbaa</color>
+    <color name="mdtp_button_selected">#33969696</color>
+    <color name="mdtp_accent_color">#009688</color>
+    <color name="mdtp_button_color">@color/mdtp_accent_color</color>
+    <color name="mdtp_white">#ffffff</color>
+    <color name="mdtp_line_dark">#808080</color>
 
     <!--    Fragments-->
     <color name="colorInitializingBorder">#00695c</color>
@@ -35,5 +40,14 @@
 
     <!--    CareportalEvent-->
     <color name="notificationAnnouncement">#FF8C00</color>
+
+    <!--    Toasts-->
+    <color name="toastBorder">#666666</color>
+    <color name="toastBase">#ffffff</color>
+    <color name="toastOk">#77dd77</color>
+    <color name="toastError">#ff0400</color>
+    <color name="toastWarn">#FF8C00</color>
+    <color name="toastInfo">#03A9F4</color>
+
 
 </resources>

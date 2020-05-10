@@ -51,6 +51,19 @@
     <string name="close">Close</string>
     <string name="please_wait">Please wait…</string>
     <string name="mute">Mute</string>
+    <string name="reload">Reload</string>
+    <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
+    <string name="overview_bolusprogress_stop">Stop</string>
+    <string name="carbs">Carbs</string>
+    <string name="invalidprofile">Invalid profile !!!</string>
+    <string name="noprofileset">NO PROFILE SET</string>
+    <string name="date">Date</string>
+    <string name="nsprofileview_units_label">Units</string>
+    <string name="nsprofileview_dia_label">DIA</string>
+    <string name="nsprofileview_ic_label">IC</string>
+    <string name="nsprofileview_isf_label">ISF</string>
+    <string name="nsprofileview_basal_label">Basal</string>
+    <string name="nsprofileview_target_label">Target</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
