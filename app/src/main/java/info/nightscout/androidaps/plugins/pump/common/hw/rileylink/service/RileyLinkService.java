@@ -101,6 +101,7 @@ public abstract class RileyLinkService extends DaggerService {
         super.onDestroy();
         //LOG.error("I die! I die!");
 
+        rfspy.stopReader();
         rileyLinkBLE.disconnect(); // dispose of Gatt (disconnect and close)
 
         if (mBroadcastReceiver != null) {

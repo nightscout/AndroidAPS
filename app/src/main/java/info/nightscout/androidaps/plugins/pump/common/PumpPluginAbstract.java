@@ -114,10 +114,13 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
     public abstract void initPumpStatusData();
 
+
     @Override
     protected void onStart() {
         super.onStart();
-        // TODO: moved from constructor .... test if it works
+
+        aapsLogger.debug(LTag.PUMP, this.deviceID() + " onStart()");
+
         initPumpStatusData();
 
         Intent intent = new Intent(context, getServiceClass());
@@ -136,6 +139,8 @@ public abstract class PumpPluginAbstract extends PumpPluginBase implements PumpI
 
     @Override
     protected void onStop() {
+        aapsLogger.debug(LTag.PUMP, this.deviceID() + " onStop()");
+
         context.unbindService(serviceConnection);
 
         serviceRunning = false;

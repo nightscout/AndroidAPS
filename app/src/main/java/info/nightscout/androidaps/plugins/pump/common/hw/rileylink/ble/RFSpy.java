@@ -56,7 +56,7 @@ public class RFSpy {
     private UUID radioServiceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
     private UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
     private UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
-    private UUID responseCountUUID = UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT);
+    //private UUID responseCountUUID = UUID.fromString(GattAttributes.CHARA_RADIO_RESPONSE_COUNT);
     private RileyLinkFirmwareVersion firmwareVersion;
     private String bleVersion; // We don't use it so no need of sofisticated logic
     private Double currentFrequencyMHz;
@@ -421,14 +421,7 @@ public class RFSpy {
     }
 
 
-    public RFSpyResponse resetRileyLink() {
-        RFSpyResponse resp = null;
-        try {
-            resp = writeToData(new Reset(), EXPECTED_MAX_BLUETOOTH_LATENCY_MS);
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Reset command send, response: {}", resp);
-        } catch (Exception e) {
-            e.toString();
-        }
-        return resp;
+    public void stopReader() {
+        reader.stop();
     }
 }

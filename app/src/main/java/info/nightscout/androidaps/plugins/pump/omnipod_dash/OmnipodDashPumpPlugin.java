@@ -153,6 +153,13 @@ public class OmnipodDashPumpPlugin extends OmnipodPumpPlugin implements OmnipodP
 
 
     @Override
+    public void onStart() {
+        this.isOmnipodEros = false;
+        super.onStart();
+    }
+
+
+    @Override
     public String deviceID() {
         return "Omnipod Dash";
     }

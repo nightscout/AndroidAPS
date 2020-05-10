@@ -29,11 +29,12 @@ public class RFSpyReader {
     private int acquireCount = 0;
     private int releaseCount = 0;
     private boolean stopAtNull = true;
+    private static boolean isRunning = false;
 
 
     RFSpyReader(AAPSLogger aapsLogger, RileyLinkBLE rileyLinkBle) {
-        this.rileyLinkBle = rileyLinkBle;
         this.aapsLogger = aapsLogger;
+        setRileyLinkBle(rileyLinkBle);
     }
 
 
@@ -87,6 +88,8 @@ public class RFSpyReader {
 
 
     public void start() {
+        isRunning = true;
+
         readerTask = new AsyncTask<Void, Void, Void>() {
 
             @Override
@@ -94,7 +97,7 @@ public class RFSpyReader {
                 UUID serviceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
                 UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
                 BLECommOperationResult result;
-                while (true) {
+                while (isRunning) {
                     try {
                         acquireCount++;
                         waitForRadioData.acquire();
@@ -129,7 +132,13 @@ public class RFSpyReader {
                         aapsLogger.error(LTag.PUMPBTCOMM, "Interrupted while waiting for data");
                     }
                 }
+                return null;
             }
         }.execute();
     }
+
+    public void stop() {
+        isRunning = false;
+    }
+
 }

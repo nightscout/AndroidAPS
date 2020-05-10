@@ -187,21 +187,6 @@ public class RileyLinkMedtronicService extends RileyLinkService {
     }
 
 
-    @Override
-    public String getDeviceSpecificBroadcastsIdentifierPrefix() {
-        return null;
-    }
-
-
-    public boolean handleDeviceSpecificBroadcasts(Intent intent) {
-        return false;
-    }
-
-
-    @Override
-    public void registerDeviceSpecificBroadcasts(IntentFilter intentFilter) {
-    }
-
     public boolean verifyConfiguration() {
         try {
             String regexSN = "[0-9]{6}";

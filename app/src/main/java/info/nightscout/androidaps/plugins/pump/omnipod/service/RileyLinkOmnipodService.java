@@ -116,12 +116,6 @@ public class RileyLinkOmnipodService extends RileyLinkService {
             if (sp.contains(OmnipodConst.Prefs.PodState) && omnipodUtil.getPodSessionState() == null) {
                 try {
                     omnipodUtil.loadSessionState();
-//                    Gson gson = omnipodUtil.getGsonInstance();
-//                    String storedPodState = sp.getString(OmnipodConst.Prefs.PodState, "");
-//                    aapsLogger.info(LTag.PUMPCOMM, "PodSessionState-SP: loaded from SharedPreferences: " + storedPodState);
-//                    podState = gson.fromJson(storedPodState, PodSessionState.class);
-//                    podState.injectDaggerClass(injector);
-//                    omnipodUtil.setPodSessionState(podState);
                 } catch (Exception ex) {
                     aapsLogger.error(LTag.PUMPCOMM, "Could not deserialize Pod state", ex);
                 }

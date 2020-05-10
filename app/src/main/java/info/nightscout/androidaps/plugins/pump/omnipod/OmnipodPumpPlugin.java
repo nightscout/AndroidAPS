@@ -118,9 +118,10 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
 
     private Profile currentProfile;
 
-    boolean omnipodServiceRunning = false;
+    //boolean omnipodServiceRunning = false;
 
     private long nextPodCheck = 0L;
+    protected boolean isOmnipodEros = true;
     //OmnipodDriverState driverState = OmnipodDriverState.NotInitalized;
 
     @Inject
@@ -157,71 +158,7 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
         this.omnipodUtil = omnipodUtil;
         this.omnipodPumpStatus = omnipodPumpStatus;
 
-        //OmnipodUtil.setDriverState();
-
-// TODO loop
-//        if (OmnipodUtil.isOmnipodEros()) {
-//            OmnipodUtil.setPlugin(this);
-//            OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
-//            OmnipodUtil.setPumpType(PumpType.Insulet_Omnipod);
-//        }
-
-//        // TODO ccc
-
-
-        serviceConnection = new ServiceConnection() {
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-                aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is disconnected");
-                rileyLinkOmnipodService = null;
-            }
-
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-
-                aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is connected");
-                RileyLinkOmnipodService.LocalBinder mLocalBinder = (RileyLinkOmnipodService.LocalBinder) service;
-                rileyLinkOmnipodService = mLocalBinder.getServiceInstance();
-
-                new Thread(() -> {
-
-                    for (int i = 0; i < 20; i++) {
-                        SystemClock.sleep(5000);
-
-                        aapsLogger.debug(LTag.PUMP, "Starting Omnipod-RileyLink service");
-                        if (rileyLinkOmnipodService.setNotInPreInit()) {
-                            break;
-                        }
-                    }
-
-
-//                        if (OmnipodPumpPlugin.this.omnipodPumpStatus != null) {
-//
-//                            aapsLogger.debug(LTag.PUMP, "Starting OmniPod-RileyLink service");
-//                            if (omnipodService.setNotInPreInit()) {
-//                                if (omnipodCommunicationManager == null) {
-//                                    omnipodCommunicationManager = AapsOmnipodManager.getInstance();
-//                                    omnipodCommunicationManager.setPumpStatus(OmnipodPumpPlugin.this.omnipodPumpStatus);
-//                                    omnipodServiceRunning = true;
-//                                } else {
-//                                    omnipodCommunicationManager.setPumpStatus(OmnipodPumpPlugin.this.omnipodPumpStatus);
-//                                }
-//
-//                                omnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
-//                                //omnipodUtil.setPlugin(OmnipodPumpPlugin.this);
-//
-//                                omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager, plugin, OmnipodPumpPlugin.this.omnipodPumpStatus);
-//                                break;
-//                            }
-//                        }
-//
-//                        SystemClock.sleep(5000);
-                    //}
-                }).start();
-            }
-        };
+        this.isOmnipodEros = true;
     }
 
     protected OmnipodPumpPlugin(PluginDescription pluginDescription, PumpType pumpType,
@@ -248,6 +185,76 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
     @Override
     protected void onStart() {
         super.onStart();
+
+        //OmnipodUtil.setDriverState();
+
+// TODO loop
+//        if (OmnipodUtil.isOmnipodEros()) {
+//            OmnipodUtil.setPlugin(this);
+//            OmnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
+//            OmnipodUtil.setPumpType(PumpType.Insulet_Omnipod);
+//        }
+
+//        // TODO ccc
+
+        if (isOmnipodEros) {
+
+            serviceConnection = new ServiceConnection() {
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+
+                    aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is disconnected");
+                    rileyLinkOmnipodService = null;
+                }
+
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+
+                    aapsLogger.debug(LTag.PUMP, "RileyLinkOmnipodService is connected");
+                    RileyLinkOmnipodService.LocalBinder mLocalBinder = (RileyLinkOmnipodService.LocalBinder) service;
+                    rileyLinkOmnipodService = mLocalBinder.getServiceInstance();
+
+                    new Thread(() -> {
+
+                        for (int i = 0; i < 20; i++) {
+                            SystemClock.sleep(5000);
+
+                            aapsLogger.debug(LTag.PUMP, "Starting Omnipod-RileyLink service");
+                            if (rileyLinkOmnipodService.setNotInPreInit()) {
+                                break;
+                            }
+                        }
+
+
+//                        if (OmnipodPumpPlugin.this.omnipodPumpStatus != null) {
+//
+//                            aapsLogger.debug(LTag.PUMP, "Starting OmniPod-RileyLink service");
+//                            if (omnipodService.setNotInPreInit()) {
+//                                if (omnipodCommunicationManager == null) {
+//                                    omnipodCommunicationManager = AapsOmnipodManager.getInstance();
+//                                    omnipodCommunicationManager.setPumpStatus(OmnipodPumpPlugin.this.omnipodPumpStatus);
+//                                    omnipodServiceRunning = true;
+//                                } else {
+//                                    omnipodCommunicationManager.setPumpStatus(OmnipodPumpPlugin.this.omnipodPumpStatus);
+//                                }
+//
+//                                omnipodUtil.setOmnipodPodType(OmnipodPodType.Eros);
+//                                //omnipodUtil.setPlugin(OmnipodPumpPlugin.this);
+//
+//                                omnipodUIComm = new OmnipodUIComm(omnipodCommunicationManager, plugin, OmnipodPumpPlugin.this.omnipodPumpStatus);
+//                                break;
+//                            }
+//                        }
+//
+//                        SystemClock.sleep(5000);
+                        //}
+                    }).start();
+                }
+            };
+        }
+
+
         disposable.add(rxBus
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(Schedulers.io())
@@ -261,6 +268,9 @@ public class OmnipodPumpPlugin extends PumpPluginAbstract implements OmnipodPump
                         rileyLinkOmnipodService.verifyConfiguration();
                 }, fabricPrivacy::logException)
         );
+
+
+
         //rileyLinkOmnipodService.verifyConfiguration();
         //initPumpStatusData();
     }
