@@ -319,7 +319,7 @@ public class RileyLinkMedtronicService extends RileyLinkService {
                 return false;
             }
 
-            RileyLinkEncodingType newEncodingType = RileyLinkEncodingType.getByDescription(encodingTypeStr);
+            RileyLinkEncodingType newEncodingType = RileyLinkEncodingType.getByDescription(encodingTypeStr, resourceHelper);
 
             if (encodingType == null) {
                 encodingType = newEncodingType;

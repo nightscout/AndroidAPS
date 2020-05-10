@@ -539,37 +539,6 @@ public class TreatmentService extends OrmLiteBaseService<DatabaseHelper> {
         return (Math.abs(diff) <= 0.00001);
     }
 
-    @Deprecated
-    private void treatmentCopy(Treatment oldTreatment, Treatment newTreatment, boolean fromNightScout) {
-
-        aapsLogger.debug(LTag.DATATREATMENTS, "treatmentCopy [old={}, new={}]", oldTreatment.toString(), newTreatment.toString());
-
-
-        if (fromNightScout) {
-            long pumpId_old = oldTreatment.pumpId;
-            boolean isSMB = (oldTreatment.isSMB || newTreatment.isSMB);
-
-            oldTreatment.copyFrom(newTreatment);
-
-            if (pumpId_old != 0) {
-                oldTreatment.pumpId = pumpId_old;
-            }
-
-            if (oldTreatment.pumpId != 0 && oldTreatment.source != Source.PUMP) {
-                oldTreatment.source = Source.PUMP;
-            }
-
-            oldTreatment.isSMB = isSMB;
-
-        } else {
-            oldTreatment.copyFrom(newTreatment);
-        }
-
-        aapsLogger.debug(LTag.DATATREATMENTS, "treatmentCopy [newAfterChange={}]", oldTreatment.toString());
-
-    }
-
-
     public Treatment getRecord(long pumpId, long date) {
 
         Treatment record = null;

@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodDriverState
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.events.EventOmnipodDeviceStatusChange;
 import info.nightscout.androidaps.utils.alertDialogs.OKDialog;
+import info.nightscout.androidaps.utils.resources.ResourceHelper;
 import info.nightscout.androidaps.utils.sharedPreferences.SP;
 
 /**
@@ -49,6 +50,7 @@ public class OmnipodUtil {
     private final OmnipodPumpStatus omnipodPumpStatus;
     private final ActivePluginProvider activePlugins;
     private final SP sp;
+    private final ResourceHelper resourceHelper;
     private final HasAndroidInjector injector;
 
     private boolean lowLevelDebug = true;
@@ -67,6 +69,7 @@ public class OmnipodUtil {
             RileyLinkUtil rileyLinkUtil,
             OmnipodPumpStatus omnipodPumpStatus,
             SP sp,
+            ResourceHelper resourceHelper,
             ActivePluginProvider activePlugins,
             HasAndroidInjector injector
     ) {
@@ -75,6 +78,7 @@ public class OmnipodUtil {
         this.rileyLinkUtil = rileyLinkUtil;
         this.omnipodPumpStatus = omnipodPumpStatus;
         this.sp = sp;
+        this.resourceHelper = resourceHelper;
         this.activePlugins = activePlugins;
         this.injector = injector;
     }
@@ -100,11 +104,6 @@ public class OmnipodUtil {
 
         if (currentCommand != null)
             rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItem(currentCommand));
-    }
-
-    public static void displayNotConfiguredDialog(Context context) {
-        OKDialog.showConfirmation(context, MainApp.gs(R.string.combo_warning),
-                MainApp.gs(R.string.omnipod_error_operation_not_possible_no_configuration), (Runnable) null);
     }
 
 

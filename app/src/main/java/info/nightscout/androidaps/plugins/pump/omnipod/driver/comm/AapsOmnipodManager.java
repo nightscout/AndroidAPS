@@ -425,7 +425,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         pumpStatus.tempBasalEnd = DateTimeUtil.getTimeInFutureFromMinutes(time, tempBasalPair.getDurationMinutes());
         pumpStatus.tempBasalPumpId = pumpId;
 
-        TemporaryBasal tempStart = new TemporaryBasal() //
+        TemporaryBasal tempStart = new TemporaryBasal(injector) //
                 .date(time) //
                 .duration(tempBasalPair.getDurationMinutes()) //
                 .absolute(tempBasalPair.getInsulinRate()) //
@@ -561,7 +561,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
 
             addSuccessToHistory(time, PodHistoryEntryType.CancelTemporaryBasal, null);
 
-            TemporaryBasal temporaryBasal = new TemporaryBasal() //
+            TemporaryBasal temporaryBasal = new TemporaryBasal(injector) //
                     .date(time) //
                     .duration(0) //
                     .pumpId(pumpStatus.tempBasalPumpId)
@@ -709,7 +709,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         Intent intent = new Intent(context, ErrorHelperActivity.class);
         intent.putExtra("soundid", sound == null ? 0 : sound);
         intent.putExtra("status", message);
-        intent.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
+        intent.putExtra("title", resourceHelper.gs(R.string.treatmentdeliveryerror));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
