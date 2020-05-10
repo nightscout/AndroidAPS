@@ -20,7 +20,8 @@ class StatusLightHandler @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
     private val activePlugin: ActivePluginProvider,
-    private val warnColors: WarnColors
+    private val warnColors: WarnColors,
+    private val config: Config
 ) {
 
     /**
@@ -32,9 +33,9 @@ class StatusLightHandler @Inject constructor(
         handleAge(careportal_insulinage, CareportalEvent.INSULINCHANGE, R.string.key_statuslights_iage_warning, 72.0, R.string.key_statuslights_iage_critical, 144.0)
         handleAge(careportal_sensorage, CareportalEvent.SENSORCHANGE, R.string.key_statuslights_sage_warning, 216.0, R.string.key_statuslights_sage_critical, 240.0)
         handleAge(careportal_pbage, CareportalEvent.PUMPBATTERYCHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0)
-        if (!Config.NSCLIENT)
+        if (!config.NSCLIENT)
             handleLevel(careportal_reservoirlevel, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, "U")
-        if (!Config.NSCLIENT && pump.model() != PumpType.AccuChekCombo)
+        if (!config.NSCLIENT && pump.model() != PumpType.AccuChekCombo)
             handleLevel(careportal_batterylevel, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")
     }
 

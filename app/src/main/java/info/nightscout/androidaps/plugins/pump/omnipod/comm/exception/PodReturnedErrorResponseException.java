@@ -7,7 +7,7 @@ public class PodReturnedErrorResponseException extends OmnipodException {
     private final ErrorResponse errorResponse;
 
     public PodReturnedErrorResponseException(ErrorResponse errorResponse) {
-        super("Pod returned error response: " + errorResponse.getErrorResponseType(), true);
+        super("Pod returned error response: " + errorResponse, true);
         this.errorResponse = errorResponse;
     }
 

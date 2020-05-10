@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.driver.comm;
 
+import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
@@ -44,10 +45,13 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommandIni
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CommunicationException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.CrcMismatchException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalDeliveryStatusException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMessageAddressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalMessageSequenceNumberException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPacketTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalPodProgressException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalResponseException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalSetupProgressException;
+import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.IllegalVersionResponseTypeException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.MessageDecodingException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceOutOfSyncException;
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.exception.NonceResyncException;
@@ -59,7 +63,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.pod
 import info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.podinfo.PodInfoResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.AlertType;
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.OmnipodCommunicationManagerInterface;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInitActionType;
@@ -80,42 +84,47 @@ import io.reactivex.disposables.Disposable;
 
 public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface {
 
-    private OmnipodUtil omnipodUtil;
-    private AAPSLogger aapsLogger;
-    private RxBusWrapper rxBus;
-    private ResourceHelper resourceHelper;
-    private HasAndroidInjector injector;
-    private ActivePluginProvider activePlugin;
-    private OmnipodPumpStatus pumpStatus;
+    private final OmnipodUtil omnipodUtil;
+    private final AAPSLogger aapsLogger;
+    private final RxBusWrapper rxBus;
+    private final ResourceHelper resourceHelper;
+    private final HasAndroidInjector injector;
+    private final ActivePluginProvider activePlugin;
+    private final OmnipodPumpStatus pumpStatus;
+    private final Context context;
 
     private final OmnipodManager delegate;
 
+    @Deprecated
     private static AapsOmnipodManager instance;
 
     private Date lastBolusTime;
     private Double lastBolusUnits;
 
+    @Deprecated
     public static AapsOmnipodManager getInstance() {
         return instance;
     }
 
     public AapsOmnipodManager(OmnipodCommunicationManager communicationService,
                               PodSessionState podState,
-                              OmnipodPumpStatus _pumpStatus,
+                              OmnipodPumpStatus pumpStatus,
                               OmnipodUtil omnipodUtil,
                               AAPSLogger aapsLogger,
                               RxBusWrapper rxBus,
                               SP sp,
                               ResourceHelper resourceHelper,
                               HasAndroidInjector injector,
-                              ActivePluginProvider activePlugin) {
+                              ActivePluginProvider activePlugin,
+                              Context context) {
         this.omnipodUtil = omnipodUtil;
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.resourceHelper = resourceHelper;
         this.injector = injector;
         this.activePlugin = activePlugin;
-        this.pumpStatus = _pumpStatus;
+        this.pumpStatus = pumpStatus;
+        this.context = context;
 
         delegate = new OmnipodManager(aapsLogger, sp, communicationService, podState, podSessionState -> {
             // Handle pod state changes
@@ -194,8 +203,13 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         long time = System.currentTimeMillis();
         if (PodInitActionType.PairAndPrimeWizardStep.equals(podInitActionType)) {
             try {
-                Disposable disposable = delegate.pairAndPrime().subscribe(res -> //
+                int address = obtainNextPodAddress();
+
+                Disposable disposable = delegate.pairAndPrime(address).subscribe(res -> //
                         handleSetupActionResult(podInitActionType, podInitReceiver, res, time, null));
+
+                removeNextPodAddress();
+
                 return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (Exception ex) {
                 String comment = handleAndTranslateException(ex);
@@ -299,6 +313,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         reportImplicitlyCanceledTbr();
 
         this.omnipodUtil.setPodSessionState(null);
+        this.omnipodUtil.removeNextPodAddress();
 
         addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.ResetPodState, null);
 
@@ -355,7 +370,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         activePlugin.getActiveTreatments().addToHistoryTreatment(detailedBolusInfo, false);
 
         if (delegate.getPodState().hasFaultEvent()) {
-            showPodFaultErrorDialog(delegate.getPodState().getFaultEvent().getFaultEventType(), R.raw.urgentalarm);
+            showPodFaultErrorDialog(delegate.getPodState().getFaultEvent().getFaultEventCode(), R.raw.urgentalarm);
         }
 
         return new PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(unitsDelivered);
@@ -371,7 +386,7 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
                 addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
                 return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (PodFaultException ex) {
-                showPodFaultErrorDialog(ex.getFaultEvent().getFaultEventType(), null);
+                showPodFaultErrorDialog(ex.getFaultEvent().getFaultEventCode(), null);
                 addSuccessToHistory(time, PodHistoryEntryType.CancelBolus, null);
                 return new PumpEnactResult(injector).success(true).enacted(true);
             } catch (Exception ex) {
@@ -449,12 +464,6 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
         }
         return new PumpEnactResult(injector).success(true).enacted(true);
-    }
-
-    @Override
-    public void setPumpStatus(OmnipodPumpStatus pumpStatus) {
-        this.pumpStatus = pumpStatus;
-        updatePumpStatus(delegate.getPodState());
     }
 
     // TODO should we add this to the OmnipodCommunicationManager interface?
@@ -562,18 +571,15 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         }
     }
 
-
-    public long addSuccessToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
+    private long addSuccessToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
         return addToHistory(requestTime, entryType, data, true);
     }
 
-    public long addFailureToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
+    private long addFailureToHistory(long requestTime, PodHistoryEntryType entryType, Object data) {
         return addToHistory(requestTime, entryType, data, false);
     }
 
-
-    public long addToHistory(long requestTime, PodHistoryEntryType entryType, Object data, boolean success) {
-
+    private long addToHistory(long requestTime, PodHistoryEntryType entryType, Object data, boolean success) {
         PodHistory podHistory = new PodHistory(requestTime, entryType);
 
         if (data != null) {
@@ -590,7 +596,20 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         MainApp.getDbHelper().createOrUpdate(podHistory);
 
         return podHistory.getPumpId();
+    }
 
+    private int obtainNextPodAddress() {
+        Integer nextPodAddress = this.omnipodUtil.getNextPodAddress();
+        if (nextPodAddress == null) {
+            nextPodAddress = OmnipodManager.generateRandomAddress();
+            this.omnipodUtil.setNextPodAddress(nextPodAddress);
+        }
+
+        return nextPodAddress;
+    }
+
+    private void removeNextPodAddress() {
+        this.omnipodUtil.removeNextPodAddress();
     }
 
     private void handleSetupActionResult(PodInitActionType podInitActionType, PodInitReceiver podInitReceiver, SetupActionResult res, long time, Profile profile) {
@@ -624,7 +643,11 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             if (ex instanceof ActionInitializationException || ex instanceof CommandInitializationException) {
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_parameters);
             } else if (ex instanceof CommunicationException) {
-                comment = getStringResource(R.string.omnipod_driver_error_communication_failed);
+                if (((CommunicationException) ex).getType() == CommunicationException.Type.TIMEOUT) {
+                    comment = getStringResource(R.string.omnipod_driver_error_communication_failed_timeout);
+                } else {
+                    comment = getStringResource(R.string.omnipod_driver_error_communication_failed_unexpected_exception);
+                }
             } else if (ex instanceof CrcMismatchException) {
                 comment = getStringResource(R.string.omnipod_driver_error_crc_mismatch);
             } else if (ex instanceof IllegalPacketTypeException) {
@@ -632,8 +655,14 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             } else if (ex instanceof IllegalPodProgressException || ex instanceof IllegalSetupProgressException
                     || ex instanceof IllegalDeliveryStatusException) {
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_progress_state);
+            } else if (ex instanceof IllegalVersionResponseTypeException) {
+                comment = getStringResource(R.string.omnipod_driver_error_invalid_response);
             } else if (ex instanceof IllegalResponseException) {
                 comment = getStringResource(R.string.omnipod_driver_error_invalid_response);
+            } else if (ex instanceof IllegalMessageSequenceNumberException) {
+                comment = getStringResource(R.string.omnipod_driver_error_invalid_message_sequence_number);
+            } else if (ex instanceof IllegalMessageAddressException) {
+                comment = getStringResource(R.string.omnipod_driver_error_invalid_message_address);
             } else if (ex instanceof MessageDecodingException) {
                 comment = getStringResource(R.string.omnipod_driver_error_message_decoding_failed);
             } else if (ex instanceof NonceOutOfSyncException) {
@@ -643,9 +672,9 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
             } else if (ex instanceof NotEnoughDataException) {
                 comment = getStringResource(R.string.omnipod_driver_error_not_enough_data);
             } else if (ex instanceof PodFaultException) {
-                FaultEventType faultEventType = ((PodFaultException) ex).getFaultEvent().getFaultEventType();
-                showPodFaultErrorDialog(faultEventType, R.raw.urgentalarm);
-                comment = createPodFaultErrorMessage(faultEventType);
+                FaultEventCode faultEventCode = ((PodFaultException) ex).getFaultEvent().getFaultEventCode();
+                showPodFaultErrorDialog(faultEventCode, R.raw.urgentalarm);
+                comment = createPodFaultErrorMessage(faultEventCode);
             } else if (ex instanceof PodReturnedErrorResponseException) {
                 comment = getStringResource(R.string.omnipod_driver_error_pod_returned_error_response);
             } else {
@@ -661,10 +690,10 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         return comment;
     }
 
-    private String createPodFaultErrorMessage(FaultEventType faultEventType) {
+    private String createPodFaultErrorMessage(FaultEventCode faultEventCode) {
         String comment;
         comment = getStringResource(R.string.omnipod_driver_error_pod_fault,
-                ByteUtil.convertUnsignedByteToInt(faultEventType.getValue()), faultEventType.name());
+                ByteUtil.convertUnsignedByteToInt(faultEventCode.getValue()), faultEventCode.name());
         return comment;
     }
 
@@ -672,17 +701,17 @@ public class AapsOmnipodManager implements OmnipodCommunicationManagerInterface 
         rxBus.send(event);
     }
 
-    private void showPodFaultErrorDialog(FaultEventType faultEventType, Integer sound) {
-        showErrorDialog(createPodFaultErrorMessage(faultEventType), sound);
+    private void showPodFaultErrorDialog(FaultEventCode faultEventCode, Integer sound) {
+        showErrorDialog(createPodFaultErrorMessage(faultEventCode), sound);
     }
 
     private void showErrorDialog(String message, Integer sound) {
-        Intent intent = new Intent(MainApp.instance(), ErrorHelperActivity.class);
+        Intent intent = new Intent(context, ErrorHelperActivity.class);
         intent.putExtra("soundid", sound == null ? 0 : sound);
         intent.putExtra("status", message);
         intent.putExtra("title", MainApp.gs(R.string.treatmentdeliveryerror));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        MainApp.instance().startActivity(intent);
+        context.startActivity(intent);
     }
 
     private void showNotification(String message, int urgency, Integer sound) {

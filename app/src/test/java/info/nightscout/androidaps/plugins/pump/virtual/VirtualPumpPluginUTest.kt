@@ -2,14 +2,15 @@ package info.nightscout.androidaps.plugins.pump.virtual
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
-import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
@@ -33,12 +34,13 @@ class VirtualPumpPluginUTest : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var treatmentsPlugin: TreatmentsPlugin
     @Mock lateinit var commandQueue: CommandQueueProvider
+    @Mock lateinit var dateUtil: DateUtil
 
     lateinit var virtualPumpPlugin: VirtualPumpPlugin
 
     @Before
     fun prepareMocks() {
-        virtualPumpPlugin = VirtualPumpPlugin(HasAndroidInjector { AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, resourceHelper, sp, profileFunction, treatmentsPlugin, commandQueue)
+        virtualPumpPlugin = VirtualPumpPlugin(HasAndroidInjector { AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, resourceHelper, sp, profileFunction, treatmentsPlugin, commandQueue, Config(), dateUtil)
     }
 
     @Test

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.comm.message;
 
+import java.util.Arrays;
+
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage;
 import info.nightscout.androidaps.plugins.pump.common.utils.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PacketType;
@@ -79,4 +81,14 @@ public class OmnipodPacket implements RLMessage {
         return valid;
     }
 
+    @Override
+    public String toString() {
+        return "OmnipodPacket{" +
+                "packetAddress=" + packetAddress +
+                ", packetType=" + packetType +
+                ", sequenceNumber=" + sequenceNumber +
+                ", encodedMessage=" + ByteUtil.shortHexStringWithoutSpaces(encodedMessage) +
+                ", valid=" + valid +
+                '}';
+    }
 }

@@ -46,6 +46,7 @@ class DanaRFragment : DaggerFragment() {
     @Inject lateinit var danaRPump: DanaRPump
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var warnColors: WarnColors
+    @Inject lateinit var dateUtil: DateUtil
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -71,21 +72,19 @@ class DanaRFragment : DaggerFragment() {
 
         danar_history.setOnClickListener { startActivity(Intent(context, DanaRHistoryActivity::class.java)) }
         danar_viewprofile.setOnClickListener {
-            fragmentManager?.let { fragmentManager ->
-                val profile = danaRPump.createConvertedProfile()?.getDefaultProfile()
-                    ?: return@let
-                val profileName = danaRPump.createConvertedProfile()?.getDefaultProfileName()
-                    ?: return@let
-                val args = Bundle()
-                args.putLong("time", DateUtil.now())
-                args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
-                args.putString("customProfile", profile.data.toString())
-                args.putString("customProfileUnits", profile.units)
-                args.putString("customProfileName", profileName)
-                val pvd = ProfileViewerDialog()
-                pvd.arguments = args
-                pvd.show(fragmentManager, "ProfileViewDialog")
-            }
+            val profile = danaRPump.createConvertedProfile()?.getDefaultProfile()
+                ?: return@setOnClickListener
+            val profileName = danaRPump.createConvertedProfile()?.getDefaultProfileName()
+                ?: return@setOnClickListener
+            val args = Bundle()
+            args.putLong("time", DateUtil.now())
+            args.putInt("mode", ProfileViewerDialog.Mode.CUSTOM_PROFILE.ordinal)
+            args.putString("customProfile", profile.data.toString())
+            args.putString("customProfileUnits", profile.units)
+            args.putString("customProfileName", profileName)
+            val pvd = ProfileViewerDialog()
+            pvd.arguments = args
+            pvd.show(childFragmentManager, "ProfileViewDialog")
         }
         danar_stats.setOnClickListener { startActivity(Intent(context, TDDStatsActivity::class.java)) }
         danar_user_options.setOnClickListener { startActivity(Intent(context, DanaRUserOptionsActivity::class.java)) }
@@ -157,7 +156,7 @@ class DanaRFragment : DaggerFragment() {
         if (pump.lastConnection != 0L) {
             val agoMsec = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMsec.toDouble() / 60.0 / 1000.0).toInt()
-            danar_lastconnection.text = DateUtil.timeString(pump.lastConnection) + " (" + resourceHelper.gs(R.string.minago, agoMin) + ")"
+            danar_lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + resourceHelper.gs(R.string.minago, agoMin) + ")"
             warnColors.setColor(danar_lastconnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {
@@ -165,7 +164,7 @@ class DanaRFragment : DaggerFragment() {
             val agoHours = agoMsec.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
-                danar_lastbolus.text = DateUtil.timeString(pump.lastBolusTime) + " " + DateUtil.sinceString(pump.lastBolusTime, resourceHelper) + " " + resourceHelper.gs(R.string.formatinsulinunits, pump.lastBolusAmount)
+                danar_lastbolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + DateUtil.sinceString(pump.lastBolusTime, resourceHelper) + " " + resourceHelper.gs(R.string.formatinsulinunits, pump.lastBolusAmount)
             else
                 danar_lastbolus.text = ""
         }

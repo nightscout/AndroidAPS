@@ -38,7 +38,8 @@ class TidepoolUploader @Inject constructor(
     private val resourceHelper: ResourceHelper,
     private val sp: SP,
     private val uploadChunk: UploadChunk,
-    private val activePlugin: ActivePluginProvider
+    private val activePlugin: ActivePluginProvider,
+    private val dateUtil: DateUtil
 ) {
 
     private var wl: PowerManager.WakeLock? = null
@@ -233,7 +234,7 @@ class TidepoolUploader @Inject constructor(
     private fun uploadNext() {
         if (uploadChunk.getLastEnd() < DateUtil.now() - T.mins(1).msecs()) {
             SystemClock.sleep(3000)
-            aapsLogger.debug(LTag.TIDEPOOL, "Restarting doUpload. Last: " + DateUtil.dateAndTimeString(uploadChunk.getLastEnd()))
+            aapsLogger.debug(LTag.TIDEPOOL, "Restarting doUpload. Last: " + dateUtil.dateAndTimeString(uploadChunk.getLastEnd()))
             doUpload()
         }
     }

@@ -13,11 +13,13 @@ import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabe
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.JsonHelper
 import info.nightscout.androidaps.utils.MidnightTime
-import info.nightscout.androidaps.utils.T
 import org.json.JSONObject
 import java.util.*
+import javax.inject.Inject
 
 class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
+    @Inject lateinit var dateUtil: DateUtil
+
     val days = InputWeekDay(injector)
     val time = InputTime(injector)
 
@@ -27,9 +29,9 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
             System.arraycopy(triggerRecurringTime.days.weekdays, 0, days.weekdays, 0, triggerRecurringTime.days.weekdays.size)
     }
 
-    fun time(minutes:Int): TriggerRecurringTime {
+    fun time(minutes: Int): TriggerRecurringTime {
         time.value = minutes
-        return  this
+        return this
     }
 
     override fun shouldRun(): Boolean {
@@ -85,7 +87,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
             sb.append(resourceHelper.gs(Objects.requireNonNull(InputWeekDay.DayOfWeek.fromCalendarInt(i)).shortName))
         }
         sb.append(" ")
-        sb.append(DateUtil.timeString(toMills(time.value)))
+        sb.append(dateUtil.timeString(toMills(time.value)))
         return if (counter == 0) resourceHelper.gs(R.string.never) else sb.toString()
     }
 

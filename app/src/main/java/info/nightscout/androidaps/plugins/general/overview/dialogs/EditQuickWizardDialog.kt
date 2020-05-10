@@ -27,6 +27,7 @@ class EditQuickWizardDialog : DaggerDialogFragment() {
     @Inject lateinit var rxBus: RxBusWrapper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var quickWizard: QuickWizard
+    @Inject lateinit var dateUtil: DateUtil
 
     var position = -1
 
@@ -77,13 +78,13 @@ class EditQuickWizardDialog : DaggerDialogFragment() {
         var pos = 0
         var t = 0
         while (t < 24 * 60 * 60) {
-            timeList.add(DateUtil.timeString(DateUtil.toDate(t)))
+            timeList.add(dateUtil.timeString(DateUtil.toDate(t)))
             if (entry.validFrom() == t) posFrom = pos
             if (entry.validTo() == t) posTo = pos
             pos++
             t += 15 * 60
         }
-        timeList.add(DateUtil.timeString(DateUtil.toDate(24 * 60 * 60 - 60)))
+        timeList.add(dateUtil.timeString(DateUtil.toDate(24 * 60 * 60 - 60)))
 
         val adapter = context?.let { context -> ArrayAdapter(context, R.layout.spinner_centered, timeList) }
         overview_editquickwizard_from_spinner.adapter = adapter

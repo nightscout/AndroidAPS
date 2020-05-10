@@ -11,7 +11,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class DanaRS_Packet_Bolus_Get_Step_Bolus_InformationTest : DanaRSTestBase() {
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Bolus_Get_Step_Bolus_Information(aapsLogger, danaRPump)
+        val packet = DanaRS_Packet_Bolus_Get_Step_Bolus_Information(aapsLogger, danaRPump, dateUtil)
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding
         packet.handleMessage(createArray(34, 0.toByte()))

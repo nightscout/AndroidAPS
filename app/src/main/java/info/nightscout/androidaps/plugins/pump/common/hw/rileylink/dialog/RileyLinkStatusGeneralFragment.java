@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin;
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.driver.OmnipodPumpStatus;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
 
 /**
@@ -45,6 +46,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
     @Inject MedtronicUtil medtronicUtil;
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;
+    @Inject DateUtil dateUtil;
 
     TextView connectionStatus;
     TextView configuredAddress;
@@ -148,7 +150,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
                         rileyLinkServiceData.lastGoodFrequency));
 
             if (medtronicPumpStatus.lastConnection != 0)
-                this.lastDeviceContact.setText(StringUtil.toDateTimeString(new LocalDateTime(
+                this.lastDeviceContact.setText(StringUtil.toDateTimeString(dateUtil, new LocalDateTime(
                         medtronicPumpStatus.lastDataTime)));
             else
                 this.lastDeviceContact.setText(resourceHelper.gs(R.string.common_never));
@@ -182,7 +184,7 @@ public class RileyLinkStatusGeneralFragment extends DaggerFragment implements Re
                                 rileyLinkServiceData.lastGoodFrequency));
 
                     if (omnipodPumpStatus.lastConnection != 0)
-                        this.lastDeviceContact.setText(StringUtil.toDateTimeString(new LocalDateTime(
+                        this.lastDeviceContact.setText(StringUtil.toDateTimeString(dateUtil, new LocalDateTime(
                                 omnipodPumpStatus.lastDataTime)));
                     else
                         this.lastDeviceContact.setText(resourceHelper.gs(R.string.common_never));

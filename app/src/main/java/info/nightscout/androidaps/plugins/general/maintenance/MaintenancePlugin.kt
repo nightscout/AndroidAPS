@@ -18,7 +18,6 @@ import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
 import java.io.*
 import java.util.*
 import java.util.zip.ZipEntry
@@ -34,7 +33,8 @@ class MaintenancePlugin @Inject constructor(
     private val sp: SP,
     private val nsSettingsStatus: NSSettingsStatus,
     aapsLogger: AAPSLogger,
-    private val buildHelper: BuildHelper
+    private val buildHelper: BuildHelper,
+    private val config: Config
 ) : PluginBase(PluginDescription()
     .mainType(PluginType.GENERAL)
     .fragmentClass(MaintenanceFragment::class.java.name)
@@ -171,7 +171,7 @@ class MaintenancePlugin @Inject constructor(
         builder.append("you have to do it manually)" + System.lineSeparator())
         builder.append("-------------------------------------------------------" + System.lineSeparator())
         builder.append(resourceHelper.gs(R.string.app_name) + " " + BuildConfig.VERSION + System.lineSeparator())
-        if (Config.NSCLIENT) builder.append("NSCLIENT" + System.lineSeparator())
+        if (config.NSCLIENT) builder.append("NSCLIENT" + System.lineSeparator())
         builder.append("Build: " + BuildConfig.BUILDVERSION + System.lineSeparator())
         builder.append("Remote: " + BuildConfig.REMOTE + System.lineSeparator())
         builder.append("Flavor: " + BuildConfig.FLAVOR + BuildConfig.BUILD_TYPE + System.lineSeparator())

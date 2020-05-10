@@ -25,7 +25,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DbRequest;
@@ -35,11 +35,12 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.aps.loop.APSResult;
 import info.nightscout.androidaps.plugins.aps.loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.receivers.ReceiverStatusStore;
 import info.nightscout.androidaps.utils.DateUtil;
@@ -50,7 +51,7 @@ import info.nightscout.androidaps.utils.SP;
  * Created by mike on 26.05.2017.
  */
 public class NSUpload {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
 
     public static void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
         try {
@@ -200,7 +201,7 @@ public class NSUpload {
                     deviceStatus.enacted.put("requested", requested);
                 }
             } else {
-                if (L.isEnabled(L.NSCLIENT))
+                if (L.isEnabled(LTag.NSCLIENT))
                     log.debug("OpenAPS data too old to upload, sending iob only");
                 IobTotal[] iob = iobCobCalculatorPlugin.calculateIobArrayInDia(profile);
                 if (iob.length > 0) {

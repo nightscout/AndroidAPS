@@ -20,7 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
 import java.sql.SQLException;
@@ -31,11 +30,10 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
@@ -91,8 +89,10 @@ public class NSClientService extends DaggerService {
     @Inject SP sp;
     @Inject NSClientPlugin nsClientPlugin;
     @Inject BuildHelper buildHelper;
+    @Inject Config config;
+    @Inject DateUtil dateUtil;
 
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.NSCLIENT);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.NSCLIENT);
     private CompositeDisposable disposable = new CompositeDisposable();
 
     static public PowerManager.WakeLock mWakeLock;
@@ -178,7 +178,7 @@ public class NSClientService extends DaggerService {
                 .toObservable(EventAppExit.class)
                 .observeOn(Schedulers.io())
                 .subscribe(event -> {
-                    if (L.isEnabled(L.NSCLIENT))
+                    if (L.isEnabled(LTag.NSCLIENT))
                         log.debug("EventAppExit received");
                     destroy();
                     stopSelf();
@@ -367,7 +367,7 @@ public class NSClientService extends DaggerService {
     private Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            if (L.isEnabled(L.NSCLIENT))
+            if (L.isEnabled(LTag.NSCLIENT))
                 log.debug("disconnect reason: {}", args);
             rxBus.send(new EventNSClientNewLog("NSCLIENT", "disconnect event"));
         }
@@ -557,7 +557,7 @@ public class NSClientService extends DaggerService {
                             nsSettingsStatus.setData(status);
 
                             if (!status.has("versionNum")) {
-                                if (status.getInt("versionNum") < Config.SUPPORTEDNSVERSION) {
+                                if (status.getInt("versionNum") < config.getSUPPORTEDNSVERSION()) {
                                     rxBus.send(new EventNSClientNewLog("ERROR", "Unsupported Nightscout version !!!!"));
                                 }
                             } else {
@@ -722,7 +722,7 @@ public class NSClientService extends DaggerService {
                             }
                             handleNewSgv(sgvs, isDelta);
                         }
-                        rxBus.send(new EventNSClientNewLog("LAST", DateUtil.dateAndTimeString(latestDateInReceivedData)));
+                        rxBus.send(new EventNSClientNewLog("LAST", dateUtil.dateAndTimeString(latestDateInReceivedData)));
                     } catch (JSONException e) {
                         log.error("Unhandled exception", e);
                     }
@@ -804,7 +804,7 @@ public class NSClientService extends DaggerService {
             if (mSocket == null || !mSocket.connected()) return;
 
             if (lastResendTime > System.currentTimeMillis() - 10 * 1000L) {
-                if (L.isEnabled(L.NSCLIENT))
+                if (L.isEnabled(LTag.NSCLIENT))
                     log.debug("Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
                 return;
             }

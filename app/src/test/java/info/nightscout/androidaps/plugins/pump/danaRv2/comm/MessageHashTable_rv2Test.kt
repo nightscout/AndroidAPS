@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRv2.comm
 
+import android.content.Context
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.interfaces.CommandQueueProvider
 import info.nightscout.androidaps.interfaces.Constraint
@@ -13,6 +14,7 @@ import info.nightscout.androidaps.plugins.pump.danaR.comm.MessageBase
 import info.nightscout.androidaps.plugins.pump.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.plugins.pump.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
+import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import org.junit.Assert
 import org.junit.Test
@@ -26,6 +28,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PrepareForTest(ConstraintChecker::class, DetailedBolusInfoStorage::class, ConfigBuilderPlugin::class)
 class MessageHashTable_rv2Test : DanaRTestBase() {
 
+    @Mock lateinit var context: Context
     @Mock lateinit var rxBus: RxBusWrapper
     @Mock lateinit var resourceHelper: ResourceHelper
     @Mock lateinit var constraintChecker: ConstraintChecker
@@ -41,7 +44,7 @@ class MessageHashTable_rv2Test : DanaRTestBase() {
     @Test
     fun runTest() {
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
-        val messageHashTableRv2 = MessageHashTableRv2(aapsLogger, rxBus, resourceHelper, constraintChecker, danaRPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue, activePlugin, detailedBolusInfoStorage, treatmentsPlugin, injector)
+        val messageHashTableRv2 = MessageHashTableRv2(aapsLogger, rxBus, resourceHelper, constraintChecker, danaRPump, danaRPlugin, danaRKoreanPlugin, danaRv2Plugin, configBuilderPlugin, commandQueue, activePlugin, detailedBolusInfoStorage, treatmentsPlugin, injector, DateUtil(context, resourceHelper))
         val forTesting: MessageBase = MsgStatusAPS_v2(aapsLogger, danaRPump)
         val testPacket: MessageBase = messageHashTableRv2.findMessage(forTesting.command)
         Assert.assertEquals(0xE001, testPacket.command.toLong())

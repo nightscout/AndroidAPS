@@ -2,21 +2,12 @@
 <resources>
     <color name="prediction">#ff00ff</color>
     <color name="basal">#00ffff</color>
-    <color name="iob">#1e88e5</color>
     <color name="iobPred">#00d2d2</color>
     <color name="bolus">#1ea3e5</color>
-    <color name="iobPredAS">#1ea3e5</color>
-    <color name="cob">#FFFB8C00</color>
-    <color name="carbs">#FFFB8C00</color>
-    <color name="uam">#c9bd60</color>
-    <color name="zt">#00d2d2</color>
     <color name="ratio">#FFFFFF</color>
     <color name="activity">#d3f166</color>
     <color name="devslopepos">#FFFFFF00</color>
     <color name="devslopeneg">#FFFF00FF</color>
-    <color name="inrange">#00FF00</color>
-    <color name="low">#FF0000</color>
-    <color name="high">#FFFF00</color>
     <color name="actionsConfirm">#FFFF00</color>
     <color name="listdelimiter">#505050</color>
     <color name="tabBgColorSelected">#FF33B5E5</color>
@@ -24,7 +15,6 @@
     <color name="cobAlert">#7484E2</color>
     <color name="inrangebackground">#2800FF00</color>
     <color name="basebasal">#C83F51B5</color>
-    <color name="tempbasal">#C803A9F4</color>
     <color name="graphgrid">#757575</color>
     <color name="colorLightGray">#d8d8d8</color>
     <color name="warning">#ff1a1a</color>
@@ -39,16 +29,8 @@
     <color name="tempTargetConfirmation">#77dd77</color>
 
 
-    <color name="colorPrimary">#212121</color>
-    <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#40bbaa</color>
     <color name="mdtp_accent_color">#40bbaa</color>
     <color name="colorInitializingBorder">#00695c</color>
-
-    <color name="dialog_title_background">#303030</color>
-    <color name="activity_title_background">#121212</color>
-    <color name="dialog_title_color">#FFFFFF</color>
-    <color name="dialog_title_icon_tint">#FFFFFF</color>
 
     <color name="cardColorBackground">#121212</color>
     <color name="cardObjectiveText">#779ECB</color>
@@ -69,7 +51,6 @@
     <color name="colorScheduled">#de7550</color>
     <color name="colorActive">#25912e</color>
 
-    <color name="notificationAnnouncement">#FF8C00</color>
     <color name="notificationUrgent">#ff0400</color>
     <color name="notificationNormal">#ff5e55</color>
     <color name="notificationLow">#ff827c</color>
@@ -91,12 +72,6 @@
 
     <color name="splashBackground">#2E2E2E</color>
 
-    <color name="warningAlertBackground">#FFFB8C00</color>
-    <color name="warningAlertHeaderText">#FF000000</color>
-
-    <color name="errorAlertBackground">#FFFF5555</color>
-    <color name="errorAlertHeaderText">#FF000000</color>
-
     <color name="toastBorder">#666666</color>
     <color name="toastBase">#ffffff</color>
     <color name="toastOk">#77dd77</color>
@@ -104,7 +79,11 @@
     <color name="toastWarn">#FF8C00</color>
     <color name="toastInfo">#03A9F4</color>
 
+    <color name="metadataOk">#77dd77</color>
     <color name="metadataTextWarning">#FF8C00</color>
     <color name="metadataTextError">#FF5555</color>
+
+    <color name="importListFileName">#FFFFFF</color>
+    <color name="importListAdditionalInfo">#BBBBBB</color>
 
 </resources>

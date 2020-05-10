@@ -20,11 +20,13 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerBroadcastReceiver;
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.DiscoverGattServicesTask;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.InitializePumpManagerTask;
@@ -45,10 +47,11 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject ServiceTaskExecutor serviceTaskExecutor;
+    @Inject ActivePluginProvider activePlugin;
 
     RileyLinkService serviceInstance;
     protected Map<String, List<String>> broadcastIdentifiers = null;
-    String deviceSpecificPrefix;
+    //String deviceSpecificPrefix;
 
     public RileyLinkBroadcastReceiver(RileyLinkService serviceInstance) {
         this.serviceInstance = serviceInstance;
@@ -80,10 +83,16 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
                 RileyLinkConst.Intents.RileyLinkDisconnect));
 
         // Device Specific
-        deviceSpecificPrefix = serviceInstance.getDeviceSpecificBroadcastsIdentifierPrefix();
+        // TODO remove from service instance
+        //deviceSpecificPrefix = serviceInstance.getDeviceSpecificBroadcastsIdentifierPrefix();
 
         // Application specific
 
+    }
+
+    private RileyLinkService getServiceInstance() {
+        RileyLinkPumpDevice pumpDevice = (RileyLinkPumpDevice)activePlugin.getActivePump();
+        return pumpDevice.getRileyLinkService();
     }
 
 
@@ -103,7 +112,6 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
                 if (!processBluetoothBroadcasts(action) && //
                         !processRileyLinkBroadcasts(action, context) && //
                         !processTuneUpBroadcasts(action) && //
-                        !processDeviceSpecificBroadcasts(action, intent) && //
                         !processApplicationSpecificBroadcasts(action, intent) //
                 ) {
                     aapsLogger.error(LTag.PUMPCOMM, "Unhandled broadcast: action=" + action);
@@ -124,15 +132,13 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             }
         }
 
-        if (deviceSpecificPrefix != null) {
-            serviceInstance.registerDeviceSpecificBroadcasts(intentFilter);
-        }
-
         LocalBroadcastManager.getInstance(context).registerReceiver(this, intentFilter);
     }
 
 
     private boolean processRileyLinkBroadcasts(String action, Context context) {
+
+        RileyLinkService rileyLinkService = getServiceInstance();
 
         if (action.equals(RileyLinkConst.Intents.RileyLinkDisconnected)) {
             if (BluetoothAdapter.getDefaultAdapter().isEnabled()) {
@@ -147,20 +153,20 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             aapsLogger.warn(LTag.PUMPCOMM, "MedtronicConst.Intents.RileyLinkReady");
             // sendIPCNotification(RT2Const.IPC.MSG_note_WakingPump);
 
-            serviceInstance.rileyLinkBLE.enableNotifications();
-            serviceInstance.rfspy.startReader(); // call startReader from outside?
+            rileyLinkService.rileyLinkBLE.enableNotifications();
+            rileyLinkService.rfspy.startReader(); // call startReader from outside?
 
-            serviceInstance.rfspy.initializeRileyLink();
-            String bleVersion = serviceInstance.rfspy.getBLEVersionCached();
+            rileyLinkService.rfspy.initializeRileyLink();
+            String bleVersion = rileyLinkService.rfspy.getBLEVersionCached();
             RileyLinkFirmwareVersion rlVersion = rileyLinkServiceData.firmwareVersion;
 
 //            if (isLoggingEnabled())
             aapsLogger.debug(LTag.PUMPCOMM, "RfSpy version (BLE113): " + bleVersion);
-            serviceInstance.rileyLinkServiceData.versionBLE113 = bleVersion;
+            rileyLinkService.rileyLinkServiceData.versionBLE113 = bleVersion;
 
 //            if (isLoggingEnabled())
             aapsLogger.debug(LTag.PUMPCOMM, "RfSpy Radio version (CC110): " + rlVersion.name());
-            serviceInstance.rileyLinkServiceData.versionCC110 = rlVersion;
+            this.rileyLinkServiceData.versionCC110 = rlVersion;
 
             ServiceTask task = new InitializePumpManagerTask(injector, context);
             serviceTaskExecutor.startTask(task);
@@ -174,13 +180,13 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
             } else {
                 // showBusy("Configuring Service", 50);
                 // rileyLinkBLE.findRileyLink(RileylinkBLEAddress);
-                serviceInstance.reconfigureRileyLink(RileylinkBLEAddress);
+                rileyLinkService.reconfigureRileyLink(RileylinkBLEAddress);
                 // MainApp.getServiceClientConnection().setThisRileylink(RileylinkBLEAddress);
             }
 
             return true;
         } else if (action.equals(RileyLinkConst.Intents.RileyLinkDisconnect)) {
-            serviceInstance.disconnectRileyLink();
+            rileyLinkService.disconnectRileyLink();
 
             return true;
         } else {
@@ -201,7 +207,7 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
         } else if (action.equals(RileyLinkConst.Intents.BluetoothReconnected)) {
             aapsLogger.debug(LTag.PUMPCOMM, "Bluetooth - Reconnecting");
 
-            serviceInstance.bluetoothInit();
+            getServiceInstance().bluetoothInit();
             serviceTaskExecutor.startTask(new DiscoverGattServicesTask(injector, true));
 
             return true;
@@ -209,7 +215,6 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
 
             return false;
         }
-
     }
 
 
@@ -223,19 +228,6 @@ public class RileyLinkBroadcastReceiver extends DaggerBroadcastReceiver {
         } else {
             return false;
         }
-    }
-
-
-    public boolean processDeviceSpecificBroadcasts(String action, Intent intent) {
-
-        if (this.deviceSpecificPrefix == null) {
-            return false;
-        }
-
-        if (action.startsWith(this.deviceSpecificPrefix)) {
-            return serviceInstance.handleDeviceSpecificBroadcasts(intent);
-        } else
-            return false;
     }
 
 

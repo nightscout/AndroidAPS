@@ -14,7 +14,7 @@ import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.Source
 import info.nightscout.androidaps.db.TempTarget
 import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
@@ -129,7 +129,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
             actions.add(resourceHelper.gs(R.string.stoptemptarget))
         }
         if (eventTimeChanged)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(eventTime))
+            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, resourceHelper.gs(R.string.careportal_temporarytarget), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), Runnable {

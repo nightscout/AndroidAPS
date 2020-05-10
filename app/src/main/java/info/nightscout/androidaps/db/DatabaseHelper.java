@@ -33,7 +33,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
@@ -47,10 +47,9 @@ import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.ActivePluginProvider;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.logging.L;
+import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.logging.StacktraceLoggerWrapper;
 import info.nightscout.androidaps.plugins.bus.RxBus;
-import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.configBuilder.PluginStore;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.pump.danaR.comm.RecordTypes;
@@ -61,6 +60,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.driver.db.PodHistory;
 import info.nightscout.androidaps.plugins.pump.virtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.utils.JsonHelper;
 import info.nightscout.androidaps.utils.PercentageSplitter;
+import info.nightscout.androidaps.utils.T;
 import info.nightscout.androidaps.utils.ToastUtils;
 
 /**
@@ -72,7 +72,7 @@ import info.nightscout.androidaps.utils.ToastUtils;
  * direct calls to the corresponding methods (eg. resetDatabases) should be done by a central service.
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
-    private static Logger log = StacktraceLoggerWrapper.getLogger(L.DATABASE);
+    private static Logger log = StacktraceLoggerWrapper.getLogger(LTag.DATABASE);
 
     public static final String DATABASE_NAME = "AndroidAPSDb";
     public static final String DATABASE_BGREADINGS = "BgReadings";
@@ -82,7 +82,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_DANARHISTORY = "DanaRHistory";
     public static final String DATABASE_DBREQUESTS = "DBRequests";
     public static final String DATABASE_CAREPORTALEVENTS = "CareportalEvents";
-    public static final String DATABASE_PROFILESWITCHES = "ProfileSwitches";
     public static final String DATABASE_TDDS = "TDDs";
     public static final String DATABASE_INSIGHT_HISTORY_OFFSETS = "InsightHistoryOffsets";
     public static final String DATABASE_INSIGHT_BOLUS_IDS = "InsightBolusIDs";
@@ -123,7 +122,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
-            if (L.isEnabled(L.DATABASE))
+            if (L.isEnabled(LTag.DATABASE))
                 log.info("onCreate");
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
@@ -366,7 +365,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static long roundDateToSec(long date) {
         long rounded = date - date % 1000;
         if (rounded != date)
-            if (L.isEnabled(L.DATABASE))
+            if (L.isEnabled(LTag.DATABASE))
                 log.debug("Rounding " + date + " to " + rounded);
         return rounded;
     }
@@ -378,17 +377,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             BgReading old = getDaoBgReadings().queryForId(bgReading.date);
             if (old == null) {
                 getDaoBgReadings().create(bgReading);
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("BG: New record from: " + from + " " + bgReading.toString());
                 scheduleBgChange(bgReading);
                 return true;
             }
             if (!old.isEqual(bgReading)) {
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("BG: Similiar found: " + old.toString());
                 old.copyFrom(bgReading);
                 getDaoBgReadings().update(old);
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("BG: Updating record from: " + from + " New data: " + old.toString());
                 scheduleBgChange(bgReading);
                 return false;
@@ -411,7 +410,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static void scheduleBgChange(@Nullable final BgReading bgReading) {
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("Firing EventNewBg");
                 RxBus.Companion.getINSTANCE().send(new EventNewBG(bgReading));
                 scheduledBgPost = null;
@@ -640,7 +639,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         getDaoTempTargets().delete(old); // need to delete/create because date may change too
                         old.copyFrom(tempTarget);
                         getDaoTempTargets().create(old);
-                        if (L.isEnabled(L.DATABASE))
+                        if (L.isEnabled(LTag.DATABASE))
                             log.debug("TEMPTARGET: Updating record by date from: " + Source.getString(tempTarget.source) + " " + old.toString());
                         scheduleTemporaryTargetChange();
                         return true;
@@ -660,7 +659,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             getDaoTempTargets().delete(old); // need to delete/create because date may change too
                             old.copyFrom(tempTarget);
                             getDaoTempTargets().create(old);
-                            if (L.isEnabled(L.DATABASE))
+                            if (L.isEnabled(LTag.DATABASE))
                                 log.debug("TEMPTARGET: Updating record by _id from: " + Source.getString(tempTarget.source) + " " + old.toString());
                             scheduleTemporaryTargetChange();
                             return true;
@@ -668,14 +667,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     }
                 }
                 getDaoTempTargets().create(tempTarget);
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("TEMPTARGET: New record from: " + Source.getString(tempTarget.source) + " " + tempTarget.toString());
                 scheduleTemporaryTargetChange();
                 return true;
             }
             if (tempTarget.source == Source.USER) {
                 getDaoTempTargets().create(tempTarget);
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("TEMPTARGET: New record from: " + Source.getString(tempTarget.source) + " " + tempTarget.toString());
                 scheduleTemporaryTargetChange();
                 return true;
@@ -698,7 +697,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static void scheduleTemporaryTargetChange() {
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("Firing EventTempTargetChange");
                 RxBus.Companion.getINSTANCE().send(new EventTempTargetChange());
                 scheduledTemTargetPost = null;
@@ -824,7 +823,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 List<TemporaryBasal> trList = getDaoTemporaryBasal().query(preparedQuery);
                 if (trList.size() > 0) {
                     // do nothing, pump history record cannot be changed
-                    if (L.isEnabled(L.DATABASE))
+                    if (L.isEnabled(LTag.DATABASE))
                         log.debug("TEMPBASAL: Already exists from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
                     return false;
                 }
@@ -842,7 +841,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     old.copyFromPump(tempBasal);
                     old.source = Source.PUMP;
 
-                    if (L.isEnabled(L.DATABASE))
+                    if (L.isEnabled(LTag.DATABASE))
                         log.debug("TEMPBASAL: Updated record with Pump Data : " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
 
                     getDaoTemporaryBasal().update(old);
@@ -854,7 +853,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
 
                 getDaoTemporaryBasal().create(tempBasal);
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("TEMPBASAL: New record from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
                 updateEarliestDataChange(tempBasal.date);
                 scheduleTemporaryBasalChange();
@@ -872,7 +871,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         getDaoTemporaryBasal().delete(old); // need to delete/create because date may change too
                         old.copyFrom(tempBasal);
                         getDaoTemporaryBasal().create(old);
-                        if (L.isEnabled(L.DATABASE))
+                        if (L.isEnabled(LTag.DATABASE))
                             log.debug("TEMPBASAL: Updating record by date from: " + Source.getString(tempBasal.source) + " " + old.toString());
                         updateEarliestDataChange(oldDate);
                         updateEarliestDataChange(old.date);
@@ -895,7 +894,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             getDaoTemporaryBasal().delete(old); // need to delete/create because date may change too
                             old.copyFrom(tempBasal);
                             getDaoTemporaryBasal().create(old);
-                            if (L.isEnabled(L.DATABASE))
+                            if (L.isEnabled(LTag.DATABASE))
                                 log.debug("TEMPBASAL: Updating record by _id from: " + Source.getString(tempBasal.source) + " " + old.toString());
                             updateEarliestDataChange(oldDate);
                             updateEarliestDataChange(old.date);
@@ -905,7 +904,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     }
                 }
                 getDaoTemporaryBasal().create(tempBasal);
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("TEMPBASAL: New record from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
                 updateEarliestDataChange(tempBasal.date);
                 scheduleTemporaryBasalChange();
@@ -913,7 +912,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
             if (tempBasal.source == Source.USER) {
                 getDaoTemporaryBasal().create(tempBasal);
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("TEMPBASAL: New record from: " + Source.getString(tempBasal.source) + " " + tempBasal.toString());
                 updateEarliestDataChange(tempBasal.date);
                 scheduleTemporaryBasalChange();
@@ -970,7 +969,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static void scheduleTemporaryBasalChange() {
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("Firing EventTempBasalChange");
                 RxBus.Companion.getINSTANCE().send(new EventReloadTempBasalData());
                 RxBus.Companion.getINSTANCE().send(new EventTempBasalChange());
@@ -1065,7 +1064,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void deleteTempBasalById(String _id) {
         TemporaryBasal stored = findTempBasalById(_id);
         if (stored != null) {
-            if (L.isEnabled(L.DATABASE))
+            if (L.isEnabled(LTag.DATABASE))
                 log.debug("TEMPBASAL: Removing TempBasal record from database: " + stored.toString());
             delete(stored);
             updateEarliestDataChange(stored.date);
@@ -1120,7 +1119,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public boolean createOrUpdate(ExtendedBolus extendedBolus) {
         try {
-            if (L.isEnabled(L.DATABASE))
+            if (L.isEnabled(LTag.DATABASE))
                 log.debug("EXTENDEDBOLUS: createOrUpdate: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
 
             ExtendedBolus old;
@@ -1145,7 +1144,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     }
                     getDaoExtendedBolus().createOrUpdate(extendedBolus);
                 }
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
@@ -1159,7 +1158,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         getDaoExtendedBolus().delete(old); // need to delete/create because date may change too
                         old.copyFrom(extendedBolus);
                         getDaoExtendedBolus().create(old);
-                        if (L.isEnabled(L.DATABASE))
+                        if (L.isEnabled(LTag.DATABASE))
                             log.debug("EXTENDEDBOLUS: Updating record by date from: " + Source.getString(extendedBolus.source) + " " + old.log());
                         updateEarliestDataChange(oldDate);
                         updateEarliestDataChange(old.date);
@@ -1182,7 +1181,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             getDaoExtendedBolus().delete(old); // need to delete/create because date may change too
                             old.copyFrom(extendedBolus);
                             getDaoExtendedBolus().create(old);
-                            if (L.isEnabled(L.DATABASE))
+                            if (L.isEnabled(LTag.DATABASE))
                                 log.debug("EXTENDEDBOLUS: Updating record by _id from: " + Source.getString(extendedBolus.source) + " " + old.log());
                             updateEarliestDataChange(oldDate);
                             updateEarliestDataChange(old.date);
@@ -1192,7 +1191,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     }
                 }
                 getDaoExtendedBolus().create(extendedBolus);
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
@@ -1200,7 +1199,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
             if (extendedBolus.source == Source.USER) {
                 getDaoExtendedBolus().create(extendedBolus);
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.log());
                 updateEarliestDataChange(extendedBolus.date);
                 scheduleExtendedBolusChange();
@@ -1249,10 +1248,26 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<ExtendedBolus>();
     }
 
+    public List<ExtendedBolus> getExtendedBolusDataFromTime(long from, long to, boolean ascending) {
+        try {
+            List<ExtendedBolus> extendedBoluses;
+            QueryBuilder<ExtendedBolus, Long> queryBuilder = getDaoExtendedBolus().queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            Where where = queryBuilder.where();
+            where.between("date", from, to);
+            PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
+            extendedBoluses = getDaoExtendedBolus().query(preparedQuery);
+            return extendedBoluses;
+        } catch (SQLException e) {
+            log.error("Unhandled exception", e);
+        }
+        return new ArrayList<ExtendedBolus>();
+    }
+
     public void deleteExtendedBolusById(String _id) {
         ExtendedBolus stored = findExtendedBolusById(_id);
         if (stored != null) {
-            if (L.isEnabled(L.DATABASE))
+            if (L.isEnabled(LTag.DATABASE))
                 log.debug("EXTENDEDBOLUS: Removing ExtendedBolus record from database: " + stored.toString());
             delete(stored);
             updateEarliestDataChange(stored.date);
@@ -1306,7 +1321,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static void scheduleExtendedBolusChange() {
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("Firing EventExtendedBolusChange");
                 RxBus.Companion.getINSTANCE().send(new EventReloadTreatmentData(new EventExtendedBolusChange()));
                 if (earliestDataChange != null)
@@ -1468,11 +1483,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
             if (list.size() == 1) {
                 CareportalEvent record = list.get(0);
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("Removing CareportalEvent record from database: " + record.toString());
                 delete(record);
             } else {
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("CareportalEvent not found database: " + _id);
             }
         } catch (SQLException e) {
@@ -1492,12 +1507,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (list.size() == 0) {
                 careportalEvent = new CareportalEvent(MainApp.instance());
                 careportalEvent.source = Source.NIGHTSCOUT;
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("Adding CareportalEvent record to database: " + trJson.toString());
                 // Record does not exists. add
             } else if (list.size() == 1) {
                 careportalEvent = list.get(0);
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("Updating CareportalEvent record in database: " + trJson.toString());
             } else {
                 log.error("Something went wrong");
@@ -1516,7 +1531,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static void scheduleCareportalEventChange() {
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("Firing scheduleCareportalEventChange");
                 RxBus.Companion.getINSTANCE().send(new EventCareportalEventChange());
                 scheduledCareportalEventPost = null;
@@ -1629,7 +1644,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         profileSwitch.profileName = old.profileName; // preserver profileName to prevent multiple CPP extension
                         getDaoProfileSwitch().delete(old); // need to delete/create because date may change too
                         getDaoProfileSwitch().create(profileSwitch);
-                        if (L.isEnabled(L.DATABASE))
+                        if (L.isEnabled(LTag.DATABASE))
                             log.debug("PROFILESWITCH: Updating record by date from: " + Source.getString(profileSwitch.source) + " " + old.toString());
                         scheduleProfileSwitchChange();
                         return true;
@@ -1649,7 +1664,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             getDaoProfileSwitch().delete(old); // need to delete/create because date may change too
                             old.copyFrom(profileSwitch);
                             getDaoProfileSwitch().create(old);
-                            if (L.isEnabled(L.DATABASE))
+                            if (L.isEnabled(LTag.DATABASE))
                                 log.debug("PROFILESWITCH: Updating record by _id from: " + Source.getString(profileSwitch.source) + " " + old.toString());
                             scheduleProfileSwitchChange();
                             return true;
@@ -1659,14 +1674,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 // look for already added percentage from NS
                 profileSwitch.profileName = PercentageSplitter.pureName(profileSwitch.profileName);
                 getDaoProfileSwitch().create(profileSwitch);
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
                 scheduleProfileSwitchChange();
                 return true;
             }
             if (profileSwitch.source == Source.USER) {
                 getDaoProfileSwitch().create(profileSwitch);
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
                 scheduleProfileSwitchChange();
                 return true;
@@ -1689,7 +1704,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static void scheduleProfileSwitchChange() {
         class PostRunnable implements Runnable {
             public void run() {
-                if (L.isEnabled(L.DATABASE))
+                if (L.isEnabled(LTag.DATABASE))
                     log.debug("Firing EventProfileNeedsUpdate");
                 RxBus.Companion.getINSTANCE().send(new EventReloadProfileSwitchData());
                 RxBus.Companion.getINSTANCE().send(new EventProfileNeedsUpdate());
@@ -1741,17 +1756,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     Profile profile = store.getSpecificProfile(profileSwitch.profileName);
                     if (profile != null) {
                         profileSwitch.profileJson = profile.getData().toString();
-                        if (L.isEnabled(L.DATABASE))
+                        if (L.isEnabled(LTag.DATABASE))
                             log.debug("Profile switch prefilled with JSON from local store");
                         // Update data in NS
                         NSUpload.updateProfileSwitch(profileSwitch);
                     } else {
-                        if (L.isEnabled(L.DATABASE))
+                        if (L.isEnabled(LTag.DATABASE))
                             log.debug("JSON for profile switch doesn't exist. Ignoring: " + trJson.toString());
                         return;
                     }
                 } else {
-                    if (L.isEnabled(L.DATABASE))
+                    if (L.isEnabled(LTag.DATABASE))
                         log.debug("Store for profile switch doesn't exist. Ignoring: " + trJson.toString());
                     return;
                 }
@@ -1767,7 +1782,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void deleteProfileSwitchById(String _id) {
         ProfileSwitch stored = findProfileSwitchById(_id);
         if (stored != null) {
-            if (L.isEnabled(L.DATABASE))
+            if (L.isEnabled(LTag.DATABASE))
                 log.debug("PROFILESWITCH: Removing ProfileSwitch record from database: " + stored.toString());
             delete(stored);
             scheduleTemporaryTargetChange();
@@ -1884,6 +1899,54 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             log.error("Unhandled exception", e);
         }
         return new ArrayList<>();
+    }
+
+
+    // Copied from xDrip+
+    String calculateDirection(BgReading bgReading) {
+        // Rework to get bgreaings from internal DB and calculate on that base
+
+        List<BgReading> bgReadingsList = MainApp.getDbHelper().getAllBgreadingsDataFromTime(bgReading.date - T.mins(10).msecs(), false);
+        if (bgReadingsList == null || bgReadingsList.size() < 2)
+            return "NONE";
+        BgReading current = bgReadingsList.get(1);
+        BgReading previous = bgReadingsList.get(0);
+
+        if (bgReadingsList.get(1).date < bgReadingsList.get(0).date) {
+            current = bgReadingsList.get(0);
+            previous = bgReadingsList.get(1);
+        }
+
+        double slope;
+
+        // Avoid division by 0
+        if (current.date == previous.date)
+            slope = 0;
+        else
+            slope = (previous.value - current.value) / (previous.date - current.date);
+
+//        aapsLogger.error(LTag.GLUCOSE, "Slope is :" + slope + " delta " + (previous.value - current.value) + " date difference " + (current.date - previous.date));
+
+        double slope_by_minute = slope * 60000;
+        String arrow = "NONE";
+
+        if (slope_by_minute <= (-3.5)) {
+            arrow = "DoubleDown";
+        } else if (slope_by_minute <= (-2)) {
+            arrow = "SingleDown";
+        } else if (slope_by_minute <= (-1)) {
+            arrow = "FortyFiveDown";
+        } else if (slope_by_minute <= (1)) {
+            arrow = "Flat";
+        } else if (slope_by_minute <= (2)) {
+            arrow = "FortyFiveUp";
+        } else if (slope_by_minute <= (3.5)) {
+            arrow = "SingleUp";
+        } else if (slope_by_minute <= (40)) {
+            arrow = "DoubleUp";
+        }
+//        aapsLogger.error(LTag.GLUCOSE, "Direction set to: " + arrow);
+        return arrow;
     }
 
 }

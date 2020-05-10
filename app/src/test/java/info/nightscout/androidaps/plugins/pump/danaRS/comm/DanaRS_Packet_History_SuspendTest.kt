@@ -11,7 +11,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class DanaRS_Packet_History_SuspendTest : DanaRSTestBase() {
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_History_Suspend(aapsLogger, rxBus, System.currentTimeMillis())
+        val packet = DanaRS_Packet_History_Suspend(aapsLogger, rxBus, dateUtil, System.currentTimeMillis())
         Assert.assertEquals("REVIEW__SUSPEND", packet.friendlyName)
     }
 }

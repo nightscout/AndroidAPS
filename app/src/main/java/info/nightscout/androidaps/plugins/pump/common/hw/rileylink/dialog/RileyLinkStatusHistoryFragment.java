@@ -34,6 +34,7 @@ public class RileyLinkStatusHistoryFragment extends DaggerFragment implements Re
 
     @Inject RileyLinkUtil rileyLinkUtil;
     @Inject ResourceHelper resourceHelper;
+    @Inject DateUtil dateUtil;
 
     RecyclerView recyclerView;
     RecyclerViewAdapter recyclerViewAdapter;
@@ -136,7 +137,7 @@ public class RileyLinkStatusHistoryFragment extends DaggerFragment implements Re
             RLHistoryItem item = historyList.get(position);
 
             if (item != null) {
-                holder.timeView.setText(DateUtil.dateAndTimeAndSecondsString(item.getDateTime().toDateTime().getMillis()));
+                holder.timeView.setText(dateUtil.dateAndTimeAndSecondsString(item.getDateTime().toDateTime().getMillis()));
                 holder.typeView.setText(item.getSource().getDesc());
                 holder.valueView.setText(item.getDescription(resourceHelper));
             }

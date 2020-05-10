@@ -25,7 +25,8 @@ class MsgInitConnStatusTime_k(
     private val danaRPlugin: DanaRPlugin,
     private val danaRKoreanPlugin: DanaRKoreanPlugin,
     private val configBuilderPlugin: ConfigBuilderPlugin,
-    private val commandQueue: CommandQueueProvider
+    private val commandQueue: CommandQueueProvider,
+    private val dateUtil: DateUtil
 ) : MessageBase() {
 
     init {
@@ -55,7 +56,7 @@ class MsgInitConnStatusTime_k(
         val versionCode2 = intFromBuff(bytes, 7, 1)
         val versionCode3 = intFromBuff(bytes, 8, 1)
         val versionCode4 = intFromBuff(bytes, 9, 1)
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump time: " + DateUtil.dateAndTimeString(time))
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump time: " + dateUtil.dateAndTimeString(time))
         aapsLogger.debug(LTag.PUMPCOMM, "Version code1: $versionCode1")
         aapsLogger.debug(LTag.PUMPCOMM, "Version code2: $versionCode2")
         aapsLogger.debug(LTag.PUMPCOMM, "Version code3: $versionCode3")

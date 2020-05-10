@@ -41,11 +41,12 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.plugins.configBuilder.ConstraintChecker
+import info.nightscout.androidaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.androidaps.plugins.constraints.versionChecker.VersionCheckerUtils
 import info.nightscout.androidaps.plugins.general.nsclient.data.NSSettingsStatus
 import info.nightscout.androidaps.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.androidaps.setupwizard.SetupWizardActivity
-import info.nightscout.androidaps.utils.tabs.TabPageAdapter
 import info.nightscout.androidaps.utils.AndroidPermission
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.LocaleHelper
@@ -53,11 +54,15 @@ import info.nightscout.androidaps.utils.alertDialogs.OKDialog
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.extensions.isRunningRealPumpTest
 import info.nightscout.androidaps.utils.protection.ProtectionCheck
+import info.nightscout.androidaps.utils.resources.IconsProvider
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
+import info.nightscout.androidaps.utils.tabs.TabPageAdapter
+import info.nightscout.androidaps.utils.ui.UIRunnable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 import javax.inject.Inject
 import kotlin.system.exitProcess
 
@@ -77,6 +82,10 @@ class MainActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var activePlugin: ActivePluginProvider
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var iconsProvider: IconsProvider
+    @Inject lateinit var constraintChecker: ConstraintChecker
+    @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
+    @Inject lateinit var config: Config
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private var pluginPreferencesMenuItem: MenuItem? = null
@@ -107,7 +116,7 @@ class MainActivity : NoSplashAppCompatActivity() {
 
         //Check here if loop plugin is disabled. Else check via constraints
         if (!loopPlugin.isEnabled(PluginType.LOOP)) versionCheckerUtils.triggerCheckVersion()
-        fabricPrivacy.setUserStats()
+        setUserStats()
         setupViews()
         disposable.add(rxBus
             .toObservable(EventRebuildTabs::class.java)
@@ -129,7 +138,7 @@ class MainActivity : NoSplashAppCompatActivity() {
         }
         androidPermission.notifyForStoragePermission(this)
         androidPermission.notifyForBatteryOptimizationPermission(this)
-        if (Config.PUMPDRIVERS) {
+        if (config.PUMPDRIVERS) {
             androidPermission.notifyForLocationPermissions(this)
             androidPermission.notifyForSMSPermissions(this, smsCommunicatorPlugin)
             androidPermission.notifyForSystemWindowPermissions(this)
@@ -153,12 +162,9 @@ class MainActivity : NoSplashAppCompatActivity() {
     override fun onResume() {
         super.onResume()
         protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, null,
-            Runnable {
-                OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() })
-            },
-            Runnable {
-                OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() })
-            })
+            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }) }),
+            UIRunnable(Runnable { OKDialog.show(this, "", resourceHelper.gs(R.string.authorizationfailed), Runnable { finish() }) })
+        )
     }
 
     private fun setWakeLock() {
@@ -190,6 +196,7 @@ class MainActivity : NoSplashAppCompatActivity() {
             }
         }
         main_pager.adapter = pageAdapter
+        main_pager.offscreenPageLimit = 8 // This may cause more memory consumption
         checkPluginPreferences(main_pager)
 
         // Tabs
@@ -283,7 +290,7 @@ class MainActivity : NoSplashAppCompatActivity() {
                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
                 AlertDialog.Builder(this)
                     .setTitle(resourceHelper.gs(R.string.app_name) + " " + BuildConfig.VERSION)
-                    .setIcon(resourceHelper.getIcon())
+                    .setIcon(iconsProvider.getIcon())
                     .setMessage(messageSpanned)
                     .setPositiveButton(resourceHelper.gs(R.string.ok), null)
                     .create().also {
@@ -323,4 +330,35 @@ class MainActivity : NoSplashAppCompatActivity() {
         }
         return actionBarDrawerToggle.onOptionsItemSelected(item)
     }
+
+    // Correct place for calling setUserStats() would be probably MainApp
+    // but we need to have it called at least once a day. Thus this location
+
+    private fun setUserStats() {
+        if (!fabricPrivacy.fabricEnabled()) return
+        val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
+        // Size is limited to 36 chars
+        val remote = BuildConfig.REMOTE.toLowerCase(Locale.getDefault())
+            .replace("https://", "")
+            .replace("http://", "")
+            .replace(".git", "")
+            .replace(".com/", ":")
+            .replace(".org/", ":")
+            .replace(".net/", ":")
+        fabricPrivacy.firebaseAnalytics.setUserProperty("Mode", BuildConfig.APPLICATION_ID + "-" + closedLoopEnabled)
+        fabricPrivacy.firebaseAnalytics.setUserProperty("Language", sp.getString(R.string.key_language, Locale.getDefault().language))
+        fabricPrivacy.firebaseAnalytics.setUserProperty("Version", BuildConfig.VERSION)
+        fabricPrivacy.firebaseAnalytics.setUserProperty("HEAD", BuildConfig.HEAD)
+        fabricPrivacy.firebaseAnalytics.setUserProperty("Remote", remote)
+        val hashes: List<String> = signatureVerifierPlugin.shortHashes()
+        if (hashes.isNotEmpty()) fabricPrivacy.firebaseAnalytics.setUserProperty("Hash", hashes[0])
+        activePlugin.activePump.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Pump", it::class.java.simpleName) }
+        if (!config.NSCLIENT && !config.PUMPCONTROL)
+            activePlugin.activeAPS.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Aps", it::class.java.simpleName) }
+        activePlugin.activeBgSource.let { fabricPrivacy.firebaseAnalytics.setUserProperty("BgSource", it::class.java.simpleName) }
+        fabricPrivacy.firebaseAnalytics.setUserProperty("Profile", activePlugin.activeProfileInterface.javaClass.simpleName)
+        activePlugin.activeSensitivity.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Sensitivity", it::class.java.simpleName) }
+        activePlugin.activeInsulin.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Insulin", it::class.java.simpleName) }
+    }
+
 }

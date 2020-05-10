@@ -41,7 +41,7 @@ class PhoneCheckerPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        phoneRooted = RootBeer(context).isRootedWithoutBusyBoxCheck()
+        phoneRooted = RootBeer(context).isRooted()
         devMode = isDevModeEnabled()
     }
 }

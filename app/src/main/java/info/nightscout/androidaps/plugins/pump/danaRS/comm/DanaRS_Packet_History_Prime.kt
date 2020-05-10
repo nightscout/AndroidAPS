@@ -4,12 +4,14 @@ import com.cozmo.danar.util.BleCommandUtil
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
+import info.nightscout.androidaps.utils.DateUtil
 
 class DanaRS_Packet_History_Prime @JvmOverloads constructor(
     aapsLogger: AAPSLogger,
     rxBus: RxBusWrapper,
+    dateUtil: DateUtil,
     from: Long = 0
-) : DanaRS_Packet_History_(aapsLogger, rxBus, from) {
+) : DanaRS_Packet_History_(aapsLogger, rxBus, dateUtil, from) {
 
     init {
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_REVIEW__PRIME

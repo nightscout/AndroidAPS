@@ -72,7 +72,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
             args.putString("event", AutomationEvent(mainApp).toJSON())
             args.putInt("position", -1) // New event
             dialog.arguments = args
-            fragmentManager?.let { dialog.show(it, "EditEventDialog") }
+            dialog.show(childFragmentManager, "EditEventDialog")
         }
 
         val callback: ItemTouchHelper.Callback = SimpleItemTouchHelperCallback(eventListAdapter)
@@ -182,7 +182,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener {
                 args.putString("event", event.toJSON())
                 args.putInt("position", position)
                 dialog.arguments = args
-                fragmentManager?.let { dialog.show(it, "EditEventDialog") }
+                dialog.show(childFragmentManager, "EditEventDialog")
             }
             // Start a drag whenever the handle view it touched
             holder.iconSort.setOnTouchListener { v: View, motionEvent: MotionEvent ->

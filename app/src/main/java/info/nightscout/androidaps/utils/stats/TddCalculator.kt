@@ -10,7 +10,7 @@ import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.logging.LTag
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.treatments.TreatmentService
 import info.nightscout.androidaps.plugins.treatments.TreatmentsPlugin
 import info.nightscout.androidaps.utils.DateUtil
@@ -31,8 +31,9 @@ class TddCalculator @Inject constructor(
     val sp: SP,
     val activePlugin: ActivePluginProvider,
     val profileFunction: ProfileFunction,
-    fabricPrivacy: FabricPrivacy
-) : TreatmentsPlugin(injector, aapsLogger, rxBus, resourceHelper, mainApp, sp, profileFunction, activePlugin, fabricPrivacy) {
+    fabricPrivacy: FabricPrivacy,
+    private val dateUtil: DateUtil
+) : TreatmentsPlugin(injector, aapsLogger, rxBus, resourceHelper, mainApp, sp, profileFunction, activePlugin, fabricPrivacy, dateUtil) {
 
     init {
         service = TreatmentService(injector) // plugin is not started
@@ -99,7 +100,7 @@ class TddCalculator @Inject constructor(
     private fun toText(tdds: LongSparseArray<TDD>): String {
         var t = ""
         for (i in 0 until tdds.size()) {
-            t += "${tdds.valueAt(i).toText(resourceHelper)}<br>"
+            t += "${tdds.valueAt(i).toText(resourceHelper, dateUtil)}<br>"
         }
         return t
     }

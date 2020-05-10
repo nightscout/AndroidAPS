@@ -71,9 +71,5 @@ public interface OmnipodCommunicationManagerInterface {
      */
     PumpEnactResult setTime();
 
-
-    void setPumpStatus(OmnipodPumpStatus pumpStatusLocal);
-
-
     PodInfoRecentPulseLog readPulseLog();
 }

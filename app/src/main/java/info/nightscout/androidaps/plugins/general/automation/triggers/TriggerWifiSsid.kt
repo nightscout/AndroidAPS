@@ -10,7 +10,6 @@ import info.nightscout.androidaps.plugins.general.automation.elements.InputStrin
 import info.nightscout.androidaps.plugins.general.automation.elements.LabelWithElement
 import info.nightscout.androidaps.plugins.general.automation.elements.LayoutBuilder
 import info.nightscout.androidaps.plugins.general.automation.elements.StaticLabel
-import info.nightscout.androidaps.receivers.NetworkChangeReceiver
 import info.nightscout.androidaps.receivers.ReceiverStatusStore
 import info.nightscout.androidaps.utils.JsonHelper
 import org.json.JSONObject

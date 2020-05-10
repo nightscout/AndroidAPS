@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.danaRS.comm
 
+import android.content.Context
 import info.nightscout.androidaps.interfaces.ActivePluginProvider
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
@@ -17,6 +18,7 @@ import java.util.*
 @PrepareForTest(RxBusWrapper::class, DetailedBolusInfoStorage::class)
 class DanaRS_Packet_APS_History_EventsTest : DanaRSTestBase() {
 
+    @Mock lateinit var context: Context
     @Mock lateinit var activePlugin: ActivePluginProvider
     @Mock lateinit var danaRSPlugin: DanaRSPlugin
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
@@ -24,7 +26,7 @@ class DanaRS_Packet_APS_History_EventsTest : DanaRSTestBase() {
     @Test fun runTest() {
         val now = DateUtil.now()
 
-        val testPacket = DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, injector, now)
+        val testPacket = DanaRS_Packet_APS_History_Events(aapsLogger, rxBus, resourceHelper, activePlugin, danaRSPlugin, detailedBolusInfoStorage, injector, DateUtil(context, resourceHelper),  now)
         // test getRequestedParams
         val returnedValues = testPacket.requestParams
         val expectedValues = getCalender(now)

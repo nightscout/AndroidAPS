@@ -29,6 +29,7 @@ class LoopFragment : DaggerFragment() {
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var loopPlugin: LoopPlugin
+    @Inject lateinit var dateUtil: DateUtil
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -81,12 +82,12 @@ class LoopFragment : DaggerFragment() {
             loop_request?.text = it.request?.toSpanned() ?: ""
             loop_constraintsprocessed?.text = it.constraintsProcessed?.toSpanned() ?: ""
             loop_source?.text = it.source ?: ""
-            loop_lastrun?.text = DateUtil.dateAndTimeString(it.lastAPSRun)
+            loop_lastrun?.text = dateUtil.dateAndTimeString(it.lastAPSRun)
                 ?: ""
-            loop_smbrequest_time?.text = DateUtil.dateAndTimeAndSecondsString(it.lastSMBRequest)
-            loop_smbexecution_time?.text = DateUtil.dateAndTimeAndSecondsString(it.lastSMBEnact)
-            loop_tbrrequest_time?.text = DateUtil.dateAndTimeAndSecondsString(it.lastTBRRequest)
-            loop_tbrexecution_time?.text = DateUtil.dateAndTimeAndSecondsString(it.lastTBREnact)
+            loop_smbrequest_time?.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBRequest)
+            loop_smbexecution_time?.text = dateUtil.dateAndTimeAndSecondsString(it.lastSMBEnact)
+            loop_tbrrequest_time?.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBRRequest)
+            loop_tbrexecution_time?.text = dateUtil.dateAndTimeAndSecondsString(it.lastTBREnact)
 
             loop_tbrsetbypump?.text = it.tbrSetByPump?.let { tbrSetByPump -> HtmlHelper.fromHtml(tbrSetByPump.toHtml()) }
                 ?: ""

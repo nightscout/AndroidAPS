@@ -9,7 +9,8 @@ import kotlin.math.ceil
 
 class DanaRS_Packet_Basal_Get_Temporary_Basal_State(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
+    private val danaRPump: DanaRPump,
+    private val dateUtil: DateUtil
 ) : DanaRS_Packet() {
 
     init {
@@ -35,7 +36,7 @@ class DanaRS_Packet_Basal_Get_Temporary_Basal_State(
         aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal percent: " + danaRPump.tempBasalPercent)
         aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal remaining min: $tempBasalRemainingMin")
         aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal total sec: " + danaRPump.tempBasalTotalSec)
-        aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal start: " + DateUtil.dateAndTimeString(tempBasalStart))
+        aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal start: " + dateUtil.dateAndTimeString(tempBasalStart))
     }
 
     override fun getFriendlyName(): String {

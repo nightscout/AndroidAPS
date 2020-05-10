@@ -14,19 +14,19 @@ class DanaRS_Packet_APS_Set_Event_HistoryTest : DanaRSTestBase() {
 
     @Test fun runTest() { // test for negative carbs
         val now = DateUtil.now()
-        var historyTest = DanaRS_Packet_APS_Set_Event_History(aapsLogger, DanaRPump.CARBS, now, -1, 0)
+        var historyTest = DanaRS_Packet_APS_Set_Event_History(aapsLogger, dateUtil, DanaRPump.CARBS, now, -1, 0)
         var testparams = historyTest.requestParams
         Assert.assertEquals(0.toByte(), testparams[8])
         // 5g carbs
-        historyTest = DanaRS_Packet_APS_Set_Event_History(aapsLogger, DanaRPump.CARBS, now, 5, 0)
+        historyTest = DanaRS_Packet_APS_Set_Event_History(aapsLogger, dateUtil, DanaRPump.CARBS, now, 5, 0)
         testparams = historyTest.requestParams
         Assert.assertEquals(5.toByte(), testparams[8])
         // 150g carbs
-        historyTest = DanaRS_Packet_APS_Set_Event_History(aapsLogger, DanaRPump.CARBS, now, 150, 0)
+        historyTest = DanaRS_Packet_APS_Set_Event_History(aapsLogger, dateUtil, DanaRPump.CARBS, now, 150, 0)
         testparams = historyTest.requestParams
         Assert.assertEquals(150.toByte(), testparams[8])
         // test message generation
-        historyTest = DanaRS_Packet_APS_Set_Event_History(aapsLogger, DanaRPump.CARBS, now, 5, 0)
+        historyTest = DanaRS_Packet_APS_Set_Event_History(aapsLogger, dateUtil, DanaRPump.CARBS, now, 5, 0)
         testparams = historyTest.requestParams
         Assert.assertEquals(5.toByte(), testparams[8])
         Assert.assertEquals(11, testparams.size)

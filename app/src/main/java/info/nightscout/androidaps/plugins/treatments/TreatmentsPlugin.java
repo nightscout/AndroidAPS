@@ -31,7 +31,8 @@ import info.nightscout.androidaps.data.NonOverlappingIntervals;
 import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
-import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.interfaces.ProfileStore;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.Source;
@@ -50,7 +51,7 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload;
 import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
@@ -75,6 +76,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
     private final ProfileFunction profileFunction;
     private final ActivePluginProvider activePlugin;
     private final FabricPrivacy fabricPrivacy;
+    private final DateUtil dateUtil;
 
     private CompositeDisposable disposable = new CompositeDisposable();
 
@@ -99,7 +101,8 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
             SP sp,
             ProfileFunction profileFunction,
             ActivePluginProvider activePlugin,
-            FabricPrivacy fabricPrivacy
+            FabricPrivacy fabricPrivacy,
+            DateUtil dateUtil
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.TREATMENT)
@@ -118,6 +121,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         this.profileFunction = profileFunction;
         this.activePlugin = activePlugin;
         this.fabricPrivacy = fabricPrivacy;
+        this.dateUtil = dateUtil;
     }
 
     @Override
@@ -338,7 +342,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     last = t.date;
             }
         }
-        getAapsLogger().debug(LTag.DATATREATMENTS, "Last bolus time: " + DateUtil.dateAndTimeString(last));
+        getAapsLogger().debug(LTag.DATATREATMENTS, "Last bolus time: " + dateUtil.dateAndTimeString(last));
         return last;
     }
 
@@ -353,7 +357,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
                     last = t.date;
             }
         }
-        getAapsLogger().debug(LTag.DATATREATMENTS, "Last manual bolus time: " + DateUtil.dateAndTimeString(last));
+        getAapsLogger().debug(LTag.DATATREATMENTS, "Last manual bolus time: " + dateUtil.dateAndTimeString(last));
         return last;
     }
 
@@ -642,7 +646,7 @@ public class TreatmentsPlugin extends PluginBase implements TreatmentsInterface 
         if (!allowUpdate && !creatOrUpdateResult.success) {
             getAapsLogger().error("Treatment could not be added to DB", new Exception());
 
-            String status = String.format(resourceHelper.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs, DateUtil.dateAndTimeString(treatment.date));
+            String status = String.format(resourceHelper.gs(R.string.error_adding_treatment_message), treatment.insulin, (int) treatment.carbs, dateUtil.dateAndTimeString(treatment.date));
 
             Intent i = new Intent(context, ErrorHelperActivity.class);
             i.putExtra("soundid", R.raw.error);

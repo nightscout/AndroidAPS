@@ -24,6 +24,7 @@ import javax.inject.Inject
 abstract class DialogFragmentWithDate : DaggerDialogFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
+    @Inject lateinit var dateUtil: DateUtil
 
     var eventTime = DateUtil.now()
     var eventTimeChanged = false
@@ -57,7 +58,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         eventTime = savedInstanceState?.getLong("eventTime") ?: DateUtil.now()
         eventTimeChanged = savedInstanceState?.getBoolean("eventTimeChanged") ?: false
         overview_eventdate?.text = DateUtil.dateString(eventTime)
-        overview_eventtime?.text = DateUtil.timeString(eventTime)
+        overview_eventtime?.text = dateUtil.timeString(eventTime)
 
         // create an OnDateSetListener
         val dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
@@ -92,7 +93,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             cal.set(Calendar.SECOND, seconds++) // randomize seconds to prevent creating record of the same time, if user choose time manually
             eventTime = cal.timeInMillis
             eventTimeChanged = true
-            overview_eventtime?.text = DateUtil.timeString(eventTime)
+            overview_eventtime?.text = dateUtil.timeString(eventTime)
         }
 
         overview_eventtime?.setOnClickListener {

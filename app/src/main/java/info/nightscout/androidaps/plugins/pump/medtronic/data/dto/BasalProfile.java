@@ -364,7 +364,7 @@ public class BasalProfile {
 
 
     private boolean isLogEnabled() {
-        return L.isEnabled(L.PUMPCOMM);
+        return L.isEnabled(LTag.PUMPCOMM);
     }
 
     public boolean verify(PumpType pumpType) {

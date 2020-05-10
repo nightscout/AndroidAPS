@@ -9,7 +9,8 @@ import java.util.*
 
 class DanaRS_Packet_Bolus_Get_Step_Bolus_Information(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
+    private val danaRPump: DanaRPump,
+    private val dateUtil: DateUtil
 ) : DanaRS_Packet() {
 
     init {
@@ -48,7 +49,7 @@ class DanaRS_Packet_Bolus_Get_Step_Bolus_Information(
         aapsLogger.debug(LTag.PUMPCOMM, "Result: $error")
         aapsLogger.debug(LTag.PUMPCOMM, "BolusType: $bolusType")
         aapsLogger.debug(LTag.PUMPCOMM, "Initial bolus amount: " + danaRPump.initialBolusAmount + " U")
-        aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + DateUtil.dateAndTimeString(danaRPump.lastBolusTime))
+        aapsLogger.debug(LTag.PUMPCOMM, "Last bolus time: " + dateUtil.dateAndTimeString(danaRPump.lastBolusTime))
         aapsLogger.debug(LTag.PUMPCOMM, "Last bolus amount: " + danaRPump.lastBolusAmount)
         aapsLogger.debug(LTag.PUMPCOMM, "Max bolus: " + danaRPump.maxBolus + " U")
         aapsLogger.debug(LTag.PUMPCOMM, "Bolus step: " + danaRPump.bolusStep + " U")

@@ -84,6 +84,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.events.EventRefreshButt
 import info.nightscout.androidaps.plugins.pump.medtronic.service.RileyLinkMedtronicService;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst;
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.resources.ResourceHelper;
@@ -136,7 +137,8 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
             MedtronicPumpStatus medtronicPumpStatus,
             MedtronicHistoryData medtronicHistoryData,
             RileyLinkServiceData rileyLinkServiceData,
-            ServiceTaskExecutor serviceTaskExecutor
+            ServiceTaskExecutor serviceTaskExecutor,
+            DateUtil dateUtil
     ) {
 
         super(new PluginDescription() //
@@ -147,7 +149,7 @@ public class MedtronicPumpPlugin extends PumpPluginAbstract implements PumpInter
                         .preferencesId(R.xml.pref_medtronic)
                         .description(R.string.description_pump_medtronic), //
                 PumpType.Medtronic_522_722, // we default to most basic model, correct model from config is loaded later
-                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy
+                injector, resourceHelper, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil
         );
 
         this.rileyLinkUtil = rileyLinkUtil;

@@ -3,12 +3,12 @@ package info.nightscout.androidaps.plugins.pump.omnipod.comm.message.response.po
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventType;
+import info.nightscout.androidaps.plugins.pump.omnipod.defs.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.defs.PodInfoType;
 
 public class PodInfoFaultAndInitializationTime extends PodInfo {
     private static final int MINIMUM_MESSAGE_LENGTH = 17;
-    private final FaultEventType faultEventType;
+    private final FaultEventCode faultEventCode;
     private final Duration timeFaultEvent;
     private final DateTime initializationTime;
 
@@ -19,7 +19,7 @@ public class PodInfoFaultAndInitializationTime extends PodInfo {
             throw new IllegalArgumentException("Not enough data");
         }
 
-        faultEventType = FaultEventType.fromByte(encodedData[1]);
+        faultEventCode = FaultEventCode.fromByte(encodedData[1]);
         timeFaultEvent = Duration.standardMinutes(((encodedData[2] & 0b1) << 8) + encodedData[3]);
         // We ignore time zones here because we don't keep the time zone in which the pod was initially set up
         // Which is fine because we don't use the initialization time for anything important anyway
@@ -31,8 +31,8 @@ public class PodInfoFaultAndInitializationTime extends PodInfo {
         return PodInfoType.FAULT_AND_INITIALIZATION_TIME;
     }
 
-    public FaultEventType getFaultEventType() {
-        return faultEventType;
+    public FaultEventCode getFaultEventCode() {
+        return faultEventCode;
     }
 
     public Duration getTimeFaultEvent() {
@@ -46,7 +46,7 @@ public class PodInfoFaultAndInitializationTime extends PodInfo {
     @Override
     public String toString() {
         return "PodInfoFaultAndInitializationTime{" +
-                "faultEventType=" + faultEventType +
+                "faultEventCode=" + faultEventCode +
                 ", timeFaultEvent=" + timeFaultEvent +
                 ", initializationTime=" + initializationTime +
                 '}';

@@ -11,7 +11,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class DanaRS_Packet_Option_Get_Pump_TimeTest : DanaRSTestBase() {
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Option_Get_Pump_Time(aapsLogger, danaRPump)
+        val packet = DanaRS_Packet_Option_Get_Pump_Time(aapsLogger, danaRPump, dateUtil)
         // test params
         Assert.assertEquals(null, packet.requestParams)
         // test message decoding

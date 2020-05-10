@@ -26,14 +26,15 @@ import info.nightscout.androidaps.logging.AAPSLogger;
 import info.nightscout.androidaps.logging.LTag;
 import info.nightscout.androidaps.plugins.aps.openAPSSMB.SMBDefaults;
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper;
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction;
+import info.nightscout.androidaps.interfaces.ProfileFunction;
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensData;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin;
-import info.nightscout.androidaps.plugins.treatments.Treatment;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -67,6 +68,7 @@ public class IobCobOref1Thread extends Thread {
     @Inject BuildHelper buildHelper;
     @Inject Profiler profiler;
     @Inject FabricPrivacy fabricPrivacy;
+    @Inject DateUtil dateUtil;
 
     private final HasAndroidInjector injector;
     private boolean bgDataReload;
@@ -121,7 +123,7 @@ public class IobCobOref1Thread extends Thread {
                 }
 
                 long prevDataTime = IobCobCalculatorPlugin.roundUpTime(bucketed_data.get(bucketed_data.size() - 3).date);
-                aapsLogger.debug(LTag.AUTOSENS, "Prev data time: " + DateUtil.dateAndTimeString(prevDataTime));
+                aapsLogger.debug(LTag.AUTOSENS, "Prev data time: " + dateUtil.dateAndTimeString(prevDataTime));
                 AutosensData previous = autosensDataTable.get(prevDataTime);
                 // start from oldest to be able sub cob
                 for (int i = bucketed_data.size() - 4; i >= 0; i--) {
@@ -240,7 +242,8 @@ public class IobCobOref1Thread extends Thread {
                     List<Treatment> recentCarbTreatments = activePluginProvider.getActiveTreatments().getCarbTreatments5MinBackFromHistory(bgTime);
                     for (Treatment recentCarbTreatment : recentCarbTreatments) {
                         autosensData.carbsFromBolus += recentCarbTreatment.carbs;
-                        autosensData.activeCarbsList.add(autosensData.new CarbsInPast(recentCarbTreatment));
+                        boolean isAAPSOrWeighted = sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled();
+                        autosensData.activeCarbsList.add(autosensData.new CarbsInPast(recentCarbTreatment, isAAPSOrWeighted));
                         autosensData.pastSensitivity += "[" + DecimalFormatter.to0Decimal(recentCarbTreatment.carbs) + "g]";
                     }
 
@@ -277,7 +280,8 @@ public class IobCobOref1Thread extends Thread {
                         autosensData.uam = previous.uam;
                     }
 
-                    autosensData.removeOldCarbs(bgTime);
+                    boolean isAAPSOrWeighted = sensitivityAAPSPlugin.isEnabled() || sensitivityWeightedAveragePlugin.isEnabled();
+                    autosensData.removeOldCarbs(bgTime, isAAPSOrWeighted);
                     autosensData.cob += autosensData.carbsFromBolus;
                     autosensData.mealCarbs += autosensData.carbsFromBolus;
                     autosensData.deviation = deviation;
@@ -375,7 +379,7 @@ public class IobCobOref1Thread extends Thread {
                     previous = autosensData;
                     if (bgTime < now())
                         autosensDataTable.put(bgTime, autosensData);
-                    aapsLogger.debug(LTag.AUTOSENS, "Running detectSensitivity from: " + DateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + DateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + iobCobCalculatorPlugin.lastDataTime());
+                    aapsLogger.debug(LTag.AUTOSENS, "Running detectSensitivity from: " + dateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + dateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + iobCobCalculatorPlugin.lastDataTime());
                     AutosensResult sensitivity = iobCobCalculatorPlugin.detectSensitivityWithLock(oldestTimeWithData, bgTime);
                     aapsLogger.debug(LTag.AUTOSENS, "Sensitivity result: " + sensitivity.toString());
                     autosensData.autosensResult = sensitivity;

@@ -15,7 +15,6 @@ import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.FragmentManager
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import info.nightscout.androidaps.Config
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.ErrorHelperActivity
@@ -34,7 +33,7 @@ import info.nightscout.androidaps.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
 import info.nightscout.androidaps.plugins.bus.RxBusWrapper
 import info.nightscout.androidaps.plugins.configBuilder.ConfigBuilderPlugin
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.androidaps.utils.DateUtil
 import info.nightscout.androidaps.utils.DefaultValueHelper
@@ -42,7 +41,6 @@ import info.nightscout.androidaps.utils.ToastUtils
 import info.nightscout.androidaps.utils.buildHelper.BuildHelper
 import info.nightscout.androidaps.utils.resources.ResourceHelper
 import info.nightscout.androidaps.utils.sharedPreferences.SP
-import java.lang.reflect.Type
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -59,7 +57,8 @@ class OverviewMenus @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val commandQueue: CommandQueueProvider,
     private val configBuilderPlugin: ConfigBuilderPlugin,
-    private val loopPlugin: LoopPlugin
+    private val loopPlugin: LoopPlugin,
+    private val config: Config
 ) {
 
     enum class CharType(@StringRes val nameId: Int, @ColorRes val colorId: Int, val primary: Boolean, val secondary: Boolean) {
@@ -117,8 +116,8 @@ class OverviewMenus @Inject constructor(
 
         chartButton.setOnClickListener { v: View ->
             val predictionsAvailable: Boolean = when {
-                Config.APS      -> loopPlugin.lastRun?.request?.hasPredictions ?: false
-                Config.NSCLIENT -> true
+                config.APS      -> loopPlugin.lastRun?.request?.hasPredictions ?: false
+                config.NSCLIENT -> true
                 else            -> false
             }
             val popup = PopupMenu(v.context, v)

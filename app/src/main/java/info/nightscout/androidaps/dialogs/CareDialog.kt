@@ -15,7 +15,7 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.Profile
 import info.nightscout.androidaps.db.CareportalEvent
 import info.nightscout.androidaps.db.Source
-import info.nightscout.androidaps.plugins.configBuilder.ProfileFunction
+import info.nightscout.androidaps.interfaces.ProfileFunction
 import info.nightscout.androidaps.plugins.general.nsclient.NSUpload
 import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatus
 import info.nightscout.androidaps.utils.DateUtil
@@ -167,7 +167,7 @@ class CareDialog : DialogFragmentWithDate() {
         eventTime -= eventTime % 1000
 
         if (eventTimeChanged)
-            actions.add(resourceHelper.gs(R.string.time) + ": " + DateUtil.dateAndTimeString(eventTime))
+            actions.add(resourceHelper.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         json.put("created_at", DateUtil.toISOString(eventTime))
         json.put("mills", eventTime)

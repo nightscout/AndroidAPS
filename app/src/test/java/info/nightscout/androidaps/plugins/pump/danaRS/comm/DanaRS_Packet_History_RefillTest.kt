@@ -11,7 +11,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 class DanaRS_Packet_History_RefillTest : DanaRSTestBase() {
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_History_Refill(aapsLogger, rxBus, System.currentTimeMillis())
+        val packet = DanaRS_Packet_History_Refill(aapsLogger, rxBus, dateUtil, System.currentTimeMillis())
         Assert.assertEquals("REVIEW__REFILL", packet.friendlyName)
     }
 }

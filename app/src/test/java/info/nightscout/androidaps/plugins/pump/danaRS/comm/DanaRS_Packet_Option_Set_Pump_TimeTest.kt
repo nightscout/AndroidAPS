@@ -13,7 +13,7 @@ import java.util.*
 class DanaRS_Packet_Option_Set_Pump_TimeTest : DanaRSTestBase() {
 
     @Test fun runTest() {
-        val packet = DanaRS_Packet_Option_Set_Pump_Time(aapsLogger, DateUtil.now())
+        val packet = DanaRS_Packet_Option_Set_Pump_Time(aapsLogger, dateUtil, DateUtil.now())
         // test params
         val params = packet.requestParams
         Assert.assertEquals((Date().date and 0xff).toByte(), params[2])

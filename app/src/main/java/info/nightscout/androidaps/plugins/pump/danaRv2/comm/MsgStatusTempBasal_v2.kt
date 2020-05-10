@@ -9,8 +9,8 @@ import kotlin.math.ceil
 
 class MsgStatusTempBasal_v2(
     private val aapsLogger: AAPSLogger,
-    private val danaRPump: DanaRPump
-
+    private val danaRPump: DanaRPump,
+    private val dateUtil: DateUtil
 ) : MessageBase() {
 
     init {
@@ -37,7 +37,7 @@ class MsgStatusTempBasal_v2(
         aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal percent: $tempBasalPercent")
         aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal remaining min: $tempBasalRemainingMin")
         aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal total sec: $tempBasalTotalSec")
-        aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal start: " + DateUtil.dateAndTimeString(tempBasalStart))
+        aapsLogger.debug(LTag.PUMPCOMM, "Current temp basal start: " + dateUtil.dateAndTimeString(tempBasalStart))
     }
 
     private fun getDateFromTempBasalSecAgo(tempBasalAgoSecs: Int): Long {
