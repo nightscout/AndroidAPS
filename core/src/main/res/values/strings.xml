@@ -50,6 +50,7 @@
     <string name="objectives">Objectives</string>
     <string name="close">Close</string>
     <string name="please_wait">Please wait…</string>
+    <string name="mute">Mute</string>
 
     <!--    Constraints-->
     <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
